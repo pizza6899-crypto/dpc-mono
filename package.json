@@ -20,7 +20,7 @@
     "db:generate": "pnpm -F api db:generate",
     "db:migrate": "pnpm -F api db:migrate",
     "db:format": "pnpm -F api format",
-    "db:reset": "pnpm -F api db:migrate reset",
+    "db:reset": "pnpm -F api db:reset",
     "db:deploy": "pnpm -F api db:migrate deploy",
     "db:push": "pnpm -F api db:push",
     "db:seed": "pnpm -F api db:seed",

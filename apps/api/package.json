@@ -26,7 +26,6 @@
     "test:integration": "jest --config ./test/jest-integration.json",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "cli": "ts-node -r tsconfig-paths/register src/cli/cli.ts",
-    "zip": "pnpm run format && pnpm run build && node scripts/deployScript && open .",
     "template": "plop",
     "swagger": "ts-node -r tsconfig-paths/register scripts/generate-swagger.ts",
     "prisma": "dotenv -e .env -- prisma",
@@ -34,6 +33,7 @@
     "db:migrate": "dotenv -e .env -- prisma migrate dev",
     "db:push": "dotenv -e .env -- prisma db push",
     "db:seed": "dotenv -e .env -- prisma db seed",
+    "db:reset": "dotenv -e .env -- prisma migrate reset",
     "db:studio": "dotenv -e .env -- prisma studio"
   },
   "dependencies": {

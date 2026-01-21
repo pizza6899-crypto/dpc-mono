@@ -27,6 +27,8 @@ const EXCLUDE_PATTERNS = [
   '*.db-journal',
   'pnpm-debug.log*',
   'npm-debug.log*',
+  'plopfile.js',
+  'plop-templates',
 ];
 
 // 루트 레벨에서만 제외할 패턴 (소스 코드 내부는 포함)
@@ -74,10 +76,7 @@ function copyDir(src, dest, relativePath = '', isRootLevel = false) {
       continue;
     }
 
-    // packages/database의 prisma 마이그레이션 제외
-    if (fullRelativePath.includes('packages/database/prisma/migrations')) {
-      continue;
-    }
+
 
     // 제외 패턴 체크
     const shouldExclude = EXCLUDE_PATTERNS.some(pattern => {
@@ -109,22 +108,16 @@ function copyDir(src, dest, relativePath = '', isRootLevel = false) {
 copyDir(apiSrc, apiDest, 'apps/api', false);
 console.log('   ✓ apps/api 복사 완료');
 
-// 3. packages/database 복사
-console.log('\n3. packages/database 복사 중...');
-const dbSrc = path.join(ROOT_DIR, 'packages', 'database');
-const dbDest = path.join(OUTPUT_DIR, 'packages', 'database');
-copyDir(dbSrc, dbDest, 'packages/database', false);
-console.log('   ✓ packages/database 복사 완료');
 
-// 4. packages/shared 복사
-console.log('\n4. packages/shared 복사 중...');
+// 3. packages/shared 복사
+console.log('\n3. packages/shared 복사 중...');
 const sharedSrc = path.join(ROOT_DIR, 'packages', 'shared');
 const sharedDest = path.join(OUTPUT_DIR, 'packages', 'shared');
 copyDir(sharedSrc, sharedDest, 'packages/shared', false);
 console.log('   ✓ packages/shared 복사 완료');
 
-// 5. ZIP 파일 생성
-console.log('\n5. ZIP 파일 생성 중...');
+// 4. ZIP 파일 생성
+console.log('\n4. ZIP 파일 생성 중...');
 const zipPath = path.join(ROOT_DIR, ZIP_NAME);
 
 // 기존 ZIP 파일 삭제
@@ -147,9 +140,10 @@ try {
   console.log('   2. unzip api-deploy-*.zip');
   console.log('   3. cd deploy-package');
   console.log('   4. pnpm install');
-  console.log('   5. pnpm db:generate');
-  console.log('   6. pnpm api:build');
-  console.log('   7. pnpm api:start:prod\n');
+  console.log('   5. pnpm prisma migrate deploy');
+  console.log('   6. pnpm db:generate');
+  console.log('   7. pnpm api:build');
+  console.log('   8. pnpm api:start:prod\n');
 } catch (error) {
   console.error('❌ ZIP 파일 생성 실패:', error.message);
   console.log('\n대안: tar 명령어 사용');
@@ -162,5 +156,11 @@ try {
     console.error('❌ TAR 파일 생성도 실패:', tarError.message);
     process.exit(1);
   }
+}
+
+// 5. 임시 디렉토리 정리
+if (fs.existsSync(OUTPUT_DIR)) {
+  console.log('🧹 임시 배포 디렉토리 정리 중...');
+  fs.rmSync(OUTPUT_DIR, { recursive: true, force: true });
 }
 
