@@ -1,3 +1,8 @@
+---
+name: kysely_implementation
+description: Kysely Implementation Expert (Prisma Integration)
+---
+
 # Skill: Kysely Implementation Expert (Prisma Integration)
 
 ## 🎯 Role & Context
