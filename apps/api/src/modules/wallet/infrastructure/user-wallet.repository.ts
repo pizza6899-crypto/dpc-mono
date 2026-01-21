@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import type { UserWalletRepositoryPort } from '../ports/out/user-wallet.repository.port';
-import { UserWallet } from '../domain';
+import { UserWallet, WalletNotFoundException } from '../domain';
 import { UserWalletMapper } from './user-wallet.mapper';
 import type { ExchangeCurrencyCode } from '@prisma/client';
 import { LockNamespace } from 'src/common/concurrency/lock-namespace';
@@ -38,6 +38,17 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
     });
 
     return balance ? this.mapper.toDomain(balance) : null;
+  }
+
+  async getByUserIdAndCurrency(
+    userId: bigint,
+    currency: ExchangeCurrencyCode,
+  ): Promise<UserWallet> {
+    const wallet = await this.findByUserIdAndCurrency(userId, currency);
+    if (!wallet) {
+      throw new WalletNotFoundException(userId, currency);
+    }
+    return wallet;
   }
 
   /**
@@ -80,16 +91,10 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
     return balances.map((balance) => this.mapper.toDomain(balance));
   }
 
-  async upsert(wallet: UserWallet): Promise<UserWallet> {
+  async create(wallet: UserWallet): Promise<UserWallet> {
     const data = this.mapper.toPrisma(wallet);
-    const result = await this.tx.userWallet.upsert({
-      where: {
-        userId_currency: {
-          userId: data.userId,
-          currency: data.currency,
-        },
-      },
-      create: {
+    const result = await this.tx.userWallet.create({
+      data: {
         userId: data.userId,
         currency: data.currency,
         cash: data.cash,
@@ -99,7 +104,20 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
         vault: data.vault,
         updatedAt: data.updatedAt,
       },
-      update: {
+    });
+    return this.mapper.toDomain(result);
+  }
+
+  async update(wallet: UserWallet): Promise<UserWallet> {
+    const data = this.mapper.toPrisma(wallet);
+    const result = await this.tx.userWallet.update({
+      where: {
+        userId_currency: {
+          userId: data.userId,
+          currency: data.currency,
+        },
+      },
+      data: {
         cash: data.cash,
         bonus: data.bonus,
         reward: data.reward,
@@ -108,7 +126,6 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
         updatedAt: data.updatedAt,
       },
     });
-
     return this.mapper.toDomain(result);
   }
 }

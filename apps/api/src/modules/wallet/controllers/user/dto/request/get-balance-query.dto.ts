@@ -1,8 +1,7 @@
-// src/modules/wallet/controllers/user/dto/request/get-balance-query.dto.ts
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsOptional } from 'class-validator';
-import { ExchangeCurrencyCode } from '@prisma/client';
+import { IsOptional, IsIn } from 'class-validator';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
+import type { WalletCurrencyCode } from 'src/utils/currency.util';
 
 export class GetBalanceQueryDto {
   @ApiPropertyOptional({
@@ -11,9 +10,9 @@ export class GetBalanceQueryDto {
     example: 'USD',
   })
   @IsOptional()
-  @IsEnum(ExchangeCurrencyCode, {
-    message: 'Invalid currency code',
+  @IsIn(WALLET_CURRENCIES, {
+    message: 'Invalid currency code. Allowed values: ' + WALLET_CURRENCIES.join(', '),
   })
-  currency?: ExchangeCurrencyCode;
+  currency?: WalletCurrencyCode;
 }
 

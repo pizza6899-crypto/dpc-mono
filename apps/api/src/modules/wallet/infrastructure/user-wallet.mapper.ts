@@ -40,16 +40,15 @@ export class UserWalletMapper {
     vault: Prisma.Decimal;
     updatedAt: Date;
   } {
-    const persistence = domain.toPersistence();
     return {
-      userId: persistence.userId,
-      currency: persistence.currency,
-      cash: persistence.cash,
-      bonus: persistence.bonus,
-      reward: persistence.reward,
-      lock: persistence.lock,
-      vault: persistence.vault,
-      updatedAt: persistence.updatedAt,
+      userId: domain.userId,
+      currency: domain.currency,
+      cash: domain.cash,
+      bonus: domain.bonus,
+      reward: domain.reward,
+      lock: domain.lock,
+      vault: domain.vault,
+      updatedAt: domain.updatedAt,
     };
   }
 }

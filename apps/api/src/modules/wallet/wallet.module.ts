@@ -1,12 +1,6 @@
-// src/modules/wallet/wallet.module.ts
 import { Module } from '@nestjs/common';
-import { CreateWalletService } from './application/create-wallet.service';
 import { WalletQueryService } from './application/wallet-query.service';
-import { GetUserBalanceService } from './application/get-user-balance.service';
-import { GetUserBalanceAdminService } from './application/get-user-balance-admin.service';
-import { UpdateUserBalanceAdminService } from './application/update-user-balance-admin.service';
-import { UpdateUserBalanceService } from './application/update-user-balance.service';
-import { GetWalletTransactionHistoryAdminService } from './application/get-wallet-transaction-history-admin.service';
+import { GetWalletTransactionHistoryService } from './application/get-wallet-transaction-history.service';
 import { UserWalletRepository } from './infrastructure/user-wallet.repository';
 import { UserWalletMapper } from './infrastructure/user-wallet.mapper';
 import { USER_WALLET_REPOSITORY } from './ports/out/user-wallet.repository.token';
@@ -15,7 +9,8 @@ import { WalletAdminController } from './controllers/admin/wallet-admin.controll
 import { UserModule } from '../user/user.module';
 import { WALLET_TRANSACTION_REPOSITORY } from './ports/out/wallet-transaction.repository.token';
 import { WalletTransactionRepository } from './infrastructure/wallet-transaction.repository';
-import { CreateWalletTransactionService } from './application/create-wallet-transaction.service';
+import { UserBalanceService } from './application/user-balance.service';
+import { SqidsModule } from 'src/common/sqids/sqids.module';
 
 /**
  * Wallet 모듈
@@ -40,14 +35,8 @@ import { CreateWalletTransactionService } from './application/create-wallet-tran
  * - UserBalanceStats (통계는 UserStatsModule에서 관리)
  */
 @Module({
-  imports: [UserModule],
+  imports: [UserModule, SqidsModule],
   providers: [
-    CreateWalletService,
-    GetUserBalanceService,
-    GetUserBalanceAdminService,
-    UpdateUserBalanceAdminService,
-    GetWalletTransactionHistoryAdminService,
-    UserWalletMapper,
     {
       provide: USER_WALLET_REPOSITORY,
       useClass: UserWalletRepository,
@@ -57,18 +46,14 @@ import { CreateWalletTransactionService } from './application/create-wallet-tran
       useClass: WalletTransactionRepository,
     },
     WalletQueryService,
-    UpdateUserBalanceService,
-    CreateWalletTransactionService,
+    UserBalanceService,
+    GetWalletTransactionHistoryService,
+    UserWalletMapper,
   ],
   controllers: [WalletController, WalletAdminController],
   exports: [
-    CreateWalletService,
-    GetUserBalanceService,
-    GetUserBalanceAdminService,
-    UpdateUserBalanceAdminService,
-    UpdateUserBalanceService,
-    CreateWalletTransactionService,
-    GetWalletTransactionHistoryAdminService,
+    UserBalanceService,
+    GetWalletTransactionHistoryService,
     WalletQueryService,
   ],
 })

@@ -1,6 +1,5 @@
 // src/modules/wallet/domain/model/user-wallet.entity.ts
-import type { ExchangeCurrencyCode } from '@prisma/client';
-import { Prisma } from '@prisma/client';
+import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import {
   InvalidWalletBalanceException,
   InsufficientBalanceException,
@@ -77,19 +76,6 @@ export class UserWallet {
     );
   }
 
-  toPersistence() {
-    return {
-      userId: this.userId,
-      currency: this.currency,
-      cash: this._cash,
-      bonus: this._bonus,
-      reward: this._reward,
-      lock: this._lock,
-      vault: this._vault,
-      updatedAt: this.updatedAt,
-    };
-  }
-
   // Getters
   get cash(): Prisma.Decimal { return this._cash; }
   get bonus(): Prisma.Decimal { return this._bonus; }
@@ -97,25 +83,13 @@ export class UserWallet {
   get lock(): Prisma.Decimal { return this._lock; }
   get vault(): Prisma.Decimal { return this._vault; }
 
+  // Business Logic
+
   /**
    * 총 사용 가능 잔액 (Cash + Bonus + Reward)
-   * Lock과 Vault는 즉시 사용 불가능하므로 제외 (정책에 따라 변경 가능)
    */
   get totalAvailableBalance(): Prisma.Decimal {
     return this._cash.add(this._bonus).add(this._reward);
-  }
-
-  /**
-   * 전체 자산 총액 (모든 밸런스 합계)
-   */
-  get totalAsset(): Prisma.Decimal {
-    return this._cash.add(this._bonus).add(this._reward).add(this._lock).add(this._vault);
-  }
-
-  // Business Logic
-
-  hasSufficientBalance(amount: Prisma.Decimal): boolean {
-    return this.totalAvailableBalance.gte(amount);
   }
 
   hasSufficientCash(amount: Prisma.Decimal): boolean {
@@ -124,54 +98,79 @@ export class UserWallet {
 
   // Modifiers
 
-  addCash(amount: Prisma.Decimal): void {
-    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount/Add must be positive');
+  increaseCash(amount: Prisma.Decimal): void {
+    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount to increase must be positive');
     this._cash = this._cash.add(amount);
   }
 
-  subtractCash(amount: Prisma.Decimal): void {
-    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount/Subtract must be positive');
+  decreaseCash(amount: Prisma.Decimal): void {
+    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount to decrease must be positive');
     if (!this.hasSufficientCash(amount)) {
       throw new InsufficientBalanceException(this._cash.toString(), amount.toString());
     }
     this._cash = this._cash.sub(amount);
   }
 
-  addBonus(amount: Prisma.Decimal): void {
-    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount/Add must be positive');
+  increaseBonus(amount: Prisma.Decimal): void {
+    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount to increase must be positive');
     this._bonus = this._bonus.add(amount);
   }
 
-  subtractBonus(amount: Prisma.Decimal): void {
-    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount/Subtract must be positive');
+  decreaseBonus(amount: Prisma.Decimal): void {
+    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount to decrease must be positive');
     if (this._bonus.lt(amount)) {
       throw new InsufficientBalanceException(this._bonus.toString(), amount.toString());
     }
     this._bonus = this._bonus.sub(amount);
   }
 
-  // Reward, Lock, Vault 관련 메서드도 필요에 따라 추가
-  addReward(amount: Prisma.Decimal): void {
-    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount/Add must be positive');
+  increaseReward(amount: Prisma.Decimal): void {
+    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount to increase must be positive');
     this._reward = this._reward.add(amount);
   }
 
-  subtractReward(amount: Prisma.Decimal): void {
-    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount/Subtract must be positive');
-    if (this._reward.lt(amount)) throw new InsufficientBalanceException(this._reward.toString(), amount.toString());
+  decreaseReward(amount: Prisma.Decimal): void {
+    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount to decrease must be positive');
+    if (this._reward.lt(amount)) {
+      throw new InsufficientBalanceException(this._reward.toString(), amount.toString());
+    }
     this._reward = this._reward.sub(amount);
   }
 
-  // Vault 입출금 로직 등은 별도 메서드로 구현 가능
+  increaseLock(amount: Prisma.Decimal): void {
+    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount to increase must be positive');
+    this._lock = this._lock.add(amount);
+  }
+
+  decreaseLock(amount: Prisma.Decimal): void {
+    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount to decrease must be positive');
+    if (this._lock.lt(amount)) {
+      throw new InsufficientBalanceException(this._lock.toString(), amount.toString());
+    }
+    this._lock = this._lock.sub(amount);
+  }
+
+  increaseVault(amount: Prisma.Decimal): void {
+    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount to increase must be positive');
+    this._vault = this._vault.add(amount);
+  }
+
+  decreaseVault(amount: Prisma.Decimal): void {
+    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount to decrease must be positive');
+    if (this._vault.lt(amount)) {
+      throw new InsufficientBalanceException(this._vault.toString(), amount.toString());
+    }
+    this._vault = this._vault.sub(amount);
+  }
+
   depositToVault(amount: Prisma.Decimal): void {
-    this.subtractCash(amount); // Cash에서 차감하여
-    this._vault = this._vault.add(amount); // Vault로 이동
+    this.decreaseCash(amount);
+    this.increaseVault(amount);
   }
 
   withdrawFromVault(amount: Prisma.Decimal): void {
-    if (this._vault.lt(amount)) throw new InsufficientBalanceException(this._vault.toString(), amount.toString());
-    this._vault = this._vault.sub(amount); // Vault에서 차감하여
-    this.addCash(amount); // Cash로 이동
+    this.decreaseVault(amount);
+    this.increaseCash(amount);
   }
 }
 

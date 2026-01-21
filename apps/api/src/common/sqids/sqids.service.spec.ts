@@ -117,7 +117,7 @@ describe('SqidsService', () => {
 
         it('should correctly decode each prefix-encoded sqid', () => {
             const id = 99999n;
-            const prefixes = [SqidsPrefix.USER, SqidsPrefix.FILE, SqidsPrefix.DEPOSIT, SqidsPrefix.TRANSACTION];
+            const prefixes = [SqidsPrefix.USER, SqidsPrefix.FILE, SqidsPrefix.DEPOSIT, SqidsPrefix.WALLET_TRANSACTION];
 
             for (const prefix of prefixes) {
                 const encoded = service.encode(id, prefix);

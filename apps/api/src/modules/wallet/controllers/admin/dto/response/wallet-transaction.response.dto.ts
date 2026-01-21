@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ExchangeCurrencyCode, TransactionStatus, TransactionType, AdjustmentReasonCode } from '@prisma/client';
+import { ExchangeCurrencyCode, WalletTransactionType, AdjustmentReasonCode } from '@prisma/client';
 import { Prisma } from '@prisma/client';
 
 export class WalletBalanceDetailResponseDto {
@@ -54,11 +54,11 @@ export class WalletTransactionResponseDto {
     @ApiProperty({ description: '사용자 ID' })
     userId: string;
 
-    @ApiProperty({ description: '트랜잭션 타입', enum: TransactionType })
-    type: TransactionType;
+    @ApiProperty({ description: '트랜잭션 타입', enum: WalletTransactionType })
+    type: WalletTransactionType;
 
-    @ApiProperty({ description: '상태', enum: TransactionStatus })
-    status: TransactionStatus;
+    @ApiProperty({ description: '상태' })
+    status: string;
 
     @ApiProperty({ description: '통화', enum: ExchangeCurrencyCode })
     currency: ExchangeCurrencyCode;

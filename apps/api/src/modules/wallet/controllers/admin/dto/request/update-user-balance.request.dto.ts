@@ -7,9 +7,9 @@ import {
   IsIn,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { ExchangeCurrencyCode, AdjustmentReasonCode } from '@prisma/client';
+import { ExchangeCurrencyCode, AdjustmentReasonCode, WalletBalanceType } from '@prisma/client';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
-import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
+import { UpdateOperation } from 'src/modules/wallet/domain/wallet.constant';
 
 export class UpdateUserBalanceRequestDto {
   @ApiProperty({
@@ -24,15 +24,15 @@ export class UpdateUserBalanceRequestDto {
   currency: ExchangeCurrencyCode;
 
   @ApiProperty({
-    description: '잔액 타입 (main: 메인 잔액, bonus: 보너스 잔액, total: 총 잔액)',
-    enum: BalanceType,
-    example: BalanceType.MAIN,
+    description: '잔액 타입 (CASH: 메인 잔액, BONUS: 보너스 잔액, REWARD: 리워드, LOCK: 잠금, VAULT: 금고)',
+    enum: WalletBalanceType,
+    example: WalletBalanceType.CASH,
   })
-  @IsEnum(BalanceType, {
-    message: 'Invalid balance type. Must be one of: main, bonus, total.',
+  @IsEnum(WalletBalanceType, {
+    message: 'Invalid balance type.',
   })
   @IsNotEmpty()
-  balanceType: BalanceType;
+  balanceType: WalletBalanceType;
 
   @ApiProperty({
     description: '업데이트 연산 (add: 증가, subtract: 감소)',

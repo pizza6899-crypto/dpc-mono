@@ -19,7 +19,7 @@ export class WalletQueryService {
     async getWallet(
         userId: bigint,
         currency: ExchangeCurrencyCode,
-        autoCreate: boolean = false,
+        autoCreate: boolean = true,
     ): Promise<UserWallet | null> {
         let wallet = await this.repository.findByUserIdAndCurrency(userId, currency);
 
@@ -28,7 +28,7 @@ export class WalletQueryService {
                 userId,
                 currency,
             });
-            wallet = await this.repository.upsert(newWallet);
+            wallet = await this.repository.create(newWallet);
         }
 
         return wallet;
@@ -40,7 +40,7 @@ export class WalletQueryService {
      */
     async getWallets(
         userId: bigint,
-        autoCreate: boolean = false,
+        autoCreate: boolean = true,
     ): Promise<UserWallet[]> {
         const existingWallets = await this.repository.findByUserId(userId);
 
@@ -65,7 +65,7 @@ export class WalletQueryService {
                         userId,
                         currency: c,
                     });
-                    return this.repository.upsert(newWallet);
+                    return this.repository.create(newWallet);
                 }),
             );
 

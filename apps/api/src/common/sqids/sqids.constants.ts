@@ -28,7 +28,7 @@ export const SqidsPrefix = {
     USER: 'u',
     DEPOSIT: 'd',
     WITHDRAWAL: 'w',
-    TRANSACTION: 'tx',
+    WALLET_TRANSACTION: 'wtx',
     AFFILIATE_CODE: 'ac',
     USER_TIER: 'ut',
     TIER: 't',

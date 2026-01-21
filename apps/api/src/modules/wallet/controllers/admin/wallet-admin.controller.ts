@@ -16,22 +16,18 @@ import {
   ApiPaginatedResponse,
 } from 'src/common/http/decorators/api-response.decorator';
 import { Admin } from 'src/common/auth/decorators/roles.decorator';
-import { GetUserBalanceAdminService } from '../../application/get-user-balance-admin.service';
-import { UpdateUserBalanceAdminService } from '../../application/update-user-balance-admin.service';
+import { UserBalanceService } from '../../application/user-balance.service';
+import { WalletQueryService } from '../../application/wallet-query.service';
 import { AdminUserBalanceResponseDto } from './dto/response/admin-user-balance.response.dto';
 import { UpdateUserBalanceResponseDto } from './dto/response/update-user-balance.response.dto';
 import { GetUserBalanceQueryDto } from './dto/request/get-user-balance-query.dto';
 import { UpdateUserBalanceRequestDto } from './dto/request/update-user-balance.request.dto';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
-import { Prisma } from '@prisma/client';
-import { GetWalletTransactionHistoryAdminService } from '../../application/get-wallet-transaction-history-admin.service';
-import {
-  WalletTransactionResponseDto,
-} from './dto/response/wallet-transaction.response.dto';
-import { GetWalletTransactionHistoryQueryDto } from './dto/request/get-wallet-transaction-history-query.dto';
-import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import { User } from 'src/modules/user/domain';
+import { Prisma, WalletTransactionType, WalletBalanceType } from '@prisma/client';
+import { GetWalletTransactionHistoryService } from '../../application/get-wallet-transaction-history.service';
+import { UserWallet } from '../../domain';
+import { UpdateOperation } from '../../domain/wallet.constant';
 
 @Controller('admin/wallet')
 @ApiTags('Admin Wallet')
@@ -39,9 +35,9 @@ import { User } from 'src/modules/user/domain';
 @ApiStandardErrors()
 export class WalletAdminController {
   constructor(
-    private readonly getUserBalanceAdminService: GetUserBalanceAdminService,
-    private readonly updateUserBalanceAdminService: UpdateUserBalanceAdminService,
-    private readonly getWalletTransactionHistoryAdminService: GetWalletTransactionHistoryAdminService,
+    private readonly userBalanceService: UserBalanceService,
+    private readonly walletQueryService: WalletQueryService,
+    private readonly getWalletTransactionHistoryService: GetWalletTransactionHistoryService,
   ) { }
 
   /**
@@ -75,18 +71,19 @@ export class WalletAdminController {
     @Param('userId') userId: string,
     @Query() query: GetUserBalanceQueryDto,
   ): Promise<AdminUserBalanceResponseDto> {
-    const result = await this.getUserBalanceAdminService.execute({
-      userId: BigInt(userId),
-      currency: query.currency,
-    });
+    const uid = BigInt(userId);
+    let wallets: UserWallet[] = [];
 
-    const walletArray = Array.isArray(result.wallet)
-      ? result.wallet
-      : [result.wallet];
+    if (query.currency) {
+      const wallet = await this.walletQueryService.getWallet(uid, query.currency);
+      if (wallet) wallets.push(wallet);
+    } else {
+      wallets = await this.walletQueryService.getWallets(uid);
+    }
 
     return {
       userId,
-      wallets: walletArray.map((wallet) => ({
+      wallets: wallets.map((wallet) => ({
         currency: wallet.currency,
         mainBalance: wallet.cash.toString(),
         bonusBalance: wallet.bonus.toString(),
@@ -131,28 +128,46 @@ export class WalletAdminController {
     @Body() updateDto: UpdateUserBalanceRequestDto,
     @CurrentUser() admin: User,
   ): Promise<UpdateUserBalanceResponseDto> {
-    const result = await this.updateUserBalanceAdminService.execute({
+    const amount = new Prisma.Decimal(updateDto.amount);
+
+    const wallet = await this.userBalanceService.updateBalance({
       userId: BigInt(userId),
       currency: updateDto.currency,
       balanceType: updateDto.balanceType,
       operation: updateDto.operation,
-      amount: new Prisma.Decimal(updateDto.amount),
+      transactionType: WalletTransactionType.ADMIN_ADJUST, // Enum Import needed
+      amount: amount,
+    }, {
       adminUserId: admin.id!,
       reasonCode: updateDto.reasonCode,
       internalNote: updateDto.internalNote,
     });
 
+    // Calculate changes for response
+    let cashChange = new Prisma.Decimal(0);
+    let bonusChange = new Prisma.Decimal(0);
+    let beforeCash = wallet.cash;
+    let beforeBonus = wallet.bonus;
+
+    if (updateDto.balanceType === WalletBalanceType.CASH) {
+      cashChange = updateDto.operation === UpdateOperation.ADD ? amount : amount.neg();
+      beforeCash = wallet.cash.sub(cashChange);
+    } else if (updateDto.balanceType === WalletBalanceType.BONUS) {
+      bonusChange = updateDto.operation === UpdateOperation.ADD ? amount : amount.neg();
+      beforeBonus = wallet.bonus.sub(bonusChange);
+    }
+
     return {
       userId,
-      currency: result.wallet.currency,
-      beforeMainBalance: result.beforeCash.toString(),
-      afterMainBalance: result.afterCash.toString(),
-      beforeBonusBalance: result.beforeBonus.toString(),
-      afterBonusBalance: result.afterBonus.toString(),
-      mainBalanceChange: result.cashChange.toString(),
-      bonusBalanceChange: result.bonusChange.toString(),
-      totalBalance: result.wallet.totalAvailableBalance.toString(),
-      updatedAt: result.wallet.updatedAt,
+      currency: wallet.currency,
+      beforeMainBalance: beforeCash.toString(),
+      afterMainBalance: wallet.cash.toString(),
+      beforeBonusBalance: beforeBonus.toString(),
+      afterBonusBalance: wallet.bonus.toString(),
+      mainBalanceChange: cashChange.toString(),
+      bonusBalanceChange: bonusChange.toString(),
+      totalBalance: wallet.totalAvailableBalance.toString(),
+      updatedAt: wallet.updatedAt,
     };
   }
   @Get('users/:userId/transactions')
@@ -186,7 +201,7 @@ export class WalletAdminController {
     const page = query.page ?? 1;
     const limit = query.limit ?? 20;
 
-    const { items, total } = await this.getWalletTransactionHistoryAdminService.execute({
+    const { items, total } = await this.getWalletTransactionHistoryService.execute({
       userId: BigInt(userId),
       currency: query.currency,
       type: query.type,
@@ -197,40 +212,38 @@ export class WalletAdminController {
     });
 
     return {
-      data: items.map((tx) => ({
-        id: tx.id?.toString() || '',
-        userId: tx.userId.toString(),
-        type: tx.type,
-        status: tx.status,
-        currency: tx.currency,
-        amount: tx.amount.toString(),
-        beforeAmount: tx.beforeAmount.toString(),
-        afterAmount: tx.afterAmount.toString(),
-        balanceDetail: {
-          mainBalanceChange: tx.balanceDetail.mainBalanceChange.toString(),
-          mainBeforeAmount: tx.balanceDetail.mainBeforeAmount.toString(),
-          mainAfterAmount: tx.balanceDetail.mainAfterAmount.toString(),
-          bonusBalanceChange: tx.balanceDetail.bonusBalanceChange.toString(),
-          bonusBeforeAmount: tx.balanceDetail.bonusBeforeAmount.toString(),
-          bonusAfterAmount: tx.balanceDetail.bonusAfterAmount.toString(),
-        },
-        adminDetail: tx.adminDetail
-          ? {
-            adminUserId: tx.adminDetail.adminUserId.toString(),
-            reasonCode: tx.adminDetail.reasonCode,
-            internalNote: tx.adminDetail.internalNote,
-          }
-          : undefined,
-        systemDetail: tx.systemDetail
-          ? {
-            serviceName: tx.systemDetail.serviceName,
-            triggerId: tx.systemDetail.triggerId,
-            actionName: tx.systemDetail.actionName,
-            metadata: tx.systemDetail.metadata,
-          }
-          : undefined,
-        createdAt: tx.createdAt,
-      })),
+      data: items.map((tx) => {
+        const afterAmount = tx.balanceAfter;
+        // tx.amount has a sign? Usually it does if from DB.
+        // Entity create logic might store signed amount.
+        // Let's assume tx.amount is signed.
+        const beforeAmount = afterAmount.sub(tx.amount);
+
+        const isCash = tx.balanceType === WalletBalanceType.CASH;
+        const isBonus = tx.balanceType === WalletBalanceType.BONUS;
+
+        return {
+          id: tx.id?.toString() || '',
+          userId: tx.userId.toString(),
+          type: tx.type,
+          status: 'SUCCESS', // New schema doesn't have status, assuming SUCCESS
+          currency: tx.currency,
+          amount: tx.amount.toString(),
+          beforeAmount: beforeAmount.toString(),
+          afterAmount: afterAmount.toString(),
+          balanceDetail: {
+            mainBalanceChange: isCash ? tx.amount.toString() : '0',
+            mainBeforeAmount: isCash ? beforeAmount.toString() : '0', // Approximation
+            mainAfterAmount: isCash ? afterAmount.toString() : '0', // Approximation
+            bonusBalanceChange: isBonus ? tx.amount.toString() : '0',
+            bonusBeforeAmount: isBonus ? beforeAmount.toString() : '0',
+            bonusAfterAmount: isBonus ? afterAmount.toString() : '0',
+          },
+          adminDetail: undefined, // Structure changed
+          systemDetail: undefined, // Structure changed
+          createdAt: tx.createdAt,
+        };
+      }),
       total,
       page,
       limit,

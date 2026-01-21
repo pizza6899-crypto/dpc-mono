@@ -1,0 +1,65 @@
+model UserWallet {
+    userId    BigInt               @map("user_id")
+    currency  ExchangeCurrencyCode
+    cash      Decimal              @default(0) @db.Decimal(32, 18)
+    bonus     Decimal              @default(0) @db.Decimal(32, 18)
+    reward    Decimal              @default(0) @db.Decimal(32, 18)
+    lock      Decimal              @default(0) @db.Decimal(32, 18)
+    vault     Decimal              @default(0) @db.Decimal(32, 18)
+    updatedAt DateTime             @updatedAt @map("updated_at")
+    user      User                 @relation(fields: [userId], references: [id])
+
+    transactions WalletTransaction[]
+
+    @@id([userId, currency])
+    @@index([userId])
+    @@index([currency])
+    @@map("user_wallets")
+}
+
+model WalletTransaction {
+    id        BigInt   @default(autoincrement())
+    createdAt DateTime @default(now()) @map("created_at")
+
+    type        WalletTransactionType // 거래 성격
+    balanceType WalletBalanceType // 어떤 잔액 타입이 변했는지 기록
+
+    amount       Decimal @db.Decimal(32, 18) // 실제 변동액 (+/- 로직)
+    balanceAfter Decimal @map("balance_after") @db.Decimal(32, 18) // 변동 후 최종 잔액 스냅샷
+
+    referenceId String? @map("reference_id") // type이 BET이면 GameLog ID, DEPOSIT이면 DepositRequest ID 등을 저장
+    remark      String? // 사유 기록용
+
+    // 보안필드
+    ipAddress   String? @map("ip_address") @db.Inet
+    countryCode String? @map("country_code") @db.Char(2)
+
+    userId   BigInt               @map("user_id")
+    currency ExchangeCurrencyCode @map("currency") // 지갑과 연결되는 외래키이자 트랜잭션의 통화 정보
+
+    userWallet UserWallet @relation(fields: [userId, currency], references: [userId, currency])
+
+    @@id([createdAt, id])
+    @@index([userId, currency, createdAt(desc)])
+    @@index([type, referenceId])
+    @@map("wallet_transactions")
+}
+
+enum WalletBalanceType {
+    CASH
+    BONUS
+    REWARD
+    LOCK
+    VAULT
+}
+
+enum WalletTransactionType {
+    DEPOSIT // 입금 승인에 의한 잔액 추가
+    WITHDRAW // 출금 승인에 의한 잔액 차감
+    BET // 베팅 (지출)
+    WIN // 승리 (수입)
+    REFUND // 베팅 취소/반환
+    BONUS_IN // 이벤트성 보너스 지급
+    BONUS_OUT // 보너스 회수/만료
+    ADJUSTMENT // 관리자 수동 보정
+}
