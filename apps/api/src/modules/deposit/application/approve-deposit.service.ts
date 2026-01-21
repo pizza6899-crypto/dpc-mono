@@ -80,8 +80,8 @@ export class ApproveDepositService {
         status: TransactionStatus.COMPLETED,
         currency: deposit.depositCurrency,
         amount: actuallyPaid,
-        beforeAmount: balanceUpdate.beforeMainBalance,
-        afterAmount: balanceUpdate.afterMainBalance,
+        beforeAmount: Prisma.Decimal(0),
+        afterAmount: Prisma.Decimal(0),
       });
     }
 

@@ -15,8 +15,7 @@ import {
   ApiStandardErrors,
   ApiPaginatedResponse,
 } from 'src/common/http/decorators/api-response.decorator';
-import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
-import { UserRoleType } from '@prisma/client';
+import { Admin } from 'src/common/auth/decorators/roles.decorator';
 import { GetUserBalanceAdminService } from '../../application/get-user-balance-admin.service';
 import { UpdateUserBalanceAdminService } from '../../application/update-user-balance-admin.service';
 import { AdminUserBalanceResponseDto } from './dto/response/admin-user-balance.response.dto';
@@ -36,7 +35,7 @@ import { User } from 'src/modules/user/domain';
 
 @Controller('admin/wallet')
 @ApiTags('Admin Wallet')
-@RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
+@Admin()
 @ApiStandardErrors()
 export class WalletAdminController {
   constructor(
@@ -89,9 +88,9 @@ export class WalletAdminController {
       userId,
       wallets: walletArray.map((wallet) => ({
         currency: wallet.currency,
-        mainBalance: wallet.mainBalance.toString(),
-        bonusBalance: wallet.bonusBalance.toString(),
-        totalBalance: wallet.totalBalance.toString(),
+        mainBalance: wallet.cash.toString(),
+        bonusBalance: wallet.bonus.toString(),
+        totalBalance: wallet.totalAvailableBalance.toString(),
         updatedAt: wallet.updatedAt,
       })),
     };
@@ -146,13 +145,13 @@ export class WalletAdminController {
     return {
       userId,
       currency: result.wallet.currency,
-      beforeMainBalance: result.beforeMainBalance.toString(),
-      afterMainBalance: result.afterMainBalance.toString(),
-      beforeBonusBalance: result.beforeBonusBalance.toString(),
-      afterBonusBalance: result.afterBonusBalance.toString(),
-      mainBalanceChange: result.mainBalanceChange.toString(),
-      bonusBalanceChange: result.bonusBalanceChange.toString(),
-      totalBalance: result.wallet.totalBalance.toString(),
+      beforeMainBalance: result.beforeCash.toString(),
+      afterMainBalance: result.afterCash.toString(),
+      beforeBonusBalance: result.beforeBonus.toString(),
+      afterBonusBalance: result.afterBonus.toString(),
+      mainBalanceChange: result.cashChange.toString(),
+      bonusBalanceChange: result.bonusChange.toString(),
+      totalBalance: result.wallet.totalAvailableBalance.toString(),
       updatedAt: result.wallet.updatedAt,
     };
   }

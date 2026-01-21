@@ -72,10 +72,15 @@ model User {
 }
 
 model UserWallet {
-  userId               BigInt                @map("user_id")
-  currency             ExchangeCurrencyCode
-  mainBalance          Decimal               @default(0) @map("main_balance") @db.Decimal(32, 18)
-  bonusBalance         Decimal               @default(0) @map("bonus_balance") @db.Decimal(32, 18)
+  userId   BigInt               @map("user_id")
+  currency ExchangeCurrencyCode
+
+  cash   Decimal @default(0) @db.Decimal(32, 18)
+  bonus  Decimal @default(0) @db.Decimal(32, 18)
+  reward Decimal @default(0) @db.Decimal(32, 18)
+  lock   Decimal @default(0) @db.Decimal(32, 18)
+  vault  Decimal @default(0) @db.Decimal(32, 18)
+
   updatedAt            DateTime              @updatedAt @map("updated_at")
   user                 User                  @relation(fields: [userId], references: [id])
   wageringRequirements WageringRequirement[]

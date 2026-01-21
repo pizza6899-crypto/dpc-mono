@@ -91,8 +91,8 @@ export class RequestCryptoWithdrawalService {
         const wallet = await this.walletQueryService.getWallet(userId, currency, false);
         if (wallet) {
             this.policy.validateBalance(requestedAmount, {
-                mainBalance: wallet.mainBalance,
-                bonusBalance: wallet.bonusBalance,
+                mainBalance: wallet.cash,
+                bonusBalance: wallet.bonus,
             });
         }
 

@@ -92,13 +92,19 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
       create: {
         userId: data.userId,
         currency: data.currency,
-        mainBalance: data.mainBalance,
-        bonusBalance: data.bonusBalance,
+        cash: data.cash,
+        bonus: data.bonus,
+        reward: data.reward,
+        lock: data.lock,
+        vault: data.vault,
         updatedAt: data.updatedAt,
       },
       update: {
-        mainBalance: data.mainBalance,
-        bonusBalance: data.bonusBalance,
+        cash: data.cash,
+        bonus: data.bonus,
+        reward: data.reward,
+        lock: data.lock,
+        vault: data.vault,
         updatedAt: data.updatedAt,
       },
     });

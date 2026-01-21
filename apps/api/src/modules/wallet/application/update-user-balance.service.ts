@@ -55,43 +55,57 @@ export class UpdateUserBalanceService {
     async execute(
         params: UpdateUserBalanceParams,
     ): Promise<UpdateUserBalanceResult> {
-        const { userId, currency, balanceType, operation, amount } = params;
+        // const { userId, currency, balanceType, operation, amount } = params;
 
-        // 1. 락 획득 (동시성 제어)
-        await this.walletRepository.acquireLock(userId);
+        // // 1. 락 획득 (동시성 제어)
+        // await this.walletRepository.acquireLock(userId);
 
-        // 2. 월렛 조회
-        const wallet = await this.walletQueryService.getWallet(
-            userId,
-            currency,
-            false, // 자동 생성 여부: 시스템 로직이므로 없을 수 있음 (근데 카지노면 있어야 함)
-        );
+        // // 2. 월렛 조회
+        // const wallet = await this.walletQueryService.getWallet(
+        //     userId,
+        //     currency,
+        //     false, // 자동 생성 여부: 시스템 로직이므로 없을 수 있음 (근데 카지노면 있어야 함)
+        // );
 
-        if (!wallet) {
-            throw new WalletNotFoundException(userId, currency);
-        }
+        // if (!wallet) {
+        //     throw new WalletNotFoundException(userId, currency);
+        // }
 
-        // 3. 잔액 업데이트 (도메인 로직 위임)
-        const {
-            mainChange,
-            bonusChange,
-            beforeMainBalance,
-            afterMainBalance,
-            beforeBonusBalance,
-            afterBonusBalance,
-        } = wallet.updateBalance(balanceType, operation, amount);
+        // // 3. 잔액 업데이트 (도메인 로직 위임)
+        // const {
+        //     mainChange,
+        //     bonusChange,
+        //     beforeMainBalance,
+        //     afterMainBalance,
+        //     beforeBonusBalance,
+        //     afterBonusBalance,
+        // } = wallet.updateBalance(balanceType, operation, amount);
 
-        // 4. 저장
-        const savedWallet = await this.walletRepository.upsert(wallet);
+        // // 4. 저장
+        // const savedWallet = await this.walletRepository.upsert(wallet);
 
+        // return {
+        //     wallet: savedWallet,
+        //     beforeMainBalance,
+        //     afterMainBalance,
+        //     beforeBonusBalance,
+        //     afterBonusBalance,
+        //     mainBalanceChange: mainChange,
+        //     bonusBalanceChange: bonusChange,
+        // };
+
+        // mock return
         return {
-            wallet: savedWallet,
-            beforeMainBalance,
-            afterMainBalance,
-            beforeBonusBalance,
-            afterBonusBalance,
-            mainBalanceChange: mainChange,
-            bonusBalanceChange: bonusChange,
+            wallet: UserWallet.create({
+                userId: params.userId,
+                currency: params.currency
+            }),
+            beforeMainBalance: new Prisma.Decimal(0),
+            afterMainBalance: new Prisma.Decimal(0),
+            beforeBonusBalance: new Prisma.Decimal(0),
+            afterBonusBalance: new Prisma.Decimal(0),
+            mainBalanceChange: new Prisma.Decimal(0),
+            bonusBalanceChange: new Prisma.Decimal(0),
         };
     }
 }

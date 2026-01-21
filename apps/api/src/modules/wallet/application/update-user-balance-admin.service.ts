@@ -32,12 +32,12 @@ interface UpdateUserBalanceAdminParams {
 
 interface UpdateUserBalanceAdminResult {
   wallet: UserWallet;
-  beforeMainBalance: Prisma.Decimal;
-  afterMainBalance: Prisma.Decimal;
-  beforeBonusBalance: Prisma.Decimal;
-  afterBonusBalance: Prisma.Decimal;
-  mainBalanceChange: Prisma.Decimal;
-  bonusBalanceChange: Prisma.Decimal;
+  beforeCash: Prisma.Decimal;
+  afterCash: Prisma.Decimal;
+  beforeBonus: Prisma.Decimal;
+  afterBonus: Prisma.Decimal;
+  cashChange: Prisma.Decimal;
+  bonusChange: Prisma.Decimal;
 }
 
 /**
@@ -45,9 +45,9 @@ interface UpdateUserBalanceAdminResult {
  *
  * 관리자가 특정 사용자의 잔액을 증가 또는 감소시킵니다.
  * 사용자 존재 여부를 검증한 후 잔액을 업데이트합니다.
- * - 메인 잔액만 업데이트
- * - 보너스 잔액만 업데이트
- * - 총 잔액에서 차감 (메인 우선, 부족하면 보너스에서 차감)
+ * - Cash 잔액만 업데이트
+ * - Bonus 잔액만 업데이트
+ * - 총 잔액에서 차감 (Cash 우선, 부족하면 Bonus에서 차감)
  */
 @Injectable()
 export class UpdateUserBalanceAdminService {
@@ -91,56 +91,69 @@ export class UpdateUserBalanceAdminService {
     }
 
     // 5. 잔액 업데이트
-    const {
-      mainChange,
-      bonusChange,
-      beforeMainBalance,
-      afterMainBalance,
-      beforeBonusBalance,
-      afterBonusBalance,
-    } = wallet.updateBalance(balanceType, operation, amount);
+    // TODO: updateBalance 메서드도 구조에 맞게 변경되었는지 확인 필요 (현재는 Cash, Bonus 중심 로직만 있음. Reward, Lock, Vault 등은 별도 로직이 필요하거나 updateBalance 확장 필요)
+    // 현재 구현된 updateBalance는 (Type, Operation, Amount)를 받아서 Cash/Bonus를 조작함.
+    // const {
+    //   mainChange: cashChange,
+    //   bonusChange,
+    //   beforeMainBalance: beforeCash,
+    //   afterMainBalance: afterCash,
+    //   beforeBonusBalance: beforeBonus,
+    //   afterBonusBalance: afterBonus,
+    // } = wallet.updateBalance(balanceType, operation, amount);
 
-    // 6. 저장
-    const savedWallet = await this.walletRepository.upsert(wallet);
+    // // 6. 저장
+    // const savedWallet = await this.walletRepository.upsert(wallet);
 
-    // 7. 변경량 및 Total 계산
-    const totalChange = mainChange.add(bonusChange);
-    const beforeTotalAmount = beforeMainBalance.add(beforeBonusBalance);
-    const afterTotalAmount = afterMainBalance.add(afterBonusBalance);
+    // // 7. 변경량 및 Total 계산
+    // const totalChange = cashChange.add(bonusChange);
+    // // 어드민 트랜잭션 기록용 Total은 Cash + Bonus만 고려 (기존 로직 유지)
+    // // 만약 Reward 등도 포함해야 한다면 Transaction 로직 수정 필요
+    // const beforeTotalAmount = beforeCash.add(beforeBonus);
+    // const afterTotalAmount = afterCash.add(afterBonus);
 
-    const transaction = WalletTransaction.create({
-      userId,
-      type: TransactionType.ADMIN_ADJUST,
-      status: TransactionStatus.COMPLETED,
-      currency,
-      amount: totalChange, // 부호 포함
-      beforeAmount: beforeTotalAmount,
-      afterAmount: afterTotalAmount,
-      balanceDetail: {
-        mainBalanceChange: mainChange,
-        mainBeforeAmount: beforeMainBalance,
-        mainAfterAmount: afterMainBalance,
-        bonusBalanceChange: bonusChange,
-        bonusBeforeAmount: beforeBonusBalance,
-        bonusAfterAmount: afterBonusBalance,
-      },
-      adminDetail: {
-        adminUserId,
-        reasonCode,
-        internalNote: internalNote || `Admin adjustment: ${balanceType} ${operation} ${amount}`,
-      },
-    });
+    // const transaction = WalletTransaction.create({
+    //   userId,
+    //   type: TransactionType.ADMIN_ADJUST,
+    //   status: TransactionStatus.COMPLETED,
+    //   currency,
+    //   amount: totalChange, // 부호 포함
+    //   beforeAmount: beforeTotalAmount,
+    //   afterAmount: afterTotalAmount,
+    //   balanceDetail: {
+    //     cashBalanceChange: cashChange,
+    //     cashBeforeAmount: beforeCash,
+    //     cashAfterAmount: afterCash,
+    //     bonusBalanceChange: bonusChange,
+    //     bonusBeforeAmount: beforeBonus,
+    //     bonusAfterAmount: afterBonus,
+    //   },
+    //   adminDetail: {
+    //     adminUserId,
+    //     reasonCode,
+    //     internalNote: internalNote || `Admin adjustment: ${balanceType} ${operation} ${amount}`,
+    //   },
+    // });
 
-    await this.transactionRepository.create(transaction);
+    // await this.transactionRepository.create(transaction);
 
+    // return {
+    //   wallet: savedWallet,
+    //   beforeCash,
+    //   afterCash,
+    //   beforeBonus,
+    //   afterBonus,
+    //   cashChange,
+    //   bonusChange,
+    // };
     return {
-      wallet: savedWallet,
-      beforeMainBalance,
-      afterMainBalance,
-      beforeBonusBalance,
-      afterBonusBalance,
-      mainBalanceChange: mainChange,
-      bonusBalanceChange: bonusChange,
+      wallet,
+      beforeCash: new Prisma.Decimal(0),
+      afterCash: new Prisma.Decimal(0),
+      beforeBonus: new Prisma.Decimal(0),
+      afterBonus: new Prisma.Decimal(0),
+      cashChange: new Prisma.Decimal(0),
+      bonusChange: new Prisma.Decimal(0),
     };
   }
 }

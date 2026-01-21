@@ -67,7 +67,7 @@ export class WhitecliffGameService {
       }),
       this.tx.userWallet.findUnique({
         where: { userId_currency: { userId: authUser.id, currency: walletCurrency } },
-        select: { mainBalance: true, bonusBalance: true },
+        select: { cash: true, bonus: true },
       }),
       this.exchangeRateService.getRate({
         fromCurrency: walletCurrency,
@@ -79,7 +79,7 @@ export class WhitecliffGameService {
     if (!userBalance) throw new WalletNotFoundException(authUser.id, walletCurrency);
 
     const balance = exchangeRate
-      .mul(userBalance.mainBalance.add(userBalance.bonusBalance))
+      .mul(userBalance.cash.add(userBalance.bonus))
       .toDecimalPlaces(2)
       .toNumber();
 

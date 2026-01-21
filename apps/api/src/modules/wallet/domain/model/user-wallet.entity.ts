@@ -5,336 +5,173 @@ import {
   InvalidWalletBalanceException,
   InsufficientBalanceException,
 } from '../wallet.exception';
-import { BalanceType, UpdateOperation } from '../wallet.types';
 
 /**
  * UserWallet 도메인 엔티티
  *
- * 사용자 잔액(UserBalance)을 표현하는 도메인 엔티티입니다.
- * 사용자가 본인의 잔액을 조회하고 관리할 수 있는 기능을 제공합니다.
+ * 사용자 지갑(UserWallet)을 표현하는 도메인 엔티티입니다.
+ * Cash, Bonus, Reward, Lock, Vault 등 다양한 자산 유형을 관리합니다.
  */
 export class UserWallet {
   private constructor(
     public readonly userId: bigint,
     public readonly currency: ExchangeCurrencyCode,
-    private _mainBalance: Prisma.Decimal,
-    private _bonusBalance: Prisma.Decimal,
+    private _cash: Prisma.Decimal,
+    private _bonus: Prisma.Decimal,
+    private _reward: Prisma.Decimal,
+    private _lock: Prisma.Decimal,
+    private _vault: Prisma.Decimal,
     public readonly updatedAt: Date,
   ) {
-    // 비즈니스 규칙: 잔액은 음수가 될 수 없음
-    if (this._mainBalance.lt(0)) {
-      throw new InvalidWalletBalanceException(
-        `Main balance cannot be negative: ${this._mainBalance}`,
-      );
-    }
-    if (this._bonusBalance.lt(0)) {
-      throw new InvalidWalletBalanceException(
-        `Bonus balance cannot be negative: ${this._bonusBalance}`,
-      );
-    }
+    this.validateBalances();
   }
 
-  /**
-   * 새로운 월렛 생성
-   * @param params - 월렛 생성 파라미터
-   * @returns 생성된 월렛 엔티티
-   * @description Application 레이어에서 Prisma.Decimal로 변환하여 전달해야 함
-   */
+  private validateBalances(): void {
+    if (this._cash.lt(0)) throw new InvalidWalletBalanceException(`Cash balance cannot be negative: ${this._cash}`);
+    if (this._bonus.lt(0)) throw new InvalidWalletBalanceException(`Bonus balance cannot be negative: ${this._bonus}`);
+    if (this._reward.lt(0)) throw new InvalidWalletBalanceException(`Reward balance cannot be negative: ${this._reward}`);
+    if (this._lock.lt(0)) throw new InvalidWalletBalanceException(`Lock balance cannot be negative: ${this._lock}`);
+    if (this._vault.lt(0)) throw new InvalidWalletBalanceException(`Vault balance cannot be negative: ${this._vault}`);
+  }
+
   static create(params: {
     userId: bigint;
     currency: ExchangeCurrencyCode;
-    mainBalance?: Prisma.Decimal; // 기본값: 0
-    bonusBalance?: Prisma.Decimal; // 기본값: 0
+    cash?: Prisma.Decimal;
+    bonus?: Prisma.Decimal;
+    reward?: Prisma.Decimal;
+    lock?: Prisma.Decimal;
+    vault?: Prisma.Decimal;
   }): UserWallet {
-    const mainBalance = params.mainBalance ?? new Prisma.Decimal(0);
-    const bonusBalance = params.bonusBalance ?? new Prisma.Decimal(0);
-
-    const now = new Date();
     return new UserWallet(
       params.userId,
       params.currency,
-      mainBalance,
-      bonusBalance,
-      now,
+      params.cash ?? new Prisma.Decimal(0),
+      params.bonus ?? new Prisma.Decimal(0),
+      params.reward ?? new Prisma.Decimal(0),
+      params.lock ?? new Prisma.Decimal(0),
+      params.vault ?? new Prisma.Decimal(0),
+      new Date(),
     );
   }
 
-  /**
-   * DB에서 조회한 데이터로부터 엔티티 생성
-   * Repository에서 Prisma를 통해 생성/조회된 데이터를 Domain Entity로 변환할 때 사용
-   */
   static fromPersistence(data: {
     userId: bigint;
     currency: ExchangeCurrencyCode;
-    mainBalance: Prisma.Decimal;
-    bonusBalance: Prisma.Decimal;
+    cash: Prisma.Decimal;
+    bonus: Prisma.Decimal;
+    reward: Prisma.Decimal;
+    lock: Prisma.Decimal;
+    vault: Prisma.Decimal;
     updatedAt: Date;
   }): UserWallet {
     return new UserWallet(
       data.userId,
       data.currency,
-      data.mainBalance,
-      data.bonusBalance,
+      data.cash,
+      data.bonus,
+      data.reward,
+      data.lock,
+      data.vault,
       data.updatedAt,
     );
   }
 
-  /**
-   * Domain 엔티티를 Persistence 레이어로 변환
-   */
-  toPersistence(): {
-    userId: bigint;
-    currency: ExchangeCurrencyCode;
-    mainBalance: Prisma.Decimal;
-    bonusBalance: Prisma.Decimal;
-    updatedAt: Date;
-  } {
+  toPersistence() {
     return {
       userId: this.userId,
       currency: this.currency,
-      mainBalance: this._mainBalance,
-      bonusBalance: this._bonusBalance,
+      cash: this._cash,
+      bonus: this._bonus,
+      reward: this._reward,
+      lock: this._lock,
+      vault: this._vault,
       updatedAt: this.updatedAt,
     };
   }
 
   // Getters
+  get cash(): Prisma.Decimal { return this._cash; }
+  get bonus(): Prisma.Decimal { return this._bonus; }
+  get reward(): Prisma.Decimal { return this._reward; }
+  get lock(): Prisma.Decimal { return this._lock; }
+  get vault(): Prisma.Decimal { return this._vault; }
 
   /**
-   * 메인 잔액 조회
+   * 총 사용 가능 잔액 (Cash + Bonus + Reward)
+   * Lock과 Vault는 즉시 사용 불가능하므로 제외 (정책에 따라 변경 가능)
    */
-  get mainBalance(): Prisma.Decimal {
-    return this._mainBalance;
+  get totalAvailableBalance(): Prisma.Decimal {
+    return this._cash.add(this._bonus).add(this._reward);
   }
 
   /**
-   * 보너스 잔액 조회
+   * 전체 자산 총액 (모든 밸런스 합계)
    */
-  get bonusBalance(): Prisma.Decimal {
-    return this._bonusBalance;
+  get totalAsset(): Prisma.Decimal {
+    return this._cash.add(this._bonus).add(this._reward).add(this._lock).add(this._vault);
   }
 
-  /**
-   * 총 잔액 조회 (메인 + 보너스)
-   */
-  get totalBalance(): Prisma.Decimal {
-    return this._mainBalance.add(this._bonusBalance);
+  // Business Logic
+
+  hasSufficientBalance(amount: Prisma.Decimal): boolean {
+    return this.totalAvailableBalance.gte(amount);
   }
 
-  // Business Logic Methods
-
-  /**
-   * 잔액이 충분한지 확인
-   * @param requiredAmount 필요한 금액
-   * @returns 잔액이 충분하면 true, 부족하면 false
-   */
-  hasSufficientBalance(requiredAmount: Prisma.Decimal): boolean {
-    return this.totalBalance.gte(requiredAmount);
+  hasSufficientCash(amount: Prisma.Decimal): boolean {
+    return this._cash.gte(amount);
   }
 
-  /**
-   * 메인 잔액이 충분한지 확인
-   * @param requiredAmount 필요한 금액
-   * @returns 메인 잔액이 충분하면 true, 부족하면 false
-   */
-  hasSufficientMainBalance(requiredAmount: Prisma.Decimal): boolean {
-    return this._mainBalance.gte(requiredAmount);
+  // Modifiers
+
+  addCash(amount: Prisma.Decimal): void {
+    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount/Add must be positive');
+    this._cash = this._cash.add(amount);
   }
 
-  /**
-   * 잔액이 있는지 확인 (0보다 큰지)
-   * @returns 잔액이 있으면 true, 없으면 false
-   */
-  hasBalance(): boolean {
-    return this.totalBalance.gt(0);
-  }
-
-  /**
-   * 메인 잔액만 있는지 확인 (보너스 잔액 없음)
-   * @returns 메인 잔액만 있으면 true
-   */
-  hasOnlyMainBalance(): boolean {
-    return this._mainBalance.gt(0) && this._bonusBalance.eq(0);
-  }
-
-  /**
-   * 보너스 잔액만 있는지 확인 (메인 잔액 없음)
-   * @returns 보너스 잔액만 있으면 true
-   */
-  hasOnlyBonusBalance(): boolean {
-    return this._mainBalance.eq(0) && this._bonusBalance.gt(0);
-  }
-
-  /**
-   * 잔액이 비어있는지 확인
-   * @returns 잔액이 없으면 true
-   */
-  isEmpty(): boolean {
-    return this.totalBalance.eq(0);
-  }
-
-  // Update Methods
-
-  /**
-   * 메인 잔액 증가
-   * @param amount 증가할 금액
-   * @throws {InvalidWalletBalanceException} 금액이 0 이하인 경우
-   */
-  addMainBalance(amount: Prisma.Decimal): void {
-    if (amount.isZero()) return;
-
-    if (amount.isNegative()) {
-      throw new InvalidWalletBalanceException(
-        'Amount to be added must be greater than 0.',
-      );
+  subtractCash(amount: Prisma.Decimal): void {
+    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount/Subtract must be positive');
+    if (!this.hasSufficientCash(amount)) {
+      throw new InsufficientBalanceException(this._cash.toString(), amount.toString());
     }
-    this._mainBalance = this._mainBalance.add(amount);
-    // updatedAt은 toPersistence에서 처리하므로 여기서는 업데이트하지 않음
+    this._cash = this._cash.sub(amount);
   }
 
-  /**
-   * 보너스 잔액 증가
-   * @param amount 증가할 금액
-   * @throws {InvalidWalletBalanceException} 금액이 0 이하인 경우
-   */
-  addBonusBalance(amount: Prisma.Decimal): void {
-    if (amount.isZero()) return;
-
-    if (amount.isNegative()) {
-      throw new InvalidWalletBalanceException(
-        'Amount to be added must be greater than 0.',
-      );
-    }
-    this._bonusBalance = this._bonusBalance.add(amount);
+  addBonus(amount: Prisma.Decimal): void {
+    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount/Add must be positive');
+    this._bonus = this._bonus.add(amount);
   }
 
-  /**
-   * 메인 잔액 감소
-   * @param amount 감소할 금액
-   * @throws {InsufficientBalanceException} 잔액이 부족한 경우
-   */
-  subtractMainBalance(amount: Prisma.Decimal): void {
-    if (amount.isZero()) return;
-
-    if (amount.isNegative()) {
-      throw new InvalidWalletBalanceException(
-        'Amount to be subtracted must be greater than 0.',
-      );
+  subtractBonus(amount: Prisma.Decimal): void {
+    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount/Subtract must be positive');
+    if (this._bonus.lt(amount)) {
+      throw new InsufficientBalanceException(this._bonus.toString(), amount.toString());
     }
-    if (!this.hasSufficientMainBalance(amount)) {
-      throw new InsufficientBalanceException(
-        this._mainBalance.toString(),
-        amount.toString(),
-      );
-    }
-    this._mainBalance = this._mainBalance.sub(amount);
+    this._bonus = this._bonus.sub(amount);
   }
 
-  /**
-   * 보너스 잔액 감소
-   * @param amount 감소할 금액
-   * @throws {InsufficientBalanceException} 잔액이 부족한 경우
-   */
-  subtractBonusBalance(amount: Prisma.Decimal): void {
-    if (amount.isZero()) return;
-
-    if (amount.isNegative()) {
-      throw new InvalidWalletBalanceException(
-        'Amount to be subtracted must be greater than 0.',
-      );
-    }
-    const currentBonusBalance = this._bonusBalance;
-    if (currentBonusBalance.lt(amount)) {
-      throw new InsufficientBalanceException(
-        currentBonusBalance.toString(),
-        amount.toString(),
-      );
-    }
-    this._bonusBalance = this._bonusBalance.sub(amount);
+  // Reward, Lock, Vault 관련 메서드도 필요에 따라 추가
+  addReward(amount: Prisma.Decimal): void {
+    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount/Add must be positive');
+    this._reward = this._reward.add(amount);
   }
 
-  /**
-   * 총 잔액에서 차감 (메인 잔액 우선, 부족하면 보너스 잔액에서 차감)
-   * @param amount 차감할 금액
-   * @throws {InsufficientBalanceException} 총 잔액이 부족한 경우
-   */
-  subtractFromTotal(amount: Prisma.Decimal): void {
-    if (amount.isZero()) return;
-
-    if (amount.isNegative()) {
-      throw new InvalidWalletBalanceException(
-        'Amount to be subtracted must be greater than 0.',
-      );
-    }
-    if (!this.hasSufficientBalance(amount)) {
-      throw new InsufficientBalanceException(
-        this.totalBalance.toString(),
-        amount.toString(),
-      );
-    }
-
-    let remaining = amount;
-    // 메인 잔액에서 먼저 차감
-    if (this._mainBalance.gt(0)) {
-      const fromMain = Prisma.Decimal.min(this._mainBalance, remaining);
-      this._mainBalance = this._mainBalance.sub(fromMain);
-      remaining = remaining.sub(fromMain);
-    }
-    // 남은 금액은 보너스 잔액에서 차감
-    if (remaining.gt(0)) {
-      this._bonusBalance = this._bonusBalance.sub(remaining);
-    }
+  subtractReward(amount: Prisma.Decimal): void {
+    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount/Subtract must be positive');
+    if (this._reward.lt(amount)) throw new InsufficientBalanceException(this._reward.toString(), amount.toString());
+    this._reward = this._reward.sub(amount);
   }
 
-  /**
-   * 잔액 업데이트 (통합 메서드)
-   * @param type 잔액 타입 (MAIN, BONUS, TOTAL)
-   * @param operation 연산 타입 (ADD, SUBTRACT)
-   * @param amount 금액
-   * @returns 변경된 잔액 정보 (변경량 및 변경 전/후 잔액)
-   */
-  updateBalance(
-    type: BalanceType,
-    operation: UpdateOperation,
-    amount: Prisma.Decimal,
-  ): {
-    mainChange: Prisma.Decimal;
-    bonusChange: Prisma.Decimal;
-    beforeMainBalance: Prisma.Decimal;
-    afterMainBalance: Prisma.Decimal;
-    beforeBonusBalance: Prisma.Decimal;
-    afterBonusBalance: Prisma.Decimal;
-  } {
-    const beforeMainBalance = this._mainBalance;
-    const beforeBonusBalance = this._bonusBalance;
+  // Vault 입출금 로직 등은 별도 메서드로 구현 가능
+  depositToVault(amount: Prisma.Decimal): void {
+    this.subtractCash(amount); // Cash에서 차감하여
+    this._vault = this._vault.add(amount); // Vault로 이동
+  }
 
-    if (operation === UpdateOperation.ADD) {
-      if (type === BalanceType.BONUS) {
-        this.addBonusBalance(amount);
-      } else {
-        // MAIN, TOTAL -> Add to Main (정책)
-        this.addMainBalance(amount);
-      }
-    } else {
-      // SUBTRACT
-      if (type === BalanceType.MAIN) {
-        this.subtractMainBalance(amount);
-      } else if (type === BalanceType.BONUS) {
-        this.subtractBonusBalance(amount);
-      } else {
-        // TOTAL: 메인 우선, 부족하면 보너스에서 차감
-        this.subtractFromTotal(amount);
-      }
-    }
-
-    return {
-      mainChange: this._mainBalance.sub(beforeMainBalance),
-      bonusChange: this._bonusBalance.sub(beforeBonusBalance),
-      beforeMainBalance,
-      afterMainBalance: this._mainBalance,
-      beforeBonusBalance,
-      afterBonusBalance: this._bonusBalance,
-    };
+  withdrawFromVault(amount: Prisma.Decimal): void {
+    if (this._vault.lt(amount)) throw new InsufficientBalanceException(this._vault.toString(), amount.toString());
+    this._vault = this._vault.sub(amount); // Vault에서 차감하여
+    this.addCash(amount); // Cash로 이동
   }
 }
 

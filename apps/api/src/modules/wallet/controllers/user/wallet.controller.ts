@@ -69,9 +69,9 @@ export class WalletController {
     return {
       wallets: walletArray.map((wallet) => ({
         currency: wallet.currency,
-        mainBalance: wallet.mainBalance.toString(),
-        bonusBalance: wallet.bonusBalance.toString(),
-        totalBalance: wallet.totalBalance.toString(),
+        mainBalance: wallet.cash.toString(),
+        bonusBalance: wallet.bonus.toString(),
+        totalBalance: wallet.totalAvailableBalance.toString(),
       })),
     };
   }

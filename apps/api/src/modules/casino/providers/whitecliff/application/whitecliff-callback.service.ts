@@ -112,7 +112,7 @@ export class WhitecliffCallbackService {
       }
 
       const balance = gameSession.exchangeRate.mul(
-        userWallet.totalBalance,
+        userWallet.totalAvailableBalance,
       );
 
       return {

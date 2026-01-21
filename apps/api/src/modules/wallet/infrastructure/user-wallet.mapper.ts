@@ -18,8 +18,11 @@ export class UserWalletMapper {
     return UserWallet.fromPersistence({
       userId: prismaModel.userId,
       currency: prismaModel.currency,
-      mainBalance: prismaModel.mainBalance,
-      bonusBalance: prismaModel.bonusBalance,
+      cash: prismaModel.cash,
+      bonus: prismaModel.bonus,
+      reward: prismaModel.reward,
+      lock: prismaModel.lock,
+      vault: prismaModel.vault,
       updatedAt: prismaModel.updatedAt,
     });
   }
@@ -30,16 +33,22 @@ export class UserWalletMapper {
   toPrisma(domain: UserWallet): {
     userId: bigint;
     currency: ExchangeCurrencyCode;
-    mainBalance: Prisma.Decimal;
-    bonusBalance: Prisma.Decimal;
+    cash: Prisma.Decimal;
+    bonus: Prisma.Decimal;
+    reward: Prisma.Decimal;
+    lock: Prisma.Decimal;
+    vault: Prisma.Decimal;
     updatedAt: Date;
   } {
     const persistence = domain.toPersistence();
     return {
       userId: persistence.userId,
       currency: persistence.currency,
-      mainBalance: persistence.mainBalance,
-      bonusBalance: persistence.bonusBalance,
+      cash: persistence.cash,
+      bonus: persistence.bonus,
+      reward: persistence.reward,
+      lock: persistence.lock,
+      vault: persistence.vault,
       updatedAt: persistence.updatedAt,
     };
   }

@@ -232,7 +232,7 @@ export class DcsCallbackService {
 
       let balance = new Prisma.Decimal(0);
       if (userWallet) {
-        balance = gameSession.exchangeRate.mul(userWallet.totalBalance);
+        balance = gameSession.exchangeRate.mul(userWallet.totalAvailableBalance);
       }
 
       if (error instanceof InsufficientBalanceException) {
@@ -380,7 +380,7 @@ export class DcsCallbackService {
           : balanceResult.wallet;
 
         if (userWallet) {
-          balance = gameSession.exchangeRate.mul(userWallet.totalBalance);
+          balance = gameSession.exchangeRate.mul(userWallet.totalAvailableBalance);
         }
       }
 
@@ -397,8 +397,11 @@ export class DcsCallbackService {
             userWallets: {
               select: {
                 currency: true,
-                mainBalance: true,
-                bonusBalance: true,
+                cash: true,
+                bonus: true,
+                reward: true,
+                lock: true,
+                vault: true,
               },
             },
           },
@@ -410,8 +413,8 @@ export class DcsCallbackService {
           let maxBalanceCurrency: WalletCurrencyCode | null = null;
 
           for (const userBalance of user.userWallets) {
-            const totalBalance = userBalance.mainBalance.add(
-              userBalance.bonusBalance,
+            const totalBalance = userBalance.cash.add(
+              userBalance.bonus,
             );
             if (totalBalance.gt(maxBalance)) {
               maxBalance = totalBalance;
@@ -613,7 +616,7 @@ export class DcsCallbackService {
           : balanceResult.wallet;
 
         if (userWallet) {
-          balance = gameSession.exchangeRate.mul(userWallet.totalBalance);
+          balance = gameSession.exchangeRate.mul(userWallet.totalAvailableBalance);
         }
       }
 
@@ -743,7 +746,7 @@ export class DcsCallbackService {
 
         if (userWallet) {
           balance = gameRound.gameSession.exchangeRate.mul(
-            userWallet.totalBalance,
+            userWallet.totalAvailableBalance,
           );
         }
       } else {
@@ -786,7 +789,7 @@ export class DcsCallbackService {
               : balanceResult.wallet;
 
             if (userWallet) {
-              balance = gameSession.exchangeRate.mul(userWallet.totalBalance);
+              balance = gameSession.exchangeRate.mul(userWallet.totalAvailableBalance);
             }
           }
         }
@@ -992,7 +995,7 @@ export class DcsCallbackService {
           : balanceResult.wallet;
 
         if (userWallet) {
-          balance = gameSession.exchangeRate.mul(userWallet.totalBalance);
+          balance = gameSession.exchangeRate.mul(userWallet.totalAvailableBalance);
         }
       }
 
@@ -1051,7 +1054,7 @@ export class DcsCallbackService {
       }
 
       const exchangeRateBalance = gameSession.exchangeRate.mul(
-        userWallet.totalBalance
+        userWallet.totalAvailableBalance
       );
 
       return getDcsResponse(DcsResponseCode.SUCCESS, {
@@ -1180,7 +1183,7 @@ export class DcsCallbackService {
 
               if (userWallet) {
                 const exchangeRateBalance = gameSession.exchangeRate.mul(
-                  userWallet.totalBalance,
+                  userWallet.totalAvailableBalance,
                 );
 
                 return getDcsResponse(DcsResponseCode.BET_RECORD_DUPLICATE, {
