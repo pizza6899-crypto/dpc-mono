@@ -1,6 +1,6 @@
-// src/modules/wallet/ports/out/user-wallet.repository.port.ts
 import type { UserWallet } from '../../domain';
 import type { ExchangeCurrencyCode } from '@prisma/client';
+import { UserWalletSearchOptions } from './user-wallet.search-options';
 
 /**
  * UserWallet Repository Port
@@ -15,6 +15,11 @@ export interface UserWalletRepositoryPort {
     userId: bigint,
     currency: ExchangeCurrencyCode,
   ): Promise<UserWallet | null>;
+
+  /**
+   * 시스템 전체 통학별/타입별 잔액 통계 조회
+   */
+  getStatistics(): Promise<any>;
 
   /**
    * 사용자 ID와 통화로 잔액 조회 (없으면 에러)
@@ -40,6 +45,11 @@ export interface UserWalletRepositoryPort {
    * 이미 존재하는 경우 에러가 발생할 수 있습니다.
    */
   create(wallet: UserWallet): Promise<UserWallet>;
+
+  /**
+   * 월렛 목록 조회 (검색 및 페이지네이션)
+   */
+  list(options: UserWalletSearchOptions): Promise<[UserWallet[], number]>;
 
   /**
    * 월렛 업데이트

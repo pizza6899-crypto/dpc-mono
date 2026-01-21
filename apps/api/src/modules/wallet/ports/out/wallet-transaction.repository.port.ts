@@ -1,7 +1,6 @@
 // src/modules/wallet/ports/out/wallet-transaction.repository.port.ts
 import { WalletTransaction } from '../../domain/model/wallet-transaction.entity';
-
-import { WalletTransactionSearchOptions } from '../../application/wallet-transaction.search-options';
+import { WalletTransactionSearchOptions } from './wallet-transaction.search-options';
 
 export interface WalletTransactionRepositoryPort {
     /**

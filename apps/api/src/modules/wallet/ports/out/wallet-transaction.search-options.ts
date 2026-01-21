@@ -1,10 +1,11 @@
-// src/modules/wallet/domain/model/wallet-transaction.search-options.ts
-import type { ExchangeCurrencyCode, WalletTransactionType } from '@prisma/client';
+import type { ExchangeCurrencyCode, WalletTransactionType, WalletBalanceType } from '@prisma/client';
 
 export interface WalletTransactionSearchOptions {
-    userId: bigint;
+    userId?: bigint;
     currency?: ExchangeCurrencyCode;
     type?: WalletTransactionType;
+    balanceTypes?: WalletBalanceType[];
+    excludeBalanceTypes?: WalletBalanceType[];
     startDate?: Date;
     endDate?: Date;
     page: number; // 1-based

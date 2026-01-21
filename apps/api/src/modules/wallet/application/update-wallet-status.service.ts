@@ -5,14 +5,14 @@ import { USER_WALLET_REPOSITORY } from '../ports/out/user-wallet.repository.toke
 import type { UserWalletRepositoryPort } from '../ports/out/user-wallet.repository.port';
 import { WALLET_TRANSACTION_REPOSITORY } from '../ports/out/wallet-transaction.repository.token';
 import type { WalletTransactionRepositoryPort } from '../ports/out/wallet-transaction.repository.port';
-import { UserWallet, WalletTransaction, UserWalletPolicy, WalletNotFoundException } from '../domain';
+import { UserWallet, WalletTransaction, UserWalletPolicy, WalletNotFoundException, WalletStatusException } from '../domain';
 import { Prisma } from '@prisma/client';
 
 export interface UpdateWalletStatusParams {
     userId: bigint;
     currency: ExchangeCurrencyCode;
     newStatus: WalletStatus;
-    adminId: string;
+    adminId: bigint;
     reason?: string;
 }
 
@@ -44,11 +44,22 @@ export class UpdateWalletStatusService {
         if (prevStatus === newStatus) return wallet;
 
         // 2. Validate State Transition by Policy
+        // Status Transition Validation
+        if (newStatus === WalletStatus.FROZEN && prevStatus === WalletStatus.FROZEN) {
+            throw new WalletStatusException(`Wallet is already frozen`);
+        }
+        if (newStatus === WalletStatus.FROZEN && prevStatus === WalletStatus.INACTIVE) {
+            throw new WalletStatusException(`Cannot freeze wallet in ${prevStatus} status`);
+        }
+        if (newStatus === WalletStatus.ACTIVE && prevStatus === WalletStatus.TERMINATED) {
+            throw new WalletStatusException(`Cannot activate wallet in ${prevStatus} status`);
+        }
+
         if (newStatus === WalletStatus.FROZEN && !this.walletPolicy.canFreeze(wallet)) {
-            throw new Error(`Cannot freeze wallet in ${prevStatus} status`);
+            throw new WalletStatusException(`Cannot freeze wallet in ${prevStatus} status`);
         }
         if (newStatus === WalletStatus.ACTIVE && !this.walletPolicy.canActivate(wallet)) {
-            throw new Error(`Cannot activate wallet in ${prevStatus} status`);
+            throw new WalletStatusException(`Cannot activate wallet in ${prevStatus} status`);
         }
 
         // 3. Update Status

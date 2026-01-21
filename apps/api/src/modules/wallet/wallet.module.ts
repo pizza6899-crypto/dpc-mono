@@ -6,8 +6,9 @@ import { UserWalletMapper } from './infrastructure/user-wallet.mapper';
 import { WalletTransactionMapper } from './infrastructure/wallet-transaction.mapper';
 import { UpdateWalletStatusService } from './application/update-wallet-status.service';
 import { ManageVaultService } from './application/manage-vault.service';
-import { InitializeUserWalletsService } from './application/initialize-user-wallets.service';
 import { AdminAdjustBalanceService } from './application/admin-adjust-balance.service';
+import { FindUserWalletsService } from './application/find-user-wallets.service';
+import { GetWalletStatisticsService } from './application/get-wallet-statistics.service';
 import { USER_WALLET_REPOSITORY } from './ports/out/user-wallet.repository.token';
 import { WalletController } from './controllers/user/wallet.controller';
 import { WalletAdminController } from './controllers/admin/wallet-admin.controller';
@@ -55,10 +56,11 @@ import { SqidsModule } from 'src/common/sqids/sqids.module';
     UserBalanceService,
     UpdateWalletStatusService,
     ManageVaultService,
-    InitializeUserWalletsService,
     AdminAdjustBalanceService,
     UserWalletPolicy,
     GetWalletTransactionHistoryService,
+    FindUserWalletsService,
+    GetWalletStatisticsService,
     UserWalletMapper,
     WalletTransactionMapper,
   ],
@@ -67,10 +69,11 @@ import { SqidsModule } from 'src/common/sqids/sqids.module';
     UserBalanceService,
     UpdateWalletStatusService,
     ManageVaultService,
-    InitializeUserWalletsService,
     AdminAdjustBalanceService,
     GetWalletTransactionHistoryService,
     WalletQueryService,
+    FindUserWalletsService,
+    GetWalletStatisticsService,
   ],
 })
 export class WalletModule { }

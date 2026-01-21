@@ -22,7 +22,7 @@ import { GetBalanceQueryDto } from './dto/request/get-balance-query.dto';
 import { UserWallet, WalletNotFoundException } from '../../domain';
 import { UserWalletTransactionResponseDto } from './dto/response/wallet-transaction.response.dto';
 import { GetUserWalletTransactionHistoryQueryDto } from './dto/request/get-wallet-transaction-history-query.dto';
-import { ExchangeCurrencyCode } from '@prisma/client';
+import { ExchangeCurrencyCode, WalletBalanceType } from '@prisma/client';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 import { CurrencyListResponseDto } from './dto/response/currency-list.response.dto';
 import { SqidsService } from 'src/common/sqids/sqids.service';

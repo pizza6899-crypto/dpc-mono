@@ -64,3 +64,17 @@ export class WalletStatusException extends WalletException {
   }
 }
 
+/**
+ * 유효하지 않은 잔액 타입인 경우
+ */
+export class InvalidWalletBalanceTypeException extends WalletException {
+  constructor(type: string) {
+    super(
+      `Unhandled or invalid balance type: ${type}`,
+      MessageCode.VALIDATION_ERROR,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'InvalidWalletBalanceTypeException';
+  }
+}
+

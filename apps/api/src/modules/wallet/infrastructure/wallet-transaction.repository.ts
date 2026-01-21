@@ -4,7 +4,7 @@ import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { WalletTransactionRepositoryPort } from '../ports/out/wallet-transaction.repository.port';
 import { WalletTransaction } from '../domain';
-import { WalletTransactionSearchOptions } from '../application/wallet-transaction.search-options';
+import { WalletTransactionSearchOptions } from '../ports/out/wallet-transaction.search-options';
 import { Prisma } from '@prisma/client';
 import { WalletTransactionMapper } from './wallet-transaction.mapper';
 
@@ -30,12 +30,16 @@ export class WalletTransactionRepository
     async listByUserId(
         options: WalletTransactionSearchOptions,
     ): Promise<[WalletTransaction[], number]> {
-        const { userId, currency, type, startDate, endDate, page, limit } = options;
+        const { userId, currency, type, balanceTypes, excludeBalanceTypes, startDate, endDate, page, limit } = options;
 
         const where: Prisma.WalletTransactionWhereInput = {
             userId,
             currency,
             type,
+            balanceType: {
+                in: balanceTypes,
+                notIn: excludeBalanceTypes,
+            },
             createdAt: {
                 gte: startDate,
                 lte: endDate,

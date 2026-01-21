@@ -6,8 +6,7 @@ import type { UserWalletRepositoryPort } from '../ports/out/user-wallet.reposito
 import { WALLET_TRANSACTION_REPOSITORY } from '../ports/out/wallet-transaction.repository.token';
 import type { WalletTransactionRepositoryPort } from '../ports/out/wallet-transaction.repository.port';
 import { ExchangeCurrencyCode, Prisma, WalletTransactionType, WalletBalanceType, AdjustmentReasonCode } from '@prisma/client';
-import { WalletTransaction, WalletNotFoundException, UserWallet, UserWalletPolicy } from '../domain';
-import { UpdateOperation } from '../domain/wallet.constant';
+import { WalletTransaction, WalletNotFoundException, UserWallet, UserWalletPolicy, UpdateOperation, InsufficientBalanceException, InvalidWalletBalanceTypeException } from '../domain';
 
 export interface BalanceUpdateContext {
     // Admin Context
@@ -129,7 +128,8 @@ export class UserBalanceService {
             case WalletBalanceType.REWARD: return wallet.reward;
             case WalletBalanceType.LOCK: return wallet.lock;
             case WalletBalanceType.VAULT: return wallet.vault;
-            default: return new Prisma.Decimal(0);
+            default:
+                throw new InvalidWalletBalanceTypeException(type);
         }
     }
 
@@ -146,6 +146,7 @@ export class UserBalanceService {
                 case WalletBalanceType.REWARD: wallet.increaseReward(amount); break;
                 case WalletBalanceType.LOCK: wallet.increaseLock(amount); break;
                 case WalletBalanceType.VAULT: wallet.increaseVault(amount); break;
+                default: throw new InvalidWalletBalanceTypeException(type);
             }
         } else {
             switch (type) {
@@ -154,6 +155,7 @@ export class UserBalanceService {
                 case WalletBalanceType.REWARD: wallet.decreaseReward(amount); break;
                 case WalletBalanceType.LOCK: wallet.decreaseLock(amount); break;
                 case WalletBalanceType.VAULT: wallet.decreaseVault(amount); break;
+                default: throw new InvalidWalletBalanceTypeException(type);
             }
         }
     }

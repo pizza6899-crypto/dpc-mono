@@ -10,6 +10,7 @@ import { LockNamespace } from 'src/common/concurrency/lock-namespace';
 import { DomainException } from 'src/common/exception/domain.exception';
 import { MessageCode } from '@repo/shared';
 import { HttpStatus } from '@nestjs/common';
+import { UserWalletSearchOptions } from '../ports/out/user-wallet.search-options';
 
 /**
  * UserWallet Repository Implementation
@@ -38,6 +39,32 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
     });
 
     return balance ? this.mapper.toDomain(balance) : null;
+  }
+
+  async getStatistics(): Promise<any> {
+    const stats = await this.tx.userWallet.groupBy({
+      by: ['currency'],
+      _sum: {
+        cash: true,
+        bonus: true,
+        reward: true,
+        lock: true,
+        vault: true,
+      },
+      _count: {
+        userId: true,
+      },
+    });
+
+    return stats.map((s) => ({
+      currency: s.currency,
+      totalCash: s._sum.cash || 0,
+      totalBonus: s._sum.bonus || 0,
+      totalReward: s._sum.reward || 0,
+      totalLock: s._sum.lock || 0,
+      totalVault: s._sum.vault || 0,
+      userCount: s._count.userId,
+    }));
   }
 
   async getByUserIdAndCurrency(
@@ -97,6 +124,28 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
       data,
     });
     return this.mapper.toDomain(result);
+  }
+
+  async list(options: UserWalletSearchOptions): Promise<[UserWallet[], number]> {
+    const { userId, currency, status, page, limit } = options;
+
+    const where = {
+      userId,
+      currency,
+      status,
+    };
+
+    const [items, total] = await Promise.all([
+      this.tx.userWallet.findMany({
+        where,
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: { updatedAt: 'desc' },
+      }),
+      this.tx.userWallet.count({ where }),
+    ]);
+
+    return [items.map((item) => this.mapper.toDomain(item)), total];
   }
 
   async update(wallet: UserWallet): Promise<UserWallet> {

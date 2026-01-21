@@ -39,12 +39,12 @@ export class UserWalletResponseDto {
     })
     lockedBalance: string;
 
-    @ApiProperty({
-        description: 'Vault balance / 금고 잔액',
-        example: '2000.00',
-        type: String,
-    })
-    vaultBalance: string;
+    // @ApiProperty({
+    //     description: 'Vault balance / 금고 잔액',
+    //     example: '2000.00',
+    //     type: String,
+    // })
+    // vaultBalance: string;
 
     @ApiProperty({
         description: 'Total available balance (Cash + Bonus) / 총 가용 잔액 (캐시 + 보너스)',
