@@ -26,9 +26,9 @@ export interface BalanceUpdateParams {
     userId: bigint;
     currency: ExchangeCurrencyCode;
     amount: Prisma.Decimal;
-    operation: UpdateOperation; // ADD | SUBTRACT
-    balanceType: WalletBalanceType; // CASH | BONUS | ...
-    transactionType: WalletTransactionType; // ADMIN_ADJUST | GAME | DEPOSIT | ...
+    operation: UpdateOperation;
+    balanceType: WalletBalanceType;
+    transactionType: WalletTransactionType;
     referenceId?: string;
 }
 

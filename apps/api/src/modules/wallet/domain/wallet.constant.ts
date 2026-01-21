@@ -1,4 +1,4 @@
 export enum UpdateOperation {
-    ADD = 'add',
-    SUBTRACT = 'subtract',
+    ADD = 'ADD',
+    SUBTRACT = 'SUBTRACT',
 }
