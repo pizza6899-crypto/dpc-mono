@@ -1,7 +1,7 @@
 // src/modules/wallet/infrastructure/user-wallet.mapper.ts
 import { Injectable } from '@nestjs/common';
 import { UserWallet } from '../domain';
-import type { UserWallet as PrismaUserWallet, ExchangeCurrencyCode } from '@prisma/client';
+import type { UserWallet as PrismaUserWallet, ExchangeCurrencyCode, WalletStatus } from '@prisma/client';
 import { Prisma } from '@prisma/client';
 
 /**
@@ -23,6 +23,7 @@ export class UserWalletMapper {
       reward: prismaModel.reward,
       lock: prismaModel.lock,
       vault: prismaModel.vault,
+      status: prismaModel.status,
       updatedAt: prismaModel.updatedAt,
     });
   }
@@ -38,6 +39,7 @@ export class UserWalletMapper {
     reward: Prisma.Decimal;
     lock: Prisma.Decimal;
     vault: Prisma.Decimal;
+    status: WalletStatus;
     updatedAt: Date;
   } {
     return {
@@ -48,6 +50,7 @@ export class UserWalletMapper {
       reward: domain.reward,
       lock: domain.lock,
       vault: domain.vault,
+      status: domain.status,
       updatedAt: domain.updatedAt,
     };
   }

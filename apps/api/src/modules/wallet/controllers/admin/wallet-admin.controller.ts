@@ -1,4 +1,29 @@
 // src/modules/wallet/controllers/admin/wallet-admin.controller.ts
+
+/**
+ * [ TODO: Wallet Entity 수정 후 구현 예정 ]
+ * 관리자용 지갑 관리 컨트롤러 엔드포인트 설계안:
+ * 
+ * 1. GET /admin/wallets
+ *    - 사용자 지갑 목록 조회 (기본 리스트)
+ *    - 필터: userId, currency, status
+ *    - 상세 조회 통합: 특정 userId나 walletId 조건 시 상세 정보 포함
+ * 
+ * 2. GET /admin/wallets/statistics
+ *    - 시스템 전체 보유 자산 합계 조회 (통계)
+ *    - 타입별(Cash, Bonus 등), 통화별 요약 정보 제공
+ * 
+ * 3. POST /admin/wallets/adjust
+ *    - 관리자 수동 잔액 조정 (수동 지급/차감)
+ *    - 사유(reasonCode), 내부 비고(internalNote) 필수 기록
+ * 
+ * 4. GET /admin/wallets/transactions
+ *    - 시스템 전체 트랜잭션 이력 조회
+ *    - 필터: userId, referenceId(게임/결제 ID), type, 기간 검색
+ * 
+ * 5. PATCH /admin/wallets/:userId/status
+ *    - 지갑 상태 관리 (비정상 유저 지갑 잠금/해제 등)
+ */
 import {
   Controller,
   Get,
@@ -16,6 +41,8 @@ import {
   ApiPaginatedResponse,
 } from 'src/common/http/decorators/api-response.decorator';
 import { Admin } from 'src/common/auth/decorators/roles.decorator';
+import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
+import { User } from 'src/modules/user/domain';
 import { UserBalanceService } from '../../application/user-balance.service';
 import { WalletQueryService } from '../../application/wallet-query.service';
 import { AdminUserBalanceResponseDto } from './dto/response/admin-user-balance.response.dto';
@@ -25,6 +52,8 @@ import { UpdateUserBalanceRequestDto } from './dto/request/update-user-balance.r
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 import { Prisma, WalletTransactionType, WalletBalanceType } from '@prisma/client';
+import { WalletTransactionResponseDto } from './dto/response/wallet-transaction.response.dto';
+import { GetWalletTransactionHistoryQueryDto } from './dto/request/get-wallet-transaction-history-query.dto';
 import { GetWalletTransactionHistoryService } from '../../application/get-wallet-transaction-history.service';
 import { UserWallet } from '../../domain';
 import { UpdateOperation } from '../../domain/wallet.constant';
@@ -87,7 +116,11 @@ export class WalletAdminController {
         currency: wallet.currency,
         mainBalance: wallet.cash.toString(),
         bonusBalance: wallet.bonus.toString(),
+        rewardBalance: wallet.reward.toString(),
+        lockedBalance: wallet.lock.toString(),
+        vaultBalance: wallet.vault.toString(),
         totalBalance: wallet.totalAvailableBalance.toString(),
+        status: wallet.status,
         updatedAt: wallet.updatedAt,
       })),
     };
@@ -135,7 +168,7 @@ export class WalletAdminController {
       currency: updateDto.currency,
       balanceType: updateDto.balanceType,
       operation: updateDto.operation,
-      transactionType: WalletTransactionType.ADMIN_ADJUST, // Enum Import needed
+      transactionType: WalletTransactionType.ADJUSTMENT,
       amount: amount,
     }, {
       adminUserId: admin.id!,

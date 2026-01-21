@@ -8,6 +8,7 @@ model UserWallet {
     vault     Decimal              @default(0) @db.Decimal(32, 18)
     updatedAt DateTime             @updatedAt @map("updated_at")
     user      User                 @relation(fields: [userId], references: [id])
+    status    WalletStatus         @default(ACTIVE) @map("status")
 
     transactions WalletTransaction[]
 
@@ -15,6 +16,15 @@ model UserWallet {
     @@index([userId])
     @@index([currency])
     @@map("user_wallets")
+}
+
+enum WalletStatus {
+    ACTIVE // 정상: 모든 거래 가능
+    FROZEN // 일시 동결: 모든 트랜잭션 차단 (입출금/베팅 불가, 해제 가능)
+    READ_ONLY // 읽기 전용: 잔액 조회만 가능
+    WITHDRAWAL_RESTRICTED // 출금 제한: 입금/베팅은 가능하나 출금만 차단
+    INACTIVE // 비활성화: 장기 미사용
+    TERMINATED // 해지/탈퇴: 더 이상 사용 불가
 }
 
 model WalletTransaction {
@@ -28,7 +38,7 @@ model WalletTransaction {
     balanceAfter Decimal @map("balance_after") @db.Decimal(32, 18) // 변동 후 최종 잔액 스냅샷
 
     referenceId String? @map("reference_id") // type이 BET이면 GameLog ID, DEPOSIT이면 DepositRequest ID 등을 저장
-    remark      String? // 사유 기록용
+    metadata    Json?   @map("metadata") // 상세 사유, 관리자 ID, 상태 변경 전후값 등 유연한 데이터 저장
 
     // 보안필드
     ipAddress   String? @map("ip_address") @db.Inet
@@ -62,4 +72,5 @@ enum WalletTransactionType {
     BONUS_IN // 이벤트성 보너스 지급
     BONUS_OUT // 보너스 회수/만료
     ADJUSTMENT // 관리자 수동 보정
+    STATUS_CHANGE // 지갑 상태 변경 기록
 }

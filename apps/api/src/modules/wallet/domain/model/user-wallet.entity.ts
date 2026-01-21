@@ -1,5 +1,5 @@
 // src/modules/wallet/domain/model/user-wallet.entity.ts
-import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
+import { ExchangeCurrencyCode, Prisma, WalletStatus } from '@prisma/client';
 import {
   InvalidWalletBalanceException,
   InsufficientBalanceException,
@@ -20,6 +20,7 @@ export class UserWallet {
     private _reward: Prisma.Decimal,
     private _lock: Prisma.Decimal,
     private _vault: Prisma.Decimal,
+    private _status: WalletStatus,
     public readonly updatedAt: Date,
   ) {
     this.validateBalances();
@@ -41,6 +42,7 @@ export class UserWallet {
     reward?: Prisma.Decimal;
     lock?: Prisma.Decimal;
     vault?: Prisma.Decimal;
+    status?: WalletStatus;
   }): UserWallet {
     return new UserWallet(
       params.userId,
@@ -50,6 +52,7 @@ export class UserWallet {
       params.reward ?? new Prisma.Decimal(0),
       params.lock ?? new Prisma.Decimal(0),
       params.vault ?? new Prisma.Decimal(0),
+      params.status ?? WalletStatus.ACTIVE,
       new Date(),
     );
   }
@@ -62,6 +65,7 @@ export class UserWallet {
     reward: Prisma.Decimal;
     lock: Prisma.Decimal;
     vault: Prisma.Decimal;
+    status: WalletStatus;
     updatedAt: Date;
   }): UserWallet {
     return new UserWallet(
@@ -72,6 +76,7 @@ export class UserWallet {
       data.reward,
       data.lock,
       data.vault,
+      data.status,
       data.updatedAt,
     );
   }
@@ -82,6 +87,7 @@ export class UserWallet {
   get reward(): Prisma.Decimal { return this._reward; }
   get lock(): Prisma.Decimal { return this._lock; }
   get vault(): Prisma.Decimal { return this._vault; }
+  get status(): WalletStatus { return this._status; }
 
   // Business Logic
 
@@ -171,6 +177,32 @@ export class UserWallet {
   withdrawFromVault(amount: Prisma.Decimal): void {
     this.decreaseVault(amount);
     this.increaseCash(amount);
+  }
+
+  // Status Modifiers
+
+  freeze(): void {
+    this._status = WalletStatus.FROZEN;
+  }
+
+  activate(): void {
+    this._status = WalletStatus.ACTIVE;
+  }
+
+  deactivate(): void {
+    this._status = WalletStatus.INACTIVE;
+  }
+
+  setReadOnly(): void {
+    this._status = WalletStatus.READ_ONLY;
+  }
+
+  restrictWithdrawal(): void {
+    this._status = WalletStatus.WITHDRAWAL_RESTRICTED;
+  }
+
+  terminate(): void {
+    this._status = WalletStatus.TERMINATED;
   }
 }
 

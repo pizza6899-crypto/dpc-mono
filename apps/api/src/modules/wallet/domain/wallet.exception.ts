@@ -54,3 +54,13 @@ export class InsufficientBalanceException extends WalletException {
   }
 }
 
+/**
+ * 지갑 상태에 의해 거래가 거부된 경우
+ */
+export class WalletStatusException extends WalletException {
+  constructor(message: string) {
+    super(message, MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST);
+    this.name = 'WalletStatusException';
+  }
+}
+

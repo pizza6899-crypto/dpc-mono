@@ -105,6 +105,7 @@ export class WalletController {
         lockedBalance: wallet.lock.toString(),
         vaultBalance: wallet.vault.toString(),
         totalBalance: wallet.totalAvailableBalance.toString(),
+        status: wallet.status,
       })),
     };
   }

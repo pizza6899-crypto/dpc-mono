@@ -1,6 +1,6 @@
 // src/modules/wallet/controllers/admin/dto/response/admin-user-balance.response.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { ExchangeCurrencyCode } from '@prisma/client';
+import { ExchangeCurrencyCode, WalletStatus } from '@prisma/client';
 
 export class AdminUserBalanceItemDto {
   @ApiProperty({
@@ -25,11 +25,39 @@ export class AdminUserBalanceItemDto {
   bonusBalance: string;
 
   @ApiProperty({
-    description: '총 잔액 (메인 + 보너스)',
-    example: '1500.00',
+    description: '리워드 잔액',
+    example: '100.00',
+    type: String,
+  })
+  rewardBalance: string;
+
+  @ApiProperty({
+    description: '잠긴 잔액',
+    example: '200.00',
+    type: String,
+  })
+  lockedBalance: string;
+
+  @ApiProperty({
+    description: '금고 잔액',
+    example: '1000.00',
+    type: String,
+  })
+  vaultBalance: string;
+
+  @ApiProperty({
+    description: '총 가용 잔액 (메인 + 보너스 + 리워드)',
+    example: '1600.00',
     type: String,
   })
   totalBalance: string;
+
+  @ApiProperty({
+    description: '지갑 상태',
+    enum: WalletStatus,
+    example: WalletStatus.ACTIVE,
+  })
+  status: WalletStatus;
 
   @ApiProperty({
     description: '마지막 업데이트 시간',

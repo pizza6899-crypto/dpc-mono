@@ -102,6 +102,7 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
         reward: data.reward,
         lock: data.lock,
         vault: data.vault,
+        status: data.status,
         updatedAt: data.updatedAt,
       },
     });
@@ -123,6 +124,7 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
         reward: data.reward,
         lock: data.lock,
         vault: data.vault,
+        status: data.status,
         updatedAt: data.updatedAt,
       },
     });

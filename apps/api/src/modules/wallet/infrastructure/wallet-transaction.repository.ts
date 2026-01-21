@@ -24,7 +24,7 @@ export class WalletTransactionRepository
             amount: transaction.amount,
             balanceAfter: transaction.balanceAfter,
             referenceId: transaction.referenceId,
-            remark: transaction.remark,
+            metadata: transaction.metadata as Prisma.InputJsonValue,
             ipAddress: transaction.ipAddress,
             countryCode: transaction.countryCode,
             createdAt: transaction.createdAt,

@@ -10,6 +10,7 @@ import { UserModule } from '../user/user.module';
 import { WALLET_TRANSACTION_REPOSITORY } from './ports/out/wallet-transaction.repository.token';
 import { WalletTransactionRepository } from './infrastructure/wallet-transaction.repository';
 import { UserBalanceService } from './application/user-balance.service';
+import { UserWalletPolicy } from './domain';
 import { SqidsModule } from 'src/common/sqids/sqids.module';
 
 /**
@@ -47,6 +48,7 @@ import { SqidsModule } from 'src/common/sqids/sqids.module';
     },
     WalletQueryService,
     UserBalanceService,
+    UserWalletPolicy,
     GetWalletTransactionHistoryService,
     UserWalletMapper,
   ],
