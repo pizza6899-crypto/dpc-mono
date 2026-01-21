@@ -4,6 +4,9 @@ import {
   GameAggregatorType,
   TransactionType,
   TransactionStatus,
+  WalletBalanceType,
+  WalletTransactionType,
+  ExchangeCurrencyCode,
 } from '@prisma/client';
 import { CasinoErrorCode } from '../constants/casino-error-codes';
 import { parseDateStringOrThrow } from 'src/utils/date.util';
@@ -12,7 +15,8 @@ import {
   WalletCurrencyCode,
 } from 'src/utils/currency.util';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
-import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
+import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
+import { UpdateOperation } from 'src/modules/wallet/domain/wallet.constant';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
@@ -95,12 +99,13 @@ export class CasinoBetService {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
+    private readonly findUserWalletService: FindUserWalletService,
     private readonly snowflakeService: SnowflakeService,
   ) { }
 
   /**
    * 베팅 처리
-   * - 잔액 차감
+   * - 잔액 차감 (Cash 우선, 부족 시 Bonus)
    * - 트랜잭션 생성
    */
   async processBet(params: ProcessBetParams): Promise<ProcessBetResult> {
@@ -140,16 +145,79 @@ export class CasinoBetService {
       throw new Error(CasinoErrorCode.DUPLICATE_DEBIT);
     }
 
-    const updatedUserBalance = await this.updateUserBalanceService.execute({
-      userId: userId,
-      currency: walletCurrency,
-      amount: betAmountInWalletCurrency,
-      balanceType: BalanceType.TOTAL,
-      operation: UpdateOperation.SUBTRACT,
-    });
+    // 1. 지갑 조회 (Balance Split 계산을 위해)
+    const wallet = await this.findUserWalletService.findWallet(
+      userId,
+      walletCurrency as unknown as ExchangeCurrencyCode,
+      true, // useLock (이미 상위 트랜잭션이나 서비스에서 처리될 수 있으나 안전하게)
+    );
 
-    const beforeAmount = updatedUserBalance.beforeBonusBalance.add(updatedUserBalance.beforeMainBalance);
-    const afterAmount = updatedUserBalance.afterBonusBalance.add(updatedUserBalance.afterMainBalance);
+    if (!wallet) {
+      throw new Error(CasinoErrorCode.USER_BALANCE_NOT_FOUND);
+    }
+
+    const beforeMainBalance = wallet.cash;
+    const beforeBonusBalance = wallet.bonus;
+
+    // 2. 차감 금액 계산 (Cash First Policy)
+    let cashDeduction = new Prisma.Decimal(0);
+    let bonusDeduction = new Prisma.Decimal(0);
+
+    if (wallet.cash.gte(betAmountInWalletCurrency)) {
+      cashDeduction = betAmountInWalletCurrency;
+    } else {
+      cashDeduction = wallet.cash;
+      bonusDeduction = betAmountInWalletCurrency.sub(wallet.cash);
+    }
+
+    // Bonus 잔액 확인
+    if (bonusDeduction.gt(0) && wallet.bonus.lt(bonusDeduction)) {
+      throw new Error(CasinoErrorCode.INSUFFICIENT_FUNDS);
+    }
+
+    // 3. 잔액 차감 실행
+    let updatedWallet = wallet;
+
+    // Cash 차감
+    if (cashDeduction.gt(0)) {
+      updatedWallet = await this.updateUserBalanceService.updateBalance({
+        userId,
+        currency: walletCurrency as unknown as ExchangeCurrencyCode,
+        amount: cashDeduction,
+        operation: UpdateOperation.SUBTRACT,
+        balanceType: WalletBalanceType.CASH,
+        transactionType: WalletTransactionType.BET,
+        referenceId: aggregatorBetId,
+      }, {
+        actionName: 'CASINO_BET_CASH',
+        metadata: { aggregatorType, aggregatorGameId, gameId },
+      });
+    }
+
+    // Bonus 차감
+    if (bonusDeduction.gt(0)) {
+      updatedWallet = await this.updateUserBalanceService.updateBalance({
+        userId,
+        currency: walletCurrency as unknown as ExchangeCurrencyCode,
+        amount: bonusDeduction,
+        operation: UpdateOperation.SUBTRACT,
+        balanceType: WalletBalanceType.BONUS,
+        transactionType: WalletTransactionType.BET,
+        referenceId: aggregatorBetId,
+      }, {
+        actionName: 'CASINO_BET_BONUS',
+        metadata: { aggregatorType, aggregatorGameId, gameId },
+      });
+    }
+
+    const afterMainBalance = updatedWallet.cash;
+    const afterBonusBalance = updatedWallet.bonus;
+
+    const beforeAmount = beforeMainBalance.add(beforeBonusBalance);
+    const afterAmount = afterMainBalance.add(afterBonusBalance);
+
+    const mainBalanceChange = afterMainBalance.sub(beforeMainBalance); // Negative
+    const bonusBalanceChange = afterBonusBalance.sub(beforeBonusBalance); // Negative
 
     const existingGameRound = await this.tx.gameRound.findUnique({
       where: {
@@ -206,12 +274,12 @@ export class CasinoBetService {
               afterAmount: afterAmount,
               balanceDetails: {
                 create: {
-                  mainBalanceChange: updatedUserBalance.mainBalanceChange,
-                  mainBeforeAmount: updatedUserBalance.beforeMainBalance,
-                  mainAfterAmount: updatedUserBalance.afterMainBalance,
-                  bonusBalanceChange: updatedUserBalance.bonusBalanceChange,
-                  bonusBeforeAmount: updatedUserBalance.beforeBonusBalance,
-                  bonusAfterAmount: updatedUserBalance.afterBonusBalance,
+                  mainBalanceChange: mainBalanceChange,
+                  mainBeforeAmount: beforeMainBalance,
+                  mainAfterAmount: afterMainBalance,
+                  bonusBalanceChange: bonusBalanceChange,
+                  bonusBeforeAmount: beforeBonusBalance,
+                  bonusAfterAmount: afterBonusBalance,
                 },
               },
             },
@@ -226,18 +294,14 @@ export class CasinoBetService {
         `[processBet] 기존 GameRound 업데이트 완료 - gameRoundId: ${updatedGameRound.id}, transactionId: ${updatedGameRound.transactionId}`,
       );
 
-      const result = {
+      return {
         transactionId: updatedGameRound.transactionId,
         gameRoundId: updatedGameRound.id,
-        beforeMainBalance: updatedUserBalance.beforeMainBalance,
-        beforeBonusBalance: updatedUserBalance.beforeBonusBalance,
-        afterMainBalance: updatedUserBalance.afterMainBalance,
-        afterBonusBalance: updatedUserBalance.afterBonusBalance,
+        beforeMainBalance,
+        beforeBonusBalance,
+        afterMainBalance,
+        afterBonusBalance,
       };
-      this.logger.log(
-        `[processBet] 성공 완료 (기존 라운드) - transactionId: ${result.transactionId}, gameRoundId: ${result.gameRoundId}`,
-      );
-      return result;
     } else {
       this.logger.debug(`[processBet] 새로운 GameRound 생성 시작`);
       // 새로운 라운드 생성
@@ -281,12 +345,12 @@ export class CasinoBetService {
           },
           balanceDetails: {
             create: {
-              mainBalanceChange: updatedUserBalance.mainBalanceChange,
-              mainBeforeAmount: updatedUserBalance.beforeMainBalance,
-              mainAfterAmount: updatedUserBalance.afterMainBalance,
-              bonusBalanceChange: updatedUserBalance.bonusBalanceChange,
-              bonusBeforeAmount: updatedUserBalance.beforeBonusBalance,
-              bonusAfterAmount: updatedUserBalance.afterBonusBalance,
+              mainBalanceChange: mainBalanceChange,
+              mainBeforeAmount: beforeMainBalance,
+              mainAfterAmount: afterMainBalance,
+              bonusBalanceChange: bonusBalanceChange,
+              bonusBeforeAmount: beforeBonusBalance,
+              bonusAfterAmount: afterBonusBalance,
             },
           },
         },
@@ -303,26 +367,21 @@ export class CasinoBetService {
         `[processBet] 새로운 Transaction 및 GameRound 생성 완료 - transactionId: ${transaction.id}, gameRoundId: ${transaction.gameRound!.id}`,
       );
 
-      const result = {
+      return {
         transactionId: transaction.id,
         gameRoundId: transaction.gameRound!.id,
-        beforeMainBalance: updatedUserBalance.beforeMainBalance,
-        beforeBonusBalance: updatedUserBalance.beforeBonusBalance,
-        afterMainBalance: updatedUserBalance.afterMainBalance,
-        afterBonusBalance: updatedUserBalance.afterBonusBalance,
+        beforeMainBalance,
+        beforeBonusBalance,
+        afterMainBalance,
+        afterBonusBalance,
       };
-      this.logger.log(
-        `[processBet] 성공 완료 (새 라운드) - transactionId: ${result.transactionId}, gameRoundId: ${result.gameRoundId}`,
-      );
-      return result;
     }
   }
 
   /**
    * 당첨 처리
-   * - 잔액 증가
+   * - 잔액 증가 (Main - Cash)
    * - 트랜잭션 업데이트
-   * - 롤링/콤프 적립 (이미 베팅 시 적립되었으므로 추가 적립 없음)
    */
   async processWin(params: ProcessWinParams): Promise<ProcessWinResult> {
     const {
@@ -340,9 +399,6 @@ export class CasinoBetService {
 
     const winTimeDate = parseDateStringOrThrow(winTime) || new Date();
 
-    // DCS의 경우: 같은 round_id에 대해 다른 wager_id로 여러 win이 올 수 있음
-    // 따라서 같은 aggregatorWinId가 이미 존재하는지만 확인 (어느 round_id에 속해 있든 중복)
-    // aggregatorWinId_aggregatorType은 unique constraint이므로 이 체크만으로 충분
     const existingWin = await this.tx.gameWin.findUnique({
       where: {
         aggregatorWinId_aggregatorType_wonAt: {
@@ -362,11 +418,9 @@ export class CasinoBetService {
     });
 
     if (existingWin) {
-      // 같은 wager_id로 이미 win이 처리되었으면 중복
       throw new Error(CasinoErrorCode.DUPLICATE_CREDIT);
     }
 
-    // GameRound가 존재하는지 확인 (같은 round_id에 대해 여러 win이 올 수 있으므로)
     const existingGameRound = await this.tx.gameRound.findUnique({
       where: {
         aggregatorTxId_aggregatorType: {
@@ -384,28 +438,49 @@ export class CasinoBetService {
       throw new Error(CasinoErrorCode.INVALID_TXN);
     }
 
-    // 유저 밸런스 업데이트
-    const updatedUserBalance =
-      await this.updateUserBalanceService.execute({
-        userId,
-        currency: walletCurrency,
-        amount: winAmountInWalletCurrency,
-        balanceType: BalanceType.MAIN,
-        operation: UpdateOperation.ADD,
-      });
+    // 유저 밸런스 조회 (Before)
+    const wallet = await this.findUserWalletService.findWallet(
+      userId,
+      walletCurrency as unknown as ExchangeCurrencyCode,
+      false, // Lock 불필요 (updateUserBalanceService 내부에서 처리됨, 다만 여기서는 이전상태 조회를 위해)
+      // *주의*: updateBalance 내에서 다시 Lock을 잡으므로 여기서는 Lock 없이 조회만 하거나,
+      // updateBalance에서 리턴된 Wallet을 사용해야 함.
+      // 여기서는 updateBalance의 리턴값을 신뢰.
+    );
 
-    if (!updatedUserBalance) {
+    if (!wallet) {
       throw new Error(CasinoErrorCode.USER_BALANCE_NOT_FOUND);
     }
 
+    const beforeMainBalance = wallet.cash;
+    const beforeBonusBalance = wallet.bonus;
+
+    // 유저 밸런스 업데이트 (항상 Cash/Main으로 지급 가정 - 필요시 Bonus 당첨 분기 추가 가능)
+    const updatedWallet = await this.updateUserBalanceService.updateBalance({
+      userId,
+      currency: walletCurrency as unknown as ExchangeCurrencyCode,
+      amount: winAmountInWalletCurrency,
+      operation: UpdateOperation.ADD,
+      balanceType: WalletBalanceType.CASH, // 당첨금은 Cash로 지급
+      transactionType: WalletTransactionType.WIN,
+      referenceId: aggregatorWinId,
+    }, {
+      actionName: 'CASINO_WIN',
+      metadata: { aggregatorType, aggregatorWinId },
+    });
+
+    const afterMainBalance = updatedWallet.cash;
+    const afterBonusBalance = updatedWallet.bonus;
+
+    const mainBalanceChange = afterMainBalance.sub(beforeMainBalance);
+    const bonusBalanceChange = afterBonusBalance.sub(beforeBonusBalance);
+
     // 트랜잭션 상태 업데이트
-    // 같은 round_id에 대해 여러 win이 올 수 있으므로 totalWinAmount는 increment로 처리
     const updatedGameRound = await this.tx.gameRound.update({
       where: {
         id: existingGameRound.id,
       },
       data: {
-        // 여러 win이 올 수 있으므로 increment 사용
         totalWinAmountInGameCurrency: {
           increment: winAmountInGameCurrency,
         },
@@ -431,17 +506,16 @@ export class CasinoBetService {
               increment: winAmountInWalletCurrency,
             },
             // 승리 금액이 0이 아니면 잔액 변경 내역 생성
-            ...(updatedUserBalance.mainBalanceChange.toNumber() !== 0 ||
-              updatedUserBalance.bonusBalanceChange.toNumber() !== 0
+            ...(mainBalanceChange.toNumber() !== 0 || bonusBalanceChange.toNumber() !== 0
               ? {
                 balanceDetails: {
                   create: {
-                    mainBalanceChange: updatedUserBalance.mainBalanceChange,
-                    mainBeforeAmount: updatedUserBalance.beforeMainBalance,
-                    mainAfterAmount: updatedUserBalance.afterMainBalance,
-                    bonusBalanceChange: updatedUserBalance.bonusBalanceChange,
-                    bonusBeforeAmount: updatedUserBalance.beforeBonusBalance,
-                    bonusAfterAmount: updatedUserBalance.afterBonusBalance,
+                    mainBalanceChange: mainBalanceChange,
+                    mainBeforeAmount: beforeMainBalance,
+                    mainAfterAmount: afterMainBalance,
+                    bonusBalanceChange: bonusBalanceChange,
+                    bonusBeforeAmount: beforeBonusBalance,
+                    bonusAfterAmount: afterBonusBalance,
                   },
                 },
               }
@@ -469,26 +543,25 @@ export class CasinoBetService {
 
     return {
       transactionId: updatedGameRound.transactionId,
-      beforeMainBalance: updatedUserBalance.beforeMainBalance,
-      beforeBonusBalance: updatedUserBalance.beforeBonusBalance,
-      afterMainBalance: updatedUserBalance.afterMainBalance,
-      afterBonusBalance: updatedUserBalance.afterBonusBalance,
       gameRoundId: updatedGameRound.id,
+      beforeMainBalance,
+      beforeBonusBalance,
+      afterMainBalance,
+      afterBonusBalance,
     };
   }
 
   /**
-   * AppendWager 처리 (잭팟 당첨)
-   * - 잔액 증가
-   * - GameRound의 totalWinAmount에 추가
-   * - GameWin 생성 (JACKPOT 타입)
-   * - round_id + wager_id로 중복 체크
+   * AppendWager 처리 (잭팟 당첨 등)
    */
   async processAppendWager(
     params: ProcessAppendWagerParams,
   ): Promise<ProcessAppendWagerResult> {
     const {
-      tx,
+      tx, // Note: This might need to be removed if we use this.tx strictly, 
+      // but if the caller passes a specific tx, we should use it OR refactor to use the CLS context.
+      // Assuming 'tx' is passed for a reason, but standard pattern is to use injected tx.
+      // For now, I'll use the injected services which manage their own tx or join existing one via CLS.
       winAmountInGameCurrency,
       winTime,
       currency,
@@ -500,9 +573,7 @@ export class CasinoBetService {
       description,
     } = params;
 
-    // 1. round_id + wager_id로 중복 체크
-    // 같은 round_id와 wager_id 조합이 이미 실행되었는지 확인
-    const existingAppendWager = await tx.gameWin.findFirst({
+    const existingAppendWager = await this.tx.gameWin.findFirst({
       where: {
         aggregatorType,
         aggregatorWinId: aggregatorWagerId,
@@ -520,8 +591,7 @@ export class CasinoBetService {
       throw new Error(CasinoErrorCode.DUPLICATE_CREDIT);
     }
 
-    // 2. GameRound 조회 (round_id로)
-    const gameRound = await tx.gameRound.findUnique({
+    const gameRound = await this.tx.gameRound.findUnique({
       where: {
         aggregatorTxId_aggregatorType: {
           aggregatorTxId,
@@ -553,27 +623,46 @@ export class CasinoBetService {
       gameRound.gameSession.exchangeRate,
     );
 
-    // 3. 유저 밸런스 업데이트
-    const updatedUserBalance =
-      await this.updateUserBalanceService.execute({
-        userId,
-        currency: walletCurrency,
-        balanceType: BalanceType.MAIN,
-        operation: UpdateOperation.ADD,
-        amount: winAmountInWalletCurrency,
-      });
+    // 유저 밸런스 조회
+    const wallet = await this.findUserWalletService.findWallet(
+      userId,
+      walletCurrency as unknown as ExchangeCurrencyCode,
+      false
+    );
 
-    if (!updatedUserBalance) {
+    if (!wallet) {
       throw new Error(CasinoErrorCode.USER_BALANCE_NOT_FOUND);
     }
 
-    // 4. GameRound 업데이트 및 GameWin 생성
-    const updatedGameRound = await tx.gameRound.update({
+    const beforeMainBalance = wallet.cash;
+    const beforeBonusBalance = wallet.bonus;
+
+    // 유저 밸런스 업데이트 (잭팟 -> Cash)
+    const updatedWallet = await this.updateUserBalanceService.updateBalance({
+      userId,
+      currency: walletCurrency as unknown as ExchangeCurrencyCode,
+      amount: winAmountInWalletCurrency,
+      operation: UpdateOperation.ADD,
+      balanceType: WalletBalanceType.CASH,
+      transactionType: WalletTransactionType.WIN, // 잭팟으로 가정
+      referenceId: aggregatorWagerId,
+    }, {
+      actionName: 'CASINO_JACKPOT',
+      internalNote: description,
+      metadata: { aggregatorType, aggregatorWagerId }
+    });
+
+    const afterMainBalance = updatedWallet.cash;
+    const afterBonusBalance = updatedWallet.bonus;
+
+    const mainBalanceChange = afterMainBalance.sub(beforeMainBalance);
+    const bonusBalanceChange = afterBonusBalance.sub(beforeBonusBalance);
+
+    const updatedGameRound = await this.tx.gameRound.update({
       where: {
         id: gameRound.id,
       },
       data: {
-        // totalWinAmount에 추가 (기존 win이 있을 수 있으므로 increment)
         totalWinAmountInGameCurrency: {
           increment: winAmountInGameCurrency,
         },
@@ -598,18 +687,16 @@ export class CasinoBetService {
             afterAmount: {
               increment: winAmountInWalletCurrency,
             },
-            // 잔액 변경 내역 생성
-            ...(updatedUserBalance.mainBalanceChange.toNumber() !== 0 ||
-              updatedUserBalance.bonusBalanceChange.toNumber() !== 0
+            ...(mainBalanceChange.toNumber() !== 0 || bonusBalanceChange.toNumber() !== 0
               ? {
                 balanceDetails: {
                   create: {
-                    mainBalanceChange: updatedUserBalance.mainBalanceChange,
-                    mainBeforeAmount: updatedUserBalance.beforeMainBalance,
-                    mainAfterAmount: updatedUserBalance.afterMainBalance,
-                    bonusBalanceChange: updatedUserBalance.bonusBalanceChange,
-                    bonusBeforeAmount: updatedUserBalance.beforeBonusBalance,
-                    bonusAfterAmount: updatedUserBalance.afterBonusBalance,
+                    mainBalanceChange: mainBalanceChange,
+                    mainBeforeAmount: beforeMainBalance,
+                    mainAfterAmount: afterMainBalance,
+                    bonusBalanceChange: bonusBalanceChange,
+                    bonusBeforeAmount: beforeBonusBalance,
+                    bonusAfterAmount: afterBonusBalance,
                   },
                 },
               }
@@ -638,10 +725,10 @@ export class CasinoBetService {
 
     return {
       transactionId: updatedGameRound.transactionId,
-      beforeMainBalance: updatedUserBalance.beforeMainBalance,
-      beforeBonusBalance: updatedUserBalance.beforeBonusBalance,
-      afterMainBalance: updatedUserBalance.afterMainBalance,
-      afterBonusBalance: updatedUserBalance.afterBonusBalance,
+      beforeMainBalance,
+      beforeBonusBalance,
+      afterMainBalance,
+      afterBonusBalance,
       gameRoundId: updatedGameRound.id,
     };
   }

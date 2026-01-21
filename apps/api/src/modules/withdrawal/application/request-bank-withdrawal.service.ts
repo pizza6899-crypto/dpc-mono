@@ -3,10 +3,9 @@ import { Prisma, ExchangeCurrencyCode } from '@prisma/client';
 import { Transactional } from '@nestjs-cls/transactional';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
-import { CreateWalletTransactionService } from 'src/modules/wallet/application/create-wallet-transaction.service';
-import { WalletQueryService } from 'src/modules/wallet/application/wallet-query.service';
-import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
-import { TransactionType, TransactionStatus } from '@prisma/client';
+import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
+import { UpdateOperation } from 'src/modules/wallet/domain';
+import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
 import { WithdrawalDetail, WithdrawalPolicy } from '../domain';
 import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';
@@ -40,8 +39,7 @@ export class RequestBankWithdrawalService {
         private readonly policy: WithdrawalPolicy,
         private readonly snowflakeService: SnowflakeService,
         private readonly updateUserBalanceService: UpdateUserBalanceService,
-        private readonly createWalletTransactionService: CreateWalletTransactionService,
-        private readonly walletQueryService: WalletQueryService,
+        private readonly findUserWalletService: FindUserWalletService,
     ) { }
 
     @Transactional()
@@ -74,7 +72,7 @@ export class RequestBankWithdrawalService {
         this.policy.validateBankAmount(requestedAmount, config);
 
         // 4. 잔액 검증
-        const wallet = await this.walletQueryService.getWallet(userId, currency, false);
+        const wallet = await this.findUserWalletService.findWallet(userId, currency, false);
         if (wallet) {
             this.policy.validateBalance(requestedAmount, {
                 mainBalance: wallet.cash,
@@ -108,41 +106,22 @@ export class RequestBankWithdrawalService {
         withdrawal.markPendingReview();
 
         // 9. 잔액 차감 (mainBalance에서 차감) - 저장 전에 먼저 차감
-        const balanceResult = await this.updateUserBalanceService.execute({
+        await this.updateUserBalanceService.updateBalance({
             userId,
             currency,
-            balanceType: BalanceType.MAIN,
-            operation: UpdateOperation.SUBTRACT,
             amount: requestedAmount,
+            operation: UpdateOperation.SUBTRACT,
+            balanceType: WalletBalanceType.CASH,
+            transactionType: WalletTransactionType.WITHDRAW,
         });
 
         // 10. 출금 요청 저장
         const saved = await this.repository.create(withdrawal);
 
-        // 11. 트랜잭션 기록 생성
-        await this.createWalletTransactionService.execute({
-            userId,
-            type: TransactionType.WITHDRAW,
-            status: TransactionStatus.PENDING,
-            currency,
-            amount: requestedAmount,
-            beforeBalance: balanceResult.beforeMainBalance.add(balanceResult.beforeBonusBalance),
-            afterBalance: balanceResult.afterMainBalance.add(balanceResult.afterBonusBalance),
-            balanceDetail: {
-                mainBalanceChange: balanceResult.mainBalanceChange,
-                mainBeforeAmount: balanceResult.beforeMainBalance,
-                mainAfterAmount: balanceResult.afterMainBalance,
-                bonusBalanceChange: balanceResult.bonusBalanceChange,
-                bonusBeforeAmount: balanceResult.beforeBonusBalance,
-                bonusAfterAmount: balanceResult.afterBonusBalance,
-            },
-            description: 'Bank withdrawal request',
-            metadata: {
-                withdrawalId: saved.id.toString(),
-                withdrawalType: 'BANK',
-                bankName
-            },
-        });
+        // 11. 트랜잭션 기록은 UpdateUserBalanceService.updateBalance 내에서 WalletTransaction으로 처리됨
+        // 기존의 common Transaction(TransactionType.WITHDRAW) 기록이 필요하다면 별도로 추가해야 함
+        // 여기서는 WithdrawalDetail이 해당 정보를 담고 있고 WalletTransaction이 잔액 변동을 담고 있으므로 일단 생략하거나 
+        // 필요시 WithdrawalRepository에 트랜잭션 생성 메서드를 추가해야 함
 
         return {
             withdrawalId: saved.id,

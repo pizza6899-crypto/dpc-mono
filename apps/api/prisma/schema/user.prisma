@@ -61,7 +61,7 @@ model UserSession {
   isAdmin Boolean @default(false) @map("is_admin")
 
   /// 디바이스 정보
-  ipAddress         String?  @map("ip_address")
+  ipAddress         String?  @map("ip_address") @db.Inet
   userAgent         String?  @map("user_agent")
   deviceFingerprint String?  @map("device_fingerprint")
   isMobile          Boolean? @map("is_mobile")

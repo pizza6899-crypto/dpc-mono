@@ -7,9 +7,10 @@ import {
   GameProvider,
   Prisma,
   TransactionStatus,
+  ExchangeCurrencyCode,
 } from '@prisma/client';
 import { WhitecliffMapperService } from '../infrastructure/whitecliff-mapper.service';
-import { GetUserBalanceService } from 'src/modules/wallet/application/get-user-balance.service';
+import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
 import { CasinoBetService } from '../../../application/casino-bet.service';
 import { CasinoBonusService } from '../../../application/casino-bonus.service';
 import { getCasinoErrorCode } from '../utils/whitecliff-error-response.util';
@@ -31,7 +32,7 @@ export class WhitecliffCallbackService {
     private readonly tx: PrismaTransaction,
     private readonly envService: EnvService,
     private readonly whitecliffMapperService: WhitecliffMapperService,
-    private readonly getUserBalanceService: GetUserBalanceService,
+    private readonly findUserWalletService: FindUserWalletService,
     private readonly casinoBetService: CasinoBetService,
     private readonly casinoBonusService: CasinoBonusService,
     private readonly queueService: CasinoQueueService,
@@ -100,12 +101,11 @@ export class WhitecliffCallbackService {
         throw new Error(CasinoErrorCode.INVALID_USER);
       }
 
-      const balanceResult = await this.getUserBalanceService.execute({
-        userId: gameSession.user.id,
-        currency: gameSession.walletCurrency,
-      });
-
-      const userWallet = Array.isArray(balanceResult.wallet) ? balanceResult.wallet[0] : balanceResult.wallet;
+      const userWallet = await this.findUserWalletService.findWallet(
+        gameSession.user.id,
+        gameSession.walletCurrency as unknown as ExchangeCurrencyCode,
+        true,
+      );
 
       if (!userWallet) {
         throw new Error(CasinoErrorCode.INVALID_USER);

@@ -1,14 +1,16 @@
 // src/modules/deposit/application/approve-deposit.service.ts
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma, AdjustmentReasonCode } from '@prisma/client';
 import { TransactionStatus, TransactionType } from '@prisma/client';
 import type { RequestClientInfo } from 'src/common/http/types';
-import { UpdateUserBalanceAdminService } from '../../wallet/application/update-user-balance-admin.service';
 import { DepositAlreadyProcessedException } from '../domain';
 import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
 import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
-import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
+import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
+import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
+import { UpdateOperation } from 'src/modules/wallet/domain';
+import { WalletBalanceType, WalletTransactionType, ExchangeCurrencyCode } from '@prisma/client';
 import { GrantPromotionBonusService } from '../../promotion/application/grant-promotion-bonus.service';
 import { CreateWageringRequirementService } from '../../wagering/application/create-wagering-requirement.service';
 import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
@@ -34,7 +36,8 @@ export class ApproveDepositService {
   constructor(
     @Inject(DEPOSIT_DETAIL_REPOSITORY)
     private readonly depositRepository: DepositDetailRepositoryPort,
-    private readonly updateUserBalanceAdminService: UpdateUserBalanceAdminService,
+    private readonly findUserWalletService: FindUserWalletService,
+    private readonly updateUserBalanceService: UpdateUserBalanceService,
     private readonly grantPromotionBonusService: GrantPromotionBonusService,
     private readonly createWageringRequirementService: CreateWageringRequirementService,
     private readonly analyticsQueue: AnalyticsQueueService,
@@ -59,17 +62,36 @@ export class ApproveDepositService {
       throw new DepositAlreadyProcessedException(id, deposit.status);
     }
 
-    // 3. 잔액 업데이트
-    const balanceUpdate = await this.updateUserBalanceAdminService.execute({
+    // 3. Get Initial Wallet State for Recording
+    const walletBefore = await this.findUserWalletService.findWallet(
+      deposit.userId,
+      deposit.depositCurrency as unknown as ExchangeCurrencyCode,
+      true
+    );
+
+    if (!walletBefore) {
+      throw new Error('User wallet not found');
+    }
+
+    const beforeTotalAmount = walletBefore.cash.add(walletBefore.bonus);
+
+    // 4. 잔액 업데이트
+    const updatedWallet = await this.updateUserBalanceService.updateBalance({
       userId: deposit.userId,
-      currency: deposit.depositCurrency,
-      balanceType: BalanceType.MAIN,
-      operation: UpdateOperation.ADD,
+      currency: deposit.depositCurrency as unknown as ExchangeCurrencyCode,
       amount: actuallyPaid,
+      operation: UpdateOperation.ADD,
+      balanceType: WalletBalanceType.CASH,
+      transactionType: WalletTransactionType.DEPOSIT,
+      referenceId: deposit.id!.toString(),
+    }, {
       adminUserId: adminId,
       reasonCode: AdjustmentReasonCode.MANUAL_DEPOSIT,
       internalNote: memo,
+      actionName: 'APPROVE_DEPOSIT',
     });
+
+    const afterTotalAmount = updatedWallet.cash.add(updatedWallet.bonus);
 
     // 4. Transaction 생성 (지연 생성)
     let transactionId = deposit.transactionId;
@@ -80,8 +102,8 @@ export class ApproveDepositService {
         status: TransactionStatus.COMPLETED,
         currency: deposit.depositCurrency,
         amount: actuallyPaid,
-        beforeAmount: Prisma.Decimal(0),
-        afterAmount: Prisma.Decimal(0),
+        beforeAmount: beforeTotalAmount,
+        afterAmount: afterTotalAmount,
       });
     }
 

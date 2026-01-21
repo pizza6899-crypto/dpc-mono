@@ -1,10 +1,13 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { GameProvider, Prisma } from '@prisma/client';
 import {
   GameAggregatorType,
   TransactionType,
   TransactionStatus,
   BonusType,
+  WalletBalanceType,
+  WalletTransactionType,
+  ExchangeCurrencyCode,
 } from '@prisma/client';
 import { CasinoErrorCode } from '../constants/casino-error-codes';
 import {
@@ -12,9 +15,10 @@ import {
   WalletCurrencyCode,
 } from 'src/utils/currency.util';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
-import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
+import { UpdateOperation } from 'src/modules/wallet/domain/wallet.constant';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
+import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
 
 export interface ProcessBonusParams {
   userId: bigint;
@@ -52,6 +56,7 @@ export class CasinoBonusService {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
+    private readonly findUserWalletService: FindUserWalletService,
   ) { }
 
   /**
@@ -151,7 +156,7 @@ export class CasinoBonusService {
     }
 
     let gameSession;
-    let walletCurrency = gameCurrency as WalletCurrencyCode;
+    let walletCurrency = gameCurrency as unknown as WalletCurrencyCode;
     let bonusAmountInWalletCurrency = bonusAmountInGameCurrency;
 
     // gameSessionId가 있으면 직접 조회, 없으면 round_id로 찾기
@@ -198,20 +203,44 @@ export class CasinoBonusService {
     }
 
     if (gameSession) {
-      walletCurrency = gameSession.walletCurrency as WalletCurrencyCode;
+      walletCurrency = gameSession.walletCurrency as unknown as WalletCurrencyCode;
       bonusAmountInWalletCurrency = bonusAmountInGameCurrency.div(
         gameSession.exchangeRate,
       );
     }
 
-    const updatedUserBalance =
-      await this.updateUserBalanceService.execute({
-        userId,
-        currency: walletCurrency,
-        amount: bonusAmountInWalletCurrency,
-        balanceType: BalanceType.MAIN,
-        operation: UpdateOperation.ADD,
-      });
+    // 유저 밸런스 조회 (Before)
+    const wallet = await this.findUserWalletService.findWallet(
+      userId,
+      walletCurrency as unknown as ExchangeCurrencyCode,
+      false,
+    );
+
+    if (!wallet) {
+      throw new Error(CasinoErrorCode.USER_BALANCE_NOT_FOUND);
+    }
+    const beforeMainBalance = wallet.cash;
+    const beforeBonusBalance = wallet.bonus;
+
+    const updatedWallet = await this.updateUserBalanceService.updateBalance({
+      userId,
+      currency: walletCurrency as unknown as ExchangeCurrencyCode,
+      amount: bonusAmountInWalletCurrency,
+      operation: UpdateOperation.ADD,
+      balanceType: WalletBalanceType.BONUS, // 보너스는 Bonus Balance로 지급한다고 가정 (기획 확인 필요, 일단 Bonus로)
+      transactionType: WalletTransactionType.BONUS_IN,
+      referenceId: aggregatorTransactionId || aggregatorPromotionId || aggregatorRoundId,
+    }, {
+      actionName: 'CASINO_BONUS',
+      metadata: { aggregatorType, bonusType },
+      internalNote: description
+    });
+
+    const afterMainBalance = updatedWallet.cash;
+    const afterBonusBalance = updatedWallet.bonus;
+
+    const mainBalanceChange = afterMainBalance.sub(beforeMainBalance);
+    const bonusBalanceChange = afterBonusBalance.sub(beforeBonusBalance);
 
     // 트랜잭션 생성
     const transaction = await this.tx.transaction.create({
@@ -221,12 +250,8 @@ export class CasinoBonusService {
         status: TransactionStatus.COMPLETED,
         currency: walletCurrency,
         amount: bonusAmountInWalletCurrency,
-        beforeAmount: updatedUserBalance.beforeMainBalance.add(
-          updatedUserBalance.beforeBonusBalance,
-        ),
-        afterAmount: updatedUserBalance.afterMainBalance.add(
-          updatedUserBalance.afterBonusBalance,
-        ),
+        beforeAmount: beforeMainBalance.add(beforeBonusBalance),
+        afterAmount: afterMainBalance.add(afterBonusBalance),
         bonusDetail: {
           create: {
             transactionTime,
@@ -247,12 +272,12 @@ export class CasinoBonusService {
         },
         balanceDetails: {
           create: {
-            mainBalanceChange: updatedUserBalance.mainBalanceChange,
-            mainBeforeAmount: updatedUserBalance.beforeMainBalance,
-            mainAfterAmount: updatedUserBalance.afterMainBalance,
-            bonusBalanceChange: null,
-            bonusBeforeAmount: null,
-            bonusAfterAmount: null,
+            mainBalanceChange: mainBalanceChange,
+            mainBeforeAmount: beforeMainBalance,
+            mainAfterAmount: afterMainBalance,
+            bonusBalanceChange: bonusBalanceChange,
+            bonusBeforeAmount: beforeBonusBalance,
+            bonusAfterAmount: afterBonusBalance,
           },
         },
       },
@@ -269,10 +294,10 @@ export class CasinoBonusService {
     return {
       transactionId: transaction.id,
       bonusDetailId: transaction.bonusDetail!.id,
-      beforeMainBalance: updatedUserBalance.beforeMainBalance,
-      beforeBonusBalance: updatedUserBalance.beforeBonusBalance,
-      afterMainBalance: updatedUserBalance.afterMainBalance,
-      afterBonusBalance: updatedUserBalance.afterBonusBalance,
+      beforeMainBalance,
+      beforeBonusBalance,
+      afterMainBalance,
+      afterBonusBalance,
     };
   }
 }

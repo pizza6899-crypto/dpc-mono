@@ -1,13 +1,14 @@
 // src/modules/casino/application/casino-refund.service.ts
 
-import { Injectable, Logger } from '@nestjs/common';
-import { GameAggregatorType, Prisma, TransactionStatus } from '@prisma/client';
+import { Injectable } from '@nestjs/common';
+import { GameAggregatorType, Prisma, TransactionStatus, WalletBalanceType, WalletTransactionType, ExchangeCurrencyCode } from '@prisma/client';
 import { CasinoErrorCode } from '../constants/casino-error-codes';
 import {
   GamingCurrencyCode,
 } from 'src/utils/currency.util';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
-import { BalanceType, UpdateOperation } from 'src/modules/wallet/domain';
+import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
+import { UpdateOperation } from 'src/modules/wallet/domain/wallet.constant';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 
@@ -36,6 +37,7 @@ export class CasinoRefundService {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
+    private readonly findUserWalletService: FindUserWalletService,
   ) { }
 
   /**
@@ -149,21 +151,59 @@ export class CasinoRefundService {
       matchingBalanceDetail.bonusBalanceChange || 0,
     );
 
-    await this.updateUserBalanceService.execute({
+    // 초기 지갑 상태 조회
+    const initialWallet = await this.findUserWalletService.findWallet(
       userId,
-      currency: walletCurrency,
-      amount: returnAmount.mainBalance,
-      balanceType: BalanceType.MAIN,
-      operation: UpdateOperation.ADD,
-    });
+      walletCurrency as unknown as ExchangeCurrencyCode,
+      false,
+    );
 
-    const updatedUserBalance = await this.updateUserBalanceService.execute({
-      userId,
-      currency: walletCurrency,
-      amount: returnAmount.bonusBalance,
-      balanceType: BalanceType.BONUS,
-      operation: UpdateOperation.ADD,
-    });
+    if (!initialWallet) {
+      throw new Error(CasinoErrorCode.USER_BALANCE_NOT_FOUND);
+    }
+
+    const beforeMainBalance = initialWallet.cash;
+    const beforeBonusBalance = initialWallet.bonus;
+
+    let currentWallet = initialWallet;
+
+    // 1. Main Balance 환불
+    if (returnAmount.mainBalance.gt(0)) {
+      currentWallet = await this.updateUserBalanceService.updateBalance({
+        userId,
+        currency: walletCurrency as unknown as ExchangeCurrencyCode,
+        amount: returnAmount.mainBalance,
+        balanceType: WalletBalanceType.CASH,
+        operation: UpdateOperation.ADD,
+        transactionType: WalletTransactionType.REFUND,
+        referenceId: aggregatorBetId,
+      }, {
+        actionName: 'CASINO_REFUND_CASH',
+        metadata: { aggregatorType, aggregatorBetId }
+      });
+    }
+
+    // 2. Bonus Balance 환불
+    if (returnAmount.bonusBalance.gt(0)) {
+      currentWallet = await this.updateUserBalanceService.updateBalance({
+        userId,
+        currency: walletCurrency as unknown as ExchangeCurrencyCode,
+        amount: returnAmount.bonusBalance,
+        balanceType: WalletBalanceType.BONUS,
+        operation: UpdateOperation.ADD,
+        transactionType: WalletTransactionType.REFUND,
+        referenceId: aggregatorBetId,
+      }, {
+        actionName: 'CASINO_REFUND_BONUS',
+        metadata: { aggregatorType, aggregatorBetId }
+      });
+    }
+
+    const afterMainBalance = currentWallet.cash;
+    const afterBonusBalance = currentWallet.bonus;
+
+    const mainBalanceChange = afterMainBalance.sub(beforeMainBalance);
+    const bonusBalanceChange = afterBonusBalance.sub(beforeBonusBalance);
 
     // 트랜잭션 업데이트
     await this.tx.gameBet.update({
@@ -211,12 +251,12 @@ export class CasinoRefundService {
                 },
                 balanceDetails: {
                   create: {
-                    mainBalanceChange: updatedUserBalance.mainBalanceChange,
-                    mainBeforeAmount: updatedUserBalance.beforeMainBalance,
-                    mainAfterAmount: updatedUserBalance.afterMainBalance,
-                    bonusBalanceChange: updatedUserBalance.bonusBalanceChange,
-                    bonusBeforeAmount: updatedUserBalance.beforeBonusBalance,
-                    bonusAfterAmount: updatedUserBalance.afterBonusBalance,
+                    mainBalanceChange: mainBalanceChange,
+                    mainBeforeAmount: beforeMainBalance,
+                    mainAfterAmount: afterMainBalance,
+                    bonusBalanceChange: bonusBalanceChange,
+                    bonusBeforeAmount: beforeBonusBalance,
+                    bonusAfterAmount: afterBonusBalance,
                   },
                 },
               },
@@ -230,10 +270,10 @@ export class CasinoRefundService {
     return {
       transactionId: existingGameBet.gameRound.transaction.id,
       gameRoundId: existingGameBet.gameRound.id,
-      beforeMainBalance: updatedUserBalance.beforeMainBalance,
-      beforeBonusBalance: updatedUserBalance.beforeBonusBalance,
-      afterMainBalance: updatedUserBalance.afterMainBalance,
-      afterBonusBalance: updatedUserBalance.afterBonusBalance,
+      beforeMainBalance: beforeMainBalance,
+      beforeBonusBalance: beforeBonusBalance,
+      afterMainBalance: afterMainBalance,
+      afterBonusBalance: afterBonusBalance,
     };
   }
 }

@@ -46,7 +46,7 @@ model DepositDetail {
   // 3. 보안 및 어뷰징 방지
   // 상세 보안 정보는 ActivityLog에 기록되며, 여기서는 최소한의 핵심 정보만 저장
   // 어뷰징 체크 시 ActivityLog와 join하여 조회
-  ipAddress         String? @map("ip_address")
+  ipAddress         String? @map("ip_address") @db.Inet
   deviceFingerprint String? @map("device_fingerprint")
 
   feeAmount             Decimal?              @map("fee_amount") @db.Decimal(32, 18)

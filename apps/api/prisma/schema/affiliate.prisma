@@ -25,7 +25,7 @@ model Referral {
   uid               String        @unique
   affiliateId       BigInt        @map("affiliate_id")
   subUserId         BigInt        @map("sub_user_id")
-  ipAddress         String?       @map("ip_address")
+  ipAddress         String?       @map("ip_address") @db.Inet
   deviceFingerprint String?       @map("device_fingerprint")
   userAgent         String?       @map("user_agent")
   createdAt         DateTime      @default(now()) @map("created_at")

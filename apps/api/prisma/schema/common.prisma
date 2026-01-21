@@ -397,7 +397,7 @@ model LoginAttempt {
   userId            BigInt?             @map("user_id")
   result            LoginAttemptResult
   failureReason     LoginFailureReason? @map("failure_reason")
-  ipAddress         String?             @map("ip_address")
+  ipAddress         String?             @map("ip_address") @db.Inet
   userAgent         String?             @map("user_agent")
   deviceFingerprint String?             @map("device_fingerprint")
   isMobile          Boolean?            @map("is_mobile")

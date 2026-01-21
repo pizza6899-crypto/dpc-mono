@@ -39,11 +39,12 @@ import { CasinoBonusService } from '../../../application/casino-bonus.service';
 import { WalletCurrencyCode } from 'src/utils/currency.util';
 import { CasinoErrorCode } from '../../../constants/casino-error-codes';
 import { FindCasinoGameSessionService } from '../../../game-session/application/find-casino-game-session.service';
-import { GetUserBalanceService } from 'src/modules/wallet/application/get-user-balance.service';
 import { InjectTransaction, Transactional } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { InsufficientBalanceException } from 'src/modules/wallet/domain/wallet.exception';
 import { CasinoQueueService } from 'src/modules/casino/infrastructure/queue/casino-queue.service';
+import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
+import { ExchangeCurrencyCode } from '@prisma/client';
 
 @Injectable()
 export class DcsCallbackService {
@@ -60,7 +61,7 @@ export class DcsCallbackService {
     private readonly casinoRefundService: CasinoRefundService,
     private readonly casinoBonusService: CasinoBonusService,
     private readonly findCasinoGameSessionService: FindCasinoGameSessionService,
-    private readonly getUserBalanceService: GetUserBalanceService,
+    private readonly findUserWalletService: FindUserWalletService,
   ) {
     this.dcsConfig = this.envService.dcs;
   }
@@ -221,14 +222,11 @@ export class DcsCallbackService {
     } catch (error) {
       this.logger.error(error, `Wager 콜백 실패`);
 
-      const balanceResult = await this.getUserBalanceService.execute({
-        userId: gameSession.userId,
-        currency: gameSession.walletCurrency,
-      });
-
-      const userWallet = Array.isArray(balanceResult.wallet)
-        ? balanceResult.wallet[0]
-        : balanceResult.wallet;
+      const userWallet = await this.findUserWalletService.findWallet(
+        gameSession.userId,
+        gameSession.walletCurrency as unknown as ExchangeCurrencyCode,
+        true,
+      );
 
       let balance = new Prisma.Decimal(0);
       if (userWallet) {
@@ -370,14 +368,11 @@ export class DcsCallbackService {
       const gameSession = gameRound?.gameSession;
 
       if (gameSession) {
-        const balanceResult = await this.getUserBalanceService.execute({
-          userId: gameSession.userId,
-          currency: gameSession.walletCurrency,
-        });
-
-        const userWallet = Array.isArray(balanceResult.wallet)
-          ? balanceResult.wallet[0]
-          : balanceResult.wallet;
+        const userWallet = await this.findUserWalletService.findWallet(
+          gameSession.userId,
+          gameSession.walletCurrency as unknown as ExchangeCurrencyCode,
+          true,
+        );
 
         if (userWallet) {
           balance = gameSession.exchangeRate.mul(userWallet.totalAvailableBalance);
@@ -606,14 +601,11 @@ export class DcsCallbackService {
       let balance = new Prisma.Decimal(0);
 
       if (gameSession) {
-        const balanceResult = await this.getUserBalanceService.execute({
-          userId: gameSession.userId,
-          currency: gameSession.walletCurrency,
-        });
-
-        const userWallet = Array.isArray(balanceResult.wallet)
-          ? balanceResult.wallet[0]
-          : balanceResult.wallet;
+        const userWallet = await this.findUserWalletService.findWallet(
+          gameSession.userId,
+          gameSession.walletCurrency as unknown as ExchangeCurrencyCode,
+          true,
+        );
 
         if (userWallet) {
           balance = gameSession.exchangeRate.mul(userWallet.totalAvailableBalance);
@@ -735,14 +727,11 @@ export class DcsCallbackService {
 
       if (gameRound) {
         // gameRound가 존재하는 경우 (DUPLICATE_CREDIT 등)
-        const balanceResult = await this.getUserBalanceService.execute({
-          userId: gameRound.gameSession.userId,
-          currency: gameRound.gameSession.walletCurrency,
-        });
-
-        const userWallet = Array.isArray(balanceResult.wallet)
-          ? balanceResult.wallet[0]
-          : balanceResult.wallet;
+        const userWallet = await this.findUserWalletService.findWallet(
+          gameRound.gameSession.userId,
+          gameRound.gameSession.walletCurrency as unknown as ExchangeCurrencyCode,
+          true,
+        );
 
         if (userWallet) {
           balance = gameRound.gameSession.exchangeRate.mul(
@@ -779,14 +768,11 @@ export class DcsCallbackService {
           });
 
           if (gameSession) {
-            const balanceResult = await this.getUserBalanceService.execute({
-              userId: user.id,
-              currency: gameSession.walletCurrency,
-            });
-
-            const userWallet = Array.isArray(balanceResult.wallet)
-              ? balanceResult.wallet[0]
-              : balanceResult.wallet;
+            const userWallet = await this.findUserWalletService.findWallet(
+              user.id,
+              gameSession.walletCurrency as unknown as ExchangeCurrencyCode,
+              true,
+            );
 
             if (userWallet) {
               balance = gameSession.exchangeRate.mul(userWallet.totalAvailableBalance);
@@ -985,14 +971,11 @@ export class DcsCallbackService {
       let balance = new Prisma.Decimal(0);
 
       if (gameSession) {
-        const balanceResult = await this.getUserBalanceService.execute({
-          userId: gameSession.userId,
-          currency: gameSession.walletCurrency,
-        });
-
-        const userWallet = Array.isArray(balanceResult.wallet)
-          ? balanceResult.wallet[0]
-          : balanceResult.wallet;
+        const userWallet = await this.findUserWalletService.findWallet(
+          gameSession.userId,
+          gameSession.walletCurrency as unknown as ExchangeCurrencyCode,
+          true,
+        );
 
         if (userWallet) {
           balance = gameSession.exchangeRate.mul(userWallet.totalAvailableBalance);
@@ -1037,16 +1020,11 @@ export class DcsCallbackService {
         return getDcsResponse(DcsResponseCode.NOT_LOGGED_IN);
       }
 
-      const balanceResult = await this.getUserBalanceService.execute({
-        userId: gameSession.userId,
-        currency: gameSession.walletCurrency,
-      });
-
-      // currency를 지정했으므로 단일 UserWallet 반환됨
-      // Array.isArray 체크를 통해 타입 안전성 확보 (혹은 as UserWallet)
-      const userWallet = Array.isArray(balanceResult.wallet)
-        ? balanceResult.wallet[0]
-        : balanceResult.wallet;
+      const userWallet = await this.findUserWalletService.findWallet(
+        gameSession.userId,
+        gameSession.walletCurrency as unknown as ExchangeCurrencyCode,
+        true,
+      );
 
       if (!userWallet) {
         this.logger.error(`❌ Get Balance API - 지갑 생성 실패: ${brand_uid}`);
@@ -1172,14 +1150,11 @@ export class DcsCallbackService {
             });
 
             if (gameSession) {
-              const balanceResult = await this.getUserBalanceService.execute({
-                userId: user.id,
-                currency: gameSession.walletCurrency,
-              });
-
-              const userWallet = Array.isArray(balanceResult.wallet)
-                ? balanceResult.wallet[0]
-                : balanceResult.wallet;
+              const userWallet = await this.findUserWalletService.findWallet(
+                user.id,
+                gameSession.walletCurrency as unknown as ExchangeCurrencyCode,
+                true,
+              );
 
               if (userWallet) {
                 const exchangeRateBalance = gameSession.exchangeRate.mul(

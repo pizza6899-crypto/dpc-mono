@@ -69,7 +69,7 @@ model WithdrawalDetail {
   failureReason String?  @map("failure_reason")
 
   // 보안 정보
-  ipAddress         String? @map("ip_address")
+  ipAddress         String? @map("ip_address") @db.Inet
   deviceFingerprint String? @map("device_fingerprint")
 
   // 타임스탬프

@@ -73,4 +73,5 @@ enum WalletTransactionType {
     BONUS_OUT // 보너스 회수/만료
     ADJUSTMENT // 관리자 수동 보정
     STATUS_CHANGE // 지갑 상태 변경 기록
+    COMP_CLAIM // 콤프 전환 (콤프 -> 현금)
 }

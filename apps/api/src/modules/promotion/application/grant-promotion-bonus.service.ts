@@ -7,6 +7,9 @@ import type { Promotion, UserPromotion } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports/out';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
 import { CreateWageringRequirementService } from '../../wagering/application/create-wagering-requirement.service';
+import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
+import { UpdateOperation } from '../../wallet/domain';
+import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
 import type { RequestClientInfo } from 'src/common/http/types';
 
 interface GrantPromotionBonusParams {
@@ -34,6 +37,7 @@ export class GrantPromotionBonusService {
     private readonly repository: PromotionRepositoryPort,
     private readonly policy: PromotionPolicy,
     private readonly createWageringRequirementService: CreateWageringRequirementService,
+    private readonly updateUserBalanceService: UpdateUserBalanceService,
   ) { }
 
   @Transactional()
@@ -129,6 +133,22 @@ export class GrantPromotionBonusService {
       currency,
       expiresAt,
     });
+
+    // 2. 지갑에 보너스 지급 (Wallet Update)
+    if (bonusAmount.gt(0)) {
+      await this.updateUserBalanceService.updateBalance({
+        userId,
+        currency,
+        amount: bonusAmount,
+        operation: UpdateOperation.ADD,
+        balanceType: WalletBalanceType.BONUS,
+        transactionType: WalletTransactionType.BONUS_IN,
+        referenceId: userPromotion.id.toString(),
+      }, {
+        internalNote: `Promotion bonus granted: ${promotion.managementName}`,
+        actionName: 'GRANT_PROMOTION_BONUS',
+      });
+    }
 
     // 롤링 생성 (보너스 금액에만 롤링 적용)
     let rollingCreated = false;

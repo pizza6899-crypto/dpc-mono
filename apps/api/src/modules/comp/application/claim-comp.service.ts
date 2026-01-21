@@ -5,7 +5,9 @@ import { COMP_REPOSITORY } from '../ports/repository.token';
 import type { CompRepositoryPort } from '../ports';
 import { CompTransaction, InsufficientCompBalanceException } from '../domain';
 import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
-import { BalanceType, UpdateOperation } from '../../wallet/domain';
+import { FindUserWalletService } from '../../wallet/application/find-user-wallet.service';
+import { UpdateOperation } from '../../wallet/domain';
+import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
 import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
 
 interface ClaimCompParams {
@@ -27,6 +29,7 @@ export class ClaimCompService {
     constructor(
         @Inject(COMP_REPOSITORY)
         private readonly compRepository: CompRepositoryPort,
+        private readonly findUserWalletService: FindUserWalletService,
         private readonly updateUserBalanceService: UpdateUserBalanceService,
         private readonly analyticsQueueService: AnalyticsQueueService,
     ) { }
@@ -48,44 +51,63 @@ export class ClaimCompService {
         wallet = wallet.claim(amount);
 
         // 3. Persist Wallet
-        const savedWallet = await this.compRepository.save(wallet);
+        const savedCompWallet = await this.compRepository.save(wallet);
 
         // 4. Record Comp Transaction
         const compTx = CompTransaction.create({
-            compWalletId: savedWallet.id,
+            compWalletId: savedCompWallet.id,
             amount: amount.negated(),
-            balanceAfter: savedWallet.balance,
+            balanceAfter: savedCompWallet.balance,
             type: CompTransactionType.CLAIM,
             description: 'Comp conversion to cash',
         });
         const createdCompTx = await this.compRepository.createTransaction(compTx);
 
-        // 5. Update Main User Balance (Cash)
-        const balanceUpdate = await this.updateUserBalanceService.execute({
+        // 5. Get Initial Wallet State for Recording
+        const walletBefore = await this.findUserWalletService.findWallet(userId, currency, true);
+        if (!walletBefore) {
+            throw new Error('User wallet not found');
+        }
+
+        const beforeMainBalance = walletBefore.cash;
+        const beforeBonusBalance = walletBefore.bonus;
+
+        // 6. Update Main User Balance (Cash)
+        const savedUserWallet = await this.updateUserBalanceService.updateBalance({
             userId,
             currency,
-            balanceType: BalanceType.MAIN,
-            operation: UpdateOperation.ADD,
             amount: amount,
+            operation: UpdateOperation.ADD,
+            balanceType: WalletBalanceType.CASH,
+            transactionType: 'COMP_CLAIM' as unknown as WalletTransactionType,
+            referenceId: createdCompTx.id.toString(),
+        }, {
+            actionName: 'COMP_CLAIM',
         });
 
-        // 6. Record Main Wallet Transaction
+        const afterMainBalance = savedUserWallet.cash;
+        const afterBonusBalance = savedUserWallet.bonus;
+
+        const mainBalanceChange = afterMainBalance.sub(beforeMainBalance);
+        const bonusBalanceChange = afterBonusBalance.sub(beforeBonusBalance);
+
+        // 7. Record Main Wallet Transaction
         await this.compRepository.createMainTransaction({
             userId,
             type: TransactionType.COMP_CLAIM,
             status: TransactionStatus.COMPLETED,
             currency,
             amount: amount,
-            beforeAmount: balanceUpdate.beforeMainBalance.add(balanceUpdate.beforeBonusBalance),
-            afterAmount: balanceUpdate.afterMainBalance.add(balanceUpdate.afterBonusBalance),
+            beforeAmount: beforeMainBalance.add(beforeBonusBalance),
+            afterAmount: afterMainBalance.add(afterBonusBalance),
             compWalletTransactionId: createdCompTx.id,
             balanceDetails: {
-                mainBalanceChange: balanceUpdate.mainBalanceChange,
-                mainBeforeAmount: balanceUpdate.beforeMainBalance,
-                mainAfterAmount: balanceUpdate.afterMainBalance,
-                bonusBalanceChange: balanceUpdate.bonusBalanceChange,
-                bonusBeforeAmount: balanceUpdate.beforeBonusBalance,
-                bonusAfterAmount: balanceUpdate.afterBonusBalance,
+                mainBalanceChange: mainBalanceChange,
+                mainBeforeAmount: beforeMainBalance,
+                mainAfterAmount: afterMainBalance,
+                bonusBalanceChange: bonusBalanceChange,
+                bonusBeforeAmount: beforeBonusBalance,
+                bonusAfterAmount: afterBonusBalance,
             },
         });
 
@@ -101,8 +123,8 @@ export class ClaimCompService {
 
         return {
             claimedAmount: amount,
-            newCompBalance: savedWallet.balance,
-            newCashBalance: balanceUpdate.afterMainBalance,
+            newCompBalance: savedCompWallet.balance,
+            newCashBalance: afterMainBalance,
         };
     }
 }
