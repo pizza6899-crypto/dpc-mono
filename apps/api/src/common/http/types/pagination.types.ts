@@ -40,7 +40,7 @@ export function createPaginationQueryDto<T extends string = string>(
 
   class PaginationQueryDto {
     @ApiPropertyOptional({
-      description: `페이지 번호 (기본값: ${finalConfig.defaultPage})`,
+      description: `Page Number (Default: ${finalConfig.defaultPage}) / 페이지 번호 (기본값: ${finalConfig.defaultPage})`,
       example: finalConfig.defaultPage,
       minimum: 1,
     })
@@ -51,7 +51,7 @@ export function createPaginationQueryDto<T extends string = string>(
     page?: number = finalConfig.defaultPage;
 
     @ApiPropertyOptional({
-      description: `페이지당 항목 수 (기본값: ${finalConfig.defaultLimit}, 최대: ${finalConfig.maxLimit})`,
+      description: `Items Per Page (Default: ${finalConfig.defaultLimit}, Max: ${finalConfig.maxLimit}) / 페이지당 항목 수 (기본값: ${finalConfig.defaultLimit}, 최대: ${finalConfig.maxLimit})`,
       example: finalConfig.defaultLimit,
       minimum: 1,
       maximum: finalConfig.maxLimit,
@@ -64,7 +64,7 @@ export function createPaginationQueryDto<T extends string = string>(
     limit?: number = finalConfig.defaultLimit;
 
     @ApiPropertyOptional({
-      description: '정렬 필드',
+      description: 'Sort Field / 정렬 필드',
       example: finalConfig.defaultSortBy,
       enum: sortFields.length > 0 ? sortFields : undefined,
     })
@@ -76,7 +76,7 @@ export function createPaginationQueryDto<T extends string = string>(
     sortBy?: T = finalConfig.defaultSortBy as T;
 
     @ApiPropertyOptional({
-      description: '정렬 방향 (asc, desc)',
+      description: 'Sort Order (asc, desc) / 정렬 방향 (오름차순, 내림차순)',
       example: finalConfig.defaultSortOrder,
       enum: ['asc', 'desc'],
     })
