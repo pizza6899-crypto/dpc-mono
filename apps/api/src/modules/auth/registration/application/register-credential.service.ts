@@ -13,12 +13,11 @@ import {
   ReferralCodeInactiveException,
   ReferralCodeExpiredException,
 } from 'src/modules/affiliate/referral/domain/referral.exception';
-import { WALLET_CURRENCIES } from 'src/utils/currency.util';
+import { InitializeUserWalletsService } from 'src/modules/wallet/application/initialize-user-wallets.service';
+import { AssignDefaultTierService } from 'src/modules/tier/application/assign-default-tier.service';
 import { UserRoleType } from '@prisma/client';
 import { CreateUserService } from 'src/modules/user/application/create-user.service';
 import { UserAlreadyExistsException } from 'src/modules/user/domain/user.exception';
-import { CreateWalletService } from 'src/modules/wallet/application/create-wallet.service';
-import { AssignDefaultTierService } from 'src/modules/tier/application/assign-default-tier.service';
 
 export interface RegisterCredentialParams {
   email: string;
@@ -45,7 +44,7 @@ export class RegisterCredentialService {
     private readonly findCodeByCodeService: FindCodeByCodeService,
     private readonly createCodeService: CreateCodeService,
     private readonly createUserService: CreateUserService,
-    private readonly createWalletService: CreateWalletService,
+    private readonly initializeUserWalletsService: InitializeUserWalletsService,
     private readonly assignDefaultTierService: AssignDefaultTierService,
   ) { }
 
@@ -101,16 +100,8 @@ export class RegisterCredentialService {
       });
       user = result.user;
 
-      // 모든 지원 통화에 대해 월렛 생성 (동기)
-      // WALLET_CURRENCIES에 정의된 모든 통화의 지갑을 생성합니다.
-      await Promise.all(
-        WALLET_CURRENCIES.map((currency) =>
-          this.createWalletService.execute({
-            userId: user.id,
-            currency,
-          }),
-        ),
-      );
+      // 4. 모든 지원 통화에 대해 월렛 생성 (동기) initialize-user-wallets.service 사용
+      await this.initializeUserWalletsService.execute(user.id);
 
       // 본인만의 기본 레퍼럴 코드 생성 (동기)
       // 첫 번째 코드이므로 자동으로 기본(default) 코드가 됨

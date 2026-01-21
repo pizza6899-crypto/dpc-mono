@@ -5,6 +5,7 @@ import { UserWalletRepository } from './infrastructure/user-wallet.repository';
 import { UserWalletMapper } from './infrastructure/user-wallet.mapper';
 import { WalletTransactionMapper } from './infrastructure/wallet-transaction.mapper';
 import { UpdateWalletStatusService } from './application/update-wallet-status.service';
+import { InitializeUserWalletsService } from './application/initialize-user-wallets.service';
 import { ManageVaultService } from './application/manage-vault.service';
 import { AdminAdjustBalanceService } from './application/admin-adjust-balance.service';
 import { FindUserWalletsService } from './application/find-user-wallets.service';
@@ -55,6 +56,7 @@ import { SqidsModule } from 'src/common/sqids/sqids.module';
     WalletQueryService,
     UserBalanceService,
     UpdateWalletStatusService,
+    InitializeUserWalletsService,
     ManageVaultService,
     AdminAdjustBalanceService,
     UserWalletPolicy,
@@ -69,6 +71,7 @@ import { SqidsModule } from 'src/common/sqids/sqids.module';
     UserBalanceService,
     UpdateWalletStatusService,
     ManageVaultService,
+    InitializeUserWalletsService,
     AdminAdjustBalanceService,
     GetWalletTransactionHistoryService,
     WalletQueryService,

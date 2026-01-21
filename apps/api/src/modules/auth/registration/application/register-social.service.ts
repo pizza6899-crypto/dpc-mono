@@ -12,8 +12,7 @@ import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.toke
 import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
 import { CreateUserService } from 'src/modules/user/application/create-user.service';
 import { UserAlreadyExistsException } from 'src/modules/user/domain/user.exception';
-import { CreateWalletService } from 'src/modules/wallet/application/create-wallet.service';
-import { WALLET_CURRENCIES } from 'src/utils/currency.util';
+import { InitializeUserWalletsService } from 'src/modules/wallet/application/initialize-user-wallets.service';
 import { AssignDefaultTierService } from 'src/modules/tier/application/assign-default-tier.service';
 
 export interface SocialUserInfo {
@@ -47,7 +46,7 @@ export class RegisterSocialService {
     private readonly dispatchLogService: DispatchLogService,
     private readonly createCodeService: CreateCodeService,
     private readonly createUserService: CreateUserService,
-    private readonly createWalletService: CreateWalletService,
+    private readonly initializeUserWalletsService: InitializeUserWalletsService,
     private readonly assignDefaultTierService: AssignDefaultTierService,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
@@ -85,15 +84,7 @@ export class RegisterSocialService {
         isNewUser = true;
 
         // 3. 월렛 생성 (동기)
-        // WALLET_CURRENCIES에 정의된 모든 통화의 지갑을 생성합니다.
-        await Promise.all(
-          WALLET_CURRENCIES.map((currency) =>
-            this.createWalletService.execute({
-              userId: user.id,
-              currency,
-            }),
-          ),
-        );
+        await this.initializeUserWalletsService.execute(user.id);
 
         // 본인만의 기본 레퍼럴 코드 생성 (동기)
         // 첫 번째 코드이므로 자동으로 기본(default) 코드가 됨
