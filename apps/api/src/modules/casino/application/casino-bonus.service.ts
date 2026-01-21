@@ -19,6 +19,7 @@ import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain/wal
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
+import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
 export interface ProcessBonusParams {
   userId: bigint;
@@ -57,6 +58,7 @@ export class CasinoBonusService {
     private readonly tx: PrismaTransaction,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
     private readonly findUserWalletService: FindUserWalletService,
+    private readonly snowflakeService: SnowflakeService,
   ) { }
 
   /**
@@ -155,6 +157,8 @@ export class CasinoBonusService {
       throw new Error(CasinoErrorCode.BONUS_ALREADY_PROCESSED);
     }
 
+    const bonusDetailId = this.snowflakeService.generate(transactionTime);
+
     let gameSession;
     let walletCurrency = gameCurrency as unknown as WalletCurrencyCode;
     let bonusAmountInWalletCurrency = bonusAmountInGameCurrency;
@@ -229,7 +233,7 @@ export class CasinoBonusService {
       operation: UpdateOperation.ADD,
       balanceType: WalletBalanceType.BONUS, // 보너스는 Bonus Balance로 지급한다고 가정 (기획 확인 필요, 일단 Bonus로)
       transactionType: WalletTransactionType.BONUS_IN,
-      referenceId: aggregatorTransactionId || aggregatorPromotionId || aggregatorRoundId,
+      referenceId: bonusDetailId,
     }, {
       actionName: WalletActionName.CASINO_BONUS,
       metadata: { aggregatorType, bonusType },
@@ -254,6 +258,7 @@ export class CasinoBonusService {
         afterAmount: afterMainBalance.add(afterBonusBalance),
         bonusDetail: {
           create: {
+            id: bonusDetailId,
             transactionTime,
             aggregatorType,
             provider,

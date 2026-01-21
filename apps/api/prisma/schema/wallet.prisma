@@ -37,7 +37,7 @@ model WalletTransaction {
     amount       Decimal @db.Decimal(32, 18) // 실제 변동액 (+/- 로직)
     balanceAfter Decimal @map("balance_after") @db.Decimal(32, 18) // 변동 후 최종 잔액 스냅샷
 
-    referenceId String? @map("reference_id") // type이 BET이면 GameLog ID, DEPOSIT이면 DepositRequest ID 등을 저장
+    referenceId BigInt? @map("reference_id") // type이 BET이면 GameLog ID, DEPOSIT이면 DepositRequest ID 등을 저장
     metadata    Json?   @map("metadata") // 상세 사유, 관리자 ID, 상태 변경 전후값 등 유연한 데이터 저장
 
     // 보안필드

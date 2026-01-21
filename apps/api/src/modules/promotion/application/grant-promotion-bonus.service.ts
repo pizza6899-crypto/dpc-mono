@@ -143,7 +143,7 @@ export class GrantPromotionBonusService {
         operation: UpdateOperation.ADD,
         balanceType: WalletBalanceType.BONUS,
         transactionType: WalletTransactionType.BONUS_IN,
-        referenceId: userPromotion.id.toString(),
+        referenceId: userPromotion.id,
       }, {
         internalNote: `Promotion bonus granted: ${promotion.managementName}`,
         actionName: WalletActionName.GRANT_PROMOTION_BONUS,

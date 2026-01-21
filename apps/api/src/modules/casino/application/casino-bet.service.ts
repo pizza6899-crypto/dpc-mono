@@ -145,6 +145,8 @@ export class CasinoBetService {
       throw new Error(CasinoErrorCode.DUPLICATE_DEBIT);
     }
 
+    const gameBetId = this.snowflakeService.generate(betTimeDate);
+
     // 1. 지갑 조회 (Balance Split 계산을 위해)
     const wallet = await this.findUserWalletService.findWallet(
       userId,
@@ -187,7 +189,7 @@ export class CasinoBetService {
         operation: UpdateOperation.SUBTRACT,
         balanceType: WalletBalanceType.CASH,
         transactionType: WalletTransactionType.BET,
-        referenceId: aggregatorBetId,
+        referenceId: gameBetId,
       }, {
         actionName: WalletActionName.CASINO_BET_CASH,
         metadata: { aggregatorType, aggregatorGameId, gameId },
@@ -203,7 +205,7 @@ export class CasinoBetService {
         operation: UpdateOperation.SUBTRACT,
         balanceType: WalletBalanceType.BONUS,
         transactionType: WalletTransactionType.BET,
-        referenceId: aggregatorBetId,
+        referenceId: gameBetId,
       }, {
         actionName: WalletActionName.CASINO_BET_BONUS,
         metadata: { aggregatorType, aggregatorGameId, gameId },
@@ -256,7 +258,7 @@ export class CasinoBetService {
           },
           bets: {
             create: {
-              id: this.snowflakeService.generate(betTimeDate),
+              id: gameBetId,
               userId,
               betAmount: betAmountInWalletCurrency,
               betAmountInGameCurrency: betAmountInGameCurrency,
@@ -331,7 +333,7 @@ export class CasinoBetService {
               gameSessionId,
               bets: {
                 create: {
-                  id: this.snowflakeService.generate(betTimeDate),
+                  id: gameBetId,
                   userId,
                   betAmount: betAmountInWalletCurrency,
                   betAmountInGameCurrency: betAmountInGameCurrency,
@@ -438,6 +440,8 @@ export class CasinoBetService {
       throw new Error(CasinoErrorCode.INVALID_TXN);
     }
 
+    const gameWinId = this.snowflakeService.generate(winTimeDate);
+
     // 유저 밸런스 조회 (Before)
     const wallet = await this.findUserWalletService.findWallet(
       userId,
@@ -463,7 +467,7 @@ export class CasinoBetService {
       operation: UpdateOperation.ADD,
       balanceType: WalletBalanceType.CASH, // 당첨금은 Cash로 지급
       transactionType: WalletTransactionType.WIN,
-      referenceId: aggregatorWinId,
+      referenceId: gameWinId,
     }, {
       actionName: WalletActionName.CASINO_WIN,
       metadata: { aggregatorType, aggregatorWinId },
@@ -524,7 +528,7 @@ export class CasinoBetService {
         },
         wins: {
           create: {
-            id: this.snowflakeService.generate(winTimeDate),
+            id: gameWinId,
             userId,
             winType: WinType.NORMAL,
             aggregatorType,
@@ -618,6 +622,8 @@ export class CasinoBetService {
       throw new Error(CasinoErrorCode.INVALID_TXN);
     }
 
+    const gameWinId = this.snowflakeService.generate(winTime);
+
     const walletCurrency = gameRound.gameSession.walletCurrency;
     const winAmountInWalletCurrency = winAmountInGameCurrency.div(
       gameRound.gameSession.exchangeRate,
@@ -645,7 +651,7 @@ export class CasinoBetService {
       operation: UpdateOperation.ADD,
       balanceType: WalletBalanceType.CASH,
       transactionType: WalletTransactionType.WIN, // 잭팟으로 가정
-      referenceId: aggregatorWagerId,
+      referenceId: gameWinId,
     }, {
       actionName: WalletActionName.CASINO_JACKPOT,
       internalNote: description,
@@ -705,7 +711,7 @@ export class CasinoBetService {
         },
         wins: {
           create: {
-            id: this.snowflakeService.generate(winTime),
+            id: gameWinId,
             userId,
             winType: WinType.JACKPOT,
             aggregatorType,

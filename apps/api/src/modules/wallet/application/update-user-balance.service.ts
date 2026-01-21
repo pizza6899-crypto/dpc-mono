@@ -28,7 +28,7 @@ export interface BalanceUpdateParams {
     operation: UpdateOperation;
     balanceType: WalletBalanceType;
     transactionType: WalletTransactionType;
-    referenceId?: string;
+    referenceId?: bigint;
 }
 
 @Injectable()

@@ -83,7 +83,7 @@ export class ApproveDepositService {
       operation: UpdateOperation.ADD,
       balanceType: WalletBalanceType.CASH,
       transactionType: WalletTransactionType.DEPOSIT,
-      referenceId: deposit.id!.toString(),
+      referenceId: deposit.id!,
     }, {
       adminUserId: adminId,
       reasonCode: AdjustmentReasonCode.MANUAL_DEPOSIT,

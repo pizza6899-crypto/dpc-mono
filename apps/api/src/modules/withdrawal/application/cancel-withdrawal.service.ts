@@ -55,7 +55,7 @@ export class CancelWithdrawalService {
                 operation: UpdateOperation.ADD,
                 balanceType: WalletBalanceType.CASH,
                 transactionType: WalletTransactionType.REFUND, // 환불 타입으로 기록
-                referenceId: withdrawal.id.toString(),
+                referenceId: withdrawal.id,
             }, {
                 internalNote: 'Withdrawal cancelled by user - balance restored',
                 actionName: WalletActionName.CANCEL_WITHDRAWAL,

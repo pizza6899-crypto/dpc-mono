@@ -80,7 +80,7 @@ export class ClaimCompService {
             operation: UpdateOperation.ADD,
             balanceType: WalletBalanceType.CASH,
             transactionType: 'COMP_CLAIM' as unknown as WalletTransactionType,
-            referenceId: createdCompTx.id.toString(),
+            referenceId: createdCompTx.id,
         }, {
             actionName: WalletActionName.CLAIM_COMP,
         });

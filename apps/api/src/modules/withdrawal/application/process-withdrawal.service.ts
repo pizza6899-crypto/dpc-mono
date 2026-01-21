@@ -136,7 +136,7 @@ export class ProcessWithdrawalService {
                 operation: UpdateOperation.ADD,
                 balanceType: WalletBalanceType.CASH,
                 transactionType: WalletTransactionType.REFUND,
-                referenceId: withdrawal.id.toString(),
+                referenceId: withdrawal.id,
             }, {
                 internalNote: 'Withdrawal processing failed - balance restored',
                 actionName: WalletActionName.RESTORE_BALANCE_ON_FAILURE,

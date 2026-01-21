@@ -119,7 +119,7 @@ export class ApplyCouponPromotionService {
             operation: UpdateOperation.ADD,
             balanceType: WalletBalanceType.BONUS,
             transactionType: WalletTransactionType.BONUS_IN,
-            referenceId: promotion.id.toString(),
+            referenceId: promotion.id,
         }, {
             internalNote: `Coupon promotion applied: ${code}`,
             actionName: WalletActionName.APPLY_COUPON_PROMOTION,

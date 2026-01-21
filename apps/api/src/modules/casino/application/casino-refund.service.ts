@@ -176,7 +176,7 @@ export class CasinoRefundService {
         balanceType: WalletBalanceType.CASH,
         operation: UpdateOperation.ADD,
         transactionType: WalletTransactionType.REFUND,
-        referenceId: aggregatorBetId,
+        referenceId: existingGameBet.id,
       }, {
         actionName: WalletActionName.CASINO_REFUND_CASH,
         metadata: { aggregatorType, aggregatorBetId }
@@ -192,7 +192,7 @@ export class CasinoRefundService {
         balanceType: WalletBalanceType.BONUS,
         operation: UpdateOperation.ADD,
         transactionType: WalletTransactionType.REFUND,
-        referenceId: aggregatorBetId,
+        referenceId: existingGameBet.id,
       }, {
         actionName: WalletActionName.CASINO_REFUND_BONUS,
         metadata: { aggregatorType, aggregatorBetId }

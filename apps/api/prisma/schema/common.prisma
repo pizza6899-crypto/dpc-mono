@@ -174,7 +174,7 @@ model TransactionBalanceDetail {
 }
 
 model BonusDetail {
-  id                      BigInt             @id @default(autoincrement())
+  id                      BigInt             @id
   createdAt               DateTime           @default(now()) @map("created_at")
   transactionTime         DateTime           @map("transaction_time")
   aggregatorType          GameAggregatorType @map("aggregator_type")

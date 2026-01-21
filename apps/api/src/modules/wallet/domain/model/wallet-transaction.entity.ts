@@ -19,7 +19,7 @@ export class WalletTransaction {
         public readonly balanceAfter: Prisma.Decimal,
 
         // Reference & Detail
-        public readonly referenceId: string | null,
+        public readonly referenceId: bigint | null,
         private readonly _metadata: AnyWalletTransactionMetadata | null,
 
         // Security/Audit
@@ -38,7 +38,7 @@ export class WalletTransaction {
         balanceType: WalletBalanceType;
         amount: Prisma.Decimal;
         balanceAfter: Prisma.Decimal;
-        referenceId?: string | null;
+        referenceId?: bigint | null;
         metadata?: AnyWalletTransactionMetadata | null;
         ipAddress?: string | null;
         countryCode?: string | null;
@@ -68,7 +68,7 @@ export class WalletTransaction {
         balanceType: WalletBalanceType;
         amount: Prisma.Decimal;
         balanceAfter: Prisma.Decimal;
-        referenceId: string | null;
+        referenceId: bigint | null;
         metadata: any | null;
         ipAddress: string | null;
         countryCode: string | null;

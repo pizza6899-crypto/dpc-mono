@@ -51,7 +51,7 @@ export class RejectWithdrawalService {
                 operation: UpdateOperation.ADD,
                 balanceType: WalletBalanceType.CASH,
                 transactionType: WalletTransactionType.REFUND, // 환불 타입으로 기록
-                referenceId: withdrawal.id.toString(),
+                referenceId: withdrawal.id,
             }, {
                 adminUserId: adminId,
                 internalNote: `Withdrawal rejected: ${reason}`,
