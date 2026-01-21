@@ -4,7 +4,7 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
-import { UpdateOperation } from 'src/modules/wallet/domain';
+import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
 import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
 import { WAGERING_REQUIREMENT_REPOSITORY } from 'src/modules/wagering/ports';
 import type { WageringRequirementRepositoryPort } from 'src/modules/wagering/ports';
@@ -131,6 +131,8 @@ export class RequestCryptoWithdrawalService {
             operation: UpdateOperation.SUBTRACT,
             balanceType: WalletBalanceType.CASH,
             transactionType: WalletTransactionType.WITHDRAW,
+        }, {
+            actionName: WalletActionName.REQUEST_WITHDRAWAL,
         });
 
         // 11. 출금 요청 저장

@@ -9,7 +9,7 @@ import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.
 import { CreateWageringRequirementService } from '../../wagering/application/create-wagering-requirement.service';
 import type { RequestClientInfo } from 'src/common/http/types';
 import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
-import { UpdateOperation } from '../../wallet/domain';
+import { UpdateOperation, WalletActionName } from '../../wallet/domain';
 import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
 import { SendAlertService } from '../../notification/alert/application/send-alert.service';
 import { NOTIFICATION_EVENTS } from '../../notification/common';
@@ -122,7 +122,7 @@ export class ApplyCouponPromotionService {
             referenceId: promotion.id.toString(),
         }, {
             internalNote: `Coupon promotion applied: ${code}`,
-            actionName: 'APPLY_COUPON_PROMOTION',
+            actionName: WalletActionName.APPLY_COUPON_PROMOTION,
             metadata: {
                 promotionId: promotion.id.toString(),
                 code,

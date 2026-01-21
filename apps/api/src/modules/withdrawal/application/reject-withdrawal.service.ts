@@ -1,7 +1,7 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
-import { UpdateOperation } from 'src/modules/wallet/domain';
+import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
 import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
 import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';
@@ -55,7 +55,7 @@ export class RejectWithdrawalService {
             }, {
                 adminUserId: adminId,
                 internalNote: `Withdrawal rejected: ${reason}`,
-                actionName: 'REJECT_WITHDRAWAL',
+                actionName: WalletActionName.REJECT_WITHDRAWAL,
             });
         } catch (error) {
             this.logger.error(

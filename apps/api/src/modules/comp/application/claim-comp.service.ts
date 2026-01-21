@@ -6,7 +6,7 @@ import type { CompRepositoryPort } from '../ports';
 import { CompTransaction, InsufficientCompBalanceException } from '../domain';
 import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
 import { FindUserWalletService } from '../../wallet/application/find-user-wallet.service';
-import { UpdateOperation } from '../../wallet/domain';
+import { UpdateOperation, WalletActionName } from '../../wallet/domain';
 import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
 import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
 
@@ -82,7 +82,7 @@ export class ClaimCompService {
             transactionType: 'COMP_CLAIM' as unknown as WalletTransactionType,
             referenceId: createdCompTx.id.toString(),
         }, {
-            actionName: 'COMP_CLAIM',
+            actionName: WalletActionName.CLAIM_COMP,
         });
 
         const afterMainBalance = savedUserWallet.cash;

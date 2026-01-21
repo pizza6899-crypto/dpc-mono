@@ -8,7 +8,7 @@ import { PROMOTION_REPOSITORY } from '../ports/out';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
 import { CreateWageringRequirementService } from '../../wagering/application/create-wagering-requirement.service';
 import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
-import { UpdateOperation } from '../../wallet/domain';
+import { UpdateOperation, WalletActionName } from '../../wallet/domain';
 import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
 import type { RequestClientInfo } from 'src/common/http/types';
 
@@ -146,7 +146,7 @@ export class GrantPromotionBonusService {
         referenceId: userPromotion.id.toString(),
       }, {
         internalNote: `Promotion bonus granted: ${promotion.managementName}`,
-        actionName: 'GRANT_PROMOTION_BONUS',
+        actionName: WalletActionName.GRANT_PROMOTION_BONUS,
       });
     }
 

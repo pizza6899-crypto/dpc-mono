@@ -9,7 +9,7 @@ import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.re
 import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
-import { UpdateOperation } from 'src/modules/wallet/domain';
+import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
 import { WalletBalanceType, WalletTransactionType, ExchangeCurrencyCode } from '@prisma/client';
 import { GrantPromotionBonusService } from '../../promotion/application/grant-promotion-bonus.service';
 import { CreateWageringRequirementService } from '../../wagering/application/create-wagering-requirement.service';
@@ -88,7 +88,7 @@ export class ApproveDepositService {
       adminUserId: adminId,
       reasonCode: AdjustmentReasonCode.MANUAL_DEPOSIT,
       internalNote: memo,
-      actionName: 'APPROVE_DEPOSIT',
+      actionName: WalletActionName.APPROVE_DEPOSIT,
     });
 
     const afterTotalAmount = updatedWallet.cash.add(updatedWallet.bonus);

@@ -16,7 +16,7 @@ import {
 } from 'src/utils/currency.util';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
-import { UpdateOperation } from 'src/modules/wallet/domain/wallet.constant';
+import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain/wallet.constant';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
@@ -189,7 +189,7 @@ export class CasinoBetService {
         transactionType: WalletTransactionType.BET,
         referenceId: aggregatorBetId,
       }, {
-        actionName: 'CASINO_BET_CASH',
+        actionName: WalletActionName.CASINO_BET_CASH,
         metadata: { aggregatorType, aggregatorGameId, gameId },
       });
     }
@@ -205,7 +205,7 @@ export class CasinoBetService {
         transactionType: WalletTransactionType.BET,
         referenceId: aggregatorBetId,
       }, {
-        actionName: 'CASINO_BET_BONUS',
+        actionName: WalletActionName.CASINO_BET_BONUS,
         metadata: { aggregatorType, aggregatorGameId, gameId },
       });
     }
@@ -465,7 +465,7 @@ export class CasinoBetService {
       transactionType: WalletTransactionType.WIN,
       referenceId: aggregatorWinId,
     }, {
-      actionName: 'CASINO_WIN',
+      actionName: WalletActionName.CASINO_WIN,
       metadata: { aggregatorType, aggregatorWinId },
     });
 
@@ -647,7 +647,7 @@ export class CasinoBetService {
       transactionType: WalletTransactionType.WIN, // 잭팟으로 가정
       referenceId: aggregatorWagerId,
     }, {
-      actionName: 'CASINO_JACKPOT',
+      actionName: WalletActionName.CASINO_JACKPOT,
       internalNote: description,
       metadata: { aggregatorType, aggregatorWagerId }
     });

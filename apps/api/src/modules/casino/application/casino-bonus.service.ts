@@ -15,7 +15,7 @@ import {
   WalletCurrencyCode,
 } from 'src/utils/currency.util';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
-import { UpdateOperation } from 'src/modules/wallet/domain/wallet.constant';
+import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain/wallet.constant';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
@@ -231,7 +231,7 @@ export class CasinoBonusService {
       transactionType: WalletTransactionType.BONUS_IN,
       referenceId: aggregatorTransactionId || aggregatorPromotionId || aggregatorRoundId,
     }, {
-      actionName: 'CASINO_BONUS',
+      actionName: WalletActionName.CASINO_BONUS,
       metadata: { aggregatorType, bonusType },
       internalNote: description
     });

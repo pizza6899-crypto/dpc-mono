@@ -1,7 +1,7 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
-import { UpdateOperation } from 'src/modules/wallet/domain';
+import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
 import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
 import { WithdrawalNotFoundException } from '../domain';
 import { WITHDRAWAL_REPOSITORY } from '../ports';
@@ -58,7 +58,7 @@ export class CancelWithdrawalService {
                 referenceId: withdrawal.id.toString(),
             }, {
                 internalNote: 'Withdrawal cancelled by user - balance restored',
-                actionName: 'CANCEL_WITHDRAWAL',
+                actionName: WalletActionName.CANCEL_WITHDRAWAL,
             });
         } catch (error) {
             this.logger.error(

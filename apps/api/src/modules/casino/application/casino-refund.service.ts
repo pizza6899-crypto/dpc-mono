@@ -8,7 +8,7 @@ import {
 } from 'src/utils/currency.util';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
-import { UpdateOperation } from 'src/modules/wallet/domain/wallet.constant';
+import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain/wallet.constant';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 
@@ -178,7 +178,7 @@ export class CasinoRefundService {
         transactionType: WalletTransactionType.REFUND,
         referenceId: aggregatorBetId,
       }, {
-        actionName: 'CASINO_REFUND_CASH',
+        actionName: WalletActionName.CASINO_REFUND_CASH,
         metadata: { aggregatorType, aggregatorBetId }
       });
     }
@@ -194,7 +194,7 @@ export class CasinoRefundService {
         transactionType: WalletTransactionType.REFUND,
         referenceId: aggregatorBetId,
       }, {
-        actionName: 'CASINO_REFUND_BONUS',
+        actionName: WalletActionName.CASINO_REFUND_BONUS,
         metadata: { aggregatorType, aggregatorBetId }
       });
     }

@@ -3,7 +3,7 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { WithdrawalProcessingMode } from '@prisma/client';
 import { NowPaymentApiService } from 'src/modules/payment/infrastructure/now-payment-api.service';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
-import { UpdateOperation } from 'src/modules/wallet/domain';
+import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
 import { AnalyticsQueueService } from 'src/modules/analytics/application/analytics-queue.service';
 import { WithdrawalDetail, WithdrawalProcessingException } from '../domain';
 import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
@@ -139,7 +139,7 @@ export class ProcessWithdrawalService {
                 referenceId: withdrawal.id.toString(),
             }, {
                 internalNote: 'Withdrawal processing failed - balance restored',
-                actionName: 'RESTORE_BALANCE_ON_FAILURE',
+                actionName: WalletActionName.RESTORE_BALANCE_ON_FAILURE,
                 metadata: {
                     withdrawalId: withdrawal.id.toString(),
                     reason: 'PROCESSING_FAILED'
