@@ -13,7 +13,7 @@ export enum VaultOperation {
     WITHDRAW = 'WITHDRAW', // Vault -> Cash
 }
 
-export interface ManageVaultParams {
+export interface ProcessVaultOperationParams {
     userId: bigint;
     currency: ExchangeCurrencyCode;
     amount: Prisma.Decimal;
@@ -26,7 +26,7 @@ export interface ManageVaultParams {
  * 사용자가 자신의 가용 자산을 금고로 옮기거나 다시 꺼내는 기능을 처리합니다.
  */
 @Injectable()
-export class ManageVaultService {
+export class ProcessVaultOperationService {
     constructor(
         @Inject(USER_WALLET_REPOSITORY)
         private readonly walletRepository: UserWalletRepositoryPort,
@@ -35,7 +35,7 @@ export class ManageVaultService {
     ) { }
 
     @Transactional()
-    async execute({ userId, currency, amount, operation }: ManageVaultParams): Promise<UserWallet> {
+    async execute({ userId, currency, amount, operation }: ProcessVaultOperationParams): Promise<UserWallet> {
         if (amount.isNegative() || amount.isZero()) {
             throw new Error('Amount must be positive');
         }

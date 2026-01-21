@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { WalletQueryService } from './wallet-query.service';
+import { FindUserWalletService } from './find-user-wallet.service';
 import { USER_WALLET_REPOSITORY } from '../ports/out/user-wallet.repository.token';
 import type { UserWalletRepositoryPort } from '../ports/out/user-wallet.repository.port';
 import { WALLET_TRANSACTION_REPOSITORY } from '../ports/out/wallet-transaction.repository.token';
@@ -32,13 +32,13 @@ export interface BalanceUpdateParams {
 }
 
 @Injectable()
-export class UserBalanceService {
-    private readonly logger = new Logger(UserBalanceService.name);
+export class UpdateUserBalanceService {
+    private readonly logger = new Logger(UpdateUserBalanceService.name);
 
     constructor(
         @Inject(USER_WALLET_REPOSITORY)
         private readonly walletRepository: UserWalletRepositoryPort,
-        private readonly walletQueryService: WalletQueryService,
+        private readonly findUserWalletService: FindUserWalletService,
         @Inject(WALLET_TRANSACTION_REPOSITORY)
         private readonly transactionRepository: WalletTransactionRepositoryPort,
         private readonly walletPolicy: UserWalletPolicy,
@@ -57,7 +57,7 @@ export class UserBalanceService {
         // 1. Lock & Get Wallet
         await this.walletRepository.acquireLock(userId);
 
-        let wallet = await this.walletQueryService.getWallet(userId, currency, false);
+        let wallet = await this.findUserWalletService.findWallet(userId, currency, false);
         if (!wallet) {
             throw new WalletNotFoundException(userId, currency);
         }

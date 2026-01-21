@@ -3,7 +3,7 @@ import { USER_WALLET_REPOSITORY } from '../ports/out/user-wallet.repository.toke
 import type { UserWalletRepositoryPort } from '../ports/out/user-wallet.repository.port';
 
 @Injectable()
-export class GetWalletStatisticsService {
+export class FindWalletStatisticsService {
     constructor(
         @Inject(USER_WALLET_REPOSITORY)
         private readonly repository: UserWalletRepositoryPort,

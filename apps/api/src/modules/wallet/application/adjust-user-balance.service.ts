@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { ExchangeCurrencyCode, Prisma, WalletTransactionType, WalletBalanceType, AdjustmentReasonCode } from '@prisma/client';
-import { UserBalanceService } from './user-balance.service';
+import { UpdateUserBalanceService } from './update-user-balance.service';
 import { UserWallet, UpdateOperation } from '../domain';
 
-export interface AdminAdjustBalanceParams {
+export interface AdjustUserBalanceParams {
     userId: bigint;
     currency: ExchangeCurrencyCode;
     amount: Prisma.Decimal;
@@ -22,13 +22,13 @@ export interface AdminAdjustBalanceParams {
  * UserBalanceService를 내부적으로 활용하여 일관된 로직을 유지합니다.
  */
 @Injectable()
-export class AdminAdjustBalanceService {
+export class AdjustUserBalanceService {
     constructor(
-        private readonly userBalanceService: UserBalanceService,
+        private readonly userBalanceService: UpdateUserBalanceService,
     ) { }
 
     @Transactional()
-    async execute(params: AdminAdjustBalanceParams): Promise<UserWallet> {
+    async execute(params: AdjustUserBalanceParams): Promise<UserWallet> {
         return this.userBalanceService.updateBalance(
             {
                 userId: params.userId,

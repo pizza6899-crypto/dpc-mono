@@ -6,7 +6,7 @@ import { ExchangeCurrencyCode } from '@prisma/client';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 
 @Injectable()
-export class WalletQueryService {
+export class FindUserWalletService {
     constructor(
         @Inject(USER_WALLET_REPOSITORY)
         private readonly repository: UserWalletRepositoryPort,
@@ -16,7 +16,7 @@ export class WalletQueryService {
      * 단일 통화 지갑 조회
      * @param autoCreate 존재하지 않을 경우 생성 여부
      */
-    async getWallet(
+    async findWallet(
         userId: bigint,
         currency: ExchangeCurrencyCode,
         autoCreate: boolean = true,
@@ -38,7 +38,7 @@ export class WalletQueryService {
      * 전체 통화 지갑 조회
      * @param autoCreate 존재하지 않는 통화의 지갑 자동 생성 여부
      */
-    async getWallets(
+    async findWallets(
         userId: bigint,
         autoCreate: boolean = true,
     ): Promise<UserWallet[]> {

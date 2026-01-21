@@ -20,11 +20,11 @@ import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
-import { AdminAdjustBalanceService } from '../../application/admin-adjust-balance.service';
+import { AdjustUserBalanceService } from '../../application/adjust-user-balance.service';
 import { UpdateWalletStatusService } from '../../application/update-wallet-status.service';
 import { FindUserWalletsService } from '../../application/find-user-wallets.service';
-import { GetWalletStatisticsService } from '../../application/get-wallet-statistics.service';
-import { GetWalletTransactionHistoryService } from '../../application/get-wallet-transaction-history.service';
+import { FindWalletStatisticsService } from '../../application/find-wallet-statistics.service';
+import { FindWalletTransactionHistoryService } from '../../application/find-wallet-transaction-history.service';
 import { FindWalletsQueryDto } from './dto/request/find-wallets-query.dto';
 import { AdjustBalanceRequestDto } from './dto/request/adjust-balance.request.dto';
 import { UpdateWalletStatusRequestDto } from './dto/request/update-wallet-status.request.dto';
@@ -44,10 +44,10 @@ import { PaginatedData } from 'src/common/http/types/pagination.types';
 export class WalletAdminController {
   constructor(
     private readonly findUserWalletsService: FindUserWalletsService,
-    private readonly getWalletStatisticsService: GetWalletStatisticsService,
-    private readonly adminAdjustBalanceService: AdminAdjustBalanceService,
+    private readonly findWalletStatisticsService: FindWalletStatisticsService,
+    private readonly adjustUserBalanceService: AdjustUserBalanceService,
     private readonly updateWalletStatusService: UpdateWalletStatusService,
-    private readonly getWalletTransactionHistoryService: GetWalletTransactionHistoryService,
+    private readonly findWalletTransactionHistoryService: FindWalletTransactionHistoryService,
   ) { }
 
   /**
@@ -109,7 +109,7 @@ export class WalletAdminController {
     status: HttpStatus.OK,
   })
   async getStatistics(): Promise<WalletStatisticsResponseDto> {
-    const stats = await this.getWalletStatisticsService.execute();
+    const stats = await this.findWalletStatisticsService.execute();
     return {
       statistics: stats.map((s: any) => ({
         currency: s.currency,
@@ -144,7 +144,7 @@ export class WalletAdminController {
     @Body() dto: AdjustBalanceRequestDto,
     @CurrentUser() admin: CurrentUserWithSession,
   ): Promise<AdjustBalanceResponseDto> {
-    const wallet = await this.adminAdjustBalanceService.execute({
+    const wallet = await this.adjustUserBalanceService.execute({
       userId: BigInt(dto.userId),
       currency: dto.currency,
       amount: new Prisma.Decimal(dto.amount),
@@ -186,7 +186,7 @@ export class WalletAdminController {
     const page = query.page || 1;
     const limit = query.limit || 20;
 
-    const { items, total } = await this.getWalletTransactionHistoryService.execute({
+    const { items, total } = await this.findWalletTransactionHistoryService.execute({
       userId: query.userId ? BigInt(query.userId) : undefined,
       currency: query.currency,
       type: query.type,
