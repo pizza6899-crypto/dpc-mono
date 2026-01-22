@@ -61,6 +61,9 @@ DCS는 단일 콜백 URL을 사용하거나 기능별 멀티 엔드포인트를 
 - **타임아웃:** 카지노 네트워크 지연에 대비하여 트랜잭션 처리를 최적화하십시오.
 
 ## 📂 Related Files
-- **Service:** `apps/api/src/modules/casino/providers/dcs/application/dcs-callback.service.ts`
+- **Application Service:** `apps/api/src/modules/casino/providers/dcs/application/dcs-game.service.ts`
+- **Callback Service:** `apps/api/src/modules/casino/providers/dcs/application/dcs-callback.service.ts`
 - **Controller:** `apps/api/src/modules/casino/providers/dcs/controllers/dcs-callback.controller.ts`
+- **API Service:** `apps/api/src/modules/casino/providers/dcs/infrastructure/dcs-api.service.ts`
 - **Mapper:** `apps/api/src/modules/casino/providers/dcs/infrastructure/dcs-mapper.service.ts`
+- **DTOs:** `apps/api/src/modules/casino/providers/dcs/dtos/`
