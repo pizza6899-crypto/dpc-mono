@@ -16,4 +16,9 @@ export interface GameTransactionRepositoryPort {
      * 외부 트랜잭션 ID와 타입을 통해 조회합니다. (중복 처리 방지용)
      */
     findByExternalId(aggregatorTxId: string, type: GameTransactionType, roundStartedAt: Date): Promise<GameTransaction | null>;
+
+    /**
+     * 특정 라운드에 속한 모든 트랜잭션을 조회합니다.
+     */
+    findAllByRoundId(gameRoundId: bigint, roundStartedAt: Date): Promise<GameTransaction[]>;
 }

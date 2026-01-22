@@ -21,11 +21,12 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { LaunchGameService } from './application/launch-game.service';
 import { GameRoundMapper } from './infrastructure/game-round.mapper';
 import { GameTransactionMapper } from './infrastructure/game-transaction.mapper';
-import { PrismaGameRoundRepository } from './infrastructure/prisma-game-round.repository';
-import { PrismaGameTransactionRepository } from './infrastructure/prisma-game-transaction.repository';
+import { GameRoundRepository } from './infrastructure/game-round.repository';
+import { GameTransactionRepository } from './infrastructure/game-transaction.repository';
 import { GAME_ROUND_REPOSITORY_TOKEN } from './ports/out/game-round.repository.token';
 import { GAME_TRANSACTION_REPOSITORY_TOKEN } from './ports/out/game-transaction.repository.token';
 import { CheckCasinoBalanceService } from './application/check-casino-balance.service';
+import { ProcessCasinoBetService } from './application/process-casino-bet.service';
 
 @Module({
   imports: [
@@ -63,19 +64,21 @@ import { CheckCasinoBalanceService } from './application/check-casino-balance.se
     GameTransactionMapper,
     {
       provide: GAME_ROUND_REPOSITORY_TOKEN,
-      useClass: PrismaGameRoundRepository,
+      useClass: GameRoundRepository,
     },
     {
       provide: GAME_TRANSACTION_REPOSITORY_TOKEN,
-      useClass: PrismaGameTransactionRepository,
+      useClass: GameTransactionRepository,
     },
     CheckCasinoBalanceService,
+    ProcessCasinoBetService,
   ],
   exports: [
     GameSessionModule,
     LaunchGameService,
     CasinoQueueService,
     CheckCasinoBalanceService,
+    ProcessCasinoBetService,
   ],
 })
 export class CasinoModule { }

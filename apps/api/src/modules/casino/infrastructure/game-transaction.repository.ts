@@ -1,14 +1,16 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
+import { Inject, Injectable } from '@nestjs/common';
 import { GameTransaction } from '../domain/model/game-transaction.entity';
 import { GameTransactionRepositoryPort } from '../ports/out/game-transaction.repository.port';
 import { GameTransactionMapper } from './game-transaction.mapper';
 import { GameTransactionType } from '@prisma/client';
+import { EXTENDED_PRISMA_CLIENT } from 'src/infrastructure/prisma/prisma.module';
+import type { ExtendedClient } from 'src/infrastructure/prisma/prisma.service';
 
 @Injectable()
-export class PrismaGameTransactionRepository implements GameTransactionRepositoryPort {
+export class GameTransactionRepository implements GameTransactionRepositoryPort {
     constructor(
-        private readonly prisma: PrismaService,
+        @Inject(EXTENDED_PRISMA_CLIENT)
+        private readonly prisma: ExtendedClient,
         private readonly mapper: GameTransactionMapper,
     ) { }
 
@@ -52,7 +54,7 @@ export class PrismaGameTransactionRepository implements GameTransactionRepositor
         return result ? this.mapper.toDomain(result) : null;
     }
 
-    async findByRoundId(gameRoundId: bigint, roundStartedAt: Date): Promise<GameTransaction[]> {
+    async findAllByRoundId(gameRoundId: bigint, roundStartedAt: Date): Promise<GameTransaction[]> {
         const results = await this.prisma.gameTransaction.findMany({
             where: {
                 gameRoundId,

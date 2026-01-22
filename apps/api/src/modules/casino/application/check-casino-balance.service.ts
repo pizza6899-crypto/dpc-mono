@@ -24,9 +24,7 @@ export class CheckCasinoBalanceService {
         // 1. 유저 지갑 조회 (세션에 지정된 walletCurrency 사용)
         const wallet = await this.findUserWalletService.findWallet(
             session.userId,
-            session.walletCurrency as unknown as ExchangeCurrencyCode,
-            true,
-        );
+            session.walletCurrency as unknown as ExchangeCurrencyCode);
 
         if (!wallet) {
             throw new UserBalanceNotFoundException(session.userId, session.walletCurrency);

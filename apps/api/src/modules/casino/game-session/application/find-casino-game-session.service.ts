@@ -1,4 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { GameAggregatorType } from '@prisma/client';
 import { CASINO_GAME_SESSION_REPOSITORY } from '../ports/casino-game-session.repository.token';
 import type { CasinoGameSessionRepositoryPort } from '../ports/casino-game-session.repository.port';
 import { CasinoGameSession } from '../domain';
@@ -24,5 +25,9 @@ export class FindCasinoGameSessionService {
 
     async findByid(id: bigint): Promise<CasinoGameSession | null> {
         return await this.repository.findByid(id);
+    }
+
+    async findRecent(userId: bigint, aggregatorType: GameAggregatorType): Promise<CasinoGameSession | null> {
+        return await this.repository.findRecentByUserId(userId, aggregatorType);
     }
 }

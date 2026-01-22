@@ -27,4 +27,9 @@ export interface GameRoundRepositoryPort {
         gameBetAmount?: Prisma.Decimal;
         gameWinAmount?: Prisma.Decimal;
     }): Promise<void>;
+
+    /**
+     * PG Advisory Lock을 사용하여 외부 라운드 ID에 대한 락을 획득합니다.
+     */
+    acquireLock(externalRoundId: string): Promise<void>;
 }

@@ -1,14 +1,18 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
+import { Inject, Injectable } from '@nestjs/common';
 import { GameRound } from '../domain/model/game-round.entity';
 import { GameRoundRepositoryPort } from '../ports/out/game-round.repository.port';
 import { GameRoundMapper } from './game-round.mapper';
 import { GameAggregatorType, Prisma } from '@prisma/client';
+import { EXTENDED_PRISMA_CLIENT } from 'src/infrastructure/prisma/prisma.module';
+import type { ExtendedClient } from 'src/infrastructure/prisma/prisma.service';
+import { LockNamespace, CONCURRENCY_CONSTANTS, DbLockUtil } from 'src/common/concurrency/lock-namespace';
+import { sql } from 'kysely';
 
 @Injectable()
-export class PrismaGameRoundRepository implements GameRoundRepositoryPort {
+export class GameRoundRepository implements GameRoundRepositoryPort {
     constructor(
-        private readonly prisma: PrismaService,
+        @Inject(EXTENDED_PRISMA_CLIENT)
+        private readonly prisma: ExtendedClient,
         private readonly mapper: GameRoundMapper,
     ) { }
 
@@ -75,5 +79,23 @@ export class PrismaGameRoundRepository implements GameRoundRepositoryPort {
             },
             data: updateData,
         });
+    }
+
+    async acquireLock(externalRoundId: string): Promise<void> {
+        try {
+            // 락 타임아웃 설정 (Kysely)
+            await sql`SET LOCAL lock_timeout = ${CONCURRENCY_CONSTANTS.DB_LOCK_TIMEOUT}`
+                .execute(this.prisma.$kysely);
+
+            // 락 획득 (DbLockUtil 사용)
+            await sql`SELECT pg_advisory_xact_lock(${DbLockUtil.generateAdvisoryLockKey(LockNamespace.GAME_ROUND, externalRoundId)})`
+                .execute(this.prisma.$kysely);
+        } catch (error: any) {
+            if (DbLockUtil.isLockTimeout(error)) {
+                // 이미 처리 중인 경우 멱등성 로직으로 넘기기 위해 에러 발생
+                throw error;
+            }
+            throw error;
+        }
     }
 }

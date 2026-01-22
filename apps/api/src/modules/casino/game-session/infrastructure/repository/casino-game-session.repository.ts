@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { GameAggregatorType } from '@prisma/client';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { CasinoGameSessionRepositoryPort } from '../../ports/casino-game-session.repository.port';
@@ -30,6 +31,14 @@ export class CasinoGameSessionRepository
     async findByid(id: bigint): Promise<CasinoGameSession | null> {
         const found = await this.tx.casinoGameSession.findUnique({
             where: { id },
+        });
+        return found ? this.mapper.toDomain(found) : null;
+    }
+
+    async findRecentByUserId(userId: bigint, aggregatorType: GameAggregatorType): Promise<CasinoGameSession | null> {
+        const found = await this.tx.casinoGameSession.findFirst({
+            where: { userId, aggregatorType },
+            orderBy: { createdAt: 'desc' },
         });
         return found ? this.mapper.toDomain(found) : null;
     }
