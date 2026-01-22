@@ -22,6 +22,13 @@ import { TierModule } from '../tier/tier.module';
 import { CompModule } from '../comp/comp.module';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { LaunchGameService } from './application/launch-game.service';
+import { GameRoundMapper } from './infrastructure/game-round.mapper';
+import { GameTransactionMapper } from './infrastructure/game-transaction.mapper';
+import { PrismaGameRoundRepository } from './infrastructure/prisma-game-round.repository';
+import { PrismaGameTransactionRepository } from './infrastructure/prisma-game-transaction.repository';
+import { GAME_ROUND_REPOSITORY_TOKEN } from './ports/out/game-round.repository.token';
+import { GAME_TRANSACTION_REPOSITORY_TOKEN } from './ports/out/game-transaction.repository.token';
+import { CasinoGameV2Service } from './application/service/casino-game-v2.service';
 
 @Module({
   imports: [
@@ -58,6 +65,17 @@ import { LaunchGameService } from './application/launch-game.service';
     GamePostProcessProcessor,
     LaunchGameService,
     CasinoQueueService,
+    GameRoundMapper,
+    GameTransactionMapper,
+    {
+      provide: GAME_ROUND_REPOSITORY_TOKEN,
+      useClass: PrismaGameRoundRepository,
+    },
+    {
+      provide: GAME_TRANSACTION_REPOSITORY_TOKEN,
+      useClass: PrismaGameTransactionRepository,
+    },
+    CasinoGameV2Service,
   ],
   exports: [
     CasinoBetService,
@@ -66,6 +84,7 @@ import { LaunchGameService } from './application/launch-game.service';
     GameSessionModule,
     LaunchGameService,
     CasinoQueueService,
+    CasinoGameV2Service,
   ],
 })
 export class CasinoModule { }
