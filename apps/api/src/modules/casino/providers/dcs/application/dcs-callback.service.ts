@@ -16,7 +16,7 @@ import {
   PromoPayoutRequestDto,
   PromoPayoutResponseDto,
   DcsCommonResponseDto,
-} from '../dtos/callback.dto';
+} from '../dtos';
 import { DcsConfig } from 'src/common/env/env.types';
 import * as crypto from 'crypto';
 import {

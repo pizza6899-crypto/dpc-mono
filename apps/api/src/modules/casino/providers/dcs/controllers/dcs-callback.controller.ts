@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   UseFilters,
+  UsePipes,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger';
 import {
@@ -24,17 +25,21 @@ import {
   GetDcsBalanceResponseDto,
   PromoPayoutRequestDto,
   PromoPayoutResponseDto,
-} from '../dtos/callback.dto';
+} from '../dtos';
 import { CasinoResponse } from 'src/common/http/decorators/casino-response.decorator';
 import { GuestOnly } from 'src/common/auth/decorators/roles.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 import { DcsCallbackService } from '../application/dcs-callback.service';
 
+import { DcsValidationPipe } from '../infrastructure/dcs-validation.pipe';
+import { DcsExceptionFilter } from '../infrastructure/dcs-exception.filter';
+
 @ApiTags('DCS Callback')
 @Controller('dopaminedev')
 @GuestOnly()
-@UseFilters() // 글로벌 예외 필터 비활성화
+@UseFilters(new DcsExceptionFilter())
+@UsePipes(new DcsValidationPipe())
 export class DcsCallbackController {
   constructor(private readonly dcsCallbackService: DcsCallbackService) { }
 
