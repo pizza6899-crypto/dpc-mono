@@ -171,7 +171,7 @@ export class DcsCallbackService {
 
       return getDcsResponse(DcsResponseCode.SUCCESS, {
         balance: result.balance,
-        brand_uid: result.playerName,
+        brand_uid: session.playerName,
         currency: body.currency,
       });
     } catch (error) {

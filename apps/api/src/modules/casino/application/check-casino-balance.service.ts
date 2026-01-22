@@ -1,12 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
 import { CasinoGameSession } from 'src/modules/casino/game-session/domain';
 import { UserBalanceNotFoundException } from 'src/modules/casino/domain/casino.exception';
 
 export interface CheckCasinoBalanceResult {
     balance: Prisma.Decimal;
-    playerName: string;
 }
 
 @Injectable()
@@ -24,9 +23,11 @@ export class CheckCasinoBalanceService {
         // 1. 유저 지갑 조회 (세션에 지정된 walletCurrency 사용)
         const wallet = await this.findUserWalletService.findWallet(
             session.userId,
-            session.walletCurrency as unknown as ExchangeCurrencyCode);
+            session.walletCurrency
+        );
 
         if (!wallet) {
+            this.logger.error(`Wallet not found for user: ${session.userId}, currency: ${session.walletCurrency}`);
             throw new UserBalanceNotFoundException(session.userId, session.walletCurrency);
         }
 
@@ -36,7 +37,6 @@ export class CheckCasinoBalanceService {
 
         return {
             balance: balanceInGameCurrency,
-            playerName: session.playerName,
         };
     }
 }
