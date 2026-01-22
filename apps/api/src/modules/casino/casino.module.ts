@@ -27,6 +27,7 @@ import { GAME_ROUND_REPOSITORY_TOKEN } from './ports/out/game-round.repository.t
 import { GAME_TRANSACTION_REPOSITORY_TOKEN } from './ports/out/game-transaction.repository.token';
 import { CheckCasinoBalanceService } from './application/check-casino-balance.service';
 import { ProcessCasinoBetService } from './application/process-casino-bet.service';
+import { ProcessCasinoWinService } from './application/process-casino-win.service';
 
 @Module({
   imports: [
@@ -72,6 +73,7 @@ import { ProcessCasinoBetService } from './application/process-casino-bet.servic
     },
     CheckCasinoBalanceService,
     ProcessCasinoBetService,
+    ProcessCasinoWinService,
   ],
   exports: [
     GameSessionModule,
@@ -79,6 +81,7 @@ import { ProcessCasinoBetService } from './application/process-casino-bet.servic
     CasinoQueueService,
     CheckCasinoBalanceService,
     ProcessCasinoBetService,
+    ProcessCasinoWinService,
   ],
 })
 export class CasinoModule { }

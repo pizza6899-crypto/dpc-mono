@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Headers,
   UseFilters,
+  UsePipes,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger';
 import { CasinoResponse } from '../../../../../common/http/decorators/casino-response.decorator';
@@ -13,12 +14,15 @@ import { GuestOnly } from 'src/common/auth/decorators/roles.decorator';
 import { AuditLog } from '../../../../audit-log/infrastructure/audit-log.decorator';
 import { getWhitecliffAuditOptions } from '../infrastructure/whitecliff-audit.util';
 import { WhitecliffCallbackService } from '../application/whitecliff-callback.service';
-import { CreditRequestDto, DebitRequestDto, GetBonusRequestDto, GetBonusResponseDto, GetWhitecliffBalanceRequestDto, GetWhitecliffBalanceResponseDto, TransactionResponseDto } from '../dtos';
+import { CreditRequestDto, DebitRequestDto, BonusRequestDto, BonusResponseDto, GetWhitecliffBalanceRequestDto, GetWhitecliffBalanceResponseDto, TransactionResponseDto } from '../dtos';
+import { WhitecliffExceptionFilter } from '../infrastructure/whitecliff-exception.filter';
+import { WhitecliffValidationPipe } from '../infrastructure/whitecliff-validation.pipe';
 
 @ApiTags('Whitecliff Callback')
 @Controller('dopaminedev')
 @GuestOnly()
-@UseFilters() // 글로벌 예외 필터 비활성화
+@UseFilters(new WhitecliffExceptionFilter())
+@UsePipes(new WhitecliffValidationPipe())
 export class WhitecliffCallbackController {
   constructor(
     private readonly whitecliffCallbackService: WhitecliffCallbackService,
@@ -67,13 +71,13 @@ export class WhitecliffCallbackController {
 
   @Post('/bonus')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: '사용자 보너스 조회' })
-  @CasinoResponse(GetBonusResponseDto, { description: '보너스 조회 성공' })
+  @ApiOperation({ summary: '사용자 보너스 지급' })
+  @CasinoResponse(BonusResponseDto, { description: '보너스 지급 성공' })
   @AuditLog(getWhitecliffAuditOptions('GET_BONUS'))
-  async getBonus(
+  async bonus(
     @Headers('secret-key') secretKey: string,
-    @Body() body: GetBonusRequestDto,
-  ): Promise<GetBonusResponseDto> {
-    return this.whitecliffCallbackService.getBonus(body, secretKey);
+    @Body() body: BonusRequestDto,
+  ): Promise<BonusResponseDto> {
+    return this.whitecliffCallbackService.bonus(body, secretKey);
   }
 }

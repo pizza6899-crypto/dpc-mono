@@ -1,121 +1,130 @@
-import { IsString, IsNumber, IsOptional, IsDateString } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsNumber, IsString, IsOptional, IsObject } from 'class-validator';
+import { Type } from 'class-transformer';
+import { WhitecliffTransactionBaseDto } from './base.dto';
 
-export class DebitRequestDto {
-  @ApiProperty({ description: '사용자 ID' })
-  @IsNumber()
-  user_id: number;
+// Debit Request
+export class DebitRequestDto extends WhitecliffTransactionBaseDto {
+  @ApiPropertyOptional({
+    description: 'Debit Time (datetime)',
+    example: '2024-01-01 12:00:00',
+  })
+  @IsOptional()
+  @IsString()
+  debit_time?: string;
 
-  @ApiProperty({ description: '차감할 금액' })
-  @IsNumber()
-  amount: number;
-
-  @ApiPropertyOptional({ description: '제품 ID' })
+  @ApiPropertyOptional({
+    description: 'Game ID',
+    example: 12345,
+  })
   @IsOptional()
   @IsNumber()
-  prd_id: number;
+  @Type(() => Number)
+  game_id?: number;
 
-  @ApiProperty({ description: '트랜잭션 ID' })
-  @IsString()
-  txn_id: string;
-
-  @ApiPropertyOptional({ description: '라운드 ID' })
+  @ApiPropertyOptional({
+    description: 'Round ID (unique round id)',
+    example: 'round123',
+  })
   @IsOptional()
   @IsString()
   round_id?: string;
 
-  @ApiPropertyOptional({ description: '게임 ID' })
-  @IsOptional()
-  @IsNumber()
-  game_id: number;
-
-  @ApiPropertyOptional({ description: '테이블 ID' })
+  @ApiPropertyOptional({
+    description: 'Table ID (Only applicable for Evolution)',
+    example: 'baccarat10001',
+  })
   @IsOptional()
   @IsString()
   table_id?: string;
 
-  @ApiPropertyOptional({ description: '크레딧 금액 (특정 게임사 전용)' })
+  @ApiPropertyOptional({
+    description: 'Credit Amount (Payout amount generated during a Debit request)',
+  })
   @IsOptional()
   @IsNumber()
+  @Type(() => Number)
   credit_amount?: number;
 
-  @ApiPropertyOptional({ description: '차감 시간' })
-  @IsDateString()
-  debit_time: string;
-
-  @ApiPropertyOptional({ description: '세션 ID' })
+  @ApiPropertyOptional({
+    description: 'Description object',
+    example: { details: 'Betting details' },
+  })
   @IsOptional()
-  @IsString()
-  sid?: string;
-
-  @ApiPropertyOptional({ description: '배당률' })
-  @IsOptional()
-  @IsString()
-  odds?: string;
-
-  @ApiPropertyOptional({ description: '파레이 베팅 여부' })
-  @IsOptional()
-  @IsNumber()
-  is_parlay?: number;
-
-  @ApiPropertyOptional({ description: '설명' })
-  @IsOptional()
+  @IsObject()
   desc?: any;
 }
 
-export class CreditRequestDto {
-  @ApiProperty({ description: '사용자 ID' })
-  @IsNumber()
-  user_id: number;
-
-  @ApiProperty({ description: '추가할 금액' })
-  @IsNumber()
-  amount: number;
-
-  @ApiPropertyOptional({ description: '제품 ID' })
-  @IsNumber()
-  prd_id: number;
-
-  @ApiProperty({ description: '트랜잭션 ID' })
+// Credit Request
+export class CreditRequestDto extends WhitecliffTransactionBaseDto {
+  @ApiPropertyOptional({
+    description: 'Credit Time (datetime)',
+    example: '2024-01-01 12:05:00',
+  })
+  @IsOptional()
   @IsString()
-  txn_id: string;
+  credit_time?: string;
 
-  @ApiPropertyOptional({ description: '라운드 ID' })
+  @ApiPropertyOptional({
+    description: 'Game ID',
+    example: 12345,
+  })
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  game_id?: number;
+
+  @ApiPropertyOptional({
+    description: 'Round ID (unique round id)',
+    example: 'round123',
+  })
   @IsOptional()
   @IsString()
   round_id?: string;
 
-  @ApiPropertyOptional({ description: '취소 여부' })
-  @IsOptional()
-  @IsNumber()
-  is_cancel?: number;
-
-  @ApiPropertyOptional({ description: '크레딧 시간' })
-  @IsOptional()
-  @IsDateString()
-  credit_time?: string;
-
-  @ApiPropertyOptional({ description: '게임 ID' })
-  @IsNumber()
-  game_id: number;
-
-  @ApiPropertyOptional({ description: '테이블 ID' })
+  @ApiPropertyOptional({
+    description: 'Table ID (Only applicable for Evolution)',
+    example: 'baccarat10001',
+  })
   @IsOptional()
   @IsString()
   table_id?: string;
 
-  @ApiPropertyOptional({ description: '세션 ID' })
+  @ApiPropertyOptional({
+    description: 'Is Cancel (1=cancel, 0=normal)',
+    example: 0,
+  })
   @IsOptional()
-  @IsString()
-  sid?: string;
+  @IsNumber()
+  @Type(() => Number)
+  is_cancel?: number;
 
-  @ApiPropertyOptional({ description: '설명' })
+  @ApiPropertyOptional({
+    description: 'Description object',
+  })
   @IsOptional()
+  @IsObject()
   desc?: any;
 }
 
+// Transaction Response (Common for Debit/Credit)
 export class TransactionResponseDto {
+  @ApiProperty({
+    description: 'Status (0=error, 1=success)',
+    example: 1,
+  })
   status: number;
+
+  @ApiProperty({
+    description: 'Latest balance',
+    example: 10000.0,
+  })
   balance: number;
+
+  @ApiProperty({
+    description: 'Error message if failed',
+    required: false,
+    example: 'INSUFFICIENT_FUNDS',
+  })
   error?: string;
 }
