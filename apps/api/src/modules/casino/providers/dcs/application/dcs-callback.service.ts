@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { EnvService } from 'src/common/env/env.service';
 import {
   WagerRequestDto,
@@ -28,11 +28,13 @@ import { DcsMapperService } from '../infrastructure/dcs-mapper.service';
 import {
   GameAggregatorType,
   Prisma,
+  GameProvider,
 } from '@prisma/client';
 import { CheckCasinoBalanceService } from '../../../application/check-casino-balance.service';
 import { FindCasinoGameSessionService } from '../../../game-session/application/find-casino-game-session.service';
 import { CasinoErrorCode } from '../../../constants/casino-error-codes';
 import { InsufficientBalanceException } from 'src/modules/wallet/domain/wallet.exception';
+import { ProcessCasinoBetService } from '../../../application/process-casino-bet.service';
 
 @Injectable()
 export class DcsCallbackService {
@@ -44,6 +46,7 @@ export class DcsCallbackService {
     private readonly dcsMapperService: DcsMapperService,
     private readonly findCasinoGameSessionService: FindCasinoGameSessionService,
     private readonly checkCasinoBalanceService: CheckCasinoBalanceService,
+    private readonly processCasinoBetService: ProcessCasinoBetService,
   ) {
     this.dcsConfig = this.envService.dcs;
   }
@@ -112,23 +115,127 @@ export class DcsCallbackService {
   }
 
   /**
+   * 통합 검증 헬퍼 (필수 필드 + 서명)
+   */
+  private verifyAndValidate(
+    body: any,
+    requiredFields: string[],
+    signParams: (string | number | undefined)[],
+  ): DcsCommonResponseDto | null {
+    // 1. 필수 필드 검증
+    const validationError = this.validateRequiredFields(body, requiredFields);
+    if (validationError) return validationError;
+
+    // 2. 서명 검증
+    const signVerificationError = this.verifySign(
+      body.brand_id,
+      body.sign,
+      ...signParams,
+    );
+    if (signVerificationError) return signVerificationError;
+
+    return null;
+  }
+
+  /**
+   * Login 콜백
+   */
+  async login(body: any): Promise<any> {
+    try {
+      const error = this.verifyAndValidate(
+        body,
+        ['brand_id', 'sign', 'token', 'brand_uid', 'currency'],
+        [body.token],
+      );
+      if (error) return error;
+
+      return await this.getBalance({ ...body });
+    } catch (error) {
+      return this.handleError(error, body.brand_uid, body.currency);
+    }
+  }
+
+  /**
    * Wager 콜백 (베팅)
    */
   async wager(body: WagerRequestDto): Promise<WagerResponseDto> {
-    throw new Error('Wager not implemented');
+    try {
+      // 1. 통합 검증 (필수값 + 서명)
+      const error = this.verifyAndValidate(
+        body,
+        [
+          'brand_id',
+          'wager_id',
+          'amount',
+          'token',
+          'round_id',
+          'game_id',
+          'transaction_time',
+          'provider',
+          'sign',
+        ],
+        [body.wager_id],
+      );
+      if (error) return error;
+
+      // 2. 세션 조회
+      const session =
+        await this.findCasinoGameSessionService.findByToken(body.token);
+      if (!session) {
+        this.logger.warn(`DCS Wager - Session not found: token=${body.token}`);
+        return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
+      }
+
+      // 3. 베팅 시간 파싱
+      const betTime = new Date(body.transaction_time);
+      if (isNaN(betTime.getTime())) {
+        this.logger.warn(`Invalid transaction_time: ${body.transaction_time}`);
+      }
+
+      // 4. Provider 매핑
+      const provider =
+        this.dcsMapperService.fromDcsProvider(body.provider) ||
+        GameProvider.PRAGMATIC_PLAY_SLOTS;
+
+      // 5. 베팅 처리 서비스 호출
+      const result = await this.processCasinoBetService.execute({
+        session: session,
+        amount: new Prisma.Decimal(body.amount),
+        transactionId: body.wager_id,
+        roundId: body.round_id,
+        gameId: BigInt(body.game_id),
+        betTime: isNaN(betTime.getTime()) ? new Date() : betTime,
+        provider: provider,
+        description: body.game_name || 'DCS Wager',
+      });
+
+      // 6. 성공 응답
+      return getDcsResponse(DcsResponseCode.SUCCESS, {
+        balance: result.balance,
+        brand_uid: session.playerName,
+        currency: body.currency,
+        wager_id: body.wager_id,
+      });
+    } catch (error) {
+      return this.handleError(error, body.brand_uid, body.currency);
+    }
   }
 
   /**
    * Cancel Wager 콜백 (베팅 취소)
    */
-  async cancelWager(body: CancelWagerRequestDto): Promise<CancelWagerResponseDto> {
+  async cancelWager(
+    body: CancelWagerRequestDto,
+  ): Promise<CancelWagerResponseDto> {
     throw new Error('Cancel Wager not implemented');
   }
 
   /**
-   * Append Wager 콜백 (추가 베팅 -> 실제로는 보너스/잭팟으로 처리되는 경우 많음)
+   * Append Wager 콜백 (추가 베팅)
    */
-  async appendWager(body: AppendWagerRequestDto): Promise<AppendWagerResponseDto> {
+  async appendWager(
+    body: AppendWagerRequestDto,
+  ): Promise<AppendWagerResponseDto> {
     throw new Error('Append Wager not implemented');
   }
 
@@ -142,17 +249,30 @@ export class DcsCallbackService {
   /**
    * Free Spin Result 콜백
    */
-  async freeSpinResult(body: FreeSpinResultRequestDto): Promise<FreeSpinResultResponseDto> {
+  async freeSpinResult(
+    body: FreeSpinResultRequestDto,
+  ): Promise<FreeSpinResultResponseDto> {
     throw new Error('Free Spin Result not implemented');
   }
 
   /**
    * Get Balance 콜백
    */
-  async getBalance(body: GetDcsBalanceRequestDto): Promise<GetDcsBalanceResponseDto> {
+  async getBalance(
+    body: GetDcsBalanceRequestDto,
+  ): Promise<GetDcsBalanceResponseDto> {
     try {
-      // 1. 세션 조회 (토큰 우선, 없으면 플레이어네임 기준 최근 세션)
-      let session = await this.findCasinoGameSessionService.findByToken(body.token);
+      // 1. 통합 검증 (필수값 + 서명)
+      const error = this.verifyAndValidate(
+        body,
+        ['brand_id', 'sign', 'token', 'brand_uid', 'currency'],
+        [body.token],
+      );
+      if (error) return error;
+
+      // 2. 세션 조회 (토큰 우선, 없으면 플레이어네임 기준 최근 세션)
+      let session =
+        await this.findCasinoGameSessionService.findByToken(body.token);
 
       if (!session && /^\d+$/.test(body.brand_uid)) {
         session = await this.findCasinoGameSessionService.findRecent(
@@ -162,11 +282,13 @@ export class DcsCallbackService {
       }
 
       if (!session) {
-        this.logger.warn(`DCS Balance API - Session not found: token=${body.token}, brand_uid=${body.brand_uid}`);
+        this.logger.warn(
+          `DCS Balance API - Session not found: token=${body.token}, brand_uid=${body.brand_uid}`,
+        );
         return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
       }
 
-      // 2. 잔액 서비스 호출
+      // 3. 잔액 서비스 호출
       const result = await this.checkCasinoBalanceService.execute(session);
 
       return getDcsResponse(DcsResponseCode.SUCCESS, {
@@ -180,16 +302,22 @@ export class DcsCallbackService {
   }
 
   /**
-   * Promo Payout 콜백
+   * Promo Payout 콜백 (프로모션 지급)
    */
-  async promoPayout(body: PromoPayoutRequestDto): Promise<PromoPayoutResponseDto> {
+  async promoPayout(
+    body: PromoPayoutRequestDto,
+  ): Promise<PromoPayoutResponseDto> {
     throw new Error('Promo Payout not implemented');
   }
 
   /**
    * DCS 특화 에러 핸들링
    */
-  private async handleError(error: any, brand_uid: string, currency: string): Promise<any> {
+  private async handleError(
+    error: any,
+    brand_uid: string,
+    currency: string,
+  ): Promise<any> {
     this.logger.error(`[DCS] Callback Error:`, error);
 
     // 잔액 조회가 필요한 에러 상황을 위해 현재 잔액 시도
@@ -201,7 +329,8 @@ export class DcsCallbackService {
           GameAggregatorType.DC,
         );
         if (session) {
-          const balanceResult = await this.checkCasinoBalanceService.execute(session);
+          const balanceResult =
+            await this.checkCasinoBalanceService.execute(session);
           currentBalance = balanceResult.balance;
         }
       }
@@ -209,9 +338,14 @@ export class DcsCallbackService {
       // ignore balance lookup error during error handling
     }
 
-    if (error instanceof InsufficientBalanceException || error.message === CasinoErrorCode.INSUFFICIENT_FUNDS) {
+    if (
+      error instanceof InsufficientBalanceException ||
+      error.message === CasinoErrorCode.INSUFFICIENT_FUNDS
+    ) {
       return getDcsResponse(DcsResponseCode.BALANCE_INSUFFICIENT, {
-        brand_uid, currency, balance: currentBalance
+        brand_uid,
+        currency,
+        balance: currentBalance,
       });
     }
 
@@ -220,14 +354,18 @@ export class DcsCallbackService {
       case CasinoErrorCode.DUPLICATE_CREDIT:
       case CasinoErrorCode.BONUS_ALREADY_PROCESSED:
         return getDcsResponse(DcsResponseCode.BET_RECORD_DUPLICATE, {
-          brand_uid, currency, balance: currentBalance
+          brand_uid,
+          currency,
+          balance: currentBalance,
         });
       case CasinoErrorCode.INVALID_USER:
       case CasinoErrorCode.USER_BALANCE_NOT_FOUND:
         return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
       case CasinoErrorCode.INVALID_TXN:
         return getDcsResponse(DcsResponseCode.BET_RECORD_NOT_EXIST, {
-          brand_uid, currency, balance: currentBalance
+          brand_uid,
+          currency,
+          balance: currentBalance,
         });
       default:
         return getDcsResponse(DcsResponseCode.SYSTEM_ERROR);

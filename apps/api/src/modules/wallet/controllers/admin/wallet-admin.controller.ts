@@ -199,28 +199,28 @@ export class WalletAdminController {
     return {
       data: items.map((tx) => {
         // Metadata 파싱 및 매핑
-        const metadata = tx.metadata || {};
-        const balanceDetail = {
-          mainBalanceChange: '0', // TODO: 메타데이터 구조에 따라 매핑 필요
-          mainBeforeAmount: '0',
-          mainAfterAmount: '0',
-          bonusBalanceChange: '0',
-          bonusBeforeAmount: '0',
-          bonusAfterAmount: '0',
-          // 현재 트랜잭션 메타데이터에 상세 잔액 정보가 없다면 임시값 또는 계산 로직 필요
-          // 일단 기존 응답과의 호환성을 위해 DTO 구조에 맞춤
-        };
+        // Metadata 파싱 및 매핑
+        const metadata = (tx.metadata || {}) as any;
 
         return {
           id: tx.id?.toString() || '',
           userId: tx.userId.toString(),
           type: tx.type,
-          status: 'COMPLETED', // 트랜잭션 상태 필드가 없다면 기본값
+          status: 'COMPLETED',
           currency: tx.currency,
-          amount: tx.amount.toString(),
-          beforeAmount: tx.balanceAfter.sub(tx.amount).toString(), // 역산 또는 별도 필드 필요
+          amount: tx.amount.abs().toString(), // 응답 DTO 정의상 절대값 반환
+          // 주의: DTO 필드명은 Total Balance로 되어있으나, 아래 값은 해당 트랜잭션이 발생한 BalanceType의 전후 잔액임
+          beforeAmount: tx.balanceAfter.sub(tx.amount).toString(),
           afterAmount: tx.balanceAfter.toString(),
-          balanceDetail: metadata.balanceDetail || balanceDetail,
+          balanceDetail: metadata.balanceDetail || {
+            // 구형 데이터 호환성 처리: 메타데이터가 없는 경우 현재 트랜잭션 정보를 바탕으로 역산
+            mainBalanceChange: tx.balanceType === 'CASH' ? tx.amount.toString() : '0',
+            mainBeforeAmount: tx.balanceType === 'CASH' ? tx.balanceAfter.sub(tx.amount).toString() : '0',
+            mainAfterAmount: tx.balanceType === 'CASH' ? tx.balanceAfter.toString() : '0',
+            bonusBalanceChange: tx.balanceType === 'BONUS' ? tx.amount.toString() : '0',
+            bonusBeforeAmount: tx.balanceType === 'BONUS' ? tx.balanceAfter.sub(tx.amount).toString() : '0',
+            bonusAfterAmount: tx.balanceType === 'BONUS' ? tx.balanceAfter.toString() : '0',
+          },
           adminDetail: metadata.adminId ? {
             adminUserId: metadata.adminId,
             reasonCode: metadata.reasonCode,

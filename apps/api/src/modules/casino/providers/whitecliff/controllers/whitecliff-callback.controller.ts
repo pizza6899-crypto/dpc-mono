@@ -36,18 +36,7 @@ export class WhitecliffCallbackController {
     @Headers('secret-key') secretKey: string,
     @Body() body: GetWhitecliffBalanceRequestDto,
   ): Promise<GetWhitecliffBalanceResponseDto> {
-    // 비밀키 검증
-    const { isValid, currency } =
-      this.whitecliffCallbackService.validateSecretKey(secretKey);
-    if (!isValid) {
-      return {
-        status: 0,
-        balance: 0,
-        error: 'ACCESS_DENIED',
-      };
-    }
-
-    return this.whitecliffCallbackService.getBalance(body, currency);
+    return this.whitecliffCallbackService.getBalance(body, secretKey);
   }
 
   @Post('/debit')
@@ -60,19 +49,7 @@ export class WhitecliffCallbackController {
     @Headers('secret-key') secretKey: string,
     @Body() body: DebitRequestDto,
   ): Promise<TransactionResponseDto> {
-    // 비밀키 검증
-    const { isValid, currency } =
-      this.whitecliffCallbackService.validateSecretKey(secretKey);
-    if (!isValid) {
-      return {
-        status: 0,
-        balance: 0,
-        error: 'ACCESS_DENIED',
-      };
-    }
-
-    // 서비스 호출
-    return this.whitecliffCallbackService.debit(body, currency);
+    return this.whitecliffCallbackService.debit(body, secretKey);
   }
 
   @Post('/credit')
@@ -85,19 +62,7 @@ export class WhitecliffCallbackController {
     @Headers('secret-key') secretKey: string,
     @Body() body: CreditRequestDto,
   ): Promise<TransactionResponseDto> {
-    // 비밀키 검증
-    const { isValid, currency } =
-      this.whitecliffCallbackService.validateSecretKey(secretKey);
-    if (!isValid) {
-      return {
-        status: 0,
-        balance: 0,
-        error: 'ACCESS_DENIED',
-      };
-    }
-
-    // 서비스 호출
-    return this.whitecliffCallbackService.credit(body, currency);
+    return this.whitecliffCallbackService.credit(body, secretKey);
   }
 
   @Post('/bonus')
@@ -109,18 +74,6 @@ export class WhitecliffCallbackController {
     @Headers('secret-key') secretKey: string,
     @Body() body: GetBonusRequestDto,
   ): Promise<GetBonusResponseDto> {
-    // 비밀키 검증
-    const { isValid, currency } =
-      this.whitecliffCallbackService.validateSecretKey(secretKey);
-    if (!isValid) {
-      return {
-        status: 0,
-        balance: 0,
-        error: 'ACCESS_DENIED',
-      };
-    }
-
-    // 서비스 호출
-    return this.whitecliffCallbackService.getBonus(body, currency);
+    return this.whitecliffCallbackService.getBonus(body, secretKey);
   }
 }

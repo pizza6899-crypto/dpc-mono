@@ -87,7 +87,7 @@ export class UpdateWalletStatusService {
                 prevStatus,
                 nextStatus: newStatus,
                 changedBy: 'ADMIN',
-                adminId,
+                adminId: adminId.toString(),
                 reason,
             },
         });

@@ -1,12 +1,25 @@
 import { WalletStatus } from '@prisma/client';
 
 /**
+ * 상세 잔액 변경 내역
+ */
+export interface BalanceDetail {
+    mainBalanceChange: string;
+    mainBeforeAmount: string;
+    mainAfterAmount: string;
+    bonusBalanceChange: string;
+    bonusBeforeAmount: string;
+    bonusAfterAmount: string;
+}
+
+/**
  * 기본 메타데이터 (공통 필드)
  */
 export interface BaseMetadata {
     description?: string;
     traceId?: string; // 추적 ID (Optional)
     adminId?: string; // 관리자 ID (Optional - Adjustment 시)
+    balanceDetail?: BalanceDetail; // 상세 잔액 변경 내역
 }
 
 /**

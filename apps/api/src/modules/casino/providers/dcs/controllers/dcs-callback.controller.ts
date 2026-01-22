@@ -5,7 +5,6 @@ import {
   HttpCode,
   HttpStatus,
   UseFilters,
-  UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger';
 import {
@@ -57,26 +56,7 @@ export class DcsCallbackController {
     }),
   })
   async login(@Body() body: LoginRequestDto): Promise<DcsLoginResponseDto> {
-    const { brand_id, sign, token, brand_uid, currency } = body;
-
-    const requiredFieldsResponse =
-      this.dcsCallbackService.validateRequiredFields(body, [
-        'brand_id',
-        'sign',
-        'token',
-        'brand_uid',
-        'currency',
-      ]);
-    if (requiredFieldsResponse) return requiredFieldsResponse;
-
-    const signVerificationResponse = this.dcsCallbackService.verifySign(
-      brand_id,
-      sign,
-      token,
-    );
-    if (signVerificationResponse) return signVerificationResponse;
-
-    return await this.dcsCallbackService.getBalance(body);
+    return await this.dcsCallbackService.login(body);
   }
 
   @Post('/wager')
@@ -97,35 +77,6 @@ export class DcsCallbackController {
     }),
   })
   async wager(@Body() body: WagerRequestDto): Promise<WagerResponseDto> {
-    const { brand_id, sign, wager_id } = body;
-
-    const requiredFieldsResponse =
-      this.dcsCallbackService.validateRequiredFields(body, [
-        'brand_id',
-        'sign',
-        'token',
-        'brand_uid',
-        'currency',
-        'amount',
-        'jackpot_contribution',
-        'game_id',
-        'game_name',
-        'round_id',
-        'wager_id',
-        'provider',
-        'bet_type',
-        'transaction_time',
-        'is_endround',
-      ]);
-    if (requiredFieldsResponse) return requiredFieldsResponse;
-
-    const signVerificationResponse = this.dcsCallbackService.verifySign(
-      brand_id,
-      sign,
-      wager_id,
-    );
-    if (signVerificationResponse) return signVerificationResponse;
-
     return await this.dcsCallbackService.wager(body);
   }
 
@@ -149,30 +100,6 @@ export class DcsCallbackController {
   async cancelWager(
     @Body() body: CancelWagerRequestDto,
   ): Promise<CancelWagerResponseDto> {
-    const { brand_id, sign, wager_id } = body;
-
-    const requiredFieldsResponse =
-      this.dcsCallbackService.validateRequiredFields(body, [
-        'brand_id',
-        'sign',
-        'brand_uid',
-        'currency',
-        'round_id',
-        'wager_id',
-        'provider',
-        'wager_type',
-        'is_endround',
-        'transaction_time',
-      ]);
-    if (requiredFieldsResponse) return requiredFieldsResponse;
-
-    const signVerificationResponse = this.dcsCallbackService.verifySign(
-      brand_id,
-      sign,
-      wager_id,
-    );
-    if (signVerificationResponse) return signVerificationResponse;
-
     return await this.dcsCallbackService.cancelWager(body);
   }
 
@@ -196,33 +123,6 @@ export class DcsCallbackController {
   async appendWager(
     @Body() body: AppendWagerRequestDto,
   ): Promise<AppendWagerResponseDto> {
-    const { brand_id, sign, wager_id } = body;
-
-    const requiredFieldsResponse =
-      this.dcsCallbackService.validateRequiredFields(body, [
-        'brand_id',
-        'sign',
-        'brand_uid',
-        'currency',
-        'amount',
-        'game_id',
-        'game_name',
-        'round_id',
-        'wager_id',
-        'provider',
-        'description',
-        'is_endround',
-        'transaction_time',
-      ]);
-    if (requiredFieldsResponse) return requiredFieldsResponse;
-
-    const signVerificationResponse = this.dcsCallbackService.verifySign(
-      brand_id,
-      sign,
-      wager_id,
-    );
-    if (signVerificationResponse) return signVerificationResponse;
-
     return await this.dcsCallbackService.appendWager(body);
   }
 
@@ -246,30 +146,6 @@ export class DcsCallbackController {
   async endWager(
     @Body() body: EndWagerRequestDto,
   ): Promise<EndWagerResponseDto> {
-    const { brand_id, sign, wager_id } = body;
-
-    const requiredFieldsResponse =
-      this.dcsCallbackService.validateRequiredFields(body, [
-        'brand_id',
-        'sign',
-        'brand_uid',
-        'currency',
-        'round_id',
-        'provider',
-        'is_endround',
-        'amount',
-        'wager_id',
-        'transaction_time',
-      ]);
-    if (requiredFieldsResponse) return requiredFieldsResponse;
-
-    const signVerificationResponse = this.dcsCallbackService.verifySign(
-      brand_id,
-      sign,
-      wager_id,
-    );
-    if (signVerificationResponse) return signVerificationResponse;
-
     return await this.dcsCallbackService.endWager(body);
   }
 
@@ -295,32 +171,6 @@ export class DcsCallbackController {
   async freeSpinResult(
     @Body() body: FreeSpinResultRequestDto,
   ): Promise<FreeSpinResultResponseDto> {
-    const { brand_id, sign, wager_id } = body;
-
-    const requiredFieldsResponse =
-      this.dcsCallbackService.validateRequiredFields(body, [
-        'brand_id',
-        'sign',
-        'brand_uid',
-        'currency',
-        'round_id',
-        'wager_id',
-        'provider',
-        'is_endround',
-        'transaction_time',
-        'amount',
-        'game_id',
-        'game_name',
-      ]);
-    if (requiredFieldsResponse) return requiredFieldsResponse;
-
-    const signVerificationResponse = this.dcsCallbackService.verifySign(
-      brand_id,
-      sign,
-      wager_id,
-    );
-    if (signVerificationResponse) return signVerificationResponse;
-
     return await this.dcsCallbackService.freeSpinResult(body);
   }
 
@@ -344,25 +194,6 @@ export class DcsCallbackController {
   async getBalance(
     @Body() body: GetDcsBalanceRequestDto,
   ): Promise<GetDcsBalanceResponseDto> {
-    const { brand_id, sign, token } = body;
-
-    const requiredFieldsResponse =
-      this.dcsCallbackService.validateRequiredFields(body, [
-        'brand_id',
-        'sign',
-        'token',
-        'brand_uid',
-        'currency',
-      ]);
-    if (requiredFieldsResponse) return requiredFieldsResponse;
-
-    const signVerificationResponse = this.dcsCallbackService.verifySign(
-      brand_id,
-      sign,
-      token,
-    );
-    if (signVerificationResponse) return signVerificationResponse;
-
     return await this.dcsCallbackService.getBalance(body);
   }
 
@@ -386,30 +217,6 @@ export class DcsCallbackController {
   async promoPayout(
     @Body() body: PromoPayoutRequestDto,
   ): Promise<PromoPayoutResponseDto> {
-    const { brand_id, sign, promotion_id, trans_id } = body;
-
-    const requiredFieldsResponse =
-      this.dcsCallbackService.validateRequiredFields(body, [
-        'brand_id',
-        'sign',
-        'brand_uid',
-        'currency',
-        'amount',
-        'promotion_id',
-        'trans_id',
-        'provider',
-        'transaction_time',
-      ]);
-    if (requiredFieldsResponse) return requiredFieldsResponse;
-
-    const signVerificationResponse = this.dcsCallbackService.verifySign(
-      brand_id,
-      sign,
-      promotion_id,
-      trans_id,
-    );
-    if (signVerificationResponse) return signVerificationResponse;
-
     return await this.dcsCallbackService.promoPayout(body);
   }
 }

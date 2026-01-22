@@ -81,7 +81,7 @@ export class LoginRequestDto {
   currency: string;
 }
 
-export class DcsLoginResponseDto extends DcsCommonResponseDto {}
+export class DcsLoginResponseDto extends DcsCommonResponseDto { }
 
 // Wager Request/Response
 export class WagerRequestDto {
@@ -193,7 +193,7 @@ export class WagerRequestDto {
   transaction_time: string;
 }
 
-export class WagerResponseDto extends DcsCommonResponseDto {}
+export class WagerResponseDto extends DcsCommonResponseDto { }
 
 // Cancel Wager Request/Response
 export class CancelWagerRequestDto {
@@ -270,7 +270,7 @@ export class CancelWagerRequestDto {
   transaction_time: string;
 }
 
-export class CancelWagerResponseDto extends DcsCommonResponseDto {}
+export class CancelWagerResponseDto extends DcsCommonResponseDto { }
 
 // Append Wager Request/Response
 export class AppendWagerRequestDto {
@@ -367,7 +367,7 @@ export class AppendWagerRequestDto {
   transaction_time: string;
 }
 
-export class AppendWagerResponseDto extends DcsCommonResponseDto {}
+export class AppendWagerResponseDto extends DcsCommonResponseDto { }
 
 // End Wager Request/Response
 export class EndWagerRequestDto {
@@ -451,7 +451,7 @@ export class EndWagerRequestDto {
   transaction_time: string;
 }
 
-export class EndWagerResponseDto extends DcsCommonResponseDto {}
+export class EndWagerResponseDto extends DcsCommonResponseDto { }
 
 // Free Spin Result Request/Response
 export class FreeSpinResultRequestDto {
@@ -555,7 +555,7 @@ export class FreeSpinResultRequestDto {
   transaction_time: string;
 }
 
-export class FreeSpinResultResponseDto extends DcsCommonResponseDto {}
+export class FreeSpinResultResponseDto extends DcsCommonResponseDto { }
 
 // Get Balance Request/Response
 export class GetDcsBalanceRequestDto {
@@ -596,7 +596,7 @@ export class GetDcsBalanceRequestDto {
   token: string;
 }
 
-export class GetDcsBalanceResponseDto extends DcsCommonResponseDto {}
+export class GetDcsBalanceResponseDto extends DcsCommonResponseDto { }
 
 // Promo Payout Request/Response
 export class PromoPayoutRequestDto {
@@ -665,4 +665,4 @@ export class PromoPayoutRequestDto {
   transaction_time: string;
 }
 
-export class PromoPayoutResponseDto extends DcsCommonResponseDto {}
+export class PromoPayoutResponseDto extends DcsCommonResponseDto { }

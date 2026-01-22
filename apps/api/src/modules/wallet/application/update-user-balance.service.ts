@@ -62,6 +62,12 @@ export class UpdateUserBalanceService {
             throw new WalletNotFoundException(userId, currency);
         }
 
+        // Snapshot before update
+        const beforeBalance = {
+            cash: wallet.cash,
+            bonus: wallet.bonus,
+        };
+
         // 2. Check Wallet Status by Policy
         this.walletPolicy.canPerformTransaction(wallet, transactionType);
 
@@ -74,7 +80,13 @@ export class UpdateUserBalanceService {
         const savedWallet = await this.walletRepository.update(wallet);
 
         // 5. Create Transaction History with Metadata
-        const metadata = this.buildMetadata(transactionType, context);
+        const metadata = this.buildMetadata(transactionType, context, {
+            before: beforeBalance,
+            after: { cash: wallet.cash, bonus: wallet.bonus },
+            changeAmount: amount,
+            operation,
+            balanceType
+        });
 
         const transaction = WalletTransaction.create({
             userId,
@@ -92,8 +104,32 @@ export class UpdateUserBalanceService {
         return savedWallet;
     }
 
-    private buildMetadata(type: WalletTransactionType, context: BalanceUpdateContext): any {
+    private buildMetadata(
+        type: WalletTransactionType,
+        context: BalanceUpdateContext,
+        balanceInfo: {
+            before: { cash: Prisma.Decimal, bonus: Prisma.Decimal },
+            after: { cash: Prisma.Decimal, bonus: Prisma.Decimal },
+            changeAmount: Prisma.Decimal,
+            operation: UpdateOperation,
+            balanceType: WalletBalanceType
+        }
+    ): any {
         const baseMetadata = context.metadata || {};
+
+        // Calculate detailed balance changes
+        const isCash = balanceInfo.balanceType === WalletBalanceType.CASH;
+        const isBonus = balanceInfo.balanceType === WalletBalanceType.BONUS;
+        const sign = balanceInfo.operation === UpdateOperation.ADD ? 1 : -1;
+
+        const balanceDetail = {
+            mainBalanceChange: isCash ? balanceInfo.changeAmount.mul(sign).toString() : '0',
+            mainBeforeAmount: balanceInfo.before.cash.toString(),
+            mainAfterAmount: balanceInfo.after.cash.toString(),
+            bonusBalanceChange: isBonus ? balanceInfo.changeAmount.mul(sign).toString() : '0',
+            bonusBeforeAmount: balanceInfo.before.bonus.toString(),
+            bonusAfterAmount: balanceInfo.after.bonus.toString(),
+        };
 
         if (type === WalletTransactionType.ADJUSTMENT) {
             return {
@@ -102,12 +138,14 @@ export class UpdateUserBalanceService {
                 reasonCode: context.reasonCode || AdjustmentReasonCode.OTHER,
                 internalNote: context.internalNote,
                 actionName: context.actionName,
+                balanceDetail,
             };
         }
 
         return {
             ...baseMetadata,
             description: context.internalNote || context.actionName,
+            balanceDetail,
         };
     }
 
