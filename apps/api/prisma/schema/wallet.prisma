@@ -28,7 +28,7 @@ enum WalletStatus {
 }
 
 model WalletTransaction {
-    id        BigInt   @default(autoincrement())
+    id        BigInt   @default(autoincrement()) // 스노우 플레이크 수정 예정
     createdAt DateTime @default(now()) @map("created_at")
 
     type        WalletTransactionType // 거래 성격
@@ -49,18 +49,10 @@ model WalletTransaction {
 
     userWallet UserWallet @relation(fields: [userId, currency], references: [userId, currency])
 
-    @@id([createdAt, id])
+    @@id([id, createdAt])
     @@index([userId, currency, createdAt(desc)])
     @@index([type, referenceId])
     @@map("wallet_transactions")
-}
-
-enum WalletBalanceType {
-    CASH
-    BONUS
-    REWARD
-    LOCK
-    VAULT
 }
 
 enum WalletTransactionType {

@@ -67,6 +67,7 @@ model User {
   compWallets            UserCompWallet[]
   alerts                 Alert[]
   notificationLogs       NotificationLog[]
+  gameRoundsV2           GameRoundV2[]
 
   @@map("users")
 }
@@ -116,45 +117,6 @@ model Transaction {
   withdrawalDetail        WithdrawalDetail?
 
   @@map("transactions")
-}
-
-model GameRound {
-  id                             BigInt                @id @default(autoincrement())
-  userId                         BigInt                @map("user_id")
-  aggregatorType                 GameAggregatorType    @map("aggregator_type")
-  provider                       GameProvider
-  aggregatorTxId                 String                @map("aggregator_tx_id")
-  transactionId                  BigInt                @unique @map("transaction_id")
-  aggregatorGameId               Int                   @map("aggregator_game_id")
-  totalBetAmountInGameCurrency   Decimal               @default(0) @map("total_bet_amount_in_game_currency") @db.Decimal(32, 18)
-  totalWinAmountInGameCurrency   Decimal               @default(0) @map("total_win_amount_in_game_currency") @db.Decimal(32, 18)
-  netAmountInGameCurrency        Decimal               @default(0) @map("net_amount_in_game_currency") @db.Decimal(32, 18)
-  totalBetAmountInWalletCurrency Decimal               @default(0) @map("total_bet_amount_in_wallet_currency") @db.Decimal(32, 18)
-  totalWinAmountInWalletCurrency Decimal               @default(0) @map("total_win_amount_in_wallet_currency") @db.Decimal(32, 18)
-  netAmountInWalletCurrency      Decimal               @default(0) @map("net_amount_in_wallet_currency") @db.Decimal(32, 18)
-  sessionId                      String?               @map("session_id")
-  tableId                        String?               @map("table_id")
-  roundId                        String?               @map("round_id")
-  replayType                     GameReplayType?       @map("replay_type")
-  replayData                     String?               @map("replay_data")
-  totalPushAmount                Decimal?              @map("total_push_amount") @db.Decimal(32, 18)
-  tieBetAmount                   Decimal?              @map("tie_bet_amount") @db.Decimal(32, 18)
-  contributionAmount             Decimal?              @map("contribution_amount") @db.Decimal(32, 18)
-  compEarned                     Decimal?              @map("comp_earned") @db.Decimal(32, 18)
-  jackpotContributionAmount      Decimal               @default(0) @map("jackpot_contribution_amount") @db.Decimal(32, 18)
-  startedAt                      DateTime?             @map("started_at")
-  completedAt                    DateTime?             @map("completed_at")
-  gameId                         BigInt?               @map("game_id")
-  gameSessionId                  BigInt                @map("game_session_id")
-  affiliateCommissions           AffiliateCommission[]
-  bets                           GameBet[]
-  casinoGameV2                   CasinoGameV2?         @relation(fields: [gameId], references: [id])
-  gameSession                    CasinoGameSession     @relation(fields: [gameSessionId], references: [id])
-  transaction                    Transaction           @relation(fields: [transactionId], references: [id])
-  wins                           GameWin[]
-
-  @@unique([aggregatorTxId, aggregatorType])
-  @@map("game_rounds")
 }
 
 model TransactionBalanceDetail {
@@ -414,4 +376,12 @@ model LoginAttempt {
   @@index([email, attemptedAt])
   @@index([ipAddress, attemptedAt])
   @@map("login_attempts")
+}
+
+enum WalletBalanceType {
+  CASH
+  BONUS
+  REWARD
+  LOCK
+  VAULT
 }
