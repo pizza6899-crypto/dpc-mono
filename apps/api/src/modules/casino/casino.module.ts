@@ -4,15 +4,12 @@ import { GameCatalogModule } from './game-catalog/game-catalog.module';
 import { GameSessionModule } from './game-session/game-session.module';
 import { WhitecliffModule } from './providers/whitecliff/whitecliff.module';
 import { DcsModule } from './providers/dcs/dcs.module';
-import { CasinoBetService } from './application/casino-bet.service';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
-import { CasinoBonusService } from './application/casino-bonus.service';
 import { BullModule } from '@nestjs/bullmq';
 import { CasinoQueueNames } from './infrastructure/queue/casino-queue.types';
 import { CasinoQueueService } from './infrastructure/queue/casino-queue.service';
 import { GamePostProcessProcessor } from './processors/game-post-process.processor';
 import { EnvModule } from 'src/common/env/env.module';
-import { CasinoRefundService } from './application/casino-refund.service';
 import { ExchangeModule } from '../exchange/exchange.module';
 import { AuditLogModule } from '../audit-log/audit-log.module';
 import { WalletModule } from '../wallet/wallet.module';
@@ -28,7 +25,7 @@ import { PrismaGameRoundRepository } from './infrastructure/prisma-game-round.re
 import { PrismaGameTransactionRepository } from './infrastructure/prisma-game-transaction.repository';
 import { GAME_ROUND_REPOSITORY_TOKEN } from './ports/out/game-round.repository.token';
 import { GAME_TRANSACTION_REPOSITORY_TOKEN } from './ports/out/game-transaction.repository.token';
-import { CasinoGameV2Service } from './application/service/casino-game-v2.service';
+import { CheckCasinoBalanceService } from './application/check-casino-balance.service';
 
 @Module({
   imports: [
@@ -59,9 +56,6 @@ import { CasinoGameV2Service } from './application/service/casino-game-v2.servic
   ],
   controllers: [],
   providers: [
-    CasinoBetService,
-    CasinoBonusService,
-    CasinoRefundService,
     GamePostProcessProcessor,
     LaunchGameService,
     CasinoQueueService,
@@ -75,16 +69,13 @@ import { CasinoGameV2Service } from './application/service/casino-game-v2.servic
       provide: GAME_TRANSACTION_REPOSITORY_TOKEN,
       useClass: PrismaGameTransactionRepository,
     },
-    CasinoGameV2Service,
+    CheckCasinoBalanceService,
   ],
   exports: [
-    CasinoBetService,
-    CasinoBonusService,
-    CasinoRefundService,
     GameSessionModule,
     LaunchGameService,
     CasinoQueueService,
-    CasinoGameV2Service,
+    CheckCasinoBalanceService,
   ],
 })
 export class CasinoModule { }

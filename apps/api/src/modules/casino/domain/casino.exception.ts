@@ -13,3 +13,13 @@ export class CurrencyUnsupportedException extends CasinoException {
         super(`Currency unsupported: ${currency}`, MessageCode.CURRENCY_UNSUPPORTED, HttpStatus.BAD_REQUEST);
     }
 }
+
+export class UserBalanceNotFoundException extends CasinoException {
+    constructor(userId: bigint, currency: string) {
+        super(
+            `User balance not found: userId=${userId}, currency=${currency}`,
+            MessageCode.USER_BALANCE_NOT_FOUND,
+            HttpStatus.NOT_FOUND,
+        );
+    }
+}
