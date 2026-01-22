@@ -17,5 +17,10 @@ description: API 서버 개발 기술 가이드 관제탑
 - **Guide:** `view_file apps/api/.agent/skills/controller/SKILL.md`
 - **Rule:** Admin은 Raw ID, User는 Sqids 사용 / `@ApiTags` 영어 사용 / `@AuditLog` 필수
 
+### 3. Casino Aggregators
+외부 카지노 플랫폼 연동을 위한 전용 콜백 처리 및 보안 지침.
+- **DCS Guide:** `view_file apps/api/.agent/skills/dcs/SKILL.md` (참조: DCS Seamless wallet API document V1.40.pdf)
+- **Whitecliff Guide:** `view_file apps/api/.agent/skills/whitecliff/SKILL.md` (참조: WHITECLIFF_en.html)
+
 ## 🚀 Usage
 기능 구현 전 관련 가이드 파일을 확인하십시오.
