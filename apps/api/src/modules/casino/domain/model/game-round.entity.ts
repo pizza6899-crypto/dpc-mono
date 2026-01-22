@@ -89,11 +89,20 @@ export class GameRound {
     }
 
     public complete(): void {
+        if (this.isCompleted) return;
+
         this.completedAt = new Date();
         this.isCompleted = true;
     }
 
     public addBet(amount: Prisma.Decimal, gameAmount: Prisma.Decimal | null): void {
+        if (this.isCompleted) {
+            throw new Error(`Cannot add bet to a completed round: ${this.id}`);
+        }
+        if (amount.isNegative()) {
+            throw new Error(`Bet amount cannot be negative: ${amount.toString()}`);
+        }
+
         this.totalBetAmount = this.totalBetAmount.add(amount);
         if (gameAmount) {
             this.totalGameBetAmount = this.totalGameBetAmount.add(gameAmount);
@@ -101,9 +110,29 @@ export class GameRound {
     }
 
     public addWin(amount: Prisma.Decimal, gameAmount: Prisma.Decimal | null): void {
+        // Late win (라운드 종료 후 당첨) 처리가 필요한 경우가 있어 guard를 두지 않거나 경고만 남깁니다.
+        if (amount.isNegative()) {
+            throw new Error(`Win amount cannot be negative: ${amount.toString()}`);
+        }
+
         this.totalWinAmount = this.totalWinAmount.add(amount);
         if (gameAmount) {
             this.totalGameWinAmount = this.totalGameWinAmount.add(gameAmount);
         }
+    }
+
+    /**
+     * GGR (Gross Gaming Revenue): 순수익 (Bet - Win)
+     */
+    public get ggr(): Prisma.Decimal {
+        return this.totalBetAmount.sub(this.totalWinAmount);
+    }
+
+    /**
+     * RTP (Return to Player): 유저 환급률 (%)
+     */
+    public get rtp(): number {
+        if (this.totalBetAmount.isZero()) return 0;
+        return this.totalWinAmount.div(this.totalBetAmount).mul(100).toNumber();
     }
 }

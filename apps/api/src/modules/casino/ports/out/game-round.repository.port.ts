@@ -1,5 +1,5 @@
 import { GameRound } from "../../domain/model/game-round.entity";
-import { GameAggregatorType } from "@prisma/client";
+import { GameAggregatorType, Prisma } from "@prisma/client";
 
 export interface GameRoundRepositoryPort {
     /**
@@ -18,12 +18,13 @@ export interface GameRoundRepositoryPort {
     findByExternalId(externalRoundId: string, aggregatorType: GameAggregatorType, startedAt: Date): Promise<GameRound | null>;
 
     /**
-     * 라운드의 통계(Bet/Win)를 업데이트합니다.
+     * 라운드의 통계를 원자적(Atomic)으로 증가시킵니다.
+     * 동시성 문제 해결을 위해 값을 덮어쓰지 않고 increment 연산을 사용합니다.
      */
-    updateStats(id: bigint, startedAt: Date, stats: {
-        totalBetAmount?: number;
-        totalWinAmount?: number;
-        totalGameBetAmount?: number;
-        totalGameWinAmount?: number;
+    increaseStats(id: bigint, startedAt: Date, delta: {
+        betAmount?: Prisma.Decimal;
+        winAmount?: Prisma.Decimal;
+        gameBetAmount?: Prisma.Decimal;
+        gameWinAmount?: Prisma.Decimal;
     }): Promise<void>;
 }

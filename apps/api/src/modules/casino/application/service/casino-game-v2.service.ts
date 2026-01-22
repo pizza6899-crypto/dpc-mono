@@ -10,6 +10,9 @@ import { GameAggregatorType, GameProvider, GameTransactionType, WalletBalanceTyp
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { UpdateOperation } from 'src/modules/wallet/domain/wallet.constant';
 import { Transactional } from '@nestjs-cls/transactional';
+import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
+import { CasinoErrorCode } from '../../constants/casino-error-codes';
+import { BettingPolicy } from '../../domain/service/betting-policy.service';
 
 export interface GetOrCreateRoundParams {
     userId: bigint;
@@ -34,6 +37,34 @@ export interface CreateTransactionParams {
     createdAt?: Date;
 }
 
+export interface ProcessGameActionCommand {
+    user: {
+        id: bigint;
+    };
+    game: {
+        id: bigint;
+        sessionId: bigint;
+        provider: GameProvider;
+        aggregatorType: GameAggregatorType;
+    };
+    round: {
+        externalId: string; // aggregatorRoundId
+        startedAt: Date;
+    };
+    transaction: {
+        type: GameTransactionType;
+        externalId: string; // aggregatorTxId
+        amount: Prisma.Decimal; // Wallet Currency Amount
+        gameAmount: Prisma.Decimal; // Game Currency Amount
+        occurredAt: Date;
+    };
+    currency: {
+        wallet: ExchangeCurrencyCode;
+        game: ExchangeCurrencyCode;
+        exchangeRate: Prisma.Decimal;
+    };
+}
+
 @Injectable()
 export class CasinoGameV2Service {
     private readonly logger = new Logger(CasinoGameV2Service.name);
@@ -45,7 +76,107 @@ export class CasinoGameV2Service {
         private readonly gameTransactionRepository: GameTransactionRepositoryPort,
         private readonly snowflakeService: SnowflakeService,
         private readonly walletService: UpdateUserBalanceService,
+        private readonly findUserWalletService: FindUserWalletService,
     ) { }
+
+    /**
+     * 표준화된 게임 액션 처리 (Bet, Win 등)
+     * 특히 BET의 경우 Cash/Bonus 분할 사용 처리를 포함합니다.
+     */
+    @Transactional()
+    async processGameAction(command: ProcessGameActionCommand): Promise<GameTransaction> {
+        // 1. Get or Create Game Round
+        const round = await this.getOrCreateRound({
+            userId: command.user.id,
+            gameSessionId: command.game.sessionId,
+            gameId: command.game.id,
+            provider: command.game.provider,
+            aggregatorType: command.game.aggregatorType,
+            aggregatorRoundId: command.round.externalId,
+            currency: command.currency.wallet,
+            gameCurrency: command.currency.game,
+            exchangeRate: command.currency.exchangeRate,
+            startedAt: command.round.startedAt,
+        });
+
+        // 2. Logic Branch based on Type
+        if (command.transaction.type === GameTransactionType.BET) {
+            return this.processBet(command, round);
+        } else {
+            // For WIN/CANCEL, usually simple single transaction (add funds)
+            // But we might need more logic later. For now, simple create.
+            return this.createTransaction({
+                gameRound: round,
+                aggregatorTxId: command.transaction.externalId,
+                type: command.transaction.type,
+                amount: command.transaction.amount,
+                gameAmount: command.transaction.gameAmount,
+                balanceType: WalletBalanceType.CASH, // Default to CASH for wins for now
+                createdAt: command.transaction.occurredAt
+            });
+        }
+    }
+
+    private async processBet(command: ProcessGameActionCommand, round: GameRound): Promise<GameTransaction> {
+        // Balance Check & Split Logic
+        const wallet = await this.findUserWalletService.findWallet(
+            command.user.id,
+            command.currency.wallet,
+            true // useLock
+        );
+
+        if (!wallet) {
+            throw new Error(CasinoErrorCode.USER_BALANCE_NOT_FOUND);
+        }
+
+        const betAmount = command.transaction.amount;
+        // [Domain Service Policy]
+        const { cashDeduction, bonusDeduction } = BettingPolicy.calculateBalanceSplit(betAmount, wallet);
+
+        let lastTx: GameTransaction | null = null;
+        let gameAmountRemaining = command.transaction.gameAmount;
+
+        // 1. Cash Part
+        if (cashDeduction.gt(0)) {
+            let cashGameAmount = command.transaction.gameAmount;
+            if (bonusDeduction.gt(0)) {
+                const ratio = cashDeduction.div(betAmount);
+                cashGameAmount = command.transaction.gameAmount.mul(ratio);
+                gameAmountRemaining = gameAmountRemaining.sub(cashGameAmount);
+            }
+
+            lastTx = await this.createTransaction({
+                gameRound: round,
+                aggregatorTxId: bonusDeduction.gt(0)
+                    ? `${command.transaction.externalId}_CASH`
+                    : command.transaction.externalId,
+                type: GameTransactionType.BET,
+                amount: cashDeduction,
+                gameAmount: cashGameAmount,
+                balanceType: WalletBalanceType.CASH,
+                createdAt: command.transaction.occurredAt
+            });
+        }
+
+        // 2. Bonus Part
+        if (bonusDeduction.gt(0)) {
+            lastTx = await this.createTransaction({
+                gameRound: round,
+                aggregatorTxId: cashDeduction.gt(0)
+                    ? `${command.transaction.externalId}_BONUS`
+                    : command.transaction.externalId,
+                type: GameTransactionType.BET,
+                amount: bonusDeduction,
+                gameAmount: gameAmountRemaining,
+                balanceType: WalletBalanceType.BONUS,
+                createdAt: command.transaction.occurredAt
+            });
+        }
+
+        if (!lastTx) throw new Error("Zero bet amount is not allowed");
+
+        return lastTx;
+    }
 
     async getOrCreateRound(params: GetOrCreateRoundParams): Promise<GameRound> {
         let round = await this.gameRoundRepository.findByExternalId(
@@ -181,33 +312,26 @@ export class CasinoGameV2Service {
     }
 
     private async updateRoundStats(round: GameRound, transaction: GameTransaction): Promise<void> {
-        const stats: any = {};
-
+        // 1. Update Domain Entity State (Memory)
         if (transaction.type === GameTransactionType.BET) {
-            round.totalBetAmount = round.totalBetAmount.add(transaction.amount);
-            if (transaction.gameAmount) {
-                round.totalGameBetAmount = round.totalGameBetAmount.add(transaction.gameAmount);
-            }
-            stats.totalBetAmount = round.totalBetAmount;
-            stats.totalGameBetAmount = round.totalGameBetAmount;
+            round.addBet(transaction.amount, transaction.gameAmount);
         } else if (transaction.type === GameTransactionType.WIN || transaction.type === GameTransactionType.JACKPOT) {
-            round.totalWinAmount = round.totalWinAmount.add(transaction.amount);
-            if (transaction.gameAmount) {
-                round.totalGameWinAmount = round.totalGameWinAmount.add(transaction.gameAmount);
-            }
-            stats.totalWinAmount = round.totalWinAmount;
-            stats.totalGameWinAmount = round.totalGameWinAmount;
-        } else if (transaction.type === GameTransactionType.CANCEL || transaction.type === GameTransactionType.ROLLBACK) {
-            // How to handle cancel? It depends on what's being cancelled.
-            // For now, let's assume we subtract from the respective totals if we know the original type.
-            // But usually, CANCEL is a separate transaction.
-            // In V2, we might need to know the original transaction to properly subtract.
-            // To keep it simple for now, we just log it. 
-            // Better logic would be required for accurate rolling totals if cancels are frequent.
+            round.addWin(transaction.amount, transaction.gameAmount);
         }
 
-        if (Object.keys(stats).length > 0) {
-            await this.gameRoundRepository.updateStats(round.id, round.startedAt, stats);
+        // 2. Persist Changes (Atomic Increment) to avoid race conditions
+        const delta: any = {};
+
+        if (transaction.type === GameTransactionType.BET) {
+            delta.betAmount = transaction.amount;
+            if (transaction.gameAmount) delta.gameBetAmount = transaction.gameAmount;
+        } else if (transaction.type === GameTransactionType.WIN || transaction.type === GameTransactionType.JACKPOT) {
+            delta.winAmount = transaction.amount;
+            if (transaction.gameAmount) delta.gameWinAmount = transaction.gameAmount;
+        }
+
+        if (Object.keys(delta).length > 0) {
+            await this.gameRoundRepository.increaseStats(round.id, round.startedAt, delta);
         }
     }
 

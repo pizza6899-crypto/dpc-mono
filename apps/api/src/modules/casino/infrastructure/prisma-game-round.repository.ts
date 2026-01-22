@@ -3,7 +3,7 @@ import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { GameRound } from '../domain/model/game-round.entity';
 import { GameRoundRepositoryPort } from '../ports/out/game-round.repository.port';
 import { GameRoundMapper } from './game-round.mapper';
-import { GameAggregatorType } from '@prisma/client';
+import { GameAggregatorType, Prisma } from '@prisma/client';
 
 @Injectable()
 export class PrismaGameRoundRepository implements GameRoundRepositoryPort {
@@ -52,12 +52,20 @@ export class PrismaGameRoundRepository implements GameRoundRepositoryPort {
         return result ? this.mapper.toDomain(result) : null;
     }
 
-    async updateStats(id: bigint, startedAt: Date, stats: {
-        totalBetAmount?: number;
-        totalWinAmount?: number;
-        totalGameBetAmount?: number;
-        totalGameWinAmount?: number;
+    async increaseStats(id: bigint, startedAt: Date, delta: {
+        betAmount?: Prisma.Decimal;
+        winAmount?: Prisma.Decimal;
+        gameBetAmount?: Prisma.Decimal;
+        gameWinAmount?: Prisma.Decimal;
     }): Promise<void> {
+        const updateData: any = {};
+        if (delta.betAmount) updateData.totalBetAmount = { increment: delta.betAmount };
+        if (delta.winAmount) updateData.totalWinAmount = { increment: delta.winAmount };
+        if (delta.gameBetAmount) updateData.totalGameBetAmount = { increment: delta.gameBetAmount };
+        if (delta.gameWinAmount) updateData.totalGameWinAmount = { increment: delta.gameWinAmount };
+
+        if (Object.keys(updateData).length === 0) return;
+
         await this.prisma.gameRoundV2.update({
             where: {
                 id_startedAt: {
@@ -65,7 +73,7 @@ export class PrismaGameRoundRepository implements GameRoundRepositoryPort {
                     startedAt,
                 },
             },
-            data: stats,
+            data: updateData,
         });
     }
 }
