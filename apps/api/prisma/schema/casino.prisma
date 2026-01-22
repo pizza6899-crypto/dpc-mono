@@ -327,15 +327,19 @@ model GameRoundV2 {
   aggregatorRoundId String             @map("aggregator_round_id") // 라운드 고유 식별자 (RoundID)
 
   // 통화 및 환율 스냅샷 (세션 변경/삭제 대비, 영수증 역할)
-  currency     ExchangeCurrencyCode @map("currency") // Wallet Currency
-  gameCurrency ExchangeCurrencyCode @map("game_currency") // Game Currency
-  exchangeRate Decimal              @map("exchange_rate") @db.Decimal(32, 18) // 적용 환율
+  currency        ExchangeCurrencyCode @map("currency") // Wallet Currency
+  gameCurrency    ExchangeCurrencyCode @map("game_currency") // Game Currency
+  exchangeRate    Decimal              @map("exchange_rate") @db.Decimal(32, 18) // 적용 환율
+  usdExchangeRate Decimal              @default(0) @map("usd_exchange_rate") @db.Decimal(32, 18) // USD 환율 스냅샷
+  compRate        Decimal              @default(0) @map("comp_rate") @db.Decimal(8, 4) // 콤프 요율 스냅샷
 
   // 통계 및 검증용 스냅샷 (실제 원장은 WalletTransaction 집계)
-  totalBetAmount     Decimal @default(0) @map("total_bet_amount") @db.Decimal(32, 18) // Wallet Currency 기준
-  totalWinAmount     Decimal @default(0) @map("total_win_amount") @db.Decimal(32, 18) // Wallet Currency 기준
-  totalGameBetAmount Decimal @default(0) @map("total_game_bet_amount") @db.Decimal(32, 18) // Game Currency 기준
-  totalGameWinAmount Decimal @default(0) @map("total_game_win_amount") @db.Decimal(32, 18) // Game Currency 기준
+  totalBetAmount            Decimal @default(0) @map("total_bet_amount") @db.Decimal(32, 18) // Wallet Currency 기준
+  totalWinAmount            Decimal @default(0) @map("total_win_amount") @db.Decimal(32, 18) // Wallet Currency 기준
+  totalGameBetAmount        Decimal @default(0) @map("total_game_bet_amount") @db.Decimal(32, 18) // Game Currency 기준
+  totalGameWinAmount        Decimal @default(0) @map("total_game_win_amount") @db.Decimal(32, 18) // Game Currency 기준
+  jackpotContributionAmount Decimal @default(0) @map("jackpot_contribution_amount") @db.Decimal(32, 18) // 잭팟 기여금 (통계)
+  compEarned                Decimal @default(0) @map("comp_earned") @db.Decimal(32, 18) // 적립된 콤프 (통계)
 
   // 상태 관리
   startedAt   DateTime  @default(now()) @map("started_at")

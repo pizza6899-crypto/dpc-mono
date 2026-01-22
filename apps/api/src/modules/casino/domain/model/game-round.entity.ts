@@ -15,12 +15,16 @@ export class GameRound {
         public readonly currency: ExchangeCurrencyCode,
         public readonly gameCurrency: ExchangeCurrencyCode,
         public readonly exchangeRate: Prisma.Decimal,
+        public readonly usdExchangeRate: Prisma.Decimal, // 추가됨
+        public readonly compRate: Prisma.Decimal, // 추가됨
 
         // 통계 (합계)
         public totalBetAmount: Prisma.Decimal,
         public totalWinAmount: Prisma.Decimal,
         public totalGameBetAmount: Prisma.Decimal,
         public totalGameWinAmount: Prisma.Decimal,
+        public jackpotContributionAmount: Prisma.Decimal, // 추가됨
+        public compEarned: Prisma.Decimal, // 추가됨
 
         // 상태 및 시간
         public readonly startedAt: Date,
@@ -42,6 +46,8 @@ export class GameRound {
         currency: ExchangeCurrencyCode,
         gameCurrency: ExchangeCurrencyCode,
         exchangeRate: Prisma.Decimal,
+        usdExchangeRate: Prisma.Decimal, // 추가됨
+        compRate: Prisma.Decimal, // 추가됨
         startedAt: Date,
     ): GameRound {
         return new GameRound(
@@ -55,10 +61,14 @@ export class GameRound {
             currency,
             gameCurrency,
             exchangeRate,
+            usdExchangeRate,
+            compRate,
             new Prisma.Decimal(0),
             new Prisma.Decimal(0),
             new Prisma.Decimal(0),
             new Prisma.Decimal(0),
+            new Prisma.Decimal(0), // jackpotContributionAmount
+            new Prisma.Decimal(0), // compEarned
             startedAt,
             null,
             false,
@@ -77,10 +87,14 @@ export class GameRound {
             data.currency,
             data.gameCurrency,
             data.exchangeRate,
+            data.usdExchangeRate,
+            data.compRate,
             data.totalBetAmount,
             data.totalWinAmount,
             data.totalGameBetAmount,
             data.totalGameWinAmount,
+            data.jackpotContributionAmount,
+            data.compEarned,
             data.startedAt,
             data.completedAt,
             data.isCompleted,

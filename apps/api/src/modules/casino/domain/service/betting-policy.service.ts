@@ -4,6 +4,8 @@ import { CasinoErrorCode } from "../../constants/casino-error-codes";
 export interface BalanceSplitResult {
     cashDeduction: Prisma.Decimal;
     bonusDeduction: Prisma.Decimal;
+    cashGameAmount: Prisma.Decimal;
+    bonusGameAmount: Prisma.Decimal;
 }
 
 /**
@@ -15,7 +17,8 @@ export class BettingPolicy {
      */
     public static calculateBalanceSplit(
         betAmount: Prisma.Decimal,
-        userWallet: { cash: Prisma.Decimal; bonus: Prisma.Decimal }
+        userWallet: { cash: Prisma.Decimal; bonus: Prisma.Decimal },
+        exchangeRate: Prisma.Decimal
     ): BalanceSplitResult {
         let cashDeduction = new Prisma.Decimal(0);
         let bonusDeduction = new Prisma.Decimal(0);
@@ -35,6 +38,11 @@ export class BettingPolicy {
             throw new Error(CasinoErrorCode.INSUFFICIENT_FUNDS);
         }
 
-        return { cashDeduction, bonusDeduction };
+        // 3. Game Currency 금액 계산 (환율 적용)
+        // 지갑 화폐 * 환율 = 게임 화폐
+        const cashGameAmount = cashDeduction.mul(exchangeRate);
+        const bonusGameAmount = bonusDeduction.mul(exchangeRate);
+
+        return { cashDeduction, bonusDeduction, cashGameAmount, bonusGameAmount };
     }
 }

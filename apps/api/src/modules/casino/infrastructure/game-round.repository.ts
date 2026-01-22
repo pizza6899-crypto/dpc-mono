@@ -56,6 +56,31 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
         return result ? this.mapper.toDomain(result) : null;
     }
 
+    async findByExternalIdWithWindow(
+        externalRoundId: string,
+        aggregatorType: GameAggregatorType,
+        referenceTime: Date,
+        windowHours: number = 24,
+    ): Promise<GameRound | null> {
+        const windowStart = new Date(referenceTime.getTime() - windowHours * 60 * 60 * 1000);
+        const windowEnd = new Date(referenceTime.getTime() + windowHours * 60 * 60 * 1000);
+
+        const result = await this.prisma.gameRoundV2.findFirst({
+            where: {
+                aggregatorRoundId: externalRoundId,
+                aggregatorType,
+                startedAt: {
+                    gte: windowStart,
+                    lte: windowEnd,
+                },
+            },
+            orderBy: {
+                startedAt: 'desc',
+            },
+        });
+        return result ? this.mapper.toDomain(result) : null;
+    }
+
     async increaseStats(id: bigint, startedAt: Date, delta: {
         betAmount?: Prisma.Decimal;
         winAmount?: Prisma.Decimal;

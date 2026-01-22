@@ -18,6 +18,11 @@ export interface GameRoundRepositoryPort {
     findByExternalId(externalRoundId: string, aggregatorType: GameAggregatorType, startedAt: Date): Promise<GameRound | null>;
 
     /**
+     * 특정 시간 범위 내에서 외부 라운드 ID를 통해 조회합니다. (재시도 시 가변적인 시간 대응)
+     */
+    findByExternalIdWithWindow(externalRoundId: string, aggregatorType: GameAggregatorType, referenceTime: Date, windowHours?: number): Promise<GameRound | null>;
+
+    /**
      * 라운드의 통계를 원자적(Atomic)으로 증가시킵니다.
      * 동시성 문제 해결을 위해 값을 덮어쓰지 않고 increment 연산을 사용합니다.
      */

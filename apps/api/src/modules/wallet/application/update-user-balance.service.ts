@@ -6,7 +6,7 @@ import type { UserWalletRepositoryPort } from '../ports/out/user-wallet.reposito
 import { WALLET_TRANSACTION_REPOSITORY } from '../ports/out/wallet-transaction.repository.token';
 import type { WalletTransactionRepositoryPort } from '../ports/out/wallet-transaction.repository.port';
 import { ExchangeCurrencyCode, Prisma, WalletTransactionType, WalletBalanceType, AdjustmentReasonCode } from '@prisma/client';
-import { WalletTransaction, WalletNotFoundException, UserWallet, UserWalletPolicy, UpdateOperation, InsufficientBalanceException, InvalidWalletBalanceTypeException, WalletActionName } from '../domain';
+import { WalletTransaction, WalletNotFoundException, UserWallet, UserWalletPolicy, UpdateOperation, InvalidWalletBalanceTypeException, WalletActionName, AnyWalletTransactionMetadata } from '../domain';
 
 export interface BalanceUpdateContext {
     // Admin Context
@@ -18,7 +18,7 @@ export interface BalanceUpdateContext {
     serviceName?: string;
     triggerId?: string;
     actionName?: WalletActionName;
-    metadata?: Record<string, any>;
+    metadata?: AnyWalletTransactionMetadata;
 }
 
 export interface BalanceUpdateParams {
