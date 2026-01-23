@@ -45,11 +45,15 @@ When encountering a task related to the following categories, you MUST load the 
 *   **Path:** `apps/api/.agent/skills/whitecliff/SKILL.md`
 *   **Context:** Refer to "WHITECLIFF_en.html".
 
-### 4. Skill Management
-**When to use:** Creating new skills or scaffolding standardized folder structures for the agent.
-*   **Skill Name:** `skill_creator`
-*   **Path:** `apps/api/.agent/skills/skill-creator/SKILL.md`
-*   **Action:** Triggers the scaffolding process for a new `SKILL.md` and directory structure.
+### 4. Core Infrastructure
+**When to use:** Handling distributed node IDs, global locks, or Snowflake ID generation.
+*   **Skill Name:** `distributed_infrastructure`
+*   **Path:** `apps/api/.agent/skills/distributed-infrastructure/SKILL.md`
+*   **Key Rules:**
+    *   Instances must have unique node IDs (0-1023).
+    *   Use `GlobalLock` table for long-running task concurrency control.
+
+### 5. Skill Management
 
 ## Usage Workflow
 

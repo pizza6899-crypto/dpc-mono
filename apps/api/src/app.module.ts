@@ -26,6 +26,7 @@ import { TierModule } from './modules/tier/tier.module';
 import { WageringModule } from './modules/wagering/wagering.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { CompModule } from './modules/comp/comp.module';
+import { NodeIdentityModule } from './common/node-identity/node-identity.module';
 import { SnowflakeModule } from './common/snowflake/snowflake.module';
 import { WithdrawalModule } from './modules/withdrawal/withdrawal.module';
 import { SqidsModule } from './common/sqids/sqids.module';
@@ -41,6 +42,7 @@ import { FileModule } from './modules/file/file.module';
     ThrottleModule,
     CommonLoggerModule,
     WebsocketModule,
+    NodeIdentityModule,
     SnowflakeModule,
     SqidsModule,
     ScheduleModule.forRoot(),

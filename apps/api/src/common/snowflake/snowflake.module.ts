@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 import { SnowflakeService } from './snowflake.service';
-import { RedisModule } from 'src/infrastructure/redis/redis.module';
-import { EnvModule } from '../env/env.module';
 
 /**
  * Snowflake ID 생성 모듈
@@ -17,7 +15,6 @@ import { EnvModule } from '../env/env.module';
  * export class YourModule {}
  */
 @Module({
-    imports: [RedisModule, EnvModule],
     providers: [SnowflakeService],
     exports: [SnowflakeService],
 })

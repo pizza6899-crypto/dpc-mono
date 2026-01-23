@@ -1,0 +1,45 @@
+/// [분산 동시성 제어 - GlobalLock]
+///
+/// [도입 배경 및 설계 의도]
+/// 1. 트랜잭션 범위 밖의 동시성 제어:
+///    - 일반적인 비즈니스 로직(잔액 수정 등)은 `pg_advisory_xact_lock`을 통해 트랜잭션 내에서 안전하게 보호됩니다.
+///    - 하지만 스케줄러와 같이 로직 전체를 하나의 긴 트랜잭션으로 묶기 어려운 경우(프리즈마 타임아웃, DB Vacuum 방해 등),
+///      트랜잭션 밖에서도 살아남아 다중 인스턴스 간의 중복 실행을 막아줄 메커니즘이 필요합니다.
+///
+/// 2. 기존 방식의 한계:
+///    - PG 세션 락(pg_advisory_lock): 커넥션 풀 또는 RDS Proxy 환경에서 락을 잡은 세션과 푸는 세션이 일치하지 않거나,
+///      커넥션 오염(Session Leakage) 문제가 발생할 위험이 큽니다.
+///    - PG 트랜잭션 락(pg_advisory_xact_lock): 긴 작업 시 트랜잭션을 계속 열어두어야 하므로 DB 부하와 성능 저하를 유발합니다.
+///
+/// 3. 테이블 기반 락 (GlobalLock)의 장점:
+///    - 커넥션 풀 상태와 무관하게 명시적인 Row 상태(is_acquired)로 락의 생명주기를 관리합니다.
+///    - 서버 장애로 락이 안 풀린 경우에도 `timeout_seconds`를 기반으로 안전하게 자동 회수(Self-recovery)가 가능합니다.
+///    - 어드민 등에서 현재 실행 중인 작업의 상태와 이력을 즉시 확인할 수 있는 가시성을 제공합니다.
+///
+/// [주요 활용 케이스]
+/// - 스케줄러(Cron Job): 다중 인스턴스 환경에서 단 하나의 서버에서만 작업이 수행되어야 할 때 (가장 일반적인 케이스)
+/// - 중복 불가 외부 API 동기화: 수동으로 트리거된 대량 데이터 동기화 작업이 동시에 여러 번 수행되는 것을 방지
+/// - 대규모 리포트 생성: 서버 자원을 많이 소모하는 엑셀 추출 등의 요청이 중복으로 발생하지 않도록 제어
+/// - 멱등성이 보장되지 않는 외부 웹훅 처리: 아주 드물게 발생하는 Long-running 외부 연동 로직 보호
+model GlobalLock {
+    /// 락 식별자 (예: 'scheduler:daily-settlement', 'job:mass-sync-users')
+    key            String    @id
+    /// 락을 점유한 인스턴스의 ID (호스트네임, 컨테이너 ID 등)
+    instanceId     String?   @map("instance_id")
+    /// 현재 락 점유 여부
+    isAcquired     Boolean   @default(false) @map("is_acquired")
+    /// 락 점유 시점
+    lockedAt       DateTime? @map("locked_at")
+    /// 좀비 락(서버 장애) 판단 기준이 되는 유효 시간 (초)
+    timeoutSeconds Int       @default(1800) @map("timeout_seconds")
+    /// 마지막 실행 결과 (SUCCESS, FAILED 등)
+    lastResult     String?   @map("last_status")
+    /// 실패 시 기록되는 에러 메시지 요약
+    errorMessage   String?   @map("error_message")
+    /// 마지막 작업 종료 시점
+    lastFinishedAt DateTime? @map("last_finished_at")
+    createdAt      DateTime  @default(now()) @map("created_at")
+    updatedAt      DateTime  @updatedAt @map("updated_at")
+
+    @@map("global_locks")
+}

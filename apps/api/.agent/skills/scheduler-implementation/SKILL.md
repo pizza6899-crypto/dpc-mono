@@ -1,12 +1,12 @@
 ---
 name: scheduler-implementation
-description: NestJS 스케줄러(Cron Job) 구현 가이드 및 모범 사례 (분산 락, 활성화 제어 포함)
+description: NestJS 스케줄러(Cron Job) 구현 가이드 및 모범 사례 (Table-based GlobalLock 포함)
 ---
 
 # Scheduler Implementation Expert
 
 ## Overview
-이 스킬은 NestJS 환경에서 안정적이고 확장 가능한 스케줄러(Cron Job)를 구현하기 위한 가이드라인을 제공합니다. 특히 마이크로서비스나 다중 인스턴스 환경에서 발생할 수 있는 중복 실행 문제를 방지하기 위한 분산 락(Global Lock) 처리와 서비스 활성 상태 제어 로직을 포함합니다.
+이 스킬은 NestJS 환경에서 안정적이고 확장 가능한 스케줄러(Cron Job)를 구현하기 위한 가이드라인을 제공합니다. 특히 커넥션 풀을 사용하는 다중 인스턴스 환경에서 발생할 수 있는 중복 실행 문제를 방지하기 위해 **GlobalLock 테이블 기반의 분산 락** 메커니즘을 표준으로 사용합니다.
 
 ## Instructions
 
@@ -22,59 +22,76 @@ export class TaskScheduler {
   constructor(
     private readonly taskService: TaskService,
     private readonly envService: EnvService,
-    private readonly concurrencyService: ConcurrencyService,
+    private readonly prisma: PrismaService,
     private readonly cls: ClsService,
   ) {}
 }
 ```
 
-### 2. 구현 가이드라인 (Implementation Checklist)
+### 2. 동시성 제어 전략 (GlobalLock)
 
-1.  **활성화 체크**: `this.envService.scheduler.enabled`를 확인하여 스케줄러 실행 여부를 결정합니다.
-2.  **분산 락 (Global Lock)**: `concurrencyService.acquireGlobalLock`을 사용하여 다중 인스턴스에서 중복 실행되지 않도록 합니다.
-    *   `ttl`: 작업 완료 예상 시간보다 넉넉하게 설정합니다.
-    *   `retryCount`: 일반적으로 0으로 설정하여 락 획득 실패 시 즉시 종료합니다.
-3.  **CLS 컨텍스트**: `this.cls.run`으로 감싸서 로깅 및 트랜잭션 추적이 용이하도록 합니다.
-4.  **비즈니스 로직 분리**: 스케줄러 클래스는 트리거 역할만 수행하고, 실제 작업은 `Application Service`에서 처리합니다.
-5.  **예외 처리**: `try...catch...finally` 블록을 사용하여 에러를 로깅하고 최종적으로 락을 해제합니다.
+비즈니스 로직의 데이터 정합성은 `pg_advisory_xact_lock`으로 보호하되, 스케줄러 인스턴스 자체의 중복 실행 방지 및 이력 관리는 `GlobalLock` 테이블을 사용합니다.
+
+1.  **원자적 선점**: `UPDATE` 쿼리의 `WHERE` 절에서 `is_acquired = false` 조건을 사용하여 원자적으로 락을 획득합니다.
+2.  **Zombie Lock 회수**: 설정된 `timeout_seconds`가 지난 락은 서버 장애로 간주하고 자동으로 회수할 수 있게 설계합니다.
+3.  **이력 관리**: 실행 결과(SUCCESS/FAILED)와 마지막 실행 시간을 기록하여 운영 지표로 활용합니다.
 
 ### 3. 표준 템플릿 (Standard Template)
 
 ```typescript
-@Cron(CronExpression.EVERY_HOUR)
+@Cron(CronExpression.EVERY_5_MINUTES)
 async handleTask() {
   await this.cls.run(async () => {
-    // 1. 활성화 상태 확인
-    if (!this.envService.scheduler.enabled) {
-      return;
-    }
+    if (!this.envService.scheduler.enabled) return;
 
-    // 2. 글로벌 락 획득
-    const lock = await this.concurrencyService.acquireGlobalLock(
-      'unique-task-lock-key',
-      { ttl: 3600, retryCount: 0 }
-    );
+    const lockKey = 'scheduler:task-name';
+    const instanceId = process.env.HOSTNAME || 'unknown';
 
-    if (!lock) {
-      this.logger.debug('Task is already running in another instance.');
-      return;
-    }
+    // 1. 락 선점 시도
+    const result = await this.prisma.$executeRaw`
+      UPDATE "global_locks"
+      SET "is_acquired" = true,
+          "locked_at" = NOW(),
+          "instance_id" = ${instanceId}
+      WHERE "key" = ${lockKey}
+        AND (
+          "is_acquired" = false 
+          OR "locked_at" < NOW() - (CAST("timeout_seconds" || ' seconds' AS INTERVAL))
+        )
+    `;
+
+    if (result === 0) return; // 입구 컷
 
     try {
-      this.logger.log('Task started');
+      this.logger.log('작업 시작');
       await this.taskService.execute();
-      this.logger.log('Task completed');
+      
+      // 2. 성공 기록 및 해제
+      await this.prisma.globalLock.update({
+        where: { key: lockKey },
+        data: {
+          isAcquired: false,
+          lastResult: 'SUCCESS',
+          lastFinishedAt: new Date(),
+        },
+      });
     } catch (error) {
-      this.logger.error('Task failed', error);
-    } finally {
-      // 3. 락 해제 필수
-      await this.concurrencyService.releaseLock(lock);
+      this.logger.error('작업 실패', error);
+      // 3. 실패 기록 및 해제
+      await this.prisma.globalLock.update({
+        where: { key: lockKey },
+        data: {
+          isAcquired: false,
+          lastResult: 'FAILED',
+          errorMessage: error.message,
+          lastFinishedAt: new Date(),
+        },
+      });
     }
   });
 }
 ```
 
 ## References
-*   [NestJS Schedule Documentation](https://docs.nestjs.com/techniques/scheduling)
-*   [Concurrency Service Guide](references/CONCURRENCY.md)
-*   [Application Service Integration](references/SERVICE_INTEGRATION.md)
+*   [Concurrency Strategy: Why Table-based?](references/CONCURRENCY.md)
+*   [GlobalLock Schema & DDL](references/SCHEMA_DETAILS.md)

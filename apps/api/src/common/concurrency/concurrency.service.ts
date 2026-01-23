@@ -1,537 +1,111 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { RedisService } from 'src/infrastructure/redis/redis.service';
-import { IdUtil } from 'src/utils/id.util';
-import { EnvService } from 'src/common/env/env.service';
+import { InjectTransaction } from '@nestjs-cls/transactional';
+import type { Transaction } from '@nestjs-cls/transactional';
+import type { PrismaTransactionalAdapter } from 'src/infrastructure/prisma/prisma.module';
+import { NodeIdentityService } from 'src/common/node-identity/node-identity.service';
 
 export interface LockOptions {
-  ttl?: number; // 락 유지 시간 (초)
-  retryCount?: number; // 재시도 횟수
-  retryDelay?: number; // 재시도 간격 (밀리초)
-}
-
-export interface DistributedLock {
-  key: string;
-  value: string;
-  ttl: number;
-}
-
-export interface InstanceLockOptions extends LockOptions {
-  instanceId?: string; // 특정 인스턴스 ID (기본값: 현재 인스턴스)
+  timeoutSeconds?: number;
 }
 
 @Injectable()
 export class ConcurrencyService {
   private readonly logger = new Logger(ConcurrencyService.name);
-  private readonly lockPrefix = 'lock:';
-  private readonly instanceId: string;
 
   constructor(
-    private readonly redisService: RedisService,
-    private readonly envService: EnvService,
-  ) {
-    const instanceId = this.envService.pm2InstanceNumber;
-    this.instanceId = `instance-${instanceId}`;
+    @InjectTransaction()
+    private readonly tx: Transaction<PrismaTransactionalAdapter>,
+    private readonly nodeIdentityService: NodeIdentityService,
+  ) { }
 
-    this.logger.log(`ConcurrencyService 인스턴스 생성: ${this.instanceId}`);
+  /**
+   * 인스턴스 식별자 (NodeIdentityService의 고유 ID 기반)
+   */
+  private get instanceId(): string {
+    return this.nodeIdentityService.getDisplayId();
   }
 
   /**
-   * 사용자 레벨 락 획득
+   * [GlobalLock] 락 획득 시도 (테이블 기반)
+   * 
+   * @param key 락 식별자
+   * @param options.timeoutSeconds 좀비 락 자동 회수 시간 (기본값: 1800초)
    */
-  async acquireUserLock(
-    userId: bigint,
-    operation: string,
-    options: LockOptions = {},
-  ): Promise<DistributedLock | null> {
-    const { ttl = 30, retryCount = 3, retryDelay = 100 } = options;
-    const lockKey = `${this.lockPrefix}user:${userId}:${operation}`;
-    const lockValue = this.generateLockValue();
+  async tryAcquire(key: string, options: LockOptions = {}): Promise<boolean> {
+    const timeoutSeconds = options.timeoutSeconds ?? 1800;
 
-    for (let attempt = 0; attempt <= retryCount; attempt++) {
-      try {
-        // RedisService의 setLock 메서드 사용
-        const success = await this.redisService.setLock(
-          lockKey,
-          lockValue,
-          ttl,
-        );
-
-        if (success) {
-          this.logger.debug(`락 획득 성공: ${lockKey}`);
-          return {
-            key: lockKey,
-            value: lockValue,
-            ttl,
-          };
-        }
-
-        if (attempt < retryCount) {
-          this.logger.debug(
-            `락 획득 실패, 재시도 중: ${lockKey} (${attempt + 1}/${retryCount})`,
-          );
-          await this.sleep(retryDelay);
-        }
-      } catch (error) {
-        this.logger.error(error, `락 획득 중 오류: ${lockKey}`);
-        if (attempt === retryCount) throw error;
-      }
-    }
-
-    this.logger.warn(`락 획득 실패: ${lockKey} (최대 재시도 횟수 초과)`);
-    return null;
-  }
-
-  /**
-   * 인스턴스 레벨 락 획득
-   */
-  async acquireInstanceLock(
-    operation: string,
-    options: InstanceLockOptions = {},
-  ): Promise<DistributedLock | null> {
-    const { ttl = 60, retryCount = 5, retryDelay = 200, instanceId } = options;
-    const targetInstanceId = instanceId || this.instanceId;
-    const lockKey = `${this.lockPrefix}instance:${targetInstanceId}:${operation}`;
-    const lockValue = this.generateLockValue();
-
-    for (let attempt = 0; attempt <= retryCount; attempt++) {
-      try {
-        const success = await this.redisService.setLock(
-          lockKey,
-          lockValue,
-          ttl,
-        );
-
-        if (success) {
-          this.logger.debug(`인스턴스 락 획득 성공: ${lockKey}`);
-          return {
-            key: lockKey,
-            value: lockValue,
-            ttl,
-          };
-        }
-
-        if (attempt < retryCount) {
-          this.logger.debug(
-            `인스턴스 락 획득 실패, 재시도 중: ${lockKey} (${attempt + 1}/${retryCount})`,
-          );
-          await this.sleep(retryDelay);
-        }
-      } catch (error) {
-        this.logger.error(error, `인스턴스 락 획득 중 오류: ${lockKey}`);
-        if (attempt === retryCount) throw error;
-      }
-    }
-
-    this.logger.warn(
-      `인스턴스 락 획득 실패: ${lockKey} (최대 재시도 횟수 초과)`,
-    );
-    return null;
-  }
-
-  /**
-   * 글로벌 락 획득 (모든 인스턴스에서 공유)
-   */
-  async acquireGlobalLock(
-    operation: string,
-    options: LockOptions = {},
-  ): Promise<DistributedLock | null> {
-    const { ttl = 120, retryCount = 10, retryDelay = 500 } = options;
-    const lockKey = `${this.lockPrefix}global:${operation}`;
-    const lockValue = this.generateLockValue();
-
-    for (let attempt = 0; attempt <= retryCount; attempt++) {
-      try {
-        const success = await this.redisService.setLock(
-          lockKey,
-          lockValue,
-          ttl,
-        );
-
-        if (success) {
-          this.logger.debug(`글로벌 락 획득 성공: ${lockKey}`);
-          return {
-            key: lockKey,
-            value: lockValue,
-            ttl,
-          };
-        }
-
-        if (attempt < retryCount) {
-          this.logger.debug(
-            `글로벌 락 획득 실패, 재시도 중: ${lockKey} (${attempt + 1}/${retryCount})`,
-          );
-          await this.sleep(retryDelay);
-        }
-      } catch (error) {
-        this.logger.error(error, `글로벌 락 획득 중 오류: ${lockKey}`);
-        if (attempt === retryCount) throw error;
-      }
-    }
-
-    this.logger.warn(`글로벌 락 획득 실패: ${lockKey} (최대 재시도 횟수 초과)`);
-    return null;
-  }
-
-  /**
-   * 락 해제
-   */
-  async releaseLock(lock: DistributedLock): Promise<boolean> {
     try {
-      // Lua 스크립트로 원자적 락 해제
-      const script = `
-        local current = redis.call("get", KEYS[1])
-        if current == false then
-            return 0  -- 키가 존재하지 않음
-        elseif current == ARGV[1] then
-            return redis.call("del", KEYS[1])
-        else
-            return -1  -- 소유권 없음
-        end`;
+      // Prisma Proxy를 통한 원자적 락 선점
+      const result = await this.tx.$executeRaw`
+        INSERT INTO "global_locks" ("key", "instance_id", "is_acquired", "locked_at", "timeout_seconds", "created_at", "updated_at")
+        VALUES (${key}, ${this.instanceId}, true, NOW(), ${timeoutSeconds}, NOW(), NOW())
+        ON CONFLICT ("key") DO UPDATE
+        SET "is_acquired" = true,
+            "locked_at" = NOW(),
+            "instance_id" = ${this.instanceId},
+            "timeout_seconds" = ${timeoutSeconds},
+            "updated_at" = NOW(),
+            "last_status" = null,
+            "error_message" = null
+        WHERE "global_locks"."is_acquired" = false 
+           OR "global_locks"."locked_at" < NOW() - (CAST(${timeoutSeconds} || ' seconds' AS INTERVAL))
+      `;
 
-      const result = await this.redisService.eval(
-        script,
-        1,
-        lock.key,
-        lock.value,
-      );
+      const success = Number(result) > 0;
 
-      if (result === 1) {
-        this.logger.debug(`락 해제 성공: ${lock.key}`);
-        return true;
-      } else if (result === 0) {
-        this.logger.warn(`락이 이미 만료됨: ${lock.key}`);
-        return false;
+      if (success) {
+        this.logger.debug(`락 획득 성공: ${key} (node: ${this.instanceId})`);
       } else {
-        this.logger.warn(`락 해제 실패 (소유권 없음): ${lock.key}`);
-        return false;
+        this.logger.debug(`락 획득 실패 (이미 점유됨): ${key}`);
       }
+
+      return success;
     } catch (error) {
-      this.logger.error(error, `락 해제 중 오류: ${lock.key}`);
+      this.logger.error(`락 획득 중 오류 발생: ${key}`, error);
       return false;
     }
   }
 
   /**
-   * 사용자 락 자동 해제를 위한 래퍼 함수
+   * [GlobalLock] 락 해제 및 결과 기록
    */
-  async withUserLock<T>({
-    userId,
-    operation,
-    callback,
-    options = { ttl: 30, retryCount: 10, retryDelay: 100 },
-  }: {
-    userId: bigint;
-    operation: string;
-    callback: () => Promise<T>;
-    options?: LockOptions;
-  }): Promise<T> {
-    const { ttl = 30, retryCount = 10, retryDelay = 100 } = options;
-
-    // 락 획득까지 대기
-    let lock: DistributedLock | null = null;
-    let attempts = 0;
-
-    while (!lock && attempts < retryCount) {
-      lock = await this.acquireUserLock(userId, operation, {
-        ttl,
-        retryCount: 0,
+  async release(key: string, success: boolean, errorMessage?: string): Promise<void> {
+    try {
+      // Prisma Proxy API를 사용하여 타입 안전하게 업데이트
+      await (this.tx as any).globalLock.update({
+        where: { key },
+        data: {
+          isAcquired: false,
+          lastResult: success ? 'SUCCESS' : 'FAILED',
+          errorMessage: errorMessage ? String(errorMessage).slice(0, 1000) : null,
+          lastFinishedAt: new Date(),
+        },
       });
 
-      if (!lock) {
-        attempts++;
-        if (attempts < retryCount) {
-          this.logger.debug(
-            `락 대기 중: ${userId} - ${operation} (${attempts}/${retryCount})`,
-          );
-          await this.sleep(retryDelay);
-        }
-      }
+      this.logger.debug(`락 해제 완료: ${key} (${success ? 'SUCCESS' : 'FAILED'})`);
+    } catch (error) {
+      this.logger.error(`락 해제 중 오류 발생: ${key}`, error);
     }
+  }
 
-    if (!lock) {
-      throw new Error(`사용자 락 획득 실패: ${userId} - ${operation}`);
-    }
+  /**
+   * [Helper] 락 실행 래퍼 함수
+   */
+  async runExclusive(
+    key: string,
+    task: () => Promise<void>,
+    options: LockOptions = {}
+  ): Promise<void> {
+    const acquired = await this.tryAcquire(key, options);
+    if (!acquired) return;
 
     try {
-      const result = await callback();
-      return result;
-    } finally {
-      await this.releaseLock(lock);
+      await task();
+      await this.release(key, true);
+    } catch (error) {
+      this.logger.error(`작업 실행 중 에러: ${key}`, error);
+      await this.release(key, false, error instanceof Error ? error.message : String(error));
+      throw error;
     }
-  }
-
-  /**
-   * 인스턴스 락 래퍼 함수
-   */
-  async withInstanceLock<T>(
-    operation: string,
-    callback: () => Promise<T>,
-    options: InstanceLockOptions = {},
-  ): Promise<T> {
-    const lock = await this.acquireInstanceLock(operation, options);
-
-    if (!lock) {
-      throw new Error(`인스턴스 락 획득 실패: ${operation}`);
-    }
-
-    try {
-      const result = await callback();
-      return result;
-    } finally {
-      await this.releaseLock(lock);
-    }
-  }
-
-  /**
-   * 글로벌 락 래퍼 함수
-   */
-  async withGlobalLock<T>(
-    operation: string,
-    callback: () => Promise<T>,
-    options: LockOptions = {},
-  ): Promise<T> {
-    const lock = await this.acquireGlobalLock(operation, options);
-
-    if (!lock) {
-      return null as any;
-    }
-
-    try {
-      const result = await callback();
-      return result;
-    } finally {
-      await this.releaseLock(lock);
-    }
-  }
-
-  /**
-   * 특정 인스턴스 락 래퍼 함수
-   */
-  async withSpecificInstanceLock<T>(
-    instanceId: string,
-    operation: string,
-    callback: () => Promise<T>,
-    options: LockOptions = {},
-  ): Promise<T> {
-    return this.withInstanceLock(operation, callback, {
-      ...options,
-      instanceId,
-    });
-  }
-
-  /**
-   * 사용자 잔액 동시성 제어
-   */
-  async withUserBalanceLock<T>(
-    userId: bigint,
-    callback: () => Promise<T>,
-    options: LockOptions = {},
-  ): Promise<T> {
-    return this.withUserLock({
-      userId,
-      operation: 'balance',
-      callback,
-      options,
-    });
-  }
-
-  /**
-   * 사용자 프로필 동시성 제어
-   */
-  async withUserProfileLock<T>(
-    userId: bigint,
-    callback: () => Promise<T>,
-    options: LockOptions = {},
-  ): Promise<T> {
-    return this.withUserLock({
-      userId,
-      operation: 'profile',
-      callback,
-      options,
-    });
-  }
-
-  /**
-   * 사용자 인증 동시성 제어
-   */
-  async withUserAuthLock<T>(
-    userId: bigint,
-    callback: () => Promise<T>,
-    options: LockOptions = {},
-  ): Promise<T> {
-    return this.withUserLock({ userId, operation: 'auth', callback, options });
-  }
-
-  /**
-   * 락 상태 확인
-   */
-  async isLocked(userId: string, operation: string): Promise<boolean> {
-    const lockKey = `${this.lockPrefix}user:${userId}:${operation}`;
-    return await this.redisService.exists(lockKey);
-  }
-
-  /**
-   * 인스턴스 락 상태 확인
-   */
-  async isInstanceLocked(
-    operation: string,
-    instanceId?: string,
-  ): Promise<boolean> {
-    const targetInstanceId = instanceId || this.instanceId;
-    const lockKey = `${this.lockPrefix}instance:${targetInstanceId}:${operation}`;
-    return await this.redisService.exists(lockKey);
-  }
-
-  /**
-   * 글로벌 락 상태 확인
-   */
-  async isGlobalLocked(operation: string): Promise<boolean> {
-    const lockKey = `${this.lockPrefix}global:${operation}`;
-    return await this.redisService.exists(lockKey);
-  }
-
-  /**
-   * 모든 사용자 락 해제 (관리자용)
-   */
-  async releaseAllUserLocks(userId: string): Promise<number> {
-    const pattern = `${this.lockPrefix}user:${userId}:*`;
-    const keys = await this.redisService.keys(pattern);
-
-    if (keys.length > 0) {
-      let releasedCount = 0;
-      for (const key of keys) {
-        const success = await this.redisService.del(key);
-        if (success) releasedCount++;
-      }
-      this.logger.log(`사용자 ${userId}의 모든 락 해제: ${releasedCount}개`);
-      return releasedCount;
-    }
-
-    return 0;
-  }
-
-  /**
-   * 현재 인스턴스의 모든 락 해제
-   */
-  async releaseAllInstanceLocks(): Promise<number> {
-    const pattern = `${this.lockPrefix}instance:${this.instanceId}:*`;
-    const keys = await this.redisService.keys(pattern);
-
-    if (keys.length > 0) {
-      let releasedCount = 0;
-      for (const key of keys) {
-        const success = await this.redisService.del(key);
-        if (success) releasedCount++;
-      }
-      this.logger.log(
-        `인스턴스 ${this.instanceId}의 모든 락 해제: ${releasedCount}개`,
-      );
-      return releasedCount;
-    }
-
-    return 0;
-  }
-
-  /**
-   * 특정 인스턴스의 모든 락 해제 (관리자용)
-   */
-  async releaseAllLocksForInstance(instanceId: string): Promise<number> {
-    const pattern = `${this.lockPrefix}instance:${instanceId}:*`;
-    const keys = await this.redisService.keys(pattern);
-
-    if (keys.length > 0) {
-      let releasedCount = 0;
-      for (const key of keys) {
-        const success = await this.redisService.del(key);
-        if (success) releasedCount++;
-      }
-      this.logger.log(
-        `인스턴스 ${instanceId}의 모든 락 해제: ${releasedCount}개`,
-      );
-      return releasedCount;
-    }
-
-    return 0;
-  }
-
-  /**
-   * 모든 글로벌 락 해제 (관리자용)
-   */
-  async releaseAllGlobalLocks(): Promise<number> {
-    const pattern = `${this.lockPrefix}global:*`;
-    const keys = await this.redisService.keys(pattern);
-
-    if (keys.length > 0) {
-      let releasedCount = 0;
-      for (const key of keys) {
-        const success = await this.redisService.del(key);
-        if (success) releasedCount++;
-      }
-      this.logger.log(`모든 글로벌 락 해제: ${releasedCount}개`);
-      return releasedCount;
-    }
-
-    return 0;
-  }
-
-  /**
-   * 락 통계 정보 (인스턴스 정보 포함)
-   */
-  async getLockStats(): Promise<{
-    totalLocks: number;
-    userLocks: number;
-    instanceLocks: number;
-    globalLocks: number;
-    currentInstanceLocks: number;
-    balanceLocks: number;
-    profileLocks: number;
-    authLocks: number;
-  }> {
-    const allLocks = await this.redisService.keys(`${this.lockPrefix}*`);
-    const userLocks = await this.redisService.keys(`${this.lockPrefix}user:*`);
-    const instanceLocks = await this.redisService.keys(
-      `${this.lockPrefix}instance:*`,
-    );
-    const globalLocks = await this.redisService.keys(
-      `${this.lockPrefix}global:*`,
-    );
-    const currentInstanceLocks = await this.redisService.keys(
-      `${this.lockPrefix}instance:${this.instanceId}:*`,
-    );
-    const balanceLocks = await this.redisService.keys(
-      `${this.lockPrefix}user:*:balance`,
-    );
-    const profileLocks = await this.redisService.keys(
-      `${this.lockPrefix}user:*:profile`,
-    );
-    const authLocks = await this.redisService.keys(
-      `${this.lockPrefix}user:*:auth`,
-    );
-
-    return {
-      totalLocks: allLocks.length,
-      userLocks: userLocks.length,
-      instanceLocks: instanceLocks.length,
-      globalLocks: globalLocks.length,
-      currentInstanceLocks: currentInstanceLocks.length,
-      balanceLocks: balanceLocks.length,
-      profileLocks: profileLocks.length,
-      authLocks: authLocks.length,
-    };
-  }
-
-  /**
-   * 현재 인스턴스 ID 반환
-   */
-  getCurrentInstanceId(): string {
-    return this.instanceId;
-  }
-
-  private generateLockValue(): string {
-    return IdUtil.generateCuid();
-  }
-
-  private sleep(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
