@@ -9,7 +9,7 @@ Whitecliff 카지노 애그리게이터와의 통합 및 콜백 처리를 위한
 
 ## 📖 Reference Documentation
 모든 구현은 반드시 아래 공식 문서를 최우선으로 참조해야 합니다:
-- **File Path:** `apps/api/docs/WHITECLIFF_en.html`
+- **File Path:** `references/WHITECLIFF_en.html`
 
 ## 🛠️ Key Implementation Details
 
