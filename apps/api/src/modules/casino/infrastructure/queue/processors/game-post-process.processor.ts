@@ -80,11 +80,31 @@ export class GamePostProcessProcessor
         this.logger.warn(
           `게임 라운드가 아직 완료되지 않았습니다: ${gameRoundId}, isCompleted=false`,
         );
-        // 완료되지 않은 라운드는 처리하지 않음 (혹은 재시도? 보통 PostProcess는 완료 후 호출됨)
         return {
-          success: true, // 에러는 아님, 처리를 건너뜀
+          success: true,
           message: `게임 라운드가 완료되지 않아 처리 건너뜀: ${gameRoundId}`,
         };
+      }
+
+      // -------------------------------------------------------------
+      // 라이브 카지노 푸시 베팅 검증 (Evolution 등)
+      // -------------------------------------------------------------
+      const isLiveCasino = gameRound.casinoGame?.categoryItems?.[0]?.category?.code === 'LIVE_CASINO';
+
+      // 라이브 카지노이면서, 아직 푸시 체크가 안 되었고, 라운드 완료 후 5분이 지나지 않았다면 재시도
+      if (isLiveCasino && !gameRound.pushedBetCheckedAt) {
+        const completedTime = gameRound.completedAt ? gameRound.completedAt.getTime() : 0;
+        const now = Date.now();
+        const diffMinutes = (now - completedTime) / 1000 / 60;
+
+        // 5분 타임아웃 (무한 대기 방지)
+        if (diffMinutes < 5) {
+          throw new Error(`라이브 카지노 푸시 검증 대기 중: ${gameRoundId}`);
+        } else {
+          this.logger.warn(
+            `라이브 카지노 푸시 검증 시간 초과(5분), 강제 진행: ${gameRoundId}`,
+          );
+        }
       }
 
       const userId = gameRound.userId;

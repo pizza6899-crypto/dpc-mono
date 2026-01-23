@@ -26,12 +26,17 @@ export class GameRoundMapper {
             totalWinAmount: domain.totalWinAmount,
             totalGameBetAmount: domain.totalGameBetAmount,
             totalGameWinAmount: domain.totalGameWinAmount,
+            totalRefundAmount: domain.totalRefundAmount,
+            totalGameRefundAmount: domain.totalGameRefundAmount,
+            totalJackpotAmount: domain.totalJackpotAmount,
+            totalGameJackpotAmount: domain.totalGameJackpotAmount,
             jackpotContributionAmount: domain.jackpotContributionAmount,
             compEarned: domain.compEarned,
             resultMeta: domain.resultMeta as any, // Prisma Json 타입 대응
             startedAt: domain.startedAt,
             completedAt: domain.completedAt,
             isCompleted: domain.isCompleted,
+            pushedBetCheckedAt: domain.pushedBetCheckedAt,
         };
     }
 }

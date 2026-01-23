@@ -9,11 +9,10 @@ import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { nowUtcMinus } from 'src/utils/date.util';
 import { WhitecliffMapperService } from 'src/modules/casino/providers/whitecliff/infrastructure/whitecliff-mapper.service';
 import { RedisService } from 'src/infrastructure/redis/redis.service';
+import { UpdatePushedBetService } from '../../../application/update-pushed-bet.service';
 import {
   GameAggregatorType,
-  GameProvider,
   Prisma,
-  TransactionStatus,
 } from '@prisma/client';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 import { ConcurrencyService } from 'src/common/concurrency/concurrency.service';
@@ -35,6 +34,7 @@ export class WhitecliffPushedBetHistoryScheduler {
     private readonly concurrencyService: ConcurrencyService,
     private readonly whitecliffMapperService: WhitecliffMapperService,
     private readonly redisService: RedisService,
+    private readonly updatePushedBetService: UpdatePushedBetService,
     private readonly cls: ClsService,
   ) { }
 
@@ -171,62 +171,72 @@ export class WhitecliffPushedBetHistoryScheduler {
         (pushedBet) => pushedBet.total_pushed_amt > 0 || pushedBet.tie_amt > 0,
       );
 
-      // API 응답에 포함된 트랜잭션 처리
+      // API 응답에 포함된 라운드 ID 집합
+      const pushedRoundIds = new Set<string>();
       if (pushedBetHistory && pushedBetHistory.length > 0) {
         for (const pushedBet of pushedBetHistory) {
-          // V2 조회: aggregatorRoundId (txn_id) 사용
-          // findFirst 사용 (복합키 및 파티셔닝 키 startedAt 몰라서)
-          const gameRound = await this.prismaService.gameRoundV2.findFirst({
-            where: {
-              aggregatorRoundId: pushedBet.txn_id,
-              aggregatorType: GameAggregatorType.WHITECLIFF,
-            },
-            select: {
-              id: true,
-              startedAt: true, // PK 구성요소
-              exchangeRate: true,
-              totalGameRefundAmount: true,
-            },
-          });
+          pushedRoundIds.add(pushedBet.txn_id);
 
-          // 이미 처리되었거나(Refund > 0), 라운드를 찾을 수 없으면 건너뜀
-          if (
-            !gameRound ||
-            (gameRound.totalGameRefundAmount &&
-              gameRound.totalGameRefundAmount.gt(0))
-          ) {
-            continue;
-          }
 
           const pushedAmountGame = new Prisma.Decimal(pushedBet.total_pushed_amt);
+          const tieAmountGame = new Prisma.Decimal(pushedBet.tie_amt || 0);
 
-          // Wallet Currency 환산: GameAmount * ExchangeRate
-          const pushedAmountWallet = pushedAmountGame.mul(
-            gameRound.exchangeRate,
-          );
-
-          // 업데이트 (복합키 사용)
-          await this.prismaService.gameRoundV2.update({
-            where: {
-              id_startedAt: {
-                id: gameRound.id,
-                startedAt: gameRound.startedAt,
-              },
-            },
-            data: {
-              totalGameRefundAmount: pushedAmountGame,
-              totalRefundAmount: pushedAmountWallet,
-              // tieBetAmount는 V2에 없으므로 resultMeta 등을 활용하거나 생략
-              // 여기서는 우선 Refund 금액 반영에 집중
-            },
+          await this.updatePushedBetService.execute({
+            aggregatorRoundId: pushedBet.txn_id,
+            pushedAmountGame,
+            tieAmountGame,
           });
         }
       }
 
-      // NOTE: 기존의 updateMissingPushBetTransactions 로직은 제거함.
-      // GameRoundV2 구조에서는 초기값이 0이며,
-      // GamePostProcessProcessor가 null 체크 대기 로직 대신 isCompleted를 사용하므로
-      // 0으로 강제 초기화할 필요가 없음.
+      // -------------------------------------------------------------
+      // 중요: API 응답에 없는(푸시 금액이 0인) 라운드도 "확인됨" 처리해야 함
+      // -------------------------------------------------------------
+      const startDateObj = new Date(startDate);
+      const endDateObj = new Date(endDate);
+
+      // 해당 기간 내의 Whitecliff Evolution 라운드 중, 아직 체크 안 된 것들 조회
+      const pendingRounds = await this.prismaService.gameRoundV2.findMany({
+        where: {
+          aggregatorType: GameAggregatorType.WHITECLIFF,
+          // provider: GameProvider.EVOLUTION, // 필요시 추가 필터링 (현재는 Whitecliff 전체 대상 or 상위에서 product loop)
+          startedAt: {
+            gte: startDateObj,
+            lte: endDateObj,
+          },
+          pushedBetCheckedAt: null, // 아직 체크 안 된 것만
+        },
+        select: {
+          id: true,
+          startedAt: true,
+          aggregatorRoundId: true,
+        },
+      });
+
+      // API 응답에 없었던 라운드들만 필터링 -> 체크 완료 처리
+      const roundsToMarkChecked = pendingRounds.filter(
+        (r) => !pushedRoundIds.has(r.aggregatorRoundId),
+      );
+
+      if (roundsToMarkChecked.length > 0) {
+        this.logger.log(
+          `푸시 없는 라운드 ${roundsToMarkChecked.length}개 검증 완료 처리 (Product: ${prdId})`,
+        );
+
+        for (const r of roundsToMarkChecked) {
+          await this.prismaService.gameRoundV2.update({
+            where: {
+              id_startedAt: {
+                id: r.id,
+                startedAt: r.startedAt,
+              },
+            },
+            data: {
+              pushedBetCheckedAt: new Date(),
+            },
+          });
+        }
+      }
 
       return true; // 성공 시 true 반환
     } catch (error) {

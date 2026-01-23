@@ -275,6 +275,9 @@ model GameRoundV2 {
   isCompleted Boolean   @default(false) @map("is_completed")
   isOrphaned  Boolean   @default(false) @map("is_orphaned") // 베팅 없이 생성된 라운드 여부 (Orphaned Round)
 
+  // 라이브 카지노 푸시(무승부/취소) 검증 여부
+  pushedBetCheckedAt DateTime? @map("pushed_bet_checked_at")
+
   // Relations
   transactions GameTransaction[]
   user         User              @relation(fields: [userId], references: [id])

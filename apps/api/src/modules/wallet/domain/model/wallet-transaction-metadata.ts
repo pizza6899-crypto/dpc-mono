@@ -49,6 +49,15 @@ export interface CasinoWinMetadata extends BaseMetadata {
 }
 
 /**
+ * 카지노 환불(Refund) 메타데이터 (Push/Tie 등)
+ */
+export interface CasinoRefundMetadata extends BaseMetadata {
+    roundId: string;
+    reason: string;
+    aggregatorRoundId: string;
+}
+
+/**
  * 상태 변경 기록 메타데이터
  */
 export interface StatusChangeMetadata extends BaseMetadata {
@@ -106,6 +115,7 @@ export interface DefaultMetadata extends BaseMetadata {
 export type AnyWalletTransactionMetadata =
     | CasinoBetMetadata
     | CasinoWinMetadata
+    | CasinoRefundMetadata
     | StatusChangeMetadata
     | AdjustmentMetadata
     | PromotionMetadata

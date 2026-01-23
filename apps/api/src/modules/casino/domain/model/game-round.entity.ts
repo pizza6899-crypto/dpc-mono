@@ -7,7 +7,14 @@ import { CasinoGameRoundException } from "../casino.exception";
 export type GameResultMetaUrl = { type: 'url'; value: string };
 export type GameResultMetaText = { type: 'text'; value: string }; // JSON string or Plain text
 export type GameResultMetaHtml = { type: 'html'; value: string }; // HTML content
-export type GameResultMeta = GameResultMetaUrl | GameResultMetaText | GameResultMetaHtml;
+export type GameResultMetaWhitecliffPush = {
+    whitecliffPushInfo: {
+        pushedAmount: number;
+        tieAmount: number;
+        processedAt: string;
+    }
+};
+export type GameResultMeta = GameResultMetaUrl | GameResultMetaText | GameResultMetaHtml | GameResultMetaWhitecliffPush;
 
 export class GameRound {
     constructor(
@@ -43,7 +50,8 @@ export class GameRound {
         public readonly startedAt: Date,
         public completedAt: Date | null,
         public isCompleted: boolean,
-        public readonly isOrphaned: boolean, // 추가됨
+        public readonly isOrphaned: boolean,
+        public pushedBetCheckedAt: Date | null, // 추가됨
 
         // 관계 (Optional)
         public readonly transactions?: GameTransaction[],
@@ -60,10 +68,10 @@ export class GameRound {
         currency: ExchangeCurrencyCode,
         gameCurrency: ExchangeCurrencyCode,
         exchangeRate: Prisma.Decimal,
-        usdExchangeRate: Prisma.Decimal, // 추가됨
-        compRate: Prisma.Decimal, // 추가됨
+        usdExchangeRate: Prisma.Decimal,
+        compRate: Prisma.Decimal,
         startedAt: Date,
-        isOrphaned: boolean = false, // 추가됨
+        isOrphaned: boolean = false,
     ): GameRound {
         return new GameRound(
             id,
@@ -82,17 +90,19 @@ export class GameRound {
             new Prisma.Decimal(0),
             new Prisma.Decimal(0),
             new Prisma.Decimal(0),
-            new Prisma.Decimal(0), // totalRefundAmount
-            new Prisma.Decimal(0), // totalGameRefundAmount
-            new Prisma.Decimal(0), // totalJackpotAmount
-            new Prisma.Decimal(0), // totalGameJackpotAmount
-            new Prisma.Decimal(0), // jackpotContributionAmount
-            new Prisma.Decimal(0), // compEarned
-            null, // resultMeta (초기값 null)
+            new Prisma.Decimal(0),
+            new Prisma.Decimal(0),
+            new Prisma.Decimal(0),
+            new Prisma.Decimal(0),
+            new Prisma.Decimal(0),
+            new Prisma.Decimal(0),
+            null,
             startedAt,
             null,
             false,
             isOrphaned,
+            null, // pushedBetCheckedAt
+            undefined, // transactions (create 시점에는 트랜잭션 없음)
         );
     }
 
@@ -120,11 +130,12 @@ export class GameRound {
             data.totalGameJackpotAmount || new Prisma.Decimal(0),
             data.jackpotContributionAmount,
             data.compEarned,
-            data.resultMeta, // Persistence에서 로드
+            data.resultMeta,
             data.startedAt,
             data.completedAt,
             data.isCompleted,
             data.isOrphaned || false,
+            data.pushedBetCheckedAt || null, // fromPersistence
             data.transactions?.map((tx: any) => GameTransaction.fromPersistence(tx)),
         );
     }

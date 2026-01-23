@@ -79,6 +79,19 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
         return result ? this.mapper.toDomain(result) : null;
     }
 
+    async findLatestByExternalId(externalRoundId: string, aggregatorType: GameAggregatorType): Promise<GameRound | null> {
+        const result = await this.prisma.gameRoundV2.findFirst({
+            where: {
+                aggregatorRoundId: externalRoundId,
+                aggregatorType,
+            },
+            orderBy: {
+                startedAt: 'desc',
+            },
+        });
+        return result ? this.mapper.toDomain(result) : null;
+    }
+
     async increaseStats(id: bigint, startedAt: Date, delta: {
         betAmount?: Prisma.Decimal;
         winAmount?: Prisma.Decimal;
@@ -129,5 +142,23 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
                 resultMeta: meta as Prisma.InputJsonValue,
             },
         });
+    }
+
+    async markPushedBetChecked(id_startedAt: { id: bigint; startedAt: Date }[]): Promise<void> {
+        if (id_startedAt.length === 0) return;
+
+        for (const item of id_startedAt) {
+            await this.prisma.gameRoundV2.update({
+                where: {
+                    id_startedAt: {
+                        id: item.id,
+                        startedAt: item.startedAt,
+                    },
+                },
+                data: {
+                    pushedBetCheckedAt: new Date(),
+                },
+            });
+        }
     }
 }

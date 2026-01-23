@@ -53,7 +53,7 @@ export class ConcurrencyService {
             "last_status" = null,
             "error_message" = null
         WHERE "global_locks"."is_acquired" = false 
-           OR "global_locks"."locked_at" < NOW() - (${timeoutSeconds} * interval '1 second')
+           OR "global_locks"."locked_at" < NOW() - ("global_locks"."timeout_seconds" * interval '1 second')
       `.execute(this.tx.$kysely);
 
       const success = Number(result.numAffectedRows) > 0;

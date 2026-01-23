@@ -29,6 +29,7 @@ import { GAME_TRANSACTION_REPOSITORY_TOKEN } from './ports/out/game-transaction.
 import { CheckCasinoBalanceService } from './application/check-casino-balance.service';
 import { ProcessCasinoBetService } from './application/process-casino-bet.service';
 import { ProcessCasinoCreditService } from './application/process-casino-credit.service';
+import { UpdatePushedBetService } from './application/update-pushed-bet.service';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { ProcessCasinoCreditService } from './application/process-casino-credit.
     CheckCasinoBalanceService,
     ProcessCasinoBetService,
     ProcessCasinoCreditService,
+    UpdatePushedBetService,
   ],
   exports: [
     GameSessionModule,
@@ -81,6 +83,7 @@ import { ProcessCasinoCreditService } from './application/process-casino-credit.
     CheckCasinoBalanceService,
     ProcessCasinoBetService,
     ProcessCasinoCreditService,
+    UpdatePushedBetService,
     GAME_ROUND_REPOSITORY_TOKEN,
     GAME_TRANSACTION_REPOSITORY_TOKEN,
   ],
