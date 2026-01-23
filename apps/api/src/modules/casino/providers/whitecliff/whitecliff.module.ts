@@ -6,10 +6,10 @@ import { EnvModule } from 'src/common/env/env.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { WhitecliffCallbackController } from './controllers/whitecliff-callback.controller';
 import { WhitecliffGameService } from './application/whitecliff-game.service';
+import { WhitecliffFetchGameResultService } from './application/whitecliff-fetch-game-result.service';
 import { RedisModule } from 'src/infrastructure/redis/redis.module';
 import { WhitecliffMapperService } from './infrastructure/whitecliff-mapper.service';
 import { WhitecliffTestController } from './controllers/whitecliff-test.controller';
-import { WhitecliffFetchGameResultUrlProcessor } from './processors/whitecliff-game-end-transaction-url.processor';
 import { ExchangeModule } from 'src/modules/exchange/exchange.module';
 import { WhitecliffPushedBetHistoryScheduler } from './schedulers/whitecliff-pushed-bet-history.scheduler';
 import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
@@ -36,7 +36,7 @@ import { CasinoModule } from '../../casino.module';
     WhitecliffApiService,
     WhitecliffGameService,
     WhitecliffMapperService,
-    WhitecliffFetchGameResultUrlProcessor,
+    WhitecliffFetchGameResultService,
     WhitecliffPushedBetHistoryScheduler,
   ],
   exports: [
@@ -44,6 +44,7 @@ import { CasinoModule } from '../../casino.module';
     WhitecliffApiService,
     WhitecliffGameService,
     WhitecliffMapperService,
+    WhitecliffFetchGameResultService,
   ],
 })
 export class WhitecliffModule { }

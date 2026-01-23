@@ -3,6 +3,12 @@ import { GameTransaction } from "./game-transaction.entity";
 import { CasinoErrorCode } from "../../constants/casino-error-codes";
 import { CasinoGameRoundException } from "../casino.exception";
 
+// 게임 결과 메타데이터 타입 정의
+export type GameResultMetaUrl = { type: 'url'; value: string };
+export type GameResultMetaText = { type: 'text'; value: string }; // JSON string or Plain text
+export type GameResultMetaHtml = { type: 'html'; value: string }; // HTML content
+export type GameResultMeta = GameResultMetaUrl | GameResultMetaText | GameResultMetaHtml;
+
 export class GameRound {
     constructor(
         public readonly id: bigint,
@@ -31,6 +37,7 @@ export class GameRound {
         public totalGameJackpotAmount: Prisma.Decimal, // 추가됨
         public jackpotContributionAmount: Prisma.Decimal, // 추가됨
         public compEarned: Prisma.Decimal, // 추가됨
+        public resultMeta: GameResultMeta | null, // 추가됨 (GameResultMeta) (Strict Type)
 
         // 상태 및 시간
         public readonly startedAt: Date,
@@ -81,6 +88,7 @@ export class GameRound {
             new Prisma.Decimal(0), // totalGameJackpotAmount
             new Prisma.Decimal(0), // jackpotContributionAmount
             new Prisma.Decimal(0), // compEarned
+            null, // resultMeta (초기값 null)
             startedAt,
             null,
             false,
@@ -112,6 +120,7 @@ export class GameRound {
             data.totalGameJackpotAmount || new Prisma.Decimal(0),
             data.jackpotContributionAmount,
             data.compEarned,
+            data.resultMeta, // Persistence에서 로드
             data.startedAt,
             data.completedAt,
             data.isCompleted,

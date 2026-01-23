@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { GameRound } from '../domain/model/game-round.entity';
+import { GameRound, GameResultMeta } from '../domain/model/game-round.entity';
 import { GameRoundRepositoryPort } from '../ports/out/game-round.repository.port';
 import { GameRoundMapper } from './game-round.mapper';
 import { GameAggregatorType, Prisma } from '@prisma/client';
@@ -134,5 +134,19 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
             }
             throw error;
         }
+    }
+
+    async updateResultMeta(id: bigint, startedAt: Date, meta: GameResultMeta): Promise<void> {
+        await this.prisma.gameRoundV2.update({
+            where: {
+                id_startedAt: {
+                    id,
+                    startedAt,
+                },
+            },
+            data: {
+                resultMeta: meta as Prisma.InputJsonValue,
+            },
+        });
     }
 }

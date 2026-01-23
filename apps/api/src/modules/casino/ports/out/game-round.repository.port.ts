@@ -1,4 +1,4 @@
-import { GameRound } from "../../domain/model/game-round.entity";
+import { GameRound, GameResultMeta } from "../../domain/model/game-round.entity";
 import { GameAggregatorType, Prisma } from "@prisma/client";
 
 export interface GameRoundRepositoryPort {
@@ -43,4 +43,9 @@ export interface GameRoundRepositoryPort {
      * PG Advisory Lock을 사용하여 외부 라운드 ID에 대한 락을 획득합니다.
      */
     acquireLock(externalRoundId: string): Promise<void>;
+
+    /**
+     * 라운드의 결과 메타데이터(URL, Replay 등)를 업데이트합니다.
+     */
+    updateResultMeta(id: bigint, startedAt: Date, meta: GameResultMeta): Promise<void>;
 }

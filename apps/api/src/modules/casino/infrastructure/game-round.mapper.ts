@@ -28,6 +28,7 @@ export class GameRoundMapper {
             totalGameWinAmount: domain.totalGameWinAmount,
             jackpotContributionAmount: domain.jackpotContributionAmount,
             compEarned: domain.compEarned,
+            resultMeta: domain.resultMeta as any, // Prisma Json 타입 대응
             startedAt: domain.startedAt,
             completedAt: domain.completedAt,
             isCompleted: domain.isCompleted,

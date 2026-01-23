@@ -9,7 +9,7 @@ import { DcsTestController } from './controllers/dcs-test.controller';
 import { DcsCallbackController } from './controllers/dcs-callback.controller';
 import { DcsCallbackService } from './application/dcs-callback.service';
 import { DcsGameService } from './application/dcs-game.service';
-import { DcsFetchGameReplayUrlProcessor } from './processors/dcs-fetch-game-replay-url.processor';
+import { DcsFetchGameResultService } from './application/dcs-fetch-game-result.service';
 import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 import { WalletModule } from 'src/modules/wallet/wallet.module';
 import { CasinoModule } from '../../casino.module';
@@ -30,9 +30,8 @@ import { CasinoModule } from '../../casino.module';
     DcsApiService,
     DcsCallbackService,
     DcsGameService,
-    DcsMapperService,
-    DcsFetchGameReplayUrlProcessor,
+    DcsFetchGameResultService,
   ],
-  exports: [DcsGameService, DcsMapperService],
+  exports: [DcsGameService, DcsMapperService, DcsFetchGameResultService],
 })
 export class DcsModule { }

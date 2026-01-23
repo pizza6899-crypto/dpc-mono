@@ -345,6 +345,14 @@ model GameRoundV2 {
   jackpotContributionAmount Decimal @default(0) @map("jackpot_contribution_amount") @db.Decimal(32, 18) // 잭팟 기여금 (통계)
   compEarned                Decimal @default(0) @map("comp_earned") @db.Decimal(32, 18) // 적립된 콤프 (통계)
 
+  /**
+   * 게임 결과 메타데이터 (URL, JSON 등 통합)
+   * Application Level Interface: GameResultMeta
+   * - { type: 'url', value: string }
+   * - { type: 'data', value: object }
+   */
+  resultMeta Json? @map("result_meta")
+
   // 상태 관리
   startedAt   DateTime  @default(now()) @map("started_at")
   completedAt DateTime? @map("completed_at")

@@ -42,7 +42,7 @@ export class GamePostProcessProcessor
 
   @Transactional()
   private async processJob(job: Job<GamePostProcessData>) {
-    const { gameRoundId, waitForPushBet } = job.data;
+    const { gameRoundId } = job.data;
 
     try {
       // 1. 트랜잭션 및 게임 트랜잭션 정보 조회
@@ -53,6 +53,7 @@ export class GamePostProcessProcessor
         select: {
           id: true,
           userId: true,
+          provider: true,
           totalBetAmountInGameCurrency: true,
           totalBetAmountInWalletCurrency: true,
           totalWinAmountInWalletCurrency: true,
@@ -107,18 +108,33 @@ export class GamePostProcessProcessor
         };
       }
 
+      const userId = gameRound.userId;
+      const currency = gameRound.transaction.currency;
+      const provider = gameRound.provider; // GameRound 엔티티에 provider가 있다고 가정 (혹은 gameSession 통해)
+      // 만약 GameRound에 provider 필드가 없다면 조회 쿼리 수정 필요.
+      // 쿼리 확인: select 절에 provider 추가 필요.
+
+      // 라이브 카지노(에볼루션, PP라이브 등)는 푸시 베팅(무승부) 여부를 확인
+      // job.data.waitForPushBet가 true로 오거나, provider가 라이브 카지노인 경우
+      const isLiveCasino = [
+        'EVOLUTION',
+        'EVOLUTION_ASIA',
+        'EVOLUTION_KOREA',
+        'EVOLUTION_INDIA',
+        'PRAGMATIC_PLAY_LIVE'
+      ].includes(provider);
+
+      const shouldWaitForPushBet = isLiveCasino;
+
       // waitForPushBet가 true이고 totalPushAmount 또는 tieBetAmount가 null이면 대기
       if (
-        waitForPushBet &&
+        shouldWaitForPushBet &&
         (!gameRound.totalPushAmount || !gameRound.tieBetAmount)
       ) {
         throw new Error(
-          `푸시 베팅 정보가 아직 준비되지 않음: ${gameRoundId}`,
+          `푸시 베팅 정보가 아직 준비되지 않음: ${gameRoundId} (LiveCasino=${isLiveCasino})`,
         );
       }
-
-      const userId = gameRound.userId;
-      const currency = gameRound.transaction.currency;
 
       // 2. 베팅 금액 계산 (푸시가 있으면 제외)
       let betAmountForProcessing = gameRound.totalBetAmountInGameCurrency

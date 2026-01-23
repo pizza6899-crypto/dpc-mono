@@ -13,6 +13,7 @@ import { GameTransaction } from '../domain/model/game-transaction.entity';
 import { CheckCasinoBalanceService } from './check-casino-balance.service';
 import { GameRound } from '../domain/model/game-round.entity';
 import { CasinoWinMetadata } from 'src/modules/wallet/domain/model/wallet-transaction-metadata';
+import { CasinoQueueService } from '../infrastructure/queue/casino-queue.service';
 
 export interface ProcessCasinoCreditCommand {
     session: CasinoGameSession;
@@ -32,6 +33,7 @@ export interface ProcessCasinoCreditResult {
     balance: Prisma.Decimal;
 }
 
+
 @Injectable()
 export class ProcessCasinoCreditService {
     private readonly logger = new Logger(ProcessCasinoCreditService.name);
@@ -44,11 +46,14 @@ export class ProcessCasinoCreditService {
         private readonly gameTransactionRepository: GameTransactionRepositoryPort,
         private readonly updateUserBalanceService: UpdateUserBalanceService,
         private readonly checkCasinoBalanceService: CheckCasinoBalanceService,
+        private readonly casinoQueueService: CasinoQueueService,
     ) { }
 
     @Transactional()
     async execute(command: ProcessCasinoCreditCommand): Promise<ProcessCasinoCreditResult> {
         const { session, amount, transactionId, roundId, gameId, winTime, provider, isCancel, isJackpot, isBonus, description } = command;
+
+        // ... (앞부분 생략: Lock, Resolve Game Round, Idempotency Check) ...
 
         // 1. Acquire Advisory Lock (Round Level)
         try {
@@ -180,7 +185,24 @@ export class ProcessCasinoCreditService {
 
         await this.gameRoundRepository.increaseStats(round.id, round.startedAt, statsDelta);
 
-        // 7. Return Result
+        // [비동기] 7. 큐 처리 (결과 조회 & 후처리)
+        // 일반 WIN 또는 CANCEL인 경우 라운드가 종료된 것으로 간주하고 후속 작업을 스케줄링합니다.
+        // 잭팟이나 보너스는 라운드 진행 중에 발생할 수도 있으므로 제외할지 정책적 결정 필요 (일단 포함)
+        // 여기서는 안전하게 모든 Credit 트랜잭션에 대해 후처리를 트리거하되, 잡 내부에서 완료 여부를 판단할 수도 있음.
+        // 하지만 효율성을 위해 WIN인 경우에만 트리거하는 것이 일반적.
+        if (txType === GameTransactionType.WIN || txType === GameTransactionType.CANCEL) {
+            // 7-1. 게임 결과(URL/Replay) 조회 스케줄링
+            await this.casinoQueueService.addGameResultFetchJob({
+                gameRoundId: round.id.toString(),
+            });
+
+            // 7-2. 게임 후처리 (콤프/롤링 등) 스케줄링
+            await this.casinoQueueService.addGamePostProcessJob({
+                gameRoundId: round.id.toString(),
+            });
+        }
+
+        // 8. Return Result
         const balanceInGameCurrency = updatedWallet.totalAvailableBalance.mul(session.exchangeRate);
 
         return {

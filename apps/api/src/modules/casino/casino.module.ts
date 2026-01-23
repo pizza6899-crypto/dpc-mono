@@ -9,6 +9,7 @@ import { BullModule } from '@nestjs/bullmq';
 import { CasinoQueueNames } from './infrastructure/queue/casino-queue.types';
 import { CasinoQueueService } from './infrastructure/queue/casino-queue.service';
 import { GamePostProcessProcessor } from './processors/game-post-process.processor';
+import { GameResultFetchProcessor } from './infrastructure/queue/processors/game-result-fetch.processor';
 import { EnvModule } from 'src/common/env/env.module';
 import { ExchangeModule } from '../exchange/exchange.module';
 import { AuditLogModule } from '../audit-log/audit-log.module';
@@ -38,13 +39,10 @@ import { ProcessCasinoCreditService } from './application/process-casino-credit.
     forwardRef(() => DcsModule),
     ConcurrencyModule,
     BullModule.registerQueue({
-      name: CasinoQueueNames.WHITECLIFF_FETCH_GAME_RESULT_URL,
-    }),
-    BullModule.registerQueue({
-      name: CasinoQueueNames.DCS_FETCH_GAME_REPLAY_URL,
-    }),
-    BullModule.registerQueue({
       name: CasinoQueueNames.GAME_POST_PROCESS,
+    }),
+    BullModule.registerQueue({ // 신규 통합 결과 조회 큐
+      name: CasinoQueueNames.GAME_RESULT_FETCH,
     }),
     EnvModule,
     ExchangeModule,
@@ -59,6 +57,7 @@ import { ProcessCasinoCreditService } from './application/process-casino-credit.
   controllers: [],
   providers: [
     GamePostProcessProcessor,
+    GameResultFetchProcessor,
     LaunchGameService,
     CasinoQueueService,
     GameRoundMapper,
