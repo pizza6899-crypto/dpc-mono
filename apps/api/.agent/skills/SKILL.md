@@ -46,12 +46,20 @@ When encountering a task related to the following categories, you MUST load the 
 *   **Context:** Refer to "WHITECLIFF_en.html".
 
 ### 4. Core Infrastructure
-**When to use:** Handling distributed node IDs, global locks, or Snowflake ID generation.
+**When to use:** Handling distributed node IDs, concurrency control, or Snowflake ID generation.
+
+#### Concurrency & Locking
+*   **Skill Name:** `concurrency_control`
+*   **Path:** `apps/api/.agent/skills/concurrency/SKILL.md`
+*   **Key Rules:**
+    *   Use **Advisory Lock** for short, transaction-bound business logic.
+    *   Use **Global Lock** table for long-running tasks (schedulers, etc.).
+
+#### Node Identity & Snowflake
 *   **Skill Name:** `distributed_infrastructure`
 *   **Path:** `apps/api/.agent/skills/distributed-infrastructure/SKILL.md`
 *   **Key Rules:**
-    *   Instances must have unique node IDs (0-1023).
-    *   Use `GlobalLock` table for long-running task concurrency control.
+    *   Instances must have unique node IDs (0-1023) for Snowflake generation.
 
 ### 5. Skill Management
 

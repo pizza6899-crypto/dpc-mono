@@ -9,41 +9,43 @@ description: Kysely Implementation Expert (Prisma Integration)
 이 스킬은 Prisma를 기반으로 구축된 NestJS 모노레포 환경에서 **Kysely**를 사용하여 Type-safe한 SQL 쿼리를 작성하는 가이드를 제공합니다. `prisma-extension-kysely`를 통해 Prisma Client와 완벽하게 통합되어 있으며, `nestjs-cls`를 통해 트랜잭션 컨텍스트를 안전하게 공유합니다.
 
 ### 언제 Kysely를 사용하나요?
-- 단순 CRUD는 **Prisma** 메서드(`findMany`, `create`, `update` 등)를 사용합니다.
-- 복잡한 조인, 집계, 윈도우 함수, 서브쿼리 등 SQL의 강력한 기능이 필요한 경우 **Kysely**를 사용합니다.
+1. **Prisma Fluent API 우선**: 기본적인 CRUD와 관계 쿼리는 Prisma를 사용합니다.
+2. **Kysely 사용 시점**:
+    - 복잡한 조인, 집계 함수, 윈도우 함수가 필요한 경우
+    - Prisma가 지원하지 않는 특정 DB 엔진 전용 기능을 직접 사용할 때
+    - 최적화된 로우 쿼리(Raw Query)가 필요한 경우
 
 ## 📁 Critical Locations (Paths)
-- **Kysely Types:** `packages/database/src/kysely-types.ts`
-- **Prisma Service:** `apps/api/src/infrastructure/prisma/prisma.service.ts`
-- **Prisma Module:** `apps/api/src/infrastructure/prisma/prisma.module.ts`
+- **Kysely Types:** `apps/api/src/generated/kysely/kysely-types.ts`
+- **Prisma Module & Proxy Type:** `apps/api/src/infrastructure/prisma/prisma.module.ts`
 
 ## 🛠 Usage Rules
 
-### 1. Repository Implementation Pattern
-리포지토리에서는 `nestjs-cls`의 `@InjectTransaction()` 데코레이터를 통해 트랜잭션 객체를 주입받아 사용합니다. 이 `tx` 객체는 `prisma-extension-kysely`가 적용된 상태이므로 `$kysely` 프로퍼티를 통해 Kysely 쿼리 빌더에 접근할 수 있습니다.
+### 1. Repository/Service Implementation Pattern
+`nestjs-cls`를 통해 주입받은 `this.tx`(프록시 객체)를 활용하며, 타입 정의는 `PrismaTransaction`을 사용합니다.
 
-**필수 패턴:**
+**권장 패턴:**
 ```typescript
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
-import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module'; // 타입 정의 경로
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
+import { sql } from 'kysely';
 
 @Injectable()
 export class MyRepository {
   constructor(
     @InjectTransaction()
-    private readonly tx: PrismaTransaction, // 확장된 Prisma Client 타입 (Kysely 포함)
+    private readonly tx: PrismaTransaction,
   ) {}
 
   async findComplexData(userId: bigint) {
-    // 1. Prisma 메서드 사용 (단순 조회)
+    // 1. Prisma 메서드 (간단한 조회는 Prisma 우선)
     // await this.tx.user.findUnique(...)
 
-    // 2. Kysely 사용 (복잡한 쿼리)
-    // this.tx.$kysely 또는 this.tx.extended.$kysely 사용 (설정에 따름)
+    // 2. Kysely 사용 (Fluent API가 지원하지 않는 영역)
     return await this.tx.$kysely
       .selectFrom('users')
-      .innerJoin('wallets', 'wallets.user_id', 'users.id')
+      .innerJoin('wallets', 'wallets.userId', 'users.id')
       .select(['users.email', 'wallets.balance'])
       .where('users.id', '=', userId)
       .execute();

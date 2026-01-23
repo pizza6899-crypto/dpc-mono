@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { sql } from 'kysely';
 import { InjectTransaction } from '@nestjs-cls/transactional';
-import type { Transaction } from '@nestjs-cls/transactional';
-import type { PrismaTransactionalAdapter } from 'src/infrastructure/prisma/prisma.module';
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { NodeIdentityService } from 'src/common/node-identity/node-identity.service';
 
 export interface LockOptions {
@@ -14,7 +14,7 @@ export class ConcurrencyService {
 
   constructor(
     @InjectTransaction()
-    private readonly tx: Transaction<PrismaTransactionalAdapter>,
+    private readonly tx: PrismaTransaction,
     private readonly nodeIdentityService: NodeIdentityService,
   ) { }
 
@@ -24,6 +24,11 @@ export class ConcurrencyService {
   private get instanceId(): string {
     return this.nodeIdentityService.getDisplayId();
   }
+
+  // ========================================================================================================
+  // Global Table Lock (작업 제어용)
+  // DB 테이블(global_locks)을 사용하며, 트랜잭션과 무관하게 지속될 수 있습니다. (스케줄러 등)
+  // ========================================================================================================
 
   /**
    * [GlobalLock] 락 획득 시도 (테이블 기반)
@@ -35,8 +40,8 @@ export class ConcurrencyService {
     const timeoutSeconds = options.timeoutSeconds ?? 1800;
 
     try {
-      // Prisma Proxy를 통한 원자적 락 선점
-      const result = await this.tx.$executeRaw`
+      // Prisma Proxy와 Kysely sql을 통한 원자적 락 선점
+      const result = await sql`
         INSERT INTO "global_locks" ("key", "instance_id", "is_acquired", "locked_at", "timeout_seconds", "created_at", "updated_at")
         VALUES (${key}, ${this.instanceId}, true, NOW(), ${timeoutSeconds}, NOW(), NOW())
         ON CONFLICT ("key") DO UPDATE
@@ -48,10 +53,10 @@ export class ConcurrencyService {
             "last_status" = null,
             "error_message" = null
         WHERE "global_locks"."is_acquired" = false 
-           OR "global_locks"."locked_at" < NOW() - (CAST(${timeoutSeconds} || ' seconds' AS INTERVAL))
-      `;
+           OR "global_locks"."locked_at" < NOW() - (${timeoutSeconds} * interval '1 second')
+      `.execute(this.tx.$kysely);
 
-      const success = Number(result) > 0;
+      const success = Number(result.numAffectedRows) > 0;
 
       if (success) {
         this.logger.debug(`락 획득 성공: ${key} (node: ${this.instanceId})`);
@@ -72,8 +77,13 @@ export class ConcurrencyService {
   async release(key: string, success: boolean, errorMessage?: string): Promise<void> {
     try {
       // Prisma Proxy API를 사용하여 타입 안전하게 업데이트
-      await (this.tx as any).globalLock.update({
-        where: { key },
+      // 소유권 확인: 자기가 잡은 락만 해제할 수 있도록 instanceId 필터링 추가
+      const result = await this.tx.globalLock.updateMany({
+        where: {
+          key,
+          instanceId: this.instanceId,
+          isAcquired: true,
+        },
         data: {
           isAcquired: false,
           lastResult: success ? 'SUCCESS' : 'FAILED',
@@ -82,14 +92,18 @@ export class ConcurrencyService {
         },
       });
 
-      this.logger.debug(`락 해제 완료: ${key} (${success ? 'SUCCESS' : 'FAILED'})`);
+      if (result.count === 0) {
+        this.logger.warn(`락 해제 실패: 소유권이 없거나 이미 해제됨 (key: ${key}, instance: ${this.instanceId})`);
+      } else {
+        this.logger.debug(`락 해제 완료: ${key} (${success ? 'SUCCESS' : 'FAILED'})`);
+      }
     } catch (error) {
       this.logger.error(`락 해제 중 오류 발생: ${key}`, error);
     }
   }
 
   /**
-   * [Helper] 락 실행 래퍼 함수
+   * [Helper] 락 실행 래퍼 함수 (Global Lock 전용)
    */
   async runExclusive(
     key: string,
