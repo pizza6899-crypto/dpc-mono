@@ -53,9 +53,11 @@ export class ConcurrencyService {
             "error_message" = null
         WHERE "global_locks"."is_acquired" = false 
            OR "global_locks"."locked_at" < clock_timestamp() - ("global_locks"."timeout_seconds" * interval '1 second')
+        RETURNING "key"
       `.execute(this.prisma.kysely);
 
-      const success = Number(result.numAffectedRows) > 0;
+      // INSERT나 UPDATE가 실제로 수행된 경우에만 row가 반환됨 (가장 확실한 방법)
+      const success = result.rows.length > 0;
 
       if (success) {
         this.logger.debug(`락 획득 성공: ${key} (node: ${this.instanceId})`);
