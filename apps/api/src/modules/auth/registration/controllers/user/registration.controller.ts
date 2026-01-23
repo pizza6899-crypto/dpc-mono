@@ -28,8 +28,8 @@ export class RegistrationController {
   @HttpCode(HttpStatus.CREATED)
   @Public()
   @Throttle({
-    limit: 5,
-    ttl: 1800, // 30분
+    limit: 5123123,
+    ttl: 60, // 1분
     scope: ThrottleScope.IP,
   })
   @ApiOperation({
