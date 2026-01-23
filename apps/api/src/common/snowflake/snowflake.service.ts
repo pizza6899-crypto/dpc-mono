@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { NodeIdentityService } from '../node-identity/node-identity.service';
+import { SnowflakeClockBackwardsException } from './snowflake.exception';
 
 @Injectable()
 export class SnowflakeService {
@@ -67,11 +68,12 @@ export class SnowflakeService {
     private internalGenerate(timestamp: bigint): bigint {
         // 과거 타임스탬프가 명시적으로 들어온 경우
         if (timestamp < this.lastTimestamp) {
-            this.logger.warn(
-                `Generating ID for past timestamp (${timestamp}) after future timestamp (${this.lastTimestamp}). ` +
-                `Sequence reset to 0. Potential ID collision risk if same timestamp is reused.`
+            const diff = this.lastTimestamp - timestamp;
+            this.logger.error(
+                `Clock moved backwards. Refusing to generate id for ${diff}ms. ` +
+                `Current timestamp: ${timestamp}, Last timestamp: ${this.lastTimestamp}`
             );
-            this.sequence = 0n;
+            throw new SnowflakeClockBackwardsException(diff);
         } else if (timestamp === this.lastTimestamp) {
             // 같은 밀리초 내에서 호출된 경우 시퀀스 증가
             this.sequence = (this.sequence + 1n) & this.SEQUENCE_MASK;

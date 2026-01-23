@@ -1,47 +1,28 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SnowflakeService } from './snowflake.service';
-import { EnvService } from '../env/env.service';
-import { RedisService } from 'src/infrastructure/redis/redis.service';
+import { NodeIdentityService } from '../node-identity/node-identity.service';
 
 describe('SnowflakeService', () => {
     let service: SnowflakeService;
-    let envService: EnvService;
-    let redisService: RedisService;
+    let nodeIdentityService: NodeIdentityService;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 SnowflakeService,
                 {
-                    provide: EnvService,
+                    provide: NodeIdentityService,
                     useValue: {
-                        pm2InstanceNumber: '0',
-                    },
-                },
-                {
-                    provide: RedisService,
-                    useValue: {
-                        setLock: jest.fn().mockResolvedValue(true),
-                        del: jest.fn().mockResolvedValue(true),
-                        getClient: jest.fn().mockReturnValue({
-                            expire: jest.fn().mockResolvedValue(true),
-                        }),
+                        getNodeId: jest.fn().mockReturnValue(1),
                     },
                 },
             ],
         }).compile();
 
         service = module.get<SnowflakeService>(SnowflakeService);
-        envService = module.get<EnvService>(EnvService);
-        redisService = module.get<RedisService>(RedisService);
-
-        // onModuleInit을 호출하여 Node ID 할당 시뮬레이션
-        await service.onModuleInit();
+        nodeIdentityService = module.get<NodeIdentityService>(NodeIdentityService);
     });
 
-    afterEach(async () => {
-        await service.onModuleDestroy();
-    });
 
     it('should be defined', () => {
         expect(service).toBeDefined();
@@ -103,7 +84,7 @@ describe('SnowflakeService', () => {
             const parsed = service.parse(id);
 
             expect(parsed.timestamp).toBeGreaterThan(0n);
-            expect(parsed.nodeId).toBe(0n); // pm2InstanceNumber가 '0'이므로
+            expect(parsed.nodeId).toBe(1n); // mocked as 1
             expect(parsed.sequence).toBeGreaterThanOrEqual(0n);
             expect(parsed.sequence).toBeLessThanOrEqual(4095n);
             expect(parsed.date).toBeInstanceOf(Date);
@@ -113,8 +94,8 @@ describe('SnowflakeService', () => {
             const id = service.generate(new Date());
             const parsed = service.parse(id);
 
-            // EnvService mock에서 pm2InstanceNumber가 '0'이므로 nodeId는 0
-            expect(parsed.nodeId).toBe(0n);
+            // mocked as 1
+            expect(parsed.nodeId).toBe(1n);
         });
 
         it('should extract valid timestamp', () => {
@@ -132,69 +113,44 @@ describe('SnowflakeService', () => {
     });
 
     describe('Node ID handling', () => {
-        it('should use PM2 instance number as node ID', async () => {
+        it('should use NodeIdentityService for node ID', async () => {
             const testModule = await Test.createTestingModule({
                 providers: [
                     SnowflakeService,
                     {
-                        provide: EnvService,
+                        provide: NodeIdentityService,
                         useValue: {
-                            pm2InstanceNumber: '5',
-                        },
-                    },
-                    {
-                        provide: RedisService,
-                        useValue: {
-                            setLock: jest.fn().mockResolvedValue(true),
-                            del: jest.fn().mockResolvedValue(true),
-                            getClient: jest.fn().mockReturnValue({
-                                expire: jest.fn().mockResolvedValue(true),
-                            }),
+                            getNodeId: jest.fn().mockReturnValue(5),
                         },
                     },
                 ],
             }).compile();
 
             const testService = testModule.get<SnowflakeService>(SnowflakeService);
-            await testService.onModuleInit();
             const id = testService.generate(new Date());
             const parsed = testService.parse(id);
 
             expect(parsed.nodeId).toBe(5n);
-            await testService.onModuleDestroy();
         });
 
-        it('should mask node ID to 10 bits (max 1023)', async () => {
+        it('should handle max node ID (1023)', async () => {
             const testModule = await Test.createTestingModule({
                 providers: [
                     SnowflakeService,
                     {
-                        provide: EnvService,
+                        provide: NodeIdentityService,
                         useValue: {
-                            pm2InstanceNumber: '2048', // 10 bits를 초과하는 값
-                        },
-                    },
-                    {
-                        provide: RedisService,
-                        useValue: {
-                            setLock: jest.fn().mockResolvedValue(true),
-                            del: jest.fn().mockResolvedValue(true),
-                            getClient: jest.fn().mockReturnValue({
-                                expire: jest.fn().mockResolvedValue(true),
-                            }),
+                            getNodeId: jest.fn().mockReturnValue(1023),
                         },
                     },
                 ],
             }).compile();
 
             const testService = testModule.get<SnowflakeService>(SnowflakeService);
-            await testService.onModuleInit();
             const id = testService.generate(new Date());
             const parsed = testService.parse(id);
 
-            // 2048 & 0x3ff = 0 (비트 마스킹 결과)
-            expect(parsed.nodeId).toBeLessThanOrEqual(1023n);
-            await testService.onModuleDestroy();
+            expect(parsed.nodeId).toBe(1023n);
         });
     });
 
@@ -250,14 +206,14 @@ describe('SnowflakeService', () => {
             expect(parsed3.date.getTime()).toBe(targetDate.getTime());
         });
 
-        it('should handle past timestamp after current timestamp generation', () => {
-            service.generate(new Date()); // 현재 시간으로 생성
-            const pastTime = new Date('2026-06-01T00:00:00Z'); // EPOCH(2026-01-01) 이후 시간
-            const id = service.generate(pastTime);
+        it('should throw SnowflakeClockBackwardsException when clock moves backwards', () => {
+            const now = new Date();
+            service.generate(now); // Set lastTimestamp
 
-            expect(id).toBeGreaterThan(0n);
-            const parsed = service.parse(id);
-            expect(parsed.date.getTime()).toBe(pastTime.getTime());
+            // Try to generate ID for past timestamp
+            const pastTime = new Date(now.getTime() - 1000); // 1 second ago
+
+            expect(() => service.generate(pastTime)).toThrow('Clock moved backwards');
         });
 
         it('should generate unique IDs for multiple calls with same timestamp', () => {
