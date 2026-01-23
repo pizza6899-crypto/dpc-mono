@@ -65,9 +65,8 @@ model AffiliateCommission {
   createdAt      DateTime             @default(now()) @map("created_at")
   updatedAt      DateTime             @updatedAt @map("updated_at")
 
-  affiliate User       @relation("AffiliateCommissions", fields: [affiliateId], references: [id], onDelete: Cascade)
-  gameRound GameRound? @relation(fields: [gameRoundId], references: [id])
-  subUser   User       @relation("SubUserCommissions", fields: [subUserId], references: [id], onDelete: Cascade)
+  affiliate User @relation("AffiliateCommissions", fields: [affiliateId], references: [id], onDelete: Cascade)
+  subUser   User @relation("SubUserCommissions", fields: [subUserId], references: [id], onDelete: Cascade)
 
   @@id([createdAt, id])
   @@index([affiliateId, status])

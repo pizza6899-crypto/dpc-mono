@@ -105,7 +105,6 @@ model Transaction {
   createdAt              DateTime                   @default(now()) @map("created_at")
   updatedAt              DateTime                   @updatedAt @map("updated_at")
   bonusDetail            BonusDetail?
-  gameRound              GameRound?
   user                   User                       @relation(fields: [userId], references: [id])
   balanceDetails         TransactionBalanceDetail[]
   adminAdjustmentDetail  AdminAdjustmentDetail?

@@ -21,95 +21,12 @@ model CasinoGameSession {
   usdExchangeRate        Decimal              @map("usd_exchange_rate") @db.Decimal(32, 18)
   compRate               Decimal              @map("comp_rate") @db.Decimal(8, 4)
   gameId                 BigInt?              @map("game_id") // 현재 실행 중인 게임 (선택적)
-  gameRounds             GameRound[]
   casinoGameV2           CasinoGameV2?        @relation(fields: [gameId], references: [id])
   user                   User                 @relation(fields: [userId], references: [id])
   gameRoundV2s           GameRoundV2[]
 
   @@index([userId])
   @@map("casino_game_sessions")
-}
-
-model GameRound {
-  id                             BigInt                @id @default(autoincrement())
-  userId                         BigInt                @map("user_id")
-  aggregatorType                 GameAggregatorType    @map("aggregator_type")
-  provider                       GameProvider
-  aggregatorTxId                 String                @map("aggregator_tx_id")
-  transactionId                  BigInt                @unique @map("transaction_id")
-  aggregatorGameId               Int                   @map("aggregator_game_id")
-  totalBetAmountInGameCurrency   Decimal               @default(0) @map("total_bet_amount_in_game_currency") @db.Decimal(32, 18)
-  totalWinAmountInGameCurrency   Decimal               @default(0) @map("total_win_amount_in_game_currency") @db.Decimal(32, 18)
-  netAmountInGameCurrency        Decimal               @default(0) @map("net_amount_in_game_currency") @db.Decimal(32, 18)
-  totalBetAmountInWalletCurrency Decimal               @default(0) @map("total_bet_amount_in_wallet_currency") @db.Decimal(32, 18)
-  totalWinAmountInWalletCurrency Decimal               @default(0) @map("total_win_amount_in_wallet_currency") @db.Decimal(32, 18)
-  netAmountInWalletCurrency      Decimal               @default(0) @map("net_amount_in_wallet_currency") @db.Decimal(32, 18)
-  sessionId                      String?               @map("session_id")
-  tableId                        String?               @map("table_id")
-  roundId                        String?               @map("round_id")
-  replayType                     GameReplayType?       @map("replay_type")
-  replayData                     String?               @map("replay_data")
-  totalPushAmount                Decimal?              @map("total_push_amount") @db.Decimal(32, 18)
-  tieBetAmount                   Decimal?              @map("tie_bet_amount") @db.Decimal(32, 18)
-  contributionAmount             Decimal?              @map("contribution_amount") @db.Decimal(32, 18)
-  compEarned                     Decimal?              @map("comp_earned") @db.Decimal(32, 18)
-  jackpotContributionAmount      Decimal               @default(0) @map("jackpot_contribution_amount") @db.Decimal(32, 18)
-  startedAt                      DateTime?             @map("started_at")
-  completedAt                    DateTime?             @map("completed_at")
-  gameId                         BigInt?               @map("game_id")
-  gameSessionId                  BigInt                @map("game_session_id")
-  affiliateCommissions           AffiliateCommission[]
-  bets                           GameBet[]
-  casinoGameV2                   CasinoGameV2?         @relation(fields: [gameId], references: [id])
-  gameSession                    CasinoGameSession     @relation(fields: [gameSessionId], references: [id])
-  transaction                    Transaction           @relation(fields: [transactionId], references: [id])
-  wins                           GameWin[]
-
-  @@unique([aggregatorTxId, aggregatorType])
-  @@map("game_rounds")
-}
-
-model GameBet {
-  id                      BigInt
-  userId                  BigInt             @map("user_id")
-  gameRoundId             BigInt             @map("game_round_id")
-  aggregatorType          GameAggregatorType @map("aggregator_type")
-  aggregatorBetId         String             @map("aggregator_bet_id")
-  betType                 BetType            @map("bet_type")
-  betAmount               Decimal            @map("bet_amount") @db.Decimal(32, 18)
-  bettedAt                DateTime           @map("betted_at")
-  betAmountInGameCurrency Decimal            @map("bet_amount_in_game_currency") @db.Decimal(32, 18)
-  isCancelled             Boolean            @default(false) @map("is_cancelled")
-  cancelledAt             DateTime?          @map("cancelled_at")
-  gameRound               GameRound          @relation(fields: [gameRoundId], references: [id], onDelete: Cascade)
-
-  // 1. PK에 파티션 키 포함
-  @@id([id, bettedAt])
-  // 2. 유니크 제약조건에도 파티션 키 필수 (DB 물리적 제약)
-  @@unique([aggregatorBetId, aggregatorType, bettedAt])
-  @@index([gameRoundId, bettedAt])
-  @@map("game_bets")
-}
-
-model GameWin {
-  id                      BigInt
-  userId                  BigInt             @map("user_id")
-  gameRoundId             BigInt             @map("game_round_id")
-  aggregatorType          GameAggregatorType @map("aggregator_type")
-  aggregatorWinId         String             @map("aggregator_win_id")
-  winType                 WinType            @map("win_type")
-  winAmount               Decimal            @map("win_amount") @db.Decimal(32, 18)
-  wonAt                   DateTime           @map("won_at")
-  description             String?
-  winAmountInGameCurrency Decimal            @map("win_amount_in_game_currency") @db.Decimal(32, 18)
-  gameRound               GameRound          @relation(fields: [gameRoundId], references: [id], onDelete: Cascade)
-
-  // PK에 파티션 키(wonAt)를 포함시킵니다.
-  @@id([id, wonAt])
-  // 비즈니스 로직상 유니크 제약조건에도 파티션 키가 포함되어야 합니다.
-  @@unique([aggregatorWinId, aggregatorType, wonAt])
-  @@index([gameRoundId])
-  @@map("game_wins")
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -281,7 +198,6 @@ model CasinoGameV2 {
   provider           CasinoGameProvider        @relation(fields: [providerId], references: [id])
   translations       CasinoGameV2Translation[]
   categoryItems      CasinoGameCategoryItem[] // N:M 카테고리 관계
-  gameRounds         GameRound[] // 게임 라운드 (레거시 호환)
   bonusDetails       BonusDetail[] // 보너스 상세 (레거시 호환)
   casinoGameSessions CasinoGameSession[]
   gameRoundV2s       GameRoundV2[]

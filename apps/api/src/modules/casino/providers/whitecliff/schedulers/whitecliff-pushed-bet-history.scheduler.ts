@@ -152,7 +152,7 @@ export class WhitecliffPushedBetHistoryScheduler {
     endDate: string;
   }): Promise<boolean> {
     try {
-      // API 호출만 (분당 1회 제한)
+      // API 호출 (분당 1회 제한)
       const response = await this.whitecliffApiService.getPushedBetHistory({
         gameCurrency,
         prd_id: prdId,
@@ -171,141 +171,67 @@ export class WhitecliffPushedBetHistoryScheduler {
         (pushedBet) => pushedBet.total_pushed_amt > 0 || pushedBet.tie_amt > 0,
       );
 
-      // API 응답에 포함된 txn_id Set 생성
-      const apiResponseTxIds = new Set<string>();
-      if (pushedBetHistory && pushedBetHistory.length > 0) {
-        for (const pushedBet of pushedBetHistory) {
-          apiResponseTxIds.add(pushedBet.txn_id);
-        }
-      }
-
       // API 응답에 포함된 트랜잭션 처리
       if (pushedBetHistory && pushedBetHistory.length > 0) {
         for (const pushedBet of pushedBetHistory) {
-          const gameTransaction = await this.prismaService.gameRound.findUnique(
-            {
-              where: {
-                aggregatorTxId_aggregatorType: {
-                  aggregatorTxId: pushedBet.txn_id,
-                  aggregatorType: GameAggregatorType.WHITECLIFF,
-                },
-              },
-              select: {
-                id: true,
-                totalPushAmount: true,
-              },
+          // V2 조회: aggregatorRoundId (txn_id) 사용
+          // findFirst 사용 (복합키 및 파티셔닝 키 startedAt 몰라서)
+          const gameRound = await this.prismaService.gameRoundV2.findFirst({
+            where: {
+              aggregatorRoundId: pushedBet.txn_id,
+              aggregatorType: GameAggregatorType.WHITECLIFF,
             },
-          );
+            select: {
+              id: true,
+              startedAt: true, // PK 구성요소
+              exchangeRate: true,
+              totalGameRefundAmount: true,
+            },
+          });
 
-          if (!gameTransaction || gameTransaction.totalPushAmount !== null) {
-            continue; // 이미 처리됨
+          // 이미 처리되었거나(Refund > 0), 라운드를 찾을 수 없으면 건너뜀
+          if (
+            !gameRound ||
+            (gameRound.totalGameRefundAmount &&
+              gameRound.totalGameRefundAmount.gt(0))
+          ) {
+            continue;
           }
 
-          // 푸시 베팅 금액 업데이트
-          await this.prismaService.gameRound.update({
-            where: { id: gameTransaction.id },
+          const pushedAmountGame = new Prisma.Decimal(pushedBet.total_pushed_amt);
+
+          // Wallet Currency 환산: GameAmount * ExchangeRate
+          const pushedAmountWallet = pushedAmountGame.mul(
+            gameRound.exchangeRate,
+          );
+
+          // 업데이트 (복합키 사용)
+          await this.prismaService.gameRoundV2.update({
+            where: {
+              id_startedAt: {
+                id: gameRound.id,
+                startedAt: gameRound.startedAt,
+              },
+            },
             data: {
-              totalPushAmount: new Prisma.Decimal(pushedBet.total_pushed_amt),
-              tieBetAmount: new Prisma.Decimal(pushedBet.tie_amt),
+              totalGameRefundAmount: pushedAmountGame,
+              totalRefundAmount: pushedAmountWallet,
+              // tieBetAmount는 V2에 없으므로 resultMeta 등을 활용하거나 생략
+              // 여기서는 우선 Refund 금액 반영에 집중
             },
           });
         }
       }
 
-      // API 응답에 포함되지 않은 에볼루션 게임 트랜잭션을 0, 0으로 업데이트
-      // (바카라/블랙잭이 아닌 게임들)
-      await this.updateMissingPushBetTransactions({
-        gameCurrency,
-        prdId,
-        startDate,
-        endDate,
-        apiResponseTxIds,
-      });
+      // NOTE: 기존의 updateMissingPushBetTransactions 로직은 제거함.
+      // GameRoundV2 구조에서는 초기값이 0이며,
+      // GamePostProcessProcessor가 null 체크 대기 로직 대신 isCompleted를 사용하므로
+      // 0으로 강제 초기화할 필요가 없음.
 
       return true; // 성공 시 true 반환
     } catch (error) {
       this.logger.error(error, `제품 ${prdId} 푸시 베팅 내역 처리 실패`);
       return false; // 예외 발생 시 false 반환
-    }
-  }
-
-  /**
-   * API 응답에 포함되지 않은 에볼루션 게임 트랜잭션을 0, 0으로 업데이트합니다.
-   * (바카라/블랙잭이 아닌 게임들)
-   */
-  private async updateMissingPushBetTransactions({
-    gameCurrency,
-    prdId,
-    startDate,
-    endDate,
-    apiResponseTxIds,
-  }: {
-    gameCurrency: GamingCurrencyCode;
-    prdId: number;
-    startDate: string;
-    endDate: string;
-    apiResponseTxIds: Set<string>;
-  }) {
-    try {
-      // 해당 시간 범위 내의 에볼루션 게임 트랜잭션 조회
-      // (totalPushAmount가 null이고, API 응답에 포함되지 않은 것들)
-      const startDateObj = new Date(startDate);
-      const endDateObj = new Date(endDate);
-
-      const missingTransactions = await this.prismaService.gameRound.findMany({
-        where: {
-          aggregatorType: GameAggregatorType.WHITECLIFF,
-          provider: GameProvider.EVOLUTION,
-          totalPushAmount: null, // 아직 처리되지 않은 것들
-          transaction: {
-            currency: gameCurrency,
-            status: TransactionStatus.COMPLETED,
-            createdAt: {
-              gte: startDateObj,
-              lte: endDateObj,
-            },
-          },
-          casinoGameV2: {
-            provider: {
-              code: GameProvider.EVOLUTION,
-            },
-          },
-        },
-        select: {
-          id: true,
-          aggregatorTxId: true,
-        },
-      });
-
-      // API 응답에 포함되지 않은 트랜잭션만 필터링
-      const toUpdate = missingTransactions.filter(
-        (tx) => !apiResponseTxIds.has(tx.aggregatorTxId),
-      );
-
-      if (toUpdate.length === 0) {
-        return;
-      }
-
-      this.logger.log(
-        `API 응답에 포함되지 않은 에볼루션 게임 트랜잭션 ${toUpdate.length}개를 0, 0으로 업데이트합니다.`,
-      );
-
-      // 배치 업데이트
-      for (const tx of toUpdate) {
-        await this.prismaService.gameRound.update({
-          where: { id: tx.id },
-          data: {
-            totalPushAmount: new Prisma.Decimal(0),
-            tieBetAmount: new Prisma.Decimal(0),
-          },
-        });
-      }
-
-      this.logger.log(
-        `업데이트 완료: ${toUpdate.length}개의 트랜잭션이 0, 0으로 설정되었습니다.`,
-      );
-    } catch (error) {
-      this.logger.error(error, `누락된 푸시 베팅 트랜잭션 업데이트 실패`);
     }
   }
 
