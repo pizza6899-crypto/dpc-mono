@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { sql } from 'kysely';
-import { InjectTransaction } from '@nestjs-cls/transactional';
-import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { NodeIdentityService } from 'src/common/node-identity/node-identity.service';
 
 export interface LockOptions {
@@ -13,8 +12,7 @@ export class ConcurrencyService {
   private readonly logger = new Logger(ConcurrencyService.name);
 
   constructor(
-    @InjectTransaction()
-    private readonly tx: PrismaTransaction,
+    private readonly prisma: PrismaService,
     private readonly nodeIdentityService: NodeIdentityService,
   ) { }
 
@@ -40,21 +38,22 @@ export class ConcurrencyService {
     const timeoutSeconds = options.timeoutSeconds ?? 1800;
 
     try {
-      // Prisma Proxy와 Kysely sql을 통한 원자적 락 선점
+      // Prisma Proxy를 거치지 않고 직접 쿼리를 실행하여 트랜잭션 전파 차단
+      // clock_timestamp()는 트랜잭션 시작 시간이 아닌 쿼리 실행 시점의 실제 시간을 반환함
       const result = await sql`
         INSERT INTO "global_locks" ("key", "instance_id", "is_acquired", "locked_at", "timeout_seconds", "created_at", "updated_at")
-        VALUES (${key}, ${this.instanceId}, true, NOW(), ${timeoutSeconds}, NOW(), NOW())
+        VALUES (${key}, ${this.instanceId}, true, clock_timestamp(), ${timeoutSeconds}, clock_timestamp(), clock_timestamp())
         ON CONFLICT ("key") DO UPDATE
         SET "is_acquired" = true,
-            "locked_at" = NOW(),
+            "locked_at" = clock_timestamp(),
             "instance_id" = ${this.instanceId},
             "timeout_seconds" = ${timeoutSeconds},
-            "updated_at" = NOW(),
+            "updated_at" = clock_timestamp(),
             "last_status" = null,
             "error_message" = null
         WHERE "global_locks"."is_acquired" = false 
-           OR "global_locks"."locked_at" < NOW() - ("global_locks"."timeout_seconds" * interval '1 second')
-      `.execute(this.tx.$kysely);
+           OR "global_locks"."locked_at" < clock_timestamp() - ("global_locks"."timeout_seconds" * interval '1 second')
+      `.execute(this.prisma.kysely);
 
       const success = Number(result.numAffectedRows) > 0;
 
@@ -78,7 +77,7 @@ export class ConcurrencyService {
     try {
       // Prisma Proxy API를 사용하여 타입 안전하게 업데이트
       // 소유권 확인: 자기가 잡은 락만 해제할 수 있도록 instanceId 필터링 추가
-      const result = await this.tx.globalLock.updateMany({
+      const result = await this.prisma.globalLock.updateMany({
         where: {
           key,
           instanceId: this.instanceId,
