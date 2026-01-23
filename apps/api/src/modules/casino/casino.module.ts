@@ -8,7 +8,7 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { BullModule } from '@nestjs/bullmq';
 import { CasinoQueueNames } from './infrastructure/queue/casino-queue.types';
 import { CasinoQueueService } from './infrastructure/queue/casino-queue.service';
-import { GamePostProcessProcessor } from './processors/game-post-process.processor';
+import { GamePostProcessProcessor } from './infrastructure/queue/processors/game-post-process.processor';
 import { GameResultFetchProcessor } from './infrastructure/queue/processors/game-result-fetch.processor';
 import { EnvModule } from 'src/common/env/env.module';
 import { ExchangeModule } from '../exchange/exchange.module';

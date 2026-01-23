@@ -2,21 +2,17 @@ import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { ClsService } from 'nestjs-cls';
 import {
-  CasinoQueueNames,
-  GamePostProcessData,
-} from '../infrastructure/queue/casino-queue.types';
-import {
   InjectTransaction,
   Transactional,
 } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { Logger, OnApplicationShutdown } from '@nestjs/common';
-import { Prisma, TransactionStatus, ExchangeCurrencyCode } from '@prisma/client';
-import { ProcessWageringContributionService } from '../../wagering/application/process-wagering-contribution.service';
-import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
-
-import { AddUserRollingService } from '../../tier/application/add-user-rolling.service';
-import { EarnCompService } from '../../comp/application/earn-comp.service';
+import { Prisma, TransactionStatus } from '@prisma/client';
+import { CasinoQueueNames, GamePostProcessData } from '../casino-queue.types';
+import { ProcessWageringContributionService } from 'src/modules/wagering/application';
+import { AnalyticsQueueService } from 'src/modules/analytics/application';
+import { AddUserRollingService } from 'src/modules/tier/application/add-user-rolling.service';
+import { EarnCompService } from 'src/modules/comp/application/earn-comp.service';
 
 @Processor(CasinoQueueNames.GAME_POST_PROCESS)
 export class GamePostProcessProcessor
