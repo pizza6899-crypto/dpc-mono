@@ -14,6 +14,7 @@ import { WalletBalanceType, WalletTransactionType, ExchangeCurrencyCode } from '
 import { GrantPromotionBonusService } from '../../promotion/application/grant-promotion-bonus.service';
 import { CreateWageringRequirementService } from '../../wagering/application/create-wagering-requirement.service';
 import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 interface ApproveDepositParams {
   id: bigint;
@@ -41,6 +42,7 @@ export class ApproveDepositService {
     private readonly grantPromotionBonusService: GrantPromotionBonusService,
     private readonly createWageringRequirementService: CreateWageringRequirementService,
     private readonly analyticsQueue: AnalyticsQueueService,
+    private readonly advisoryLockService: AdvisoryLockService,
   ) { }
 
   @Transactional()
@@ -49,7 +51,9 @@ export class ApproveDepositService {
       params;
 
     // 락 획득 (DB Advisory Lock)
-    await this.depositRepository.acquireDepositLock(id);
+    await this.advisoryLockService.acquireLock(LockNamespace.DEPOSIT, id.toString(), {
+      throwThrottleError: true,
+    });
 
     // 1. DepositDetail 조회 (transaction 포함)
     const deposit = await this.depositRepository.getById(id, {

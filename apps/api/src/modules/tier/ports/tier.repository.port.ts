@@ -11,7 +11,6 @@ export interface TierRepositoryPort {
     // Admin / Init
     create(tier: Tier): Promise<Tier>;
     update(tier: Tier): Promise<Tier>;
-    acquireGlobalLock(): Promise<void>;
 
     // Translations
     saveTranslation(tierId: bigint, language: string, name: string): Promise<void>;

@@ -86,10 +86,6 @@ export interface AffiliateCodeRepositoryPort {
     total: number;
   }>;
 
-  /**
-   * 사용자 기반 락 획득 (경합 방지)
-   */
-  acquireLock(userId: bigint): Promise<void>;
 
   /**
    * ID로 코드 조회 (관리자용 - userId 없이 조회)

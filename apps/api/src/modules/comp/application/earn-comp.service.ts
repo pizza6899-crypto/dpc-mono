@@ -5,6 +5,7 @@ import { COMP_REPOSITORY } from '../ports/repository.token';
 import type { CompRepositoryPort } from '../ports';
 import { CompWallet, CompTransaction } from '../domain';
 import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 interface EarnCompParams {
     userId: bigint;
@@ -22,6 +23,7 @@ export class EarnCompService {
         @Inject(COMP_REPOSITORY)
         private readonly compRepository: CompRepositoryPort,
         private readonly analyticsQueueService: AnalyticsQueueService,
+        private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
     @Transactional()
@@ -29,7 +31,9 @@ export class EarnCompService {
         const { userId, currency, amount, referenceId, description } = params;
 
         // 0. Acquire Lock
-        await this.compRepository.acquireLock(userId);
+        await this.advisoryLockService.acquireLock(LockNamespace.COMP_WALLET, userId.toString(), {
+            throwThrottleError: true,
+        });
 
         // 1. Get or Create Wallet
         let wallet = await this.compRepository.findByUserIdAndCurrency(userId, currency);

@@ -9,12 +9,14 @@ import { COMP_REPOSITORY } from '../ports/repository.token';
 import type { CompRepositoryPort } from '../ports';
 import { CompWallet } from '../domain';
 import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
+import { AdvisoryLockService } from 'src/common/concurrency';
 
 describe('EarnCompService', () => {
     let module: TestingModule;
     let service: EarnCompService;
     let mockRepository: jest.Mocked<CompRepositoryPort>;
     let mockAnalyticsQueueService: jest.Mocked<AnalyticsQueueService>;
+    let mockAdvisoryLockService: jest.Mocked<AdvisoryLockService>;
 
     const userId = BigInt(100);
     const currency = ExchangeCurrencyCode.USDT;
@@ -36,7 +38,6 @@ describe('EarnCompService', () => {
         mockRepository = {
             findByUserIdAndCurrency: jest.fn(),
             save: jest.fn(),
-            acquireLock: jest.fn(),
             createTransaction: jest.fn(),
             createMainTransaction: jest.fn(),
             findTransactions: jest.fn(),
@@ -49,12 +50,17 @@ describe('EarnCompService', () => {
             enqueueComp: jest.fn().mockResolvedValue(undefined),
         } as any;
 
+        mockAdvisoryLockService = {
+            acquireLock: jest.fn().mockResolvedValue(undefined),
+        } as any;
+
         module = await Test.createTestingModule({
             imports: [PrismaModule, EnvModule],
             providers: [
                 EarnCompService,
                 { provide: COMP_REPOSITORY, useValue: mockRepository },
                 { provide: AnalyticsQueueService, useValue: mockAnalyticsQueueService },
+                { provide: AdvisoryLockService, useValue: mockAdvisoryLockService },
             ],
         }).compile();
 
@@ -71,7 +77,6 @@ describe('EarnCompService', () => {
             const existingWallet = createMockWallet(50, 100);
             const savedWallet = createMockWallet(80, 130);
 
-            mockRepository.acquireLock.mockResolvedValue(undefined);
             mockRepository.findByUserIdAndCurrency.mockResolvedValue(existingWallet);
             mockRepository.save.mockResolvedValue(savedWallet);
             mockRepository.createTransaction.mockResolvedValue({} as any);
@@ -85,7 +90,7 @@ describe('EarnCompService', () => {
             });
 
             expect(result.balance).toEqual(new Prisma.Decimal(80));
-            expect(mockRepository.acquireLock).toHaveBeenCalledWith(userId);
+            expect(mockAdvisoryLockService.acquireLock).toHaveBeenCalled();
             expect(mockRepository.save).toHaveBeenCalled();
             expect(mockRepository.createTransaction).toHaveBeenCalledWith(
                 expect.objectContaining({
@@ -99,7 +104,6 @@ describe('EarnCompService', () => {
         it('should create new wallet when not exists', async () => {
             const savedWallet = createMockWallet(50, 50);
 
-            mockRepository.acquireLock.mockResolvedValue(undefined);
             mockRepository.findByUserIdAndCurrency.mockResolvedValue(null);
             mockRepository.save.mockResolvedValue(savedWallet);
             mockRepository.createTransaction.mockResolvedValue({} as any);
@@ -118,7 +122,6 @@ describe('EarnCompService', () => {
             const wallet = createMockWallet(0, 0);
             const savedWallet = createMockWallet(100, 100);
 
-            mockRepository.acquireLock.mockResolvedValue(undefined);
             mockRepository.findByUserIdAndCurrency.mockResolvedValue(wallet);
             mockRepository.save.mockResolvedValue(savedWallet);
             mockRepository.createTransaction.mockResolvedValue({} as any);
@@ -143,7 +146,6 @@ describe('EarnCompService', () => {
             const wallet = createMockWallet(0, 0);
             const savedWallet = createMockWallet(25, 25);
 
-            mockRepository.acquireLock.mockResolvedValue(undefined);
             mockRepository.findByUserIdAndCurrency.mockResolvedValue(wallet);
             mockRepository.save.mockResolvedValue(savedWallet);
             mockRepository.createTransaction.mockResolvedValue({} as any);

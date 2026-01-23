@@ -6,6 +6,7 @@ import {
 } from '../domain';
 import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repository.token';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 @Injectable()
 export class DeleteCodeAdminService {
@@ -13,6 +14,7 @@ export class DeleteCodeAdminService {
         @Inject(AFFILIATE_CODE_REPOSITORY)
         private readonly repository: AffiliateCodeRepositoryPort,
         private readonly policy: AffiliateCodePolicy,
+        private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
     @Transactional()
@@ -25,7 +27,9 @@ export class DeleteCodeAdminService {
         }
 
         // 사용자 락 획득 (동시성 제어)
-        await this.repository.acquireLock(code.userId);
+        await this.advisoryLockService.acquireLock(LockNamespace.AFFILIATE_CODE, code.userId.toString(), {
+            throwThrottleError: true
+        });
 
         // 삭제 정책 검증을 위해 전체 코드 개수 조회
         const totalCodes = await this.repository.countByUserId(code.userId);

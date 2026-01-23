@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { sql } from 'kysely';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { LockNamespace } from './concurrency.constants';
+import { LockNamespace, CONCURRENCY_CONSTANTS } from './concurrency.constants';
 import * as crypto from 'crypto';
 
 @Injectable()
@@ -18,11 +18,40 @@ export class AdvisoryLockService {
      * 
      * @param namespace 락 종류 (LockNamespace)
      * @param id 대상 식별자 (string 또는 number)
+     * @param options 추가 옵션 (throwThrottleError: true일 경우 429 에러용 메시지로 throw)
      */
-    async acquireLock(namespace: LockNamespace, id: string | number): Promise<void> {
+    async acquireLock(
+        namespace: LockNamespace,
+        id: string | number,
+        options?: { throwThrottleError?: boolean }
+    ): Promise<void> {
         const key = this.generateKey(namespace, id);
-        // pg_advisory_xact_lock: 트랜잭션 레벨 락 (Blocking)
-        await sql`SELECT pg_advisory_xact_lock(${key})`.execute(this.tx.$kysely);
+        try {
+            // 1. 세션 범위의 락 대기 시간 설정 (기본 3초)
+            await sql`SET LOCAL lock_timeout = ${CONCURRENCY_CONSTANTS.DB_LOCK_TIMEOUT}`.execute(this.tx.$kysely);
+
+            // 2. 배타적 트랜잭션 어드바이저리 락 획득 (트랜잭션 종료 시 자동 해제)
+            await sql`SELECT pg_advisory_xact_lock(${key})`.execute(this.tx.$kysely);
+        } catch (error: any) {
+            if (this.isLockTimeoutError(error)) {
+                if (options?.throwThrottleError) {
+                    throw new Error('CONCURRENCY_LOCK_TIMEOUT');
+                }
+            }
+            throw error;
+        }
+    }
+
+    /**
+     * PostgreSQL lock_not_available (55P03) 또는 락 타임아웃 에러 여부 확인
+     */
+    private isLockTimeoutError(error: any): boolean {
+        return (
+            error.code === '55P03' ||
+            error.meta?.code === '55P03' ||
+            error.message?.includes('55P03') ||
+            error.message?.includes('lock timeout')
+        );
     }
 
     /**

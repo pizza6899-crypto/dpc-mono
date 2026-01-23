@@ -29,11 +29,6 @@ export interface UserWalletRepositoryPort {
     currency: ExchangeCurrencyCode,
   ): Promise<UserWallet>;
 
-  /**
-   * 사용자 ID에 대한 배타적 락 획득 (Advisory Lock)
-   * 트랜잭션 범위 내에서 호출해야 하며, 트랜잭션 종료 시 자동 해제됩니다.
-   */
-  acquireLock(userId: bigint): Promise<void>;
 
   /**
    * 사용자 ID로 보유한 모든 지갑 목록 조회

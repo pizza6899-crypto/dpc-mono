@@ -9,12 +9,14 @@ import { COMP_REPOSITORY } from '../ports/repository.token';
 import type { CompRepositoryPort } from '../ports';
 import { CompWallet, CompNotFoundException, InsufficientCompBalanceException } from '../domain';
 import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
+import { AdvisoryLockService } from 'src/common/concurrency';
 
 describe('DeductCompService', () => {
     let module: TestingModule;
     let service: DeductCompService;
     let mockRepository: jest.Mocked<CompRepositoryPort>;
     let mockAnalyticsQueueService: jest.Mocked<AnalyticsQueueService>;
+    let mockAdvisoryLockService: jest.Mocked<AdvisoryLockService>;
 
     const userId = BigInt(100);
     const currency = ExchangeCurrencyCode.USDT;
@@ -36,7 +38,6 @@ describe('DeductCompService', () => {
         mockRepository = {
             findByUserIdAndCurrency: jest.fn(),
             save: jest.fn(),
-            acquireLock: jest.fn(),
             createTransaction: jest.fn(),
             createMainTransaction: jest.fn(),
             findTransactions: jest.fn(),
@@ -49,12 +50,17 @@ describe('DeductCompService', () => {
             enqueueComp: jest.fn().mockResolvedValue(undefined),
         } as any;
 
+        mockAdvisoryLockService = {
+            acquireLock: jest.fn().mockResolvedValue(undefined),
+        } as any;
+
         module = await Test.createTestingModule({
             imports: [PrismaModule, EnvModule],
             providers: [
                 DeductCompService,
                 { provide: COMP_REPOSITORY, useValue: mockRepository },
                 { provide: AnalyticsQueueService, useValue: mockAnalyticsQueueService },
+                { provide: AdvisoryLockService, useValue: mockAdvisoryLockService },
             ],
         }).compile();
 
@@ -71,7 +77,6 @@ describe('DeductCompService', () => {
             const existingWallet = createMockWallet(100, 50);
             const savedWallet = createMockWallet(70, 80);
 
-            mockRepository.acquireLock.mockResolvedValue(undefined);
             mockRepository.findByUserIdAndCurrency.mockResolvedValue(existingWallet);
             mockRepository.save.mockResolvedValue(savedWallet);
             mockRepository.createTransaction.mockResolvedValue({} as any);
@@ -84,7 +89,7 @@ describe('DeductCompService', () => {
             });
 
             expect(result.balance).toEqual(new Prisma.Decimal(70));
-            expect(mockRepository.acquireLock).toHaveBeenCalledWith(userId);
+            expect(mockAdvisoryLockService.acquireLock).toHaveBeenCalled();
             expect(mockRepository.save).toHaveBeenCalled();
             expect(mockRepository.createTransaction).toHaveBeenCalledWith(
                 expect.objectContaining({
@@ -96,7 +101,6 @@ describe('DeductCompService', () => {
         });
 
         it('should throw CompNotFoundException when wallet not found', async () => {
-            mockRepository.acquireLock.mockResolvedValue(undefined);
             mockRepository.findByUserIdAndCurrency.mockResolvedValue(null);
 
             await expect(
@@ -111,7 +115,6 @@ describe('DeductCompService', () => {
         it('should throw InsufficientCompBalanceException when balance insufficient', async () => {
             const wallet = createMockWallet(30);
 
-            mockRepository.acquireLock.mockResolvedValue(undefined);
             mockRepository.findByUserIdAndCurrency.mockResolvedValue(wallet);
 
             await expect(
@@ -127,7 +130,6 @@ describe('DeductCompService', () => {
             const wallet = createMockWallet(100);
             const savedWallet = createMockWallet(80, 20);
 
-            mockRepository.acquireLock.mockResolvedValue(undefined);
             mockRepository.findByUserIdAndCurrency.mockResolvedValue(wallet);
             mockRepository.save.mockResolvedValue(savedWallet);
             mockRepository.createTransaction.mockResolvedValue({} as any);
@@ -149,7 +151,6 @@ describe('DeductCompService', () => {
             const wallet = createMockWallet(100);
             const savedWallet = createMockWallet(60, 40);
 
-            mockRepository.acquireLock.mockResolvedValue(undefined);
             mockRepository.findByUserIdAndCurrency.mockResolvedValue(wallet);
             mockRepository.save.mockResolvedValue(savedWallet);
             mockRepository.createTransaction.mockResolvedValue({} as any);

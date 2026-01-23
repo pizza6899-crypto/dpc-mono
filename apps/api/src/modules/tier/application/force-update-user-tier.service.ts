@@ -6,6 +6,7 @@ import type { UserTierRepositoryPort } from '../ports/user-tier.repository.port'
 import type { TierHistoryRepositoryPort } from '../ports/tier-history.repository.port';
 import { TierNotFoundException, UserTierNotFoundException } from '../domain/tier.exception';
 import { TierHistory, TierChangeType } from '../domain/model/tier-history.entity';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 @Injectable()
 export class ForceUpdateUserTierService {
@@ -16,11 +17,14 @@ export class ForceUpdateUserTierService {
         private readonly userTierRepository: UserTierRepositoryPort,
         @Inject(TIER_HISTORY_REPOSITORY)
         private readonly tierHistoryRepository: TierHistoryRepositoryPort,
+        private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
     @Transactional()
     async execute(userId: bigint, tierCode: string, reason: string): Promise<void> {
-        await this.userTierRepository.acquireLock(userId);
+        await this.advisoryLockService.acquireLock(LockNamespace.USER_TIER, userId.toString(), {
+            throwThrottleError: true
+        });
 
         const userTier = await this.userTierRepository.findByUserId(userId);
         if (!userTier) {

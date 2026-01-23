@@ -6,6 +6,7 @@ import {
 } from '../domain';
 import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repository.token';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 import { Transactional } from '@nestjs-cls/transactional';
 
@@ -23,6 +24,7 @@ export class UpdateCodeService {
     @Inject(AFFILIATE_CODE_REPOSITORY)
     private readonly repository: AffiliateCodeRepositoryPort,
     private readonly policy: AffiliateCodePolicy,
+    private readonly advisoryLockService: AdvisoryLockService,
   ) { }
 
   @Transactional()
@@ -35,7 +37,9 @@ export class UpdateCodeService {
   }: UpdateCodeParams): Promise<AffiliateCode> {
     // 사용자 기반 락 획득 (동시 요청 처리 방지)
     // 트랜잭션 내에서 실행되므로 트랜잭션 종료 시 자동으로 해제됩니다.
-    await this.repository.acquireLock(userId);
+    await this.advisoryLockService.acquireLock(LockNamespace.AFFILIATE_CODE, userId.toString(), {
+      throwThrottleError: true
+    });
 
     const code = await this.repository.findById(id);
     if (!code || code.userId !== userId) {

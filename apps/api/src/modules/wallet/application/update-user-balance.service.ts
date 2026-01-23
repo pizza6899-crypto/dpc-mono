@@ -7,6 +7,7 @@ import { WALLET_TRANSACTION_REPOSITORY } from '../ports/out/wallet-transaction.r
 import type { WalletTransactionRepositoryPort } from '../ports/out/wallet-transaction.repository.port';
 import { ExchangeCurrencyCode, Prisma, WalletTransactionType, WalletBalanceType, AdjustmentReasonCode } from '@prisma/client';
 import { WalletTransaction, WalletNotFoundException, UserWallet, UserWalletPolicy, UpdateOperation, InvalidWalletBalanceTypeException, WalletActionName, AnyWalletTransactionMetadata } from '../domain';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 export interface BalanceUpdateContext {
     // Admin Context
@@ -42,6 +43,7 @@ export class UpdateUserBalanceService {
         @Inject(WALLET_TRANSACTION_REPOSITORY)
         private readonly transactionRepository: WalletTransactionRepositoryPort,
         private readonly walletPolicy: UserWalletPolicy,
+        private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
     /**
@@ -55,7 +57,9 @@ export class UpdateUserBalanceService {
         const { userId, currency, amount, operation, balanceType, transactionType, referenceId } = params;
 
         // 1. Lock & Get Wallet
-        await this.walletRepository.acquireLock(userId);
+        await this.advisoryLockService.acquireLock(LockNamespace.USER_WALLET, userId.toString(), {
+            throwThrottleError: true,
+        });
 
         let wallet = await this.findUserWalletService.findWallet(userId, currency, false);
         if (!wallet) {

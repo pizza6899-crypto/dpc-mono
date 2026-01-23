@@ -15,6 +15,7 @@ import {
 } from '../domain';
 import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 export interface RequestCryptoWithdrawalParams {
     userId: bigint;
@@ -48,6 +49,7 @@ export class RequestCryptoWithdrawalService {
         private readonly snowflakeService: SnowflakeService,
         private readonly updateUserBalanceService: UpdateUserBalanceService,
         private readonly findUserWalletService: FindUserWalletService,
+        private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
     @Transactional()
@@ -67,7 +69,9 @@ export class RequestCryptoWithdrawalService {
         const requestedAmount = new Prisma.Decimal(amount);
 
         // 0. 락 획득 (동일 유저의 동시 출금 요청 방지)
-        await this.repository.acquireUserLock(userId);
+        await this.advisoryLockService.acquireLock(LockNamespace.USER_WITHDRAWAL, userId.toString(), {
+            throwThrottleError: true,
+        });
 
         // 1. 진행 중인 출금 요청 확인 (1개만 진행 가능)
         const hasPending = await this.repository.hasPendingWithdrawal(userId);

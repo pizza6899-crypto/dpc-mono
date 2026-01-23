@@ -6,6 +6,7 @@ import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
 import { WithdrawalNotFoundException } from '../domain';
 import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 export interface CancelWithdrawalParams {
     userId: bigint;
@@ -26,11 +27,17 @@ export class CancelWithdrawalService {
         @Inject(WITHDRAWAL_REPOSITORY)
         private readonly repository: WithdrawalRepositoryPort,
         private readonly updateUserBalanceService: UpdateUserBalanceService,
+        private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
     @Transactional()
     async execute(params: CancelWithdrawalParams): Promise<CancelWithdrawalResult> {
         const { userId, withdrawalId } = params;
+
+        // 0. 락 획득 (출금 건별 동시 처리 방지)
+        await this.advisoryLockService.acquireLock(LockNamespace.WITHDRAWAL, withdrawalId.toString(), {
+            throwThrottleError: true,
+        });
 
         // 1. 출금 조회
         const withdrawal = await this.repository.getById(withdrawalId);

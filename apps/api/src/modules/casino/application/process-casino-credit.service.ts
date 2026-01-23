@@ -14,6 +14,7 @@ import { CheckCasinoBalanceService } from './check-casino-balance.service';
 import { GameRound } from '../domain/model/game-round.entity';
 import { CasinoWinMetadata } from 'src/modules/wallet/domain/model/wallet-transaction-metadata';
 import { CasinoQueueService } from '../infrastructure/queue/casino-queue.service';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 export interface ProcessCasinoCreditCommand {
     session: CasinoGameSession;
@@ -47,6 +48,7 @@ export class ProcessCasinoCreditService {
         private readonly updateUserBalanceService: UpdateUserBalanceService,
         private readonly checkCasinoBalanceService: CheckCasinoBalanceService,
         private readonly casinoQueueService: CasinoQueueService,
+        private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
     @Transactional()
@@ -56,12 +58,9 @@ export class ProcessCasinoCreditService {
         // ... (앞부분 생략: Lock, Resolve Game Round, Idempotency Check) ...
 
         // 1. Acquire Advisory Lock (Round Level)
-        try {
-            await this.gameRoundRepository.acquireLock(roundId);
-        } catch (error) {
-            this.logger.error(`Failed to acquire lock for round: ${roundId}`, error);
-            throw error;
-        }
+        await this.advisoryLockService.acquireLock(LockNamespace.GAME_ROUND, roundId, {
+            throwThrottleError: true,
+        });
 
         // 2. Resolve Game Round
         let round = await this.gameRoundRepository.findByExternalIdWithWindow(

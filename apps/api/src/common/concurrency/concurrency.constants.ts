@@ -13,6 +13,9 @@ export enum LockNamespace {
     USER_DEPOSIT = 1006,
     COMP_WALLET = 1007,
     PROMOTION = 1008,
+    PAYMENT_TOKEN = 1009,
+    WITHDRAWAL = 1010,
+    USER_WITHDRAWAL = 1011,
 
     // Casino
     GAME_ROUND = 2002,

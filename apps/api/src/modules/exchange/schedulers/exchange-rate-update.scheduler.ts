@@ -91,56 +91,64 @@ export class ExchangeRateUpdateScheduler implements OnApplicationBootstrap {
       }
 
       // 다중 인스턴스에서 중복 실행 방지용 글로벌 락
-      const lock = await this.concurrencyService.acquireGlobalLock(
+      await this.concurrencyService.runExclusive(
         'exchange-rate-update-scheduler',
-        {
-          ttl: 300,
-          retryCount: 0, // 락 못 잡으면 바로 종료
-        },
-      );
+        async () => {
+          // Open Exchange Rates에서 최신 환율 조회
+          const latestRates =
+            await this.openExchangeRatesApiService.getLatestRates();
 
-      if (!lock) {
-        this.logger.debug(
-          '다른 인스턴스에서 이미 환율 갱신 스케줄러가 실행 중입니다.',
-        );
-        return;
-      }
+          const targetCurrencies = Object.values(ExchangeCurrencyCode);
+          const now = nowUtc();
+          let successCount = 0;
 
-      try {
-        // Open Exchange Rates에서 최신 환율 조회
-        const latestRates =
-          await this.openExchangeRatesApiService.getLatestRates();
+          for (const currency of targetCurrencies) {
+            try {
+              // USD는 건너뛰기 (USD → USD는 항상 1)
+              // 비트코인도 건너뛰기
+              if (
+                currency === ExchangeCurrencyCode.USD ||
+                currency === ExchangeCurrencyCode.BTC
+              ) {
+                continue;
+              }
 
-        const targetCurrencies = Object.values(ExchangeCurrencyCode);
-        const now = nowUtc();
-        let successCount = 0;
+              // Open Exchange Rates 응답에 해당 통화가 없으면 건너뛰기
+              if (!(currency in latestRates.rates)) {
+                continue;
+              }
 
-        for (const currency of targetCurrencies) {
-          try {
-            // USD는 건너뛰기 (USD → USD는 항상 1)
-            // 비트코인도 건너뛰기
-            if (
-              currency === ExchangeCurrencyCode.USD ||
-              currency === ExchangeCurrencyCode.BTC
-            ) {
-              continue;
-            }
+              // USD → currency 환율 (Open Exchange Rates는 이미 USD 기준)
+              const rate = latestRates.rates[currency];
 
-            // Open Exchange Rates 응답에 해당 통화가 없으면 건너뛰기
-            if (!(currency in latestRates.rates)) {
-              continue;
-            }
+              if (!rate || rate <= 0) {
+                continue;
+              }
 
-            // USD → currency 환율 (Open Exchange Rates는 이미 USD 기준)
-            const rate = latestRates.rates[currency];
+              // 이전 환율 조회 (검증용)
+              const previousRate = await this.prismaService.exchangeRate.findUnique(
+                {
+                  where: {
+                    baseCurrency_quoteCurrency_provider: {
+                      baseCurrency: ExchangeCurrencyCode.USD,
+                      quoteCurrency: currency,
+                      provider: ExchangeRateProvider.OPEN_EXCHANGE_RATES,
+                    },
+                  },
+                  select: { rate: true },
+                },
+              );
 
-            if (!rate || rate <= 0) {
-              continue;
-            }
+              // 환율 검증
+              const validation = this.exchangeRateValidator.validate(
+                new Prisma.Decimal(rate),
+                previousRate?.rate,
+                ExchangeCurrencyCode.USD,
+                currency,
+              );
 
-            // 이전 환율 조회 (검증용)
-            const previousRate = await this.prismaService.exchangeRate.findUnique(
-              {
+              // DB에 저장 또는 업데이트
+              await this.prismaService.exchangeRate.upsert({
                 where: {
                   baseCurrency_quoteCurrency_provider: {
                     baseCurrency: ExchangeCurrencyCode.USD,
@@ -148,59 +156,39 @@ export class ExchangeRateUpdateScheduler implements OnApplicationBootstrap {
                     provider: ExchangeRateProvider.OPEN_EXCHANGE_RATES,
                   },
                 },
-                select: { rate: true },
-              },
-            );
-
-            // 환율 검증
-            const validation = this.exchangeRateValidator.validate(
-              new Prisma.Decimal(rate),
-              previousRate?.rate,
-              ExchangeCurrencyCode.USD,
-              currency,
-            );
-
-            // DB에 저장 또는 업데이트
-            await this.prismaService.exchangeRate.upsert({
-              where: {
-                baseCurrency_quoteCurrency_provider: {
+                update: {
+                  rate: rate,
+                  collectedAt: now,
+                  previousRate: previousRate?.rate || null,
+                  changeRate: validation.changeRate || null,
+                  isValid: validation.isValid,
+                  updatedAt: now,
+                },
+                create: {
                   baseCurrency: ExchangeCurrencyCode.USD,
                   quoteCurrency: currency,
+                  rate: rate,
                   provider: ExchangeRateProvider.OPEN_EXCHANGE_RATES,
+                  collectedAt: now,
+                  previousRate: previousRate?.rate || null,
+                  changeRate: validation.changeRate || null,
+                  isValid: validation.isValid,
+                  updatedAt: now,
                 },
-              },
-              update: {
-                rate: rate,
-                collectedAt: now,
-                previousRate: previousRate?.rate || null,
-                changeRate: validation.changeRate || null,
-                isValid: validation.isValid,
-                updatedAt: now,
-              },
-              create: {
-                baseCurrency: ExchangeCurrencyCode.USD,
-                quoteCurrency: currency,
-                rate: rate,
-                provider: ExchangeRateProvider.OPEN_EXCHANGE_RATES,
-                collectedAt: now,
-                previousRate: previousRate?.rate || null,
-                changeRate: validation.changeRate || null,
-                isValid: validation.isValid,
-              },
-            });
+              });
 
-            successCount++;
-          } catch (error) {
-            this.logger.debug(`환율 저장 실패: USD → ${currency}`, error);
+              successCount++;
+            } catch (error) {
+              this.logger.debug(`환율 저장 실패: USD → ${currency}`, error);
+            }
           }
-        }
 
-        await this.exchangeRateService.clearAllCache();
-      } catch (error) {
-        this.logger.error('피아트 환율 갱신 중 오류 발생', error);
-      } finally {
-        await this.concurrencyService.releaseLock(lock);
-      }
+          await this.exchangeRateService.clearAllCache();
+        },
+        {
+          timeoutSeconds: 300,
+        },
+      );
     });
   }
 }

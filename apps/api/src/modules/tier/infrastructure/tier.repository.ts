@@ -1,13 +1,10 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { TierRepositoryPort } from '../ports/tier.repository.port';
 import { TierMapper } from './tier.mapper';
 import { generateUid } from 'src/utils/id.util';
 import { Tier } from '../domain';
-import { TierNotFoundException, TierException } from '../domain/tier.exception';
-import { LockNamespace } from 'src/common/concurrency/lock-namespace';
-import { DomainException } from 'src/common/exception/domain.exception';
-import { MessageCode } from '@repo/shared';
+import { TierException } from '../domain/tier.exception';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 
 @Injectable()
@@ -78,31 +75,6 @@ export class TierRepository implements TierRepositoryPort {
         return this.mapper.toDomain(model);
     }
 
-    async acquireGlobalLock(): Promise<void> {
-        try {
-            // Set lock timeout to 3 seconds for current transaction
-            await this.tx.$executeRaw`SET LOCAL lock_timeout = '3s'`;
-
-            // Acquire advisory lock using TIER_CREATION namespace
-            // Using a constant 0 as the second part of the key since this is a global lock for tier creation
-            await this.tx.$executeRaw`SELECT pg_advisory_xact_lock(('x' || substr(md5(${LockNamespace.TIER_CREATION}::text || '0'), 1, 16))::bit(64)::bigint)`;
-        } catch (error: any) {
-            const isLockTimeout =
-                error.code === '55P03' ||
-                error.meta?.code === '55P03' ||
-                error.message?.includes('55P03') ||
-                error.message?.includes('lock timeout');
-
-            if (isLockTimeout) {
-                throw new DomainException(
-                    'Another tier creation is being processed. Please try again.',
-                    MessageCode.THROTTLE_TOO_MANY_REQUESTS,
-                    HttpStatus.TOO_MANY_REQUESTS,
-                );
-            }
-            throw error;
-        }
-    }
 
     async saveTranslation(tierId: bigint, language: string, name: string): Promise<void> {
         const existing = await this.tx.tierTranslation.findFirst({

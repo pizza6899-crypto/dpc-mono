@@ -14,6 +14,7 @@ import { GameTransaction } from '../domain/model/game-transaction.entity';
 import { CheckCasinoBalanceService } from './check-casino-balance.service';
 import { BettingPolicy } from '../domain/service/betting-policy.service';
 import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 export interface ProcessCasinoBetCommand {
     session: CasinoGameSession;
@@ -43,6 +44,7 @@ export class ProcessCasinoBetService {
         private readonly updateUserBalanceService: UpdateUserBalanceService,
         private readonly checkCasinoBalanceService: CheckCasinoBalanceService,
         private readonly findUserWalletService: FindUserWalletService,
+        private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
     @Transactional()
@@ -51,12 +53,9 @@ export class ProcessCasinoBetService {
 
         // 1. Acquire Advisory Lock (Round Level)
         // Serialize requests for the same round to prevent race conditions during round creation and idempotency checks.
-        try {
-            await this.gameRoundRepository.acquireLock(roundId);
-        } catch (error) {
-            this.logger.error(`Failed to acquire lock for round: ${roundId}`, error);
-            throw error; // Let the caller handle or retry (e.g., 503 or 429)
-        }
+        await this.advisoryLockService.acquireLock(LockNamespace.GAME_ROUND, roundId, {
+            throwThrottleError: true,
+        });
 
         // 2. Resolve Game Round
         // Find existing round within a 24-hour window or create a new one.

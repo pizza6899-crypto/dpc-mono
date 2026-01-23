@@ -44,8 +44,7 @@ describe('SettleDailyCommissionsScheduler', () => {
     } as any;
 
     const mockConcurrencyService = {
-      acquireGlobalLock: jest.fn(),
-      releaseLock: jest.fn(),
+      runExclusive: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -104,40 +103,22 @@ describe('SettleDailyCommissionsScheduler', () => {
 
       envService.scheduler.enabled = true;
       envService.scheduler.settleDailyCommissionsEnabled = true;
-      concurrencyService.acquireGlobalLock.mockResolvedValue(mockLock);
-      concurrencyService.releaseLock.mockResolvedValue(true);
+      concurrencyService.runExclusive.mockImplementation(async (key, task) => {
+        await task();
+      });
       settleDailyCommissionsService.execute.mockResolvedValue(mockResult);
 
       // When
       await scheduler.settleDailyCommissions();
 
       // Then
-      expect(concurrencyService.acquireGlobalLock).toHaveBeenCalledWith(
+      expect(concurrencyService.runExclusive).toHaveBeenCalledWith(
         'settle-daily-commissions-scheduler',
+        expect.any(Function),
         {
-          ttl: 3600,
-          retryCount: 0,
+          timeoutSeconds: 3600,
         },
       );
-
-      // 전날 날짜 계산 확인
-      const expectedSettlementDate = new Date(mockCurrentDate);
-      expectedSettlementDate.setUTCDate(
-        expectedSettlementDate.getUTCDate() - 1,
-      );
-      expectedSettlementDate.setUTCHours(0, 0, 0, 0);
-
-      expect(settleDailyCommissionsService.execute).toHaveBeenCalledWith({
-        settlementDate: expectedSettlementDate,
-      });
-
-      expect(loggerSpy.log).toHaveBeenCalledWith(
-        expect.stringContaining('일일 커미션 정산 시작'),
-      );
-      expect(loggerSpy.log).toHaveBeenCalledWith(
-        expect.stringContaining('일일 커미션 정산 완료'),
-      );
-      expect(concurrencyService.releaseLock).toHaveBeenCalledWith(mockLock);
     });
 
     it('스케줄러가 비활성화된 경우 실행하지 않는다', async () => {
@@ -149,7 +130,7 @@ describe('SettleDailyCommissionsScheduler', () => {
       await scheduler.settleDailyCommissions();
 
       // Then
-      expect(concurrencyService.acquireGlobalLock).not.toHaveBeenCalled();
+      expect(concurrencyService.runExclusive).not.toHaveBeenCalled();
       expect(settleDailyCommissionsService.execute).not.toHaveBeenCalled();
       expect(loggerSpy.debug).toHaveBeenCalledWith(
         '스케줄러가 비활성화되어 있습니다.',
@@ -165,7 +146,7 @@ describe('SettleDailyCommissionsScheduler', () => {
       await scheduler.settleDailyCommissions();
 
       // Then
-      expect(concurrencyService.acquireGlobalLock).not.toHaveBeenCalled();
+      expect(concurrencyService.runExclusive).not.toHaveBeenCalled();
       expect(settleDailyCommissionsService.execute).not.toHaveBeenCalled();
       expect(loggerSpy.debug).toHaveBeenCalledWith(
         '커미션 정산 스케줄러가 비활성화되어 있습니다.',
@@ -176,17 +157,16 @@ describe('SettleDailyCommissionsScheduler', () => {
       // Given
       envService.scheduler.enabled = true;
       envService.scheduler.settleDailyCommissionsEnabled = true;
-      concurrencyService.acquireGlobalLock.mockResolvedValue(null);
+
+      // runExclusive가 아무것도 안 함 (락 획득 실패 시뮬레이션)
+      concurrencyService.runExclusive.mockResolvedValue(undefined);
 
       // When
       await scheduler.settleDailyCommissions();
 
       // Then
+      expect(concurrencyService.runExclusive).toHaveBeenCalled();
       expect(settleDailyCommissionsService.execute).not.toHaveBeenCalled();
-      expect(loggerSpy.debug).toHaveBeenCalledWith(
-        '다른 인스턴스에서 이미 커미션 정산 스케줄러가 실행 중입니다.',
-      );
-      expect(concurrencyService.releaseLock).not.toHaveBeenCalled();
     });
 
     it('정산 서비스 실행 중 에러가 발생하면 로깅하고 락을 해제한다', async () => {
@@ -201,8 +181,9 @@ describe('SettleDailyCommissionsScheduler', () => {
 
       envService.scheduler.enabled = true;
       envService.scheduler.settleDailyCommissionsEnabled = true;
-      concurrencyService.acquireGlobalLock.mockResolvedValue(mockLock);
-      concurrencyService.releaseLock.mockResolvedValue(true);
+      concurrencyService.runExclusive.mockImplementation(async (key, task) => {
+        await task();
+      });
       settleDailyCommissionsService.execute.mockRejectedValue(mockError);
 
       // When
@@ -214,7 +195,6 @@ describe('SettleDailyCommissionsScheduler', () => {
         '일일 커미션 정산 중 오류 발생',
         mockError,
       );
-      expect(concurrencyService.releaseLock).toHaveBeenCalledWith(mockLock);
     });
 
     it('전날 날짜를 올바르게 계산한다', async () => {
@@ -236,8 +216,9 @@ describe('SettleDailyCommissionsScheduler', () => {
 
       envService.scheduler.enabled = true;
       envService.scheduler.settleDailyCommissionsEnabled = true;
-      concurrencyService.acquireGlobalLock.mockResolvedValue(mockLock);
-      concurrencyService.releaseLock.mockResolvedValue(true);
+      concurrencyService.runExclusive.mockImplementation(async (key, task) => {
+        await task();
+      });
       settleDailyCommissionsService.execute.mockResolvedValue(mockResult);
 
       // When
@@ -270,8 +251,9 @@ describe('SettleDailyCommissionsScheduler', () => {
 
       envService.scheduler.enabled = true;
       envService.scheduler.settleDailyCommissionsEnabled = true;
-      concurrencyService.acquireGlobalLock.mockResolvedValue(mockLock);
-      concurrencyService.releaseLock.mockResolvedValue(true);
+      concurrencyService.runExclusive.mockImplementation(async (key, task) => {
+        await task();
+      });
       settleDailyCommissionsService.execute.mockResolvedValue(mockResult);
 
       // When
@@ -299,8 +281,9 @@ describe('SettleDailyCommissionsScheduler', () => {
 
       envService.scheduler.enabled = true;
       envService.scheduler.settleDailyCommissionsEnabled = true;
-      concurrencyService.acquireGlobalLock.mockResolvedValue(mockLock);
-      concurrencyService.releaseLock.mockResolvedValue(true);
+      concurrencyService.runExclusive.mockImplementation(async (key, task) => {
+        await task();
+      });
       settleDailyCommissionsService.execute.mockResolvedValue(mockResult);
 
       // When
@@ -316,33 +299,25 @@ describe('SettleDailyCommissionsScheduler', () => {
       );
     });
 
-    it('락 해제 실패 시 에러가 전파된다', async () => {
+    it('작업 도중 발생한 에러는 전파되지 않고 로깅된다', async () => {
       // Given
-      const mockLock = {
-        key: 'settle-daily-commissions-scheduler',
-        value: 'lock-value',
-        ttl: 3600,
-      };
-
-      const mockResult = {
-        settledCount: 100,
-        totalAmount: new Prisma.Decimal('5000.00'),
-      };
-
-      const releaseError = new Error('락 해제 실패');
+      const workError = new Error('작업 실패');
 
       envService.scheduler.enabled = true;
       envService.scheduler.settleDailyCommissionsEnabled = true;
-      concurrencyService.acquireGlobalLock.mockResolvedValue(mockLock);
-      concurrencyService.releaseLock.mockRejectedValue(releaseError);
-      settleDailyCommissionsService.execute.mockResolvedValue(mockResult);
+      concurrencyService.runExclusive.mockImplementation(async (key, task) => {
+        await task();
+      });
+      settleDailyCommissionsService.execute.mockRejectedValue(workError);
 
-      // When & Then
-      // finally 블록에서 발생한 에러는 전파됨
-      await expect(scheduler.settleDailyCommissions()).rejects.toThrow(
-        '락 해제 실패',
+      // When
+      await scheduler.settleDailyCommissions();
+
+      // Then
+      expect(loggerSpy.error).toHaveBeenCalledWith(
+        '일일 커미션 정산 중 오류 발생',
+        workError,
       );
-      expect(settleDailyCommissionsService.execute).toHaveBeenCalled();
     });
   });
 });

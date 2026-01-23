@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { EnvService } from '../../../common/env/env.service';
 import { RedisService } from 'src/infrastructure/redis/redis.service';
-import { ConcurrencyService } from 'src/common/concurrency/concurrency.service';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { nowUtc } from 'src/utils/date.util';
 import { firstValueFrom } from 'rxjs';
 
@@ -19,9 +19,9 @@ export class NowPaymentApiService {
   constructor(
     private envService: EnvService,
     private redisService: RedisService,
-    private concurrencyService: ConcurrencyService,
+    private advisoryLockService: AdvisoryLockService,
     private readonly httpService: HttpService,
-  ) {}
+  ) { }
 
   private async getJwtToken(): Promise<string> {
     // Redis에서 토큰 조회
@@ -35,41 +35,35 @@ export class NowPaymentApiService {
       return tokenData.token;
     }
 
-    // 토큰이 없거나 만료된 경우, 글로벌 락을 사용해서 중복 요청 방지
-    return await this.concurrencyService.withGlobalLock(
-      'nowpayment_token_refresh',
-      async () => {
-        // 락 획득 후 다시 한번 토큰 확인 (다른 인스턴스가 토큰을 발급했을 수 있음)
-        const existingTokenData = await this.redisService.get<JwtTokenData>(
-          this.TOKEN_REDIS_KEY,
-        );
-        if (
-          existingTokenData &&
-          nowUtc().getTime() < existingTokenData.expiresAt - 30000
-        ) {
-          return existingTokenData.token;
-        }
+    // 토큰이 없거나 만료된 경우, 락을 사용해서 중복 요청 방지
+    await this.advisoryLockService.acquireLock(LockNamespace.PAYMENT_TOKEN, 'nowpayment', {
+      throwThrottleError: true,
+    });
 
-        // 새 토큰 발급
-        const newToken = await this.issueNewToken();
-
-        // Redis에 토큰 저장 (4분 30초 TTL)
-        const tokenData: JwtTokenData = {
-          token: newToken,
-          expiresAt: nowUtc().getTime() + 4.5 * 60 * 1000, // 4분 30초 후
-        };
-
-        await this.redisService.set(this.TOKEN_REDIS_KEY, tokenData, 270); // 4분 30초
-
-        this.logger.log('NowPayment JWT 토큰이 새로 발급되었습니다.');
-        return newToken;
-      },
-      {
-        ttl: 30, // 30초 락
-        retryCount: 5, // 5번 재시도
-        retryDelay: 200, // 200ms 간격
-      },
+    // 락 획득 후 다시 한번 토큰 확인 (Double-checked locking)
+    const existingTokenData = await this.redisService.get<JwtTokenData>(
+      this.TOKEN_REDIS_KEY,
     );
+    if (
+      existingTokenData &&
+      nowUtc().getTime() < existingTokenData.expiresAt - 30000
+    ) {
+      return existingTokenData.token;
+    }
+
+    // 새 토큰 발급
+    const newToken = await this.issueNewToken();
+
+    // Redis에 토큰 저장 (4분 30초 TTL)
+    const newTokenData: JwtTokenData = {
+      token: newToken,
+      expiresAt: nowUtc().getTime() + 4.5 * 60 * 1000, // 4분 30초 후
+    };
+
+    await this.redisService.set(this.TOKEN_REDIS_KEY, newTokenData, 270); // 4분 30초
+
+    this.logger.log('NowPayment JWT 토큰이 새로 발급되었습니다.');
+    return newToken;
   }
 
   public async issueNewToken(): Promise<string> {

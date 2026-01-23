@@ -5,10 +5,6 @@ import { ExchangeCurrencyCode, Prisma, TransactionStatus, TransactionType } from
 import { CompRepositoryPort } from '../ports';
 import { CompWallet, CompTransaction } from '../domain';
 import { CompMapper } from './comp.mapper';
-import { LockNamespace } from 'src/common/concurrency/lock-namespace';
-import { DomainException } from 'src/common/exception/domain.exception';
-import { MessageCode } from '@repo/shared';
-import { HttpStatus } from '@nestjs/common';
 
 @Injectable()
 export class CompRepository implements CompRepositoryPort {
@@ -30,34 +26,6 @@ export class CompRepository implements CompRepositoryPort {
         return result ? this.mapper.toDomain(result) : null;
     }
 
-    /**
-     * PostgreSQL Advisory Lock을 사용하여 사용자 콤프 지갑에 대한 배타적 락을 획득합니다.
-     * 트랜잭션이 종료되면 자동으로 해제됩니다 (Transaction-level advisory lock).
-     */
-    async acquireLock(userId: bigint): Promise<void> {
-        try {
-            // 락 타임아웃 3초 설정
-            await this.tx.$executeRaw`SET LOCAL lock_timeout = '3s'`;
-
-            // MD5 해시의 앞 16자리를 사용하여 충돌 가능성을 최소화한 64비트 정수로 변환
-            await this.tx.$executeRaw`SELECT pg_advisory_xact_lock(('x' || substr(md5(${LockNamespace.COMP_WALLET}::text || ${userId.toString()}), 1, 16))::bit(64)::bigint)`;
-        } catch (error: any) {
-            const isLockTimeout =
-                error.code === '55P03' ||
-                error.meta?.code === '55P03' ||
-                error.message?.includes('55P03') ||
-                error.message?.includes('lock timeout');
-
-            if (isLockTimeout) {
-                throw new DomainException(
-                    'User comp wallet is being processed by another transaction. Please try again.',
-                    MessageCode.THROTTLE_TOO_MANY_REQUESTS,
-                    HttpStatus.TOO_MANY_REQUESTS,
-                );
-            }
-            throw error;
-        }
-    }
 
     async save(wallet: CompWallet): Promise<CompWallet> {
         const data = this.mapper.toPersistence(wallet);

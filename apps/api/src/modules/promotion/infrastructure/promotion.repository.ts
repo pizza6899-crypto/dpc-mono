@@ -7,10 +7,6 @@ import { Promotion, UserPromotion, PromotionCurrency } from '../domain';
 import type { PromotionTranslation } from '../domain/model/promotion.entity';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
 import { PromotionMapper } from './promotion.mapper';
-import { LockNamespace } from 'src/common/concurrency/lock-namespace';
-import { DomainException } from 'src/common/exception/domain.exception';
-import { MessageCode } from '@repo/shared';
-import { HttpStatus } from '@nestjs/common';
 
 @Injectable()
 export class PromotionRepository implements PromotionRepositoryPort {
@@ -554,30 +550,6 @@ export class PromotionRepository implements PromotionRepositoryPort {
     });
   }
 
-  async acquireLock(userId: bigint): Promise<void> {
-    try {
-      // 락 타임아웃 3초 설정
-      await this.tx.$executeRaw`SET LOCAL lock_timeout = '3s'`;
-
-      // MD5 해시의 앞 16자리를 사용하여 64비트 정수로 변환하여 락 획득
-      await this.tx.$executeRaw`SELECT pg_advisory_xact_lock(('x' || substr(md5(${LockNamespace.PROMOTION}::text || ${userId.toString()}), 1, 16))::bit(64)::bigint)`;
-    } catch (error: any) {
-      const isLockTimeout =
-        error.code === '55P03' ||
-        error.meta?.code === '55P03' ||
-        error.message?.includes('55P03') ||
-        error.message?.includes('lock timeout');
-
-      if (isLockTimeout) {
-        throw new DomainException(
-          'Promotion processing is in progress for this user. Please try again.',
-          MessageCode.THROTTLE_TOO_MANY_REQUESTS,
-          HttpStatus.TOO_MANY_REQUESTS,
-        );
-      }
-      throw error;
-    }
-  }
 
   async incrementUsageCount(id: bigint): Promise<Promotion> {
     const result = await this.tx.promotion.update({

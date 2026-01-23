@@ -11,6 +11,7 @@ import { UpdateUserBalanceService } from '../../wallet/application/update-user-b
 import { UpdateOperation, WalletActionName } from '../../wallet/domain';
 import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
 import type { RequestClientInfo } from 'src/common/http/types';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 interface GrantPromotionBonusParams {
   userId: bigint;
@@ -38,6 +39,7 @@ export class GrantPromotionBonusService {
     private readonly policy: PromotionPolicy,
     private readonly createWageringRequirementService: CreateWageringRequirementService,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
+    private readonly advisoryLockService: AdvisoryLockService,
   ) { }
 
   @Transactional()
@@ -51,7 +53,9 @@ export class GrantPromotionBonusService {
     requestInfo,
   }: GrantPromotionBonusParams): Promise<GrantPromotionBonusResult> {
     // 0. 락 획득 (동시성 제어)
-    await this.repository.acquireLock(userId);
+    await this.advisoryLockService.acquireLock(LockNamespace.PROMOTION, userId.toString(), {
+      throwThrottleError: true,
+    });
 
     // 프로모션 조회
     const promotion = await this.repository.findById(promotionId);

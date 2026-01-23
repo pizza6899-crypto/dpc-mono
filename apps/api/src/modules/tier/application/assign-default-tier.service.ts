@@ -7,6 +7,7 @@ import { UserTier } from '../domain/model/user-tier.entity';
 import { TierHistory, TierChangeType } from '../domain/model/tier-history.entity';
 import { TierException } from '../domain/tier.exception';
 import { Transactional } from '@nestjs-cls/transactional';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 @Injectable()
 export class AssignDefaultTierService {
@@ -17,12 +18,15 @@ export class AssignDefaultTierService {
         private readonly userTierRepository: UserTierRepositoryPort,
         @Inject(TIER_HISTORY_REPOSITORY)
         private readonly tierHistoryRepository: TierHistoryRepositoryPort,
+        private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
     @Transactional()
     async execute(userId: bigint): Promise<UserTier> {
         // Lock to prevent concurrent creation for the same user
-        await this.userTierRepository.acquireLock(userId);
+        await this.advisoryLockService.acquireLock(LockNamespace.USER_TIER, userId.toString(), {
+            throwThrottleError: true
+        });
 
         // 1. Check if user already has a tier
         const existing = await this.userTierRepository.findByUserId(userId);

@@ -55,9 +55,5 @@ export interface DepositDetailRepositoryPort {
   list(query: DepositListQuery): Promise<{ items: DepositWithUser[]; total: number }>;
   getByIdWithUser(id: bigint): Promise<DepositWithUser>;
   getStats(): Promise<DepositStats>;
-
-  // Locks
-  acquireUserLock(userId: bigint): Promise<void>;
-  acquireDepositLock(depositId: bigint): Promise<void>;
 }
 

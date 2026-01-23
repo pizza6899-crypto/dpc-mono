@@ -9,6 +9,7 @@ import { FindUserWalletService } from '../../wallet/application/find-user-wallet
 import { UpdateOperation, WalletActionName } from '../../wallet/domain';
 import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
 import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 interface ClaimCompParams {
     userId: bigint;
@@ -32,6 +33,7 @@ export class ClaimCompService {
         private readonly findUserWalletService: FindUserWalletService,
         private readonly updateUserBalanceService: UpdateUserBalanceService,
         private readonly analyticsQueueService: AnalyticsQueueService,
+        private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
     @Transactional()
@@ -39,7 +41,9 @@ export class ClaimCompService {
         const { userId, currency, amount } = params;
 
         // 0. Acquire Lock
-        await this.compRepository.acquireLock(userId);
+        await this.advisoryLockService.acquireLock(LockNamespace.COMP_WALLET, userId.toString(), {
+            throwThrottleError: true,
+        });
 
         // 1. Get Wallet
         let wallet = await this.compRepository.findByUserIdAndCurrency(userId, currency);

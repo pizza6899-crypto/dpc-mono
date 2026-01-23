@@ -10,6 +10,7 @@ import {
 import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repository.token';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
 import { generateUid } from 'src/utils/id.util';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 interface CreateCodeParams {
   userId: bigint;
@@ -22,6 +23,7 @@ export class CreateCodeService {
     @Inject(AFFILIATE_CODE_REPOSITORY)
     private readonly repository: AffiliateCodeRepositoryPort,
     private readonly policy: AffiliateCodePolicy,
+    private readonly advisoryLockService: AdvisoryLockService,
   ) { }
 
   @Transactional()
@@ -31,7 +33,10 @@ export class CreateCodeService {
   }: CreateCodeParams): Promise<AffiliateCode> {
     // 1. 사용자 기반 락 획득 (동시 요청 처리 방지)
     // 트랜잭션 내에서 실행되므로 트랜잭션 종료 시 자동으로 해제됩니다.
-    await this.repository.acquireLock(userId);
+    // 동시성 제어: 동일 유저의 중복 생성 방지
+    await this.advisoryLockService.acquireLock(LockNamespace.AFFILIATE_CODE, userId.toString(), {
+      throwThrottleError: true
+    });
 
     // 2. 사용자별 기존 코드 조회 (개수 제한 및 첫 번째 코드 확인용)
     const existingCodes = await this.repository.findByUserId(userId);

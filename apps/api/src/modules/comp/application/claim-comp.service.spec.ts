@@ -10,6 +10,7 @@ import type { CompRepositoryPort } from '../ports';
 import { CompWallet, InsufficientCompBalanceException } from '../domain';
 import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
 import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
+import { AdvisoryLockService } from 'src/common/concurrency';
 
 describe('ClaimCompService', () => {
     let module: TestingModule;
@@ -17,6 +18,7 @@ describe('ClaimCompService', () => {
     let mockRepository: jest.Mocked<CompRepositoryPort>;
     let mockUpdateBalanceService: jest.Mocked<UpdateUserBalanceService>;
     let mockAnalyticsQueueService: jest.Mocked<AnalyticsQueueService>;
+    let mockAdvisoryLockService: jest.Mocked<AdvisoryLockService>;
 
     const userId = BigInt(100);
     const currency = ExchangeCurrencyCode.USDT;
@@ -38,7 +40,6 @@ describe('ClaimCompService', () => {
         mockRepository = {
             findByUserIdAndCurrency: jest.fn(),
             save: jest.fn(),
-            acquireLock: jest.fn(),
             createTransaction: jest.fn(),
             createMainTransaction: jest.fn(),
             findTransactions: jest.fn(),
@@ -48,18 +49,18 @@ describe('ClaimCompService', () => {
         };
 
         mockUpdateBalanceService = {
-            execute: jest.fn().mockResolvedValue({
-                beforeMainBalance: new Prisma.Decimal(100),
-                afterMainBalance: new Prisma.Decimal(150),
-                beforeBonusBalance: new Prisma.Decimal(0),
-                afterBonusBalance: new Prisma.Decimal(0),
-                mainBalanceChange: new Prisma.Decimal(50),
-                bonusBalanceChange: new Prisma.Decimal(0),
+            updateBalance: jest.fn().mockResolvedValue({
+                cash: new Prisma.Decimal(150),
+                bonus: new Prisma.Decimal(0),
             }),
         } as any;
 
         mockAnalyticsQueueService = {
             enqueueComp: jest.fn().mockResolvedValue(undefined),
+        } as any;
+
+        mockAdvisoryLockService = {
+            acquireLock: jest.fn().mockResolvedValue(undefined),
         } as any;
 
         module = await Test.createTestingModule({
@@ -69,6 +70,7 @@ describe('ClaimCompService', () => {
                 { provide: COMP_REPOSITORY, useValue: mockRepository },
                 { provide: UpdateUserBalanceService, useValue: mockUpdateBalanceService },
                 { provide: AnalyticsQueueService, useValue: mockAnalyticsQueueService },
+                { provide: AdvisoryLockService, useValue: mockAdvisoryLockService },
             ],
         }).compile();
 
@@ -85,7 +87,6 @@ describe('ClaimCompService', () => {
             const existingWallet = createMockWallet(100, 50);
             const savedWallet = createMockWallet(50, 100);
 
-            mockRepository.acquireLock.mockResolvedValue(undefined);
             mockRepository.findByUserIdAndCurrency.mockResolvedValue(existingWallet);
             mockRepository.save.mockResolvedValue(savedWallet);
             mockRepository.createTransaction.mockResolvedValue({ id: BigInt(10) } as any);
@@ -99,7 +100,7 @@ describe('ClaimCompService', () => {
 
             expect(result.claimedAmount).toEqual(new Prisma.Decimal(50));
             expect(result.newCompBalance).toEqual(new Prisma.Decimal(50));
-            expect(mockRepository.acquireLock).toHaveBeenCalledWith(userId);
+            expect(mockAdvisoryLockService.acquireLock).toHaveBeenCalled();
             expect(mockRepository.save).toHaveBeenCalled();
             expect(mockRepository.createTransaction).toHaveBeenCalledWith(
                 expect.objectContaining({
@@ -107,12 +108,11 @@ describe('ClaimCompService', () => {
                     amount: new Prisma.Decimal(-50), // negated
                 }),
             );
-            expect(mockUpdateBalanceService.execute).toHaveBeenCalled();
+            expect(mockUpdateBalanceService.updateBalance).toHaveBeenCalled();
             expect(mockRepository.createMainTransaction).toHaveBeenCalled();
         });
 
         it('should throw error when wallet not found', async () => {
-            mockRepository.acquireLock.mockResolvedValue(undefined);
             mockRepository.findByUserIdAndCurrency.mockResolvedValue(null);
 
             await expect(
@@ -127,7 +127,6 @@ describe('ClaimCompService', () => {
         it('should throw error when insufficient balance', async () => {
             const wallet = createMockWallet(30);
 
-            mockRepository.acquireLock.mockResolvedValue(undefined);
             mockRepository.findByUserIdAndCurrency.mockResolvedValue(wallet);
 
             await expect(
@@ -143,7 +142,6 @@ describe('ClaimCompService', () => {
             const wallet = createMockWallet(100);
             const savedWallet = createMockWallet(75, 25);
 
-            mockRepository.acquireLock.mockResolvedValue(undefined);
             mockRepository.findByUserIdAndCurrency.mockResolvedValue(wallet);
             mockRepository.save.mockResolvedValue(savedWallet);
             mockRepository.createTransaction.mockResolvedValue({ id: BigInt(10) } as any);
@@ -155,7 +153,7 @@ describe('ClaimCompService', () => {
                 amount: new Prisma.Decimal(25),
             });
 
-            expect(mockUpdateBalanceService.execute).toHaveBeenCalledWith(
+            expect(mockUpdateBalanceService.updateBalance).toHaveBeenCalledWith(
                 expect.objectContaining({
                     userId,
                     currency,
@@ -168,7 +166,6 @@ describe('ClaimCompService', () => {
             const wallet = createMockWallet(100);
             const savedWallet = createMockWallet(80, 20);
 
-            mockRepository.acquireLock.mockResolvedValue(undefined);
             mockRepository.findByUserIdAndCurrency.mockResolvedValue(wallet);
             mockRepository.save.mockResolvedValue(savedWallet);
             mockRepository.createTransaction.mockResolvedValue({ id: BigInt(10) } as any);

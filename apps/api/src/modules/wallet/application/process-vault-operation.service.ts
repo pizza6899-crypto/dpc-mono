@@ -7,6 +7,7 @@ import { WALLET_TRANSACTION_REPOSITORY } from '../ports/out/wallet-transaction.r
 import type { WalletTransactionRepositoryPort } from '../ports/out/wallet-transaction.repository.port';
 import { UserWallet, WalletTransaction, WalletNotFoundException } from '../domain';
 import { Prisma } from '@prisma/client';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 export enum VaultOperation {
     DEPOSIT = 'DEPOSIT',   // Cash -> Vault
@@ -32,6 +33,7 @@ export class ProcessVaultOperationService {
         private readonly walletRepository: UserWalletRepositoryPort,
         @Inject(WALLET_TRANSACTION_REPOSITORY)
         private readonly transactionRepository: WalletTransactionRepositoryPort,
+        private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
     @Transactional()
@@ -41,7 +43,9 @@ export class ProcessVaultOperationService {
         }
 
         // 1. Lock & Get Wallet
-        await this.walletRepository.acquireLock(userId);
+        await this.advisoryLockService.acquireLock(LockNamespace.USER_WALLET, userId.toString(), {
+            throwThrottleError: true,
+        });
         const wallet = await this.walletRepository.findByUserIdAndCurrency(userId, currency);
         if (!wallet) {
             throw new WalletNotFoundException(userId, currency);

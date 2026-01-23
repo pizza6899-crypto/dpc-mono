@@ -5,6 +5,7 @@ import { COMP_REPOSITORY } from '../ports/repository.token';
 import type { CompRepositoryPort } from '../ports';
 import { CompWallet, CompTransaction, CompNotFoundException } from '../domain';
 import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 interface DeductCompParams {
     userId: bigint;
@@ -21,6 +22,7 @@ export class DeductCompService {
         @Inject(COMP_REPOSITORY)
         private readonly compRepository: CompRepositoryPort,
         private readonly analyticsQueueService: AnalyticsQueueService,
+        private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
     @Transactional()
@@ -28,7 +30,9 @@ export class DeductCompService {
         const { userId, currency, amount, description } = params;
 
         // 0. Acquire Lock
-        await this.compRepository.acquireLock(userId);
+        await this.advisoryLockService.acquireLock(LockNamespace.COMP_WALLET, userId.toString(), {
+            throwThrottleError: true,
+        });
 
         // 1. Get Wallet
         let wallet = await this.compRepository.findByUserIdAndCurrency(userId, currency);

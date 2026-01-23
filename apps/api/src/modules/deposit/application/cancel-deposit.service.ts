@@ -3,6 +3,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
 import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 interface CancelDepositParams {
     id: bigint;
@@ -14,14 +15,17 @@ export class CancelDepositService {
     constructor(
         @Inject(DEPOSIT_DETAIL_REPOSITORY)
         private readonly depositRepository: DepositDetailRepositoryPort,
+        private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
     @Transactional()
     async execute(params: CancelDepositParams): Promise<void> {
         const { id, userId } = params;
 
-        // 1. 락 획득
-        await this.depositRepository.acquireDepositLock(id);
+        // 1. 락 획득 (DB Advisory Lock)
+        await this.advisoryLockService.acquireLock(LockNamespace.DEPOSIT, id.toString(), {
+            throwThrottleError: true,
+        });
 
         // 2. DepositDetail 조회 (본인 것만)
         const deposit = await this.depositRepository.findByIdAndUserId(id, userId);

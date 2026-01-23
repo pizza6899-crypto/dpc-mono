@@ -5,7 +5,6 @@ import { CompTransaction } from '../domain/model/comp-transaction.entity';
 export interface CompRepositoryPort {
     findByUserIdAndCurrency(userId: bigint, currency: ExchangeCurrencyCode): Promise<CompWallet | null>;
     save(wallet: CompWallet): Promise<CompWallet>;
-    acquireLock(userId: bigint): Promise<void>;
     createTransaction(transaction: CompTransaction): Promise<CompTransaction>;
     createMainTransaction(data: {
         userId: bigint;

@@ -8,6 +8,7 @@ import { USER_TIER_REPOSITORY, TIER_REPOSITORY, TIER_HISTORY_REPOSITORY } from '
 import { UserTierNotFoundException } from '../domain/tier.exception';
 import { TierChangeType, TierHistory } from '../domain/model/tier-history.entity';
 import { Tier } from '../domain/model/tier.entity';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 @Injectable()
 export class AddUserRollingService {
@@ -18,6 +19,7 @@ export class AddUserRollingService {
         private readonly tierRepository: TierRepositoryPort,
         @Inject(TIER_HISTORY_REPOSITORY)
         private readonly tierHistoryRepository: TierHistoryRepositoryPort,
+        private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
     @Transactional()
@@ -26,7 +28,9 @@ export class AddUserRollingService {
         amount: Prisma.Decimal,
     ): Promise<void> {
         // 1. Lock UserTier
-        await this.userTierRepository.acquireLock(userId);
+        await this.advisoryLockService.acquireLock(LockNamespace.USER_TIER, userId.toString(), {
+            throwThrottleError: true
+        });
 
         // 2. Fetch UserTier
         const userTier = await this.userTierRepository.findByUserId(userId);

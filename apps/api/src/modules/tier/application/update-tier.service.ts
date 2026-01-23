@@ -4,6 +4,7 @@ import { Tier } from '../domain';
 import type { TierRepositoryPort } from '../ports/tier.repository.port';
 import { TIER_REPOSITORY } from '../ports/repository.token';
 import { TierNotFoundException, TierException } from '../domain/tier.exception';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 interface UpdateTierCommand {
     id: bigint;
@@ -21,12 +22,15 @@ export class UpdateTierService {
     constructor(
         @Inject(TIER_REPOSITORY)
         private readonly tierRepository: TierRepositoryPort,
+        private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
     @Transactional()
     async execute(command: UpdateTierCommand): Promise<Tier> {
         // Serializes tier updates to prevent concurrent duplicates/race conditions
-        await this.tierRepository.acquireGlobalLock();
+        await this.advisoryLockService.acquireLock(LockNamespace.TIER_CREATION, '0', {
+            throwThrottleError: true
+        });
 
         const tier = await this.tierRepository.findById(command.id);
         if (!tier) {

@@ -3,6 +3,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
 import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 interface RejectDepositParams {
   id: bigint;
@@ -21,6 +22,7 @@ export class RejectDepositService {
   constructor(
     @Inject(DEPOSIT_DETAIL_REPOSITORY)
     private readonly depositRepository: DepositDetailRepositoryPort,
+    private readonly advisoryLockService: AdvisoryLockService,
   ) { }
 
   @Transactional()
@@ -28,7 +30,9 @@ export class RejectDepositService {
     const { id, failureReason, adminId } = params;
 
     // 락 획득 (DB Advisory Lock)
-    await this.depositRepository.acquireDepositLock(id);
+    await this.advisoryLockService.acquireLock(LockNamespace.DEPOSIT, id.toString(), {
+      throwThrottleError: true,
+    });
 
     // 1. DepositDetail 조회
     const deposit = await this.depositRepository.getById(id, {

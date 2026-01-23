@@ -1,12 +1,9 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { UserTierRepositoryPort } from '../ports/user-tier.repository.port';
 import { UserTierMapper } from './user-tier.mapper';
 import { UserTier } from '../domain';
 import { TierException } from '../domain/tier.exception';
-import { LockNamespace } from 'src/common/concurrency/lock-namespace';
-import { DomainException } from 'src/common/exception/domain.exception';
-import { MessageCode } from '@repo/shared';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 
 @Injectable()
@@ -73,30 +70,6 @@ export class UserTierRepository implements UserTierRepositoryPort {
         }));
     }
 
-    async acquireLock(userId: bigint): Promise<void> {
-        try {
-            // Set lock timeout to 3 seconds for current transaction
-            await this.tx.$executeRaw`SET LOCAL lock_timeout = '3s'`;
-
-            // Acquire advisory lock using USER_TIER namespace and userId
-            await this.tx.$executeRaw`SELECT pg_advisory_xact_lock(('x' || substr(md5(${LockNamespace.USER_TIER}::text || ${userId.toString()}), 1, 16))::bit(64)::bigint)`;
-        } catch (error: any) {
-            const isLockTimeout =
-                error.code === '55P03' ||
-                error.meta?.code === '55P03' ||
-                error.message?.includes('55P03') ||
-                error.message?.includes('lock timeout');
-
-            if (isLockTimeout) {
-                throw new DomainException(
-                    'User tier is being updated by another process. Please try again.',
-                    MessageCode.THROTTLE_TOO_MANY_REQUESTS,
-                    HttpStatus.TOO_MANY_REQUESTS,
-                );
-            }
-            throw error;
-        }
-    }
 
     async findManyByTierId(tierId: bigint, skip: number, take: number): Promise<[UserTier[], number]> {
         const [items, total] = await Promise.all([

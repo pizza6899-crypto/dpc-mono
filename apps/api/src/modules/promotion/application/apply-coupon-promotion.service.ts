@@ -8,6 +8,7 @@ import { PROMOTION_REPOSITORY } from '../ports/out';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
 import { CreateWageringRequirementService } from '../../wagering/application/create-wagering-requirement.service';
 import type { RequestClientInfo } from 'src/common/http/types';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
 import { UpdateOperation, WalletActionName } from '../../wallet/domain';
 import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
@@ -37,6 +38,7 @@ export class ApplyCouponPromotionService {
         private readonly createWageringRequirementService: CreateWageringRequirementService,
         private readonly updateUserBalanceService: UpdateUserBalanceService,
         private readonly sendAlertService: SendAlertService,
+        private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
     @Transactional()
@@ -50,7 +52,9 @@ export class ApplyCouponPromotionService {
         const userId = user.id;
 
         // 0. 락 획득 (동시성 제어)
-        await this.repository.acquireLock(userId);
+        await this.advisoryLockService.acquireLock(LockNamespace.PROMOTION, userId.toString(), {
+            throwThrottleError: true,
+        });
 
         // 1. 프로모션 조회 (코드로 조회)
         const promotion = await this.repository.findByCode(code);

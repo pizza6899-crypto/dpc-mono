@@ -24,6 +24,7 @@ import { CheckEligiblePromotionsService } from '../../promotion/application/chec
 import { PROMOTION_REPOSITORY } from '../../promotion/ports/out';
 import type { PromotionRepositoryPort } from '../../promotion/ports/out/promotion.repository.port';
 import { Transactional } from '@nestjs-cls/transactional';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 interface CreateBankDepositParams {
     userId: bigint;
@@ -50,6 +51,7 @@ export class CreateBankDepositService {
         @Inject(PROMOTION_REPOSITORY)
         private readonly promotionRepository: PromotionRepositoryPort,
         private readonly promotionsService: CheckEligiblePromotionsService,
+        private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
     @Transactional()
@@ -65,7 +67,9 @@ export class CreateBankDepositService {
         } = params;
 
         // 락 획득 (DB Advisory Lock)
-        await this.depositRepository.acquireUserLock(userId);
+        await this.advisoryLockService.acquireLock(LockNamespace.USER_DEPOSIT, userId.toString(), {
+            throwThrottleError: true,
+        });
 
         // 0. 중복 입금 신청 확인
         const hasPendingDeposit = await this.depositRepository.existsPendingByUserId(userId);

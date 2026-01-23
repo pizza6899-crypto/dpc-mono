@@ -1,8 +1,8 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { WithdrawalDetail } from '../domain';
 import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 export interface ApproveWithdrawalParams {
     withdrawalId: bigint;
@@ -21,11 +21,17 @@ export class ApproveWithdrawalService {
     constructor(
         @Inject(WITHDRAWAL_REPOSITORY)
         private readonly repository: WithdrawalRepositoryPort,
+        private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
     @Transactional()
     async execute(params: ApproveWithdrawalParams): Promise<ApproveWithdrawalResult> {
         const { withdrawalId, adminId, note } = params;
+
+        // 0. 락 획득 (출금 건별 동시 처리 방지)
+        await this.advisoryLockService.acquireLock(LockNamespace.WITHDRAWAL, withdrawalId.toString(), {
+            throwThrottleError: true,
+        });
 
         // 1. 출금 조회
         const withdrawal = await this.repository.getById(withdrawalId);
