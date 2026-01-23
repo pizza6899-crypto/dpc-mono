@@ -22,16 +22,16 @@ describe('EarnCompService', () => {
     const currency = ExchangeCurrencyCode.USDT;
 
     const createMockWallet = (balance: number = 0, totalEarned: number = 0): CompWallet => {
-        return new CompWallet(
-            BigInt(1),
+        return CompWallet.rehydrate({
+            id: BigInt(1),
             userId,
             currency,
-            new Prisma.Decimal(balance),
-            new Prisma.Decimal(totalEarned),
-            new Prisma.Decimal(0),
-            new Date(),
-            new Date(),
-        );
+            balance: new Prisma.Decimal(balance),
+            totalEarned: new Prisma.Decimal(totalEarned),
+            totalUsed: new Prisma.Decimal(0),
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        });
     };
 
     beforeEach(async () => {
