@@ -13,7 +13,7 @@ import { GameTransaction } from '../domain/model/game-transaction.entity';
 import { CheckCasinoBalanceService } from './check-casino-balance.service';
 import { GameRound } from '../domain/model/game-round.entity';
 
-export interface ProcessCasinoWinCommand {
+export interface ProcessCasinoCreditCommand {
     session: CasinoGameSession;
     amount: Prisma.Decimal;
     transactionId: string;
@@ -27,13 +27,13 @@ export interface ProcessCasinoWinCommand {
     description?: string;
 }
 
-export interface ProcessCasinoWinResult {
+export interface ProcessCasinoCreditResult {
     balance: Prisma.Decimal;
 }
 
 @Injectable()
-export class ProcessCasinoWinService {
-    private readonly logger = new Logger(ProcessCasinoWinService.name);
+export class ProcessCasinoCreditService {
+    private readonly logger = new Logger(ProcessCasinoCreditService.name);
 
     constructor(
         private readonly snowflakeService: SnowflakeService,
@@ -46,7 +46,7 @@ export class ProcessCasinoWinService {
     ) { }
 
     @Transactional()
-    async execute(command: ProcessCasinoWinCommand): Promise<ProcessCasinoWinResult> {
+    async execute(command: ProcessCasinoCreditCommand): Promise<ProcessCasinoCreditResult> {
         const { session, amount, transactionId, roundId, gameId, winTime, provider, isCancel, isJackpot, isBonus, description } = command;
 
         // 1. Acquire Advisory Lock (Round Level)
@@ -83,6 +83,7 @@ export class ProcessCasinoWinService {
                 session.usdExchangeRate,
                 session.compRate,
                 winTime,
+                true, // isOrphaned: 베팅 없이 당첨/환불/보너스만 들어온 경우
             );
             await this.gameRoundRepository.save(round);
         }
@@ -141,6 +142,7 @@ export class ProcessCasinoWinService {
                 gameTransactionId: String(newTxId),
                 description,
                 provider,
+                isOrphaned: round.isOrphaned,
             },
         });
 
@@ -161,12 +163,20 @@ export class ProcessCasinoWinService {
         await this.gameTransactionRepository.save(winTx);
 
         // 6. 라운드 통계 업데이트
-        if (!isCancel) {
-            await this.gameRoundRepository.increaseStats(round.id, round.startedAt, {
-                winAmount: walletAmount,
-                gameWinAmount: amount,
-            });
+        const statsDelta: any = {};
+        if (isCancel) {
+            statsDelta.refundAmount = walletAmount;
+            statsDelta.gameRefundAmount = amount;
+        } else if (isJackpot) {
+            statsDelta.jackpotAmount = walletAmount;
+            statsDelta.gameJackpotAmount = amount;
+        } else {
+            // General Win & Bonus
+            statsDelta.winAmount = walletAmount;
+            statsDelta.gameWinAmount = amount;
         }
+
+        await this.gameRoundRepository.increaseStats(round.id, round.startedAt, statsDelta);
 
         // 7. Return Result
         const balanceInGameCurrency = updatedWallet.totalAvailableBalance.mul(session.exchangeRate);

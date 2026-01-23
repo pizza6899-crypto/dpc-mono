@@ -10,7 +10,7 @@ import { CasinoErrorCode } from '../../../constants/casino-error-codes';
 import { CheckCasinoBalanceService } from '../../../application/check-casino-balance.service';
 import { FindCasinoGameSessionService } from '../../../game-session/application/find-casino-game-session.service';
 import { ProcessCasinoBetService } from '../../../application/process-casino-bet.service';
-import { ProcessCasinoWinService } from '../../../application/process-casino-win.service';
+import { ProcessCasinoCreditService } from '../../../application/process-casino-credit.service';
 import { type GamingCurrencyCode } from 'src/utils/currency.util';
 import { BonusRequestDto, BonusResponseDto, CreditRequestDto, DebitRequestDto, GetWhitecliffBalanceRequestDto, GetWhitecliffBalanceResponseDto, TransactionResponseDto } from '../dtos';
 
@@ -24,7 +24,7 @@ export class WhitecliffCallbackService {
     private readonly findCasinoGameSessionService: FindCasinoGameSessionService,
     private readonly checkCasinoBalanceService: CheckCasinoBalanceService,
     private readonly processCasinoBetService: ProcessCasinoBetService,
-    private readonly processCasinoWinService: ProcessCasinoWinService,
+    private readonly processCasinoCreditService: ProcessCasinoCreditService,
   ) { }
 
   /**
@@ -148,7 +148,7 @@ export class WhitecliffCallbackService {
       // credit_amount가 포함된 경우 추가적인 당첨 지급 처리
       let finalBalance = result.balance;
       if (body.credit_amount && body.credit_amount > 0) {
-        const winResult = await this.processCasinoWinService.execute({
+        const winResult = await this.processCasinoCreditService.execute({
           session: session,
           amount: new Prisma.Decimal(body.credit_amount),
           transactionId: `${txn_id}_WIN`, // 겹치지 않게 가공
@@ -198,7 +198,7 @@ export class WhitecliffCallbackService {
       const winTime = credit_time ? new Date(credit_time) : new Date();
       const provider = prd_id ? this.whitecliffMapperService.fromWhitecliffProvider(prd_id) : null;
 
-      const result = await this.processCasinoWinService.execute({
+      const result = await this.processCasinoCreditService.execute({
         session: session,
         amount: new Prisma.Decimal(amount),
         transactionId: txn_id,
@@ -245,7 +245,7 @@ export class WhitecliffCallbackService {
 
       const provider = prd_id ? this.whitecliffMapperService.fromWhitecliffProvider(prd_id) : null;
 
-      const result = await this.processCasinoWinService.execute({
+      const result = await this.processCasinoCreditService.execute({
         session: session,
         amount: new Prisma.Decimal(amount),
         transactionId: txn_id,

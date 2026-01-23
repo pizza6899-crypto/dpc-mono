@@ -338,6 +338,10 @@ model GameRoundV2 {
   totalWinAmount            Decimal @default(0) @map("total_win_amount") @db.Decimal(32, 18) // Wallet Currency 기준
   totalGameBetAmount        Decimal @default(0) @map("total_game_bet_amount") @db.Decimal(32, 18) // Game Currency 기준
   totalGameWinAmount        Decimal @default(0) @map("total_game_win_amount") @db.Decimal(32, 18) // Game Currency 기준
+  totalRefundAmount         Decimal @default(0) @map("total_refund_amount") @db.Decimal(32, 18) // Wallet Currency 기준 (환불)
+  totalGameRefundAmount     Decimal @default(0) @map("total_game_refund_amount") @db.Decimal(32, 18) // Game Currency 기준 (환불)
+  totalJackpotAmount        Decimal @default(0) @map("total_jackpot_amount") @db.Decimal(32, 18) // Wallet Currency 기준 (잭팟 당첨금)
+  totalGameJackpotAmount    Decimal @default(0) @map("total_game_jackpot_amount") @db.Decimal(32, 18) // Game Currency 기준 (잭팟 당첨금)
   jackpotContributionAmount Decimal @default(0) @map("jackpot_contribution_amount") @db.Decimal(32, 18) // 잭팟 기여금 (통계)
   compEarned                Decimal @default(0) @map("comp_earned") @db.Decimal(32, 18) // 적립된 콤프 (통계)
 
@@ -345,6 +349,7 @@ model GameRoundV2 {
   startedAt   DateTime  @default(now()) @map("started_at")
   completedAt DateTime? @map("completed_at")
   isCompleted Boolean   @default(false) @map("is_completed")
+  isOrphaned  Boolean   @default(false) @map("is_orphaned") // 베팅 없이 생성된 라운드 여부 (Orphaned Round)
 
   // Relations
   transactions GameTransaction[]

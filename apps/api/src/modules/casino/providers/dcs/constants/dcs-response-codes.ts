@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { DcsResponseDataDto } from '../dtos/callback.dto';
+import { DcsResponseDataDto } from '../dtos';
 
 /**
  * DCS Seamless Wallet API Response Codes

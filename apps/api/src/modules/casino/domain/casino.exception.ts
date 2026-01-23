@@ -23,3 +23,13 @@ export class UserBalanceNotFoundException extends CasinoException {
         );
     }
 }
+
+export class CasinoGameRoundException extends CasinoException {
+    constructor(public readonly casinoErrorCode: string, message: string) {
+        super(
+            `${message} (Code: ${casinoErrorCode})`,
+            (MessageCode as any).INVALID_REQUEST ?? MessageCode.USER_NOT_FOUND, // Fallback to safe code
+            HttpStatus.BAD_REQUEST,
+        );
+    }
+}

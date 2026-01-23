@@ -31,6 +31,12 @@ export interface GameRoundRepositoryPort {
         winAmount?: Prisma.Decimal;
         gameBetAmount?: Prisma.Decimal;
         gameWinAmount?: Prisma.Decimal;
+        refundAmount?: Prisma.Decimal;
+        gameRefundAmount?: Prisma.Decimal;
+        jackpotAmount?: Prisma.Decimal;
+        gameJackpotAmount?: Prisma.Decimal;
+        compEarned?: Prisma.Decimal;
+        jackpotContributionAmount?: Prisma.Decimal;
     }): Promise<void>;
 
     /**

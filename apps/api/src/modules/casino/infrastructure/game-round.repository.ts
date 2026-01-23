@@ -86,12 +86,24 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
         winAmount?: Prisma.Decimal;
         gameBetAmount?: Prisma.Decimal;
         gameWinAmount?: Prisma.Decimal;
+        refundAmount?: Prisma.Decimal;
+        gameRefundAmount?: Prisma.Decimal;
+        jackpotAmount?: Prisma.Decimal;
+        gameJackpotAmount?: Prisma.Decimal;
+        compEarned?: Prisma.Decimal;
+        jackpotContributionAmount?: Prisma.Decimal;
     }): Promise<void> {
         const updateData: any = {};
         if (delta.betAmount) updateData.totalBetAmount = { increment: delta.betAmount };
         if (delta.winAmount) updateData.totalWinAmount = { increment: delta.winAmount };
         if (delta.gameBetAmount) updateData.totalGameBetAmount = { increment: delta.gameBetAmount };
         if (delta.gameWinAmount) updateData.totalGameWinAmount = { increment: delta.gameWinAmount };
+        if (delta.refundAmount) updateData.totalRefundAmount = { increment: delta.refundAmount };
+        if (delta.gameRefundAmount) updateData.totalGameRefundAmount = { increment: delta.gameRefundAmount };
+        if (delta.jackpotAmount) updateData.totalJackpotAmount = { increment: delta.jackpotAmount };
+        if (delta.gameJackpotAmount) updateData.totalGameJackpotAmount = { increment: delta.gameJackpotAmount };
+        if (delta.compEarned) updateData.compEarned = { increment: delta.compEarned };
+        if (delta.jackpotContributionAmount) updateData.jackpotContributionAmount = { increment: delta.jackpotContributionAmount };
 
         if (Object.keys(updateData).length === 0) return;
 
