@@ -114,7 +114,7 @@ export class UpdateUserBalanceService {
             operation: UpdateOperation,
             balanceType: WalletBalanceType
         }
-    ): any {
+    ): AnyWalletTransactionMetadata {
         const baseMetadata = context.metadata || {};
 
         // Calculate detailed balance changes
@@ -131,22 +131,21 @@ export class UpdateUserBalanceService {
             bonusAfterAmount: balanceInfo.after.bonus.toString(),
         };
 
-        if (type === WalletTransactionType.ADJUSTMENT) {
-            return {
-                ...baseMetadata,
-                adminId: context.adminUserId?.toString() || 'SYSTEM',
-                reasonCode: context.reasonCode || AdjustmentReasonCode.OTHER,
-                internalNote: context.internalNote,
-                actionName: context.actionName,
-                balanceDetail,
-            };
-        }
-
-        return {
+        const result: any = {
             ...baseMetadata,
-            description: context.internalNote || context.actionName,
             balanceDetail,
         };
+
+        if (type === WalletTransactionType.ADJUSTMENT) {
+            result.adminId = context.adminUserId?.toString() || 'SYSTEM';
+            result.reasonCode = context.reasonCode || AdjustmentReasonCode.OTHER;
+            result.internalNote = context.internalNote;
+            result.actionName = context.actionName;
+        } else {
+            result.description = context.internalNote || context.actionName;
+        }
+
+        return result as AnyWalletTransactionMetadata;
     }
 
     private calculateBalanceAfter(

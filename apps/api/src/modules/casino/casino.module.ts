@@ -82,6 +82,8 @@ import { ProcessCasinoCreditService } from './application/process-casino-credit.
     CheckCasinoBalanceService,
     ProcessCasinoBetService,
     ProcessCasinoCreditService,
+    GAME_ROUND_REPOSITORY_TOKEN,
+    GAME_TRANSACTION_REPOSITORY_TOKEN,
   ],
 })
 export class CasinoModule { }

@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Inject } from '@nestjs/common';
 import { EnvService } from 'src/common/env/env.service';
 import {
   WagerRequestDto,
@@ -35,6 +35,9 @@ import { FindCasinoGameSessionService } from '../../../game-session/application/
 import { CasinoErrorCode } from '../../../constants/casino-error-codes';
 import { InsufficientBalanceException } from 'src/modules/wallet/domain/wallet.exception';
 import { ProcessCasinoBetService } from '../../../application/process-casino-bet.service';
+import { ProcessCasinoCreditService } from '../../../application/process-casino-credit.service';
+import { GAME_ROUND_REPOSITORY_TOKEN } from '../../../ports/out/game-round.repository.token';
+import { type GameRoundRepositoryPort } from '../../../ports/out/game-round.repository.port';
 
 @Injectable()
 export class DcsCallbackService {
@@ -47,8 +50,32 @@ export class DcsCallbackService {
     private readonly findCasinoGameSessionService: FindCasinoGameSessionService,
     private readonly checkCasinoBalanceService: CheckCasinoBalanceService,
     private readonly processCasinoBetService: ProcessCasinoBetService,
+    private readonly processCasinoCreditService: ProcessCasinoCreditService,
+    @Inject(GAME_ROUND_REPOSITORY_TOKEN)
+    private readonly gameRoundRepository: GameRoundRepositoryPort,
   ) {
     this.dcsConfig = this.envService.dcs;
+  }
+
+  /**
+   * 세션 조회 헬퍼
+   */
+  private async getSession(body: any): Promise<any> {
+    if (body.token) {
+      const session = await this.findCasinoGameSessionService.findByToken(
+        body.token,
+      );
+      if (session) return session;
+    }
+
+    // token으로 못 찾거나 없는 경우 brand_uid(user id)로 시도
+    if (body.brand_uid && /^\d+$/.test(body.brand_uid)) {
+      return await this.findCasinoGameSessionService.findRecent(
+        BigInt(body.brand_uid),
+        GameAggregatorType.DC,
+      );
+    }
+    return null;
   }
 
   /**
@@ -179,8 +206,7 @@ export class DcsCallbackService {
       if (error) return error;
 
       // 2. 세션 조회
-      const session =
-        await this.findCasinoGameSessionService.findByToken(body.token);
+      const session = await this.getSession(body);
       if (!session) {
         this.logger.warn(`DCS Wager - Session not found: token=${body.token}`);
         return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
@@ -227,7 +253,104 @@ export class DcsCallbackService {
   async cancelWager(
     body: CancelWagerRequestDto,
   ): Promise<CancelWagerResponseDto> {
-    throw new Error('Cancel Wager not implemented');
+    try {
+      const error = this.verifyAndValidate(
+        body,
+        ['brand_id', 'wager_id', 'round_id', 'sign', 'wager_type'],
+        [body.wager_id],
+      );
+      if (error) return error;
+
+      const session = await this.getSession(body);
+      if (!session) return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
+
+      if (body.wager_type === 1) {
+        // Cancel Wager (Refund)
+
+        /**
+         * TODO: [Refactoring] 리포지토리 직접 접근 및 환불 로직 분리
+         * 현재는 구현 편의상 Controller/Service 레이어에서 Repository를 직접 호출하여
+         * 라운드를 조회하고 환불 금액을 계산하고 있습니다.
+         * 
+         * 추후 다른 프로바이더에서도 유사한 '조회 후 전액 환불' 로직이 반복된다면,
+         * 이를 `ProcessCasinoRefundService`와 같은 별도 Domain Service로 분리하여
+         * 비즈니스 로직(환불 정책, 검증)을 캡슐화하는 것이 좋습니다.
+         */
+
+        // round_id와 시간 윈도우로 라운드 조회
+        // 시간 정보가 요청에 없으면 현재 시간 기준으로 조회하거나, 시간 무관하게 검색해야 할 수도 있음.
+        // 여기서는 일단 transaction_time이 있다고 가정하거나(문서에 따름), 없으면 현재 시간 기준 하루 전까지 검색.
+        const referenceTime = body.transaction_time
+          ? new Date(body.transaction_time)
+          : new Date();
+
+        const round =
+          await this.gameRoundRepository.findByExternalIdWithWindow(
+            body.round_id,
+            GameAggregatorType.DC,
+            referenceTime, // 검색 기준 시간
+            24, // 24시간 윈도우
+          );
+
+        // 라운드가 없으면 이미 취소되었거나 존재하지 않는 것으로 간주하고 성공 응답 (Idempotency)
+        if (!round) {
+          const balanceResult =
+            await this.checkCasinoBalanceService.execute(session);
+          return getDcsResponse(DcsResponseCode.SUCCESS, {
+            balance: balanceResult.balance,
+            brand_uid: session.playerName,
+            currency: body.currency,
+            wager_id: body.wager_id,
+          });
+        }
+
+        // 환불 금액: 전체 베팅 금액 (부분 취소 불가 가정)
+        // TODO: 이미 부분 환불된 경우 잔여 금액만 환불해야 하는지 확인 필요.
+        // 현재는 전체 환불 로직.
+        const refundAmount = round.totalGameBetAmount;
+
+        if (refundAmount.lte(0)) {
+          const balanceResult =
+            await this.checkCasinoBalanceService.execute(session);
+          return getDcsResponse(DcsResponseCode.SUCCESS, {
+            balance: balanceResult.balance,
+            brand_uid: session.playerName,
+            currency: body.currency,
+            wager_id: body.wager_id,
+          });
+        }
+
+        const result = await this.processCasinoCreditService.execute({
+          session,
+          amount: refundAmount,
+          transactionId: body.wager_id,
+          roundId: body.round_id,
+          gameId: round.gameId,
+          winTime: body.transaction_time
+            ? new Date(body.transaction_time)
+            : new Date(),
+          provider:
+            this.dcsMapperService.fromDcsProvider(body.provider) ||
+            GameProvider.PRAGMATIC_PLAY_SLOTS,
+          isCancel: true,
+          description: 'DCS Cancel Wager',
+        });
+
+        return getDcsResponse(DcsResponseCode.SUCCESS, {
+          balance: result.balance,
+          brand_uid: session.playerName,
+          currency: body.currency,
+          wager_id: body.wager_id,
+        });
+      } else {
+        this.logger.warn(
+          `Unsupported wager_type for cancelWager: ${body.wager_type}`,
+        );
+        return getDcsResponse(DcsResponseCode.REQUEST_PARAM_ERROR);
+      }
+    } catch (error) {
+      return this.handleError(error, body.brand_uid, body.currency);
+    }
   }
 
   /**
@@ -236,14 +359,79 @@ export class DcsCallbackService {
   async appendWager(
     body: AppendWagerRequestDto,
   ): Promise<AppendWagerResponseDto> {
-    throw new Error('Append Wager not implemented');
+    try {
+      const error = this.verifyAndValidate(
+        body,
+        ['brand_id', 'wager_id', 'round_id', 'amount', 'sign'],
+        [body.wager_id],
+      );
+      if (error) return error;
+
+      const session = await this.getSession(body);
+      if (!session) return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
+
+      // 추가 베팅 처리
+      const result = await this.processCasinoBetService.execute({
+        session: session,
+        amount: new Prisma.Decimal(body.amount),
+        transactionId: body.wager_id,
+        roundId: body.round_id, // 기존 라운드 ID 사용
+        gameId: BigInt(body.game_id),
+        betTime: new Date(), // AppendWager에는 transaction_time이 DcsTransactionBaseDto에 포함됨 (body.transaction_time 사용 가능)
+        provider:
+          this.dcsMapperService.fromDcsProvider(body.provider) ||
+          GameProvider.PRAGMATIC_PLAY_SLOTS,
+        description: body.description || 'DCS Append Wager',
+      });
+
+      return getDcsResponse(DcsResponseCode.SUCCESS, {
+        balance: result.balance,
+        brand_uid: session.playerName,
+        currency: body.currency,
+        wager_id: body.wager_id,
+      });
+    } catch (error) {
+      return this.handleError(error, body.brand_uid, body.currency);
+    }
   }
 
   /**
    * End Wager 콜백 (베팅 종료 및 지급)
    */
   async endWager(body: EndWagerRequestDto): Promise<EndWagerResponseDto> {
-    throw new Error('End Wager not implemented');
+    try {
+      const error = this.verifyAndValidate(
+        body,
+        ['brand_id', 'wager_id', 'round_id', 'amount', 'sign'],
+        [body.wager_id],
+      );
+      if (error) return error;
+
+      const session = await this.getSession(body);
+      if (!session) return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
+
+      const result = await this.processCasinoCreditService.execute({
+        session,
+        amount: new Prisma.Decimal(body.amount),
+        transactionId: body.wager_id,
+        roundId: body.round_id,
+        gameId: BigInt(0), // Round lookup will handle proper gameId if round exists
+        winTime: new Date(body.transaction_time),
+        provider:
+          this.dcsMapperService.fromDcsProvider(body.provider) ||
+          GameProvider.PRAGMATIC_PLAY_SLOTS,
+        description: 'DCS End Wager',
+      });
+
+      return getDcsResponse(DcsResponseCode.SUCCESS, {
+        balance: result.balance,
+        brand_uid: session.playerName,
+        currency: body.currency,
+        wager_id: body.wager_id,
+      });
+    } catch (error) {
+      return this.handleError(error, body.brand_uid, body.currency);
+    }
   }
 
   /**
@@ -252,7 +440,39 @@ export class DcsCallbackService {
   async freeSpinResult(
     body: FreeSpinResultRequestDto,
   ): Promise<FreeSpinResultResponseDto> {
-    throw new Error('Free Spin Result not implemented');
+    try {
+      const error = this.verifyAndValidate(
+        body,
+        ['brand_id', 'wager_id', 'round_id', 'amount', 'sign'],
+        [body.wager_id],
+      );
+      if (error) return error;
+
+      const session = await this.getSession(body);
+      if (!session) return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
+
+      const result = await this.processCasinoCreditService.execute({
+        session,
+        amount: new Prisma.Decimal(body.amount),
+        transactionId: body.wager_id,
+        roundId: body.round_id,
+        gameId: BigInt(body.game_id),
+        winTime: new Date(body.transaction_time),
+        provider:
+          this.dcsMapperService.fromDcsProvider(body.provider) ||
+          GameProvider.PRAGMATIC_PLAY_SLOTS,
+        description: body.freespin_description || 'DCS FreeSpin Result',
+      });
+
+      return getDcsResponse(DcsResponseCode.SUCCESS, {
+        balance: result.balance,
+        brand_uid: session.playerName,
+        currency: body.currency,
+        wager_id: body.wager_id,
+      });
+    } catch (error) {
+      return this.handleError(error, body.brand_uid, body.currency);
+    }
   }
 
   /**
@@ -307,7 +527,40 @@ export class DcsCallbackService {
   async promoPayout(
     body: PromoPayoutRequestDto,
   ): Promise<PromoPayoutResponseDto> {
-    throw new Error('Promo Payout not implemented');
+    try {
+      const error = this.verifyAndValidate(
+        body,
+        ['brand_id', 'trans_id', 'promotion_id', 'amount', 'sign'],
+        [body.trans_id],
+      );
+      if (error) return error;
+
+      const session = await this.getSession(body);
+      if (!session) return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
+
+      const result = await this.processCasinoCreditService.execute({
+        session,
+        amount: new Prisma.Decimal(body.amount),
+        transactionId: body.trans_id,
+        roundId: body.promotion_id, // Use promotion_id as round_id alternative
+        gameId: BigInt(0),
+        winTime: new Date(body.transaction_time),
+        provider:
+          this.dcsMapperService.fromDcsProvider(body.provider) ||
+          GameProvider.PRAGMATIC_PLAY_SLOTS,
+        isBonus: true,
+        description: `DCS Promo Payout: ${body.promotion_id}`,
+      });
+
+      return getDcsResponse(DcsResponseCode.SUCCESS, {
+        balance: result.balance,
+        brand_uid: session.playerName,
+        currency: body.currency,
+        trans_id: body.trans_id,
+      });
+    } catch (error) {
+      return this.handleError(error, body.brand_uid, body.currency);
+    }
   }
 
   /**

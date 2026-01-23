@@ -45,6 +45,7 @@ export interface CasinoWinMetadata extends BaseMetadata {
     gameTransactionId: string;
     provider: string;
     winType?: string; // e.g., 'NORMAL', 'JACKPOT'
+    isOrphaned?: boolean;
 }
 
 /**
@@ -68,10 +69,35 @@ export interface AdjustmentMetadata extends BaseMetadata {
 }
 
 /**
+ * 프로모션/쿠폰 적용 메타데이터
+ */
+export interface PromotionMetadata extends BaseMetadata {
+    promotionId: string;
+    code?: string;
+    promotionType: string;
+}
+
+/**
+ * 금고(Vault) 작업 메타데이터
+ */
+export interface VaultOperationMetadata extends BaseMetadata {
+    operation: string; // 'DEPOSIT' | 'WITHDRAW'
+    cashBefore?: string; // Optional (BalanceDetail이 없을 경우 대비)
+    cashAfter?: string;
+}
+
+/**
+ * 출금 처리/환불 메타데이터
+ */
+export interface WithdrawalMetadata extends BaseMetadata {
+    withdrawalId: string;
+    reason?: string;
+}
+
+/**
  * 기타 일반 메타데이터
  */
 export interface DefaultMetadata extends BaseMetadata {
-    [key: string]: any; // 하위 호환성 및 기타 용도 (지양해야 함)
 }
 
 /**
@@ -82,4 +108,7 @@ export type AnyWalletTransactionMetadata =
     | CasinoWinMetadata
     | StatusChangeMetadata
     | AdjustmentMetadata
+    | PromotionMetadata
+    | VaultOperationMetadata
+    | WithdrawalMetadata
     | DefaultMetadata;

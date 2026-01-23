@@ -57,24 +57,40 @@ export class ProcessVaultOperationService {
         // 3. Save Wallet
         const savedWallet = await this.walletRepository.update(wallet);
 
-        // 4. Record Transaction (Dual records suggested for clarity, but single record with metadata is fine)
-        // 여기서는 잔액이 변동된 핵심 타입(VAULT)을 기준으로 기록합니다.
-        const transaction = WalletTransaction.create({
+        // 4. Record Transactions (Dual Records for Cash & Vault)
+        // 4-1. Cash Side Transaction
+        const cashTransaction = WalletTransaction.create({
             userId,
             currency,
-            type: operation === VaultOperation.DEPOSIT ? WalletTransactionType.ADJUSTMENT : WalletTransactionType.ADJUSTMENT, // 전용 타입이 없으므로 ADJUSTMENT 활용
+            type: WalletTransactionType.ADJUSTMENT,
+            balanceType: WalletBalanceType.CASH,
+            amount: operation === VaultOperation.DEPOSIT ? amount.neg() : amount,
+            balanceAfter: wallet.cash,
+            metadata: {
+                operation,
+                description: `Vault ${operation.toLowerCase()} - Cash side`,
+                cashBefore: (operation === VaultOperation.DEPOSIT ? wallet.cash.add(amount) : wallet.cash.sub(amount)).toString(),
+                cashAfter: wallet.cash.toString(),
+            },
+        });
+        await this.transactionRepository.create(cashTransaction);
+
+        // 4-2. Vault Side Transaction
+        const vaultTransaction = WalletTransaction.create({
+            userId,
+            currency,
+            type: WalletTransactionType.ADJUSTMENT,
             balanceType: WalletBalanceType.VAULT,
             amount: operation === VaultOperation.DEPOSIT ? amount : amount.neg(),
             balanceAfter: wallet.vault,
             metadata: {
                 operation,
+                description: `Vault ${operation.toLowerCase()} - Vault side`,
                 cashBefore: (operation === VaultOperation.DEPOSIT ? wallet.cash.add(amount) : wallet.cash.sub(amount)).toString(),
                 cashAfter: wallet.cash.toString(),
-                description: `Vault ${operation.toLowerCase()} processed`,
             },
         });
-
-        await this.transactionRepository.create(transaction);
+        await this.transactionRepository.create(vaultTransaction);
 
         return savedWallet;
     }

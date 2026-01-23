@@ -3,6 +3,7 @@ import { EnvService } from 'src/common/env/env.service';
 import {
   GameAggregatorType,
   Prisma,
+  GameProvider,
 } from '@prisma/client';
 import { WhitecliffMapperService } from '../infrastructure/whitecliff-mapper.service';
 import { getCasinoErrorCode } from '../utils/whitecliff-error-response.util';
@@ -132,7 +133,7 @@ export class WhitecliffCallbackService {
       }
 
       const betTime = debit_time ? new Date(debit_time) : new Date();
-      const provider = prd_id ? this.whitecliffMapperService.fromWhitecliffProvider(prd_id) : null;
+      const provider = prd_id ? this.whitecliffMapperService.fromWhitecliffProvider(prd_id) : GameProvider.PRAGMATIC_PLAY_SLOTS;
 
       const result = await this.processCasinoBetService.execute({
         session: session,
@@ -141,7 +142,7 @@ export class WhitecliffCallbackService {
         roundId: round_id || txn_id,
         gameId: BigInt(game_id || 0),
         betTime: isNaN(betTime.getTime()) ? new Date() : betTime,
-        provider: provider || GameAggregatorType.WHITECLIFF as any,
+        provider: provider!, // Default fallback applied above
         description: desc ? JSON.stringify(desc) : 'Whitecliff Bet',
       });
 
@@ -155,8 +156,8 @@ export class WhitecliffCallbackService {
           roundId: round_id || txn_id,
           gameId: BigInt(game_id || 0),
           winTime: betTime,
-          provider: provider || GameAggregatorType.WHITECLIFF as any,
-          description: 'Whitecliff Debit-Credit',
+          provider: provider!,
+          description: 'Whitecliff Debit-Credit Auto Win',
         });
         finalBalance = winResult.balance;
       }
@@ -196,7 +197,7 @@ export class WhitecliffCallbackService {
       }
 
       const winTime = credit_time ? new Date(credit_time) : new Date();
-      const provider = prd_id ? this.whitecliffMapperService.fromWhitecliffProvider(prd_id) : null;
+      const provider = prd_id ? this.whitecliffMapperService.fromWhitecliffProvider(prd_id) : GameProvider.PRAGMATIC_PLAY_SLOTS;
 
       const result = await this.processCasinoCreditService.execute({
         session: session,
@@ -205,7 +206,7 @@ export class WhitecliffCallbackService {
         roundId: round_id || txn_id,
         gameId: BigInt(game_id || 0),
         winTime: isNaN(winTime.getTime()) ? new Date() : winTime,
-        provider: provider || GameAggregatorType.WHITECLIFF as any,
+        provider: provider!,
         isCancel: is_cancel === 1,
         description: desc ? JSON.stringify(desc) : (is_cancel === 1 ? 'Whitecliff Refund' : 'Whitecliff Win'),
       });
@@ -243,7 +244,7 @@ export class WhitecliffCallbackService {
         return { status: 0, balance: 0, error: 'INVALID_USER' };
       }
 
-      const provider = prd_id ? this.whitecliffMapperService.fromWhitecliffProvider(prd_id) : null;
+      const provider = prd_id ? this.whitecliffMapperService.fromWhitecliffProvider(prd_id) : GameProvider.PRAGMATIC_PLAY_SLOTS;
 
       const result = await this.processCasinoCreditService.execute({
         session: session,
@@ -252,7 +253,7 @@ export class WhitecliffCallbackService {
         roundId: round_id || txn_id,
         gameId: BigInt(game_id || 0),
         winTime: new Date(),
-        provider: provider || GameAggregatorType.WHITECLIFF as any,
+        provider: provider!,
         isBonus: type === 0 || type === 1,
         isJackpot: type === 2,
         description: type === 2 ? 'Whitecliff Jackpot' : 'Whitecliff Bonus',

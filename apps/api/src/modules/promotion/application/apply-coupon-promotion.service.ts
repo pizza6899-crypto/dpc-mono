@@ -14,6 +14,7 @@ import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
 import { SendAlertService } from '../../notification/alert/application/send-alert.service';
 import { NOTIFICATION_EVENTS } from '../../notification/common';
 import { ChannelType } from '@prisma/client';
+import { PromotionMetadata } from '../../wallet/domain/model/wallet-transaction-metadata';
 
 import { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 
@@ -127,7 +128,7 @@ export class ApplyCouponPromotionService {
                 promotionId: promotion.id.toString(),
                 code,
                 promotionType: 'COUPON',
-            },
+            } as PromotionMetadata,
         });
 
         // 13. UserPromotion 생성

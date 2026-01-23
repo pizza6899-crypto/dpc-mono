@@ -12,6 +12,7 @@ import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
 import { GameTransaction } from '../domain/model/game-transaction.entity';
 import { CheckCasinoBalanceService } from './check-casino-balance.service';
 import { GameRound } from '../domain/model/game-round.entity';
+import { CasinoWinMetadata } from 'src/modules/wallet/domain/model/wallet-transaction-metadata';
 
 export interface ProcessCasinoCreditCommand {
     session: CasinoGameSession;
@@ -125,6 +126,7 @@ export class ProcessCasinoCreditService {
             walletTxType = WalletTransactionType.BONUS_IN;
         }
 
+
         const updatedWallet = await this.updateUserBalanceService.updateBalance({
             userId: session.userId,
             currency: session.walletCurrency,
@@ -143,7 +145,7 @@ export class ProcessCasinoCreditService {
                 description,
                 provider,
                 isOrphaned: round.isOrphaned,
-            },
+            } as CasinoWinMetadata,
         });
 
         // 5. 카지노 엔티티 영속화

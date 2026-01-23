@@ -9,6 +9,7 @@ import { WithdrawalDetail, WithdrawalProcessingException } from '../domain';
 import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
 import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';
+import { WithdrawalMetadata } from 'src/modules/wallet/domain/model/wallet-transaction-metadata';
 
 export interface ProcessWithdrawalParams {
     withdrawalId: bigint;
@@ -143,7 +144,7 @@ export class ProcessWithdrawalService {
                 metadata: {
                     withdrawalId: withdrawal.id.toString(),
                     reason: 'PROCESSING_FAILED'
-                },
+                } as WithdrawalMetadata,
             });
 
             this.logger.log(
