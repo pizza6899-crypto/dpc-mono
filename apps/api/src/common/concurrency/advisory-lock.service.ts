@@ -28,10 +28,12 @@ export class AdvisoryLockService {
         const key = this.generateKey(namespace, id);
         try {
             // 1. 세션 범위의 락 대기 시간 설정 (기본 3초)
-            await sql`SET LOCAL lock_timeout = ${CONCURRENCY_CONSTANTS.DB_LOCK_TIMEOUT}`.execute(this.tx.$kysely);
+            // Kysely/Prisma Adapter에서 SET 구문에 파라미터 바인딩($1) 사용 시 문법 에러가 발생하므로 raw string 처리
+            await this.tx.$executeRawUnsafe(`SET LOCAL lock_timeout = '${CONCURRENCY_CONSTANTS.DB_LOCK_TIMEOUT}'`);
 
             // 2. 배타적 트랜잭션 어드바이저리 락 획득 (트랜잭션 종료 시 자동 해제)
-            await sql`SELECT pg_advisory_xact_lock(${key})`.execute(this.tx.$kysely);
+            // queryRaw는 void 반환타입 역직렬화에 실패하므로 executeRaw 사용
+            await this.tx.$executeRaw`SELECT pg_advisory_xact_lock(${key})`;
         } catch (error: any) {
             if (this.isLockTimeoutError(error)) {
                 if (options?.throwThrottleError) {
