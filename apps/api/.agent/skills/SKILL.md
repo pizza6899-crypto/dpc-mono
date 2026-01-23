@@ -56,10 +56,14 @@ When encountering a task related to the following categories, you MUST load the 
     *   Use **Global Lock** table for long-running tasks (schedulers, etc.).
 
 #### Node Identity & Snowflake
-*   **Skill Name:** `distributed_infrastructure`
-*   **Path:** `apps/api/.agent/skills/distributed-infrastructure/SKILL.md`
-*   **Key Rules:**
+**When to use**: Handling distributed node IDs or generating Snowflake unique IDs.
+*   **Skill Name**: `distributed_infrastructure`
+*   **Path**: `apps/api/.agent/skills/distributed-infrastructure/SKILL.md`
+*   **Skill Name**: `snowflake_id_generation`
+*   **Path**: `apps/api/.agent/skills/snowflake/SKILL.md`
+*   **Key Rules**:
     *   Instances must have unique node IDs (0-1023) for Snowflake generation.
+    *   Snowflake generation MUST throw `SnowflakeClockBackwardsException` on time retrograde.
 
 ### 5. Skill Management
 

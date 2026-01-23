@@ -79,10 +79,12 @@ Before finalizing, verify:
 *   [ ] **Progressive Disclosure**: Is the `SKILL.md` concise? Are detailed implementation guides moved to `references/`?
 *   [ ] **Self-Contained**: Do scripts in `scripts/` handle their own dependencies or fail gracefully?
 *   [ ] **Naming**: Does the directory name match the `name` field in frontmatter exactly?
+*   [ ] **Control Tower Sync**: Have you updated the root skill file (`apps/api/.agent/skills/SKILL.md`) to include this new/updated skill?
 *   [ ] **Context Efficiency**: Is the description optimized for the agent to know *when* to activate this skill without reading the whole file?
 
-### 5. Final Confirmation
+### 5. Final Confirmation & Root Sync
 
 Inform the user:
 *   Skill created at: `apps/api/.agent/skills/<skill-name>/`
+*   **Root Update**: Always ensure `apps/api/.agent/skills/SKILL.md` is updated to register this skill so it can be discovered by the agent.
 *   Remind them to fill in the `references/` or `scripts/` if placeholders were created.
