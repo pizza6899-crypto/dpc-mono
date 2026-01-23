@@ -1,5 +1,6 @@
 // src/modules/promotion/promotion.module.ts
 import { Module } from '@nestjs/common';
+import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { PromotionPolicy } from './domain';
 import { CheckEligiblePromotionsService } from './application/check-eligible-promotions.service';
 import { GrantPromotionBonusService } from './application/grant-promotion-bonus.service';
@@ -26,7 +27,7 @@ import { WalletModule } from '../wallet/wallet.module';
 import { NotificationModule } from '../notification/notification.module';
 
 @Module({
-  imports: [WageringModule, WalletModule, NotificationModule],
+  imports: [WageringModule, WalletModule, NotificationModule, ConcurrencyModule],
   providers: [
     PromotionPolicy,
     CheckEligiblePromotionsService,

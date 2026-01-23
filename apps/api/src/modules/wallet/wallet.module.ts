@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { FindUserWalletService } from './application/find-user-wallet.service';
 import { FindWalletTransactionHistoryService } from './application/find-wallet-transaction-history.service';
 import { UserWalletRepository } from './infrastructure/user-wallet.repository';
@@ -43,7 +44,7 @@ import { SqidsModule } from 'src/common/sqids/sqids.module';
  * - UserBalanceStats (통계는 UserStatsModule에서 관리)
  */
 @Module({
-  imports: [UserModule, SqidsModule],
+  imports: [UserModule, SqidsModule, ConcurrencyModule],
   providers: [
     {
       provide: USER_WALLET_REPOSITORY,

@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import {
   TierMapper,
   UserTierMapper,
@@ -31,7 +32,7 @@ import { UnlockUserTierService } from './application/unlock-user-tier.service';
 import { UpdateAffiliateMonthlyWagerService } from './application/update-affiliate-monthly-wager.service';
 
 @Module({
-  imports: [],
+  imports: [ConcurrencyModule],
   providers: [
     TierMapper,
     UserTierMapper,

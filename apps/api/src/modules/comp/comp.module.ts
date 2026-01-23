@@ -15,11 +15,13 @@ import { CompAdminController } from './controllers/admin/comp-admin.controller';
 import { CompStatsController } from './controllers/admin/comp-stats.controller';
 import { WalletModule } from '../wallet/wallet.module';
 import { AnalyticsModule } from '../analytics/analytics.module';
+import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 
 @Module({
     imports: [
         WalletModule,
         AnalyticsModule,
+        ConcurrencyModule,
     ],
     controllers: [
         CompUserController,

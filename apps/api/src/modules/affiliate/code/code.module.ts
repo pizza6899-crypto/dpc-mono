@@ -16,9 +16,10 @@ import { AffiliateCodeRepository } from './infrastructure/affiliate-code.reposit
 import { AffiliateCodeMapper } from './infrastructure/affiliate-code.mapper';
 import { AffiliateCodeController } from './controllers/user/affiliate-code.controller';
 import { AffiliateCodeAdminController } from './controllers/admin/affiliate-code-admin.controller';
+import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 
 @Module({
-  imports: [],
+  imports: [ConcurrencyModule],
   providers: [
     // Use Case Services
     CreateCodeService,

@@ -10,6 +10,7 @@ import { WalletModule } from '../wallet/wallet.module';
 import { PromotionModule } from '../promotion/promotion.module';
 import { WageringModule } from '../wagering/wagering.module';
 import { AnalyticsModule } from '../analytics/analytics.module';
+import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { GetDepositStatsService } from './application/get-deposit-stats.service';
 import { GetDepositsService } from './application/get-deposits.service';
 import { GetDepositDetailService } from './application/get-deposit-detail.service';
@@ -53,6 +54,7 @@ import {
     PromotionModule, // CheckEligiblePromotionsService 사용을 위해
     WageringModule,
     AnalyticsModule,
+    ConcurrencyModule,
   ],
   providers: [
     // Infrastructure (Mapper)
