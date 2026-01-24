@@ -13,7 +13,7 @@ export const GameResultFetchPolicy = {
     attempts: 10,
     delay: 5000,
     backoff: {
-        type: 'fixed' as const,
+        type: 'exponential' as const,
         delay: 5000,
     },
     limiter: {
