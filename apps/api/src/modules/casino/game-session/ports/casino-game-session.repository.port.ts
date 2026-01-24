@@ -5,4 +5,5 @@ export interface CasinoGameSessionRepositoryPort {
     findByToken(token: string): Promise<CasinoGameSession | null>;
     findByid(id: bigint): Promise<CasinoGameSession | null>;
     findRecentByUserId(userId: bigint, aggregatorType: string): Promise<CasinoGameSession | null>;
+    findRecentByPlayerName(playerName: string, aggregatorType: string): Promise<CasinoGameSession | null>;
 }

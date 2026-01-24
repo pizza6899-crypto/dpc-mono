@@ -27,6 +27,7 @@ export interface ProcessCasinoCreditCommand {
     isCancel?: boolean;
     isJackpot?: boolean;
     isBonus?: boolean;
+    isEndRound?: boolean;
     description?: string;
 }
 
@@ -58,7 +59,9 @@ export class ProcessCasinoCreditService {
         // ... (앞부분 생략: Lock, Resolve Game Round, Idempotency Check) ...
 
         // 1. Acquire Advisory Lock (Round Level)
-        await this.advisoryLockService.acquireLock(LockNamespace.GAME_ROUND, roundId, {
+        // [FIX] 애그리게이터 타입을 키에 포함하여 서로 다른 애그리게이터 간의 ID 충돌(Lock Collision)을 방지합니다.
+        const lockKey = `${session.aggregatorType}:${roundId}`;
+        await this.advisoryLockService.acquireLock(LockNamespace.GAME_ROUND, lockKey, {
             throwThrottleError: true,
         });
 
@@ -73,12 +76,19 @@ export class ProcessCasinoCreditService {
 
         if (!round) {
             this.logger.warn(`WIN 요청을 위한 라운드가 존재하지 않음: ${roundId}. 새로운 라운드 생성 시도.`);
+
+            // [FIX] 애그리게이터가 보내는 외부 ID 대신 세션에 기록된 우리 DB의 내부 PK(gameId)를 사용합니다.
+            const internalGameId = session.gameId;
+            if (!internalGameId) {
+                throw new Error(`Casino Game Session has no valid gameId: ${session.id}`);
+            }
+
             const newRoundId = this.snowflakeService.generate(winTime);
             round = GameRound.create(
                 newRoundId,
                 session.userId,
                 session.id!,
-                gameId,
+                internalGameId,
                 provider,
                 session.aggregatorType,
                 roundId,
@@ -112,8 +122,31 @@ export class ProcessCasinoCreditService {
             };
         }
 
+        // [LOGICAL FIX] 취소(CANCEL/REFUND) 요청인 경우 처리
+        let finalRefundAmount = amount;
+        if (isCancel) {
+            const originalBet = await this.gameTransactionRepository.findByExternalId(
+                transactionId,
+                GameTransactionType.BET,
+                anchorTime,
+            );
+
+            if (!originalBet) {
+                this.logger.warn(`원본 BET을 찾을 수 없는 CANCEL 요청 무시됨 (차감된 적 없음): ${transactionId}`);
+                const balanceResult = await this.checkCasinoBalanceService.execute(session);
+                return {
+                    balance: balanceResult.balance,
+                };
+            }
+
+            // [FIX] DCS 등에서 취소 금액을 보내주지 않는 경우, DB에 기록된 원본 베팅 금액을 사용합니다.
+            if (amount.isZero() && originalBet.gameAmount) {
+                finalRefundAmount = originalBet.gameAmount;
+            }
+        }
+
         // 4. 지급 처리 (현금 잔액으로 지급)
-        const walletAmount = amount.div(session.exchangeRate);
+        const walletAmount = finalRefundAmount.div(session.exchangeRate);
         const newTxId = this.snowflakeService.generate(winTime);
 
         let actionName: WalletActionName = WalletActionName.CASINO_WIN;
@@ -161,7 +194,7 @@ export class ProcessCasinoCreditService {
             txType,
             transactionId,
             walletAmount,
-            amount,
+            finalRefundAmount,
             WalletBalanceType.CASH,
             session.walletCurrency,
             winTime,
@@ -172,7 +205,7 @@ export class ProcessCasinoCreditService {
         const statsDelta: any = {};
         if (isCancel) {
             statsDelta.refundAmount = walletAmount;
-            statsDelta.gameRefundAmount = amount;
+            statsDelta.gameRefundAmount = finalRefundAmount;
         } else if (isJackpot) {
             statsDelta.jackpotAmount = walletAmount;
             statsDelta.gameJackpotAmount = amount;
@@ -184,7 +217,13 @@ export class ProcessCasinoCreditService {
 
         await this.gameRoundRepository.increaseStats(round.id, round.startedAt, statsDelta);
 
-        // [비동기] 7. 큐 처리 (결과 조회 & 후처리)
+        // 7. Round Completion 처리
+        if (command.isEndRound) {
+            round.complete();
+            await this.gameRoundRepository.save(round);
+        }
+
+        // [비동기] 8. 큐 처리 (결과 조회 & 후처리)
         // 일반 WIN 또는 CANCEL인 경우 라운드가 종료된 것으로 간주하고 후속 작업을 스케줄링합니다.
         // 잭팟이나 보너스는 라운드 진행 중에 발생할 수도 있으므로 제외할지 정책적 결정 필요 (일단 포함)
         // 여기서는 안전하게 모든 Credit 트랜잭션에 대해 후처리를 트리거하되, 잡 내부에서 완료 여부를 판단할 수도 있음.

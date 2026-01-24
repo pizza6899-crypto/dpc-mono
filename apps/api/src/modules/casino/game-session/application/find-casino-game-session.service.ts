@@ -30,4 +30,8 @@ export class FindCasinoGameSessionService {
     async findRecent(userId: bigint, aggregatorType: GameAggregatorType): Promise<CasinoGameSession | null> {
         return await this.repository.findRecentByUserId(userId, aggregatorType);
     }
+
+    async findRecentByPlayerName(playerName: string, aggregatorType: GameAggregatorType): Promise<CasinoGameSession | null> {
+        return await this.repository.findRecentByPlayerName(playerName, aggregatorType);
+    }
 }

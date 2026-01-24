@@ -24,6 +24,7 @@ export interface ProcessCasinoBetCommand {
     gameId: bigint;
     betTime: Date;
     provider: GameProvider;
+    isEndRound?: boolean;
     description?: string;
 }
 
@@ -53,7 +54,9 @@ export class ProcessCasinoBetService {
 
         // 1. Acquire Advisory Lock (Round Level)
         // Serialize requests for the same round to prevent race conditions during round creation and idempotency checks.
-        await this.advisoryLockService.acquireLock(LockNamespace.GAME_ROUND, roundId, {
+        // [FIX] 애그리게이터 타입을 키에 포함하여 서로 다른 애그리게이터 간의 ID 충돌(Lock Collision)을 방지합니다.
+        const lockKey = `${session.aggregatorType}:${roundId}`;
+        await this.advisoryLockService.acquireLock(LockNamespace.GAME_ROUND, lockKey, {
             throwThrottleError: true,
         });
 
@@ -71,13 +74,20 @@ export class ProcessCasinoBetService {
         let isNewRound = false;
 
         if (!round) {
+            // [FIX] 애그리게이터가 보내는 외부 ID 대신 세션에 기록된 우리 DB의 내부 PK(gameId)를 사용합니다.
+            // 라이브 카지노 등에서 방 이동 시에도 세션 정보를 기준으로 무결성을 유지합니다.
+            const internalGameId = session.gameId;
+            if (!internalGameId) {
+                throw new Error(`Casino Game Session has no valid gameId: ${session.id}`);
+            }
+
             // Use betTime for Snowflake ID generation timestamp
             const newRoundId = this.snowflakeService.generate(betTime);
             round = GameRound.create(
                 newRoundId,
                 session.userId,
                 session.id!,
-                gameId,
+                internalGameId,
                 provider,
                 session.aggregatorType,
                 roundId,
@@ -89,6 +99,10 @@ export class ProcessCasinoBetService {
                 betTime,
             );
             isNewRound = true;
+
+            // [FIX] 새로운 라운드인 경우, 트랜잭션 저장을 위해 라운드를 먼저 DB에 생성합니다 (외래키 제약 준수)
+            // 통계 정보는 초기값(0)인 상태로 먼저 저장됩니다.
+            await this.gameRoundRepository.save(round);
         }
 
         // 3. Idempotency Check
@@ -218,18 +232,18 @@ export class ProcessCasinoBetService {
             await this.gameTransactionRepository.save(bonusTx);
         }
 
-        // 6-2. 라운드 통계 업데이트
-        if (isNewRound) {
-            round.addBet(totalWalletAmount, amount);
+        await this.gameRoundRepository.increaseStats(round.id, round.startedAt, {
+            betAmount: totalWalletAmount,
+            gameBetAmount: amount,
+        });
+
+        // 7. Round Completion 처리
+        if (command.isEndRound) {
+            round.complete();
             await this.gameRoundRepository.save(round);
-        } else {
-            await this.gameRoundRepository.increaseStats(round.id, round.startedAt, {
-                betAmount: totalWalletAmount,
-                gameBetAmount: amount,
-            });
         }
 
-        // 7. Return Result (Total Available Balance in Game Currency)
+        // 8. Return Result (Total Available Balance in Game Currency)
         const balanceInGameCurrency = updatedWallet.totalAvailableBalance.mul(session.exchangeRate);
 
         return {

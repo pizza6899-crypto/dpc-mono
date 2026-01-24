@@ -35,9 +35,17 @@ export class CasinoGameSessionRepository
         return found ? this.mapper.toDomain(found) : null;
     }
 
-    async findRecentByUserId(userId: bigint, aggregatorType: GameAggregatorType): Promise<CasinoGameSession | null> {
+    async findRecentByUserId(userId: bigint, aggregatorType: string): Promise<CasinoGameSession | null> {
         const found = await this.tx.casinoGameSession.findFirst({
-            where: { userId, aggregatorType },
+            where: { userId, aggregatorType: aggregatorType as any },
+            orderBy: { createdAt: 'desc' },
+        });
+        return found ? this.mapper.toDomain(found) : null;
+    }
+
+    async findRecentByPlayerName(playerName: string, aggregatorType: string): Promise<CasinoGameSession | null> {
+        const found = await this.tx.casinoGameSession.findFirst({
+            where: { playerName, aggregatorType: aggregatorType as any },
             orderBy: { createdAt: 'desc' },
         });
         return found ? this.mapper.toDomain(found) : null;

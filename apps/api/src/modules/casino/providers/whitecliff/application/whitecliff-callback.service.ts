@@ -95,8 +95,13 @@ export class WhitecliffCallbackService {
         };
       }
 
-      if (sid && session.playerName !== String(user_id)) {
+      if (session.playerName !== String(user_id)) {
         this.logger.error(`❌ Balance API - user_id 불일치: sessionPlayerName=${session.playerName}, req=${user_id}`);
+        return { status: 0, balance: 0, error: 'INVALID_USER' };
+      }
+
+      if (session.gameCurrency !== currency) {
+        this.logger.error(`❌ Balance API - 통화 불일치: sessionCurrency=${session.gameCurrency}, reqCurrency=${currency}`);
         return { status: 0, balance: 0, error: 'INVALID_USER' };
       }
 
@@ -135,12 +140,22 @@ export class WhitecliffCallbackService {
         return { status: 0, balance: 0, error: 'INVALID_USER' };
       }
 
+      // [SECURITY FIX] 세션 소유 및 통화 검증
+      if (session.playerName !== String(user_id)) {
+        this.logger.error(`❌ Debit API - user_id 불일치: SessionUser=${session.playerName}, ReqUser=${user_id}`);
+        return { status: 0, balance: 0, error: 'INVALID_USER' };
+      }
+      if (session.gameCurrency !== currency) {
+        this.logger.error(`❌ Debit API - 통화 불일치: SessionCurr=${session.gameCurrency}, VerificationReqCurr=${currency}`);
+        return { status: 0, balance: 0, error: 'INVALID_USER' };
+      }
+
       const betTime = debit_time ? new Date(debit_time) : new Date();
       const provider = prd_id ? this.whitecliffMapperService.fromWhitecliffProvider(prd_id) : GameProvider.PRAGMATIC_PLAY_SLOTS;
 
       const result = await this.processCasinoBetService.execute({
         session: session,
-        amount: new Prisma.Decimal(amount),
+        amount: new Prisma.Decimal(amount.toString()),
         transactionId: txn_id,
         roundId: round_id || txn_id,
         gameId: BigInt(game_id || 0),
@@ -199,12 +214,22 @@ export class WhitecliffCallbackService {
         return { status: 0, balance: 0, error: 'INVALID_USER' };
       }
 
+      // [SECURITY FIX] 세션 소유 및 통화 검증
+      if (session.playerName !== String(user_id)) {
+        this.logger.error(`❌ Credit API - user_id 불일치: SessionUser=${session.playerName}, ReqUser=${user_id}`);
+        return { status: 0, balance: 0, error: 'INVALID_USER' };
+      }
+      if (session.gameCurrency !== currency) {
+        this.logger.error(`❌ Credit API - 통화 불일치: SessionCurr=${session.gameCurrency}, VerificationReqCurr=${currency}`);
+        return { status: 0, balance: 0, error: 'INVALID_USER' };
+      }
+
       const winTime = credit_time ? new Date(credit_time) : new Date();
       const provider = prd_id ? this.whitecliffMapperService.fromWhitecliffProvider(prd_id) : GameProvider.PRAGMATIC_PLAY_SLOTS;
 
       const result = await this.processCasinoCreditService.execute({
         session: session,
-        amount: new Prisma.Decimal(amount),
+        amount: new Prisma.Decimal(amount.toString()),
         transactionId: txn_id,
         roundId: round_id || txn_id,
         gameId: BigInt(game_id || 0),
@@ -247,11 +272,21 @@ export class WhitecliffCallbackService {
         return { status: 0, balance: 0, error: 'INVALID_USER' };
       }
 
+      // [SECURITY FIX] 세션 소유 및 통화 검증
+      if (session.playerName !== String(user_id)) {
+        this.logger.error(`❌ Bonus API - user_id 불일치: SessionUser=${session.playerName}, ReqUser=${user_id}`);
+        return { status: 0, balance: 0, error: 'INVALID_USER' };
+      }
+      if (session.gameCurrency !== currency) {
+        this.logger.error(`❌ Bonus API - 통화 불일치: SessionCurr=${session.gameCurrency}, VerificationReqCurr=${currency}`);
+        return { status: 0, balance: 0, error: 'INVALID_USER' };
+      }
+
       const provider = prd_id ? this.whitecliffMapperService.fromWhitecliffProvider(prd_id) : GameProvider.PRAGMATIC_PLAY_SLOTS;
 
       const result = await this.processCasinoCreditService.execute({
         session: session,
-        amount: new Prisma.Decimal(amount),
+        amount: new Prisma.Decimal(amount.toString()),
         transactionId: txn_id,
         roundId: round_id || txn_id,
         gameId: BigInt(game_id || 0),
