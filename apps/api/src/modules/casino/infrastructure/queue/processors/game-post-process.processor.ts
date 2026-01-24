@@ -14,6 +14,18 @@ import { AnalyticsQueueService } from 'src/modules/analytics/application';
 import { AddUserRollingService } from 'src/modules/tier/application/add-user-rolling.service';
 import { EarnCompService } from 'src/modules/comp/application/earn-comp.service';
 
+/**
+ * 게임 후처리 큐 정책
+ */
+export const GamePostProcessPolicy = {
+  attempts: 999999, // 무거운 작업이므로 성공할 때까지 무제한 시도
+  delay: 5000,
+  backoff: {
+    type: 'fixed' as const,
+    delay: 5000,
+  },
+};
+
 @Processor(CasinoQueueNames.GAME_POST_PROCESS)
 export class GamePostProcessProcessor
   extends WorkerHost

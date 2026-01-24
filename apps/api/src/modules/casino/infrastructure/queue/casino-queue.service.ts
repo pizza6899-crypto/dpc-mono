@@ -7,7 +7,8 @@ import {
     GamePostProcessData,
     GameResultFetchData,
 } from './casino-queue.types';
-import { CASINO_QUEUE_CONFIGS } from './casino-queue.constants';
+import { GameResultFetchPolicy } from './processors/game-result-fetch.processor';
+import { GamePostProcessPolicy } from './processors/game-post-process.processor';
 
 @Injectable()
 export class CasinoQueueService {
@@ -27,7 +28,7 @@ export class CasinoQueueService {
         data: GameResultFetchData,
         options?: QueueJobOptions,
     ): Promise<Job> {
-        const config = CASINO_QUEUE_CONFIGS[CasinoQueueNames.GAME_RESULT_FETCH];
+        const config = GameResultFetchPolicy;
         const jobOptions = {
             ...config,
             ...options,
@@ -52,7 +53,7 @@ export class CasinoQueueService {
         data: GamePostProcessData,
         options?: QueueJobOptions,
     ): Promise<Job> {
-        const config = CASINO_QUEUE_CONFIGS[CasinoQueueNames.GAME_POST_PROCESS];
+        const config = GamePostProcessPolicy;
         const jobOptions = {
             ...config,
             ...options,

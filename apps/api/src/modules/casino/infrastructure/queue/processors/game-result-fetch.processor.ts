@@ -5,6 +5,22 @@ import {
     CasinoQueueNames,
     GameResultFetchData,
 } from '../casino-queue.types';
+
+/**
+ * 게임 결과 조회 큐 정책
+ */
+export const GameResultFetchPolicy = {
+    attempts: 10,
+    delay: 5000,
+    backoff: {
+        type: 'fixed' as const,
+        delay: 5000,
+    },
+    limiter: {
+        max: 5,
+        duration: 2000,
+    },
+};
 import { ClsService } from 'nestjs-cls';
 import { WhitecliffFetchGameResultService } from '../../../providers/whitecliff/application/whitecliff-fetch-game-result.service';
 import { DcsFetchGameResultService } from '../../../providers/dcs/application/dcs-fetch-game-result.service';
@@ -17,10 +33,7 @@ import type { GameRoundRepositoryPort } from '../../../ports/out/game-round.repo
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
 @Processor(CasinoQueueNames.GAME_RESULT_FETCH, {
-    limiter: {
-        max: 5, // 각 프로바이더 API 호출 제한 고려 (보수적 설정)
-        duration: 2000,
-    },
+    limiter: GameResultFetchPolicy.limiter,
 })
 export class GameResultFetchProcessor extends WorkerHost {
     private readonly logger = new Logger(GameResultFetchProcessor.name);
