@@ -20,7 +20,7 @@ import { TierModule } from '../tier/tier.module';
 import { CompModule } from '../comp/comp.module';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { LaunchGameService } from './application/launch-game.service';
-import { CasinoLaunchPolicy } from './application/policies/casino-launch.policy';
+import { CasinoLaunchPolicy } from './domain/casino-launch.policy';
 import { GameRoundMapper } from './infrastructure/game-round.mapper';
 import { GameTransactionMapper } from './infrastructure/game-transaction.mapper';
 import { GameRoundRepository } from './infrastructure/game-round.repository';

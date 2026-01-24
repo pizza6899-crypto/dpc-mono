@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { CasinoGameV2 } from '../../game-catalog/domain/model/game.entity';
-import { CasinoGameProvider } from '../../aggregator/domain/model/casino-game-provider.entity';
-import { CasinoAggregator } from '../../aggregator/domain/model/casino-aggregator.entity';
+import { CasinoGameV2 } from '../game-catalog/domain/model/game.entity';
+import { CasinoGameProvider } from '../aggregator/domain/model/casino-game-provider.entity';
+import { CasinoAggregator } from '../aggregator/domain/model/casino-aggregator.entity';
 import {
     CasinoGameDisabledException,
     CasinoProviderInactiveException,
     CurrencyUnsupportedException,
-} from '../../domain/casino.exception';
+} from './casino.exception';
 import {
     CasinoAggregatorInactiveException,
     CasinoAggregatorMaintenanceException
-} from '../../aggregator/domain/casino-aggregator.exception';
+} from '../aggregator/domain/casino-aggregator.exception';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import {
     GAMING_CURRENCIES,

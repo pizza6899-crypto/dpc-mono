@@ -5,7 +5,7 @@ import { FindGameProviderByIdService } from '../aggregator/application/provider/
 import { AggregatorRegistryService } from '../aggregator/application/aggregator-registry.service';
 import { WhitecliffGameService } from '../providers/whitecliff/application/whitecliff-game.service';
 import { DcsGameService } from '../providers/dcs/application/dcs-game.service';
-import { CasinoLaunchPolicy } from './policies/casino-launch.policy';
+import { CasinoLaunchPolicy } from '../domain/casino-launch.policy';
 import { CasinoAggregatorUnsupportedException } from '../aggregator/domain/casino-aggregator.exception';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import type { RequestClientInfo } from 'src/common/http/types';
