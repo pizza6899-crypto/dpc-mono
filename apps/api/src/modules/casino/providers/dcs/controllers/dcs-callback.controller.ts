@@ -38,7 +38,7 @@ import { DcsExceptionFilter } from '../infrastructure/dcs-exception.filter';
 @ApiTags('DCS Callback')
 @Controller('dopaminedev')
 @GuestOnly()
-@UseFilters(new DcsExceptionFilter())
+@UseFilters(DcsExceptionFilter)
 @UsePipes(new DcsValidationPipe())
 export class DcsCallbackController {
   constructor(private readonly dcsCallbackService: DcsCallbackService) { }

@@ -21,7 +21,7 @@ import { WhitecliffValidationPipe } from '../infrastructure/whitecliff-validatio
 @ApiTags('Whitecliff Callback')
 @Controller('dopaminedev')
 @GuestOnly()
-@UseFilters(new WhitecliffExceptionFilter())
+@UseFilters(WhitecliffExceptionFilter)
 @UsePipes(new WhitecliffValidationPipe())
 export class WhitecliffCallbackController {
   constructor(

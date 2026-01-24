@@ -7,7 +7,10 @@ import {
     HttpStatus,
     HttpException,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Response, Request } from 'express';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
+import { RequestClientInfo } from 'src/common/http/types/client-info.types';
 
 /**
  * Whitecliff 유효성 검사 실패 예외
@@ -27,8 +30,9 @@ export class WhitecliffValidationException extends Error {
 @Catch()
 export class WhitecliffExceptionFilter implements ExceptionFilter {
     private readonly logger = new Logger(WhitecliffExceptionFilter.name);
+    constructor(private readonly dispatchLogService: DispatchLogService) { }
 
-    catch(exception: unknown, host: ArgumentsHost) {
+    async catch(exception: unknown, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
         const request = ctx.getRequest<Request>();
@@ -66,6 +70,25 @@ export class WhitecliffExceptionFilter implements ExceptionFilter {
             `[Whitecliff Exception] ${request.method} ${request.url} - ${logMessage}`,
             stackTrace,
         );
+
+        // 시스템 로그 기록 (비동기)
+        this.dispatchLogService.dispatch(
+            {
+                type: LogType.ERROR,
+                data: {
+                    errorCode: errorCode,
+                    errorMessage: logMessage,
+                    stackTrace: stackTrace,
+                    path: request.url,
+                    method: request.method,
+                    severity: 'ERROR',
+                    metadata: {
+                        requestBody: request.body,
+                    }
+                },
+            },
+            (request as any).clientInfo as RequestClientInfo,
+        ).catch((err) => this.logger.warn(`Failed to dispatch system log: ${err.message}`));
 
         // Whitecliff 규격: 항상 200 OK
         response.status(HttpStatus.OK).json({

@@ -86,6 +86,7 @@ export interface SystemErrorLogPayload {
   cfRay?: string; // CF-Ray: 요청 추적 ID
   ip?: string; // 클라이언트 IP
   userAgent?: string; // User-Agent
+  metadata?: any;
 }
 
 export interface IntegrationLogPayload {

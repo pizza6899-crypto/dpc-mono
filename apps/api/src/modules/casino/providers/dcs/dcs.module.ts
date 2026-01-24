@@ -13,6 +13,7 @@ import { DcsFetchGameResultService } from './application/dcs-fetch-game-result.s
 import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 import { WalletModule } from 'src/modules/wallet/wallet.module';
 import { CasinoModule } from '../../casino.module';
+import { DcsExceptionFilter } from './infrastructure/dcs-exception.filter';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { CasinoModule } from '../../casino.module';
     DcsCallbackService,
     DcsGameService,
     DcsFetchGameResultService,
+    DcsExceptionFilter,
   ],
   exports: [DcsGameService, DcsMapperService, DcsFetchGameResultService],
 })

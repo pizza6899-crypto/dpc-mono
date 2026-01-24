@@ -38,6 +38,8 @@ import { ProcessCasinoBetService } from '../../../application/process-casino-bet
 import { ProcessCasinoCreditService } from '../../../application/process-casino-credit.service';
 import { GAME_ROUND_REPOSITORY_TOKEN } from '../../../ports/out/game-round.repository.token';
 import { type GameRoundRepositoryPort } from '../../../ports/out/game-round.repository.port';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 
 @Injectable()
 export class DcsCallbackService {
@@ -51,6 +53,7 @@ export class DcsCallbackService {
     private readonly checkCasinoBalanceService: CheckCasinoBalanceService,
     private readonly processCasinoBetService: ProcessCasinoBetService,
     private readonly processCasinoCreditService: ProcessCasinoCreditService,
+    private readonly dispatchLogService: DispatchLogService,
     @Inject(GAME_ROUND_REPOSITORY_TOKEN)
     private readonly gameRoundRepository: GameRoundRepositoryPort,
   ) {
@@ -178,7 +181,7 @@ export class DcsCallbackService {
 
       return await this.getBalance({ ...body });
     } catch (error) {
-      return this.handleError(error, body.brand_uid, body.currency);
+      return this.handleError(error, body.brand_uid, body.currency, body);
     }
   }
 
@@ -243,7 +246,7 @@ export class DcsCallbackService {
         wager_id: body.wager_id,
       });
     } catch (error) {
-      return this.handleError(error, body.brand_uid, body.currency);
+      return this.handleError(error, body.brand_uid, body.currency, body);
     }
   }
 
@@ -349,7 +352,7 @@ export class DcsCallbackService {
         return getDcsResponse(DcsResponseCode.REQUEST_PARAM_ERROR);
       }
     } catch (error) {
-      return this.handleError(error, body.brand_uid, body.currency);
+      return this.handleError(error, body.brand_uid, body.currency, body);
     }
   }
 
@@ -391,7 +394,7 @@ export class DcsCallbackService {
         wager_id: body.wager_id,
       });
     } catch (error) {
-      return this.handleError(error, body.brand_uid, body.currency);
+      return this.handleError(error, body.brand_uid, body.currency, body);
     }
   }
 
@@ -430,7 +433,7 @@ export class DcsCallbackService {
         wager_id: body.wager_id,
       });
     } catch (error) {
-      return this.handleError(error, body.brand_uid, body.currency);
+      return this.handleError(error, body.brand_uid, body.currency, body);
     }
   }
 
@@ -471,7 +474,7 @@ export class DcsCallbackService {
         wager_id: body.wager_id,
       });
     } catch (error) {
-      return this.handleError(error, body.brand_uid, body.currency);
+      return this.handleError(error, body.brand_uid, body.currency, body);
     }
   }
 
@@ -517,7 +520,7 @@ export class DcsCallbackService {
         currency: body.currency,
       });
     } catch (error) {
-      return this.handleError(error, body.brand_uid, body.currency);
+      return this.handleError(error, body.brand_uid, body.currency, body);
     }
   }
 
@@ -559,7 +562,7 @@ export class DcsCallbackService {
         trans_id: body.trans_id,
       });
     } catch (error) {
-      return this.handleError(error, body.brand_uid, body.currency);
+      return this.handleError(error, body.brand_uid, body.currency, body);
     }
   }
 
@@ -570,6 +573,7 @@ export class DcsCallbackService {
     error: any,
     brand_uid: string,
     currency: string,
+    requestBody?: any,
   ): Promise<any> {
     this.logger.error(`[DCS] Callback Error:`, error);
 
@@ -602,26 +606,50 @@ export class DcsCallbackService {
       });
     }
 
-    switch (error.message) {
+    const dcsError = this.getDcsErrorFromMessage(error.message);
+
+    // 시스템 로그 기록 (예상된 비즈니스 에러 외의 심각한 오류나 시스템 오류 위주)
+    const isCritical = dcsError.code === DcsResponseCode.SYSTEM_ERROR ||
+      !Object.values(CasinoErrorCode).includes(error.message as any);
+
+    this.dispatchLogService.dispatch(
+      {
+        type: LogType.ERROR,
+        data: {
+          errorCode: `CASINO_DCS_${dcsError.code}`,
+          errorMessage: `[DCS Callback] ${error.message || 'Unknown Error'}`,
+          stackTrace: error.stack,
+          severity: isCritical ? 'CRITICAL' : 'ERROR',
+          metadata: {
+            requestBody,
+            brand_uid,
+            currency,
+            originalError: error.message,
+          }
+        },
+      },
+    ).catch((err) => this.logger.warn(`Failed to dispatch system log: ${err.message}`));
+
+    return getDcsResponse(dcsError.code, {
+      brand_uid,
+      currency,
+      balance: currentBalance,
+    });
+  }
+
+  private getDcsErrorFromMessage(message: string): { code: DcsResponseCode } {
+    switch (message) {
       case CasinoErrorCode.DUPLICATE_DEBIT:
       case CasinoErrorCode.DUPLICATE_CREDIT:
       case CasinoErrorCode.BONUS_ALREADY_PROCESSED:
-        return getDcsResponse(DcsResponseCode.BET_RECORD_DUPLICATE, {
-          brand_uid,
-          currency,
-          balance: currentBalance,
-        });
+        return { code: DcsResponseCode.BET_RECORD_DUPLICATE };
       case CasinoErrorCode.INVALID_USER:
       case CasinoErrorCode.USER_BALANCE_NOT_FOUND:
-        return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
+        return { code: DcsResponseCode.PLAYER_NOT_EXIST };
       case CasinoErrorCode.INVALID_TXN:
-        return getDcsResponse(DcsResponseCode.BET_RECORD_NOT_EXIST, {
-          brand_uid,
-          currency,
-          balance: currentBalance,
-        });
+        return { code: DcsResponseCode.BET_RECORD_NOT_EXIST };
       default:
-        return getDcsResponse(DcsResponseCode.SYSTEM_ERROR);
+        return { code: DcsResponseCode.SYSTEM_ERROR };
     }
   }
 }

@@ -15,6 +15,7 @@ import { WhitecliffPushedBetHistoryScheduler } from './schedulers/whitecliff-pus
 import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 import { WalletModule } from 'src/modules/wallet/wallet.module';
 import { CasinoModule } from '../../casino.module';
+import { WhitecliffExceptionFilter } from './infrastructure/whitecliff-exception.filter';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { CasinoModule } from '../../casino.module';
     WhitecliffMapperService,
     WhitecliffFetchGameResultService,
     WhitecliffPushedBetHistoryScheduler,
+    WhitecliffExceptionFilter,
   ],
   exports: [
     WhitecliffCallbackService,

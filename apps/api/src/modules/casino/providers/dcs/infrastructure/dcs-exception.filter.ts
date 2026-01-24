@@ -7,8 +7,11 @@ import {
     HttpStatus,
     HttpException,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { DcsResponseCode, getDcsResponse } from '../constants/dcs-response-codes';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
+import { RequestClientInfo } from 'src/common/http/types/client-info.types';
 
 /**
  * DCS 유효성 검사 실패 예외
@@ -29,7 +32,9 @@ export class DcsValidationException extends RegExp {
 export class DcsExceptionFilter implements ExceptionFilter {
     private readonly logger = new Logger(DcsExceptionFilter.name);
 
-    catch(exception: unknown, host: ArgumentsHost) {
+    constructor(private readonly dispatchLogService: DispatchLogService) { }
+
+    async catch(exception: unknown, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
         const request = ctx.getRequest<Request>();
@@ -66,6 +71,25 @@ export class DcsExceptionFilter implements ExceptionFilter {
             `[DCS Exception] ${request.method} ${request.url} - ${errorMessage}`,
             stackTrace,
         );
+
+        // 시스템 로그 기록 (비동기)
+        this.dispatchLogService.dispatch(
+            {
+                type: LogType.ERROR,
+                data: {
+                    errorCode: dcsError.code.toString(),
+                    errorMessage: errorMessage,
+                    stackTrace: stackTrace,
+                    path: request.url,
+                    method: request.method,
+                    severity: 'ERROR',
+                    metadata: {
+                        requestBody: request.body,
+                    }
+                },
+            },
+            (request as any).clientInfo as RequestClientInfo,
+        ).catch((err) => this.logger.warn(`Failed to dispatch system log: ${err.message}`));
 
         response.status(statusCode).json(dcsError);
     }

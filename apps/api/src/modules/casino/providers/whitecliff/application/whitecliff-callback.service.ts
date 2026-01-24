@@ -13,6 +13,8 @@ import { FindCasinoGameSessionService } from '../../../game-session/application/
 import { ProcessCasinoBetService } from '../../../application/process-casino-bet.service';
 import { ProcessCasinoCreditService } from '../../../application/process-casino-credit.service';
 import { type GamingCurrencyCode } from 'src/utils/currency.util';
+import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
+import { LogType } from 'src/modules/audit-log/domain';
 import { BonusRequestDto, BonusResponseDto, CreditRequestDto, DebitRequestDto, GetWhitecliffBalanceRequestDto, GetWhitecliffBalanceResponseDto, TransactionResponseDto } from '../dtos';
 
 @Injectable()
@@ -26,6 +28,7 @@ export class WhitecliffCallbackService {
     private readonly checkCasinoBalanceService: CheckCasinoBalanceService,
     private readonly processCasinoBetService: ProcessCasinoBetService,
     private readonly processCasinoCreditService: ProcessCasinoCreditService,
+    private readonly dispatchLogService: DispatchLogService,
   ) { }
 
   /**
@@ -104,7 +107,7 @@ export class WhitecliffCallbackService {
         balance: result.balance.toNumber(),
       };
     } catch (error) {
-      return this.handleError(error, user_id, currency || 'UNKNOWN');
+      return this.handleError(error, user_id, currency || 'UNKNOWN', body);
     }
   }
 
@@ -168,7 +171,7 @@ export class WhitecliffCallbackService {
       };
 
     } catch (error) {
-      return this.handleError(error, body.user_id, currency || 'UNKNOWN');
+      return this.handleError(error, body.user_id, currency || 'UNKNOWN', body);
     }
   }
 
@@ -216,7 +219,7 @@ export class WhitecliffCallbackService {
         balance: result.balance.toNumber(),
       };
     } catch (error) {
-      return this.handleError(error, body.user_id, currency || 'UNKNOWN');
+      return this.handleError(error, body.user_id, currency || 'UNKNOWN', body);
     }
   }
 
@@ -264,7 +267,7 @@ export class WhitecliffCallbackService {
         balance: result.balance.toNumber(),
       };
     } catch (error) {
-      const errRes = await this.handleError(error, body.user_id, currency || 'UNKNOWN');
+      const errRes = await this.handleError(error, body.user_id, currency || 'UNKNOWN', body);
       return {
         status: 0,
         balance: errRes.balance || 0,
@@ -309,6 +312,7 @@ export class WhitecliffCallbackService {
     error: any,
     userId: number | string,
     currency: string,
+    requestBody?: any,
   ): Promise<any> {
     this.logger.error(`[Whitecliff] Error for user ${userId}:`, error);
 
@@ -324,6 +328,27 @@ export class WhitecliffCallbackService {
     } catch (e) { }
 
     const errorCode = getCasinoErrorCode(error);
+
+    // 시스템 로그 기록 (예상된 비즈니스 에러 외의 심각한 오류나 시스템 오류 위주)
+    const isCritical = errorCode === CasinoErrorCode.UNKNOWN_ERROR ||
+      !Object.values(CasinoErrorCode).includes(errorCode as any);
+
+    this.dispatchLogService.dispatch(
+      {
+        type: LogType.ERROR,
+        data: {
+          errorCode: `CASINO_WHITECLIFF_${errorCode}`,
+          errorMessage: `[Whitecliff Callback] ${error.message || 'Unknown Error'}`,
+          stackTrace: error.stack,
+          severity: isCritical ? 'CRITICAL' : 'ERROR',
+          metadata: {
+            requestBody,
+            userId,
+            currency,
+          }
+        },
+      },
+    ).catch((err) => this.logger.warn(`Failed to dispatch system log: ${err.message}`));
 
     switch (errorCode) {
       case CasinoErrorCode.INSUFFICIENT_FUNDS:
