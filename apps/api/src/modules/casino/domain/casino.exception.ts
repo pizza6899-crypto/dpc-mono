@@ -33,3 +33,15 @@ export class CasinoGameRoundException extends CasinoException {
         );
     }
 }
+
+export class CasinoGameDisabledException extends CasinoException {
+    constructor(gameId: bigint) {
+        super(`Casino game is disabled: ${gameId}`, MessageCode.GAME_NOT_FOUND, HttpStatus.FORBIDDEN);
+    }
+}
+
+export class CasinoProviderInactiveException extends CasinoException {
+    constructor(providerId: bigint) {
+        super(`Casino provider is inactive: ${providerId}`, MessageCode.CASINO_GAME_PROVIDER_NOT_FOUND, HttpStatus.FORBIDDEN);
+    }
+}
