@@ -9,6 +9,7 @@ import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 
 import { HttpModule } from '@nestjs/axios';
 import { NowPaymentCallbackLogService } from './application/now-payment-callback-log.service';
+import { AuditLogModule } from '../audit-log/audit-log.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { NowPaymentCallbackLogService } from './application/now-payment-callback
     PrismaModule,
 
     HttpModule,
+    AuditLogModule,
   ],
   controllers: [
     NowPaymentCallbackController,
