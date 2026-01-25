@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CasinoGameV2 } from '../game-catalog/domain/model/game.entity';
+import { CasinoGame } from '../game-catalog/domain/model/game.entity';
 import { CasinoGameProvider } from '../aggregator/domain/model/casino-game-provider.entity';
 import { CasinoAggregator } from '../aggregator/domain/model/casino-aggregator.entity';
 import {
@@ -26,7 +26,7 @@ export class CasinoLaunchPolicy {
      */
     validate(
         user: CurrentUserWithSession,
-        game: CasinoGameV2,
+        game: CasinoGame,
         provider: CasinoGameProvider,
         aggregator: CasinoAggregator,
         currencies: {

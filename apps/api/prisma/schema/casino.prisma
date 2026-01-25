@@ -21,9 +21,9 @@ model CasinoGameSession {
   usdExchangeRate        Decimal              @map("usd_exchange_rate") @db.Decimal(32, 18)
   compRate               Decimal              @map("comp_rate") @db.Decimal(8, 4)
   gameId                 BigInt?              @map("game_id") // 현재 실행 중인 게임 (선택적)
-  casinoGameV2           CasinoGameV2?        @relation(fields: [gameId], references: [id])
+  casinoGame             CasinoGame?          @relation(fields: [gameId], references: [id])
   user                   User                 @relation(fields: [userId], references: [id])
-  gameRoundV2s           CasinoGameRound[]
+  gameRounds             CasinoGameRound[]
 
   @@index([userId])
   @@map("casino_game_sessions")
@@ -70,7 +70,7 @@ model CasinoGameProvider {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   aggregator CasinoAggregator @relation(fields: [aggregatorId], references: [id])
-  games      CasinoGameV2[]
+  games      CasinoGame[]
 
   @@unique([aggregatorId, code])
   @@unique([aggregatorId, externalId]) // 애그리게이터 내 외부 ID 유니크
@@ -145,7 +145,7 @@ model CasinoGameCategoryItem {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   category CasinoGameCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  game     CasinoGameV2       @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  game     CasinoGame         @relation(fields: [gameId], references: [id], onDelete: Cascade)
 
   @@unique([categoryId, gameId]) // 같은 게임은 같은 카테고리에 중복 불가
   @@index([categoryId, sortOrder]) // 카테고리별 정렬 조회 최적화
@@ -163,7 +163,7 @@ enum CategoryType {
 // 게임 (Refactored - N:M 카테고리 관계)
 // ═══════════════════════════════════════════════════════════════
 
-model CasinoGameV2 {
+model CasinoGame {
   id         BigInt @id @default(autoincrement())
   providerId BigInt @map("provider_id")
 
@@ -195,20 +195,20 @@ model CasinoGameV2 {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
-  provider           CasinoGameProvider        @relation(fields: [providerId], references: [id])
-  translations       CasinoGameV2Translation[]
+  provider           CasinoGameProvider       @relation(fields: [providerId], references: [id])
+  translations       CasinoGameTranslation[]
   categoryItems      CasinoGameCategoryItem[] // N:M 카테고리 관계
   bonusDetails       BonusDetail[] // 보너스 상세 (레거시 호환)
   casinoGameSessions CasinoGameSession[]
-  gameRoundV2s       CasinoGameRound[]
+  gameRounds         CasinoGameRound[]
 
   @@unique([providerId, externalGameId]) // 프로바이더 + 외부게임ID 조합은 유니크
   @@index([isEnabled, isVisible])
   @@index([sortOrder])
-  @@map("casino_games_v2")
+  @@map("casino_games")
 }
 
-model CasinoGameV2Translation {
+model CasinoGameTranslation {
   id       BigInt   @id @default(autoincrement())
   gameId   BigInt   @map("game_id")
   language Language
@@ -217,12 +217,12 @@ model CasinoGameV2Translation {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  game CasinoGameV2 @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  game CasinoGame @relation(fields: [gameId], references: [id], onDelete: Cascade)
 
   @@unique([gameId, language])
   @@index([language])
   @@index([name(ops: raw("gin_trgm_ops"))], type: Gin)
-  @@map("casino_game_v2_translations")
+  @@map("casino_game_translations")
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -282,7 +282,7 @@ model CasinoGameRound {
   transactions CasinoGameTransaction[]
   user         User                    @relation(fields: [userId], references: [id])
   gameSession  CasinoGameSession       @relation(fields: [gameSessionId], references: [id])
-  casinoGame   CasinoGameV2            @relation(fields: [gameId], references: [id])
+  casinoGame   CasinoGame              @relation(fields: [gameId], references: [id])
 
   // 파티셔닝을 위한 복합키 설정
   @@id([id, startedAt])

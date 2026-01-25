@@ -1,4 +1,4 @@
-import { CasinoGameV2 } from '../domain';
+import { CasinoGame } from '../domain';
 
 export interface GameListOptions {
     providerId?: bigint;
@@ -12,14 +12,14 @@ export interface GameListOptions {
 }
 
 export interface GameRepositoryPort {
-    findById(id: bigint): Promise<CasinoGameV2 | null>;
-    getById(id: bigint): Promise<CasinoGameV2>;
-    findByExternalId(providerId: bigint, externalGameId: string): Promise<CasinoGameV2 | null>;
-    getByExternalId(providerId: bigint, externalGameId: string): Promise<CasinoGameV2>;
-    list(options?: GameListOptions): Promise<CasinoGameV2[]>;
+    findById(id: bigint): Promise<CasinoGame | null>;
+    getById(id: bigint): Promise<CasinoGame>;
+    findByExternalId(providerId: bigint, externalGameId: string): Promise<CasinoGame | null>;
+    getByExternalId(providerId: bigint, externalGameId: string): Promise<CasinoGame>;
+    list(options?: GameListOptions): Promise<CasinoGame[]>;
     count(options?: GameListOptions): Promise<number>;
-    create(game: CasinoGameV2): Promise<CasinoGameV2>;
-    update(game: CasinoGameV2): Promise<CasinoGameV2>;
+    create(game: CasinoGame): Promise<CasinoGame>;
+    update(game: CasinoGame): Promise<CasinoGame>;
 }
 
 export const GAME_REPOSITORY = Symbol('GAME_REPOSITORY');

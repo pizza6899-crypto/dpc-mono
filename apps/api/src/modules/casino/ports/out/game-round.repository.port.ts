@@ -3,7 +3,7 @@ import { GameAggregatorType, Prisma } from "@prisma/client";
 
 export interface GameRoundRepositoryPort {
     /**
-     * 라운드 정보를 저장/생성합니다. (V2)
+     * 라운드 정보를 저장/생성합니다.
      */
     save(gameRound: GameRound): Promise<GameRound>;
 

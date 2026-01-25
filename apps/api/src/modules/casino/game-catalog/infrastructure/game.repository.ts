@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { GameRepositoryPort, GameListOptions } from '../ports';
-import { CasinoGameV2, GameNotFoundException } from '../domain';
+import { CasinoGame, GameNotFoundException } from '../domain';
 import { GameMapper } from './game.mapper';
 
 @Injectable()
@@ -13,22 +13,22 @@ export class GameRepository implements GameRepositoryPort {
         private readonly mapper: GameMapper,
     ) { }
 
-    async findById(id: bigint): Promise<CasinoGameV2 | null> {
-        const result = await this.tx.casinoGameV2.findUnique({
+    async findById(id: bigint): Promise<CasinoGame | null> {
+        const result = await this.tx.casinoGame.findUnique({
             where: { id },
             include: { translations: true },
         });
         return result ? this.mapper.toDomain(result as any) : null;
     }
 
-    async getById(id: bigint): Promise<CasinoGameV2> {
+    async getById(id: bigint): Promise<CasinoGame> {
         const game = await this.findById(id);
         if (!game) throw new GameNotFoundException(id);
         return game;
     }
 
-    async findByExternalId(providerId: bigint, externalGameId: string): Promise<CasinoGameV2 | null> {
-        const result = await this.tx.casinoGameV2.findUnique({
+    async findByExternalId(providerId: bigint, externalGameId: string): Promise<CasinoGame | null> {
+        const result = await this.tx.casinoGame.findUnique({
             where: {
                 providerId_externalGameId: {
                     providerId,
@@ -40,16 +40,16 @@ export class GameRepository implements GameRepositoryPort {
         return result ? this.mapper.toDomain(result as any) : null;
     }
 
-    async getByExternalId(providerId: bigint, externalGameId: string): Promise<CasinoGameV2> {
+    async getByExternalId(providerId: bigint, externalGameId: string): Promise<CasinoGame> {
         const game = await this.findByExternalId(providerId, externalGameId);
         if (!game) throw new GameNotFoundException(`${providerId}:${externalGameId}`);
         return game;
     }
 
-    async list(options?: GameListOptions): Promise<CasinoGameV2[]> {
+    async list(options?: GameListOptions): Promise<CasinoGame[]> {
         const where = this.buildWhere(options);
 
-        const result = await this.tx.casinoGameV2.findMany({
+        const result = await this.tx.casinoGame.findMany({
             where,
             include: { translations: true },
             orderBy: { sortOrder: 'asc' },
@@ -61,7 +61,7 @@ export class GameRepository implements GameRepositoryPort {
 
     async count(options?: GameListOptions): Promise<number> {
         const where = this.buildWhere(options);
-        return await this.tx.casinoGameV2.count({ where });
+        return await this.tx.casinoGame.count({ where });
     }
 
     private buildWhere(options?: GameListOptions): any {
@@ -97,11 +97,11 @@ export class GameRepository implements GameRepositoryPort {
         return where;
     }
 
-    async create(game: CasinoGameV2): Promise<CasinoGameV2> {
+    async create(game: CasinoGame): Promise<CasinoGame> {
         const data = this.mapper.toPrisma(game);
         const translations = this.mapper.toPrismaTranslations(game);
 
-        const result = await this.tx.casinoGameV2.create({
+        const result = await this.tx.casinoGame.create({
             data: {
                 ...data,
                 translations: {
@@ -114,17 +114,17 @@ export class GameRepository implements GameRepositoryPort {
         return this.mapper.toDomain(result as any);
     }
 
-    async update(game: CasinoGameV2): Promise<CasinoGameV2> {
+    async update(game: CasinoGame): Promise<CasinoGame> {
         if (!game.id) throw new Error('Game ID is required for update');
 
         const data = this.mapper.toPrisma(game);
         const translations = this.mapper.toPrismaTranslations(game);
 
-        await this.tx.casinoGameV2Translation.deleteMany({
+        await this.tx.casinoGameTranslation.deleteMany({
             where: { gameId: game.id },
         });
 
-        const result = await this.tx.casinoGameV2.update({
+        const result = await this.tx.casinoGame.update({
             where: { id: game.id },
             data: {
                 ...data,

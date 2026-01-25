@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { GAME_REPOSITORY } from '../ports';
 import type { GameRepositoryPort } from '../ports';
-import { CasinoGameV2 } from '../domain';
+import { CasinoGame } from '../domain';
 import { Language, Prisma } from '@prisma/client';
 
 interface UpdateGameParams {
@@ -31,7 +31,7 @@ export class UpdateGameService {
         private readonly repository: GameRepositoryPort,
     ) { }
 
-    async execute(params: UpdateGameParams): Promise<CasinoGameV2> {
+    async execute(params: UpdateGameParams): Promise<CasinoGame> {
         const game = await this.repository.getById(params.id);
 
         game.update({

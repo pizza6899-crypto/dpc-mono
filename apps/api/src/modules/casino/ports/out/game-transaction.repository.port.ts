@@ -3,7 +3,7 @@ import { GameTransaction } from "../../domain/model/game-transaction.entity";
 
 export interface GameTransactionRepositoryPort {
     /**
-     * 게임 트랜잭션을 저장/생성합니다. (V2)
+     * 게임 트랜잭션을 저장/생성합니다.
      */
     save(transaction: GameTransaction): Promise<GameTransaction>;
 

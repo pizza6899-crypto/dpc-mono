@@ -116,7 +116,7 @@ export class SyncGamesService {
         stats: SyncResultResponseDto
     ) {
         // 1. DB에서 해당 Aggregator의 '활성화된' 게임들을 모두 조회
-        const activeGamesInDb = await this.tx.casinoGameV2.findMany({
+        const activeGamesInDb = await this.tx.casinoGame.findMany({
             where: {
                 provider: { aggregatorId },
                 isEnabled: true,
@@ -143,7 +143,7 @@ export class SyncGamesService {
             this.logger.log(`Deactivating games: ${gamesToDeactivate.map(g => `${g.code}(${g.externalGameId})`).join(', ')}`);
         }
 
-        await this.tx.casinoGameV2.updateMany({
+        await this.tx.casinoGame.updateMany({
             where: { id: { in: idsToDeactivate } },
             data: {
                 isEnabled: false,
@@ -168,7 +168,7 @@ export class SyncGamesService {
         const externalGameId = gameDto.gameCode;
 
         // 3. Check Existing Game
-        const existingGame = await this.tx.casinoGameV2.findUnique({
+        const existingGame = await this.tx.casinoGame.findUnique({
             where: {
                 providerId_externalGameId: {
                     providerId: provider.id,
@@ -186,7 +186,7 @@ export class SyncGamesService {
                 existingGame.isEnabled !== gameDto.isEnabled; // 상태 동기화 (재활성화 포함)
 
             if (needsUpdate) {
-                await this.tx.casinoGameV2.update({
+                await this.tx.casinoGame.update({
                     where: { id: existingGame.id },
                     data: {
                         thumbnailUrl: gameDto.iconUrl,
@@ -204,7 +204,7 @@ export class SyncGamesService {
         // 4. Create New Game
         const code = this.generateGameCode(gameDto.providerName, gameDto.gameName);
 
-        await this.tx.casinoGameV2.create({
+        await this.tx.casinoGame.create({
             data: {
                 providerId: provider.id,
                 externalGameId,

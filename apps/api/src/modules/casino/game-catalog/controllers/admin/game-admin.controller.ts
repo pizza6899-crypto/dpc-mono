@@ -14,7 +14,7 @@ import { UpdateGameAdminRequestDto } from './dto/request/update-game.request.dto
 
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { ApiPaginatedResponse, ApiStandardResponse } from 'src/common/http/decorators/api-response.decorator';
-import { CasinoGameV2 } from '../../domain';
+import { CasinoGame } from '../../domain';
 
 @ApiTags('Admin Casino Game')
 @Controller('admin/casino/games')
@@ -86,7 +86,7 @@ export class GameAdminController {
         return this.toResponseDto(game);
     }
 
-    private toResponseDto(game: CasinoGameV2): GameAdminResponseDto {
+    private toResponseDto(game: CasinoGame): GameAdminResponseDto {
         return {
             id: game.id?.toString() ?? '',
             providerId: game.providerId.toString(),

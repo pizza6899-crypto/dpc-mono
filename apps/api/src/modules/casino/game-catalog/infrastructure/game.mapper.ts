@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CasinoGameV2 as PrismaGame, CasinoGameV2Translation as PrismaTranslation } from '@prisma/client';
-import { CasinoGameV2, GameTranslation } from '../domain';
+import { CasinoGame as PrismaGame, CasinoGameTranslation as PrismaTranslation } from '@prisma/client';
+import { CasinoGame } from '../domain';
 
 type PrismaGameWithTranslations = PrismaGame & {
     translations: PrismaTranslation[];
@@ -8,8 +8,8 @@ type PrismaGameWithTranslations = PrismaGame & {
 
 @Injectable()
 export class GameMapper {
-    toDomain(prismaGame: PrismaGameWithTranslations): CasinoGameV2 {
-        return CasinoGameV2.create({
+    toDomain(prismaGame: PrismaGameWithTranslations): CasinoGame {
+        return CasinoGame.create({
             id: prismaGame.id,
             providerId: prismaGame.providerId,
             externalGameId: prismaGame.externalGameId,
@@ -33,7 +33,7 @@ export class GameMapper {
         });
     }
 
-    toPrisma(domain: CasinoGameV2): any {
+    toPrisma(domain: CasinoGame): any {
         return {
             providerId: domain.providerId,
             externalGameId: domain.externalGameId,
@@ -53,7 +53,7 @@ export class GameMapper {
         };
     }
 
-    toPrismaTranslations(domain: CasinoGameV2): any[] {
+    toPrismaTranslations(domain: CasinoGame): any[] {
         return domain.translations.map((t) => ({
             language: t.language,
             name: t.name,

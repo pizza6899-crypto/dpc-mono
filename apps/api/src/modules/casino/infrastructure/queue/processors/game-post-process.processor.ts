@@ -53,7 +53,7 @@ export class GamePostProcessProcessor
     const { gameRoundId } = job.data;
 
     try {
-      // 1. 게임 라운드 V2 조회 (Snowflake ID이므로 id로 조회 가능하지만 파티셔닝 키 때문에 findFirst 사용)
+      // 1. 게임 라운드 조회 (Snowflake ID이므로 id로 조회 가능하지만 파티셔닝 키 때문에 findFirst 사용)
       const gameRound = await this.tx.casinoGameRound.findFirst({
         where: {
           id: BigInt(gameRoundId),
@@ -65,7 +65,7 @@ export class GamePostProcessProcessor
               compRate: true,
             },
           },
-          casinoGame: { // casinoGameV2 -> casinoGame
+          casinoGame: {
             select: {
               contributionRate: true,
               categoryItems: {
@@ -123,7 +123,7 @@ export class GamePostProcessProcessor
       const currency = gameRound.currency;
 
       // 3. 실질 베팅 금액 계산 (Wallet Currency 기준)
-      // V2에서는 totalBetAmount에 총 베팅액이, totalRefundAmount에 환불액이 집계되어 있음.
+      // totalBetAmount에 총 베팅액이, totalRefundAmount에 환불액이 집계되어 있음.
       // 넷 베팅액 = 총 베팅 - 환불
       let betAmountForProcessing = new Prisma.Decimal(gameRound.totalBetAmount);
 
@@ -212,7 +212,7 @@ export class GamePostProcessProcessor
         this.logger.error(`Failed to process comp earning: ${error.message}`, error.stack);
       }
 
-      // V2에서는 CasinoGameTransaction 업데이트 불필요 (이미 CasinoGameRound에 집계됨)
+      // CasinoGameTransaction 업데이트 불필요 (이미 CasinoGameRound에 집계됨)
       // 추후 필요하다면 CasinoGameRound.compEarned 등을 업데이트할 수 있음
 
       return {

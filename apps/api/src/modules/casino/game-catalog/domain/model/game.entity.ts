@@ -5,7 +5,7 @@ export interface GameTranslation {
     name: string;
 }
 
-export class CasinoGameV2 {
+export class CasinoGame {
     private constructor(
         public readonly id: bigint | null,
         private _providerId: bigint,
@@ -44,8 +44,8 @@ export class CasinoGameV2 {
         isEnabled?: boolean;
         isVisible?: boolean;
         translations: GameTranslation[];
-    }): CasinoGameV2 {
-        return new CasinoGameV2(
+    }): CasinoGame {
+        return new CasinoGame(
             params.id ?? null,
             params.providerId,
             params.externalGameId,

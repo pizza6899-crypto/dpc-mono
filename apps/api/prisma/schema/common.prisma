@@ -152,7 +152,7 @@ model BonusDetail {
   description             String?
   gameId                  BigInt?            @map("game_id")
   transactionId           BigInt             @unique @map("transaction_id")
-  casinoGameV2            CasinoGameV2?      @relation(fields: [gameId], references: [id])
+  casinoGame              CasinoGame?        @relation(fields: [gameId], references: [id])
   transaction             Transaction        @relation(fields: [transactionId], references: [id])
 
   @@map("bonus_details")

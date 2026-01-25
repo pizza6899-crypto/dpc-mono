@@ -3,7 +3,7 @@ import {
   WhitecliffApiService,
   WhitecliffGameLaunchResponse,
 } from '../infrastructure/whitecliff-api.service';
-import { MessageCode, type RequestClientInfo } from 'src/common/http/types';
+import { type RequestClientInfo } from 'src/common/http/types';
 import { IdUtil } from 'src/utils/id.util';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { WhitecliffMapperService } from '../infrastructure/whitecliff-mapper.service';
@@ -20,7 +20,7 @@ import { ExchangeRateService } from 'src/modules/exchange/application/exchange-r
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { CreateCasinoGameSessionService } from 'src/modules/casino/game-session/application/create-casino-game-session.service';
-import { CasinoGameV2 } from 'src/modules/casino/game-catalog/domain';
+import { CasinoGame } from 'src/modules/casino/game-catalog/domain';
 import { CasinoGameProvider } from 'src/modules/casino/aggregator/domain';
 
 @Injectable()
@@ -42,7 +42,7 @@ export class WhitecliffGameService {
   async launchGame(
     authUser: CurrentUserWithSession,
     data: {
-      game: CasinoGameV2;
+      game: CasinoGame;
       provider: CasinoGameProvider;
       isMobile: boolean;
       walletCurrency: WalletCurrencyCode;

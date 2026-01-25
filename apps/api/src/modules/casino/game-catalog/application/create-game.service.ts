@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { GAME_REPOSITORY } from '../ports';
 import type { GameRepositoryPort } from '../ports';
-import { CasinoGameV2 } from '../domain';
+import { CasinoGame } from '../domain';
 import { Language, Prisma } from '@prisma/client';
 
 interface CreateGameParams {
@@ -33,9 +33,9 @@ export class CreateGameService {
         private readonly repository: GameRepositoryPort,
     ) { }
 
-    async execute(params: CreateGameParams): Promise<CasinoGameV2> {
+    async execute(params: CreateGameParams): Promise<CasinoGame> {
         // Optional: check if existsByExternalId
-        const game = CasinoGameV2.create(params);
+        const game = CasinoGame.create(params);
         return await this.repository.create(game);
     }
 }
