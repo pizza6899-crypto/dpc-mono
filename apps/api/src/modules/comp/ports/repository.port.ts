@@ -1,29 +1,15 @@
 import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import { CompWallet } from '../domain/model/comp-wallet.entity';
 import { CompTransaction } from '../domain/model/comp-transaction.entity';
+import { CompConfig } from '../domain/model/comp-config.entity';
+import { CompClaimHistory } from '../domain/model/comp-claim-history.entity';
 
 export interface CompRepositoryPort {
     findByUserIdAndCurrency(userId: bigint, currency: ExchangeCurrencyCode): Promise<CompWallet | null>;
     save(wallet: CompWallet): Promise<CompWallet>;
     createTransaction(transaction: CompTransaction): Promise<CompTransaction>;
-    createMainTransaction(data: {
-        userId: bigint;
-        type: any; // TransactionType 삭제됨
-        status: any; // TransactionStatus 삭제됨
-        currency: ExchangeCurrencyCode;
-        amount: Prisma.Decimal;
-        beforeAmount: Prisma.Decimal;
-        afterAmount: Prisma.Decimal;
-        balanceDetails: {
-            mainBalanceChange: Prisma.Decimal;
-            mainBeforeAmount: Prisma.Decimal;
-            mainAfterAmount: Prisma.Decimal;
-            bonusBalanceChange: Prisma.Decimal;
-            bonusBeforeAmount: Prisma.Decimal;
-            bonusAfterAmount: Prisma.Decimal;
-        };
-        compWalletTransactionId?: bigint;
-    }): Promise<bigint>;
+    // Deprecated?
+    createMainTransaction(data: any): Promise<bigint>;
 
     findTransactions(params: {
         userId: bigint;
@@ -60,4 +46,15 @@ export interface CompRepositoryPort {
         userId: bigint;
         totalEarned: Prisma.Decimal;
     }>>;
+}
+
+export interface CompConfigRepositoryPort {
+    getConfig(): Promise<CompConfig | null>;
+    save(config: CompConfig): Promise<CompConfig>;
+}
+
+export interface CompClaimHistoryRepositoryPort {
+    save(history: CompClaimHistory): Promise<CompClaimHistory>;
+    findById(id: bigint): Promise<CompClaimHistory | null>;
+    findByWalletTransactionId(walletTransactionId: bigint): Promise<CompClaimHistory | null>;
 }

@@ -41,6 +41,7 @@ export class DeductCompService {
         }
 
         // 2. Apply Deduct Logic (Domain)
+        const balanceBefore = wallet.balance;
         wallet = wallet.deduct(amount);
 
         // 3. Persist Wallet
@@ -50,7 +51,9 @@ export class DeductCompService {
         const transaction = CompTransaction.create({
             compWalletId: savedWallet.id,
             amount: amount.negated(),
+            balanceBefore: balanceBefore,
             balanceAfter: savedWallet.balance,
+            appliedRate: new Prisma.Decimal(1),
             type: CompTransactionType.ADMIN,
             description: description || 'Admin Deduction',
         });

@@ -3,7 +3,7 @@ import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import { CompRepositoryPort } from '../ports';
-import { CompWallet, CompTransaction } from '../domain';
+import { CompWallet, CompTransaction, CompConfig, CompClaimHistory } from '../domain';
 import { CompMapper } from './comp.mapper';
 
 @Injectable()
@@ -44,6 +44,9 @@ export class CompRepository implements CompRepositoryPort {
                 balance: wallet.balance,
                 totalEarned: wallet.totalEarned,
                 totalUsed: wallet.totalUsed,
+                isFrozen: wallet.isFrozen,
+                lastClaimedAt: wallet.lastClaimedAt,
+                lastActiveAt: wallet.lastActiveAt,
                 createdAt: wallet.createdAt,
                 updatedAt: wallet.updatedAt
             },
@@ -51,6 +54,9 @@ export class CompRepository implements CompRepositoryPort {
                 balance: wallet.balance,
                 totalEarned: wallet.totalEarned,
                 totalUsed: wallet.totalUsed,
+                isFrozen: wallet.isFrozen,
+                lastClaimedAt: wallet.lastClaimedAt,
+                lastActiveAt: wallet.lastActiveAt,
                 updatedAt: wallet.updatedAt,
             },
         });
@@ -236,5 +242,105 @@ export class CompRepository implements CompRepositoryPort {
         }));
 
         return results;
+    }
+
+    // CompConfig Methods
+    async getConfig(): Promise<CompConfig | null> {
+        const result = await this.tx.compConfig.findFirst();
+        return result ? this.mapper.toConfigDomain(result) : null;
+    }
+
+    async saveConfig(config: CompConfig): Promise<CompConfig> {
+        const data = this.mapper.toConfigPersistence(config);
+
+        let result;
+        if (data.id) {
+            result = await this.tx.compConfig.update({
+                where: { id: data.id },
+                data: {
+                    isEarnEnabled: data.isEarnEnabled,
+                    isClaimEnabled: data.isClaimEnabled,
+                    allowNegativeBalance: data.allowNegativeBalance,
+                    minClaimAmount: data.minClaimAmount,
+                    maxDailyEarnPerUser: data.maxDailyEarnPerUser,
+                    expirationDays: data.expirationDays,
+                    description: data.description,
+                }
+            });
+        } else {
+            // Ensure only one config exists or strictly update if ID provided
+            // For simplicity, findFirst -> update or create
+            const existing = await this.tx.compConfig.findFirst();
+            if (existing) {
+                result = await this.tx.compConfig.update({
+                    where: { id: existing.id },
+                    data: {
+                        isEarnEnabled: data.isEarnEnabled,
+                        isClaimEnabled: data.isClaimEnabled,
+                        allowNegativeBalance: data.allowNegativeBalance,
+                        minClaimAmount: data.minClaimAmount,
+                        maxDailyEarnPerUser: data.maxDailyEarnPerUser,
+                        expirationDays: data.expirationDays,
+                        description: data.description,
+                    }
+                });
+            } else {
+                result = await this.tx.compConfig.create({
+                    data: {
+                        isEarnEnabled: data.isEarnEnabled ?? true,
+                        isClaimEnabled: data.isClaimEnabled ?? true,
+                        allowNegativeBalance: data.allowNegativeBalance ?? true,
+                        minClaimAmount: data.minClaimAmount ?? new Prisma.Decimal(0.01),
+                        maxDailyEarnPerUser: data.maxDailyEarnPerUser ?? new Prisma.Decimal(0),
+                        expirationDays: data.expirationDays ?? 365,
+                        description: data.description,
+                    } as any
+                });
+            }
+        }
+
+        return this.mapper.toConfigDomain(result);
+    }
+
+
+    // CompClaimHistory Methods
+    async saveHistory(history: CompClaimHistory): Promise<CompClaimHistory> {
+        const data = this.mapper.toClaimHistoryPersistence(history);
+        const result = await this.tx.compClaimHistory.upsert({
+            where: { id: data.id ?? BigInt(0) }, // Use 0 for create if id is undefined/0
+            create: {
+                userId: data.userId!,
+                status: data.status,
+                failureReason: data.failureReason,
+                compWalletTransactionId: data.compWalletTransactionId!,
+                compAmount: data.compAmount!,
+                compCurrency: data.compCurrency!,
+                walletTransactionId: data.walletTransactionId,
+                targetAmount: data.targetAmount!,
+                targetCurrency: data.targetCurrency!,
+                exchangeRate: data.exchangeRate!,
+                claimedAt: data.claimedAt,
+            },
+            update: {
+                status: data.status,
+                failureReason: data.failureReason,
+                walletTransactionId: data.walletTransactionId,
+            }
+        });
+        return this.mapper.toClaimHistoryDomain(result);
+    }
+
+    async findHistoryById(id: bigint): Promise<CompClaimHistory | null> {
+        const result = await this.tx.compClaimHistory.findUnique({
+            where: { id },
+        });
+        return result ? this.mapper.toClaimHistoryDomain(result) : null;
+    }
+
+    async findHistoryByWalletTransactionId(walletTransactionId: bigint): Promise<CompClaimHistory | null> {
+        const result = await this.tx.compClaimHistory.findUnique({
+            where: { walletTransactionId },
+        });
+        return result ? this.mapper.toClaimHistoryDomain(result) : null;
     }
 }

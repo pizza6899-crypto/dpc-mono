@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { COMP_REPOSITORY } from './ports';
+import { COMP_REPOSITORY, COMP_CONFIG_REPOSITORY, COMP_CLAIM_HISTORY_REPOSITORY } from './ports';
 import { CompRepository } from './infrastructure/comp.repository';
 import { CompMapper } from './infrastructure/comp.mapper';
 import { EarnCompService } from './application/earn-comp.service';
@@ -32,6 +32,14 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
         CompMapper,
         {
             provide: COMP_REPOSITORY,
+            useClass: CompRepository,
+        },
+        {
+            provide: COMP_CONFIG_REPOSITORY,
+            useClass: CompRepository,
+        },
+        {
+            provide: COMP_CLAIM_HISTORY_REPOSITORY,
             useClass: CompRepository,
         },
         EarnCompService,

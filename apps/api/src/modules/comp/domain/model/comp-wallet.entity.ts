@@ -9,6 +9,9 @@ export class CompWallet {
         public readonly balance: Prisma.Decimal,
         public readonly totalEarned: Prisma.Decimal,
         public readonly totalUsed: Prisma.Decimal,
+        public readonly isFrozen: boolean,
+        public readonly lastClaimedAt: Date | null,
+        public readonly lastActiveAt: Date,
         public readonly createdAt: Date,
         public readonly updatedAt: Date,
     ) { }
@@ -27,6 +30,9 @@ export class CompWallet {
             params.balance ?? new Prisma.Decimal(0),
             params.totalEarned ?? new Prisma.Decimal(0),
             params.totalUsed ?? new Prisma.Decimal(0),
+            false,
+            null,
+            new Date(),
             new Date(),
             new Date(),
         );
@@ -43,6 +49,9 @@ export class CompWallet {
         balance: Prisma.Decimal;
         totalEarned: Prisma.Decimal;
         totalUsed: Prisma.Decimal;
+        isFrozen: boolean;
+        lastClaimedAt: Date | null;
+        lastActiveAt: Date;
         createdAt: Date;
         updatedAt: Date;
     }): CompWallet {
@@ -53,12 +62,22 @@ export class CompWallet {
             params.balance,
             params.totalEarned,
             params.totalUsed,
+            params.isFrozen,
+            params.lastClaimedAt,
+            params.lastActiveAt,
             params.createdAt,
             params.updatedAt,
         );
     }
 
+    private checkStatus() {
+        if (this.isFrozen) {
+            throw new Error(`Comp wallet is frozen for user: ${this.userId}`);
+        }
+    }
+
     earn(amount: Prisma.Decimal): CompWallet {
+        this.checkStatus();
         return new CompWallet(
             this.id,
             this.userId,
@@ -66,12 +85,16 @@ export class CompWallet {
             this.balance.add(amount),
             this.totalEarned.add(amount),
             this.totalUsed,
+            this.isFrozen,
+            this.lastClaimedAt,
+            new Date(), // Update lastActiveAt
             this.createdAt,
             new Date(),
         );
     }
 
     claim(amount: Prisma.Decimal): CompWallet {
+        this.checkStatus();
         if (this.balance.lessThan(amount)) {
             throw new InsufficientCompBalanceException(
                 this.userId,
@@ -87,12 +110,16 @@ export class CompWallet {
             this.balance.sub(amount),
             this.totalEarned,
             this.totalUsed.add(amount),
+            this.isFrozen,
+            new Date(), // Update lastClaimedAt
+            new Date(), // Update lastActiveAt
             this.createdAt,
             new Date(),
         );
     }
 
     deduct(amount: Prisma.Decimal): CompWallet {
+        this.checkStatus();
         if (this.balance.lessThan(amount)) {
             throw new InsufficientCompBalanceException(
                 this.userId,
@@ -108,6 +135,9 @@ export class CompWallet {
             this.balance.sub(amount),
             this.totalEarned,
             this.totalUsed.add(amount), // Also count as used/deducted
+            this.isFrozen,
+            this.lastClaimedAt,
+            new Date(), // Update lastActiveAt
             this.createdAt,
             new Date(),
         );

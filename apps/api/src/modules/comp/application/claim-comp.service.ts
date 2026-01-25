@@ -1,9 +1,9 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { ExchangeCurrencyCode, Prisma, CompTransactionType } from '@prisma/client';
-import { COMP_REPOSITORY } from '../ports/repository.token';
-import type { CompRepositoryPort } from '../ports';
-import { CompTransaction, InsufficientCompBalanceException } from '../domain';
+import { ExchangeCurrencyCode, Prisma, CompTransactionType, CompClaimStatus } from '@prisma/client';
+import { COMP_REPOSITORY, COMP_CONFIG_REPOSITORY, COMP_CLAIM_HISTORY_REPOSITORY } from '../ports/repository.token';
+import type { CompRepositoryPort, CompConfigRepositoryPort, CompClaimHistoryRepositoryPort } from '../ports';
+import { CompTransaction, InsufficientCompBalanceException, CompClaimHistory } from '../domain';
 import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
 import { FindUserWalletService } from '../../wallet/application/find-user-wallet.service';
 import { UpdateOperation, WalletActionName } from '../../wallet/domain';
@@ -30,6 +30,10 @@ export class ClaimCompService {
     constructor(
         @Inject(COMP_REPOSITORY)
         private readonly compRepository: CompRepositoryPort,
+        @Inject(COMP_CONFIG_REPOSITORY)
+        private readonly compConfigRepository: CompConfigRepositoryPort,
+        @Inject(COMP_CLAIM_HISTORY_REPOSITORY)
+        private readonly compClaimHistoryRepository: CompClaimHistoryRepositoryPort,
         private readonly findUserWalletService: FindUserWalletService,
         private readonly updateUserBalanceService: UpdateUserBalanceService,
         private readonly analyticsQueueService: AnalyticsQueueService,
@@ -45,90 +49,106 @@ export class ClaimCompService {
             throwThrottleError: true,
         });
 
-        // 1. Get Wallet
+        // 1. Check Configuration
+        const config = await this.compConfigRepository.getConfig();
+        if (config) {
+            if (!config.canClaim(amount)) {
+                throw new Error(`Comp claim not allowed: Disabled or below minimum amount (${config.minClaimAmount})`);
+            }
+        }
+
+        // 2. Get Wallet
         let wallet = await this.compRepository.findByUserIdAndCurrency(userId, currency);
         if (!wallet || wallet.balance.lt(amount)) {
             throw new InsufficientCompBalanceException(userId, amount.toString(), wallet?.balance.toString() || '0');
         }
 
-        // 2. Apply Claim Logic (Domain)
+        const balanceBefore = wallet.balance;
+
+        // 3. Apply Claim Logic (Domain)
         wallet = wallet.claim(amount);
 
-        // 3. Persist Wallet
+        // 4. Persist Wallet
         const savedCompWallet = await this.compRepository.save(wallet);
 
-        // 4. Record Comp Transaction
+        // 5. Record Comp Transaction
         const compTx = CompTransaction.create({
             compWalletId: savedCompWallet.id,
             amount: amount.negated(),
+            balanceBefore: balanceBefore,
             balanceAfter: savedCompWallet.balance,
+            appliedRate: new Prisma.Decimal(1), // ExchangeRate for Comp->Currency
             type: CompTransactionType.CLAIM,
             description: 'Comp conversion to cash',
         });
         const createdCompTx = await this.compRepository.createTransaction(compTx);
 
-        // 5. Get Initial Wallet State for Recording
-        const walletBefore = await this.findUserWalletService.findWallet(userId, currency, true);
-        if (!walletBefore) {
-            throw new Error('User wallet not found');
+        // 6. Create Pending Claim History (Receipt)
+        let claimHistory = CompClaimHistory.create({
+            userId,
+            compWalletTransactionId: createdCompTx.id,
+            compAmount: amount,
+            compCurrency: currency,
+            targetAmount: amount, // 1:1 conversion assumed for now
+            targetCurrency: currency,
+            exchangeRate: new Prisma.Decimal(1),
+            status: CompClaimStatus.PENDING,
+        });
+        claimHistory = await this.compClaimHistoryRepository.save(claimHistory);
+
+        try {
+            // 7. Get Initial Wallet State for Recording
+            const walletBefore = await this.findUserWalletService.findWallet(userId, currency, true);
+            if (!walletBefore) {
+                throw new Error('User wallet not found');
+            }
+
+            const beforeMainBalance = walletBefore.cash;
+            const beforeBonusBalance = walletBefore.bonus;
+
+            // 8. Update Main User Balance (Cash)
+            const savedUserWallet = await this.updateUserBalanceService.updateBalance({
+                userId,
+                currency,
+                amount: amount,
+                operation: UpdateOperation.ADD,
+                balanceType: WalletBalanceType.CASH,
+                transactionType: 'COMP_CLAIM' as unknown as WalletTransactionType,
+                referenceId: createdCompTx.id,
+            }, {
+                actionName: WalletActionName.CLAIM_COMP,
+            });
+
+            // 9. Complete History
+            // Since WalletTransaction ID is handled inside UpdateUserBalanceService and returned via some indirect way or new flow,
+            // we might not get the exact ID here easily unless UpdateUserBalanceService returns it.
+            // For now, we update status to COMPLETED. Ideally we link the Wallet Tx ID.
+            // Assuming we refactor UpdateUserBalanceService to return transaction ID later or we use referenceId to link.
+            claimHistory = claimHistory.complete(BigInt(0)); // TODO: Pass real wallet tx ID
+            await this.compClaimHistoryRepository.save(claimHistory);
+
+            // 10. Enqueue Analytics
+            await this.analyticsQueueService.enqueueComp({
+                userId,
+                currency,
+                convertedAmount: amount, // Claimed amount is converted amount
+                date: new Date(),
+            });
+
+            this.logger.log(`Comp Claimed: user=${userId}, compDeducted=${amount}, cashAdded=${amount}`);
+
+            return {
+                claimedAmount: amount,
+                newCompBalance: savedCompWallet.balance,
+                newCashBalance: savedUserWallet.cash,
+            };
+
+        } catch (error) {
+            // Mark history as FAILED
+            claimHistory = claimHistory.fail(error.message);
+            await this.compClaimHistoryRepository.save(claimHistory);
+            throw error;
         }
 
-        const beforeMainBalance = walletBefore.cash;
-        const beforeBonusBalance = walletBefore.bonus;
-
-        // 6. Update Main User Balance (Cash)
-        const savedUserWallet = await this.updateUserBalanceService.updateBalance({
-            userId,
-            currency,
-            amount: amount,
-            operation: UpdateOperation.ADD,
-            balanceType: WalletBalanceType.CASH,
-            transactionType: 'COMP_CLAIM' as unknown as WalletTransactionType,
-            referenceId: createdCompTx.id,
-        }, {
-            actionName: WalletActionName.CLAIM_COMP,
-        });
-
-        const afterMainBalance = savedUserWallet.cash;
-        const afterBonusBalance = savedUserWallet.bonus;
-
-        const mainBalanceChange = afterMainBalance.sub(beforeMainBalance);
-        const bonusBalanceChange = afterBonusBalance.sub(beforeBonusBalance);
-
-        // 7. Record Main Wallet Transaction
-        await this.compRepository.createMainTransaction({
-            userId,
-            type: 'COMP_CLAIM' as any, // TransactionType 삭제됨
-            status: 'COMPLETED' as any, // TransactionStatus 삭제됨
-            currency,
-            amount: amount,
-            beforeAmount: beforeMainBalance.add(beforeBonusBalance),
-            afterAmount: afterMainBalance.add(afterBonusBalance),
-            compWalletTransactionId: createdCompTx.id,
-            balanceDetails: {
-                mainBalanceChange: mainBalanceChange,
-                mainBeforeAmount: beforeMainBalance,
-                mainAfterAmount: afterMainBalance,
-                bonusBalanceChange: bonusBalanceChange,
-                bonusBeforeAmount: beforeBonusBalance,
-                bonusAfterAmount: afterBonusBalance,
-            },
-        });
-
-        // 7. Enqueue Analytics
-        await this.analyticsQueueService.enqueueComp({
-            userId,
-            currency,
-            convertedAmount: amount, // Claimed amount is converted amount
-            date: new Date(),
-        });
-
-        this.logger.log(`Comp Claimed: user=${userId}, compDeducted=${amount}, cashAdded=${amount}`);
-
-        return {
-            claimedAmount: amount,
-            newCompBalance: savedCompWallet.balance,
-            newCashBalance: afterMainBalance,
-        };
     }
 }

@@ -11,6 +11,9 @@ export class CompTransactionResponseDto {
     @ApiProperty({ description: 'Amount' })
     amount: string;
 
+    @ApiProperty({ description: 'Balance Before' })
+    balanceBefore: string;
+
     @ApiProperty({ description: 'Balance After' })
     balanceAfter: string;
 

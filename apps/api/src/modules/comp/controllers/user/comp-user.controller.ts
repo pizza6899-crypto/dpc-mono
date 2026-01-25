@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Post, Query, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { ClaimCompService } from '../../application/claim-comp.service';
 import { FindCompBalanceService } from '../../application/find-comp-balance.service';
 import { ClaimCompRequestDto } from './dto/request/claim-comp.request.dto';
@@ -138,9 +138,10 @@ export class CompUserController {
                 id: this.sqidsService.encode(item.id, SqidsPrefix.COM_TRANSACTION),
                 compWalletId: this.sqidsService.encode(item.compWalletId, SqidsPrefix.COM_WALLET),
                 amount: item.amount.toString(),
+                balanceBefore: item.balanceBefore.toString(),
                 balanceAfter: item.balanceAfter.toString(),
                 type: item.type,
-                referenceId: item.referenceId ?? undefined,
+                referenceId: item.referenceId?.toString(),
                 description: item.description ?? undefined,
                 createdAt: item.createdAt,
             })),

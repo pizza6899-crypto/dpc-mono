@@ -1,8 +1,8 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { ExchangeCurrencyCode, Prisma, CompTransactionType } from '@prisma/client';
-import { COMP_REPOSITORY } from '../ports/repository.token';
-import type { CompRepositoryPort } from '../ports';
+import { COMP_CONFIG_REPOSITORY, COMP_REPOSITORY } from '../ports/repository.token';
+import type { CompConfigRepositoryPort, CompRepositoryPort } from '../ports';
 import { CompWallet, CompTransaction } from '../domain';
 import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
@@ -22,6 +22,8 @@ export class EarnCompService {
     constructor(
         @Inject(COMP_REPOSITORY)
         private readonly compRepository: CompRepositoryPort,
+        @Inject(COMP_CONFIG_REPOSITORY)
+        private readonly compConfigRepository: CompConfigRepositoryPort,
         private readonly analyticsQueueService: AnalyticsQueueService,
         private readonly advisoryLockService: AdvisoryLockService,
     ) { }
@@ -35,25 +37,39 @@ export class EarnCompService {
             throwThrottleError: true,
         });
 
-        // 1. Get or Create Wallet
+        // 1. Check Configuration
+        const config = await this.compConfigRepository.getConfig();
+        if (config && !config.canEarn()) {
+            this.logger.warn(`Comp earn skipped: Earn disabled in config. user=${userId}`);
+            // Return current wallet or throw? Returning current wallet (no-op) is safer to not break game flow
+            let wallet = await this.compRepository.findByUserIdAndCurrency(userId, currency);
+            if (!wallet) return CompWallet.create({ userId, currency });
+            return wallet;
+        }
+
+        // 2. Get or Create Wallet
         let wallet = await this.compRepository.findByUserIdAndCurrency(userId, currency);
         if (!wallet) {
             wallet = CompWallet.create({ userId, currency });
         }
 
-        // 2. Apply Earn Logic (Domain)
+        const balanceBefore = wallet.balance;
+
+        // 3. Apply Earn Logic (Domain)
         wallet = wallet.earn(amount);
 
-        // 3. Persist Wallet
+        // 4. Persist Wallet
         const savedWallet = await this.compRepository.save(wallet);
 
-        // 4. Record Transaction
+        // 5. Record Transaction
         const transaction = CompTransaction.create({
             compWalletId: savedWallet.id,
             amount: amount,
+            balanceBefore: balanceBefore,
             balanceAfter: savedWallet.balance,
+            appliedRate: new Prisma.Decimal(1), // Default rate
             type: CompTransactionType.EARN,
-            referenceId,
+            referenceId: referenceId ? BigInt(referenceId) : undefined,
             description,
         });
         await this.compRepository.createTransaction(transaction);
