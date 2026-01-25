@@ -17,6 +17,7 @@ export class GameTransactionMapper {
             type: domain.type,
             aggregatorTxId: domain.aggregatorTxId,
             amount: domain.amount,
+            balanceBefore: domain.balanceBefore,
             gameAmount: domain.gameAmount,
             balanceType: domain.balanceType,
             currency: domain.currency,

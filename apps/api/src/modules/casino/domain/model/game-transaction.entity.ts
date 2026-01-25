@@ -11,6 +11,7 @@ export class GameTransaction {
 
         // 금액 정보
         public readonly amount: Prisma.Decimal, // Wallet Currency
+        public readonly balanceBefore: Prisma.Decimal, // 변동 전 잔액 (검증용)
         public readonly gameAmount: Prisma.Decimal | null, // Game Currency (원본)
         public readonly balanceType: WalletBalanceType,
         public readonly currency: ExchangeCurrencyCode, // Wallet Currency
@@ -26,6 +27,7 @@ export class GameTransaction {
         type: CasinoGameTransactionType,
         aggregatorTxId: string,
         amount: Prisma.Decimal,
+        balanceBefore: Prisma.Decimal,
         gameAmount: Prisma.Decimal | null,
         balanceType: WalletBalanceType,
         currency: ExchangeCurrencyCode,
@@ -39,6 +41,7 @@ export class GameTransaction {
             type,
             aggregatorTxId,
             amount,
+            balanceBefore,
             gameAmount,
             balanceType,
             currency,
@@ -55,6 +58,7 @@ export class GameTransaction {
             data.type,
             data.aggregatorTxId,
             data.amount,
+            data.balanceBefore,
             data.gameAmount,
             data.balanceType,
             data.currency,

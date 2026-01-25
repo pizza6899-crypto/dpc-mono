@@ -205,6 +205,7 @@ export class ProcessCasinoBetService {
                 CasinoGameTransactionType.BET,
                 transactionId, // 외부 ID 유지
                 cashDeduction,
+                userWallet.cash,
                 // 믹스벳의 경우 게임 금액(Game Amount)도 정책에서 계산된 값 사용
                 cashGameAmount,
                 WalletBalanceType.CASH,
@@ -223,6 +224,7 @@ export class ProcessCasinoBetService {
                 CasinoGameTransactionType.BET,
                 `${transactionId}_BONUS`, // [수정] 생성 시점에 가공된 ID 전달 (유니크 충돌 방지)
                 bonusDeduction,
+                userWallet.bonus,
                 bonusGameAmount,
                 WalletBalanceType.BONUS,
                 session.walletCurrency,

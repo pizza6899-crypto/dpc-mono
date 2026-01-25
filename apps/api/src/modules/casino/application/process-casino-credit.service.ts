@@ -194,6 +194,7 @@ export class ProcessCasinoCreditService {
             txType,
             transactionId,
             walletAmount,
+            updatedWallet.cash.sub(walletAmount), // [추가] balanceBefore (역산)
             finalRefundAmount,
             WalletBalanceType.CASH,
             session.walletCurrency,
