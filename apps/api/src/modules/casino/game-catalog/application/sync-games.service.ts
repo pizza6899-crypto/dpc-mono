@@ -156,63 +156,14 @@ export class SyncGamesService {
     }
 
     private async upsertGame(aggregatorType: GameAggregatorType, aggregatorId: bigint, gameDto: AggregatorGameDto): Promise<'created' | 'updated' | 'skipped'> {
-        // 1. Find Provider
-        // 우선 매핑된 코드로 DB에서 Provider 검색
-        let providerCodeEnum: GameProvider | undefined;
-
-        if (gameDto.providerCode) {
-            if (aggregatorType === GameAggregatorType.WHITECLIFF) {
-                const id = parseInt(gameDto.providerCode, 10);
-                if (!isNaN(id)) {
-                    providerCodeEnum = WhitecliffMapperService.PROVIDER_MAP[id];
-                }
-            } else if (aggregatorType === GameAggregatorType.DC) {
-                providerCodeEnum = DcsMapperService.PROVIDER_MAP[gameDto.providerCode];
-            }
-        }
-
-        let provider = providerCodeEnum ? await this.tx.casinoGameProvider.findFirst({
-            where: {
-                aggregatorId,
-                // code는 String 컬럼이지만 Enum 값을 저장/조회
-                code: providerCodeEnum.toString(),
-            },
-        }) : null;
-
-        // 매핑된 코드로 못 찾았거나 매핑이 없으면 이름으로 백업 검색
+        // 1. Resolve Provider (매핑 및 DB 조회)
+        const provider = await this.resolveProvider(aggregatorType, aggregatorId, gameDto);
         if (!provider) {
-            provider = await this.tx.casinoGameProvider.findFirst({
-                where: {
-                    aggregatorId,
-                    name: gameDto.providerName,
-                },
-            });
-        }
-
-        if (!provider) {
-            // Provider가 없으면 스킵
             return 'skipped';
         }
 
-        // 2. Map Category & Find Category Entity
-        let categoryCode = 'SLOTS'; // Default Category Code
-
-        if (gameDto.category) {
-            let mappedCategory: string | undefined;
-            if (aggregatorType === GameAggregatorType.WHITECLIFF) {
-                mappedCategory = WhitecliffMapperService.CATEGORY_MAP[gameDto.category];
-            } else if (aggregatorType === GameAggregatorType.DC) {
-                mappedCategory = DcsMapperService.CATEGORY_MAP[gameDto.category];
-            }
-
-            if (mappedCategory) {
-                categoryCode = mappedCategory;
-            }
-        }
-
-        const categoryEntity = await this.tx.casinoGameCategory.findUnique({
-            where: { code: categoryCode }
-        });
+        // 2. Resolve Category
+        const categoryEntity = await this.resolveCategory(aggregatorType, gameDto);
 
         const externalGameId = gameDto.gameCode;
 
@@ -281,6 +232,69 @@ export class SyncGamesService {
         });
 
         return 'created';
+    }
+
+    /**
+     * Aggregator별 Provider 매핑 및 조회
+     */
+    private async resolveProvider(aggregatorType: GameAggregatorType, aggregatorId: bigint, gameDto: AggregatorGameDto) {
+        let providerCodeEnum: GameProvider | undefined;
+
+        // 1. DTO 코드를 내부 Enum으로 변환
+        if (gameDto.providerCode) {
+            if (aggregatorType === GameAggregatorType.WHITECLIFF) {
+                const id = parseInt(gameDto.providerCode, 10);
+                if (!isNaN(id)) {
+                    providerCodeEnum = WhitecliffMapperService.PROVIDER_MAP[id];
+                }
+            } else if (aggregatorType === GameAggregatorType.DC) {
+                providerCodeEnum = DcsMapperService.PROVIDER_MAP[gameDto.providerCode];
+            }
+        }
+
+        // 2. Enum으로 DB 조회
+        let provider = providerCodeEnum ? await this.tx.casinoGameProvider.findFirst({
+            where: {
+                aggregatorId,
+                code: providerCodeEnum.toString(),
+            },
+        }) : null;
+
+        // 3. 실패 시 이름으로 백업 검색
+        if (!provider) {
+            provider = await this.tx.casinoGameProvider.findFirst({
+                where: {
+                    aggregatorId,
+                    name: gameDto.providerName,
+                },
+            });
+        }
+
+        return provider;
+    }
+
+    /**
+     * Aggregator별 Category 매핑 및 조회
+     */
+    private async resolveCategory(aggregatorType: GameAggregatorType, gameDto: AggregatorGameDto) {
+        let categoryCode = 'SLOTS'; // Default Category Code
+
+        if (gameDto.category) {
+            let mappedCategory: string | undefined;
+            if (aggregatorType === GameAggregatorType.WHITECLIFF) {
+                mappedCategory = WhitecliffMapperService.CATEGORY_MAP[gameDto.category];
+            } else if (aggregatorType === GameAggregatorType.DC) {
+                mappedCategory = DcsMapperService.CATEGORY_MAP[gameDto.category];
+            }
+
+            if (mappedCategory) {
+                categoryCode = mappedCategory;
+            }
+        }
+
+        return this.tx.casinoGameCategory.findUnique({
+            where: { code: categoryCode }
+        });
     }
 
     private generateGameCode(providerName: string, gameName: string): string {
