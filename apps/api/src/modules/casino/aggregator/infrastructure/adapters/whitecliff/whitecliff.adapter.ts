@@ -3,7 +3,7 @@ import { AggregatorClientPort } from '../../../ports/aggregator.client.port';
 import { AggregatorGameDto } from '../../../ports/aggregator-game.dto';
 import { Language } from '@prisma/client';
 import { mockResponse2 } from './mock2';
-import { WhitecliffApiService } from 'src/modules/casino/providers/whitecliff/infrastructure/whitecliff-api.service';
+import { WhitecliffApiService, ProductGameListResponse, WhitecliffErrorResponse } from 'src/modules/casino/providers/whitecliff/infrastructure/whitecliff-api.service';
 
 @Injectable()
 export class WhitecliffAdapter implements AggregatorClientPort {
@@ -11,18 +11,19 @@ export class WhitecliffAdapter implements AggregatorClientPort {
 
     constructor(private readonly whitecliffApiService: WhitecliffApiService) { }
 
-    async fetchGameList(): Promise<AggregatorGameDto[]> {
+    async fetchGameList(useMock: boolean = true): Promise<AggregatorGameDto[]> {
         const language = Language.EN;
         this.logger.log(`Fetching game list from Whitecliff (default language: ${language})...`);
 
-        // 1. Fetch from WC API
-        // TODO: 실제 API 호출로 전환 시 language 파라미터 사용
-        // const response = await this.whitecliffApiService.getProductGameList({
-        //     gameCurrency: 'KRW', // TODO: EnvService에서 주입받도록 변경
-        //     language: language,
-        // });
-
-        const response = mockResponse2;
+        let response: ProductGameListResponse | WhitecliffErrorResponse;
+        if (useMock) {
+            response = mockResponse2;
+        } else {
+            response = await this.whitecliffApiService.getProductGameList({
+                gameCurrency: 'KRW', // Default currency for game list sync
+                language: language,
+            });
+        }
 
         if ('error' in response) {
             this.logger.error(`Whitecliff API Error: ${response.error}`);

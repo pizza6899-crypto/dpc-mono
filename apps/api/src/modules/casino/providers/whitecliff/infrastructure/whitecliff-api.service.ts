@@ -11,7 +11,7 @@ import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-l
 import { LogType } from 'src/modules/audit-log/domain';
 
 // 공통 에러 응답 타입 정의
-interface WhitecliffErrorResponse {
+export interface WhitecliffErrorResponse {
   status: number;
   error: string;
   message?: string;
