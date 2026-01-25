@@ -3,7 +3,7 @@ model UserCompWallet {
   userId      BigInt               @map("user_id")
   currency    ExchangeCurrencyCode
   balance     Decimal              @default(0) @db.Decimal(32, 18) // 현재 잔액
-  totalEarned Decimal              @default(0) @map("total_earned") @db.Decimal(32, 18) // 누적 획득
+  totalEarned Decimal              @default(0) @map("total_earned") @db.Decimal(32, 18) // 누적 획득 (롤백 시 차감 필수)
   totalUsed   Decimal              @default(0) @map("total_used") @db.Decimal(32, 18) // 누적 사용
 
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -12,27 +12,98 @@ model UserCompWallet {
   transactions CompWalletTransaction[] // 1:N 관계
   user         User                    @relation(fields: [userId], references: [id])
 
+  isFrozen      Boolean   @default(false) @map("is_frozen") // 콤프 지갑 동결 여부 (어뷰징 의심 등)
+  lastClaimedAt DateTime? @map("last_claimed_at") // 마지막으로 전환(Claim)한 일시 (휴면 체크용)
+  lastActiveAt  DateTime  @default(now()) @map("last_active_at") // 마지막으로 적립/사용 등 활동한 일시 (유효기간/소멸 관리용)
+
   @@unique([userId, currency])
+  @@index([isFrozen, lastActiveAt])
   @@map("user_comp_wallets")
 }
 
 model CompWalletTransaction {
-  id           BigInt              @id @default(autoincrement())
-  compWalletId BigInt              @map("comp_wallet_id") // 어느 지갑의 거래인가
-  amount       Decimal             @db.Decimal(32, 18) // 변경 금액 (양수: 획득, 음수: 사용/차감)
-  balanceAfter Decimal             @map("balance_after") @db.Decimal(32, 18) // 변경 후 잔액
-  type         CompTransactionType // EARN(적립), CLAIM(전환), ADMIN(관리자), EXPIRE(소멸)
+  id            BigInt
+  compWalletId  BigInt              @map("comp_wallet_id") // 어느 지갑의 거래인가
+  amount        Decimal             @db.Decimal(32, 18) // 변경 금액 (양수: 획득, 음수: 사용/차감)
+  balanceBefore Decimal             @map("balance_before") @db.Decimal(32, 18) // 변경 전 잔액 (무결성 검증용)
+  balanceAfter  Decimal             @map("balance_after") @db.Decimal(32, 18) // 변경 후 잔액
+  appliedRate   Decimal?            @map("applied_rate") @db.Decimal(8, 4) // 당시 적용된 요율 스냅샷
+  type          CompTransactionType // EARN(적립), CLAIM(전환), ADMIN(관리자), EXPIRE(소멸)
 
-  referenceId String? @map("reference_id") // 예: gameRoundId, paymentId
-  description String? // 비고
+  referenceId         BigInt? @map("reference_id") // 예: gameRoundId, paymentId
+  processedBy         BigInt? @map("processed_by") // 처리한 관리자 ID (ADMIN 등의 경우 필수)
+  parentTransactionId BigInt? @map("parent_transaction_id") // ROLLBACK 시 원본 트랜잭션 ID 참조
+  metadata            Json?   @map("metadata")
+  description         String? // 비고
 
   createdAt DateTime @default(now()) @map("created_at")
 
   wallet UserCompWallet @relation(fields: [compWalletId], references: [id])
 
+  @@id([id, createdAt])
+  @@unique([type, referenceId]) // 중복 적립 방지 (동일 건에 대한 중복 처리 방지)
   @@index([compWalletId])
   @@index([createdAt])
+  @@index([parentTransactionId]) // 롤백 추적 쿼리 성능용
   @@map("comp_wallet_transactions")
+}
+
+model CompConfig {
+  id BigInt @id @default(autoincrement())
+
+  // 시스템 스위치 (점검 시 False)
+  isEarnEnabled  Boolean @default(true) @map("is_earn_enabled") // 적립 가능 여부
+  isClaimEnabled Boolean @default(true) @map("is_claim_enabled") // 전환 가능 여부
+
+  // 정책 설정
+  allowNegativeBalance Boolean @default(true) @map("allow_negative_balance") // 마이너스 잔액 허용 여부 (롤백 대응용)
+  minClaimAmount       Decimal @default(0.01) @map("min_claim_amount") @db.Decimal(32, 18) // 최소 전환 가능 금액
+  maxDailyEarnPerUser  Decimal @default(0) @map("max_daily_earn_per_user") @db.Decimal(32, 18) // 유저당 일일 최대 적립 한도 (0=무제한)
+  expirationDays       Int     @default(365) @map("expiration_days") // 콤프 소멸 기간 (일 단위, 기본 1년)
+
+  description String? // 관리자 메모
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("comp_configs")
+}
+
+// 콤프 전환 이력 (영수증 역할)
+model CompClaimHistory {
+  id BigInt @id @default(autoincrement())
+
+  userId        BigInt          @map("user_id")
+  status        CompClaimStatus @default(PENDING) @map("status") // 상태 추가 (실패/대기 추적용)
+  failureReason String?         @map("failure_reason") // 실패 사유
+
+  // 1. 무엇을 썼는가 (Source)
+  compWalletTransactionId BigInt               @unique @map("comp_wallet_transaction_id")
+  compAmount              Decimal              @map("comp_amount") @db.Decimal(32, 18) // 차감된 콤프량
+  compCurrency            ExchangeCurrencyCode @map("comp_currency")
+
+  // 2. 무엇을 받았는가 (Target)
+  // 단일 통화 정책 시: compCurrency != targetCurrency 일 수 있음 (환전 발생)
+  walletTransactionId BigInt?              @unique @map("wallet_transaction_id")
+  targetAmount        Decimal              @map("target_amount") @db.Decimal(32, 18) // 실제 지급된 현금량
+  targetCurrency      ExchangeCurrencyCode @map("target_currency")
+
+  exchangeRate Decimal @default(1) @map("exchange_rate") @db.Decimal(32, 18) // 당시 적용 환율
+
+  claimedAt DateTime @default(now()) @map("claimed_at")
+
+  // 연관 관계
+  user User @relation(fields: [userId], references: [id])
+  // (Transaction 테이블들과의 relation은 선택사항이나, ID만 있어도 충분함)
+
+  @@index([userId, status, claimedAt])
+  @@index([status, claimedAt])
+  @@map("comp_claim_histories")
+}
+
+enum CompClaimStatus {
+  PENDING
+  COMPLETED
+  FAILED
 }
 
 enum CompTransactionType {
@@ -40,4 +111,5 @@ enum CompTransactionType {
   CLAIM // 현금으로 전환 (사용)
   ADMIN // 관리자 조정 (지급/차감)
   EXPIRE // 유효기간 만료 소멸 (옵션)
+  ROLLBACK // 베팅 취소 등으로 인한 콤프 회수
 }

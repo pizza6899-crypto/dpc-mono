@@ -64,6 +64,7 @@ model User {
   wageringRequirements   WageringRequirement[]
   hourlyStats            UserHourlyStat[]
   compWallets            UserCompWallet[]
+  compClaimHistories     CompClaimHistory[]
   alerts                 Alert[]
   notificationLogs       NotificationLog[]
   casinoGameRounds       CasinoGameRound[]

@@ -34,8 +34,9 @@ model WalletTransaction {
     type        WalletTransactionType // 거래 성격
     balanceType WalletBalanceType // 어떤 잔액 타입이 변했는지 기록
 
-    amount       Decimal @db.Decimal(32, 18) // 실제 변동액 (+/- 로직)
-    balanceAfter Decimal @map("balance_after") @db.Decimal(32, 18) // 변동 후 최종 잔액 스냅샷
+    amount        Decimal @db.Decimal(32, 18) // 실제 변동액 (+/- 로직)
+    balanceBefore Decimal @map("balance_before") @db.Decimal(32, 18) // 변동 전 잔액 (무결성 검증용)
+    balanceAfter  Decimal @map("balance_after") @db.Decimal(32, 18) // 변동 후 최종 잔액 스냅샷
 
     referenceId BigInt? @map("reference_id") // type이 BET이면 GameLog ID, DEPOSIT이면 DepositRequest ID 등을 저장
     metadata    Json?   @map("metadata") // 상세 사유, 관리자 ID, 상태 변경 전후값 등 유연한 데이터 저장
