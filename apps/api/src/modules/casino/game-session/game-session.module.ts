@@ -18,6 +18,10 @@ import { TierModule } from '../../tier/tier.module';
         CreateCasinoGameSessionService,
         FindCasinoGameSessionService,
     ],
-    exports: [CreateCasinoGameSessionService, FindCasinoGameSessionService],
+    exports: [
+        CreateCasinoGameSessionService,
+        FindCasinoGameSessionService,
+        CASINO_GAME_SESSION_REPOSITORY,
+    ],
 })
 export class GameSessionModule { }

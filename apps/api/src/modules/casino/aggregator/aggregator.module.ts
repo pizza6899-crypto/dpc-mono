@@ -24,9 +24,10 @@ import { WhitecliffModule } from '../providers/whitecliff/whitecliff.module';
 import { AggregatorClientFactory } from './infrastructure/aggregator.factory';
 import { WhitecliffAdapter } from './infrastructure/adapters/whitecliff/whitecliff.adapter';
 import { DcsAdapter } from './infrastructure/adapters/dcs/dcs.adapter';
+import { DcsModule } from '../providers/dcs/dcs.module';
 
 @Module({
-    imports: [EnvModule, FileModule, WhitecliffModule],
+    imports: [EnvModule, FileModule, WhitecliffModule, DcsModule],
     controllers: [AggregatorAdminController, GameProviderAdminController],
     providers: [
         // Infrastructure - Aggregator

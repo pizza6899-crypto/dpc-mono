@@ -13,6 +13,7 @@ import { DcsFetchGameResultService } from './application/dcs-fetch-game-result.s
 import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 import { WalletModule } from 'src/modules/wallet/wallet.module';
 import { CasinoModule } from '../../casino.module';
+import { GameSessionModule } from '../../game-session/game-session.module';
 import { DcsExceptionFilter } from './infrastructure/dcs-exception.filter';
 
 @Module({
@@ -22,6 +23,7 @@ import { DcsExceptionFilter } from './infrastructure/dcs-exception.filter';
     ConcurrencyModule,
     RedisModule,
     forwardRef(() => CasinoModule),
+    GameSessionModule,
     AuditLogModule,
     WalletModule,
   ],
@@ -34,6 +36,6 @@ import { DcsExceptionFilter } from './infrastructure/dcs-exception.filter';
     DcsFetchGameResultService,
     DcsExceptionFilter,
   ],
-  exports: [DcsGameService, DcsMapperService, DcsFetchGameResultService],
+  exports: [DcsGameService, DcsMapperService, DcsFetchGameResultService, DcsApiService],
 })
 export class DcsModule { }
