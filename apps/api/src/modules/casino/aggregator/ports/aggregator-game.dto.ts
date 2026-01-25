@@ -61,9 +61,9 @@ export interface AggregatorGameDto {
     tableId?: string | null;
 
     /** 
-     * 활성화 여부 (WC: is_enabled)
+     * 활성 여부 (WC: is_enabled)
      */
-    isEnabled?: boolean;
+    isEnabled: boolean;
 }
 
 /**
