@@ -28,8 +28,7 @@ model CompWalletTransaction {
 
   createdAt DateTime @default(now()) @map("created_at")
 
-  wallet       UserCompWallet @relation(fields: [compWalletId], references: [id])
-  transactions Transaction[]
+  wallet UserCompWallet @relation(fields: [compWalletId], references: [id])
 
   @@index([compWalletId])
   @@index([createdAt])

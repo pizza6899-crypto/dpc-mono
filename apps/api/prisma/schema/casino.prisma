@@ -198,7 +198,6 @@ model CasinoGame {
   provider           CasinoGameProvider       @relation(fields: [providerId], references: [id])
   translations       CasinoGameTranslation[]
   categoryItems      CasinoGameCategoryItem[] // N:M 카테고리 관계
-  bonusDetails       BonusDetail[] // 보너스 상세 (레거시 호환)
   casinoGameSessions CasinoGameSession[]
   gameRounds         CasinoGameRound[]
 

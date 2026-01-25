@@ -22,9 +22,8 @@
  */
 model WithdrawalDetail {
   // snowflake id
-  id            BigInt  @id
-  userId        BigInt  @map("user_id")
-  transactionId BigInt? @unique @map("transaction_id")
+  id     BigInt @id
+  userId BigInt @map("user_id")
 
   // 출금 방법 및 상태
   methodType WithdrawalMethodType @map("method_type")
@@ -88,7 +87,6 @@ model WithdrawalDetail {
 
   // 관계
   user                   User                  @relation(fields: [userId], references: [id])
-  transaction            Transaction?          @relation(fields: [transactionId], references: [id])
   // Config 관계 (조회 편의성) + appliedConfig 스냅샷 (이력 보존) 병행 사용
   cryptoWithdrawConfigId BigInt?               @map("crypto_withdraw_config_id")
   cryptoWithdrawConfig   CryptoWithdrawConfig? @relation(fields: [cryptoWithdrawConfigId], references: [id])

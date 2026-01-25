@@ -49,7 +49,6 @@ model User {
   gameSessions           CasinoGameSession[]
   affiliateReferrals     Referral[]              @relation("AffiliateReferrals")
   referredUsers          Referral[]              @relation("ReferredUsers")
-  transactions           Transaction[]
   depositDetails         DepositDetail[]
   withdrawalDetails      WithdrawalDetail[]
   userWallets            UserWallet[]
@@ -91,71 +90,6 @@ model UserBalanceStats {
   @@index([userId])
   @@index([currency])
   @@map("user_balance_stats")
-}
-
-model Transaction {
-  id                     BigInt                     @id @default(autoincrement())
-  userId                 BigInt                     @map("user_id")
-  type                   TransactionType
-  status                 TransactionStatus
-  currency               ExchangeCurrencyCode
-  amount                 Decimal                    @db.Decimal(32, 18)
-  beforeAmount           Decimal                    @map("before_amount") @db.Decimal(32, 18)
-  afterAmount            Decimal                    @map("after_amount") @db.Decimal(32, 18)
-  createdAt              DateTime                   @default(now()) @map("created_at")
-  updatedAt              DateTime                   @updatedAt @map("updated_at")
-  bonusDetail            BonusDetail?
-  user                   User                       @relation(fields: [userId], references: [id])
-  balanceDetails         TransactionBalanceDetail[]
-  adminAdjustmentDetail  AdminAdjustmentDetail?
-  systemAdjustmentDetail SystemAdjustmentDetail?
-
-  compWalletTransactionId BigInt?                @map("comp_wallet_transaction_id")
-  compWalletTransaction   CompWalletTransaction? @relation(fields: [compWalletTransactionId], references: [id])
-  depositDetail           DepositDetail?
-  withdrawalDetail        WithdrawalDetail?
-
-  @@map("transactions")
-}
-
-model TransactionBalanceDetail {
-  id                 BigInt      @id @default(autoincrement())
-  transactionId      BigInt      @map("transaction_id")
-  mainBalanceChange  Decimal?    @map("main_balance_change") @db.Decimal(32, 18)
-  mainBeforeAmount   Decimal?    @map("main_before_amount") @db.Decimal(32, 18)
-  mainAfterAmount    Decimal?    @map("main_after_amount") @db.Decimal(32, 18)
-  bonusBalanceChange Decimal?    @map("bonus_balance_change") @db.Decimal(32, 18)
-  bonusBeforeAmount  Decimal?    @map("bonus_before_amount") @db.Decimal(32, 18)
-  bonusAfterAmount   Decimal?    @map("bonus_after_amount") @db.Decimal(32, 18)
-  createdAt          DateTime    @default(now()) @map("created_at")
-  transaction        Transaction @relation(fields: [transactionId], references: [id])
-
-  @@index([transactionId])
-  @@map("transaction_balance_details")
-}
-
-model BonusDetail {
-  id                      BigInt             @id
-  createdAt               DateTime           @default(now()) @map("created_at")
-  transactionTime         DateTime           @map("transaction_time")
-  aggregatorType          GameAggregatorType @map("aggregator_type")
-  provider                GameProvider
-  bonusType               BonusType          @map("bonus_type")
-  amount                  Decimal            @db.Decimal(32, 18)
-  aggregatorPromotionId   String?            @map("aggregator_promotion_id")
-  aggregatorRoundId       String?            @map("aggregator_round_id")
-  aggregatorWagerId       String?            @map("aggregator_wager_id")
-  aggregatorTransactionId String?            @map("aggregator_transaction_id")
-  aggregatorFreespinId    String?            @map("aggregator_freespin_id")
-  aggregatorSessionId     String?            @map("aggregator_session_id")
-  isEndRound              Boolean?           @map("is_end_round")
-  description             String?
-  gameId                  BigInt?            @map("game_id")
-  transactionId           BigInt             @unique @map("transaction_id")
-  casinoGame              CasinoGame?        @relation(fields: [gameId], references: [id])
-  transaction             Transaction        @relation(fields: [transactionId], references: [id])
-
-  @@map("bonus_details")
 }
 
 model ExchangeRate {

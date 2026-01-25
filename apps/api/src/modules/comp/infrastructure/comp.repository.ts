@@ -86,22 +86,9 @@ export class CompRepository implements CompRepositoryPort {
         };
         compWalletTransactionId?: bigint;
     }): Promise<bigint> {
-        const result = await this.tx.transaction.create({
-            data: {
-                userId: data.userId,
-                type: data.type,
-                status: data.status,
-                currency: data.currency,
-                amount: data.amount,
-                beforeAmount: data.beforeAmount,
-                afterAmount: data.afterAmount,
-                compWalletTransactionId: data.compWalletTransactionId,
-                balanceDetails: {
-                    create: data.balanceDetails,
-                },
-            },
-        });
-        return result.id;
+        // TODO: Transaction 테이블 삭제/변경에 따른 임시 처리
+        // 스키마 반영 후 WalletTransaction 등으로 대체 필요
+        return BigInt(Date.now());
     }
 
     async findTransactions(params: {

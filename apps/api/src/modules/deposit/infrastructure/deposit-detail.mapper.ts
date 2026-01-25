@@ -21,7 +21,7 @@ export class DepositDetailMapper {
     id: bigint;
     uid: string;
     userId: bigint;
-    transactionId: bigint | null;
+    transactionId?: bigint | null;
     status: DepositDetailStatus;
     methodType: any;
     provider: any;
@@ -56,7 +56,7 @@ export class DepositDetailMapper {
       id: prismaModel.id,
       uid: prismaModel.uid,
       userId: prismaModel.userId,
-      transactionId: prismaModel.transactionId,
+      transactionId: prismaModel.transactionId ?? null,
       status: prismaModel.status,
       methodType: prismaModel.methodType,
       provider: prismaModel.provider,
@@ -104,7 +104,6 @@ export class DepositDetailMapper {
       updatedAt: persistence.updatedAt,
       failureReason: persistence.failureReason,
       failedAt: persistence.failedAt,
-      transactionId: persistence.transactionId,
       walletAddress: persistence.walletAddress,
       walletAddressExtraId: persistence.walletAddressExtraId,
       providerPaymentId: persistence.providerPaymentId,

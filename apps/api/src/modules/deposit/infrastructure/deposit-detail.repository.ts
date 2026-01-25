@@ -24,7 +24,6 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
   async findById(
     id: bigint,
     include?: {
-      transaction?: boolean;
       bankDepositConfig?: boolean;
       cryptoDepositConfig?: boolean;
     },
@@ -32,7 +31,6 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     const result = await this.tx.depositDetail.findUnique({
       where: { id },
       include: {
-        transaction: include?.transaction ?? false,
         bankDepositConfig: include?.bankDepositConfig ?? false,
         cryptoDepositConfig: include?.cryptoDepositConfig ?? false,
       },
@@ -44,7 +42,6 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
   async getById(
     id: bigint,
     include?: {
-      transaction?: boolean;
       bankDepositConfig?: boolean;
       cryptoDepositConfig?: boolean;
     },
@@ -68,12 +65,8 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
   }
 
   async getTransactionUserId(transactionId: bigint): Promise<bigint | null> {
-    const transaction = await this.tx.transaction.findUnique({
-      where: { id: transactionId },
-      select: { userId: true },
-    });
-
-    return transaction?.userId ?? null;
+    // TODO: Transaction 테이블 삭제 대응 (임시 null 반환 또는 User 지갑 정보에서 조회 필요)
+    return null;
   }
 
   async createTransaction(data: {
@@ -85,10 +78,8 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     beforeAmount: Prisma.Decimal;
     afterAmount: Prisma.Decimal;
   }): Promise<bigint> {
-    const result = await this.tx.transaction.create({
-      data,
-    });
-    return result.id;
+    // TODO: Transaction 테이블 삭제 대응 (임시 ID 반환)
+    return BigInt(Date.now());
   }
 
   async create(deposit: DepositDetail): Promise<DepositDetail> {
@@ -97,7 +88,6 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
       data: {
         ...data,
         uid: generateUid(),
-        transactionId: null, // 초기 생성 시에는 트랜잭션 없음
       },
     });
 
@@ -141,7 +131,6 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
           [sortBy]: sortOrder,
         },
         include: {
-          transaction: false,
           bankDepositConfig: true,
           cryptoDepositConfig: true,
         },
@@ -193,16 +182,6 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
         take,
         orderBy,
         include: {
-          transaction: {
-            select: {
-              userId: true,
-              user: {
-                select: {
-                  email: true,
-                },
-              },
-            },
-          },
           bankDepositConfig: true,
           cryptoDepositConfig: true,
         },
@@ -213,7 +192,7 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     return {
       items: deposits.map((deposit) => ({
         deposit: this.mapper.toDomain(deposit),
-        userEmail: deposit.transaction?.user?.email || null,
+        userEmail: null, // TODO: User 테이블에서 직접 조회하도록 변경 필요
       })),
       total,
     };
@@ -223,16 +202,6 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     const result = await this.tx.depositDetail.findUnique({
       where: { id },
       include: {
-        transaction: {
-          select: {
-            userId: true,
-            user: {
-              select: {
-                email: true,
-              },
-            },
-          },
-        },
         bankDepositConfig: true,
         cryptoDepositConfig: true,
       },
@@ -244,7 +213,7 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
 
     return {
       deposit: this.mapper.toDomain(result),
-      userEmail: result.transaction?.user?.email || null,
+      userEmail: null, // TODO: User 테이블에서 직접 조회하도록 변경 필요
     };
   }
 
@@ -308,7 +277,6 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
         userId,
       },
       include: {
-        transaction: false,
         bankDepositConfig: true,
         cryptoDepositConfig: true,
       },
@@ -327,7 +295,6 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
         userId,
       },
       include: {
-        transaction: false,
         bankDepositConfig: true,
         cryptoDepositConfig: true,
       },

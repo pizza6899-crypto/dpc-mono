@@ -51,7 +51,6 @@ export class WithdrawalRepository implements WithdrawalRepositoryPort {
                 processedBy: withdrawal.props.processedBy,
                 adminNotes: withdrawal.props.adminNotes,
                 failureReason: withdrawal.props.failureReason,
-                transactionId: withdrawal.props.transactionId,
                 confirmedAt: withdrawal.props.confirmedAt,
                 failedAt: withdrawal.props.failedAt,
                 cancelledAt: withdrawal.props.cancelledAt,

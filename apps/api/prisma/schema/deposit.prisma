@@ -23,7 +23,6 @@ model DepositDetail {
   updatedAt            DateTime             @updatedAt @map("updated_at")
   status               DepositDetailStatus
   userId               BigInt               @map("user_id")
-  transactionId        BigInt?              @unique @map("transaction_id")
   user                 User                 @relation(fields: [userId], references: [id])
   methodType           DepositMethodType    @map("method_type")
   provider             PaymentProvider
@@ -60,12 +59,10 @@ model DepositDetail {
   bankDepositConfig     BankDepositConfig?    @relation(fields: [bankDepositConfigId], references: [id])
   cryptoDepositConfig   CryptoDepositConfig?  @relation(fields: [cryptoDepositConfigId], references: [id])
   promotion             Promotion?            @relation(fields: [promotionId], references: [id])
-  transaction           Transaction?          @relation(fields: [transactionId], references: [id])
   wageringRequirements  WageringRequirement[]
 
   @@index([provider, providerPaymentId])
   @@index([status, createdAt])
-  @@index([transactionId])
   @@index([methodType, status])
   @@index([depositCurrency, status])
   @@index([createdAt])

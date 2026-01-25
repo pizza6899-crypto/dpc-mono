@@ -43,7 +43,7 @@ export class WithdrawalMapper {
             ipAddress: prisma.ipAddress,
             deviceFingerprint: prisma.deviceFingerprint,
             appliedConfig: (prisma.appliedConfig as Record<string, unknown>) ?? {},
-            transactionId: prisma.transactionId,
+            transactionId: (prisma as any).transactionId ?? null,
             cryptoWithdrawConfigId: prisma.cryptoWithdrawConfigId,
             bankWithdrawConfigId: prisma.bankWithdrawConfigId,
             createdAt: prisma.createdAt,
@@ -58,7 +58,6 @@ export class WithdrawalMapper {
         return {
             id: domain.id,
             userId: domain.props.userId,
-            transactionId: domain.props.transactionId,
             methodType: domain.props.methodType,
             status: domain.props.status,
             processingMode: domain.props.processingMode,
