@@ -86,6 +86,7 @@ export class UpdateWalletStatusService {
             type: WalletTransactionType.STATUS_CHANGE,
             balanceType: WalletBalanceType.CASH, // 상태 변경은 특정 잔액 타입에 귀속되지 않으나 필드 제약상 CASH 기본값 사용
             amount: new Prisma.Decimal(0),
+            balanceBefore: wallet.cash,
             balanceAfter: wallet.cash,
             metadata: {
                 prevStatus,

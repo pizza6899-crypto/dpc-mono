@@ -75,6 +75,7 @@ export class UpdateUserBalanceService {
         // 2. Check Wallet Status by Policy
         this.walletPolicy.canPerformTransaction(wallet, transactionType);
 
+        const balanceBefore = this.getBalanceByType(wallet, balanceType);
         const balanceAfter = this.calculateBalanceAfter(wallet, balanceType, operation, amount);
 
         // 3. Update Domain Entity
@@ -98,6 +99,7 @@ export class UpdateUserBalanceService {
             type: transactionType,
             balanceType,
             amount: operation === UpdateOperation.ADD ? amount : amount.neg(),
+            balanceBefore,
             balanceAfter,
             referenceId,
             metadata,

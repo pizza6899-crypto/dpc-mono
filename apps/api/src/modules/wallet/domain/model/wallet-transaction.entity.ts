@@ -16,6 +16,7 @@ export class WalletTransaction {
         public readonly type: WalletTransactionType,
         public readonly balanceType: WalletBalanceType,
         public readonly amount: Prisma.Decimal, // (+) 수입, (-) 지출
+        public readonly balanceBefore: Prisma.Decimal,
         public readonly balanceAfter: Prisma.Decimal,
 
         // Reference & Detail
@@ -37,6 +38,7 @@ export class WalletTransaction {
         type: WalletTransactionType;
         balanceType: WalletBalanceType;
         amount: Prisma.Decimal;
+        balanceBefore: Prisma.Decimal;
         balanceAfter: Prisma.Decimal;
         referenceId?: bigint | null;
         metadata?: AnyWalletTransactionMetadata | null;
@@ -51,6 +53,7 @@ export class WalletTransaction {
             params.type,
             params.balanceType,
             params.amount,
+            params.balanceBefore,
             params.balanceAfter,
             params.referenceId ?? null,
             params.metadata ?? null,
@@ -67,6 +70,7 @@ export class WalletTransaction {
         type: WalletTransactionType;
         balanceType: WalletBalanceType;
         amount: Prisma.Decimal;
+        balanceBefore: Prisma.Decimal;
         balanceAfter: Prisma.Decimal;
         referenceId: bigint | null;
         metadata: any | null;
@@ -81,6 +85,7 @@ export class WalletTransaction {
             data.type,
             data.balanceType,
             data.amount,
+            data.balanceBefore,
             data.balanceAfter,
             data.referenceId,
             data.metadata as AnyWalletTransactionMetadata,

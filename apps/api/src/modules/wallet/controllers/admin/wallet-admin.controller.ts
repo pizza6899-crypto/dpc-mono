@@ -206,16 +206,15 @@ export class WalletAdminController {
           status: 'COMPLETED',
           currency: tx.currency,
           amount: tx.amount.abs().toString(), // 응답 DTO 정의상 절대값 반환
-          // 주의: DTO 필드명은 Total Balance로 되어있으나, 아래 값은 해당 트랜잭션이 발생한 BalanceType의 전후 잔액임
-          beforeAmount: tx.balanceAfter.sub(tx.amount).toString(),
+          beforeAmount: tx.balanceBefore.toString(),
           afterAmount: tx.balanceAfter.toString(),
           balanceDetail: metadata.balanceDetail || {
             // 구형 데이터 호환성 처리: 메타데이터가 없는 경우 현재 트랜잭션 정보를 바탕으로 역산
             mainBalanceChange: tx.balanceType === 'CASH' ? tx.amount.toString() : '0',
-            mainBeforeAmount: tx.balanceType === 'CASH' ? tx.balanceAfter.sub(tx.amount).toString() : '0',
+            mainBeforeAmount: tx.balanceType === 'CASH' ? tx.balanceBefore.toString() : '0',
             mainAfterAmount: tx.balanceType === 'CASH' ? tx.balanceAfter.toString() : '0',
             bonusBalanceChange: tx.balanceType === 'BONUS' ? tx.amount.toString() : '0',
-            bonusBeforeAmount: tx.balanceType === 'BONUS' ? tx.balanceAfter.sub(tx.amount).toString() : '0',
+            bonusBeforeAmount: tx.balanceType === 'BONUS' ? tx.balanceBefore.toString() : '0',
             bonusAfterAmount: tx.balanceType === 'BONUS' ? tx.balanceAfter.toString() : '0',
           },
           adminDetail: metadata.adminId ? {

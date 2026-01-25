@@ -156,6 +156,7 @@ export class WalletController {
           balanceType: tx.balanceType,
           currency: tx.currency,
           amount: tx.amount.toString(),
+          balanceBefore: tx.balanceBefore.toString(),
           balanceAfter: tx.balanceAfter.toString(),
           createdAt: tx.createdAt,
         };

@@ -51,6 +51,10 @@ export class ProcessVaultOperationService {
             throw new WalletNotFoundException(userId, currency);
         }
 
+        // Snapshot before update
+        const cashBefore = wallet.cash;
+        const vaultBefore = wallet.vault;
+
         // 2. Perform Operation
         if (operation === VaultOperation.DEPOSIT) {
             wallet.depositToVault(amount);
@@ -69,11 +73,12 @@ export class ProcessVaultOperationService {
             type: WalletTransactionType.ADJUSTMENT,
             balanceType: WalletBalanceType.CASH,
             amount: operation === VaultOperation.DEPOSIT ? amount.neg() : amount,
+            balanceBefore: cashBefore,
             balanceAfter: wallet.cash,
             metadata: {
                 operation,
                 description: `Vault ${operation.toLowerCase()} - Cash side`,
-                cashBefore: (operation === VaultOperation.DEPOSIT ? wallet.cash.add(amount) : wallet.cash.sub(amount)).toString(),
+                cashBefore: cashBefore.toString(),
                 cashAfter: wallet.cash.toString(),
             },
         });
@@ -86,12 +91,13 @@ export class ProcessVaultOperationService {
             type: WalletTransactionType.ADJUSTMENT,
             balanceType: WalletBalanceType.VAULT,
             amount: operation === VaultOperation.DEPOSIT ? amount : amount.neg(),
+            balanceBefore: vaultBefore,
             balanceAfter: wallet.vault,
             metadata: {
                 operation,
                 description: `Vault ${operation.toLowerCase()} - Vault side`,
-                cashBefore: (operation === VaultOperation.DEPOSIT ? wallet.cash.add(amount) : wallet.cash.sub(amount)).toString(),
-                cashAfter: wallet.cash.toString(),
+                vaultBefore: vaultBefore.toString(),
+                vaultAfter: wallet.vault.toString(),
             },
         });
         await this.transactionRepository.create(vaultTransaction);

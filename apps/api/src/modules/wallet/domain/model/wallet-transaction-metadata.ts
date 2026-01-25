@@ -91,8 +91,10 @@ export interface PromotionMetadata extends BaseMetadata {
  */
 export interface VaultOperationMetadata extends BaseMetadata {
     operation: string; // 'DEPOSIT' | 'WITHDRAW'
-    cashBefore?: string; // Optional (BalanceDetail이 없을 경우 대비)
+    cashBefore?: string;
     cashAfter?: string;
+    vaultBefore?: string;
+    vaultAfter?: string;
 }
 
 /**

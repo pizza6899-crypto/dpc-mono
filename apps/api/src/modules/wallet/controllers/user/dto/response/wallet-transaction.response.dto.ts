@@ -17,6 +17,9 @@ export class UserWalletTransactionResponseDto {
     @ApiProperty({ description: 'Transaction amount (signed) / 거래 금액 (부호 포함 변동량)' })
     amount: string;
 
+    @ApiProperty({ description: 'Balance before transaction / 거래 전 잔액' })
+    balanceBefore: string;
+
     @ApiProperty({ description: 'Balance after transaction / 거래 후 잔액' })
     balanceAfter: string;
 
