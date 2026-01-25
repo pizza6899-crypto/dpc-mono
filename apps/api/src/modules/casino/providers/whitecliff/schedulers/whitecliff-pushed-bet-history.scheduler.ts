@@ -196,7 +196,7 @@ export class WhitecliffPushedBetHistoryScheduler {
       const endDateObj = new Date(endDate);
 
       // 해당 기간 내의 Whitecliff Evolution 라운드 중, 아직 체크 안 된 것들 조회
-      const pendingRounds = await this.prismaService.gameRoundV2.findMany({
+      const pendingRounds = await this.prismaService.casinoGameRound.findMany({
         where: {
           aggregatorType: GameAggregatorType.WHITECLIFF,
           // provider: GameProvider.EVOLUTION, // 필요시 추가 필터링 (현재는 Whitecliff 전체 대상 or 상위에서 product loop)
@@ -224,7 +224,7 @@ export class WhitecliffPushedBetHistoryScheduler {
         );
 
         for (const r of roundsToMarkChecked) {
-          await this.prismaService.gameRoundV2.update({
+          await this.prismaService.casinoGameRound.update({
             where: {
               id_startedAt: {
                 id: r.id,

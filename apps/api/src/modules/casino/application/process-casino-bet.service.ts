@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Prisma, GameProvider, GameTransactionType, WalletBalanceType, WalletTransactionType } from '@prisma/client';
+import { Prisma, GameProvider, CasinoGameTransactionType, WalletBalanceType, WalletTransactionType } from '@prisma/client';
 import { CasinoGameSession } from '../game-session/domain';
 import { Transactional } from '@nestjs-cls/transactional';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
@@ -109,7 +109,7 @@ export class ProcessCasinoBetService {
         // Check if the transaction with the given external ID already exists using the anchorTime.
         const existingTx = await this.gameTransactionRepository.findByExternalId(
             transactionId,
-            GameTransactionType.BET,
+            CasinoGameTransactionType.BET,
             anchorTime,
         );
 
@@ -202,7 +202,7 @@ export class ProcessCasinoBetService {
                 round.id,
                 round.startedAt,
                 session.userId,
-                GameTransactionType.BET,
+                CasinoGameTransactionType.BET,
                 transactionId, // 외부 ID 유지
                 cashDeduction,
                 // 믹스벳의 경우 게임 금액(Game Amount)도 정책에서 계산된 값 사용
@@ -220,7 +220,7 @@ export class ProcessCasinoBetService {
                 round.id,
                 round.startedAt,
                 session.userId,
-                GameTransactionType.BET,
+                CasinoGameTransactionType.BET,
                 `${transactionId}_BONUS`, // [수정] 생성 시점에 가공된 ID 전달 (유니크 충돌 방지)
                 bonusDeduction,
                 bonusGameAmount,

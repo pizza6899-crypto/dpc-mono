@@ -54,7 +54,7 @@ export class GamePostProcessProcessor
 
     try {
       // 1. 게임 라운드 V2 조회 (Snowflake ID이므로 id로 조회 가능하지만 파티셔닝 키 때문에 findFirst 사용)
-      const gameRound = await this.tx.gameRoundV2.findFirst({
+      const gameRound = await this.tx.casinoGameRound.findFirst({
         where: {
           id: BigInt(gameRoundId),
         },
@@ -212,8 +212,8 @@ export class GamePostProcessProcessor
         this.logger.error(`Failed to process comp earning: ${error.message}`, error.stack);
       }
 
-      // V2에서는 GameTransaction 업데이트 불필요 (이미 GameRoundV2에 집계됨)
-      // 추후 필요하다면 GameRoundV2.compEarned 등을 업데이트할 수 있음
+      // V2에서는 CasinoGameTransaction 업데이트 불필요 (이미 CasinoGameRound에 집계됨)
+      // 추후 필요하다면 CasinoGameRound.compEarned 등을 업데이트할 수 있음
 
       return {
         success: true,

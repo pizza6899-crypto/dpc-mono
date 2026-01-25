@@ -16,7 +16,7 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
 
     async save(gameRound: GameRound): Promise<GameRound> {
         const data = this.mapper.toPrisma(gameRound);
-        const result = await this.prisma.gameRoundV2.upsert({
+        const result = await this.prisma.casinoGameRound.upsert({
             where: {
                 id_startedAt: {
                     id: data.id,
@@ -30,7 +30,7 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
     }
 
     async findById(id: bigint, startedAt: Date): Promise<GameRound | null> {
-        const result = await this.prisma.gameRoundV2.findUnique({
+        const result = await this.prisma.casinoGameRound.findUnique({
             where: {
                 id_startedAt: {
                     id,
@@ -42,7 +42,7 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
     }
 
     async findByExternalId(externalRoundId: string, aggregatorType: GameAggregatorType, startedAt: Date): Promise<GameRound | null> {
-        const result = await this.prisma.gameRoundV2.findUnique({
+        const result = await this.prisma.casinoGameRound.findUnique({
             where: {
                 aggregatorRoundId_aggregatorType_startedAt: {
                     aggregatorRoundId: externalRoundId,
@@ -63,7 +63,7 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
         const windowStart = new Date(referenceTime.getTime() - windowHours * 60 * 60 * 1000);
         const windowEnd = new Date(referenceTime.getTime() + windowHours * 60 * 60 * 1000);
 
-        const result = await this.prisma.gameRoundV2.findFirst({
+        const result = await this.prisma.casinoGameRound.findFirst({
             where: {
                 aggregatorRoundId: externalRoundId,
                 aggregatorType,
@@ -80,7 +80,7 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
     }
 
     async findLatestByExternalId(externalRoundId: string, aggregatorType: GameAggregatorType): Promise<GameRound | null> {
-        const result = await this.prisma.gameRoundV2.findFirst({
+        const result = await this.prisma.casinoGameRound.findFirst({
             where: {
                 aggregatorRoundId: externalRoundId,
                 aggregatorType,
@@ -118,7 +118,7 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
 
         if (Object.keys(updateData).length === 0) return;
 
-        await this.prisma.gameRoundV2.update({
+        await this.prisma.casinoGameRound.update({
             where: {
                 id_startedAt: {
                     id,
@@ -131,7 +131,7 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
 
 
     async updateResultMeta(id: bigint, startedAt: Date, meta: GameResultMeta): Promise<void> {
-        await this.prisma.gameRoundV2.update({
+        await this.prisma.casinoGameRound.update({
             where: {
                 id_startedAt: {
                     id,
@@ -148,7 +148,7 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
         if (id_startedAt.length === 0) return;
 
         for (const item of id_startedAt) {
-            await this.prisma.gameRoundV2.update({
+            await this.prisma.casinoGameRound.update({
                 where: {
                     id_startedAt: {
                         id: item.id,

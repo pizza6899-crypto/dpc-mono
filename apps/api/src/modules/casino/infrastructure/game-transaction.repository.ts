@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { GameTransaction } from '../domain/model/game-transaction.entity';
 import { GameTransactionRepositoryPort } from '../ports/out/game-transaction.repository.port';
 import { GameTransactionMapper } from './game-transaction.mapper';
-import { GameTransactionType } from '@prisma/client';
+import { CasinoGameTransactionType } from '@prisma/client';
 import { EXTENDED_PRISMA_CLIENT } from 'src/infrastructure/prisma/prisma.module';
 import type { ExtendedClient } from 'src/infrastructure/prisma/prisma.service';
 
@@ -16,7 +16,7 @@ export class GameTransactionRepository implements GameTransactionRepositoryPort 
 
     async save(transaction: GameTransaction): Promise<GameTransaction> {
         const data = this.mapper.toPrisma(transaction);
-        const result = await this.prisma.gameTransaction.upsert({
+        const result = await this.prisma.casinoGameTransaction.upsert({
             where: {
                 id_roundStartedAt: {
                     id: data.id,
@@ -30,7 +30,7 @@ export class GameTransactionRepository implements GameTransactionRepositoryPort 
     }
 
     async findById(id: bigint, roundStartedAt: Date): Promise<GameTransaction | null> {
-        const result = await this.prisma.gameTransaction.findUnique({
+        const result = await this.prisma.casinoGameTransaction.findUnique({
             where: {
                 id_roundStartedAt: {
                     id,
@@ -41,8 +41,8 @@ export class GameTransactionRepository implements GameTransactionRepositoryPort 
         return result ? this.mapper.toDomain(result) : null;
     }
 
-    async findByExternalId(aggregatorTxId: string, type: GameTransactionType, roundStartedAt: Date): Promise<GameTransaction | null> {
-        const result = await this.prisma.gameTransaction.findUnique({
+    async findByExternalId(aggregatorTxId: string, type: CasinoGameTransactionType, roundStartedAt: Date): Promise<GameTransaction | null> {
+        const result = await this.prisma.casinoGameTransaction.findUnique({
             where: {
                 aggregatorTxId_type_roundStartedAt: {
                     aggregatorTxId,
@@ -55,7 +55,7 @@ export class GameTransactionRepository implements GameTransactionRepositoryPort 
     }
 
     async findAllByRoundId(gameRoundId: bigint, roundStartedAt: Date): Promise<GameTransaction[]> {
-        const results = await this.prisma.gameTransaction.findMany({
+        const results = await this.prisma.casinoGameTransaction.findMany({
             where: {
                 gameRoundId,
                 roundStartedAt,

@@ -1,4 +1,4 @@
-import { Prisma, GameTransactionType, WalletBalanceType, ExchangeCurrencyCode } from "@prisma/client";
+import { Prisma, CasinoGameTransactionType, WalletBalanceType, ExchangeCurrencyCode } from "@prisma/client";
 
 export class GameTransaction {
     constructor(
@@ -6,7 +6,7 @@ export class GameTransaction {
         public readonly gameRoundId: bigint,
         public readonly roundStartedAt: Date, // 파티셔닝 키 (부모 라운드 시작 시간)
         public readonly userId: bigint,
-        public readonly type: GameTransactionType,
+        public readonly type: CasinoGameTransactionType,
         public readonly aggregatorTxId: string,
 
         // 금액 정보
@@ -23,7 +23,7 @@ export class GameTransaction {
         gameRoundId: bigint,
         roundStartedAt: Date,
         userId: bigint,
-        type: GameTransactionType,
+        type: CasinoGameTransactionType,
         aggregatorTxId: string,
         amount: Prisma.Decimal,
         gameAmount: Prisma.Decimal | null,

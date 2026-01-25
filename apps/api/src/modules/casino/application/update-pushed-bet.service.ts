@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { GameAggregatorType, Prisma, GameTransactionType, WalletTransactionType, WalletBalanceType } from '@prisma/client';
+import { GameAggregatorType, Prisma, CasinoGameTransactionType, WalletTransactionType, WalletBalanceType } from '@prisma/client';
 import { CasinoErrorCode } from '../constants/casino-error-codes';
 import { CasinoGameRoundException } from '../domain/casino.exception';
 import { GameResultMeta } from '../domain/model/game-round.entity';
@@ -70,7 +70,7 @@ export class UpdatePushedBetService {
 
         // 3. 베팅 트랜잭션 조회
         const transactions = await this.gameTransactionRepository.findAllByRoundId(gameRound.id, gameRound.startedAt);
-        const betTransactions = transactions.filter(t => t.type === GameTransactionType.BET);
+        const betTransactions = transactions.filter(t => t.type === CasinoGameTransactionType.BET);
 
         // 4. 베팅 원금 분석 (Cash vs Bonus)
         let totalCashBetGame = new Prisma.Decimal(0);
@@ -164,7 +164,7 @@ export class UpdatePushedBetService {
                 });
             }
 
-            // D. GameRoundV2 Update (Via Repo)
+            // D. CasinoGameRound Update (Via Repo)
             // 통계 증가 (환불액)
             await this.gameRoundRepository.increaseStats(gameRound.id, gameRound.startedAt, {
                 refundAmount: totalRefundWallet,

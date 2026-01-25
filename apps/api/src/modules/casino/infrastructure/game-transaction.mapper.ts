@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { GameTransaction as PrismaGameTransaction } from '@prisma/client';
+import { CasinoGameTransaction as PrismaGameTransaction } from '@prisma/client';
 import { GameTransaction } from '../domain/model/game-transaction.entity';
 
 @Injectable()

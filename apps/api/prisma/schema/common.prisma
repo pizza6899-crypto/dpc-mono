@@ -67,7 +67,7 @@ model User {
   compWallets            UserCompWallet[]
   alerts                 Alert[]
   notificationLogs       NotificationLog[]
-  gameRoundsV2           GameRoundV2[]
+  casinoGameRounds       CasinoGameRound[]
 
   @@map("users")
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { GameRoundV2 as PrismaGameRound } from '@prisma/client';
+import { CasinoGameRound as PrismaGameRound } from '@prisma/client';
 import { GameRound } from '../domain/model/game-round.entity';
 
 @Injectable()

@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Prisma, GameProvider, GameTransactionType, WalletBalanceType, WalletTransactionType } from '@prisma/client';
+import { Prisma, GameProvider, CasinoGameTransactionType, WalletBalanceType, WalletTransactionType } from '@prisma/client';
 import { CasinoGameSession } from '../game-session/domain';
 import { Transactional } from '@nestjs-cls/transactional';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
@@ -104,9 +104,9 @@ export class ProcessCasinoCreditService {
         }
 
         // 3. Idempotency Check
-        let txType: GameTransactionType = GameTransactionType.WIN;
-        if (isCancel) txType = GameTransactionType.CANCEL;
-        else if (isJackpot) txType = GameTransactionType.JACKPOT;
+        let txType: CasinoGameTransactionType = CasinoGameTransactionType.WIN;
+        if (isCancel) txType = CasinoGameTransactionType.CANCEL;
+        else if (isJackpot) txType = CasinoGameTransactionType.JACKPOT;
 
         const existingTx = await this.gameTransactionRepository.findByExternalId(
             transactionId,
@@ -127,7 +127,7 @@ export class ProcessCasinoCreditService {
         if (isCancel) {
             const originalBet = await this.gameTransactionRepository.findByExternalId(
                 transactionId,
-                GameTransactionType.BET,
+                CasinoGameTransactionType.BET,
                 anchorTime,
             );
 
@@ -228,7 +228,7 @@ export class ProcessCasinoCreditService {
         // 잭팟이나 보너스는 라운드 진행 중에 발생할 수도 있으므로 제외할지 정책적 결정 필요 (일단 포함)
         // 여기서는 안전하게 모든 Credit 트랜잭션에 대해 후처리를 트리거하되, 잡 내부에서 완료 여부를 판단할 수도 있음.
         // 하지만 효율성을 위해 WIN인 경우에만 트리거하는 것이 일반적.
-        if (txType === GameTransactionType.WIN || txType === GameTransactionType.CANCEL) {
+        if (txType === CasinoGameTransactionType.WIN || txType === CasinoGameTransactionType.CANCEL) {
             // 7-1. 게임 결과(URL/Replay) 조회 스케줄링
             await this.casinoQueueService.addGameResultFetchJob({
                 gameRoundId: round.id.toString(),

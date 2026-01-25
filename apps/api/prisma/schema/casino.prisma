@@ -23,7 +23,7 @@ model CasinoGameSession {
   gameId                 BigInt?              @map("game_id") // 현재 실행 중인 게임 (선택적)
   casinoGameV2           CasinoGameV2?        @relation(fields: [gameId], references: [id])
   user                   User                 @relation(fields: [userId], references: [id])
-  gameRoundV2s           GameRoundV2[]
+  gameRoundV2s           CasinoGameRound[]
 
   @@index([userId])
   @@map("casino_game_sessions")
@@ -200,7 +200,7 @@ model CasinoGameV2 {
   categoryItems      CasinoGameCategoryItem[] // N:M 카테고리 관계
   bonusDetails       BonusDetail[] // 보너스 상세 (레거시 호환)
   casinoGameSessions CasinoGameSession[]
-  gameRoundV2s       GameRoundV2[]
+  gameRoundV2s       CasinoGameRound[]
 
   @@unique([providerId, externalGameId]) // 프로바이더 + 외부게임ID 조합은 유니크
   @@index([isEnabled, isVisible])
@@ -229,7 +229,7 @@ model CasinoGameV2Translation {
 // 신규 게임 로깅 구조 (V2) - WalletTransaction과 연계
 // ═══════════════════════════════════════════════════════════════
 
-model GameRoundV2 {
+model CasinoGameRound {
   id     BigInt // 스노우플레이크 처리
   userId BigInt @map("user_id")
 
@@ -279,20 +279,20 @@ model GameRoundV2 {
   pushedBetCheckedAt DateTime? @map("pushed_bet_checked_at")
 
   // Relations
-  transactions GameTransaction[]
-  user         User              @relation(fields: [userId], references: [id])
-  gameSession  CasinoGameSession @relation(fields: [gameSessionId], references: [id])
-  casinoGame   CasinoGameV2      @relation(fields: [gameId], references: [id])
+  transactions CasinoGameTransaction[]
+  user         User                    @relation(fields: [userId], references: [id])
+  gameSession  CasinoGameSession       @relation(fields: [gameSessionId], references: [id])
+  casinoGame   CasinoGameV2            @relation(fields: [gameId], references: [id])
 
   // 파티셔닝을 위한 복합키 설정
   @@id([id, startedAt])
   // 유니크 제약조건에도 파티션 키(startedAt) 포함 필수
   @@unique([aggregatorRoundId, aggregatorType, startedAt])
   @@index([userId, startedAt])
-  @@map("game_rounds_v2")
+  @@map("casino_game_rounds")
 }
 
-model GameTransaction {
+model CasinoGameTransaction {
   id BigInt // 스노우플레이크 처리
 
   // 라운드 정보 (복합키 참조를 위해 startedAt 포함)
@@ -301,7 +301,7 @@ model GameTransaction {
   userId         BigInt   @map("user_id")
 
   // 행위 유형
-  type GameTransactionType // BET, WIN, CANCEL, ROLLBACK, JACKPOT
+  type CasinoGameTransactionType // BET, WIN, CANCEL, ROLLBACK, JACKPOT
 
   // 외부 식별자 (제공사가 주는 Transaction ID)
   aggregatorTxId String @map("aggregator_tx_id")
@@ -315,17 +315,17 @@ model GameTransaction {
   createdAt DateTime @default(now()) @map("created_at")
 
   // Relation
-  gameRound GameRoundV2 @relation(fields: [gameRoundId, roundStartedAt], references: [id, startedAt], onDelete: Cascade)
+  gameRound CasinoGameRound @relation(fields: [gameRoundId, roundStartedAt], references: [id, startedAt], onDelete: Cascade)
 
   // 파티셔닝을 위한 복합키 설정 (부모 라운드 시간 기준 Co-located Partitioning)
   @@id([id, roundStartedAt])
   // 유니크 제약조건에도 파티션 키(roundStartedAt) 포함 필수
   @@unique([aggregatorTxId, type, roundStartedAt])
   @@index([gameRoundId, roundStartedAt])
-  @@map("game_transactions")
+  @@map("casino_game_transactions")
 }
 
-enum GameTransactionType {
+enum CasinoGameTransactionType {
   BET
   WIN
   CANCEL
