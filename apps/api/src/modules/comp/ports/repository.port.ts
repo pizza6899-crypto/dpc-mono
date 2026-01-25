@@ -1,4 +1,4 @@
-import { ExchangeCurrencyCode, Prisma, TransactionStatus, TransactionType } from '@prisma/client';
+import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import { CompWallet } from '../domain/model/comp-wallet.entity';
 import { CompTransaction } from '../domain/model/comp-transaction.entity';
 
@@ -8,8 +8,8 @@ export interface CompRepositoryPort {
     createTransaction(transaction: CompTransaction): Promise<CompTransaction>;
     createMainTransaction(data: {
         userId: bigint;
-        type: TransactionType;
-        status: TransactionStatus;
+        type: any; // TransactionType 삭제됨
+        status: any; // TransactionStatus 삭제됨
         currency: ExchangeCurrencyCode;
         amount: Prisma.Decimal;
         beforeAmount: Prisma.Decimal;

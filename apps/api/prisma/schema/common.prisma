@@ -200,54 +200,6 @@ enum GameProvider {
   PLAYNGO
 }
 
-enum TransactionType {
-  DEPOSIT
-  WITHDRAW
-  GAME
-  BONUS
-  COMP_CLAIM
-  SYSTEM // 시스템 자동 지급/차감 (이벤트 등)
-  ADMIN_ADJUST // 관리자가 어드민 패널에서 수동으로 지급/차감
-}
-
-enum TransactionStatus {
-  PENDING
-  COMPLETED
-  CANCELLED
-}
-
-enum GameReplayType {
-  TEXT
-  URL
-  HTML
-}
-
-enum BetType {
-  NORMAL
-  TIP
-}
-
-enum WinType {
-  NORMAL
-  JACKPOT
-}
-
-enum BonusType {
-  PROMOTION
-  JACKPOT
-  IN_GAME_BONUS
-}
-
-enum WithdrawDetailStatus {
-  PENDING
-  PROCESSING
-  SENDING
-  COMPLETED
-  FAILED
-  CANCELLED
-  REJECTED
-}
-
 enum ExchangeRateProvider {
   NOWPAYMENT
   COINGECKO

@@ -36,7 +36,8 @@ export class RejectDepositService {
 
     // 1. DepositDetail 조회
     const deposit = await this.depositRepository.getById(id, {
-      transaction: true,
+      bankDepositConfig: true,
+      cryptoDepositConfig: true,
     });
 
     // 2. 엔티티 비즈니스 로직 실행 (거부 처리)

@@ -5,7 +5,7 @@ import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module'
 import { DepositDetail, DepositNotFoundException } from '../domain';
 import type { DepositDetailRepositoryPort, DepositListQuery, DepositStats, DepositWithUser } from '../ports/out/deposit-detail.repository.port';
 import { DepositDetailMapper } from './deposit-detail.mapper';
-import { TransactionStatus, TransactionType, ExchangeCurrencyCode, Prisma, DepositDetailStatus, DepositMethodType } from '@prisma/client';
+import { ExchangeCurrencyCode, Prisma, DepositDetailStatus, DepositMethodType } from '@prisma/client';
 import { generateUid } from 'src/utils/id.util';
 
 /**
@@ -71,8 +71,8 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
 
   async createTransaction(data: {
     userId: bigint;
-    type: TransactionType;
-    status: TransactionStatus;
+    type: any; // TransactionType 삭제됨
+    status: any; // TransactionStatus 삭제됨
     currency: ExchangeCurrencyCode;
     amount: Prisma.Decimal;
     beforeAmount: Prisma.Decimal;

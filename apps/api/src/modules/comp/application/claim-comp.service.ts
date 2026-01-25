@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { ExchangeCurrencyCode, Prisma, CompTransactionType, TransactionType, TransactionStatus } from '@prisma/client';
+import { ExchangeCurrencyCode, Prisma, CompTransactionType } from '@prisma/client';
 import { COMP_REPOSITORY } from '../ports/repository.token';
 import type { CompRepositoryPort } from '../ports';
 import { CompTransaction, InsufficientCompBalanceException } from '../domain';
@@ -98,8 +98,8 @@ export class ClaimCompService {
         // 7. Record Main Wallet Transaction
         await this.compRepository.createMainTransaction({
             userId,
-            type: TransactionType.COMP_CLAIM,
-            status: TransactionStatus.COMPLETED,
+            type: 'COMP_CLAIM' as any, // TransactionType 삭제됨
+            status: 'COMPLETED' as any, // TransactionStatus 삭제됨
             currency,
             amount: amount,
             beforeAmount: beforeMainBalance.add(beforeBonusBalance),

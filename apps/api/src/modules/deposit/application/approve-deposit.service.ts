@@ -2,7 +2,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma, AdjustmentReasonCode } from '@prisma/client';
-import { TransactionStatus, TransactionType } from '@prisma/client';
+
 import type { RequestClientInfo } from 'src/common/http/types';
 import { DepositAlreadyProcessedException } from '../domain';
 import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
@@ -57,7 +57,6 @@ export class ApproveDepositService {
 
     // 1. DepositDetail 조회 (transaction 포함)
     const deposit = await this.depositRepository.getById(id, {
-      transaction: true,
       bankDepositConfig: true,
     });
 
@@ -102,8 +101,8 @@ export class ApproveDepositService {
     if (!transactionId) {
       transactionId = await this.depositRepository.createTransaction({
         userId: deposit.userId,
-        type: TransactionType.DEPOSIT,
-        status: TransactionStatus.COMPLETED,
+        type: 'DEPOSIT' as any, // TransactionType 삭제됨
+        status: 'COMPLETED' as any, // TransactionStatus 삭제됨
         currency: deposit.depositCurrency,
         amount: actuallyPaid,
         beforeAmount: beforeTotalAmount,

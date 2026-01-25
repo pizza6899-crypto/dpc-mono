@@ -1,5 +1,5 @@
 // apps/api/src/modules/deposit/ports/out/deposit-detail.repository.port.ts
-import { Prisma, TransactionStatus, TransactionType, ExchangeCurrencyCode, DepositDetailStatus, DepositMethodType } from '@prisma/client';
+import { Prisma, ExchangeCurrencyCode, DepositDetailStatus, DepositMethodType } from '@prisma/client';
 import { DepositDetail } from '../../domain';
 
 export interface DepositListQuery {
@@ -30,14 +30,14 @@ export interface DepositWithUser {
 }
 
 export interface DepositDetailRepositoryPort {
-  findById(id: bigint, include?: { transaction?: boolean; bankDepositConfig?: boolean; cryptoDepositConfig?: boolean }): Promise<DepositDetail | null>;
-  getById(id: bigint, include?: { transaction?: boolean; bankDepositConfig?: boolean; cryptoDepositConfig?: boolean }): Promise<DepositDetail>;
+  findById(id: bigint, include?: { bankDepositConfig?: boolean; cryptoDepositConfig?: boolean }): Promise<DepositDetail | null>;
+  getById(id: bigint, include?: { bankDepositConfig?: boolean; cryptoDepositConfig?: boolean }): Promise<DepositDetail>;
   update(deposit: DepositDetail): Promise<DepositDetail>;
   create(deposit: DepositDetail): Promise<DepositDetail>;
   createTransaction(data: {
     userId: bigint;
-    type: TransactionType;
-    status: TransactionStatus;
+    type: any; // TransactionType 삭제됨
+    status: any; // TransactionStatus 삭제됨
     currency: ExchangeCurrencyCode;
     amount: Prisma.Decimal;
     beforeAmount: Prisma.Decimal;

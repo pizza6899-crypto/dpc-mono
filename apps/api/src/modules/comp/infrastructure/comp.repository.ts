@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { ExchangeCurrencyCode, Prisma, TransactionStatus, TransactionType } from '@prisma/client';
+import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import { CompRepositoryPort } from '../ports';
 import { CompWallet, CompTransaction } from '../domain';
 import { CompMapper } from './comp.mapper';
@@ -70,8 +70,8 @@ export class CompRepository implements CompRepositoryPort {
 
     async createMainTransaction(data: {
         userId: bigint;
-        type: TransactionType;
-        status: TransactionStatus;
+        type: any; // TransactionType 삭제됨
+        status: any; // TransactionStatus 삭제됨
         currency: ExchangeCurrencyCode;
         amount: Prisma.Decimal;
         beforeAmount: Prisma.Decimal;
