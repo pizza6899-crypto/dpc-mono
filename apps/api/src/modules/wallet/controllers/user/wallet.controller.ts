@@ -101,7 +101,7 @@ export class WalletController {
         currency: wallet.currency,
         cashBalance: wallet.cash.toString(),
         bonusBalance: wallet.bonus.toString(),
-        rewardBalance: wallet.reward.toString(),
+
         lockedBalance: wallet.lock.toString(),
         vaultBalance: wallet.vault.toString(),
         totalBalance: wallet.totalAvailableBalance.toString(),

@@ -20,7 +20,7 @@ export class UserWalletMapper {
       currency: prismaModel.currency,
       cash: prismaModel.cash,
       bonus: prismaModel.bonus,
-      reward: prismaModel.reward,
+
       lock: prismaModel.lock,
       vault: prismaModel.vault,
       status: prismaModel.status,
@@ -36,7 +36,7 @@ export class UserWalletMapper {
     currency: ExchangeCurrencyCode;
     cash: Prisma.Decimal;
     bonus: Prisma.Decimal;
-    reward: Prisma.Decimal;
+
     lock: Prisma.Decimal;
     vault: Prisma.Decimal;
     status: WalletStatus;
@@ -47,7 +47,7 @@ export class UserWalletMapper {
       currency: domain.currency,
       cash: domain.cash,
       bonus: domain.bonus,
-      reward: domain.reward,
+
       lock: domain.lock,
       vault: domain.vault,
       status: domain.status,

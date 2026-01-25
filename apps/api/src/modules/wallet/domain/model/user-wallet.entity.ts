@@ -17,7 +17,6 @@ export class UserWallet {
     public readonly currency: ExchangeCurrencyCode,
     private _cash: Prisma.Decimal,
     private _bonus: Prisma.Decimal,
-    private _reward: Prisma.Decimal,
     private _lock: Prisma.Decimal,
     private _vault: Prisma.Decimal,
     private _status: WalletStatus,
@@ -29,7 +28,6 @@ export class UserWallet {
   private validateBalances(): void {
     if (this._cash.lt(0)) throw new InvalidWalletBalanceException(`Cash balance cannot be negative: ${this._cash}`);
     if (this._bonus.lt(0)) throw new InvalidWalletBalanceException(`Bonus balance cannot be negative: ${this._bonus}`);
-    if (this._reward.lt(0)) throw new InvalidWalletBalanceException(`Reward balance cannot be negative: ${this._reward}`);
     if (this._lock.lt(0)) throw new InvalidWalletBalanceException(`Lock balance cannot be negative: ${this._lock}`);
     if (this._vault.lt(0)) throw new InvalidWalletBalanceException(`Vault balance cannot be negative: ${this._vault}`);
   }
@@ -39,7 +37,6 @@ export class UserWallet {
     currency: ExchangeCurrencyCode;
     cash?: Prisma.Decimal;
     bonus?: Prisma.Decimal;
-    reward?: Prisma.Decimal;
     lock?: Prisma.Decimal;
     vault?: Prisma.Decimal;
     status?: WalletStatus;
@@ -49,7 +46,6 @@ export class UserWallet {
       params.currency,
       params.cash ?? new Prisma.Decimal(0),
       params.bonus ?? new Prisma.Decimal(0),
-      params.reward ?? new Prisma.Decimal(0),
       params.lock ?? new Prisma.Decimal(0),
       params.vault ?? new Prisma.Decimal(0),
       params.status ?? WalletStatus.ACTIVE,
@@ -62,7 +58,6 @@ export class UserWallet {
     currency: ExchangeCurrencyCode;
     cash: Prisma.Decimal;
     bonus: Prisma.Decimal;
-    reward: Prisma.Decimal;
     lock: Prisma.Decimal;
     vault: Prisma.Decimal;
     status: WalletStatus;
@@ -73,7 +68,6 @@ export class UserWallet {
       data.currency,
       data.cash,
       data.bonus,
-      data.reward,
       data.lock,
       data.vault,
       data.status,
@@ -84,7 +78,6 @@ export class UserWallet {
   // Getters
   get cash(): Prisma.Decimal { return this._cash; }
   get bonus(): Prisma.Decimal { return this._bonus; }
-  get reward(): Prisma.Decimal { return this._reward; }
   get lock(): Prisma.Decimal { return this._lock; }
   get vault(): Prisma.Decimal { return this._vault; }
   get status(): WalletStatus { return this._status; }
@@ -95,7 +88,7 @@ export class UserWallet {
    * 총 사용 가능 잔액 (Cash + Bonus + Reward)
    */
   get totalAvailableBalance(): Prisma.Decimal {
-    return this._cash.add(this._bonus).add(this._reward);
+    return this._cash.add(this._bonus);
   }
 
   hasSufficientCash(amount: Prisma.Decimal): boolean {
@@ -128,19 +121,6 @@ export class UserWallet {
       throw new InsufficientBalanceException(this._bonus.toString(), amount.toString());
     }
     this._bonus = this._bonus.sub(amount);
-  }
-
-  increaseReward(amount: Prisma.Decimal): void {
-    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount to increase must be positive');
-    this._reward = this._reward.add(amount);
-  }
-
-  decreaseReward(amount: Prisma.Decimal): void {
-    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount to decrease must be positive');
-    if (this._reward.lt(amount)) {
-      throw new InsufficientBalanceException(this._reward.toString(), amount.toString());
-    }
-    this._reward = this._reward.sub(amount);
   }
 
   increaseLock(amount: Prisma.Decimal): void {

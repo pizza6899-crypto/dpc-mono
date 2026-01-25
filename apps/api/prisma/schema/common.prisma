@@ -380,7 +380,6 @@ model LoginAttempt {
 enum WalletBalanceType {
   CASH
   BONUS
-  REWARD
   LOCK
   VAULT
 }

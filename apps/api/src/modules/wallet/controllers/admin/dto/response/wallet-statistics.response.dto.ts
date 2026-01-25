@@ -11,8 +11,7 @@ export class CurrencyStatisticsDto {
     @ApiProperty({ description: 'Total Bonus Balance / 총 보너스 잔액 합계' })
     totalBonus: string;
 
-    @ApiProperty({ description: 'Total Reward Balance / 총 리워드 잔액 합계' })
-    totalReward: string;
+
 
     @ApiProperty({ description: 'Total Locked Balance / 총 잠긴 잔액 합계' })
     totalLock: string;

@@ -26,13 +26,6 @@ export class UserWalletResponseDto {
     bonusBalance: string;
 
     @ApiProperty({
-        description: 'Reward balance / 리워드 잔액',
-        example: '100.00',
-        type: String,
-    })
-    rewardBalance: string;
-
-    @ApiProperty({
         description: 'Locked balance / 잠긴 잔액',
         example: '0.00',
         type: String,

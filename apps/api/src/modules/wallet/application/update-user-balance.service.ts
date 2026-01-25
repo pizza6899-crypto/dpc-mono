@@ -166,7 +166,6 @@ export class UpdateUserBalanceService {
         switch (type) {
             case WalletBalanceType.CASH: return wallet.cash;
             case WalletBalanceType.BONUS: return wallet.bonus;
-            case WalletBalanceType.REWARD: return wallet.reward;
             case WalletBalanceType.LOCK: return wallet.lock;
             case WalletBalanceType.VAULT: return wallet.vault;
             default:
@@ -184,7 +183,6 @@ export class UpdateUserBalanceService {
             switch (type) {
                 case WalletBalanceType.CASH: wallet.increaseCash(amount); break;
                 case WalletBalanceType.BONUS: wallet.increaseBonus(amount); break;
-                case WalletBalanceType.REWARD: wallet.increaseReward(amount); break;
                 case WalletBalanceType.LOCK: wallet.increaseLock(amount); break;
                 case WalletBalanceType.VAULT: wallet.increaseVault(amount); break;
                 default: throw new InvalidWalletBalanceTypeException(type);
@@ -193,7 +191,6 @@ export class UpdateUserBalanceService {
             switch (type) {
                 case WalletBalanceType.CASH: wallet.decreaseCash(amount); break;
                 case WalletBalanceType.BONUS: wallet.decreaseBonus(amount); break;
-                case WalletBalanceType.REWARD: wallet.decreaseReward(amount); break;
                 case WalletBalanceType.LOCK: wallet.decreaseLock(amount); break;
                 case WalletBalanceType.VAULT: wallet.decreaseVault(amount); break;
                 default: throw new InvalidWalletBalanceTypeException(type);

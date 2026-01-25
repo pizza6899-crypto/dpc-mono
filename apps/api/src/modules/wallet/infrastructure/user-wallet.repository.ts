@@ -43,7 +43,6 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
       _sum: {
         cash: true,
         bonus: true,
-        reward: true,
         lock: true,
         vault: true,
       },
@@ -56,7 +55,6 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
       currency: s.currency,
       totalCash: s._sum.cash || 0,
       totalBonus: s._sum.bonus || 0,
-      totalReward: s._sum.reward || 0,
       totalLock: s._sum.lock || 0,
       totalVault: s._sum.vault || 0,
       userCount: s._count.userId,

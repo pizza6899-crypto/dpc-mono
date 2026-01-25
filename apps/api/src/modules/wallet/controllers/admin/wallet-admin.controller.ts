@@ -83,7 +83,6 @@ export class WalletAdminController {
         currency: w.currency,
         cashBalance: w.cash.toString(),
         bonusBalance: w.bonus.toString(),
-        rewardBalance: w.reward.toString(),
         lockedBalance: w.lock.toString(),
         vaultBalance: w.vault.toString(),
         totalBalance: w.totalAvailableBalance.toString(),
@@ -115,7 +114,6 @@ export class WalletAdminController {
         currency: s.currency,
         totalCash: s.totalCash.toString(),
         totalBonus: s.totalBonus.toString(),
-        totalReward: s.totalReward.toString(),
         totalLock: s.totalLock.toString(),
         totalVault: s.totalVault.toString(),
         userCount: s.userCount,
@@ -161,7 +159,6 @@ export class WalletAdminController {
       newBalance: {
         cash: wallet.cash.toString(),
         bonus: wallet.bonus.toString(),
-        reward: wallet.reward.toString(),
         total: wallet.totalAvailableBalance.toString(),
       },
       updatedAt: wallet.updatedAt,

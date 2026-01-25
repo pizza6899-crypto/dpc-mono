@@ -8,8 +8,7 @@ export class AdjustedBalanceDetailDto {
     @ApiProperty({ description: 'New Bonus Balance / 변경 후 보너스 잔액' })
     bonus: string;
 
-    @ApiProperty({ description: 'New Reward Balance / 변경 후 리워드 잔액' })
-    reward: string;
+
 
     @ApiProperty({ description: 'New Total Available Balance / 변경 후 총 가용 잔액' })
     total: string;

@@ -14,8 +14,7 @@ export class AdminWalletResponseDto {
     @ApiProperty({ description: 'Bonus Balance / 보너스 잔액' })
     bonusBalance: string;
 
-    @ApiProperty({ description: 'Reward Balance / 리워드 잔액' })
-    rewardBalance: string;
+
 
     @ApiProperty({ description: 'Locked Balance / 잠긴 잔액' })
     lockedBalance: string;
