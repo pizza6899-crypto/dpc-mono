@@ -5,6 +5,8 @@ import { DcsApiService } from '../infrastructure/dcs-api.service';
 import { GameAggregatorType, Prisma } from '@prisma/client';
 import { GameResultMeta } from '../../../domain/model/game-round.entity';
 import { ClsService } from 'nestjs-cls';
+import { CASINO_GAME_SESSION_REPOSITORY } from '../../../game-session/ports/casino-game-session.repository.token';
+import { type CasinoGameSessionRepositoryPort } from '../../../game-session/ports/casino-game-session.repository.port';
 
 import { DcsResponseCode } from '../constants/dcs-response-codes';
 
@@ -15,6 +17,8 @@ export class DcsFetchGameResultService {
     constructor(
         @Inject(GAME_ROUND_REPOSITORY_TOKEN)
         private readonly gameRoundRepository: GameRoundRepositoryPort,
+        @Inject(CASINO_GAME_SESSION_REPOSITORY)
+        private readonly gameSessionRepository: CasinoGameSessionRepositoryPort,
         private readonly dcsApiService: DcsApiService,
         private readonly cls: ClsService,
     ) { }
@@ -41,9 +45,17 @@ export class DcsFetchGameResultService {
             }
 
             try {
+                // 세션 정보 조회 (brand_uid = playerName)
+                const session = await this.gameSessionRepository.findByid(round.gameSessionId);
+
+                if (!session) {
+                    this.logger.warn(`CasinoGameSession not found for round ${gameRoundId}`);
+                    return;
+                }
+
                 // DCS API 호출 (getReplay)
                 const result = await this.dcsApiService.getReplay({
-                    brand_uid: round.userId.toString(),
+                    brand_uid: session.playerName,
                     gameCurrency: round.gameCurrency as any, // DcsApiService에서 GamingCurrencyCode 타입 캐스팅 필요
                     provider: round.provider,
                     round_id: aggregatorRoundId,
