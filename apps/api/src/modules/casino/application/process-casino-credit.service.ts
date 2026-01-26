@@ -30,6 +30,7 @@ export interface ProcessCasinoCreditCommand {
     isJackpot?: boolean;
     isBonus?: boolean;
     isEndRound?: boolean;
+    isSimulation?: boolean;
     description?: string;
 }
 
@@ -233,9 +234,13 @@ export class ProcessCasinoCreditService {
 
         // [비동기] 8. 큐 처리 (결과 조회 & 후처리)
         if (txType === CasinoGameTransactionType.WIN || txType === CasinoGameTransactionType.CANCEL) {
-            await this.casinoQueueService.addGameResultFetchJob({
-                gameRoundId: round.id.toString(),
-            });
+            // 시뮬레이션이 아닐 때만 실제 결과 조회를 큐에 넣음
+            if (!command.isSimulation) {
+                await this.casinoQueueService.addGameResultFetchJob({
+                    gameRoundId: round.id.toString(),
+                });
+            }
+
             await this.casinoQueueService.addGamePostProcessJob({
                 gameRoundId: round.id.toString(),
             });

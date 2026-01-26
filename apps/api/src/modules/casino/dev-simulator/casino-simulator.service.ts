@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, Inject } from '@nestjs/common';
 import { Prisma, GameAggregatorType, GameProvider } from '@prisma/client';
 import { ProcessCasinoBetService } from '../application/process-casino-bet.service';
 import { ProcessCasinoCreditService } from '../application/process-casino-credit.service';
@@ -6,6 +6,9 @@ import { FindCasinoGameSessionService } from '../game-session/application/find-c
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { SimulateRoundRequestDto, SimulateRoundResponseDto } from './dto/simulate-round.dto';
 import { CreateCasinoGameSessionService } from '../game-session/application/create-casino-game-session.service';
+import { UpdatePushedBetService } from '../application/update-pushed-bet.service';
+import { GAME_ROUND_REPOSITORY_TOKEN } from '../ports/out/game-round.repository.token';
+import type { GameRoundRepositoryPort } from '../ports/out/game-round.repository.port';
 
 @Injectable()
 export class CasinoSimulatorService {
@@ -17,6 +20,9 @@ export class CasinoSimulatorService {
         private readonly findSessionService: FindCasinoGameSessionService,
         private readonly createSessionService: CreateCasinoGameSessionService,
         private readonly snowflakeService: SnowflakeService,
+        private readonly updatePushedBetService: UpdatePushedBetService,
+        @Inject(GAME_ROUND_REPOSITORY_TOKEN)
+        private readonly gameRoundRepository: GameRoundRepositoryPort,
     ) { }
 
     async simulateRound(dto: SimulateRoundRequestDto): Promise<SimulateRoundResponseDto> {
@@ -93,9 +99,25 @@ export class CasinoSimulatorService {
             winTime: winTime,
             provider,
             isEndRound: true, // 라운드 종료 처리
+            isSimulation: true, //Added
             description: 'Simulation Win',
         });
         logs.push(`[Win] 완료. 잔액: ${winResult.balance}`);
+
+        // 5. 시뮬레이션 편의성: 푸시 검증 즉시 완료 처리 (5분 대기 방지)
+        try {
+            const gameRound = await this.gameRoundRepository.findLatestByExternalId(roundId, aggregatorType);
+            if (gameRound) {
+                await this.updatePushedBetService.markAsChecked([{
+                    id: gameRound.id,
+                    startedAt: gameRound.startedAt,
+                }]);
+                logs.push(`[PostProcess] 푸시 검증 마킹 완료 (5분 대기 스킵)`);
+            }
+        } catch (e) {
+            logs.push(`[Warning] 푸시 검증 마킹 실패: ${e.message}`);
+        }
+
         logs.push(`[PostProcess] 큐에 작업 등록됨 (비동기 실행)`);
 
         return {
