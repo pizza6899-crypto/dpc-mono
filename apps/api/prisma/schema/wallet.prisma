@@ -105,13 +105,24 @@ model UserWalletHourlyStats {
     currency ExchangeCurrencyCode
     date     DateTime // YYYY-MM-DD HH:00:00
 
-    totalDeposit  Decimal @default(0) @map("total_deposit") @db.Decimal(32, 18)
-    totalWithdraw Decimal @default(0) @map("total_withdraw") @db.Decimal(32, 18)
-    totalBet      Decimal @default(0) @map("total_bet") @db.Decimal(32, 18)
-    totalWin      Decimal @default(0) @map("total_win") @db.Decimal(32, 18)
+    // [Cash Flow Statistics]
+    totalDepositCash  Decimal @default(0) @map("total_deposit_cash") @db.Decimal(32, 18) // 입금
+    totalWithdrawCash Decimal @default(0) @map("total_withdraw_cash") @db.Decimal(32, 18) // 출금
+    totalBetCash      Decimal @default(0) @map("total_bet_cash") @db.Decimal(32, 18) // 현금 베팅
+    totalWinCash      Decimal @default(0) @map("total_win_cash") @db.Decimal(32, 18) // 현금 승리
 
-    startBalance Decimal @default(0) @map("start_balance") @db.Decimal(32, 18)
-    endBalance   Decimal @default(0) @map("end_balance") @db.Decimal(32, 18)
+    // [Bonus Flow Statistics]
+    totalBonusGiven Decimal @default(0) @map("total_bonus_given") @db.Decimal(32, 18) // 보너스 지급
+    totalBonusUsed  Decimal @default(0) @map("total_bonus_used") @db.Decimal(32, 18) // 보너스 회수/만료
+    totalBetBonus   Decimal @default(0) @map("total_bet_bonus") @db.Decimal(32, 18) // 보너스 베팅
+    totalWinBonus   Decimal @default(0) @map("total_win_bonus") @db.Decimal(32, 18) // 보너스 승리
+
+    // [Snapshots] - 기초/기말 잔액 분리
+    startCash Decimal @default(0) @map("start_cash") @db.Decimal(32, 18)
+    endCash   Decimal @default(0) @map("end_cash") @db.Decimal(32, 18)
+
+    startBonus Decimal @default(0) @map("start_bonus") @db.Decimal(32, 18)
+    endBonus   Decimal @default(0) @map("end_bonus") @db.Decimal(32, 18)
 
     createdAt DateTime @default(now()) @map("created_at")
     user      User     @relation(fields: [userId], references: [id])
