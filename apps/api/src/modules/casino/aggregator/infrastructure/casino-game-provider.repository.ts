@@ -10,11 +10,37 @@ import { CasinoGameProvider, CasinoGameProviderNotFoundException } from '../doma
 
 @Injectable()
 export class CasinoGameProviderRepository implements CasinoGameProviderRepositoryPort {
+    private readonly cacheById = new Map<bigint, { data: CasinoGameProvider, timestamp: number }>();
+    private readonly cacheByCode = new Map<string, { data: CasinoGameProvider, timestamp: number }>();
+    private readonly cacheByExternalId = new Map<string, { data: CasinoGameProvider, timestamp: number }>();
+    private readonly CACHE_TTL = 60 * 1000; // 1분 캐시
+
     constructor(
         @InjectTransaction()
         private readonly tx: PrismaTransaction,
         private readonly mapper: CasinoGameProviderMapper,
     ) { }
+
+    private getCacheKey(aggregatorId: bigint, code: string): string {
+        return `${aggregatorId}:${code}`;
+    }
+
+    private updateCache(provider: CasinoGameProvider): void {
+        const now = Date.now();
+        if (provider.id) {
+            this.cacheById.set(provider.id, { data: provider, timestamp: now });
+        }
+        this.cacheByCode.set(this.getCacheKey(provider.aggregatorId, provider.code), { data: provider, timestamp: now });
+        this.cacheByExternalId.set(this.getCacheKey(provider.aggregatorId, provider.externalId), { data: provider, timestamp: now });
+    }
+
+    private clearCache(provider: CasinoGameProvider): void {
+        if (provider.id) {
+            this.cacheById.delete(provider.id);
+        }
+        this.cacheByCode.delete(this.getCacheKey(provider.aggregatorId, provider.code));
+        this.cacheByExternalId.delete(this.getCacheKey(provider.aggregatorId, provider.externalId));
+    }
 
     async create(provider: CasinoGameProvider): Promise<CasinoGameProvider> {
         const data = this.mapper.toPrisma(provider);
@@ -30,14 +56,32 @@ export class CasinoGameProviderRepository implements CasinoGameProviderRepositor
             where: { id: provider.id! },
             data,
         });
-        return this.mapper.toDomain(updated);
+        const domain = this.mapper.toDomain(updated);
+
+        // 캐시 무효화
+        this.clearCache(domain);
+
+        return domain;
     }
 
     async findById(id: bigint): Promise<CasinoGameProvider | null> {
+        const cached = this.cacheById.get(id);
+        const now = Date.now();
+
+        if (cached && (now - cached.timestamp) < this.CACHE_TTL) {
+            return cached.data;
+        }
+
         const found = await this.tx.casinoGameProvider.findUnique({
             where: { id },
         });
-        return found ? this.mapper.toDomain(found) : null;
+
+        if (found) {
+            const domain = this.mapper.toDomain(found);
+            this.updateCache(domain);
+            return domain;
+        }
+        return null;
     }
 
     async getById(id: bigint): Promise<CasinoGameProvider> {
@@ -49,6 +93,14 @@ export class CasinoGameProviderRepository implements CasinoGameProviderRepositor
     }
 
     async findByCode(aggregatorId: bigint, code: string): Promise<CasinoGameProvider | null> {
+        const key = this.getCacheKey(aggregatorId, code);
+        const cached = this.cacheByCode.get(key);
+        const now = Date.now();
+
+        if (cached && (now - cached.timestamp) < this.CACHE_TTL) {
+            return cached.data;
+        }
+
         const found = await this.tx.casinoGameProvider.findUnique({
             where: {
                 aggregatorId_code: {
@@ -57,10 +109,24 @@ export class CasinoGameProviderRepository implements CasinoGameProviderRepositor
                 },
             },
         });
-        return found ? this.mapper.toDomain(found) : null;
+
+        if (found) {
+            const domain = this.mapper.toDomain(found);
+            this.updateCache(domain);
+            return domain;
+        }
+        return null;
     }
 
     async findByExternalId(aggregatorId: bigint, externalId: string): Promise<CasinoGameProvider | null> {
+        const key = this.getCacheKey(aggregatorId, externalId);
+        const cached = this.cacheByExternalId.get(key);
+        const now = Date.now();
+
+        if (cached && (now - cached.timestamp) < this.CACHE_TTL) {
+            return cached.data;
+        }
+
         const found = await this.tx.casinoGameProvider.findUnique({
             where: {
                 aggregatorId_externalId: {
@@ -69,7 +135,13 @@ export class CasinoGameProviderRepository implements CasinoGameProviderRepositor
                 },
             },
         });
-        return found ? this.mapper.toDomain(found) : null;
+
+        if (found) {
+            const domain = this.mapper.toDomain(found);
+            this.updateCache(domain);
+            return domain;
+        }
+        return null;
     }
 
     async list(options?: ListProvidersOptions): Promise<CasinoGameProvider[]> {

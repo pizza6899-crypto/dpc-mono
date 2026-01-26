@@ -8,6 +8,9 @@ import { CompMapper } from './comp.mapper';
 
 @Injectable()
 export class CompConfigRepository implements CompConfigRepositoryPort {
+    private readonly configCache = new Map<ExchangeCurrencyCode, { config: CompConfig, timestamp: number }>();
+    private readonly CACHE_TTL = 60 * 1000; // 1분 캐시
+
     constructor(
         @InjectTransaction()
         private readonly tx: PrismaTransaction,
@@ -15,10 +18,24 @@ export class CompConfigRepository implements CompConfigRepositoryPort {
     ) { }
 
     async getConfig(currency: ExchangeCurrencyCode): Promise<CompConfig | null> {
+        const cached = this.configCache.get(currency);
+        const now = Date.now();
+
+        if (cached && (now - cached.timestamp) < this.CACHE_TTL) {
+            return cached.config;
+        }
+
         const result = await this.tx.compConfig.findUnique({
             where: { currency },
         });
-        return result ? this.mapper.toConfigDomain(result) : null;
+
+        if (result) {
+            const domainConfig = this.mapper.toConfigDomain(result);
+            this.configCache.set(currency, { config: domainConfig, timestamp: now });
+            return domainConfig;
+        }
+
+        return null;
     }
 
     async getAllConfigs(): Promise<CompConfig[]> {
@@ -53,6 +70,9 @@ export class CompConfigRepository implements CompConfigRepositoryPort {
                 description: data.description,
             },
         });
+
+        // 캐시 무효화 (다음 조회 시 최신 정보를 읽도록)
+        this.configCache.delete(config.currency);
 
         return this.mapper.toConfigDomain(result);
     }
