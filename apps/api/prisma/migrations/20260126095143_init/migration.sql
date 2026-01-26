@@ -35,6 +35,9 @@ CREATE TYPE "AggregatorStatus" AS ENUM ('ACTIVE', 'INACTIVE', 'MAINTENANCE');
 CREATE TYPE "CategoryType" AS ENUM ('PRIMARY', 'COLLECTION');
 
 -- CreateEnum
+CREATE TYPE "CasinoGameTransactionType" AS ENUM ('BET', 'WIN', 'CANCEL', 'ROLLBACK', 'JACKPOT');
+
+-- CreateEnum
 CREATE TYPE "SocialType" AS ENUM ('GOOGLE', 'APPLE', 'TELEGRAM');
 
 -- CreateEnum
@@ -59,27 +62,6 @@ CREATE TYPE "GameAggregatorType" AS ENUM ('WHITECLIFF', 'DC');
 CREATE TYPE "GameProvider" AS ENUM ('EVOLUTION', 'EVOLUTION_ASIA', 'EVOLUTION_INDIA', 'EVOLUTION_KOREA', 'PRAGMATIC_PLAY_LIVE', 'PG_SOFT', 'PRAGMATIC_PLAY_SLOTS', 'RELAX_GAMING', 'PLAYNGO');
 
 -- CreateEnum
-CREATE TYPE "TransactionType" AS ENUM ('DEPOSIT', 'WITHDRAW', 'GAME', 'BONUS', 'COMP_CLAIM', 'SYSTEM', 'ADMIN_ADJUST');
-
--- CreateEnum
-CREATE TYPE "TransactionStatus" AS ENUM ('PENDING', 'COMPLETED', 'CANCELLED');
-
--- CreateEnum
-CREATE TYPE "GameReplayType" AS ENUM ('TEXT', 'URL', 'HTML');
-
--- CreateEnum
-CREATE TYPE "BetType" AS ENUM ('NORMAL', 'TIP');
-
--- CreateEnum
-CREATE TYPE "WinType" AS ENUM ('NORMAL', 'JACKPOT');
-
--- CreateEnum
-CREATE TYPE "BonusType" AS ENUM ('PROMOTION', 'JACKPOT', 'IN_GAME_BONUS');
-
--- CreateEnum
-CREATE TYPE "WithdrawDetailStatus" AS ENUM ('PENDING', 'PROCESSING', 'SENDING', 'COMPLETED', 'FAILED', 'CANCELLED', 'REJECTED');
-
--- CreateEnum
 CREATE TYPE "ExchangeRateProvider" AS ENUM ('NOWPAYMENT', 'COINGECKO', 'OPEN_EXCHANGE_RATES');
 
 -- CreateEnum
@@ -92,7 +74,13 @@ CREATE TYPE "LoginAttemptResult" AS ENUM ('SUCCESS', 'FAILED');
 CREATE TYPE "LoginFailureReason" AS ENUM ('INVALID_CREDENTIALS', 'USER_NOT_FOUND', 'ACCOUNT_SUSPENDED', 'ACCOUNT_CLOSED', 'THROTTLE_LIMIT_EXCEEDED', 'UNKNOWN');
 
 -- CreateEnum
-CREATE TYPE "CompTransactionType" AS ENUM ('EARN', 'CLAIM', 'ADMIN', 'EXPIRE');
+CREATE TYPE "WalletBalanceType" AS ENUM ('CASH', 'BONUS', 'LOCK', 'VAULT');
+
+-- CreateEnum
+CREATE TYPE "CompClaimStatus" AS ENUM ('PENDING', 'COMPLETED', 'FAILED');
+
+-- CreateEnum
+CREATE TYPE "CompTransactionType" AS ENUM ('EARN', 'CLAIM', 'ADMIN', 'EXPIRE', 'ROLLBACK');
 
 -- CreateEnum
 CREATE TYPE "DepositMethodType" AS ENUM ('CRYPTO_WALLET', 'BANK_TRANSFER');
@@ -152,6 +140,12 @@ CREATE TYPE "WageringSourceType" AS ENUM ('DEPOSIT', 'PROMOTION_BONUS');
 CREATE TYPE "WageringStatus" AS ENUM ('ACTIVE', 'COMPLETED', 'CANCELLED', 'EXPIRED', 'VOIDED');
 
 -- CreateEnum
+CREATE TYPE "WalletStatus" AS ENUM ('ACTIVE', 'FROZEN', 'READ_ONLY', 'WITHDRAWAL_RESTRICTED', 'INACTIVE', 'TERMINATED');
+
+-- CreateEnum
+CREATE TYPE "WalletTransactionType" AS ENUM ('DEPOSIT', 'WITHDRAW', 'BET', 'WIN', 'REFUND', 'BONUS_IN', 'BONUS_OUT', 'ADJUSTMENT', 'STATUS_CHANGE', 'COMP_CLAIM');
+
+-- CreateEnum
 CREATE TYPE "WithdrawalMethodType" AS ENUM ('CRYPTO_WALLET', 'BANK_TRANSFER');
 
 -- CreateEnum
@@ -184,7 +178,7 @@ CREATE TABLE "referrals" (
     "uid" TEXT NOT NULL,
     "affiliate_id" BIGINT NOT NULL,
     "sub_user_id" BIGINT NOT NULL,
-    "ip_address" TEXT,
+    "ip_address" INET,
     "device_fingerprint" TEXT,
     "user_agent" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -385,39 +379,6 @@ CREATE TABLE "casino_game_sessions" (
 );
 
 -- CreateTable
-CREATE TABLE "game_bets" (
-    "id" BIGINT NOT NULL,
-    "user_id" BIGINT NOT NULL,
-    "game_round_id" BIGINT NOT NULL,
-    "aggregator_type" "GameAggregatorType" NOT NULL,
-    "aggregator_bet_id" TEXT NOT NULL,
-    "bet_type" "BetType" NOT NULL,
-    "bet_amount" DECIMAL(32,18) NOT NULL,
-    "betted_at" TIMESTAMP(3) NOT NULL,
-    "bet_amount_in_game_currency" DECIMAL(32,18) NOT NULL,
-    "is_cancelled" BOOLEAN NOT NULL DEFAULT false,
-    "cancelled_at" TIMESTAMP(3),
-
-    CONSTRAINT "game_bets_pkey" PRIMARY KEY ("id","betted_at")
-);
-
--- CreateTable
-CREATE TABLE "game_wins" (
-    "id" BIGINT NOT NULL,
-    "user_id" BIGINT NOT NULL,
-    "game_round_id" BIGINT NOT NULL,
-    "aggregator_type" "GameAggregatorType" NOT NULL,
-    "aggregator_win_id" TEXT NOT NULL,
-    "win_type" "WinType" NOT NULL,
-    "win_amount" DECIMAL(32,18) NOT NULL,
-    "won_at" TIMESTAMP(3) NOT NULL,
-    "description" TEXT,
-    "win_amount_in_game_currency" DECIMAL(32,18) NOT NULL,
-
-    CONSTRAINT "game_wins_pkey" PRIMARY KEY ("id","won_at")
-);
-
--- CreateTable
 CREATE TABLE "casino_aggregators" (
     "id" BIGSERIAL NOT NULL,
     "name" TEXT NOT NULL,
@@ -491,7 +452,7 @@ CREATE TABLE "casino_game_category_items" (
 );
 
 -- CreateTable
-CREATE TABLE "casino_games_v2" (
+CREATE TABLE "casino_games" (
     "id" BIGSERIAL NOT NULL,
     "provider_id" BIGINT NOT NULL,
     "external_game_id" TEXT NOT NULL,
@@ -511,11 +472,11 @@ CREATE TABLE "casino_games_v2" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "casino_games_v2_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "casino_games_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "casino_game_v2_translations" (
+CREATE TABLE "casino_game_translations" (
     "id" BIGSERIAL NOT NULL,
     "game_id" BIGINT NOT NULL,
     "language" "Language" NOT NULL,
@@ -523,7 +484,59 @@ CREATE TABLE "casino_game_v2_translations" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "casino_game_v2_translations_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "casino_game_translations_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "casino_game_rounds" (
+    "id" BIGINT NOT NULL,
+    "user_id" BIGINT NOT NULL,
+    "game_session_id" BIGINT NOT NULL,
+    "game_id" BIGINT NOT NULL,
+    "provider" "GameProvider" NOT NULL,
+    "aggregator_type" "GameAggregatorType" NOT NULL,
+    "aggregator_round_id" TEXT NOT NULL,
+    "currency" "ExchangeCurrencyCode" NOT NULL,
+    "game_currency" "ExchangeCurrencyCode" NOT NULL,
+    "exchange_rate" DECIMAL(32,18) NOT NULL,
+    "usd_exchange_rate" DECIMAL(32,18) NOT NULL DEFAULT 0,
+    "comp_rate" DECIMAL(8,4) NOT NULL DEFAULT 0,
+    "total_bet_amount" DECIMAL(32,18) NOT NULL DEFAULT 0,
+    "total_win_amount" DECIMAL(32,18) NOT NULL DEFAULT 0,
+    "total_game_bet_amount" DECIMAL(32,18) NOT NULL DEFAULT 0,
+    "total_game_win_amount" DECIMAL(32,18) NOT NULL DEFAULT 0,
+    "total_refund_amount" DECIMAL(32,18) NOT NULL DEFAULT 0,
+    "total_game_refund_amount" DECIMAL(32,18) NOT NULL DEFAULT 0,
+    "total_jackpot_amount" DECIMAL(32,18) NOT NULL DEFAULT 0,
+    "total_game_jackpot_amount" DECIMAL(32,18) NOT NULL DEFAULT 0,
+    "jackpot_contribution_amount" DECIMAL(32,18) NOT NULL DEFAULT 0,
+    "comp_earned" DECIMAL(32,18) NOT NULL DEFAULT 0,
+    "result_meta" JSONB,
+    "started_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "completed_at" TIMESTAMP(3),
+    "is_completed" BOOLEAN NOT NULL DEFAULT false,
+    "is_orphaned" BOOLEAN NOT NULL DEFAULT false,
+    "pushed_bet_checked_at" TIMESTAMP(3),
+
+    CONSTRAINT "casino_game_rounds_pkey" PRIMARY KEY ("id","started_at")
+);
+
+-- CreateTable
+CREATE TABLE "casino_game_transactions" (
+    "id" BIGINT NOT NULL,
+    "game_round_id" BIGINT NOT NULL,
+    "round_started_at" TIMESTAMP(3) NOT NULL,
+    "user_id" BIGINT NOT NULL,
+    "type" "CasinoGameTransactionType" NOT NULL,
+    "aggregator_tx_id" TEXT NOT NULL,
+    "amount" DECIMAL(32,18) NOT NULL,
+    "balance_before" DECIMAL(32,18) NOT NULL,
+    "game_amount" DECIMAL(32,18),
+    "balanceType" "WalletBalanceType" NOT NULL,
+    "currency" "ExchangeCurrencyCode" NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "casino_game_transactions_pkey" PRIMARY KEY ("id","round_started_at")
 );
 
 -- CreateTable
@@ -551,17 +564,6 @@ CREATE TABLE "users" (
 );
 
 -- CreateTable
-CREATE TABLE "user_wallets" (
-    "user_id" BIGINT NOT NULL,
-    "currency" "ExchangeCurrencyCode" NOT NULL,
-    "main_balance" DECIMAL(32,18) NOT NULL DEFAULT 0,
-    "bonus_balance" DECIMAL(32,18) NOT NULL DEFAULT 0,
-    "updated_at" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "user_wallets_pkey" PRIMARY KEY ("user_id","currency")
-);
-
--- CreateTable
 CREATE TABLE "user_balance_stats" (
     "user_id" BIGINT NOT NULL,
     "currency" "ExchangeCurrencyCode" NOT NULL,
@@ -577,109 +579,6 @@ CREATE TABLE "user_balance_stats" (
     "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "user_balance_stats_pkey" PRIMARY KEY ("user_id","currency")
-);
-
--- CreateTable
-CREATE TABLE "transactions" (
-    "id" BIGSERIAL NOT NULL,
-    "user_id" BIGINT NOT NULL,
-    "type" "TransactionType" NOT NULL,
-    "status" "TransactionStatus" NOT NULL,
-    "currency" "ExchangeCurrencyCode" NOT NULL,
-    "amount" DECIMAL(32,18) NOT NULL,
-    "before_amount" DECIMAL(32,18) NOT NULL,
-    "after_amount" DECIMAL(32,18) NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
-    "comp_wallet_transaction_id" BIGINT,
-
-    CONSTRAINT "transactions_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "game_rounds" (
-    "id" BIGSERIAL NOT NULL,
-    "user_id" BIGINT NOT NULL,
-    "aggregator_type" "GameAggregatorType" NOT NULL,
-    "provider" "GameProvider" NOT NULL,
-    "aggregator_tx_id" TEXT NOT NULL,
-    "transaction_id" BIGINT NOT NULL,
-    "aggregator_game_id" INTEGER NOT NULL,
-    "total_bet_amount_in_game_currency" DECIMAL(32,18) NOT NULL DEFAULT 0,
-    "total_win_amount_in_game_currency" DECIMAL(32,18) NOT NULL DEFAULT 0,
-    "net_amount_in_game_currency" DECIMAL(32,18) NOT NULL DEFAULT 0,
-    "total_bet_amount_in_wallet_currency" DECIMAL(32,18) NOT NULL DEFAULT 0,
-    "total_win_amount_in_wallet_currency" DECIMAL(32,18) NOT NULL DEFAULT 0,
-    "net_amount_in_wallet_currency" DECIMAL(32,18) NOT NULL DEFAULT 0,
-    "session_id" TEXT,
-    "table_id" TEXT,
-    "round_id" TEXT,
-    "replay_type" "GameReplayType",
-    "replay_data" TEXT,
-    "total_push_amount" DECIMAL(32,18),
-    "tie_bet_amount" DECIMAL(32,18),
-    "contribution_amount" DECIMAL(32,18),
-    "comp_earned" DECIMAL(32,18),
-    "jackpot_contribution_amount" DECIMAL(32,18) NOT NULL DEFAULT 0,
-    "started_at" TIMESTAMP(3),
-    "completed_at" TIMESTAMP(3),
-    "game_id" BIGINT,
-    "game_session_id" BIGINT NOT NULL,
-
-    CONSTRAINT "game_rounds_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "transaction_balance_details" (
-    "id" BIGSERIAL NOT NULL,
-    "transaction_id" BIGINT NOT NULL,
-    "main_balance_change" DECIMAL(32,18),
-    "main_before_amount" DECIMAL(32,18),
-    "main_after_amount" DECIMAL(32,18),
-    "bonus_balance_change" DECIMAL(32,18),
-    "bonus_before_amount" DECIMAL(32,18),
-    "bonus_after_amount" DECIMAL(32,18),
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "transaction_balance_details_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "bonus_details" (
-    "id" BIGSERIAL NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "transaction_time" TIMESTAMP(3) NOT NULL,
-    "aggregator_type" "GameAggregatorType" NOT NULL,
-    "provider" "GameProvider" NOT NULL,
-    "bonus_type" "BonusType" NOT NULL,
-    "amount" DECIMAL(32,18) NOT NULL,
-    "aggregator_promotion_id" TEXT,
-    "aggregator_round_id" TEXT,
-    "aggregator_wager_id" TEXT,
-    "aggregator_transaction_id" TEXT,
-    "aggregator_freespin_id" TEXT,
-    "aggregator_session_id" TEXT,
-    "is_end_round" BOOLEAN,
-    "description" TEXT,
-    "game_id" BIGINT,
-    "transaction_id" BIGINT NOT NULL,
-
-    CONSTRAINT "bonus_details_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "now_payment_callback_logs" (
-    "id" BIGSERIAL NOT NULL,
-    "request_headers" JSONB,
-    "request_body" JSONB NOT NULL,
-    "response_status" INTEGER,
-    "response_body" JSONB,
-    "processed" BOOLEAN NOT NULL DEFAULT false,
-    "processing_error" TEXT,
-    "processed_at" TIMESTAMP(3),
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "now_payment_callback_logs_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -722,7 +621,7 @@ CREATE TABLE "login_attempts" (
     "user_id" BIGINT,
     "result" "LoginAttemptResult" NOT NULL,
     "failure_reason" "LoginFailureReason",
-    "ip_address" TEXT,
+    "ip_address" INET,
     "user_agent" TEXT,
     "device_fingerprint" TEXT,
     "is_mobile" BOOLEAN,
@@ -743,22 +642,64 @@ CREATE TABLE "user_comp_wallets" (
     "total_used" DECIMAL(32,18) NOT NULL DEFAULT 0,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "is_frozen" BOOLEAN NOT NULL DEFAULT false,
+    "last_claimed_at" TIMESTAMP(3),
+    "last_active_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "user_comp_wallets_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "comp_wallet_transactions" (
-    "id" BIGSERIAL NOT NULL,
+    "id" BIGINT NOT NULL,
     "comp_wallet_id" BIGINT NOT NULL,
     "amount" DECIMAL(32,18) NOT NULL,
+    "balance_before" DECIMAL(32,18) NOT NULL,
     "balance_after" DECIMAL(32,18) NOT NULL,
+    "applied_rate" DECIMAL(8,4),
     "type" "CompTransactionType" NOT NULL,
-    "reference_id" TEXT,
+    "reference_id" BIGINT,
+    "processed_by" BIGINT,
+    "parent_transaction_id" BIGINT,
+    "metadata" JSONB,
     "description" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "comp_wallet_transactions_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "comp_wallet_transactions_pkey" PRIMARY KEY ("id","created_at")
+);
+
+-- CreateTable
+CREATE TABLE "comp_configs" (
+    "id" BIGSERIAL NOT NULL,
+    "currency" "ExchangeCurrencyCode" NOT NULL,
+    "is_earn_enabled" BOOLEAN NOT NULL,
+    "is_claim_enabled" BOOLEAN NOT NULL,
+    "allow_negative_balance" BOOLEAN NOT NULL,
+    "min_claim_amount" DECIMAL(32,18) NOT NULL,
+    "max_daily_earn_per_user" DECIMAL(32,18) NOT NULL,
+    "expiration_days" INTEGER NOT NULL,
+    "description" TEXT,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "comp_configs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "comp_claim_histories" (
+    "id" BIGSERIAL NOT NULL,
+    "user_id" BIGINT NOT NULL,
+    "status" "CompClaimStatus" NOT NULL DEFAULT 'PENDING',
+    "failure_reason" TEXT,
+    "comp_wallet_transaction_id" BIGINT NOT NULL,
+    "comp_amount" DECIMAL(32,18) NOT NULL,
+    "comp_currency" "ExchangeCurrencyCode" NOT NULL,
+    "wallet_transaction_id" BIGINT,
+    "target_amount" DECIMAL(32,18) NOT NULL,
+    "target_currency" "ExchangeCurrencyCode" NOT NULL,
+    "exchange_rate" DECIMAL(32,18) NOT NULL DEFAULT 1,
+    "claimed_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "comp_claim_histories_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -771,7 +712,6 @@ CREATE TABLE "deposit_details" (
     "updated_at" TIMESTAMP(3) NOT NULL,
     "status" "DepositDetailStatus" NOT NULL,
     "user_id" BIGINT NOT NULL,
-    "transaction_id" BIGINT,
     "method_type" "DepositMethodType" NOT NULL,
     "provider" "PaymentProvider" NOT NULL,
     "provider_payment_id" TEXT,
@@ -785,7 +725,7 @@ CREATE TABLE "deposit_details" (
     "actually_paid" DECIMAL(32,18),
     "processed_by" BIGINT,
     "admin_note" TEXT,
-    "ip_address" TEXT,
+    "ip_address" INET,
     "device_fingerprint" TEXT,
     "fee_amount" DECIMAL(32,18),
     "fee_currency" TEXT,
@@ -871,6 +811,22 @@ CREATE TABLE "file_usages" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "file_usages_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "global_locks" (
+    "key" TEXT NOT NULL,
+    "instance_id" TEXT,
+    "is_acquired" BOOLEAN NOT NULL DEFAULT false,
+    "locked_at" TIMESTAMP(3),
+    "timeout_seconds" INTEGER NOT NULL DEFAULT 1800,
+    "last_status" TEXT,
+    "error_message" TEXT,
+    "last_finished_at" TIMESTAMP(3),
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "global_locks_pkey" PRIMARY KEY ("key")
 );
 
 -- CreateTable
@@ -1095,7 +1051,6 @@ CREATE TABLE "tier_history" (
 -- CreateTable
 CREATE TABLE "admin_adjustment_details" (
     "id" BIGSERIAL NOT NULL,
-    "transaction_id" BIGINT NOT NULL,
     "admin_user_id" BIGINT NOT NULL,
     "reason_code" "AdjustmentReasonCode" NOT NULL,
     "internal_note" TEXT,
@@ -1106,7 +1061,6 @@ CREATE TABLE "admin_adjustment_details" (
 -- CreateTable
 CREATE TABLE "system_adjustment_details" (
     "id" BIGSERIAL NOT NULL,
-    "transaction_id" BIGINT NOT NULL,
     "service_name" TEXT NOT NULL,
     "trigger_id" TEXT,
     "action_name" TEXT NOT NULL,
@@ -1124,7 +1078,7 @@ CREATE TABLE "user_sessions" (
     "type" "SessionType" NOT NULL,
     "status" "SessionStatus" NOT NULL DEFAULT 'ACTIVE',
     "is_admin" BOOLEAN NOT NULL DEFAULT false,
-    "ip_address" TEXT,
+    "ip_address" INET,
     "user_agent" TEXT,
     "device_fingerprint" TEXT,
     "is_mobile" BOOLEAN,
@@ -1180,10 +1134,42 @@ CREATE TABLE "wagering_contribution_logs" (
 );
 
 -- CreateTable
+CREATE TABLE "user_wallets" (
+    "user_id" BIGINT NOT NULL,
+    "currency" "ExchangeCurrencyCode" NOT NULL,
+    "cash" DECIMAL(32,18) NOT NULL DEFAULT 0,
+    "bonus" DECIMAL(32,18) NOT NULL DEFAULT 0,
+    "lock" DECIMAL(32,18) NOT NULL DEFAULT 0,
+    "vault" DECIMAL(32,18) NOT NULL DEFAULT 0,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+    "status" "WalletStatus" NOT NULL DEFAULT 'ACTIVE',
+
+    CONSTRAINT "user_wallets_pkey" PRIMARY KEY ("user_id","currency")
+);
+
+-- CreateTable
+CREATE TABLE "wallet_transactions" (
+    "id" BIGSERIAL NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "type" "WalletTransactionType" NOT NULL,
+    "balanceType" "WalletBalanceType" NOT NULL,
+    "amount" DECIMAL(32,18) NOT NULL,
+    "balance_before" DECIMAL(32,18) NOT NULL,
+    "balance_after" DECIMAL(32,18) NOT NULL,
+    "reference_id" BIGINT,
+    "metadata" JSONB,
+    "ip_address" INET,
+    "country_code" CHAR(2),
+    "user_id" BIGINT NOT NULL,
+    "currency" "ExchangeCurrencyCode" NOT NULL,
+
+    CONSTRAINT "wallet_transactions_pkey" PRIMARY KEY ("id","created_at")
+);
+
+-- CreateTable
 CREATE TABLE "withdrawal_details" (
     "id" BIGINT NOT NULL,
     "user_id" BIGINT NOT NULL,
-    "transaction_id" BIGINT,
     "method_type" "WithdrawalMethodType" NOT NULL,
     "status" "WithdrawalStatus" NOT NULL,
     "processing_mode" "WithdrawalProcessingMode" NOT NULL,
@@ -1206,7 +1192,7 @@ CREATE TABLE "withdrawal_details" (
     "processed_by" BIGINT,
     "admin_notes" TEXT[] DEFAULT ARRAY[]::TEXT[],
     "failure_reason" TEXT,
-    "ip_address" TEXT,
+    "ip_address" INET,
     "device_fingerprint" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
@@ -1399,18 +1385,6 @@ CREATE UNIQUE INDEX "casino_game_sessions_token_key" ON "casino_game_sessions"("
 CREATE INDEX "casino_game_sessions_user_id_idx" ON "casino_game_sessions"("user_id");
 
 -- CreateIndex
-CREATE INDEX "game_bets_game_round_id_betted_at_idx" ON "game_bets"("game_round_id", "betted_at");
-
--- CreateIndex
-CREATE UNIQUE INDEX "game_bets_aggregator_bet_id_aggregator_type_betted_at_key" ON "game_bets"("aggregator_bet_id", "aggregator_type", "betted_at");
-
--- CreateIndex
-CREATE INDEX "game_wins_game_round_id_idx" ON "game_wins"("game_round_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "game_wins_aggregator_win_id_aggregator_type_won_at_key" ON "game_wins"("aggregator_win_id", "aggregator_type", "won_at");
-
--- CreateIndex
 CREATE UNIQUE INDEX "casino_aggregators_code_key" ON "casino_aggregators"("code");
 
 -- CreateIndex
@@ -1438,22 +1412,34 @@ CREATE INDEX "casino_game_category_items_expires_at_idx" ON "casino_game_categor
 CREATE UNIQUE INDEX "casino_game_category_items_category_id_game_id_key" ON "casino_game_category_items"("category_id", "game_id");
 
 -- CreateIndex
-CREATE INDEX "casino_games_v2_is_enabled_is_visible_idx" ON "casino_games_v2"("is_enabled", "is_visible");
+CREATE INDEX "casino_games_is_enabled_is_visible_idx" ON "casino_games"("is_enabled", "is_visible");
 
 -- CreateIndex
-CREATE INDEX "casino_games_v2_sort_order_idx" ON "casino_games_v2"("sort_order");
+CREATE INDEX "casino_games_sort_order_idx" ON "casino_games"("sort_order");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "casino_games_v2_provider_id_external_game_id_key" ON "casino_games_v2"("provider_id", "external_game_id");
+CREATE UNIQUE INDEX "casino_games_provider_id_external_game_id_key" ON "casino_games"("provider_id", "external_game_id");
 
 -- CreateIndex
-CREATE INDEX "casino_game_v2_translations_language_idx" ON "casino_game_v2_translations"("language");
+CREATE INDEX "casino_game_translations_language_idx" ON "casino_game_translations"("language");
 
 -- CreateIndex
-CREATE INDEX "casino_game_v2_translations_name_idx" ON "casino_game_v2_translations" USING GIN ("name" gin_trgm_ops);
+CREATE INDEX "casino_game_translations_name_idx" ON "casino_game_translations" USING GIN ("name" gin_trgm_ops);
 
 -- CreateIndex
-CREATE UNIQUE INDEX "casino_game_v2_translations_game_id_language_key" ON "casino_game_v2_translations"("game_id", "language");
+CREATE UNIQUE INDEX "casino_game_translations_game_id_language_key" ON "casino_game_translations"("game_id", "language");
+
+-- CreateIndex
+CREATE INDEX "casino_game_rounds_user_id_started_at_idx" ON "casino_game_rounds"("user_id", "started_at");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "casino_game_rounds_aggregator_round_id_aggregator_type_star_key" ON "casino_game_rounds"("aggregator_round_id", "aggregator_type", "started_at");
+
+-- CreateIndex
+CREATE INDEX "casino_game_transactions_game_round_id_round_started_at_idx" ON "casino_game_transactions"("game_round_id", "round_started_at");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "casino_game_transactions_aggregator_tx_id_type_round_starte_key" ON "casino_game_transactions"("aggregator_tx_id", "type", "round_started_at");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_whitecliff_id_key" ON "users"("whitecliff_id");
@@ -1471,28 +1457,10 @@ CREATE UNIQUE INDEX "users_dcs_id_key" ON "users"("dcs_id");
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
-CREATE INDEX "user_wallets_user_id_idx" ON "user_wallets"("user_id");
-
--- CreateIndex
-CREATE INDEX "user_wallets_currency_idx" ON "user_wallets"("currency");
-
--- CreateIndex
 CREATE INDEX "user_balance_stats_user_id_idx" ON "user_balance_stats"("user_id");
 
 -- CreateIndex
 CREATE INDEX "user_balance_stats_currency_idx" ON "user_balance_stats"("currency");
-
--- CreateIndex
-CREATE UNIQUE INDEX "game_rounds_transaction_id_key" ON "game_rounds"("transaction_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "game_rounds_aggregator_tx_id_aggregator_type_key" ON "game_rounds"("aggregator_tx_id", "aggregator_type");
-
--- CreateIndex
-CREATE INDEX "transaction_balance_details_transaction_id_idx" ON "transaction_balance_details"("transaction_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "bonus_details_transaction_id_key" ON "bonus_details"("transaction_id");
 
 -- CreateIndex
 CREATE INDEX "exchange_rates_base_currency_quote_currency_idx" ON "exchange_rates"("base_currency", "quote_currency");
@@ -1549,6 +1517,9 @@ CREATE INDEX "login_attempts_email_attempted_at_idx" ON "login_attempts"("email"
 CREATE INDEX "login_attempts_ip_address_attempted_at_idx" ON "login_attempts"("ip_address", "attempted_at");
 
 -- CreateIndex
+CREATE INDEX "user_comp_wallets_is_frozen_last_active_at_idx" ON "user_comp_wallets"("is_frozen", "last_active_at");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "user_comp_wallets_user_id_currency_key" ON "user_comp_wallets"("user_id", "currency");
 
 -- CreateIndex
@@ -1558,10 +1529,28 @@ CREATE INDEX "comp_wallet_transactions_comp_wallet_id_idx" ON "comp_wallet_trans
 CREATE INDEX "comp_wallet_transactions_created_at_idx" ON "comp_wallet_transactions"("created_at");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "deposit_details_uid_key" ON "deposit_details"("uid");
+CREATE INDEX "comp_wallet_transactions_parent_transaction_id_idx" ON "comp_wallet_transactions"("parent_transaction_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "deposit_details_transaction_id_key" ON "deposit_details"("transaction_id");
+CREATE UNIQUE INDEX "comp_wallet_transactions_type_reference_id_key" ON "comp_wallet_transactions"("type", "reference_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "comp_configs_currency_key" ON "comp_configs"("currency");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "comp_claim_histories_comp_wallet_transaction_id_key" ON "comp_claim_histories"("comp_wallet_transaction_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "comp_claim_histories_wallet_transaction_id_key" ON "comp_claim_histories"("wallet_transaction_id");
+
+-- CreateIndex
+CREATE INDEX "comp_claim_histories_user_id_status_claimed_at_idx" ON "comp_claim_histories"("user_id", "status", "claimed_at");
+
+-- CreateIndex
+CREATE INDEX "comp_claim_histories_status_claimed_at_idx" ON "comp_claim_histories"("status", "claimed_at");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "deposit_details_uid_key" ON "deposit_details"("uid");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "deposit_details_provider_payment_id_key" ON "deposit_details"("provider_payment_id");
@@ -1571,9 +1560,6 @@ CREATE INDEX "deposit_details_provider_provider_payment_id_idx" ON "deposit_deta
 
 -- CreateIndex
 CREATE INDEX "deposit_details_status_created_at_idx" ON "deposit_details"("status", "created_at");
-
--- CreateIndex
-CREATE INDEX "deposit_details_transaction_id_idx" ON "deposit_details"("transaction_id");
 
 -- CreateIndex
 CREATE INDEX "deposit_details_method_type_status_idx" ON "deposit_details"("method_type", "status");
@@ -1768,12 +1754,6 @@ CREATE INDEX "tier_history_user_id_idx" ON "tier_history"("user_id");
 CREATE INDEX "tier_history_changed_at_idx" ON "tier_history"("changed_at");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "admin_adjustment_details_transaction_id_key" ON "admin_adjustment_details"("transaction_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "system_adjustment_details_transaction_id_key" ON "system_adjustment_details"("transaction_id");
-
--- CreateIndex
 CREATE INDEX "system_adjustment_details_service_name_action_name_idx" ON "system_adjustment_details"("service_name", "action_name");
 
 -- CreateIndex
@@ -1849,7 +1829,16 @@ CREATE INDEX "wagering_contribution_logs_wagering_requirement_id_idx" ON "wageri
 CREATE INDEX "wagering_contribution_logs_game_round_id_idx" ON "wagering_contribution_logs"("game_round_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "withdrawal_details_transaction_id_key" ON "withdrawal_details"("transaction_id");
+CREATE INDEX "user_wallets_user_id_idx" ON "user_wallets"("user_id");
+
+-- CreateIndex
+CREATE INDEX "user_wallets_currency_idx" ON "user_wallets"("currency");
+
+-- CreateIndex
+CREATE INDEX "wallet_transactions_user_id_currency_created_at_idx" ON "wallet_transactions"("user_id", "currency", "created_at");
+
+-- CreateIndex
+CREATE INDEX "wallet_transactions_type_reference_id_idx" ON "wallet_transactions"("type", "reference_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "withdrawal_details_provider_withdrawal_id_key" ON "withdrawal_details"("provider_withdrawal_id");
@@ -1906,9 +1895,6 @@ ALTER TABLE "referrals" ADD CONSTRAINT "referrals_sub_user_id_fkey" FOREIGN KEY 
 ALTER TABLE "affiliate_commissions" ADD CONSTRAINT "affiliate_commissions_affiliate_id_fkey" FOREIGN KEY ("affiliate_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "affiliate_commissions" ADD CONSTRAINT "affiliate_commissions_game_round_id_fkey" FOREIGN KEY ("game_round_id") REFERENCES "game_rounds"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "affiliate_commissions" ADD CONSTRAINT "affiliate_commissions_sub_user_id_fkey" FOREIGN KEY ("sub_user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -1918,16 +1904,10 @@ ALTER TABLE "affiliate_wallets" ADD CONSTRAINT "affiliate_wallets_affiliate_id_f
 ALTER TABLE "user_hourly_stats" ADD CONSTRAINT "user_hourly_stats_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "casino_game_sessions" ADD CONSTRAINT "casino_game_sessions_game_id_fkey" FOREIGN KEY ("game_id") REFERENCES "casino_games_v2"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "casino_game_sessions" ADD CONSTRAINT "casino_game_sessions_game_id_fkey" FOREIGN KEY ("game_id") REFERENCES "casino_games"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "casino_game_sessions" ADD CONSTRAINT "casino_game_sessions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "game_bets" ADD CONSTRAINT "game_bets_game_round_id_fkey" FOREIGN KEY ("game_round_id") REFERENCES "game_rounds"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "game_wins" ADD CONSTRAINT "game_wins_game_round_id_fkey" FOREIGN KEY ("game_round_id") REFERENCES "game_rounds"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "casino_game_providers" ADD CONSTRAINT "casino_game_providers_aggregator_id_fkey" FOREIGN KEY ("aggregator_id") REFERENCES "casino_aggregators"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -1939,43 +1919,28 @@ ALTER TABLE "casino_game_category_translations" ADD CONSTRAINT "casino_game_cate
 ALTER TABLE "casino_game_category_items" ADD CONSTRAINT "casino_game_category_items_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "casino_game_categories"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "casino_game_category_items" ADD CONSTRAINT "casino_game_category_items_game_id_fkey" FOREIGN KEY ("game_id") REFERENCES "casino_games_v2"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "casino_game_category_items" ADD CONSTRAINT "casino_game_category_items_game_id_fkey" FOREIGN KEY ("game_id") REFERENCES "casino_games"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "casino_games_v2" ADD CONSTRAINT "casino_games_v2_provider_id_fkey" FOREIGN KEY ("provider_id") REFERENCES "casino_game_providers"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "casino_games" ADD CONSTRAINT "casino_games_provider_id_fkey" FOREIGN KEY ("provider_id") REFERENCES "casino_game_providers"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "casino_game_v2_translations" ADD CONSTRAINT "casino_game_v2_translations_game_id_fkey" FOREIGN KEY ("game_id") REFERENCES "casino_games_v2"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "casino_game_translations" ADD CONSTRAINT "casino_game_translations_game_id_fkey" FOREIGN KEY ("game_id") REFERENCES "casino_games"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "user_wallets" ADD CONSTRAINT "user_wallets_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "casino_game_rounds" ADD CONSTRAINT "casino_game_rounds_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "casino_game_rounds" ADD CONSTRAINT "casino_game_rounds_game_session_id_fkey" FOREIGN KEY ("game_session_id") REFERENCES "casino_game_sessions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "casino_game_rounds" ADD CONSTRAINT "casino_game_rounds_game_id_fkey" FOREIGN KEY ("game_id") REFERENCES "casino_games"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "casino_game_transactions" ADD CONSTRAINT "casino_game_transactions_game_round_id_round_started_at_fkey" FOREIGN KEY ("game_round_id", "round_started_at") REFERENCES "casino_game_rounds"("id", "started_at") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "user_balance_stats" ADD CONSTRAINT "user_balance_stats_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "transactions" ADD CONSTRAINT "transactions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "transactions" ADD CONSTRAINT "transactions_comp_wallet_transaction_id_fkey" FOREIGN KEY ("comp_wallet_transaction_id") REFERENCES "comp_wallet_transactions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "game_rounds" ADD CONSTRAINT "game_rounds_game_id_fkey" FOREIGN KEY ("game_id") REFERENCES "casino_games_v2"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "game_rounds" ADD CONSTRAINT "game_rounds_game_session_id_fkey" FOREIGN KEY ("game_session_id") REFERENCES "casino_game_sessions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "game_rounds" ADD CONSTRAINT "game_rounds_transaction_id_fkey" FOREIGN KEY ("transaction_id") REFERENCES "transactions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "transaction_balance_details" ADD CONSTRAINT "transaction_balance_details_transaction_id_fkey" FOREIGN KEY ("transaction_id") REFERENCES "transactions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "bonus_details" ADD CONSTRAINT "bonus_details_game_id_fkey" FOREIGN KEY ("game_id") REFERENCES "casino_games_v2"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "bonus_details" ADD CONSTRAINT "bonus_details_transaction_id_fkey" FOREIGN KEY ("transaction_id") REFERENCES "transactions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "user_tokens" ADD CONSTRAINT "user_tokens_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -1990,6 +1955,9 @@ ALTER TABLE "user_comp_wallets" ADD CONSTRAINT "user_comp_wallets_user_id_fkey" 
 ALTER TABLE "comp_wallet_transactions" ADD CONSTRAINT "comp_wallet_transactions_comp_wallet_id_fkey" FOREIGN KEY ("comp_wallet_id") REFERENCES "user_comp_wallets"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "comp_claim_histories" ADD CONSTRAINT "comp_claim_histories_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "deposit_details" ADD CONSTRAINT "deposit_details_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -2000,9 +1968,6 @@ ALTER TABLE "deposit_details" ADD CONSTRAINT "deposit_details_crypto_deposit_con
 
 -- AddForeignKey
 ALTER TABLE "deposit_details" ADD CONSTRAINT "deposit_details_promotion_id_fkey" FOREIGN KEY ("promotion_id") REFERENCES "promotions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "deposit_details" ADD CONSTRAINT "deposit_details_transaction_id_fkey" FOREIGN KEY ("transaction_id") REFERENCES "transactions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "file_usages" ADD CONSTRAINT "file_usages_file_id_fkey" FOREIGN KEY ("file_id") REFERENCES "files"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -2056,13 +2021,7 @@ ALTER TABLE "tier_history" ADD CONSTRAINT "tier_history_from_tier_id_fkey" FOREI
 ALTER TABLE "tier_history" ADD CONSTRAINT "tier_history_to_tier_id_fkey" FOREIGN KEY ("to_tier_id") REFERENCES "tier"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "admin_adjustment_details" ADD CONSTRAINT "admin_adjustment_details_transaction_id_fkey" FOREIGN KEY ("transaction_id") REFERENCES "transactions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "admin_adjustment_details" ADD CONSTRAINT "admin_adjustment_details_admin_user_id_fkey" FOREIGN KEY ("admin_user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "system_adjustment_details" ADD CONSTRAINT "system_adjustment_details_transaction_id_fkey" FOREIGN KEY ("transaction_id") REFERENCES "transactions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "user_sessions" ADD CONSTRAINT "user_sessions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -2074,9 +2033,6 @@ ALTER TABLE "user_sessions" ADD CONSTRAINT "user_sessions_revoked_by_fkey" FOREI
 ALTER TABLE "wagering_requirements" ADD CONSTRAINT "wagering_requirements_deposit_detail_id_fkey" FOREIGN KEY ("deposit_detail_id") REFERENCES "deposit_details"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "wagering_requirements" ADD CONSTRAINT "wagering_requirements_user_id_currency_fkey" FOREIGN KEY ("user_id", "currency") REFERENCES "user_wallets"("user_id", "currency") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "wagering_requirements" ADD CONSTRAINT "wagering_requirements_user_promotion_id_fkey" FOREIGN KEY ("user_promotion_id") REFERENCES "user_promotions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -2086,10 +2042,13 @@ ALTER TABLE "wagering_requirements" ADD CONSTRAINT "wagering_requirements_user_i
 ALTER TABLE "wagering_contribution_logs" ADD CONSTRAINT "wagering_contribution_logs_wagering_requirement_id_fkey" FOREIGN KEY ("wagering_requirement_id") REFERENCES "wagering_requirements"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "withdrawal_details" ADD CONSTRAINT "withdrawal_details_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "user_wallets" ADD CONSTRAINT "user_wallets_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "withdrawal_details" ADD CONSTRAINT "withdrawal_details_transaction_id_fkey" FOREIGN KEY ("transaction_id") REFERENCES "transactions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "wallet_transactions" ADD CONSTRAINT "wallet_transactions_user_id_currency_fkey" FOREIGN KEY ("user_id", "currency") REFERENCES "user_wallets"("user_id", "currency") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "withdrawal_details" ADD CONSTRAINT "withdrawal_details_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "withdrawal_details" ADD CONSTRAINT "withdrawal_details_crypto_withdraw_config_id_fkey" FOREIGN KEY ("crypto_withdraw_config_id") REFERENCES "crypto_withdraw_configs"("id") ON DELETE SET NULL ON UPDATE CASCADE;

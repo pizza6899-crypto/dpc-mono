@@ -15,7 +15,7 @@ import { CompOverviewResponseDto } from './dto/response/comp-overview.response.d
 import { CompDailyStatResponseDto } from './dto/response/comp-daily-stat.response.dto';
 import { CompTopEarnerResponseDto } from './dto/response/comp-top-earner.response.dto';
 
-@ApiTags('Admin Comp Stats')
+@ApiTags('Admin Comp')
 @Controller('admin/comp/stats')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 @ApiStandardErrors()

@@ -5,6 +5,7 @@ import { FindCompTransactionsService } from '../../application/find-comp-transac
 import { FindCompTransactionsQueryDto } from '../dto/request/find-comp-transactions-query.dto';
 import { CompTransactionResponseDto } from '../dto/response/comp-transaction.response.dto';
 import { FindCompBalanceService } from '../../application/find-comp-balance.service';
+import { CompConfig } from '../../domain';
 import { EarnCompService } from '../../application/earn-comp.service';
 import { DeductCompService } from '../../application/deduct-comp.service';
 import { FindCompConfigService } from '../../application/find-comp-config.service';
@@ -21,6 +22,7 @@ import { AdminCompBalanceQueryDto } from './dto/request/admin-comp-balance-query
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
 import { AdminCompAdjustResponseDto } from './dto/response/admin-comp-adjust.response.dto';
+import { AdminCompConfigResponseDto } from './dto/response/admin-comp-config.response.dto';
 import { AdminUpdateCompConfigDto } from './dto/request/admin-update-comp-config.dto';
 
 
@@ -185,24 +187,13 @@ export class CompAdminController {
         summary: 'Get all comp configurations / 모든 콤프 설정 조회',
         description: 'Retrieve all currency-specific comp configurations / 모든 통화별 콤프 설정을 조회합니다.'
     })
-    @ApiStandardResponse(Object, {
+    @ApiStandardResponse(AdminCompConfigResponseDto, {
         description: 'Successfully retrieved comp configurations / 콤프 설정 조회 성공',
         isArray: true
     })
-    async getAllConfigs() {
+    async getAllConfigs(): Promise<AdminCompConfigResponseDto[]> {
         const configs = await this.findCompConfigService.findAll();
-        return configs.map(c => ({
-            id: c.id.toString(),
-            currency: c.currency,
-            isEarnEnabled: c.isEarnEnabled,
-            isClaimEnabled: c.isClaimEnabled,
-            allowNegativeBalance: c.allowNegativeBalance,
-            minClaimAmount: c.minClaimAmount.toString(),
-            maxDailyEarnPerUser: c.maxDailyEarnPerUser.toString(),
-            expirationDays: c.expirationDays,
-            description: c.description,
-            updatedAt: c.updatedAt,
-        }));
+        return configs.map(c => this.mapConfigToDto(c));
     }
 
     @Post('config')
@@ -211,7 +202,7 @@ export class CompAdminController {
         summary: 'Update comp configuration / 콤프 설정 업데이트',
         description: 'Update the global comp configuration for a specific currency / 특정 통화에 대한 전역 콤프 설정을 업데이트합니다.'
     })
-    @ApiStandardResponse(Object, {
+    @ApiStandardResponse(AdminCompConfigResponseDto, {
         description: 'Successfully updated comp configuration / 콤프 설정 업데이트 성공'
     })
     @AuditLog({
@@ -223,22 +214,28 @@ export class CompAdminController {
             updates: args[0],
         }),
     })
-    async updateConfig(@Body() dto: AdminUpdateCompConfigDto) {
+    async updateConfig(@Body() dto: AdminUpdateCompConfigDto): Promise<AdminCompConfigResponseDto> {
         const result = await this.updateCompConfigService.execute({
             ...dto,
             minClaimAmount: dto.minClaimAmount ? new Prisma.Decimal(dto.minClaimAmount) : undefined,
             maxDailyEarnPerUser: dto.maxDailyEarnPerUser ? new Prisma.Decimal(dto.maxDailyEarnPerUser) : undefined,
         });
 
+        return this.mapConfigToDto(result);
+    }
+
+    private mapConfigToDto(c: CompConfig): AdminCompConfigResponseDto {
         return {
-            id: result.id.toString(),
-            currency: result.currency,
-            isEarnEnabled: result.isEarnEnabled,
-            isClaimEnabled: result.isClaimEnabled,
-            minClaimAmount: result.minClaimAmount.toString(),
-            maxDailyEarnPerUser: result.maxDailyEarnPerUser.toString(),
-            expirationDays: result.expirationDays,
-            updatedAt: result.updatedAt,
+            id: c.id.toString(),
+            currency: c.currency,
+            isEarnEnabled: c.isEarnEnabled,
+            isClaimEnabled: c.isClaimEnabled,
+            allowNegativeBalance: c.allowNegativeBalance,
+            minClaimAmount: c.minClaimAmount.toString(),
+            maxDailyEarnPerUser: c.maxDailyEarnPerUser.toString(),
+            expirationDays: c.expirationDays,
+            description: c.description,
+            updatedAt: c.updatedAt,
         };
     }
 }

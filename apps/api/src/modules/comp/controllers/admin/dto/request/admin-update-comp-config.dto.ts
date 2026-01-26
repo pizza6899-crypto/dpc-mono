@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { ExchangeCurrencyCode } from '@prisma/client';
-import { IsBoolean, IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator';
+import { IsBoolean, IsEnum, IsInt, IsNumberString, IsOptional, IsString, Min } from 'class-validator';
 
 export class AdminUpdateCompConfigDto {
     @ApiPropertyOptional({ enum: ExchangeCurrencyCode, description: 'Currency to update config for / 설정을 변경할 통화' })
@@ -24,12 +24,12 @@ export class AdminUpdateCompConfigDto {
 
     @ApiPropertyOptional({ description: 'Minimum comp amount per claim / 최소 전환 신청 가능 금액', type: 'string' })
     @IsOptional()
-    @IsString()
+    @IsNumberString()
     minClaimAmount?: string;
 
     @ApiPropertyOptional({ description: 'Max daily earn limit per user (0 for unlimited) / 유저당 일일 최대 적립 한도 (0=무제한)', type: 'string' })
     @IsOptional()
-    @IsString()
+    @IsNumberString()
     maxDailyEarnPerUser?: string;
 
     @ApiPropertyOptional({ description: 'Comp expiration days / 콤프 소멸 기간 (일 단위)' })

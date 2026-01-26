@@ -1,7 +1,7 @@
 import { PrismaClient, ExchangeCurrencyCode } from '@prisma/client';
 
 export async function seedCompConfig(prisma: PrismaClient) {
-    const currencies = Object.values(ExchangeCurrencyCode);
+    const currencies = [ExchangeCurrencyCode.KRW];
 
     for (const currency of currencies) {
         // We use findFirst temporarily if findUnique is not available due to type issues locally
