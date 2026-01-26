@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { COMP_REPOSITORY, COMP_CONFIG_REPOSITORY, COMP_CLAIM_HISTORY_REPOSITORY } from './ports';
-import { CompRepository } from './infrastructure/comp.repository';
+import { CompWalletRepository } from './infrastructure/comp-wallet.repository';
+import { CompConfigRepository } from './infrastructure/comp-config.repository';
+import { CompClaimHistoryRepository } from './infrastructure/comp-claim-history.repository';
 import { CompMapper } from './infrastructure/comp.mapper';
 import { EarnCompService } from './application/earn-comp.service';
 import { ClaimCompService } from './application/claim-comp.service';
@@ -32,15 +34,15 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
         CompMapper,
         {
             provide: COMP_REPOSITORY,
-            useClass: CompRepository,
+            useClass: CompWalletRepository,
         },
         {
             provide: COMP_CONFIG_REPOSITORY,
-            useClass: CompRepository,
+            useClass: CompConfigRepository,
         },
         {
             provide: COMP_CLAIM_HISTORY_REPOSITORY,
-            useClass: CompRepository,
+            useClass: CompClaimHistoryRepository,
         },
         EarnCompService,
         ClaimCompService,
