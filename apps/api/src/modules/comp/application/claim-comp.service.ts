@@ -8,7 +8,6 @@ import { UpdateUserBalanceService } from '../../wallet/application/update-user-b
 import { FindUserWalletService } from '../../wallet/application/find-user-wallet.service';
 import { UpdateOperation, WalletActionName } from '../../wallet/domain';
 import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
-import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
@@ -37,7 +36,6 @@ export class ClaimCompService {
         private readonly compClaimHistoryRepository: CompClaimHistoryRepositoryPort,
         private readonly findUserWalletService: FindUserWalletService,
         private readonly updateUserBalanceService: UpdateUserBalanceService,
-        private readonly analyticsQueueService: AnalyticsQueueService,
         private readonly advisoryLockService: AdvisoryLockService,
         private readonly compPolicy: CompPolicy,
         private readonly snowflakeService: SnowflakeService,
@@ -127,14 +125,6 @@ export class ClaimCompService {
             // Assuming we refactor UpdateUserBalanceService to return transaction ID later or we use referenceId to link.
             claimHistory = claimHistory.complete(BigInt(0)); // TODO: Pass real wallet tx ID
             await this.compClaimHistoryRepository.save(claimHistory);
-
-            // 10. Enqueue Analytics
-            await this.analyticsQueueService.enqueueComp({
-                userId,
-                currency,
-                convertedAmount: amount, // Claimed amount is converted amount
-                date: new Date(),
-            });
 
             this.logger.log(`Comp Claimed: user=${userId}, compDeducted=${amount}, cashAdded=${amount}`);
 

@@ -19,14 +19,12 @@ import { CompUserController } from './controllers/user/comp-user.controller';
 import { CompAdminController } from './controllers/admin/comp-admin.controller';
 import { CompStatsController } from './controllers/admin/comp-stats.controller';
 import { WalletModule } from '../wallet/wallet.module';
-import { AnalyticsModule } from '../analytics/analytics.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 
 @Module({
     imports: [
         WalletModule,
-        AnalyticsModule,
         ConcurrencyModule,
         SnowflakeModule,
     ],

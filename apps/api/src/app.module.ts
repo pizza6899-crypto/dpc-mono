@@ -24,7 +24,6 @@ import { RequestInfoInterceptor } from './common/http/interceptors/request-info.
 import { PromotionModule } from './modules/promotion/promotion.module';
 import { TierModule } from './modules/tier/tier.module';
 import { WageringModule } from './modules/wagering/wagering.module';
-import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { CompModule } from './modules/comp/comp.module';
 import { NodeIdentityModule } from './common/node-identity/node-identity.module';
 import { SnowflakeModule } from './common/snowflake/snowflake.module';
@@ -73,7 +72,6 @@ import { FileModule } from './modules/file/file.module';
     PromotionModule,
     TierModule,
     WageringModule,
-    AnalyticsModule,
     CompModule,
     NotificationModule,
     SocketModule,

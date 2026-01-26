@@ -4,7 +4,6 @@ import { ExchangeCurrencyCode, Prisma, CompTransactionType } from '@prisma/clien
 import { COMP_REPOSITORY, COMP_CONFIG_REPOSITORY } from '../ports/repository.token';
 import type { CompRepositoryPort, CompConfigRepositoryPort } from '../ports';
 import { CompWallet, CompTransaction, CompNotFoundException, CompPolicy } from '../domain';
-import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
@@ -28,7 +27,6 @@ export class DeductCompService {
         private readonly compRepository: CompRepositoryPort,
         @Inject(COMP_CONFIG_REPOSITORY)
         private readonly compConfigRepository: CompConfigRepositoryPort,
-        private readonly analyticsQueueService: AnalyticsQueueService,
         private readonly advisoryLockService: AdvisoryLockService,
         private readonly compPolicy: CompPolicy,
         private readonly snowflakeService: SnowflakeService,
@@ -77,14 +75,6 @@ export class DeductCompService {
             description: description || 'Admin Deduction',
         });
         await this.compRepository.createTransaction(transaction);
-
-        // 5. Enqueue Analytics
-        await this.analyticsQueueService.enqueueComp({
-            userId,
-            currency,
-            deductedAmount: amount,
-            date: new Date(),
-        });
 
         this.logger.log(`Comp Deducted by Admin: user=${userId}, amount=${amount}, curr=${currency}, newBal=${savedWallet.balance}`);
 

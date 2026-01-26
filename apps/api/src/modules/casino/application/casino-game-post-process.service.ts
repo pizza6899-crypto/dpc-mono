@@ -2,7 +2,6 @@ import { Injectable, Logger, Inject } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma, ExchangeCurrencyCode } from '@prisma/client'; // ExchangeCurrencyCode 추가
 import { ProcessWageringContributionService } from 'src/modules/wagering/application';
-import { AnalyticsQueueService } from 'src/modules/analytics/application';
 import { AddUserRollingService } from 'src/modules/tier/application/add-user-rolling.service';
 import { EarnCompService } from 'src/modules/comp/application/earn-comp.service';
 import { GAME_ROUND_REPOSITORY_TOKEN } from '../ports/out/game-round.repository.token';
@@ -24,7 +23,6 @@ export class CasinoGamePostProcessService {
         @Inject(GAME_ROUND_REPOSITORY_TOKEN)
         private readonly gameRoundRepository: GameRoundRepositoryPort,
         private readonly wageringService: ProcessWageringContributionService,
-        private readonly analyticsQueue: AnalyticsQueueService,
         private readonly tierService: AddUserRollingService,
         private readonly earnCompService: EarnCompService,
     ) { }
@@ -50,7 +48,6 @@ export class CasinoGamePostProcessService {
 
         // 4. Processing Steps
         await this.processWagering(gameRound, context);
-        await this.processAnalytics(gameRound, context);
         await this.processTierRolling(gameRound, context);
         await this.processCompEarning(gameRound, context);
 
@@ -100,22 +97,6 @@ export class CasinoGamePostProcessService {
             gameRoundId: gameRound.id,
             betAmount: context.betAmount,
             gameContributionRate: gameRound.gameContributionRate?.toNumber() ?? 1,
-        });
-    }
-
-    private async processAnalytics(gameRound: GameRoundPostProcessContext, context: ProcessingContext) {
-        const categoryMap: Record<string, 'slot' | 'live' | 'other'> = {
-            ['SLOTS']: 'slot',
-            ['LIVE_CASINO']: 'live',
-        };
-
-        await this.analyticsQueue.enqueueGame({
-            userId: gameRound.userId,
-            currency: gameRound.currency as ExchangeCurrencyCode,
-            betAmount: context.betAmount,
-            winAmount: gameRound.totalWinAmount,
-            category: context.categoryCode ? (categoryMap[context.categoryCode] || 'other') : 'other',
-            date: gameRound.completedAt || new Date(),
         });
     }
 

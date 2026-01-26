@@ -4,7 +4,6 @@ import { ExchangeCurrencyCode, Prisma, CompTransactionType } from '@prisma/clien
 import { COMP_CONFIG_REPOSITORY, COMP_REPOSITORY } from '../ports/repository.token';
 import type { CompConfigRepositoryPort, CompRepositoryPort } from '../ports';
 import { CompWallet, CompTransaction, CompPolicy, CompPolicyViolationException } from '../domain';
-import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
@@ -30,7 +29,6 @@ export class EarnCompService {
         private readonly compRepository: CompRepositoryPort,
         @Inject(COMP_CONFIG_REPOSITORY)
         private readonly compConfigRepository: CompConfigRepositoryPort,
-        private readonly analyticsQueueService: AnalyticsQueueService,
         private readonly advisoryLockService: AdvisoryLockService,
         private readonly compPolicy: CompPolicy,
         private readonly snowflakeService: SnowflakeService,
@@ -91,14 +89,6 @@ export class EarnCompService {
             description,
         });
         await this.compRepository.createTransaction(transaction);
-
-        // 5. Enqueue Analytics
-        await this.analyticsQueueService.enqueueComp({
-            userId,
-            currency,
-            earnedAmount: amount,
-            date: new Date(),
-        });
 
         this.logger.log(`Comp Earned: user=${userId}, amount=${amount}, curr=${currency}, newBal=${savedWallet.balance}`);
 

@@ -53,7 +53,9 @@ model User {
   depositDetails         DepositDetail[]
   withdrawalDetails      WithdrawalDetail[]
   userWallets            UserWallet[]
-  userBalanceStats       UserBalanceStats[]
+  userTotalStats         UserWalletTotalStat[]
+  userHourlyStats        UserWalletHourlyStat[]
+  userDailyStats         UserWalletDailyStat[]
   userPromotions         UserPromotion[]
   userSessions           UserSession[]           @relation("UserSessions")
   revokedSessions        UserSession[]           @relation("RevokedSessions")
@@ -63,7 +65,6 @@ model User {
   tierHistory            TierHistory[]
   adminAdjustmentDetails AdminAdjustmentDetail[] @relation("AdminAdjustments")
   wageringRequirements   WageringRequirement[]
-  hourlyStats            UserHourlyStat[]
   compWallets            UserCompWallet[]
   compClaimHistories     CompClaimHistory[]
   alerts                 Alert[]
@@ -71,27 +72,6 @@ model User {
   casinoGameRounds       CasinoGameRound[]
 
   @@map("users")
-}
-
-model UserBalanceStats {
-  userId                 BigInt               @map("user_id")
-  currency               ExchangeCurrencyCode
-  totalDeposit           Decimal              @default(0) @map("total_deposit") @db.Decimal(32, 18)
-  totalWithdraw          Decimal              @default(0) @map("total_withdraw") @db.Decimal(32, 18)
-  totalBet               Decimal              @default(0) @map("total_bet") @db.Decimal(32, 18)
-  totalWin               Decimal              @default(0) @map("total_win") @db.Decimal(32, 18)
-  totalBonus             Decimal              @default(0) @map("total_bonus") @db.Decimal(32, 18)
-  totalCompEarned        Decimal              @default(0) @map("total_comp_earned") @db.Decimal(32, 18)
-  totalCompUsed          Decimal              @default(0) @map("total_comp_used") @db.Decimal(32, 18)
-  totalSettlementFromBet Decimal              @default(0) @map("total_settlement_from_bet") @db.Decimal(32, 18)
-  totalSettlementFromVip Decimal              @default(0) @map("total_settlement_from_vip") @db.Decimal(32, 18)
-  updatedAt              DateTime             @updatedAt @map("updated_at")
-  user                   User                 @relation(fields: [userId], references: [id])
-
-  @@id([userId, currency])
-  @@index([userId])
-  @@index([currency])
-  @@map("user_balance_stats")
 }
 
 model ExchangeRate {

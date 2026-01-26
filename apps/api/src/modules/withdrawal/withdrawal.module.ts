@@ -3,7 +3,6 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { PaymentModule } from 'src/modules/payment/payment.module';
 import { WalletModule } from 'src/modules/wallet/wallet.module';
 import { WageringModule } from 'src/modules/wagering/wagering.module';
-import { AnalyticsModule } from 'src/modules/analytics/analytics.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { WithdrawalPolicy } from './domain';
 import { WITHDRAWAL_REPOSITORY } from './ports';
@@ -43,7 +42,6 @@ import { WithdrawalConfigAdminController } from './controllers/admin/withdrawal-
         PaymentModule,
         WalletModule,
         WageringModule,
-        AnalyticsModule,
         ConcurrencyModule,
     ],
     controllers: [

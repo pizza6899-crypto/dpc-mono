@@ -4,7 +4,6 @@ import { WithdrawalProcessingMode } from '@prisma/client';
 import { NowPaymentApiService } from 'src/modules/payment/infrastructure/now-payment-api.service';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
-import { AnalyticsQueueService } from 'src/modules/analytics/application/analytics-queue.service';
 import { WithdrawalDetail, WithdrawalProcessingException } from '../domain';
 import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
 import { WITHDRAWAL_REPOSITORY } from '../ports';
@@ -32,7 +31,6 @@ export class ProcessWithdrawalService {
         private readonly repository: WithdrawalRepositoryPort,
         private readonly nowPaymentApiService: NowPaymentApiService,
         private readonly updateUserBalanceService: UpdateUserBalanceService,
-        private readonly analyticsQueueService: AnalyticsQueueService,
         private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
@@ -163,26 +161,6 @@ export class ProcessWithdrawalService {
                 error instanceof Error ? error.stack : String(error),
             );
             // 잔액 복원 실패는 로깅하고 계속 진행 (수동 처리 필요)
-        }
-    }
-
-    /**
-     * 출금 완료 시 통계 기록 (웹훅에서 호출)
-     */
-    async recordWithdrawalCompleted(withdrawal: WithdrawalDetail): Promise<void> {
-        try {
-            await this.analyticsQueueService.enqueueWithdraw({
-                userId: withdrawal.userId,
-                currency: withdrawal.currency,
-                amount: withdrawal.requestedAmount,
-                date: new Date(),
-            });
-        } catch (error) {
-            this.logger.error(
-                `Failed to record withdrawal completion for ${withdrawal.id}`,
-                error instanceof Error ? error.stack : String(error),
-            );
-            // 통계 기록 실패는 로깅하고 계속 진행
         }
     }
 }

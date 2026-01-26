@@ -13,7 +13,6 @@ import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
 import { WalletBalanceType, WalletTransactionType, ExchangeCurrencyCode } from '@prisma/client';
 import { GrantPromotionBonusService } from '../../promotion/application/grant-promotion-bonus.service';
 import { CreateWageringRequirementService } from '../../wagering/application/create-wagering-requirement.service';
-import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 interface ApproveDepositParams {
@@ -41,7 +40,6 @@ export class ApproveDepositService {
     private readonly updateUserBalanceService: UpdateUserBalanceService,
     private readonly grantPromotionBonusService: GrantPromotionBonusService,
     private readonly createWageringRequirementService: CreateWageringRequirementService,
-    private readonly analyticsQueue: AnalyticsQueueService,
     private readonly advisoryLockService: AdvisoryLockService,
   ) { }
 
@@ -115,14 +113,6 @@ export class ApproveDepositService {
 
     // 6. DepositDetail 상태 업데이트 (엔티티의 변경사항 반영)
     await this.depositRepository.update(deposit);
-
-    // --- 통계 기록 추가 ---
-    await this.analyticsQueue.enqueueDeposit({
-      userId: deposit.userId,
-      currency: deposit.depositCurrency,
-      amount: actuallyPaid,
-      date: deposit.updatedAt || new Date(),
-    });
 
     // 7. 롤링(Wagering Requirement) 처리
     let bonusAmount = new Prisma.Decimal(0);

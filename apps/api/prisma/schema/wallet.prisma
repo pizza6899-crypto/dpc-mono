@@ -72,3 +72,76 @@ enum WalletTransactionType {
     COMP_CLAIM // 콤프 전환 (콤프 -> 현금)
     BONUS_CONVERSION // 보너스 -> 현금 전환 (롤링 충족 등)
 }
+
+/**
+ * 지갑 누적 통계 (Life-time)
+ * 유저의 계정 생성 시점부터의 모든 합계를 기록합니다.
+ */
+model UserWalletTotalStat {
+    userId   BigInt               @map("user_id")
+    currency ExchangeCurrencyCode
+
+    totalDeposit    Decimal @default(0) @map("total_deposit") @db.Decimal(32, 18)
+    totalWithdraw   Decimal @default(0) @map("total_withdraw") @db.Decimal(32, 18)
+    totalBet        Decimal @default(0) @map("total_bet") @db.Decimal(32, 18)
+    totalWin        Decimal @default(0) @map("total_win") @db.Decimal(32, 18)
+    totalBonus      Decimal @default(0) @map("total_bonus") @db.Decimal(32, 18)
+    totalCompEarned Decimal @default(0) @map("total_comp_earned") @db.Decimal(32, 18)
+    totalCompUsed   Decimal @default(0) @map("total_comp_used") @db.Decimal(32, 18)
+
+    updatedAt DateTime @updatedAt @map("updated_at")
+    user      User     @relation(fields: [userId], references: [id])
+
+    @@id([userId, currency])
+    @@index([userId])
+    @@index([currency])
+    @@map("user_wallet_total_stats")
+}
+
+/**
+ * 지갑 시간별 통계 및 스냅샷
+ */
+model UserWalletHourlyStat {
+    userId   BigInt               @map("user_id")
+    currency ExchangeCurrencyCode
+    date     DateTime // YYYY-MM-DD HH:00:00
+
+    totalDeposit  Decimal @default(0) @map("total_deposit") @db.Decimal(32, 18)
+    totalWithdraw Decimal @default(0) @map("total_withdraw") @db.Decimal(32, 18)
+    totalBet      Decimal @default(0) @map("total_bet") @db.Decimal(32, 18)
+    totalWin      Decimal @default(0) @map("total_win") @db.Decimal(32, 18)
+
+    startBalance Decimal @default(0) @map("start_balance") @db.Decimal(32, 18)
+    endBalance   Decimal @default(0) @map("end_balance") @db.Decimal(32, 18)
+
+    createdAt DateTime @default(now()) @map("created_at")
+    user      User     @relation(fields: [userId], references: [id])
+
+    @@id([userId, date, currency])
+    @@index([date])
+    @@map("user_wallet_hourly_stats")
+}
+
+/**
+ * 지갑 일별 통계 및 스냅샷 (회계 마감용)
+ */
+model UserWalletDailyStat {
+    userId   BigInt               @map("user_id")
+    currency ExchangeCurrencyCode
+    date     DateTime             @db.Date // YYYY-MM-DD
+
+    totalDeposit  Decimal @default(0) @map("total_deposit") @db.Decimal(32, 18)
+    totalWithdraw Decimal @default(0) @map("total_withdraw") @db.Decimal(32, 18)
+    totalBet      Decimal @default(0) @map("total_bet") @db.Decimal(32, 18)
+    totalWin      Decimal @default(0) @map("total_win") @db.Decimal(32, 18)
+
+    startBalance Decimal @default(0) @map("start_balance") @db.Decimal(32, 18)
+    endBalance   Decimal @default(0) @map("end_balance") @db.Decimal(32, 18)
+
+    createdAt DateTime @default(now()) @map("created_at")
+    user      User     @relation(fields: [userId], references: [id])
+
+    @@id([userId, date, currency])
+    @@index([date])
+    @@map("user_wallet_daily_stats")
+}
