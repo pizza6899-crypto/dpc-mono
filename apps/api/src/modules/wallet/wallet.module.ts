@@ -5,6 +5,7 @@ import { FindWalletTransactionHistoryService } from './application/find-wallet-t
 import { UserWalletRepository } from './infrastructure/user-wallet.repository';
 import { UserWalletMapper } from './infrastructure/user-wallet.mapper';
 import { UserWalletTransactionMapper } from './infrastructure/user-wallet-transaction.mapper';
+import { UserWalletStatsMapper } from './infrastructure/user-wallet-stats.mapper';
 import { UpdateWalletStatusService } from './application/update-wallet-status.service';
 import { InitializeUserWalletsService } from './application/initialize-user-wallets.service';
 import { ProcessVaultOperationService } from './application/process-vault-operation.service';
@@ -66,6 +67,7 @@ import { SqidsModule } from 'src/common/sqids/sqids.module';
     FindWalletStatisticsService,
     UserWalletMapper,
     UserWalletTransactionMapper,
+    UserWalletStatsMapper,
   ],
   controllers: [WalletController, WalletAdminController],
   exports: [
@@ -78,6 +80,7 @@ import { SqidsModule } from 'src/common/sqids/sqids.module';
     FindUserWalletService,
     FindUserWalletsService,
     FindWalletStatisticsService,
+    UserWalletStatsMapper,
   ],
 })
 export class WalletModule { }

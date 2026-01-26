@@ -37,8 +37,8 @@ import { WalletTransactionResponseDto } from './dto/response/wallet-transaction.
 import { Prisma } from '@prisma/client';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
 
+@ApiTags('Admin Wallet')
 @Controller('admin/wallets')
-@ApiTags('Admin-Wallet')
 @Admin()
 @ApiStandardErrors()
 export class WalletAdminController {
