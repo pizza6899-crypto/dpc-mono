@@ -33,7 +33,9 @@
     "db:migrate": "dotenv -e .env -- prisma migrate dev",
     "db:push": "dotenv -e .env -- prisma db push",
     "db:seed": "dotenv -e .env -- prisma db seed",
+    "db:infra": "dotenv -e .env -- prisma db execute --file ./prisma/init_infrastructure.sql",
     "db:reset": "dotenv -e .env -- prisma migrate reset",
+    "db:deploy": "dotenv -e .env -- prisma migrate deploy",
     "db:studio": "dotenv -e .env -- prisma studio"
   },
   "dependencies": {
