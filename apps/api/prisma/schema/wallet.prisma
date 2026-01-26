@@ -81,13 +81,26 @@ model UserWalletTotalStats {
     userId   BigInt               @map("user_id")
     currency ExchangeCurrencyCode
 
-    totalDeposit    Decimal @default(0) @map("total_deposit") @db.Decimal(32, 18)
-    totalWithdraw   Decimal @default(0) @map("total_withdraw") @db.Decimal(32, 18)
-    totalBet        Decimal @default(0) @map("total_bet") @db.Decimal(32, 18)
-    totalWin        Decimal @default(0) @map("total_win") @db.Decimal(32, 18)
-    totalBonus      Decimal @default(0) @map("total_bonus") @db.Decimal(32, 18)
+    totalDepositCash  Decimal @default(0) @map("total_deposit_cash") @db.Decimal(32, 18)
+    totalWithdrawCash Decimal @default(0) @map("total_withdraw_cash") @db.Decimal(32, 18)
+
+    // Bet/Win 분리
+    totalBetCash  Decimal @default(0) @map("total_bet_cash") @db.Decimal(32, 18)
+    totalWinCash  Decimal @default(0) @map("total_win_cash") @db.Decimal(32, 18)
+    totalBetBonus Decimal @default(0) @map("total_bet_bonus") @db.Decimal(32, 18)
+    totalWinBonus Decimal @default(0) @map("total_win_bonus") @db.Decimal(32, 18)
+
+    // Bonus
+    totalBonusGiven Decimal @default(0) @map("total_bonus_given") @db.Decimal(32, 18)
+    totalBonusUsed  Decimal @default(0) @map("total_bonus_used") @db.Decimal(32, 18)
+
+    // Comp
     totalCompEarned Decimal @default(0) @map("total_comp_earned") @db.Decimal(32, 18)
     totalCompUsed   Decimal @default(0) @map("total_comp_used") @db.Decimal(32, 18)
+
+    // Vault (금고)
+    totalVaultIn  Decimal @default(0) @map("total_vault_in") @db.Decimal(32, 18)
+    totalVaultOut Decimal @default(0) @map("total_vault_out") @db.Decimal(32, 18)
 
     updatedAt DateTime @updatedAt @map("updated_at")
     user      User     @relation(fields: [userId], references: [id])

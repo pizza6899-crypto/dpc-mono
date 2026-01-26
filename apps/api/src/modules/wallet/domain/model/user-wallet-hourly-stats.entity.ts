@@ -10,7 +10,7 @@ export class UserWalletHourlyStats {
     private constructor(
         public readonly userId: bigint,
         public readonly currency: ExchangeCurrencyCode,
-        public readonly date: Date, // YYYY-MM-DD HH:00:00 (정시 기준)
+        public readonly date: Date, // YYYY-MM-DD HH:00:00 (Must be UTC) / 반드시 UTC 기준으로 저장
 
         // Cash Flow
         private _totalDepositCash: Prisma.Decimal,

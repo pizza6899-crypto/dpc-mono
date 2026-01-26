@@ -104,8 +104,20 @@ export class UpdatePushedBetService {
         const refundCashWallet = refundCashGame.mul(exchangeRate);
         const totalRefundWallet = refundBonusWallet.add(refundCashWallet);
 
-        // 롤링 차감용 (Push 금액만 취소 처리)
-        const pushAmountWallet = pushVal.mul(exchangeRate);
+        // 롤링 차감용 (Push 금액만 취소 처리) - Cash/Bonus 분리
+        let pushBonusGameRaw = new Prisma.Decimal(0);
+        let pushCashGameRaw = new Prisma.Decimal(0);
+
+        if (pushVal.lte(totalBonusBetGame)) {
+            pushBonusGameRaw = pushVal;
+        } else {
+            pushBonusGameRaw = totalBonusBetGame;
+            pushCashGameRaw = pushVal.minus(totalBonusBetGame);
+        }
+
+        const pushBonusStats = pushBonusGameRaw.mul(exchangeRate);
+        const pushCashStats = pushCashGameRaw.mul(exchangeRate);
+        const pushAmountWallet = pushBonusStats.add(pushCashStats);
 
         try {
             // 6. 지갑 업데이트 (Via Wallet Service)
@@ -159,7 +171,8 @@ export class UpdatePushedBetService {
                         },
                     },
                     data: {
-                        totalBet: { decrement: pushAmountWallet },
+                        totalBetCash: pushCashStats.gt(0) ? { decrement: pushCashStats } : undefined,
+                        totalBetBonus: pushBonusStats.gt(0) ? { decrement: pushBonusStats } : undefined,
                     },
                 });
             }

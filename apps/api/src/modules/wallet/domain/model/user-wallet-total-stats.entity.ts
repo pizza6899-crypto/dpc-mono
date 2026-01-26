@@ -9,13 +9,29 @@ export class UserWalletTotalStats {
     private constructor(
         public readonly userId: bigint,
         public readonly currency: ExchangeCurrencyCode,
-        private _totalDeposit: Prisma.Decimal,
-        private _totalWithdraw: Prisma.Decimal,
-        private _totalBet: Prisma.Decimal,
-        private _totalWin: Prisma.Decimal,
-        private _totalBonus: Prisma.Decimal,
+
+        // Cash Flow
+        private _totalDepositCash: Prisma.Decimal,
+        private _totalWithdrawCash: Prisma.Decimal,
+
+        // Bet/Win (Separated)
+        private _totalBetCash: Prisma.Decimal,
+        private _totalWinCash: Prisma.Decimal,
+        private _totalBetBonus: Prisma.Decimal,
+        private _totalWinBonus: Prisma.Decimal,
+
+        // Bonus Flow
+        private _totalBonusGiven: Prisma.Decimal,
+        private _totalBonusUsed: Prisma.Decimal,
+
+        // Comp Flow
         private _totalCompEarned: Prisma.Decimal,
         private _totalCompUsed: Prisma.Decimal,
+
+        // Vault Flow
+        private _totalVaultIn: Prisma.Decimal,
+        private _totalVaultOut: Prisma.Decimal,
+
         public readonly updatedAt: Date,
     ) { }
 
@@ -26,13 +42,18 @@ export class UserWalletTotalStats {
         return new UserWalletTotalStats(
             params.userId,
             params.currency,
-            new Prisma.Decimal(0),
-            new Prisma.Decimal(0),
-            new Prisma.Decimal(0),
-            new Prisma.Decimal(0),
-            new Prisma.Decimal(0),
-            new Prisma.Decimal(0),
-            new Prisma.Decimal(0),
+            new Prisma.Decimal(0), // totalDepositCash
+            new Prisma.Decimal(0), // totalWithdrawCash
+            new Prisma.Decimal(0), // totalBetCash
+            new Prisma.Decimal(0), // totalWinCash
+            new Prisma.Decimal(0), // totalBetBonus
+            new Prisma.Decimal(0), // totalWinBonus
+            new Prisma.Decimal(0), // totalBonusGiven
+            new Prisma.Decimal(0), // totalBonusUsed
+            new Prisma.Decimal(0), // totalCompEarned
+            new Prisma.Decimal(0), // totalCompUsed
+            new Prisma.Decimal(0), // totalVaultIn
+            new Prisma.Decimal(0), // totalVaultOut
             new Date(),
         );
     }
@@ -40,57 +61,84 @@ export class UserWalletTotalStats {
     static fromPersistence(data: {
         userId: bigint;
         currency: ExchangeCurrencyCode;
-        totalDeposit: Prisma.Decimal;
-        totalWithdraw: Prisma.Decimal;
-        totalBet: Prisma.Decimal;
-        totalWin: Prisma.Decimal;
-        totalBonus: Prisma.Decimal;
+        totalDepositCash: Prisma.Decimal;
+        totalWithdrawCash: Prisma.Decimal;
+        totalBetCash: Prisma.Decimal;
+        totalWinCash: Prisma.Decimal;
+        totalBetBonus: Prisma.Decimal;
+        totalWinBonus: Prisma.Decimal;
+        totalBonusGiven: Prisma.Decimal;
+        totalBonusUsed: Prisma.Decimal;
         totalCompEarned: Prisma.Decimal;
         totalCompUsed: Prisma.Decimal;
+        totalVaultIn: Prisma.Decimal;
+        totalVaultOut: Prisma.Decimal;
         updatedAt: Date;
     }): UserWalletTotalStats {
         return new UserWalletTotalStats(
             data.userId,
             data.currency,
-            data.totalDeposit,
-            data.totalWithdraw,
-            data.totalBet,
-            data.totalWin,
-            data.totalBonus,
+            data.totalDepositCash,
+            data.totalWithdrawCash,
+            data.totalBetCash,
+            data.totalWinCash,
+            data.totalBetBonus,
+            data.totalWinBonus,
+            data.totalBonusGiven,
+            data.totalBonusUsed,
             data.totalCompEarned,
             data.totalCompUsed,
+            data.totalVaultIn,
+            data.totalVaultOut,
             data.updatedAt,
         );
     }
 
     // Getters
-    get totalDeposit(): Prisma.Decimal { return this._totalDeposit; }
-    get totalWithdraw(): Prisma.Decimal { return this._totalWithdraw; }
-    get totalBet(): Prisma.Decimal { return this._totalBet; }
-    get totalWin(): Prisma.Decimal { return this._totalWin; }
-    get totalBonus(): Prisma.Decimal { return this._totalBonus; }
+    get totalDepositCash(): Prisma.Decimal { return this._totalDepositCash; }
+    get totalWithdrawCash(): Prisma.Decimal { return this._totalWithdrawCash; }
+    get totalBetCash(): Prisma.Decimal { return this._totalBetCash; }
+    get totalWinCash(): Prisma.Decimal { return this._totalWinCash; }
+    get totalBetBonus(): Prisma.Decimal { return this._totalBetBonus; }
+    get totalWinBonus(): Prisma.Decimal { return this._totalWinBonus; }
+    get totalBonusGiven(): Prisma.Decimal { return this._totalBonusGiven; }
+    get totalBonusUsed(): Prisma.Decimal { return this._totalBonusUsed; }
     get totalCompEarned(): Prisma.Decimal { return this._totalCompEarned; }
     get totalCompUsed(): Prisma.Decimal { return this._totalCompUsed; }
+    get totalVaultIn(): Prisma.Decimal { return this._totalVaultIn; }
+    get totalVaultOut(): Prisma.Decimal { return this._totalVaultOut; }
 
     // Business Logic
-    addDeposit(amount: Prisma.Decimal): void {
-        this._totalDeposit = this._totalDeposit.add(amount);
+    addDepositCash(amount: Prisma.Decimal): void {
+        this._totalDepositCash = this._totalDepositCash.add(amount);
     }
 
-    addWithdraw(amount: Prisma.Decimal): void {
-        this._totalWithdraw = this._totalWithdraw.add(amount);
+    addWithdrawCash(amount: Prisma.Decimal): void {
+        this._totalWithdrawCash = this._totalWithdrawCash.add(amount);
     }
 
-    addBet(amount: Prisma.Decimal): void {
-        this._totalBet = this._totalBet.add(amount);
+    addBetCash(amount: Prisma.Decimal): void {
+        this._totalBetCash = this._totalBetCash.add(amount);
     }
 
-    addWin(amount: Prisma.Decimal): void {
-        this._totalWin = this._totalWin.add(amount);
+    addWinCash(amount: Prisma.Decimal): void {
+        this._totalWinCash = this._totalWinCash.add(amount);
     }
 
-    addBonus(amount: Prisma.Decimal): void {
-        this._totalBonus = this._totalBonus.add(amount);
+    addBetBonus(amount: Prisma.Decimal): void {
+        this._totalBetBonus = this._totalBetBonus.add(amount);
+    }
+
+    addWinBonus(amount: Prisma.Decimal): void {
+        this._totalWinBonus = this._totalWinBonus.add(amount);
+    }
+
+    addBonusGiven(amount: Prisma.Decimal): void {
+        this._totalBonusGiven = this._totalBonusGiven.add(amount);
+    }
+
+    addBonusUsed(amount: Prisma.Decimal): void {
+        this._totalBonusUsed = this._totalBonusUsed.add(amount);
     }
 
     addCompEarned(amount: Prisma.Decimal): void {
@@ -101,20 +149,44 @@ export class UserWalletTotalStats {
         this._totalCompUsed = this._totalCompUsed.add(amount);
     }
 
-    /**
-     * GGR (Gross Gaming Revenue) 계산
-     * 공식: Bet - Win
-     */
-    get ggr(): Prisma.Decimal {
-        return this._totalBet.sub(this._totalWin);
+    addVaultIn(amount: Prisma.Decimal): void {
+        this._totalVaultIn = this._totalVaultIn.add(amount);
+    }
+
+    addVaultOut(amount: Prisma.Decimal): void {
+        this._totalVaultOut = this._totalVaultOut.add(amount);
     }
 
     /**
-     * NGR (Net Gaming Revenue) 계산
-     * 공식: (Bet - Win) - Bonus
-     * (플랫폼마다 정의가 다를 수 있으나 기본적인 산식)
+     * Cash GGR (Gross Gaming Revenue)
+     * Cash Bet - Cash Win
+     */
+    get cashGgr(): Prisma.Decimal {
+        return this._totalBetCash.sub(this._totalWinCash);
+    }
+
+    /**
+     * Bonus GGR
+     * Bonus Bet - Bonus Win
+     */
+    get bonusGgr(): Prisma.Decimal {
+        return this._totalBetBonus.sub(this._totalWinBonus);
+    }
+
+    /**
+     * Total GGR
+     */
+    get totalGgr(): Prisma.Decimal {
+        return this.cashGgr.add(this.bonusGgr);
+    }
+
+    /**
+     * NGR (Net Gaming Revenue)
+     * GGR - Bonus Costs
+     * Note: This is a simplified formula. 
+     * In some jurisdictions, NGR = (Cash Bet - Cash Win) - Bonus Cost - Taxes
      */
     get ngr(): Prisma.Decimal {
-        return this.ggr.sub(this._totalBonus);
+        return this.cashGgr.sub(this._totalBonusGiven); // Assuming Bonus Given is a cost
     }
 }

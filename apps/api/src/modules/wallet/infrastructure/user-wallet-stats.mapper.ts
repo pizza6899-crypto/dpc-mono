@@ -19,13 +19,18 @@ export class UserWalletStatsMapper {
         return UserWalletTotalStats.fromPersistence({
             userId: prismaModel.userId,
             currency: prismaModel.currency,
-            totalDeposit: prismaModel.totalDeposit,
-            totalWithdraw: prismaModel.totalWithdraw,
-            totalBet: prismaModel.totalBet,
-            totalWin: prismaModel.totalWin,
-            totalBonus: prismaModel.totalBonus,
+            totalDepositCash: prismaModel.totalDepositCash,
+            totalWithdrawCash: prismaModel.totalWithdrawCash,
+            totalBetCash: prismaModel.totalBetCash,
+            totalWinCash: prismaModel.totalWinCash,
+            totalBetBonus: prismaModel.totalBetBonus,
+            totalWinBonus: prismaModel.totalWinBonus,
+            totalBonusGiven: prismaModel.totalBonusGiven,
+            totalBonusUsed: prismaModel.totalBonusUsed,
             totalCompEarned: prismaModel.totalCompEarned,
             totalCompUsed: prismaModel.totalCompUsed,
+            totalVaultIn: prismaModel.totalVaultIn,
+            totalVaultOut: prismaModel.totalVaultOut,
             updatedAt: prismaModel.updatedAt,
         });
     }
@@ -37,13 +42,18 @@ export class UserWalletStatsMapper {
         return {
             userId: domain.userId,
             currency: domain.currency,
-            totalDeposit: domain.totalDeposit,
-            totalWithdraw: domain.totalWithdraw,
-            totalBet: domain.totalBet,
-            totalWin: domain.totalWin,
-            totalBonus: domain.totalBonus,
+            totalDepositCash: domain.totalDepositCash,
+            totalWithdrawCash: domain.totalWithdrawCash,
+            totalBetCash: domain.totalBetCash,
+            totalWinCash: domain.totalWinCash,
+            totalBetBonus: domain.totalBetBonus,
+            totalWinBonus: domain.totalWinBonus,
+            totalBonusGiven: domain.totalBonusGiven,
+            totalBonusUsed: domain.totalBonusUsed,
             totalCompEarned: domain.totalCompEarned,
             totalCompUsed: domain.totalCompUsed,
+            totalVaultIn: domain.totalVaultIn,
+            totalVaultOut: domain.totalVaultOut,
         };
     }
 
