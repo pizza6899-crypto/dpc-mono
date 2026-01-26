@@ -60,7 +60,7 @@ export class ClaimCompService {
         }
 
         // 2. Check Policy via Domain Service
-        const config = await this.compConfigRepository.getConfig();
+        const config = await this.compConfigRepository.getConfig(currency);
         this.compPolicy.verifyClaim(config, wallet, amount);
 
         const balanceBefore = wallet.balance;

@@ -1,12 +1,14 @@
 import { Body, Controller, Get, Param, Post, Query, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
-import { Prisma, UserRoleType, CompTransactionType } from '@prisma/client';
+import { Prisma, UserRoleType, CompTransactionType, ExchangeCurrencyCode } from '@prisma/client';
 import { FindCompTransactionsService } from '../../application/find-comp-transactions.service';
 import { FindCompTransactionsQueryDto } from '../dto/request/find-comp-transactions-query.dto';
 import { CompTransactionResponseDto } from '../dto/response/comp-transaction.response.dto';
 import { FindCompBalanceService } from '../../application/find-comp-balance.service';
 import { EarnCompService } from '../../application/earn-comp.service';
 import { DeductCompService } from '../../application/deduct-comp.service';
+import { FindCompConfigService } from '../../application/find-comp-config.service';
+import { UpdateCompConfigService } from '../../application/update-comp-config.service';
 import { AdminCompBalanceResponseDto } from './dto/response/admin-comp-balance.response.dto';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
@@ -19,6 +21,7 @@ import { AdminCompBalanceQueryDto } from './dto/request/admin-comp-balance-query
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
 import { AdminCompAdjustResponseDto } from './dto/response/admin-comp-adjust.response.dto';
+import { AdminUpdateCompConfigDto } from './dto/request/admin-update-comp-config.dto';
 
 
 @ApiTags('Admin Comp')
@@ -31,6 +34,8 @@ export class CompAdminController {
         private readonly earnCompService: EarnCompService,
         private readonly deductCompService: DeductCompService,
         private readonly findCompTransactionsService: FindCompTransactionsService,
+        private readonly findCompConfigService: FindCompConfigService,
+        private readonly updateCompConfigService: UpdateCompConfigService,
     ) { }
 
     @Get('users/:userId/balance')
@@ -171,6 +176,69 @@ export class CompAdminController {
             total: result.total,
             page: query.page ?? 1,
             limit: query.limit ?? 20,
+        };
+    }
+
+    @Get('configs')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({
+        summary: 'Get all comp configurations / 모든 콤프 설정 조회',
+        description: 'Retrieve all currency-specific comp configurations / 모든 통화별 콤프 설정을 조회합니다.'
+    })
+    @ApiStandardResponse(Object, {
+        description: 'Successfully retrieved comp configurations / 콤프 설정 조회 성공',
+        isArray: true
+    })
+    async getAllConfigs() {
+        const configs = await this.findCompConfigService.findAll();
+        return configs.map(c => ({
+            id: c.id.toString(),
+            currency: c.currency,
+            isEarnEnabled: c.isEarnEnabled,
+            isClaimEnabled: c.isClaimEnabled,
+            allowNegativeBalance: c.allowNegativeBalance,
+            minClaimAmount: c.minClaimAmount.toString(),
+            maxDailyEarnPerUser: c.maxDailyEarnPerUser.toString(),
+            expirationDays: c.expirationDays,
+            description: c.description,
+            updatedAt: c.updatedAt,
+        }));
+    }
+
+    @Post('config')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({
+        summary: 'Update comp configuration / 콤프 설정 업데이트',
+        description: 'Update the global comp configuration for a specific currency / 특정 통화에 대한 전역 콤프 설정을 업데이트합니다.'
+    })
+    @ApiStandardResponse(Object, {
+        description: 'Successfully updated comp configuration / 콤프 설정 업데이트 성공'
+    })
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'COMP',
+        action: 'UPDATE_CONFIG',
+        extractMetadata: (_, args) => ({
+            currency: args[0]?.currency,
+            updates: args[0],
+        }),
+    })
+    async updateConfig(@Body() dto: AdminUpdateCompConfigDto) {
+        const result = await this.updateCompConfigService.execute({
+            ...dto,
+            minClaimAmount: dto.minClaimAmount ? new Prisma.Decimal(dto.minClaimAmount) : undefined,
+            maxDailyEarnPerUser: dto.maxDailyEarnPerUser ? new Prisma.Decimal(dto.maxDailyEarnPerUser) : undefined,
+        });
+
+        return {
+            id: result.id.toString(),
+            currency: result.currency,
+            isEarnEnabled: result.isEarnEnabled,
+            isClaimEnabled: result.isClaimEnabled,
+            minClaimAmount: result.minClaimAmount.toString(),
+            maxDailyEarnPerUser: result.maxDailyEarnPerUser.toString(),
+            expirationDays: result.expirationDays,
+            updatedAt: result.updatedAt,
         };
     }
 }

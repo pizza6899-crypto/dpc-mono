@@ -13,6 +13,8 @@ import { DeductCompService } from './application/deduct-comp.service';
 import { FindCompOverviewService } from './application/find-comp-overview.service';
 import { FindCompDailyStatsService } from './application/find-comp-daily-stats.service';
 import { FindCompTopEarnersService } from './application/find-comp-top-earners.service';
+import { FindCompConfigService } from './application/find-comp-config.service';
+import { UpdateCompConfigService } from './application/update-comp-config.service';
 import { CompUserController } from './controllers/user/comp-user.controller';
 import { CompAdminController } from './controllers/admin/comp-admin.controller';
 import { CompStatsController } from './controllers/admin/comp-stats.controller';
@@ -56,6 +58,8 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
         FindCompOverviewService,
         FindCompDailyStatsService,
         FindCompTopEarnersService,
+        FindCompConfigService,
+        UpdateCompConfigService,
     ],
     exports: [
         EarnCompService,
@@ -66,6 +70,8 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
         FindCompOverviewService,
         FindCompDailyStatsService,
         FindCompTopEarnersService,
+        FindCompConfigService,
+        UpdateCompConfigService,
         CompPolicy,
     ],
 })

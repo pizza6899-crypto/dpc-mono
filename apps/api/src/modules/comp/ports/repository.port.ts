@@ -49,7 +49,8 @@ export interface CompRepositoryPort {
 }
 
 export interface CompConfigRepositoryPort {
-    getConfig(): Promise<CompConfig | null>;
+    getConfig(currency: ExchangeCurrencyCode): Promise<CompConfig | null>;
+    getAllConfigs(): Promise<CompConfig[]>;
     save(config: CompConfig): Promise<CompConfig>;
 }
 

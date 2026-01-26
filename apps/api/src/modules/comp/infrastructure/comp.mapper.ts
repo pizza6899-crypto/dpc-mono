@@ -71,6 +71,7 @@ export class CompMapper {
     toConfigDomain(model: CompConfig): DomainCompConfig {
         return DomainCompConfig.rehydrate({
             id: model.id,
+            currency: model.currency,
             isEarnEnabled: model.isEarnEnabled,
             isClaimEnabled: model.isClaimEnabled,
             allowNegativeBalance: model.allowNegativeBalance,
@@ -85,6 +86,7 @@ export class CompMapper {
     toConfigPersistence(entity: DomainCompConfig): Partial<CompConfig> {
         return {
             id: entity.id === BigInt(0) ? undefined : entity.id,
+            currency: entity.currency,
             isEarnEnabled: entity.isEarnEnabled,
             isClaimEnabled: entity.isClaimEnabled,
             allowNegativeBalance: entity.allowNegativeBalance,

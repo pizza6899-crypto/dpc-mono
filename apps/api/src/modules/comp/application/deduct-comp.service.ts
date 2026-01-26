@@ -49,7 +49,7 @@ export class DeductCompService {
             throw new CompNotFoundException(userId, currency);
         }
 
-        const config = await this.compConfigRepository.getConfig();
+        const config = await this.compConfigRepository.getConfig(currency);
 
         if (!params.options?.bypassPolicy) {
             // 2. Verify Policy

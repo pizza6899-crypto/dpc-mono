@@ -1,8 +1,9 @@
-import { Prisma } from '@prisma/client';
+import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
 
 export class CompConfig {
     private constructor(
         public readonly id: bigint,
+        public readonly currency: ExchangeCurrencyCode,
         public readonly isEarnEnabled: boolean,
         public readonly isClaimEnabled: boolean,
         public readonly allowNegativeBalance: boolean,
@@ -14,6 +15,7 @@ export class CompConfig {
     ) { }
 
     static create(params: {
+        currency: ExchangeCurrencyCode;
         isEarnEnabled?: boolean;
         isClaimEnabled?: boolean;
         allowNegativeBalance?: boolean;
@@ -24,6 +26,7 @@ export class CompConfig {
     }): CompConfig {
         return new CompConfig(
             BigInt(0), // ID is assigned by DB
+            params.currency,
             params.isEarnEnabled ?? true,
             params.isClaimEnabled ?? true,
             params.allowNegativeBalance ?? true,
@@ -37,6 +40,7 @@ export class CompConfig {
 
     static rehydrate(params: {
         id: bigint;
+        currency: ExchangeCurrencyCode;
         isEarnEnabled: boolean;
         isClaimEnabled: boolean;
         allowNegativeBalance: boolean;
@@ -48,6 +52,7 @@ export class CompConfig {
     }): CompConfig {
         return new CompConfig(
             params.id,
+            params.currency,
             params.isEarnEnabled,
             params.isClaimEnabled,
             params.allowNegativeBalance,

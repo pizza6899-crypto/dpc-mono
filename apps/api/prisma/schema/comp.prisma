@@ -49,22 +49,24 @@ model CompWalletTransaction {
 }
 
 model CompConfig {
-  id BigInt @id @default(autoincrement())
+  id       BigInt               @id @default(autoincrement())
+  currency ExchangeCurrencyCode // 통화별 고유 설정
 
   // 시스템 스위치 (점검 시 False)
-  isEarnEnabled  Boolean @default(true) @map("is_earn_enabled") // 적립 가능 여부
-  isClaimEnabled Boolean @default(true) @map("is_claim_enabled") // 전환 가능 여부
+  isEarnEnabled  Boolean @map("is_earn_enabled") // 적립 가능 여부
+  isClaimEnabled Boolean @map("is_claim_enabled") // 전환 가능 여부
 
   // 정책 설정
-  allowNegativeBalance Boolean @default(true) @map("allow_negative_balance") // 마이너스 잔액 허용 여부 (롤백 대응용)
-  minClaimAmount       Decimal @default(0.01) @map("min_claim_amount") @db.Decimal(32, 18) // 최소 전환 가능 금액
-  maxDailyEarnPerUser  Decimal @default(0) @map("max_daily_earn_per_user") @db.Decimal(32, 18) // 유저당 일일 최대 적립 한도 (0=무제한)
-  expirationDays       Int     @default(365) @map("expiration_days") // 콤프 소멸 기간 (일 단위, 기본 1년)
+  allowNegativeBalance Boolean @map("allow_negative_balance") // 마이너스 잔액 허용 여부 (롤백 대응용)
+  minClaimAmount       Decimal @map("min_claim_amount") @db.Decimal(32, 18) // 최소 전환 가능 금액
+  maxDailyEarnPerUser  Decimal @map("max_daily_earn_per_user") @db.Decimal(32, 18) // 유저당 일일 최대 적립 한도 (0=무제한)
+  expirationDays       Int     @map("expiration_days") // 콤프 소멸 기간 (일 단위, 기본 1년)
 
   description String? // 관리자 메모
 
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@unique([currency])
   @@map("comp_configs")
 }
 

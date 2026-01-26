@@ -47,7 +47,7 @@ export class EarnCompService {
 
         // 1. Check Configuration via Policy (if not bypassed)
         if (!params.options?.bypassPolicy) {
-            const config = await this.compConfigRepository.getConfig();
+            const config = await this.compConfigRepository.getConfig(currency);
 
             try {
                 this.compPolicy.verifyEarn(config, userId);
