@@ -32,6 +32,8 @@ import { ProcessCasinoBetService } from './application/process-casino-bet.servic
 import { ProcessCasinoCreditService } from './application/process-casino-credit.service';
 import { UpdatePushedBetService } from './application/update-pushed-bet.service';
 import { CasinoGamePostProcessService } from './application/casino-game-post-process.service';
+import { CasinoSimulatorController } from './dev-simulator/casino-simulator.controller';
+import { CasinoSimulatorService } from './dev-simulator/casino-simulator.service';
 
 @Module({
   imports: [
@@ -44,7 +46,7 @@ import { CasinoGamePostProcessService } from './application/casino-game-post-pro
     BullModule.registerQueue({
       name: CasinoQueueNames.GAME_POST_PROCESS,
     }),
-    BullModule.registerQueue({ // 신규 통합 결과 조회 큐
+    BullModule.registerQueue({
       name: CasinoQueueNames.GAME_RESULT_FETCH,
     }),
     EnvModule,
@@ -57,7 +59,9 @@ import { CasinoGamePostProcessService } from './application/casino-game-post-pro
     CompModule,
     SnowflakeModule,
   ],
-  controllers: [],
+  controllers: [
+    CasinoSimulatorController, // [DEV] Simulator
+  ],
   providers: [
     GamePostProcessProcessor,
     GameResultFetchProcessor,
@@ -79,6 +83,7 @@ import { CasinoGamePostProcessService } from './application/casino-game-post-pro
     ProcessCasinoCreditService,
     UpdatePushedBetService,
     CasinoGamePostProcessService,
+    CasinoSimulatorService, // [DEV] Simulator
   ],
   exports: [
     GameSessionModule,
