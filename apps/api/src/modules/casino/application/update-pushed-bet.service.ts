@@ -151,7 +151,7 @@ export class UpdatePushedBetService {
             // C. Update UserBalanceStats (Decrease Total Bet for Rolling exclusion)
             // TODO: UserBalanceStatsService/Repo 도입 필요. 현재는 직접 Prisma 사용.
             if (pushAmountWallet.gt(0)) {
-                await this.tx.userBalanceStats.update({
+                await this.tx.userWalletTotalStat.update({
                     where: {
                         userId_currency: {
                             userId: gameRound.userId,
