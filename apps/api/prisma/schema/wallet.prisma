@@ -28,7 +28,7 @@ enum WalletStatus {
 }
 
 model WalletTransaction {
-    id        BigInt   @default(autoincrement()) // 스노우 플레이크 수정 예정
+    id        BigInt   @map("id") // Snowflake ID 적용 (PK)
     createdAt DateTime @default(now()) @map("created_at")
 
     type        WalletTransactionType // 거래 성격
@@ -64,7 +64,11 @@ enum WalletTransactionType {
     REFUND // 베팅 취소/반환
     BONUS_IN // 이벤트성 보너스 지급
     BONUS_OUT // 보너스 회수/만료
+    VAULT_IN // 현금 -> 금고 이동
+    VAULT_OUT // 금고 -> 현금 이동
+    EXCHANGE // 커런시 환전
     ADJUSTMENT // 관리자 수동 보정
     STATUS_CHANGE // 지갑 상태 변경 기록
     COMP_CLAIM // 콤프 전환 (콤프 -> 현금)
+    BONUS_CONVERSION // 보너스 -> 현금 전환 (롤링 충족 등)
 }
