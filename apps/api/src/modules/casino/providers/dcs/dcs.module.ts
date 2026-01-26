@@ -5,7 +5,6 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { RedisModule } from 'src/infrastructure/redis/redis.module';
 import { DcsMapperService } from './infrastructure/dcs-mapper.service';
 import { DcsApiService } from './infrastructure/dcs-api.service';
-import { DcsTestController } from './controllers/dcs-test.controller';
 import { DcsCallbackController } from './controllers/dcs-callback.controller';
 import { DcsCallbackService } from './application/dcs-callback.service';
 import { DcsGameService } from './application/dcs-game.service';
@@ -27,7 +26,7 @@ import { DcsExceptionFilter } from './infrastructure/dcs-exception.filter';
     AuditLogModule,
     WalletModule,
   ],
-  controllers: [DcsTestController, DcsCallbackController],
+  controllers: [DcsCallbackController],
   providers: [
     DcsMapperService,
     DcsApiService,

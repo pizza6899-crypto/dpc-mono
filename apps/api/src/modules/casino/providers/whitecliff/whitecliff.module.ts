@@ -9,7 +9,6 @@ import { WhitecliffGameService } from './application/whitecliff-game.service';
 import { WhitecliffFetchGameResultService } from './application/whitecliff-fetch-game-result.service';
 import { RedisModule } from 'src/infrastructure/redis/redis.module';
 import { WhitecliffMapperService } from './infrastructure/whitecliff-mapper.service';
-import { WhitecliffTestController } from './controllers/whitecliff-test.controller';
 import { ExchangeModule } from 'src/modules/exchange/exchange.module';
 import { WhitecliffPushedBetHistoryScheduler } from './schedulers/whitecliff-pushed-bet-history.scheduler';
 import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
@@ -30,7 +29,6 @@ import { WhitecliffExceptionFilter } from './infrastructure/whitecliff-exception
   ],
   controllers: [
     WhitecliffCallbackController,
-    WhitecliffTestController,
   ],
   providers: [
     WhitecliffCallbackService,
