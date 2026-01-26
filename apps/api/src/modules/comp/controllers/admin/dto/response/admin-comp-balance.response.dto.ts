@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ExchangeCurrencyCode } from '@prisma/client';
 
-export class CompBalanceResponseDto {
+export class AdminCompBalanceResponseDto {
     @ApiProperty({ enum: ExchangeCurrencyCode, description: 'Currency code / 통화 코드' })
     currency: ExchangeCurrencyCode;
 
@@ -10,4 +10,7 @@ export class CompBalanceResponseDto {
 
     @ApiProperty({ description: 'Total earned comp points / 총 적립 콤프', example: '5000.00' })
     totalEarned: string;
+
+    @ApiProperty({ description: 'Total used comp points / 총 사용 콤프', example: '2000.00' })
+    totalUsed: string;
 }

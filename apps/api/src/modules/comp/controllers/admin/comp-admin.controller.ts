@@ -7,7 +7,7 @@ import { CompTransactionResponseDto } from '../dto/response/comp-transaction.res
 import { FindCompBalanceService } from '../../application/find-comp-balance.service';
 import { EarnCompService } from '../../application/earn-comp.service';
 import { DeductCompService } from '../../application/deduct-comp.service';
-import { CompBalanceResponseDto } from '../user/dto/response/comp-balance.response.dto';
+import { AdminCompBalanceResponseDto } from './dto/response/admin-comp-balance.response.dto';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
@@ -34,12 +34,12 @@ export class CompAdminController {
     @Get('users/:userId/balance')
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
-        summary: 'Get user comp balance (Admin)',
-        description: '관리자가 특정 사용자의 콤프 잔액 및 통계를 조회합니다.'
+        summary: 'Get user comp balance (Admin) / 사용자 콤프 잔액 조회 (관리자)',
+        description: 'Admin retrieves a specific user\'s comp balance and statistics / 관리자가 특정 사용자의 콤프 잔액 및 통계를 조회합니다.'
     })
     @ApiParam({ name: 'userId', example: '1', description: 'User ID' })
-    @ApiStandardResponse(CompBalanceResponseDto, {
-        description: 'Successfully retrieved user comp balance'
+    @ApiStandardResponse(AdminCompBalanceResponseDto, {
+        description: 'Successfully retrieved user comp balance / 사용자 콤프 잔액 조회 성공'
     })
     @AuditLog({
         type: LogType.ACTIVITY,
@@ -53,7 +53,7 @@ export class CompAdminController {
     async getUserBalance(
         @Param('userId') userId: string,
         @Query() query: AdminCompBalanceQueryDto,
-    ): Promise<CompBalanceResponseDto> {
+    ): Promise<AdminCompBalanceResponseDto> {
         const wallet = await this.findCompBalanceService.execute(BigInt(userId), query.currency);
         return {
             currency: wallet.currency,
@@ -66,12 +66,12 @@ export class CompAdminController {
     @Post('users/:userId/adjust')
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
-        summary: 'Adjust user comp balance (GIVE/DEDUCT)',
-        description: '관리자가 특정 사용자의 콤프 잔액을 수동으로 지급하거나 차감합니다.'
+        summary: 'Adjust user comp balance (GIVE/DEDUCT) / 사용자 콤프 잔액 조정 (지급/차감)',
+        description: 'Admin manually gives or deducts comp balance from a specific user / 관리자가 특정 사용자의 콤프 잔액을 수동으로 지급하거나 차감합니다.'
     })
     @ApiParam({ name: 'userId', example: '1', description: 'User ID' })
     @ApiStandardResponse(AdminCompAdjustResponseDto, {
-        description: 'Successfully adjusted user comp balance'
+        description: 'Successfully adjusted user comp balance / 사용자 콤프 잔액 조정 성공'
     })
     @AuditLog({
         type: LogType.ACTIVITY,
@@ -115,13 +115,13 @@ export class CompAdminController {
     @Get('users/:userId/transactions')
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
-        summary: 'Get user comp transactions (Admin)',
-        description: '관리자가 특정 사용자의 콤프 거래 내역을 조회합니다.'
+        summary: 'Get user comp transactions (Admin) / 사용자 콤프 거래 내역 조회 (관리자)',
+        description: 'Admin retrieves a specific user\'s comp transaction history / 관리자가 특정 사용자의 콤프 거래 내역을 조회합니다.'
     })
     @ApiParam({ name: 'userId', example: '1', description: 'User ID' })
     @Paginated()
     @ApiPaginatedResponse(CompTransactionResponseDto, {
-        description: 'Successfully retrieved user comp transactions'
+        description: 'Successfully retrieved user comp transactions / 사용자 콤프 거래 내역 조회 성공'
     })
     @AuditLog({
         type: LogType.ACTIVITY,

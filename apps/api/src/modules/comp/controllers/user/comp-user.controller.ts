@@ -34,11 +34,11 @@ export class CompUserController {
     @Get('balance')
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
-        summary: 'Get user comp balance',
-        description: '현재 로그인한 사용자의 콤프 잔액 및 누적 통계를 조회합니다.'
+        summary: 'Get user comp balance / 사용자 콤프 잔액 조회',
+        description: 'Get current user\'s comp balance and accumulated statistics / 현재 로그인한 사용자의 콤프 잔액 및 누적 통계를 조회합니다.'
     })
     @ApiStandardResponse(CompBalanceResponseDto, {
-        description: 'Successfully retrieved comp balance'
+        description: 'Successfully retrieved comp balance / 콤프 잔액 조회 성공'
     })
     @AuditLog({
         type: LogType.ACTIVITY,
@@ -59,18 +59,17 @@ export class CompUserController {
             currency: wallet.currency,
             balance: wallet.balance.toString(),
             totalEarned: wallet.totalEarned.toString(),
-            totalUsed: wallet.totalUsed.toString(),
         };
     }
 
     @Post('claim')
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
-        summary: 'Claim comp points as cash',
-        description: '누적된 콤프 포인트를 실제 현금 잔액으로 전환합니다.'
+        summary: 'Claim comp points as cash / 콤프 포인트 현금 전환',
+        description: 'Convert accumulated comp points to actual cash balance / 누적된 콤프 포인트를 실제 현금 잔액으로 전환합니다.'
     })
     @ApiStandardResponse(ClaimCompResponseDto, {
-        description: 'Successfully claimed comp points'
+        description: 'Successfully claimed comp points / 콤프 포인트 전환 성공'
     })
     @AuditLog({
         type: LogType.ACTIVITY,
@@ -104,12 +103,12 @@ export class CompUserController {
     @Get('transactions')
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
-        summary: 'Get my comp transactions',
-        description: '현재 로그인한 사용자의 콤프 거래 내역(적립, 전환 등)을 조회합니다.'
+        summary: 'Get my comp transactions / 내 콤프 거래 내역 조회',
+        description: 'Retrieve the current user\'s comp transaction history (accrual, conversion, etc.) / 현재 로그인한 사용자의 콤프 거래 내역(적립, 전환 등)을 조회합니다.'
     })
     @Paginated()
     @ApiPaginatedResponse(CompTransactionResponseDto, {
-        description: 'Successfully retrieved comp transactions'
+        description: 'Successfully retrieved comp transactions / 콤프 거래 내역 조회 성공'
     })
     @AuditLog({
         type: LogType.ACTIVITY,
