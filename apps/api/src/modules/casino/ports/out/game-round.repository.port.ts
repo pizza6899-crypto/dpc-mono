@@ -50,8 +50,33 @@ export interface GameRoundRepositoryPort {
      */
     updateResultMeta(id: bigint, startedAt: Date, meta: GameResultMeta): Promise<void>;
 
+
     /**
      * 라운드의 푸시(환불) 검증 여부를 체크 완료로 마킹합니다.
      */
     markPushedBetChecked(id_startedAt: { id: bigint; startedAt: Date }[]): Promise<void>;
+
+    /**
+     * 후처리를 위해 라운드와 관련된 상세 정보(세션, 게임 정보 등)를 조인하여 조회합니다.
+     */
+    findByIdForPostProcess(id: bigint): Promise<GameRoundPostProcessContext | null>;
+}
+
+export interface GameRoundPostProcessContext {
+    id: bigint;
+    userId: bigint;
+    currency: string;
+    isCompleted: boolean;
+    completedAt: Date | null;
+    pushedBetCheckedAt: Date | null;
+    totalBetAmount: Prisma.Decimal;
+    totalWinAmount: Prisma.Decimal;
+    usdExchangeRate: Prisma.Decimal;
+    compRate: Prisma.Decimal;
+
+    // Joined Data
+    sessionCompRate?: Prisma.Decimal;
+    sessionUsdExchangeRate?: Prisma.Decimal;
+    gameContributionRate: Prisma.Decimal;
+    gameCategoryCode?: string;
 }

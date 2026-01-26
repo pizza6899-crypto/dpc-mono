@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { GameRound, GameResultMeta } from '../domain/model/game-round.entity';
-import { GameRoundRepositoryPort } from '../ports/out/game-round.repository.port';
+import { GameRoundRepositoryPort, GameRoundPostProcessContext } from '../ports/out/game-round.repository.port';
 import { GameRoundMapper } from './game-round.mapper';
 import { GameAggregatorType, Prisma } from '@prisma/client';
 import { EXTENDED_PRISMA_CLIENT } from 'src/infrastructure/prisma/prisma.module';
@@ -160,5 +160,50 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
                 },
             });
         }
+    }
+    async findByIdForPostProcess(id: bigint): Promise<GameRoundPostProcessContext | null> {
+        const result = await this.prisma.casinoGameRound.findFirst({
+            where: { id },
+            include: {
+                gameSession: {
+                    select: {
+                        usdExchangeRate: true,
+                        compRate: true,
+                    },
+                },
+                casinoGame: {
+                    select: {
+                        contributionRate: true,
+                        categoryItems: {
+                            where: { isPrimary: true },
+                            select: {
+                                category: {
+                                    select: { code: true },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        });
+
+        if (!result) return null;
+
+        return {
+            id: result.id,
+            userId: result.userId,
+            currency: result.currency,
+            isCompleted: result.isCompleted,
+            completedAt: result.completedAt,
+            pushedBetCheckedAt: result.pushedBetCheckedAt,
+            totalBetAmount: result.totalBetAmount,
+            totalWinAmount: result.totalWinAmount,
+            usdExchangeRate: result.usdExchangeRate,
+            compRate: result.compRate,
+            sessionCompRate: result.gameSession?.compRate,
+            sessionUsdExchangeRate: result.gameSession?.usdExchangeRate,
+            gameContributionRate: result.casinoGame?.contributionRate ?? new Prisma.Decimal(1),
+            gameCategoryCode: result.casinoGame?.categoryItems?.[0]?.category?.code,
+        };
     }
 }

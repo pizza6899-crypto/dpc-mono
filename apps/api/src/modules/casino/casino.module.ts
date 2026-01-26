@@ -31,6 +31,7 @@ import { CheckCasinoBalanceService } from './application/check-casino-balance.se
 import { ProcessCasinoBetService } from './application/process-casino-bet.service';
 import { ProcessCasinoCreditService } from './application/process-casino-credit.service';
 import { UpdatePushedBetService } from './application/update-pushed-bet.service';
+import { CasinoGamePostProcessService } from './application/casino-game-post-process.service';
 
 @Module({
   imports: [
@@ -77,6 +78,7 @@ import { UpdatePushedBetService } from './application/update-pushed-bet.service'
     ProcessCasinoBetService,
     ProcessCasinoCreditService,
     UpdatePushedBetService,
+    CasinoGamePostProcessService,
   ],
   exports: [
     GameSessionModule,
@@ -86,6 +88,7 @@ import { UpdatePushedBetService } from './application/update-pushed-bet.service'
     ProcessCasinoBetService,
     ProcessCasinoCreditService,
     UpdatePushedBetService,
+    CasinoGamePostProcessService,
     GAME_ROUND_REPOSITORY_TOKEN,
     GAME_TRANSACTION_REPOSITORY_TOKEN,
   ],
