@@ -15,10 +15,11 @@ generator kysely {
 
 datasource db {
   provider   = "postgresql"
-  // 크론은 첫 실행때만 설치 마이그레이션 파일로 명시적으로 처리.
-  // 자꾸 문제생겨서 변경
-  // 크론 및 크론 관련의존성은 프리즈마에서 관리 안함.
-  // cron, partman, stat_statements, repack
+  // [인프라 익스텐션 관리 정책]
+  // pg_cron 등 인프라 레벨 익스텐션은 Shadow DB 생성 시 권한/설정 충돌(Drift)을 유발하므로 Prisma 관리에서 제외합니다.
+  // 로컬: 필요 시 'pnpm db:infra' 수동 실행 (Drift 발생 시 Reset 수락 or db:push 사용)
+  // 운영: 초기 구축 시 'pnpm db:infra' 1회 실행 후 'db:deploy'로 테이블 관리
+  // 관리 제외 대상: pg_cron, pg_partman, pg_stat_statements, pg_repack
   extensions = [pg_trgm, unaccent, vector, pgcrypto, uuid_ossp(map: "uuid-ossp"), citext, btree_gist, tsm_system_rows, fuzzystrmatch]
 }
 
