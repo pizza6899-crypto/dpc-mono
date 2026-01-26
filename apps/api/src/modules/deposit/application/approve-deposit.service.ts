@@ -10,7 +10,7 @@ import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
-import { WalletBalanceType, WalletTransactionType, ExchangeCurrencyCode } from '@prisma/client';
+import { UserWalletBalanceType, UserWalletTransactionType, ExchangeCurrencyCode } from '@prisma/client';
 import { GrantPromotionBonusService } from '../../promotion/application/grant-promotion-bonus.service';
 import { CreateWageringRequirementService } from '../../wagering/application/create-wagering-requirement.service';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
@@ -82,8 +82,8 @@ export class ApproveDepositService {
       currency: deposit.depositCurrency as unknown as ExchangeCurrencyCode,
       amount: actuallyPaid,
       operation: UpdateOperation.ADD,
-      balanceType: WalletBalanceType.CASH,
-      transactionType: WalletTransactionType.DEPOSIT,
+      balanceType: UserWalletBalanceType.CASH,
+      transactionType: UserWalletTransactionType.DEPOSIT,
       referenceId: deposit.id!,
     }, {
       adminUserId: adminId,

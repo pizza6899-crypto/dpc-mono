@@ -4,7 +4,7 @@ import { FindUserWalletService } from './application/find-user-wallet.service';
 import { FindWalletTransactionHistoryService } from './application/find-wallet-transaction-history.service';
 import { UserWalletRepository } from './infrastructure/user-wallet.repository';
 import { UserWalletMapper } from './infrastructure/user-wallet.mapper';
-import { WalletTransactionMapper } from './infrastructure/wallet-transaction.mapper';
+import { UserWalletTransactionMapper } from './infrastructure/user-wallet-transaction.mapper';
 import { UpdateWalletStatusService } from './application/update-wallet-status.service';
 import { InitializeUserWalletsService } from './application/initialize-user-wallets.service';
 import { ProcessVaultOperationService } from './application/process-vault-operation.service';
@@ -15,8 +15,8 @@ import { USER_WALLET_REPOSITORY } from './ports/out/user-wallet.repository.token
 import { WalletController } from './controllers/user/wallet.controller';
 import { WalletAdminController } from './controllers/admin/wallet-admin.controller';
 import { UserModule } from '../user/user.module';
-import { WALLET_TRANSACTION_REPOSITORY } from './ports/out/wallet-transaction.repository.token';
-import { WalletTransactionRepository } from './infrastructure/wallet-transaction.repository';
+import { USER_WALLET_TRANSACTION_REPOSITORY } from './ports/out/user-wallet-transaction.repository.token';
+import { UserWalletTransactionRepository } from './infrastructure/wallet-transaction.repository';
 import { UpdateUserBalanceService } from './application/update-user-balance.service';
 import { UserWalletPolicy } from './domain';
 import { SqidsModule } from 'src/common/sqids/sqids.module';
@@ -51,8 +51,8 @@ import { SqidsModule } from 'src/common/sqids/sqids.module';
       useClass: UserWalletRepository,
     },
     {
-      provide: WALLET_TRANSACTION_REPOSITORY,
-      useClass: WalletTransactionRepository,
+      provide: USER_WALLET_TRANSACTION_REPOSITORY,
+      useClass: UserWalletTransactionRepository,
     },
     FindUserWalletService,
     UpdateUserBalanceService,
@@ -65,7 +65,7 @@ import { SqidsModule } from 'src/common/sqids/sqids.module';
     FindUserWalletsService,
     FindWalletStatisticsService,
     UserWalletMapper,
-    WalletTransactionMapper,
+    UserWalletTransactionMapper,
   ],
   controllers: [WalletController, WalletAdminController],
   exports: [

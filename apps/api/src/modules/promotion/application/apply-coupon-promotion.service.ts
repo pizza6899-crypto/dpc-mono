@@ -11,11 +11,11 @@ import type { RequestClientInfo } from 'src/common/http/types';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
 import { UpdateOperation, WalletActionName } from '../../wallet/domain';
-import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
+import { UserWalletBalanceType, UserWalletTransactionType } from '@prisma/client';
 import { SendAlertService } from '../../notification/alert/application/send-alert.service';
 import { NOTIFICATION_EVENTS } from '../../notification/common';
 import { ChannelType } from '@prisma/client';
-import { PromotionMetadata } from '../../wallet/domain/model/wallet-transaction-metadata';
+import { PromotionMetadata } from '../../wallet/domain/model/user-wallet-transaction-metadata';
 
 import { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 
@@ -122,8 +122,8 @@ export class ApplyCouponPromotionService {
             currency,
             amount: bonusAmount,
             operation: UpdateOperation.ADD,
-            balanceType: WalletBalanceType.BONUS,
-            transactionType: WalletTransactionType.BONUS_IN,
+            balanceType: UserWalletBalanceType.BONUS,
+            transactionType: UserWalletTransactionType.BONUS_IN,
             referenceId: promotion.id,
         }, {
             internalNote: `Coupon promotion applied: ${code}`,

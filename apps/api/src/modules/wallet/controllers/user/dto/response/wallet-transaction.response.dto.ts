@@ -1,15 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ExchangeCurrencyCode, WalletTransactionType, WalletBalanceType } from '@prisma/client';
+import { ExchangeCurrencyCode, UserWalletTransactionType, UserWalletBalanceType } from '@prisma/client';
 
 export class UserWalletTransactionResponseDto {
     @ApiProperty({ description: 'Encoded Transaction ID (Sqid) / 인코딩된 트랜잭션 ID (Sqid)' })
     id: string;
 
-    @ApiProperty({ description: 'Transaction type / 트랜잭션 타입', enum: WalletTransactionType })
-    type: WalletTransactionType;
+    @ApiProperty({ description: 'Transaction type / 트랜잭션 타입', enum: UserWalletTransactionType })
+    type: UserWalletTransactionType;
 
-    @ApiProperty({ description: 'Balance type / 잔액 타입', enum: WalletBalanceType })
-    balanceType: WalletBalanceType;
+    @ApiProperty({ description: 'Balance type / 잔액 타입', enum: UserWalletBalanceType })
+    balanceType: UserWalletBalanceType;
 
     @ApiProperty({ description: 'Currency / 통화', enum: ExchangeCurrencyCode })
     currency: ExchangeCurrencyCode;

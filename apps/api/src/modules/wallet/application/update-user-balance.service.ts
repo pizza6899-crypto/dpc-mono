@@ -3,10 +3,10 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { FindUserWalletService } from './find-user-wallet.service';
 import { USER_WALLET_REPOSITORY } from '../ports/out/user-wallet.repository.token';
 import type { UserWalletRepositoryPort } from '../ports/out/user-wallet.repository.port';
-import { WALLET_TRANSACTION_REPOSITORY } from '../ports/out/wallet-transaction.repository.token';
-import type { WalletTransactionRepositoryPort } from '../ports/out/wallet-transaction.repository.port';
-import { ExchangeCurrencyCode, Prisma, WalletTransactionType, WalletBalanceType, AdjustmentReasonCode } from '@prisma/client';
-import { WalletTransaction, WalletNotFoundException, UserWallet, UserWalletPolicy, UpdateOperation, InvalidWalletBalanceTypeException, WalletActionName, AnyWalletTransactionMetadata } from '../domain';
+import { USER_WALLET_TRANSACTION_REPOSITORY } from '../ports/out/user-wallet-transaction.repository.token';
+import type { UserWalletTransactionRepositoryPort } from '../ports/out/user-wallet-transaction.repository.port';
+import { ExchangeCurrencyCode, Prisma, UserWalletTransactionType, UserWalletBalanceType, AdjustmentReasonCode } from '@prisma/client';
+import { UserWalletTransaction, WalletNotFoundException, UserWallet, UserWalletPolicy, UpdateOperation, InvalidWalletBalanceTypeException, WalletActionName, AnyWalletTransactionMetadata } from '../domain';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 export interface BalanceUpdateContext {
@@ -27,8 +27,8 @@ export interface BalanceUpdateParams {
     currency: ExchangeCurrencyCode;
     amount: Prisma.Decimal;
     operation: UpdateOperation;
-    balanceType: WalletBalanceType;
-    transactionType: WalletTransactionType;
+    balanceType: UserWalletBalanceType;
+    transactionType: UserWalletTransactionType;
     referenceId?: bigint;
 }
 
@@ -40,8 +40,8 @@ export class UpdateUserBalanceService {
         @Inject(USER_WALLET_REPOSITORY)
         private readonly walletRepository: UserWalletRepositoryPort,
         private readonly findUserWalletService: FindUserWalletService,
-        @Inject(WALLET_TRANSACTION_REPOSITORY)
-        private readonly transactionRepository: WalletTransactionRepositoryPort,
+        @Inject(USER_WALLET_TRANSACTION_REPOSITORY)
+        private readonly transactionRepository: UserWalletTransactionRepositoryPort,
         private readonly walletPolicy: UserWalletPolicy,
         private readonly advisoryLockService: AdvisoryLockService,
     ) { }
@@ -93,7 +93,7 @@ export class UpdateUserBalanceService {
             balanceType
         });
 
-        const transaction = WalletTransaction.create({
+        const transaction = UserWalletTransaction.create({
             userId,
             currency,
             type: transactionType,
@@ -111,21 +111,21 @@ export class UpdateUserBalanceService {
     }
 
     private buildMetadata(
-        type: WalletTransactionType,
+        type: UserWalletTransactionType,
         context: BalanceUpdateContext,
         balanceInfo: {
             before: { cash: Prisma.Decimal, bonus: Prisma.Decimal },
             after: { cash: Prisma.Decimal, bonus: Prisma.Decimal },
             changeAmount: Prisma.Decimal,
             operation: UpdateOperation,
-            balanceType: WalletBalanceType
+            balanceType: UserWalletBalanceType
         }
     ): AnyWalletTransactionMetadata {
         const baseMetadata = context.metadata || {};
 
         // Calculate detailed balance changes
-        const isCash = balanceInfo.balanceType === WalletBalanceType.CASH;
-        const isBonus = balanceInfo.balanceType === WalletBalanceType.BONUS;
+        const isCash = balanceInfo.balanceType === UserWalletBalanceType.CASH;
+        const isBonus = balanceInfo.balanceType === UserWalletBalanceType.BONUS;
         const sign = balanceInfo.operation === UpdateOperation.ADD ? 1 : -1;
 
         const balanceDetail = {
@@ -142,7 +142,7 @@ export class UpdateUserBalanceService {
             balanceDetail,
         };
 
-        if (type === WalletTransactionType.ADJUSTMENT) {
+        if (type === UserWalletTransactionType.ADJUSTMENT) {
             result.adminId = context.adminUserId?.toString() || 'SYSTEM';
             result.reasonCode = context.reasonCode || AdjustmentReasonCode.OTHER;
             result.internalNote = context.internalNote;
@@ -156,7 +156,7 @@ export class UpdateUserBalanceService {
 
     private calculateBalanceAfter(
         wallet: UserWallet,
-        type: WalletBalanceType,
+        type: UserWalletBalanceType,
         op: UpdateOperation,
         amount: Prisma.Decimal
     ): Prisma.Decimal {
@@ -164,12 +164,12 @@ export class UpdateUserBalanceService {
         return op === UpdateOperation.ADD ? current.add(amount) : current.sub(amount);
     }
 
-    private getBalanceByType(wallet: UserWallet, type: WalletBalanceType): Prisma.Decimal {
+    private getBalanceByType(wallet: UserWallet, type: UserWalletBalanceType): Prisma.Decimal {
         switch (type) {
-            case WalletBalanceType.CASH: return wallet.cash;
-            case WalletBalanceType.BONUS: return wallet.bonus;
-            case WalletBalanceType.LOCK: return wallet.lock;
-            case WalletBalanceType.VAULT: return wallet.vault;
+            case UserWalletBalanceType.CASH: return wallet.cash;
+            case UserWalletBalanceType.BONUS: return wallet.bonus;
+            case UserWalletBalanceType.LOCK: return wallet.lock;
+            case UserWalletBalanceType.VAULT: return wallet.vault;
             default:
                 throw new InvalidWalletBalanceTypeException(type);
         }
@@ -177,24 +177,24 @@ export class UpdateUserBalanceService {
 
     private applyUpdate(
         wallet: UserWallet,
-        type: WalletBalanceType,
+        type: UserWalletBalanceType,
         op: UpdateOperation,
         amount: Prisma.Decimal
     ) {
         if (op === UpdateOperation.ADD) {
             switch (type) {
-                case WalletBalanceType.CASH: wallet.increaseCash(amount); break;
-                case WalletBalanceType.BONUS: wallet.increaseBonus(amount); break;
-                case WalletBalanceType.LOCK: wallet.increaseLock(amount); break;
-                case WalletBalanceType.VAULT: wallet.increaseVault(amount); break;
+                case UserWalletBalanceType.CASH: wallet.increaseCash(amount); break;
+                case UserWalletBalanceType.BONUS: wallet.increaseBonus(amount); break;
+                case UserWalletBalanceType.LOCK: wallet.increaseLock(amount); break;
+                case UserWalletBalanceType.VAULT: wallet.increaseVault(amount); break;
                 default: throw new InvalidWalletBalanceTypeException(type);
             }
         } else {
             switch (type) {
-                case WalletBalanceType.CASH: wallet.decreaseCash(amount); break;
-                case WalletBalanceType.BONUS: wallet.decreaseBonus(amount); break;
-                case WalletBalanceType.LOCK: wallet.decreaseLock(amount); break;
-                case WalletBalanceType.VAULT: wallet.decreaseVault(amount); break;
+                case UserWalletBalanceType.CASH: wallet.decreaseCash(amount); break;
+                case UserWalletBalanceType.BONUS: wallet.decreaseBonus(amount); break;
+                case UserWalletBalanceType.LOCK: wallet.decreaseLock(amount); break;
+                case UserWalletBalanceType.VAULT: wallet.decreaseVault(amount); break;
                 default: throw new InvalidWalletBalanceTypeException(type);
             }
         }

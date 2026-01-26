@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { ExchangeCurrencyCode, Prisma, WalletTransactionType, WalletBalanceType, AdjustmentReasonCode } from '@prisma/client';
+import { ExchangeCurrencyCode, Prisma, UserWalletTransactionType, UserWalletBalanceType, AdjustmentReasonCode } from '@prisma/client';
 import { UpdateUserBalanceService } from './update-user-balance.service';
 import { UserWallet, UpdateOperation, WalletActionName } from '../domain';
 
@@ -9,7 +9,7 @@ export interface AdjustUserBalanceParams {
     currency: ExchangeCurrencyCode;
     amount: Prisma.Decimal;
     operation: UpdateOperation;
-    balanceType: WalletBalanceType;
+    balanceType: UserWalletBalanceType;
     adminId: bigint;
     reasonCode: AdjustmentReasonCode;
     remark?: string;
@@ -36,7 +36,7 @@ export class AdjustUserBalanceService {
                 amount: params.amount,
                 operation: params.operation,
                 balanceType: params.balanceType,
-                transactionType: WalletTransactionType.ADJUSTMENT,
+                transactionType: UserWalletTransactionType.ADJUSTMENT,
             },
             {
                 adminUserId: params.adminId,

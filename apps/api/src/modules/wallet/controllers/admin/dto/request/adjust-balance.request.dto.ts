@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsOptional, IsString, Matches, IsIn } from 'class-validator';
-import { ExchangeCurrencyCode, WalletBalanceType, AdjustmentReasonCode } from '@prisma/client';
+import { ExchangeCurrencyCode, UserWalletBalanceType, AdjustmentReasonCode } from '@prisma/client';
 import { UpdateOperation } from '../../../../domain/wallet.constant';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 
@@ -41,12 +41,12 @@ export class AdjustBalanceRequestDto {
     operation: UpdateOperation;
 
     @ApiProperty({
-        enum: WalletBalanceType,
+        enum: UserWalletBalanceType,
         description: 'Target Balance Type / 대상 잔액 타입 (CASH/BONUS 등)',
     })
-    @IsEnum(WalletBalanceType)
+    @IsEnum(UserWalletBalanceType)
     @IsNotEmpty()
-    balanceType: WalletBalanceType;
+    balanceType: UserWalletBalanceType;
 
     @ApiProperty({
         enum: AdjustmentReasonCode,

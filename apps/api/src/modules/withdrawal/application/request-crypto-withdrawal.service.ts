@@ -5,7 +5,7 @@ import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
-import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
+import { UserWalletBalanceType, UserWalletTransactionType } from '@prisma/client';
 import { WAGERING_REQUIREMENT_REPOSITORY } from 'src/modules/wagering/ports';
 import type { WageringRequirementRepositoryPort } from 'src/modules/wagering/ports';
 import {
@@ -133,8 +133,8 @@ export class RequestCryptoWithdrawalService {
             currency,
             amount: requestedAmount,
             operation: UpdateOperation.SUBTRACT,
-            balanceType: WalletBalanceType.CASH,
-            transactionType: WalletTransactionType.WITHDRAW,
+            balanceType: UserWalletBalanceType.CASH,
+            transactionType: UserWalletTransactionType.WITHDRAW,
         }, {
             actionName: WalletActionName.REQUEST_WITHDRAWAL,
         });

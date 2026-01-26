@@ -2,25 +2,25 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { WalletTransactionRepositoryPort } from '../ports/out/wallet-transaction.repository.port';
-import { WalletTransaction } from '../domain';
-import { WalletTransactionSearchOptions } from '../ports/out/wallet-transaction.search-options';
+import { UserWalletTransactionRepositoryPort } from '../ports/out/user-wallet-transaction.repository.port';
+import { UserWalletTransaction } from '../domain';
+import { UserWalletTransactionSearchOptions } from '../ports/out/user-wallet-transaction.search-options';
 import { Prisma } from '@prisma/client';
-import { WalletTransactionMapper } from './wallet-transaction.mapper';
+import { UserWalletTransactionMapper } from './user-wallet-transaction.mapper';
 
 @Injectable()
-export class WalletTransactionRepository
-    implements WalletTransactionRepositoryPort {
+export class UserWalletTransactionRepository
+    implements UserWalletTransactionRepositoryPort {
     constructor(
         @InjectTransaction()
         private readonly tx: PrismaTransaction,
-        private readonly mapper: WalletTransactionMapper,
+        private readonly mapper: UserWalletTransactionMapper,
     ) { }
 
-    async create(transaction: WalletTransaction): Promise<WalletTransaction> {
+    async create(transaction: UserWalletTransaction): Promise<UserWalletTransaction> {
         const data = this.mapper.toPrisma(transaction);
 
-        const result = await this.tx.walletTransaction.create({
+        const result = await this.tx.userWalletTransaction.create({
             data,
         });
 
@@ -28,11 +28,11 @@ export class WalletTransactionRepository
     }
 
     async listByUserId(
-        options: WalletTransactionSearchOptions,
-    ): Promise<[WalletTransaction[], number]> {
+        options: UserWalletTransactionSearchOptions,
+    ): Promise<[UserWalletTransaction[], number]> {
         const { userId, currency, type, balanceTypes, excludeBalanceTypes, startDate, endDate, page, limit } = options;
 
-        const where: Prisma.WalletTransactionWhereInput = {
+        const where: Prisma.UserWalletTransactionWhereInput = {
             userId,
             currency,
             type,
@@ -47,7 +47,7 @@ export class WalletTransactionRepository
         };
 
         const [items, total] = await Promise.all([
-            this.tx.walletTransaction.findMany({
+            this.tx.userWalletTransaction.findMany({
                 where,
                 orderBy: {
                     createdAt: 'desc',
@@ -55,7 +55,7 @@ export class WalletTransactionRepository
                 skip: (page - 1) * limit,
                 take: limit,
             }),
-            this.tx.walletTransaction.count({
+            this.tx.userWalletTransaction.count({
                 where,
             }),
         ]);

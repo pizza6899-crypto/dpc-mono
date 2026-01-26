@@ -1,7 +1,7 @@
 // src/modules/wallet/infrastructure/wallet-transaction.mapper.ts
 import { Injectable } from '@nestjs/common';
-import { WalletTransaction } from '../domain';
-import { WalletTransaction as PrismaWalletTransaction } from '@prisma/client';
+import { UserWalletTransaction } from '../domain';
+import { UserWalletTransaction as PrismaUserWalletTransaction } from '@prisma/client';
 
 /**
  * WalletTransaction Mapper
@@ -9,12 +9,12 @@ import { WalletTransaction as PrismaWalletTransaction } from '@prisma/client';
  * Prisma WalletTransaction 모델과 Domain WalletTransaction 엔티티 간 변환을 담당합니다.
  */
 @Injectable()
-export class WalletTransactionMapper {
+export class UserWalletTransactionMapper {
     /**
      * Prisma 모델 → Domain 엔티티 변환
      */
-    toDomain(prismaModel: PrismaWalletTransaction): WalletTransaction {
-        return WalletTransaction.fromPersistence({
+    toDomain(prismaModel: PrismaUserWalletTransaction): UserWalletTransaction {
+        return UserWalletTransaction.fromPersistence({
             id: prismaModel.id,
             createdAt: prismaModel.createdAt,
             type: prismaModel.type,
@@ -34,7 +34,7 @@ export class WalletTransactionMapper {
     /**
      * Domain 엔티티 → Prisma 모델 변환
      */
-    toPrisma(domain: WalletTransaction): any {
+    toPrisma(domain: UserWalletTransaction): any {
         return {
             userId: domain.userId,
             currency: domain.currency,

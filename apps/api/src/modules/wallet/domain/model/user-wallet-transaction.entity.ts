@@ -1,20 +1,20 @@
-import { ExchangeCurrencyCode, Prisma, WalletBalanceType, WalletTransactionType } from "@prisma/client";
-import { AnyWalletTransactionMetadata } from "./wallet-transaction-metadata";
+import { ExchangeCurrencyCode, Prisma, UserWalletBalanceType, UserWalletTransactionType } from "@prisma/client";
+import { AnyWalletTransactionMetadata } from "./user-wallet-transaction-metadata";
 
 /**
- * WalletTransaction 도메인 엔티티
+ * UserWalletTransaction 도메인 엔티티
  * 
  * 지갑의 모든 잔액 변동 이력을 기록합니다.
  */
-export class WalletTransaction {
+export class UserWalletTransaction {
     private constructor(
         // Identity
         public readonly id: bigint | null,
         public readonly createdAt: Date,
 
         // Core fields
-        public readonly type: WalletTransactionType,
-        public readonly balanceType: WalletBalanceType,
+        public readonly type: UserWalletTransactionType,
+        public readonly balanceType: UserWalletBalanceType,
         public readonly amount: Prisma.Decimal, // (+) 수입, (-) 지출
         public readonly balanceBefore: Prisma.Decimal,
         public readonly balanceAfter: Prisma.Decimal,
@@ -35,8 +35,8 @@ export class WalletTransaction {
     static create(params: {
         userId: bigint;
         currency: ExchangeCurrencyCode;
-        type: WalletTransactionType;
-        balanceType: WalletBalanceType;
+        type: UserWalletTransactionType;
+        balanceType: UserWalletBalanceType;
         amount: Prisma.Decimal;
         balanceBefore: Prisma.Decimal;
         balanceAfter: Prisma.Decimal;
@@ -45,9 +45,9 @@ export class WalletTransaction {
         ipAddress?: string | null;
         countryCode?: string | null;
         createdAt?: Date;
-    }): WalletTransaction {
+    }): UserWalletTransaction {
         // 도메인 유효성 검사 (필요 시)
-        return new WalletTransaction(
+        return new UserWalletTransaction(
             null, // DB 저장 시 자동 생성
             params.createdAt ?? new Date(),
             params.type,
@@ -67,8 +67,8 @@ export class WalletTransaction {
     static fromPersistence(data: {
         id: bigint;
         createdAt: Date;
-        type: WalletTransactionType;
-        balanceType: WalletBalanceType;
+        type: UserWalletTransactionType;
+        balanceType: UserWalletBalanceType;
         amount: Prisma.Decimal;
         balanceBefore: Prisma.Decimal;
         balanceAfter: Prisma.Decimal;
@@ -78,8 +78,8 @@ export class WalletTransaction {
         countryCode: string | null;
         userId: bigint;
         currency: ExchangeCurrencyCode;
-    }): WalletTransaction {
-        return new WalletTransaction(
+    }): UserWalletTransaction {
+        return new UserWalletTransaction(
             data.id,
             data.createdAt,
             data.type,

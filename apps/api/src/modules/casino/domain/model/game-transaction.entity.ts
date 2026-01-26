@@ -1,4 +1,4 @@
-import { Prisma, CasinoGameTransactionType, WalletBalanceType, ExchangeCurrencyCode } from "@prisma/client";
+import { Prisma, CasinoGameTransactionType, UserWalletBalanceType, ExchangeCurrencyCode } from "@prisma/client";
 
 export class GameTransaction {
     constructor(
@@ -13,7 +13,7 @@ export class GameTransaction {
         public readonly amount: Prisma.Decimal, // Wallet Currency
         public readonly balanceBefore: Prisma.Decimal, // 변동 전 잔액 (검증용)
         public readonly gameAmount: Prisma.Decimal | null, // Game Currency (원본)
-        public readonly balanceType: WalletBalanceType,
+        public readonly balanceType: UserWalletBalanceType,
         public readonly currency: ExchangeCurrencyCode, // Wallet Currency
 
         public readonly createdAt: Date,
@@ -29,7 +29,7 @@ export class GameTransaction {
         amount: Prisma.Decimal,
         balanceBefore: Prisma.Decimal,
         gameAmount: Prisma.Decimal | null,
-        balanceType: WalletBalanceType,
+        balanceType: UserWalletBalanceType,
         currency: ExchangeCurrencyCode,
         createdAt: Date = new Date(),
     ): GameTransaction {

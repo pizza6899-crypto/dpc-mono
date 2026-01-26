@@ -306,10 +306,10 @@ model CasinoGameTransaction {
   aggregatorTxId String @map("aggregator_tx_id")
 
   // 금액 정보
-  amount        Decimal              @map("amount") @db.Decimal(32, 18) // Wallet Currency 기준 (실제 차감/지급액)
-  balanceBefore Decimal              @map("balance_before") @db.Decimal(32, 18) // 변동 전 잔액 (무결성 검증용)
-  gameAmount    Decimal?             @map("game_amount") @db.Decimal(32, 18) // Game Currency 기준 (원본 금액)
-  balanceType   WalletBalanceType // CASH or BONUS
+  amount        Decimal               @map("amount") @db.Decimal(32, 18) // Wallet Currency 기준 (실제 차감/지급액)
+  balanceBefore Decimal               @map("balance_before") @db.Decimal(32, 18) // 변동 전 잔액 (무결성 검증용)
+  gameAmount    Decimal?              @map("game_amount") @db.Decimal(32, 18) // Game Currency 기준 (원본 금액)
+  balanceType   UserWalletBalanceType // CASH or BONUS
   currency      ExchangeCurrencyCode // Wallet Currency
 
   createdAt DateTime @default(now()) @map("created_at")

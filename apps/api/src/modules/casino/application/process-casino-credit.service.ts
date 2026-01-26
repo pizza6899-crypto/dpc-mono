@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Prisma, GameProvider, CasinoGameTransactionType, WalletBalanceType, WalletTransactionType } from '@prisma/client';
+import { Prisma, GameProvider, CasinoGameTransactionType, UserWalletBalanceType, UserWalletTransactionType } from '@prisma/client';
 import { CasinoGameSession } from '../game-session/domain';
 import { Transactional } from '@nestjs-cls/transactional';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
@@ -13,7 +13,7 @@ import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
 import { GameTransaction } from '../domain/model/game-transaction.entity';
 import { CheckCasinoBalanceService } from './check-casino-balance.service';
 import { GameRound } from '../domain/model/game-round.entity';
-import { CasinoWinMetadata } from 'src/modules/wallet/domain/model/wallet-transaction-metadata';
+import { CasinoWinMetadata } from 'src/modules/wallet/domain/model/user-wallet-transaction-metadata';
 import { CasinoQueueService } from '../infrastructure/queue/casino-queue.service';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { UserBalanceNotFoundException } from '../domain/casino.exception';
@@ -149,17 +149,17 @@ export class ProcessCasinoCreditService {
         const newTxId = this.snowflakeService.generate(winTime);
 
         let actionName: WalletActionName = WalletActionName.CASINO_WIN;
-        let walletTxType: WalletTransactionType = WalletTransactionType.WIN;
+        let walletTxType: UserWalletTransactionType = UserWalletTransactionType.WIN;
 
         if (isCancel) {
             actionName = WalletActionName.CASINO_REFUND;
-            walletTxType = WalletTransactionType.REFUND;
+            walletTxType = UserWalletTransactionType.REFUND;
         } else if (isJackpot) {
             actionName = WalletActionName.CASINO_JACKPOT;
-            walletTxType = WalletTransactionType.WIN;
+            walletTxType = UserWalletTransactionType.WIN;
         } else if (isBonus) {
             actionName = WalletActionName.CASINO_BONUS;
-            walletTxType = WalletTransactionType.BONUS_IN;
+            walletTxType = UserWalletTransactionType.BONUS_IN;
         }
 
         let updatedWallet: any = null;
@@ -177,7 +177,7 @@ export class ProcessCasinoCreditService {
                 currency: session.walletCurrency,
                 amount: walletAmount,
                 operation: UpdateOperation.ADD,
-                balanceType: WalletBalanceType.CASH,
+                balanceType: UserWalletBalanceType.CASH,
                 transactionType: walletTxType,
                 referenceId: round.id,
             }, {
@@ -205,7 +205,7 @@ export class ProcessCasinoCreditService {
             walletAmount,
             updatedWallet.cash.sub(walletAmount), // balanceBefore
             finalRefundAmount,
-            WalletBalanceType.CASH,
+            UserWalletBalanceType.CASH,
             session.walletCurrency,
             winTime,
         );

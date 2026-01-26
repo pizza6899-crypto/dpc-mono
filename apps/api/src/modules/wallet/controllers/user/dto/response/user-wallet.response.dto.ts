@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 import type { WalletCurrencyCode } from 'src/utils/currency.util';
-import { WalletStatus } from '@prisma/client';
+import { UserWalletStatus } from '@prisma/client';
 
 export class UserWalletResponseDto {
     @ApiProperty({
@@ -48,10 +48,10 @@ export class UserWalletResponseDto {
 
     @ApiProperty({
         description: 'Wallet status / 지갑 상태',
-        enum: WalletStatus,
-        example: WalletStatus.ACTIVE,
+        enum: UserWalletStatus,
+        example: UserWalletStatus.ACTIVE,
     })
-    status: WalletStatus;
+    status: UserWalletStatus;
 }
 
 export class UserWalletListResponseDto {

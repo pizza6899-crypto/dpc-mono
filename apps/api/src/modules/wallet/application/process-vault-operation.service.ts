@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { ExchangeCurrencyCode, WalletTransactionType, WalletBalanceType } from '@prisma/client';
+import { ExchangeCurrencyCode, UserWalletTransactionType, UserWalletBalanceType } from '@prisma/client';
 import { USER_WALLET_REPOSITORY } from '../ports/out/user-wallet.repository.token';
 import type { UserWalletRepositoryPort } from '../ports/out/user-wallet.repository.port';
-import { WALLET_TRANSACTION_REPOSITORY } from '../ports/out/wallet-transaction.repository.token';
-import type { WalletTransactionRepositoryPort } from '../ports/out/wallet-transaction.repository.port';
-import { UserWallet, WalletTransaction, WalletNotFoundException } from '../domain';
+import { USER_WALLET_TRANSACTION_REPOSITORY } from '../ports/out/user-wallet-transaction.repository.token';
+import type { UserWalletTransactionRepositoryPort } from '../ports/out/user-wallet-transaction.repository.port';
+import { UserWallet, UserWalletTransaction, WalletNotFoundException } from '../domain';
 import { Prisma } from '@prisma/client';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
@@ -31,8 +31,8 @@ export class ProcessVaultOperationService {
     constructor(
         @Inject(USER_WALLET_REPOSITORY)
         private readonly walletRepository: UserWalletRepositoryPort,
-        @Inject(WALLET_TRANSACTION_REPOSITORY)
-        private readonly transactionRepository: WalletTransactionRepositoryPort,
+        @Inject(USER_WALLET_TRANSACTION_REPOSITORY)
+        private readonly transactionRepository: UserWalletTransactionRepositoryPort,
         private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
@@ -67,11 +67,11 @@ export class ProcessVaultOperationService {
 
         // 4. Record Transactions (Dual Records for Cash & Vault)
         // 4-1. Cash Side Transaction
-        const cashTransaction = WalletTransaction.create({
+        const cashTransaction = UserWalletTransaction.create({
             userId,
             currency,
-            type: WalletTransactionType.ADJUSTMENT,
-            balanceType: WalletBalanceType.CASH,
+            type: UserWalletTransactionType.ADJUSTMENT,
+            balanceType: UserWalletBalanceType.CASH,
             amount: operation === VaultOperation.DEPOSIT ? amount.neg() : amount,
             balanceBefore: cashBefore,
             balanceAfter: wallet.cash,
@@ -85,11 +85,11 @@ export class ProcessVaultOperationService {
         await this.transactionRepository.create(cashTransaction);
 
         // 4-2. Vault Side Transaction
-        const vaultTransaction = WalletTransaction.create({
+        const vaultTransaction = UserWalletTransaction.create({
             userId,
             currency,
-            type: WalletTransactionType.ADJUSTMENT,
-            balanceType: WalletBalanceType.VAULT,
+            type: UserWalletTransactionType.ADJUSTMENT,
+            balanceType: UserWalletBalanceType.VAULT,
             amount: operation === VaultOperation.DEPOSIT ? amount : amount.neg(),
             balanceBefore: vaultBefore,
             balanceAfter: wallet.vault,

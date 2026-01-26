@@ -53,9 +53,8 @@ model User {
   depositDetails         DepositDetail[]
   withdrawalDetails      WithdrawalDetail[]
   userWallets            UserWallet[]
-  userTotalStats         UserWalletTotalStat[]
-  userHourlyStats        UserWalletHourlyStat[]
-  userDailyStats         UserWalletDailyStat[]
+  userTotalStats         UserWalletTotalStats[]
+  userHourlyStats        UserWalletHourlyStats[]
   userPromotions         UserPromotion[]
   userSessions           UserSession[]           @relation("UserSessions")
   revokedSessions        UserSession[]           @relation("RevokedSessions")
@@ -229,11 +228,4 @@ model LoginAttempt {
   @@index([email, attemptedAt])
   @@index([ipAddress, attemptedAt])
   @@map("login_attempts")
-}
-
-enum WalletBalanceType {
-  CASH
-  BONUS
-  LOCK
-  VAULT
 }

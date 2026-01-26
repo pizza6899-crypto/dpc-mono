@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsString, IsIn } from 'class-validator';
-import { ExchangeCurrencyCode, WalletStatus } from '@prisma/client';
+import { ExchangeCurrencyCode, UserWalletStatus } from '@prisma/client';
 import { PaginationQueryDto } from 'src/common/http/types/pagination.types';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 
@@ -17,8 +17,8 @@ export class FindWalletsQueryDto extends PaginationQueryDto {
     })
     currency?: ExchangeCurrencyCode;
 
-    @ApiPropertyOptional({ enum: WalletStatus, description: 'Wallet Status / 지갑 상태' })
+    @ApiPropertyOptional({ enum: UserWalletStatus, description: 'Wallet Status / 지갑 상태' })
     @IsOptional()
-    @IsEnum(WalletStatus)
-    status?: WalletStatus;
+    @IsEnum(UserWalletStatus)
+    status?: UserWalletStatus;
 }

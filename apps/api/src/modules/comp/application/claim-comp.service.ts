@@ -7,7 +7,7 @@ import { CompTransaction, InsufficientCompBalanceException, CompClaimHistory, Co
 import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
 import { FindUserWalletService } from '../../wallet/application/find-user-wallet.service';
 import { UpdateOperation, WalletActionName } from '../../wallet/domain';
-import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
+import { UserWalletBalanceType, UserWalletTransactionType } from '@prisma/client';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
@@ -111,8 +111,8 @@ export class ClaimCompService {
                 currency,
                 amount: amount,
                 operation: UpdateOperation.ADD,
-                balanceType: WalletBalanceType.CASH,
-                transactionType: 'COMP_CLAIM' as unknown as WalletTransactionType,
+                balanceType: UserWalletBalanceType.CASH,
+                transactionType: UserWalletTransactionType.COMP_CLAIM,
                 referenceId: createdCompTx.id,
             }, {
                 actionName: WalletActionName.CLAIM_COMP,

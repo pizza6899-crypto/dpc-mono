@@ -1,4 +1,4 @@
-import { WalletStatus } from '@prisma/client';
+import { UserWalletStatus } from '@prisma/client';
 
 /**
  * 상세 잔액 변경 내역
@@ -61,8 +61,8 @@ export interface CasinoRefundMetadata extends BaseMetadata {
  * 상태 변경 기록 메타데이터
  */
 export interface StatusChangeMetadata extends BaseMetadata {
-    prevStatus: WalletStatus;
-    nextStatus: WalletStatus;
+    prevStatus: UserWalletStatus;
+    nextStatus: UserWalletStatus;
     changedBy: 'SYSTEM' | 'ADMIN' | 'USER';
     reason?: string;
 }

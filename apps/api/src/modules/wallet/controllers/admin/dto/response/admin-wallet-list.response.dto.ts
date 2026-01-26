@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ExchangeCurrencyCode, WalletStatus } from '@prisma/client';
+import { ExchangeCurrencyCode, UserWalletStatus } from '@prisma/client';
 
 export class AdminWalletResponseDto {
     @ApiProperty({ description: 'User ID / 사용자 ID' })
@@ -25,8 +25,8 @@ export class AdminWalletResponseDto {
     @ApiProperty({ description: 'Total Available Balance / 총 가용 잔액' })
     totalBalance: string;
 
-    @ApiProperty({ enum: WalletStatus, description: 'Wallet Status / 지갑 상태' })
-    status: WalletStatus;
+    @ApiProperty({ enum: UserWalletStatus, description: 'Wallet Status / 지갑 상태' })
+    status: UserWalletStatus;
 
     @ApiProperty({ description: 'Last Updated At / 최종 수정 일시' })
     updatedAt: Date;

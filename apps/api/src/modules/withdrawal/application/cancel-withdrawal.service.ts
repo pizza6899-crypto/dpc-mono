@@ -2,7 +2,7 @@ import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
-import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
+import { UserWalletBalanceType, UserWalletTransactionType } from '@prisma/client';
 import { WithdrawalNotFoundException } from '../domain';
 import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';
@@ -60,8 +60,8 @@ export class CancelWithdrawalService {
                 currency: withdrawal.currency,
                 amount: withdrawal.requestedAmount,
                 operation: UpdateOperation.ADD,
-                balanceType: WalletBalanceType.CASH,
-                transactionType: WalletTransactionType.REFUND, // 환불 타입으로 기록
+                balanceType: UserWalletBalanceType.CASH,
+                transactionType: UserWalletTransactionType.REFUND, // 환불 타입으로 기록
                 referenceId: withdrawal.id,
             }, {
                 internalNote: 'Withdrawal cancelled by user - balance restored',

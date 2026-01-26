@@ -1,18 +1,18 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { ExchangeCurrencyCode, WalletStatus, WalletTransactionType, WalletBalanceType } from '@prisma/client';
+import { ExchangeCurrencyCode, UserWalletStatus, UserWalletTransactionType, UserWalletBalanceType } from '@prisma/client';
 import { USER_WALLET_REPOSITORY } from '../ports/out/user-wallet.repository.token';
 import type { UserWalletRepositoryPort } from '../ports/out/user-wallet.repository.port';
-import { WALLET_TRANSACTION_REPOSITORY } from '../ports/out/wallet-transaction.repository.token';
-import type { WalletTransactionRepositoryPort } from '../ports/out/wallet-transaction.repository.port';
-import { UserWallet, WalletTransaction, UserWalletPolicy, WalletNotFoundException, WalletStatusException } from '../domain';
+import { USER_WALLET_TRANSACTION_REPOSITORY } from '../ports/out/user-wallet-transaction.repository.token';
+import type { UserWalletTransactionRepositoryPort } from '../ports/out/user-wallet-transaction.repository.port';
+import { UserWallet, UserWalletTransaction, UserWalletPolicy, WalletNotFoundException, WalletStatusException } from '../domain';
 import { Prisma } from '@prisma/client';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 export interface UpdateWalletStatusParams {
     userId: bigint;
     currency: ExchangeCurrencyCode;
-    newStatus: WalletStatus;
+    newStatus: UserWalletStatus;
     adminId: bigint;
     reason?: string;
 }
@@ -27,8 +27,8 @@ export class UpdateWalletStatusService {
     constructor(
         @Inject(USER_WALLET_REPOSITORY)
         private readonly walletRepository: UserWalletRepositoryPort,
-        @Inject(WALLET_TRANSACTION_REPOSITORY)
-        private readonly transactionRepository: WalletTransactionRepositoryPort,
+        @Inject(USER_WALLET_TRANSACTION_REPOSITORY)
+        private readonly transactionRepository: UserWalletTransactionRepositoryPort,
         private readonly walletPolicy: UserWalletPolicy,
         private readonly advisoryLockService: AdvisoryLockService,
     ) { }
@@ -49,42 +49,42 @@ export class UpdateWalletStatusService {
 
         // 2. Validate State Transition by Policy
         // Status Transition Validation
-        if (newStatus === WalletStatus.FROZEN && prevStatus === WalletStatus.FROZEN) {
+        if (newStatus === UserWalletStatus.FROZEN && prevStatus === UserWalletStatus.FROZEN) {
             throw new WalletStatusException(`Wallet is already frozen`);
         }
-        if (newStatus === WalletStatus.FROZEN && prevStatus === WalletStatus.INACTIVE) {
+        if (newStatus === UserWalletStatus.FROZEN && prevStatus === UserWalletStatus.INACTIVE) {
             throw new WalletStatusException(`Cannot freeze wallet in ${prevStatus} status`);
         }
-        if (newStatus === WalletStatus.ACTIVE && prevStatus === WalletStatus.TERMINATED) {
+        if (newStatus === UserWalletStatus.ACTIVE && prevStatus === UserWalletStatus.TERMINATED) {
             throw new WalletStatusException(`Cannot activate wallet in ${prevStatus} status`);
         }
 
-        if (newStatus === WalletStatus.FROZEN && !this.walletPolicy.canFreeze(wallet)) {
+        if (newStatus === UserWalletStatus.FROZEN && !this.walletPolicy.canFreeze(wallet)) {
             throw new WalletStatusException(`Cannot freeze wallet in ${prevStatus} status`);
         }
-        if (newStatus === WalletStatus.ACTIVE && !this.walletPolicy.canActivate(wallet)) {
+        if (newStatus === UserWalletStatus.ACTIVE && !this.walletPolicy.canActivate(wallet)) {
             throw new WalletStatusException(`Cannot activate wallet in ${prevStatus} status`);
         }
 
         // 3. Update Status
         switch (newStatus) {
-            case WalletStatus.ACTIVE: wallet.activate(); break;
-            case WalletStatus.FROZEN: wallet.freeze(); break;
-            case WalletStatus.INACTIVE: wallet.deactivate(); break;
-            case WalletStatus.READ_ONLY: wallet.setReadOnly(); break;
-            case WalletStatus.WITHDRAWAL_RESTRICTED: wallet.restrictWithdrawal(); break;
-            case WalletStatus.TERMINATED: wallet.terminate(); break;
+            case UserWalletStatus.ACTIVE: wallet.activate(); break;
+            case UserWalletStatus.FROZEN: wallet.freeze(); break;
+            case UserWalletStatus.INACTIVE: wallet.deactivate(); break;
+            case UserWalletStatus.READ_ONLY: wallet.setReadOnly(); break;
+            case UserWalletStatus.WITHDRAWAL_RESTRICTED: wallet.restrictWithdrawal(); break;
+            case UserWalletStatus.TERMINATED: wallet.terminate(); break;
         }
 
         // 4. Save Wallet
         const savedWallet = await this.walletRepository.update(wallet);
 
         // 5. Record Status Change Transaction
-        const transaction = WalletTransaction.create({
+        const transaction = UserWalletTransaction.create({
             userId,
             currency,
-            type: WalletTransactionType.STATUS_CHANGE,
-            balanceType: WalletBalanceType.CASH, // 상태 변경은 특정 잔액 타입에 귀속되지 않으나 필드 제약상 CASH 기본값 사용
+            type: UserWalletTransactionType.STATUS_CHANGE,
+            balanceType: UserWalletBalanceType.CASH, // 상태 변경은 특정 잔액 타입에 귀속되지 않으나 필드 제약상 CASH 기본값 사용
             amount: new Prisma.Decimal(0),
             balanceBefore: wallet.cash,
             balanceAfter: wallet.cash,

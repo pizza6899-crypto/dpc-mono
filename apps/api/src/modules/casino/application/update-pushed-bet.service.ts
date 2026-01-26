@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { GameAggregatorType, Prisma, CasinoGameTransactionType, WalletTransactionType, WalletBalanceType } from '@prisma/client';
+import { GameAggregatorType, Prisma, CasinoGameTransactionType, UserWalletTransactionType, UserWalletBalanceType } from '@prisma/client';
 import { CasinoErrorCode } from '../constants/casino-error-codes';
 import { CasinoGameRoundException } from '../domain/casino.exception';
 import { GameResultMeta } from '../domain/model/game-round.entity';
@@ -11,7 +11,7 @@ import { GAME_TRANSACTION_REPOSITORY_TOKEN } from '../ports/out/game-transaction
 import type { GameTransactionRepositoryPort } from '../ports/out/game-transaction.repository.port';
 import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
 import { UpdateOperation } from '../../wallet/domain';
-import { CasinoRefundMetadata } from '../../wallet/domain/model/wallet-transaction-metadata';
+import { CasinoRefundMetadata } from '../../wallet/domain/model/user-wallet-transaction-metadata';
 
 export type GamePushedBetUpdateDto = {
     aggregatorRoundId: string;
@@ -79,9 +79,9 @@ export class UpdatePushedBetService {
         if (betTransactions.length > 0) {
             for (const tx of betTransactions) {
                 const amount = tx.gameAmount ?? new Prisma.Decimal(0);
-                if (tx.balanceType === WalletBalanceType.CASH) {
+                if (tx.balanceType === UserWalletBalanceType.CASH) {
                     totalCashBetGame = totalCashBetGame.add(amount);
-                } else if (tx.balanceType === WalletBalanceType.BONUS) {
+                } else if (tx.balanceType === UserWalletBalanceType.BONUS) {
                     totalBonusBetGame = totalBonusBetGame.add(amount);
                 }
             }
@@ -117,8 +117,8 @@ export class UpdatePushedBetService {
                     currency: gameRound.currency,
                     amount: refundCashWallet,
                     operation: UpdateOperation.ADD,
-                    balanceType: WalletBalanceType.CASH,
-                    transactionType: WalletTransactionType.REFUND,
+                    balanceType: UserWalletBalanceType.CASH,
+                    transactionType: UserWalletTransactionType.REFUND,
                     referenceId: gameRound.id,
                 }, {
                     metadata: {
@@ -136,8 +136,8 @@ export class UpdatePushedBetService {
                     currency: gameRound.currency,
                     amount: refundBonusWallet,
                     operation: UpdateOperation.ADD,
-                    balanceType: WalletBalanceType.BONUS,
-                    transactionType: WalletTransactionType.REFUND,
+                    balanceType: UserWalletBalanceType.BONUS,
+                    transactionType: UserWalletTransactionType.REFUND,
                     referenceId: gameRound.id,
                 }, {
                     metadata: {
@@ -151,7 +151,7 @@ export class UpdatePushedBetService {
             // C. Update UserBalanceStats (Decrease Total Bet for Rolling exclusion)
             // TODO: UserBalanceStatsService/Repo 도입 필요. 현재는 직접 Prisma 사용.
             if (pushAmountWallet.gt(0)) {
-                await this.tx.userWalletTotalStat.update({
+                await this.tx.userWalletTotalStats.update({
                     where: {
                         userId_currency: {
                             userId: gameRound.userId,

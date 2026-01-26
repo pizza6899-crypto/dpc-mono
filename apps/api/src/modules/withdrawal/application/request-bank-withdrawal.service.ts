@@ -5,7 +5,7 @@ import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
-import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
+import { UserWalletBalanceType, UserWalletTransactionType } from '@prisma/client';
 import { WithdrawalDetail, WithdrawalPolicy } from '../domain';
 import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';
@@ -115,8 +115,8 @@ export class RequestBankWithdrawalService {
             currency,
             amount: requestedAmount,
             operation: UpdateOperation.SUBTRACT,
-            balanceType: WalletBalanceType.CASH,
-            transactionType: WalletTransactionType.WITHDRAW,
+            balanceType: UserWalletBalanceType.CASH,
+            transactionType: UserWalletTransactionType.WITHDRAW,
         }, {
             actionName: WalletActionName.REQUEST_WITHDRAWAL,
         });

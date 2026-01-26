@@ -4,13 +4,13 @@ model UserWallet {
     cash     Decimal              @default(0) @db.Decimal(32, 18)
     bonus    Decimal              @default(0) @db.Decimal(32, 18)
 
-    lock      Decimal      @default(0) @db.Decimal(32, 18)
-    vault     Decimal      @default(0) @db.Decimal(32, 18)
-    updatedAt DateTime     @updatedAt @map("updated_at")
-    user      User         @relation(fields: [userId], references: [id])
-    status    WalletStatus @default(ACTIVE) @map("status")
+    lock      Decimal          @default(0) @db.Decimal(32, 18)
+    vault     Decimal          @default(0) @db.Decimal(32, 18)
+    updatedAt DateTime         @updatedAt @map("updated_at")
+    user      User             @relation(fields: [userId], references: [id])
+    status    UserWalletStatus @default(ACTIVE) @map("status")
 
-    transactions WalletTransaction[]
+    transactions UserWalletTransaction[]
 
     @@id([userId, currency])
     @@index([userId])
@@ -18,7 +18,7 @@ model UserWallet {
     @@map("user_wallets")
 }
 
-enum WalletStatus {
+enum UserWalletStatus {
     ACTIVE // 정상: 모든 거래 가능
     FROZEN // 일시 동결: 모든 트랜잭션 차단 (입출금/베팅 불가, 해제 가능)
     READ_ONLY // 읽기 전용: 잔액 조회만 가능
@@ -27,12 +27,12 @@ enum WalletStatus {
     TERMINATED // 해지/탈퇴: 더 이상 사용 불가
 }
 
-model WalletTransaction {
+model UserWalletTransaction {
     id        BigInt   @map("id") // Snowflake ID 적용 (PK)
     createdAt DateTime @default(now()) @map("created_at")
 
-    type        WalletTransactionType // 거래 성격
-    balanceType WalletBalanceType // 어떤 잔액 타입이 변했는지 기록
+    type        UserWalletTransactionType // 거래 성격
+    balanceType UserWalletBalanceType // 어떤 잔액 타입이 변했는지 기록
 
     amount        Decimal @db.Decimal(32, 18) // 실제 변동액 (+/- 로직)
     balanceBefore Decimal @map("balance_before") @db.Decimal(32, 18) // 변동 전 잔액 (무결성 검증용)
@@ -53,10 +53,10 @@ model WalletTransaction {
     @@id([id, createdAt])
     @@index([userId, currency, createdAt(desc)])
     @@index([type, referenceId])
-    @@map("wallet_transactions")
+    @@map("user_wallet_transactions")
 }
 
-enum WalletTransactionType {
+enum UserWalletTransactionType {
     DEPOSIT // 입금 승인에 의한 잔액 추가
     WITHDRAW // 출금 승인에 의한 잔액 차감
     BET // 베팅 (지출)
@@ -77,7 +77,7 @@ enum WalletTransactionType {
  * 지갑 누적 통계 (Life-time)
  * 유저의 계정 생성 시점부터의 모든 합계를 기록합니다.
  */
-model UserWalletTotalStat {
+model UserWalletTotalStats {
     userId   BigInt               @map("user_id")
     currency ExchangeCurrencyCode
 
@@ -93,7 +93,6 @@ model UserWalletTotalStat {
     user      User     @relation(fields: [userId], references: [id])
 
     @@id([userId, currency])
-    @@index([userId])
     @@index([currency])
     @@map("user_wallet_total_stats")
 }
@@ -101,7 +100,7 @@ model UserWalletTotalStat {
 /**
  * 지갑 시간별 통계 및 스냅샷
  */
-model UserWalletHourlyStat {
+model UserWalletHourlyStats {
     userId   BigInt               @map("user_id")
     currency ExchangeCurrencyCode
     date     DateTime // YYYY-MM-DD HH:00:00
@@ -117,31 +116,13 @@ model UserWalletHourlyStat {
     createdAt DateTime @default(now()) @map("created_at")
     user      User     @relation(fields: [userId], references: [id])
 
-    @@id([userId, date, currency])
-    @@index([date])
+    @@id([date, userId, currency])
     @@map("user_wallet_hourly_stats")
 }
 
-/**
- * 지갑 일별 통계 및 스냅샷 (회계 마감용)
- */
-model UserWalletDailyStat {
-    userId   BigInt               @map("user_id")
-    currency ExchangeCurrencyCode
-    date     DateTime             @db.Date // YYYY-MM-DD
-
-    totalDeposit  Decimal @default(0) @map("total_deposit") @db.Decimal(32, 18)
-    totalWithdraw Decimal @default(0) @map("total_withdraw") @db.Decimal(32, 18)
-    totalBet      Decimal @default(0) @map("total_bet") @db.Decimal(32, 18)
-    totalWin      Decimal @default(0) @map("total_win") @db.Decimal(32, 18)
-
-    startBalance Decimal @default(0) @map("start_balance") @db.Decimal(32, 18)
-    endBalance   Decimal @default(0) @map("end_balance") @db.Decimal(32, 18)
-
-    createdAt DateTime @default(now()) @map("created_at")
-    user      User     @relation(fields: [userId], references: [id])
-
-    @@id([userId, date, currency])
-    @@index([date])
-    @@map("user_wallet_daily_stats")
+enum UserWalletBalanceType {
+    CASH
+    BONUS
+    LOCK
+    VAULT
 }

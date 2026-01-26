@@ -9,7 +9,7 @@ import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.
 import { CreateWageringRequirementService } from '../../wagering/application/create-wagering-requirement.service';
 import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
 import { UpdateOperation, WalletActionName } from '../../wallet/domain';
-import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
+import { UserWalletBalanceType, UserWalletTransactionType } from '@prisma/client';
 import type { RequestClientInfo } from 'src/common/http/types';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
@@ -145,8 +145,8 @@ export class GrantPromotionBonusService {
         currency,
         amount: bonusAmount,
         operation: UpdateOperation.ADD,
-        balanceType: WalletBalanceType.BONUS,
-        transactionType: WalletTransactionType.BONUS_IN,
+        balanceType: UserWalletBalanceType.BONUS,
+        transactionType: UserWalletTransactionType.BONUS_IN,
         referenceId: userPromotion.id,
       }, {
         internalNote: `Promotion bonus granted: ${promotion.managementName}`,

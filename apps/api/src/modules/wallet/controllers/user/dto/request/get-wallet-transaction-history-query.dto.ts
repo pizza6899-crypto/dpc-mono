@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsDateString, IsInt, Min, IsIn } from 'class-validator';
-import { ExchangeCurrencyCode, WalletTransactionType } from '@prisma/client';
+import { ExchangeCurrencyCode, UserWalletTransactionType } from '@prisma/client';
 import { Type } from 'class-transformer';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 
@@ -17,11 +17,11 @@ export class GetUserWalletTransactionHistoryQueryDto {
 
     @ApiPropertyOptional({
         description: 'Transaction type / 트랜잭션 타입',
-        enum: WalletTransactionType,
+        enum: UserWalletTransactionType,
     })
     @IsOptional()
-    @IsEnum(WalletTransactionType)
-    type?: WalletTransactionType;
+    @IsEnum(UserWalletTransactionType)
+    type?: UserWalletTransactionType;
 
     @ApiPropertyOptional({
         description: 'Start date / 조회 시작일 (ISO 8601)',

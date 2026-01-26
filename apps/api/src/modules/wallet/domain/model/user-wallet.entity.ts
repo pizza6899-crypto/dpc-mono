@@ -1,5 +1,5 @@
 // src/modules/wallet/domain/model/user-wallet.entity.ts
-import { ExchangeCurrencyCode, Prisma, WalletStatus } from '@prisma/client';
+import { ExchangeCurrencyCode, Prisma, UserWalletStatus } from '@prisma/client';
 import {
   InvalidWalletBalanceException,
   InsufficientBalanceException,
@@ -19,7 +19,7 @@ export class UserWallet {
     private _bonus: Prisma.Decimal,
     private _lock: Prisma.Decimal,
     private _vault: Prisma.Decimal,
-    private _status: WalletStatus,
+    private _status: UserWalletStatus,
     public readonly updatedAt: Date,
   ) {
     this.validateBalances();
@@ -39,7 +39,7 @@ export class UserWallet {
     bonus?: Prisma.Decimal;
     lock?: Prisma.Decimal;
     vault?: Prisma.Decimal;
-    status?: WalletStatus;
+    status?: UserWalletStatus;
   }): UserWallet {
     return new UserWallet(
       params.userId,
@@ -48,7 +48,7 @@ export class UserWallet {
       params.bonus ?? new Prisma.Decimal(0),
       params.lock ?? new Prisma.Decimal(0),
       params.vault ?? new Prisma.Decimal(0),
-      params.status ?? WalletStatus.ACTIVE,
+      params.status ?? UserWalletStatus.ACTIVE,
       new Date(),
     );
   }
@@ -60,7 +60,7 @@ export class UserWallet {
     bonus: Prisma.Decimal;
     lock: Prisma.Decimal;
     vault: Prisma.Decimal;
-    status: WalletStatus;
+    status: UserWalletStatus;
     updatedAt: Date;
   }): UserWallet {
     return new UserWallet(
@@ -80,7 +80,7 @@ export class UserWallet {
   get bonus(): Prisma.Decimal { return this._bonus; }
   get lock(): Prisma.Decimal { return this._lock; }
   get vault(): Prisma.Decimal { return this._vault; }
-  get status(): WalletStatus { return this._status; }
+  get status(): UserWalletStatus { return this._status; }
 
   // Business Logic
 
@@ -162,27 +162,27 @@ export class UserWallet {
   // Status Modifiers
 
   freeze(): void {
-    this._status = WalletStatus.FROZEN;
+    this._status = UserWalletStatus.FROZEN;
   }
 
   activate(): void {
-    this._status = WalletStatus.ACTIVE;
+    this._status = UserWalletStatus.ACTIVE;
   }
 
   deactivate(): void {
-    this._status = WalletStatus.INACTIVE;
+    this._status = UserWalletStatus.INACTIVE;
   }
 
   setReadOnly(): void {
-    this._status = WalletStatus.READ_ONLY;
+    this._status = UserWalletStatus.READ_ONLY;
   }
 
   restrictWithdrawal(): void {
-    this._status = WalletStatus.WITHDRAWAL_RESTRICTED;
+    this._status = UserWalletStatus.WITHDRAWAL_RESTRICTED;
   }
 
   terminate(): void {
-    this._status = WalletStatus.TERMINATED;
+    this._status = UserWalletStatus.TERMINATED;
   }
 }
 

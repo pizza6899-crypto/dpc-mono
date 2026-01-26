@@ -1,9 +1,9 @@
-import type { ExchangeCurrencyCode, WalletStatus } from '@prisma/client';
+import type { ExchangeCurrencyCode, UserWalletStatus } from '@prisma/client';
 
 export interface UserWalletSearchOptions {
     userId?: bigint;
     currency?: ExchangeCurrencyCode;
-    status?: WalletStatus;
+    status?: UserWalletStatus;
     page: number;
     limit: number;
 }

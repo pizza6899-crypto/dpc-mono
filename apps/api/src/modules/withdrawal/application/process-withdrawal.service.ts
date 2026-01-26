@@ -5,10 +5,10 @@ import { NowPaymentApiService } from 'src/modules/payment/infrastructure/now-pay
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
 import { WithdrawalDetail, WithdrawalProcessingException } from '../domain';
-import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
+import { UserWalletBalanceType, UserWalletTransactionType } from '@prisma/client';
 import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';
-import { WithdrawalMetadata } from 'src/modules/wallet/domain/model/wallet-transaction-metadata';
+import { WithdrawalMetadata } from 'src/modules/wallet/domain/model/user-wallet-transaction-metadata';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 export interface ProcessWithdrawalParams {
@@ -140,8 +140,8 @@ export class ProcessWithdrawalService {
                 currency: withdrawal.currency,
                 amount: withdrawal.requestedAmount,
                 operation: UpdateOperation.ADD,
-                balanceType: WalletBalanceType.CASH,
-                transactionType: WalletTransactionType.REFUND,
+                balanceType: UserWalletBalanceType.CASH,
+                transactionType: UserWalletTransactionType.REFUND,
                 referenceId: withdrawal.id,
             }, {
                 internalNote: 'Withdrawal processing failed - balance restored',
