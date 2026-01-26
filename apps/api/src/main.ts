@@ -147,7 +147,14 @@ async function bootstrap() {
         .build();
 
       const document = SwaggerModule.createDocument(app, config);
-      SwaggerModule.setup('api', app, document);
+      SwaggerModule.setup('api', app, document, {
+        swaggerOptions: {
+          persistAuthorization: true, // 새로고침 해도 토큰 유지
+          tagsSorter: 'alpha', // 태그 정렬
+          operationsSorter: 'alpha', // API 정렬
+          docExpansion: 'none', // 기본적으로 접어두기
+        },
+      });
 
       // AsyncAPI 설정 (운영 환경 제외)
       if ((envService.app.nodeEnv as string) !== 'production') {
