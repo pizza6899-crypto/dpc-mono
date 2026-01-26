@@ -22,11 +22,11 @@ model UserCompWallet {
 }
 
 model CompWalletTransaction {
-  id            BigInt
+  id            BigInt              @map("id") // Snowflake ID 적용 (PK)
   compWalletId  BigInt              @map("comp_wallet_id") // 어느 지갑의 거래인가
   amount        Decimal             @db.Decimal(32, 18) // 변경 금액 (양수: 획득, 음수: 사용/차감)
   balanceBefore Decimal             @map("balance_before") @db.Decimal(32, 18) // 변경 전 잔액 (무결성 검증용)
-  balanceAfter  Decimal             @map("balance_after") @db.Decimal(32, 18) // 변경 후 잔액
+  balanceAfter  Decimal             @map("balance_after") @db.Decimal(32, 18) // 변경 후 잔액 (무결성 검증용)
   appliedRate   Decimal?            @map("applied_rate") @db.Decimal(8, 4) // 당시 적용된 요율 스냅샷
   type          CompTransactionType // EARN(적립), CLAIM(전환), ADMIN(관리자), EXPIRE(소멸)
 
