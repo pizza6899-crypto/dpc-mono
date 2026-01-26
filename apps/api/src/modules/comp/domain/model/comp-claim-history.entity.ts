@@ -27,7 +27,7 @@ export class CompClaimHistory {
         status?: CompClaimStatus;
     }): CompClaimHistory {
         return new CompClaimHistory(
-            BigInt(0), // ID is assigned by DB
+            BigInt(0), // ID is assigned by DB (autoincrement)
             params.userId,
             params.status ?? CompClaimStatus.PENDING,
             null,

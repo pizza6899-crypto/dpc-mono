@@ -41,3 +41,13 @@ export class CompInvalidParameterException extends CompDomainException {
         );
     }
 }
+
+export class CompPolicyViolationException extends CompDomainException {
+    constructor(message: string) {
+        super(
+            message,
+            MessageCode.VALIDATION_ERROR,
+            HttpStatus.FORBIDDEN,
+        );
+    }
+}

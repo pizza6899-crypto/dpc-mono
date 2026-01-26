@@ -3,13 +3,14 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { ExchangeCurrencyCode, Prisma, CompTransactionType, CompClaimStatus } from '@prisma/client';
 import { COMP_REPOSITORY, COMP_CONFIG_REPOSITORY, COMP_CLAIM_HISTORY_REPOSITORY } from '../ports/repository.token';
 import type { CompRepositoryPort, CompConfigRepositoryPort, CompClaimHistoryRepositoryPort } from '../ports';
-import { CompTransaction, InsufficientCompBalanceException, CompClaimHistory } from '../domain';
+import { CompTransaction, InsufficientCompBalanceException, CompClaimHistory, CompPolicy } from '../domain';
 import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
 import { FindUserWalletService } from '../../wallet/application/find-user-wallet.service';
 import { UpdateOperation, WalletActionName } from '../../wallet/domain';
 import { WalletBalanceType, WalletTransactionType } from '@prisma/client';
 import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
 interface ClaimCompParams {
     userId: bigint;
@@ -38,6 +39,8 @@ export class ClaimCompService {
         private readonly updateUserBalanceService: UpdateUserBalanceService,
         private readonly analyticsQueueService: AnalyticsQueueService,
         private readonly advisoryLockService: AdvisoryLockService,
+        private readonly compPolicy: CompPolicy,
+        private readonly snowflakeService: SnowflakeService,
     ) { }
 
     @Transactional()
@@ -50,18 +53,15 @@ export class ClaimCompService {
         });
 
         // 1. Check Configuration
-        const config = await this.compConfigRepository.getConfig();
-        if (config) {
-            if (!config.canClaim(amount)) {
-                throw new Error(`Comp claim not allowed: Disabled or below minimum amount (${config.minClaimAmount})`);
-            }
+        // 1. Get Wallet
+        let wallet = await this.compRepository.findByUserIdAndCurrency(userId, currency);
+        if (!wallet) {
+            throw new InsufficientCompBalanceException(userId, amount.toString(), '0');
         }
 
-        // 2. Get Wallet
-        let wallet = await this.compRepository.findByUserIdAndCurrency(userId, currency);
-        if (!wallet || wallet.balance.lt(amount)) {
-            throw new InsufficientCompBalanceException(userId, amount.toString(), wallet?.balance.toString() || '0');
-        }
+        // 2. Check Policy via Domain Service
+        const config = await this.compConfigRepository.getConfig();
+        this.compPolicy.verifyClaim(config, wallet, amount);
 
         const balanceBefore = wallet.balance;
 
@@ -73,6 +73,7 @@ export class ClaimCompService {
 
         // 5. Record Comp Transaction
         const compTx = CompTransaction.create({
+            id: this.snowflakeService.generate(new Date()),
             compWalletId: savedCompWallet.id,
             amount: amount.negated(),
             balanceBefore: balanceBefore,

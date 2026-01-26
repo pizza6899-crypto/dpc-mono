@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Query, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
-import { Prisma, UserRoleType } from '@prisma/client';
+import { Prisma, UserRoleType, CompTransactionType } from '@prisma/client';
 import { FindCompTransactionsService } from '../../application/find-comp-transactions.service';
 import { FindCompTransactionsQueryDto } from '../dto/request/find-comp-transactions-query.dto';
 import { CompTransactionResponseDto } from '../dto/response/comp-transaction.response.dto';
@@ -12,6 +12,8 @@ import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 import { ApiStandardErrors, ApiPaginatedResponse, ApiStandardResponse } from 'src/common/http/decorators/api-response.decorator';
+import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { AdminCompAdjustRequestDto, AdminCompAdjustType } from './dto/request/admin-comp-adjust.request.dto';
 import { AdminCompBalanceQueryDto } from './dto/request/admin-comp-balance-query.dto';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
@@ -88,6 +90,7 @@ export class CompAdminController {
     async adjustUserComp(
         @Param('userId') userId: string,
         @Body() dto: AdminCompAdjustRequestDto,
+        @CurrentUser() admin: AuthenticatedUser,
     ): Promise<AdminCompAdjustResponseDto> {
         const uid = BigInt(userId);
         const amount = new Prisma.Decimal(dto.amount);
@@ -98,7 +101,11 @@ export class CompAdminController {
                 currency: dto.currency,
                 amount: amount,
                 description: dto.reason || 'Admin Adjustment (GIVE)',
-                referenceId: `ADMIN-GIVE-${Date.now()}`
+                options: {
+                    bypassPolicy: true,
+                    transactionType: CompTransactionType.ADMIN,
+                    processedBy: admin.id
+                }
             });
             return { newBalance: wallet.balance.toString() };
         } else {
@@ -107,6 +114,10 @@ export class CompAdminController {
                 currency: dto.currency,
                 amount: amount,
                 description: dto.reason || 'Admin Adjustment (DEDUCT)',
+                options: {
+                    bypassPolicy: true,
+                    processedBy: admin.id
+                }
             });
             return { newBalance: wallet.balance.toString() };
         }

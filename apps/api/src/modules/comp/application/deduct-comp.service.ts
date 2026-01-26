@@ -1,17 +1,22 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { ExchangeCurrencyCode, Prisma, CompTransactionType } from '@prisma/client';
-import { COMP_REPOSITORY } from '../ports/repository.token';
-import type { CompRepositoryPort } from '../ports';
-import { CompWallet, CompTransaction, CompNotFoundException } from '../domain';
+import { COMP_REPOSITORY, COMP_CONFIG_REPOSITORY } from '../ports/repository.token';
+import type { CompRepositoryPort, CompConfigRepositoryPort } from '../ports';
+import { CompWallet, CompTransaction, CompNotFoundException, CompPolicy } from '../domain';
 import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
 interface DeductCompParams {
     userId: bigint;
     currency: ExchangeCurrencyCode;
     amount: Prisma.Decimal;
     description?: string;
+    options?: {
+        bypassPolicy?: boolean;
+        processedBy?: bigint; // Admin User ID
+    };
 }
 
 @Injectable()
@@ -21,8 +26,12 @@ export class DeductCompService {
     constructor(
         @Inject(COMP_REPOSITORY)
         private readonly compRepository: CompRepositoryPort,
+        @Inject(COMP_CONFIG_REPOSITORY)
+        private readonly compConfigRepository: CompConfigRepositoryPort,
         private readonly analyticsQueueService: AnalyticsQueueService,
         private readonly advisoryLockService: AdvisoryLockService,
+        private readonly compPolicy: CompPolicy,
+        private readonly snowflakeService: SnowflakeService,
     ) { }
 
     @Transactional()
@@ -40,21 +49,31 @@ export class DeductCompService {
             throw new CompNotFoundException(userId, currency);
         }
 
-        // 2. Apply Deduct Logic (Domain)
+        const config = await this.compConfigRepository.getConfig();
+
+        if (!params.options?.bypassPolicy) {
+            // 2. Verify Policy
+            this.compPolicy.verifyDeduct(config, wallet, amount);
+        }
+
+        // 3. Apply Deduct Logic (Domain)
         const balanceBefore = wallet.balance;
-        wallet = wallet.deduct(amount);
+        const allowNegative = config?.allowNegativeBalance ?? true;
+        wallet = wallet.deduct(amount, { allowNegative });
 
         // 3. Persist Wallet
         const savedWallet = await this.compRepository.save(wallet);
 
         // 4. Record Transaction
         const transaction = CompTransaction.create({
+            id: this.snowflakeService.generate(new Date()),
             compWalletId: savedWallet.id,
             amount: amount.negated(),
             balanceBefore: balanceBefore,
             balanceAfter: savedWallet.balance,
             appliedRate: new Prisma.Decimal(1),
             type: CompTransactionType.ADMIN,
+            processedBy: params.options?.processedBy,
             description: description || 'Admin Deduction',
         });
         await this.compRepository.createTransaction(transaction);

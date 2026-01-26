@@ -46,6 +46,7 @@ export class CompMapper {
             appliedRate: model.appliedRate,
             type: model.type,
             referenceId: model.referenceId,
+            processedBy: model.processedBy,
             description: model.description,
             createdAt: model.createdAt,
         });
@@ -61,6 +62,7 @@ export class CompMapper {
             appliedRate: entity.appliedRate,
             type: entity.type,
             referenceId: entity.referenceId,
+            processedBy: entity.processedBy,
             description: entity.description,
             createdAt: entity.createdAt,
         };

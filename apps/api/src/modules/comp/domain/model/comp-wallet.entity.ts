@@ -17,6 +17,7 @@ export class CompWallet {
     ) { }
 
     static create(params: {
+        id?: bigint;
         userId: bigint;
         currency: ExchangeCurrencyCode;
         balance?: Prisma.Decimal;
@@ -24,7 +25,7 @@ export class CompWallet {
         totalUsed?: Prisma.Decimal;
     }): CompWallet {
         return new CompWallet(
-            BigInt(0), // ID is assigned by DB
+            params.id ?? 0n,
             params.userId,
             params.currency,
             params.balance ?? new Prisma.Decimal(0),
@@ -118,9 +119,10 @@ export class CompWallet {
         );
     }
 
-    deduct(amount: Prisma.Decimal): CompWallet {
+    deduct(amount: Prisma.Decimal, options?: { allowNegative?: boolean }): CompWallet {
         this.checkStatus();
-        if (this.balance.lessThan(amount)) {
+        const allowNegative = options?.allowNegative ?? false;
+        if (!allowNegative && this.balance.lessThan(amount)) {
             throw new InsufficientCompBalanceException(
                 this.userId,
                 amount.toString(),

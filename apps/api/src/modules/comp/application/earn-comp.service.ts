@@ -3,16 +3,22 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { ExchangeCurrencyCode, Prisma, CompTransactionType } from '@prisma/client';
 import { COMP_CONFIG_REPOSITORY, COMP_REPOSITORY } from '../ports/repository.token';
 import type { CompConfigRepositoryPort, CompRepositoryPort } from '../ports';
-import { CompWallet, CompTransaction } from '../domain';
+import { CompWallet, CompTransaction, CompPolicy, CompPolicyViolationException } from '../domain';
 import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
 interface EarnCompParams {
     userId: bigint;
     currency: ExchangeCurrencyCode;
     amount: Prisma.Decimal;
-    referenceId?: string; // e.g. gameRoundId or transactionId
+    referenceId?: bigint; // e.g. gameRoundId or transactionId
     description?: string;
+    options?: {
+        transactionType?: CompTransactionType;
+        bypassPolicy?: boolean;
+        processedBy?: bigint; // Admin User ID
+    };
 }
 
 @Injectable()
@@ -26,6 +32,8 @@ export class EarnCompService {
         private readonly compConfigRepository: CompConfigRepositoryPort,
         private readonly analyticsQueueService: AnalyticsQueueService,
         private readonly advisoryLockService: AdvisoryLockService,
+        private readonly compPolicy: CompPolicy,
+        private readonly snowflakeService: SnowflakeService,
     ) { }
 
     @Transactional()
@@ -37,14 +45,22 @@ export class EarnCompService {
             throwThrottleError: true,
         });
 
-        // 1. Check Configuration
-        const config = await this.compConfigRepository.getConfig();
-        if (config && !config.canEarn()) {
-            this.logger.warn(`Comp earn skipped: Earn disabled in config. user=${userId}`);
-            // Return current wallet or throw? Returning current wallet (no-op) is safer to not break game flow
-            let wallet = await this.compRepository.findByUserIdAndCurrency(userId, currency);
-            if (!wallet) return CompWallet.create({ userId, currency });
-            return wallet;
+        // 1. Check Configuration via Policy (if not bypassed)
+        if (!params.options?.bypassPolicy) {
+            const config = await this.compConfigRepository.getConfig();
+
+            try {
+                this.compPolicy.verifyEarn(config, userId);
+            } catch (error) {
+                if (error instanceof CompPolicyViolationException) {
+                    this.logger.warn(`Comp earn skipped: ${error.message}`);
+                    // Return current wallet without changes
+                    let wallet = await this.compRepository.findByUserIdAndCurrency(userId, currency);
+                    if (!wallet) return CompWallet.create({ userId, currency });
+                    return wallet;
+                }
+                throw error;
+            }
         }
 
         // 2. Get or Create Wallet
@@ -63,13 +79,15 @@ export class EarnCompService {
 
         // 5. Record Transaction
         const transaction = CompTransaction.create({
+            id: this.snowflakeService.generate(new Date()),
             compWalletId: savedWallet.id,
             amount: amount,
             balanceBefore: balanceBefore,
             balanceAfter: savedWallet.balance,
             appliedRate: new Prisma.Decimal(1), // Default rate
-            type: CompTransactionType.EARN,
-            referenceId: referenceId ? BigInt(referenceId) : undefined,
+            type: params.options?.transactionType ?? CompTransactionType.EARN,
+            referenceId: referenceId,
+            processedBy: params.options?.processedBy,
             description,
         });
         await this.compRepository.createTransaction(transaction);

@@ -4,6 +4,7 @@ import { CompWalletRepository } from './infrastructure/comp-wallet.repository';
 import { CompConfigRepository } from './infrastructure/comp-config.repository';
 import { CompClaimHistoryRepository } from './infrastructure/comp-claim-history.repository';
 import { CompMapper } from './infrastructure/comp.mapper';
+import { CompPolicy } from './domain/comp.policy';
 import { EarnCompService } from './application/earn-comp.service';
 import { ClaimCompService } from './application/claim-comp.service';
 import { FindCompBalanceService } from './application/find-comp-balance.service';
@@ -18,12 +19,14 @@ import { CompStatsController } from './controllers/admin/comp-stats.controller';
 import { WalletModule } from '../wallet/wallet.module';
 import { AnalyticsModule } from '../analytics/analytics.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 
 @Module({
     imports: [
         WalletModule,
         AnalyticsModule,
         ConcurrencyModule,
+        SnowflakeModule,
     ],
     controllers: [
         CompUserController,
@@ -32,6 +35,7 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
     ],
     providers: [
         CompMapper,
+        CompPolicy,
         {
             provide: COMP_REPOSITORY,
             useClass: CompWalletRepository,
@@ -62,6 +66,7 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
         FindCompOverviewService,
         FindCompDailyStatsService,
         FindCompTopEarnersService,
+        CompPolicy,
     ],
 })
 export class CompModule { }

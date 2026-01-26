@@ -4,6 +4,7 @@ import { seedNotificationTemplates } from './seeders/notification.seeder';
 import { seedAggregators } from './seeders/aggregator.seeder';
 import { seedGameProviders } from './seeders/game-provider.seeder';
 import { seedGameCategories } from './seeders/game-category.seeder';
+import { seedCompConfig } from './seeders/comp-config.seeder';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
 
@@ -43,6 +44,10 @@ async function main() {
     // 게임 카테고리 시딩 처리
     await seedGameCategories(prisma);
     console.log('✅ 게임 카테고리 시딩이 완료되었습니다.');
+
+    // 콤프 설정 시딩 처리
+    await seedCompConfig(prisma);
+    console.log('✅ 콤프 설정 시딩이 완료되었습니다.');
 
   } catch (error) {
     console.error('❌ 시딩 중 오류가 발생했습니다:', error);
