@@ -173,7 +173,7 @@ model TierHistory {
 }
 
 model TierEvaluationLog {
-  id         BigInt    @id @default(autoincrement())
+  id         BigInt
   startedAt  DateTime  @default(now()) @map("started_at")
   finishedAt DateTime? @map("finished_at")
 
@@ -190,6 +190,7 @@ model TierEvaluationLog {
 
   errorMessage String? @map("error_message") @db.Text
 
+  @@id([id, startedAt])
   @@index([startedAt])
   @@map("tier_evaluation_log")
 }

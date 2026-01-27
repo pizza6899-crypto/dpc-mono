@@ -1,4 +1,4 @@
-import { Prisma, TierChangeType, TierHistoryReferenceType } from '@prisma/client';
+import { Prisma, TierChangeType, TierHistoryReferenceType, TierHistory as PrismaTierHistory } from '@prisma/client';
 
 export class TierHistory {
     constructor(
@@ -33,13 +33,13 @@ export class TierHistory {
         public readonly referenceId: bigint | null,
     ) { }
 
-    static fromPersistence(data: any): TierHistory {
+    static fromPersistence(data: PrismaTierHistory): TierHistory {
         return new TierHistory(
             data.id,
             data.userId,
             data.fromTierId,
             data.toTierId,
-            data.changeType as TierChangeType,
+            data.changeType,
             data.reason,
             data.rollingAmountSnap,
             data.compRateSnap,
@@ -53,7 +53,7 @@ export class TierHistory {
             data.skippedReason,
             data.changedAt,
             data.changeBy,
-            data.referenceType as TierHistoryReferenceType,
+            data.referenceType,
             data.referenceId
         );
     }

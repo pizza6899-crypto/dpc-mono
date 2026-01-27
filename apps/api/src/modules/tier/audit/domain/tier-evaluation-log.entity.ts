@@ -1,4 +1,4 @@
-import { EvaluationStatus } from '@prisma/client';
+import { EvaluationStatus, TierEvaluationLog as PrismaTierEvaluationLog } from '@prisma/client';
 
 export class TierEvaluationLog {
     constructor(
@@ -18,12 +18,12 @@ export class TierEvaluationLog {
         public readonly errorMessage: string | null,
     ) { }
 
-    static fromPersistence(data: any): TierEvaluationLog {
+    static fromPersistence(data: PrismaTierEvaluationLog): TierEvaluationLog {
         return new TierEvaluationLog(
             data.id,
             data.startedAt,
             data.finishedAt,
-            data.status as EvaluationStatus,
+            data.status,
             data.totalProcessedCount,
             data.promotedCount,
             data.demotedCount,

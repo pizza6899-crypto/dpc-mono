@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, TierStats as PrismaTierStats, UserTierPeriodStats as PrismaUserTierPeriodStats } from '@prisma/client';
 
 export class TierStats {
     constructor(
@@ -12,7 +12,7 @@ export class TierStats {
         public readonly updatedAt: Date,
     ) { }
 
-    static fromPersistence(data: any): TierStats {
+    static fromPersistence(data: PrismaTierStats): TierStats {
         return new TierStats(
             data.timestamp,
             data.tierId,
@@ -38,7 +38,7 @@ export class UserTierPeriodStats {
         public readonly createdAt: Date,
     ) { }
 
-    static fromPersistence(data: any): UserTierPeriodStats {
+    static fromPersistence(data: PrismaUserTierPeriodStats): UserTierPeriodStats {
         return new UserTierPeriodStats(
             data.id,
             data.userId,

@@ -25,6 +25,23 @@ export interface CreateTierHistoryProps {
     referenceId?: bigint | null;
 }
 
+export interface UpdateTierStatsProps {
+    snapshotUserCount?: number;
+    totalBonusPaidUsd?: Prisma.Decimal;
+    totalRollingUsd?: Prisma.Decimal;
+    promotedCount?: number;
+    demotedCount?: number;
+}
+
+export interface UpdateEvaluationLogMetrics {
+    totalProcessedCount?: number;
+    promotedCount?: number;
+    demotedCount?: number;
+    gracePeriodCount?: number;
+    maintainedCount?: number;
+    skippedBonusCount?: number;
+}
+
 export abstract class TierAuditRepositoryPort {
     // 1. History
     abstract saveHistory(props: CreateTierHistoryProps): Promise<TierHistory>;
@@ -32,13 +49,13 @@ export abstract class TierAuditRepositoryPort {
 
     // 2. Evaluation Log
     abstract createEvaluationLog(status: EvaluationStatus): Promise<TierEvaluationLog>;
-    abstract updateEvaluationLog(id: bigint, data: Partial<TierEvaluationLog>): Promise<TierEvaluationLog>;
+    abstract updateEvaluationLog(id: bigint, startedAt: Date, data: UpdateEvaluationLogMetrics & { status?: EvaluationStatus, finishedAt?: Date, errorMessage?: string | null }): Promise<TierEvaluationLog>;
 
     // 3. Demotion Warning
     abstract upsertDemotionWarning(warning: TierDemotionWarning): Promise<TierDemotionWarning>;
     abstract deleteDemotionWarning(userId: bigint): Promise<void>;
 
     // 4. Stats
-    abstract updateStats(timestamp: Date, tierId: bigint, data: any): Promise<void>;
+    abstract updateStats(timestamp: Date, tierId: bigint, data: UpdateTierStatsProps): Promise<void>;
     abstract savePeriodStats(stats: UserTierPeriodStats): Promise<void>;
 }

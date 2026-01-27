@@ -3,7 +3,7 @@ import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { EvaluationStatus } from '@prisma/client';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { TierAuditRepositoryPort, CreateTierHistoryProps } from './audit.repository.port';
+import { TierAuditRepositoryPort, CreateTierHistoryProps, UpdateEvaluationLogMetrics, UpdateTierStatsProps } from './audit.repository.port';
 import { TierHistory } from '../domain/tier-history.entity';
 import { TierEvaluationLog } from '../domain/tier-evaluation-log.entity';
 import { TierDemotionWarning } from '../domain/tier-demotion-warning.entity';
@@ -58,9 +58,9 @@ export class TierAuditRepository implements TierAuditRepositoryPort {
         return TierEvaluationLog.fromPersistence(record);
     }
 
-    async updateEvaluationLog(id: bigint, data: any): Promise<TierEvaluationLog> {
+    async updateEvaluationLog(id: bigint, startedAt: Date, data: UpdateEvaluationLogMetrics & { status?: EvaluationStatus, finishedAt?: Date, errorMessage?: string | null }): Promise<TierEvaluationLog> {
         const record = await this.tx.tierEvaluationLog.update({
-            where: { id },
+            where: { id_startedAt: { id, startedAt } },
             data
         });
         return TierEvaluationLog.fromPersistence(record);
@@ -89,7 +89,7 @@ export class TierAuditRepository implements TierAuditRepositoryPort {
     }
 
     // --- Stats ---
-    async updateStats(timestamp: Date, tierId: bigint, data: any): Promise<void> {
+    async updateStats(timestamp: Date, tierId: bigint, data: UpdateTierStatsProps): Promise<void> {
         await this.tx.tierStats.upsert({
             where: { timestamp_tierId: { timestamp, tierId } },
             create: { timestamp, tierId, ...data },

@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, TierDemotionWarning as PrismaTierDemotionWarning } from '@prisma/client';
 
 export class TierDemotionWarning {
     constructor(
@@ -22,7 +22,7 @@ export class TierDemotionWarning {
         return remaining.isPositive() ? remaining : new Prisma.Decimal(0);
     }
 
-    static fromPersistence(data: any): TierDemotionWarning {
+    static fromPersistence(data: PrismaTierDemotionWarning): TierDemotionWarning {
         return new TierDemotionWarning(
             data.id,
             data.userId,
