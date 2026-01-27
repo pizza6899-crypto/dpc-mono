@@ -73,7 +73,16 @@ When encountering a task related to the following categories, you MUST load the 
     *   Instances must have unique node IDs (0-1023) for Snowflake generation.
     *   Snowflake generation MUST throw `SnowflakeClockBackwardsException` on time retrograde.
 
-### 5. Skill Management
+### 5. Development Workflow
+**When to use:** committing changes, writing commit messages, or following project collaboration rules.
+*   **Skill Name:** `git-commit-guide`
+*   **Path:** `apps/api/.agent/skills/git-commit-guide/SKILL.md`
+*   **Key Rules:**
+    *   Follow **Conventional Commits** specification.
+    *   Use **Korean** for commit subjects and descriptions.
+    *   Include detailed information in the body if the change is complex.
+
+### 6. Skill Management
 
 ## Usage Workflow
 
