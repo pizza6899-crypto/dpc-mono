@@ -15,7 +15,7 @@ export class TierConfig {
             data.isDowngradeEnabled,
             data.evaluationHourUtc,
             data.updatedAt,
-            data.updatedBy,
+            data.updatedBy
         );
     }
 }

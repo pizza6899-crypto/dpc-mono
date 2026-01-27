@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
-import { UserTier } from '../../domain/user-tier.entity';
-import { UserTierRepositoryPort } from './user-tier.repository.port';
+import { UserTier } from '../domain/user-tier.entity';
+
+export abstract class UserTierRepositoryPort {
+    abstract findByUserId(userId: bigint): Promise<UserTier | null>;
+    abstract save(userTier: UserTier): Promise<UserTier>;
+}
 
 @Injectable()
 export class UserTierRepository implements UserTierRepositoryPort {
@@ -10,13 +14,7 @@ export class UserTierRepository implements UserTierRepositoryPort {
     async findByUserId(userId: bigint): Promise<UserTier | null> {
         const record = await this.prisma.userTier.findUnique({
             where: { userId },
-            include: {
-                tier: {
-                    include: {
-                        translations: true,
-                    },
-                },
-            },
+            include: { tier: { include: { translations: true } } }
         });
         return record ? UserTier.fromPersistence(record) : null;
     }
@@ -40,22 +38,15 @@ export class UserTierRepository implements UserTierRepositoryPort {
             isCustomDedicatedManager: userTier.isCustomDedicatedManager,
             isCustomVipEventEligible: userTier.isCustomVipEventEligible,
             isBonusEligible: userTier.isBonusEligible,
+            nextEvaluationAt: userTier.nextEvaluationAt,
+            note: userTier.note
         };
 
         const record = await this.prisma.userTier.upsert({
             where: { userId: userTier.userId },
-            create: {
-                userId: userTier.userId,
-                ...data,
-            },
+            create: { userId: userTier.userId, ...data },
             update: data,
-            include: {
-                tier: {
-                    include: {
-                        translations: true,
-                    },
-                },
-            },
+            include: { tier: { include: { translations: true } } }
         });
 
         return UserTier.fromPersistence(record);

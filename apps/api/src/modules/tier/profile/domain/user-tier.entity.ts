@@ -1,5 +1,5 @@
 import { Prisma, UserTierStatus } from '@prisma/client';
-import { Tier } from './tier.entity';
+import { Tier } from '../../master/domain/tier.entity';
 
 export interface EffectiveBenefits {
     compRate: Prisma.Decimal;
@@ -17,18 +17,15 @@ export class UserTier {
         public readonly id: bigint,
         public readonly userId: bigint,
         public tierId: bigint,
-
-        // State
+        // States
         public totalEffectiveRollingUsd: Prisma.Decimal,
         public currentPeriodRollingUsd: Prisma.Decimal,
         public lastEvaluationAt: Date,
-
-        // Control
+        // Controls
         public highestPromotedPriority: number,
         public status: UserTierStatus,
         public graceEndsAt: Date | null,
         public lastTierChangedAt: Date,
-
         // Overrides
         public readonly customCompRate: Prisma.Decimal | null,
         public readonly customLossbackRate: Prisma.Decimal | null,
@@ -38,22 +35,17 @@ export class UserTier {
         public readonly isCustomWithdrawalUnlimited: boolean | null,
         public readonly isCustomDedicatedManager: boolean | null,
         public readonly isCustomVipEventEligible: boolean | null,
-
+        // Audit
         public readonly isBonusEligible: boolean,
-
-        // Joined Tier (Optional)
+        public readonly nextEvaluationAt: Date | null,
+        public readonly note: string | null,
+        // Joined Data
         public readonly tier?: Tier,
     ) { }
 
-    /**
-     * Calculates the final benefits for the user by applying overrides.
-     * If a custom value exists, it takes precedence over the base tier value.
-     */
     getEffectiveBenefits(baseTier?: Tier): EffectiveBenefits {
         const tier = baseTier || this.tier;
-        if (!tier) {
-            throw new Error('Base tier is required for benefit calculation');
-        }
+        if (!tier) throw new Error('Base tier is required for benefit calculation');
 
         return {
             compRate: this.customCompRate ?? tier.compRate,
@@ -67,36 +59,16 @@ export class UserTier {
         };
     }
 
-    isActive(): boolean {
-        return this.status === UserTierStatus.ACTIVE;
-    }
-
-    isInGracePeriod(): boolean {
-        return this.status === UserTierStatus.GRACE;
-    }
-
     static fromPersistence(data: any): UserTier {
         return new UserTier(
-            data.id,
-            data.userId,
-            data.tierId,
-            data.totalEffectiveRollingUsd,
-            data.currentPeriodRollingUsd,
-            data.lastEvaluationAt,
-            data.highestPromotedPriority,
-            data.status as UserTierStatus,
-            data.graceEndsAt,
-            data.lastTierChangedAt,
-            data.customCompRate,
-            data.customLossbackRate,
-            data.customRakebackRate,
-            data.customReloadBonusRate,
-            data.customWithdrawalLimitUsd,
-            data.isCustomWithdrawalUnlimited,
-            data.isCustomDedicatedManager,
-            data.isCustomVipEventEligible,
-            data.isBonusEligible,
-            data.tier ? Tier.fromPersistence(data.tier) : undefined,
+            data.id, data.userId, data.tierId,
+            data.totalEffectiveRollingUsd, data.currentPeriodRollingUsd, data.lastEvaluationAt,
+            data.highestPromotedPriority, data.status as UserTierStatus, data.graceEndsAt, data.lastTierChangedAt,
+            data.customCompRate, data.customLossbackRate, data.customRakebackRate, data.customReloadBonusRate,
+            data.customWithdrawalLimitUsd, data.isCustomWithdrawalUnlimited,
+            data.isCustomDedicatedManager, data.isCustomVipEventEligible,
+            data.isBonusEligible, data.nextEvaluationAt, data.note,
+            data.tier ? Tier.fromPersistence(data.tier) : undefined
         );
     }
 }
