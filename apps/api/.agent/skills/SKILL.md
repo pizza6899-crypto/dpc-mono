@@ -23,6 +23,14 @@ When encountering a task related to the following categories, you MUST load the 
     *   Use **Kysely** for complex queries, **Prisma** for simple CRUD.
     *   Always use `nestjs-cls` for transaction management (`@InjectTransaction()`).
 
+### 1-A. Prisma Schema Management
+**When to use:** creating or modifying Prisma schema files (*.prisma).
+*   **Skill Name:** `prisma_schema_guide`
+*   **Path:** `apps/api/.agent/skills/prisma-schema-guide/SKILL.md`
+*   **Key Rules:**
+    *   Follow `snake_case` mapping for DB tables/columns.
+    *   Separate models by domain files.
+
 ### 2. NestJS Controllers & API Design
 **When to use:** creating new endpoints, defining DTOs, or implementing controllers.
 *   **Skill Name:** `controller_skill`

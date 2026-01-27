@@ -6,24 +6,31 @@
 // ═══════════════════════════════════════════════════════════════
 
 model CasinoGameSession {
-  id                     BigInt               @id @default(autoincrement())
-  userId                 BigInt               @map("user_id")
-  token                  String               @unique
-  playerName             String               @map("player_name")
-  createdAt              DateTime             @default(now()) @map("created_at")
-  updatedAt              DateTime             @updatedAt @map("updated_at")
-  lastAccessedAt         DateTime             @default(now()) @map("last_accessed_at")
-  aggregatorType         GameAggregatorType   @map("aggregator_type")
-  walletCurrency         ExchangeCurrencyCode @map("wallet_currency")
-  gameCurrency           ExchangeCurrencyCode @map("game_currency")
-  exchangeRate           Decimal              @map("exchange_rate") @db.Decimal(32, 18)
-  exchangeRateSnapshotAt DateTime             @default(now()) @map("exchange_rate_snapshot_at")
-  usdExchangeRate        Decimal              @map("usd_exchange_rate") @db.Decimal(32, 18)
-  compRate               Decimal              @map("comp_rate") @db.Decimal(8, 4)
-  gameId                 BigInt?              @map("game_id") // 현재 실행 중인 게임 (선택적)
-  casinoGame             CasinoGame?          @relation(fields: [gameId], references: [id])
-  user                   User                 @relation(fields: [userId], references: [id])
-  gameRounds             CasinoGameRound[]
+  id             BigInt               @id @default(autoincrement())
+  userId         BigInt               @map("user_id")
+  token          String               @unique
+  playerName     String               @map("player_name")
+  createdAt      DateTime             @default(now()) @map("created_at")
+  updatedAt      DateTime             @updatedAt @map("updated_at")
+  lastAccessedAt DateTime             @default(now()) @map("last_accessed_at")
+  aggregatorType GameAggregatorType   @map("aggregator_type")
+  walletCurrency ExchangeCurrencyCode @map("wallet_currency")
+  gameCurrency   ExchangeCurrencyCode @map("game_currency")
+
+  // [Exchange Rate Snapshots]
+  // exchangeRate: 게임 통화에서 지갑 통화로 변환하는 비율 (1 GameUnit = X WalletUnit)
+  exchangeRate           Decimal  @map("exchange_rate") @db.Decimal(32, 18)
+  exchangeRateSnapshotAt DateTime @default(now()) @map("exchange_rate_snapshot_at")
+
+  // usdExchangeRate: 지갑 통화에서 USD(Base)로 변환하는 비율 (1 WalletUnit = X USD)
+  // 전사 통합 티어 및 통계 계산을 위한 기준 환율입니다.
+  usdExchangeRate Decimal @map("usd_exchange_rate") @db.Decimal(32, 18)
+
+  compRate   Decimal           @map("comp_rate") @db.Decimal(8, 4)
+  gameId     BigInt?           @map("game_id") // 현재 실행 중인 게임 (선택적)
+  casinoGame CasinoGame?       @relation(fields: [gameId], references: [id])
+  user       User              @relation(fields: [userId], references: [id])
+  gameRounds CasinoGameRound[]
 
   @@index([userId])
   @@map("casino_game_sessions")
@@ -242,11 +249,17 @@ model CasinoGameRound {
   aggregatorRoundId String             @map("aggregator_round_id") // 라운드 고유 식별자 (RoundID)
 
   // 통화 및 환율 스냅샷 (세션 변경/삭제 대비, 영수증 역할)
-  currency        ExchangeCurrencyCode @map("currency") // Wallet Currency
-  gameCurrency    ExchangeCurrencyCode @map("game_currency") // Game Currency
-  exchangeRate    Decimal              @map("exchange_rate") @db.Decimal(32, 18) // 적용 환율
-  usdExchangeRate Decimal              @default(0) @map("usd_exchange_rate") @db.Decimal(32, 18) // USD 환율 스냅샷
-  compRate        Decimal              @default(0) @map("comp_rate") @db.Decimal(8, 4) // 콤프 요율 스냅샷
+  currency     ExchangeCurrencyCode @map("currency") // Wallet Currency
+  gameCurrency ExchangeCurrencyCode @map("game_currency") // Game Currency
+
+  // exchangeRate: 게임 통화에서 지갑 통화로 변환하는 비율 (1 GameUnit = X WalletUnit)
+  exchangeRate Decimal @map("exchange_rate") @db.Decimal(32, 18)
+
+  // usdExchangeRate: 지갑 통화에서 USD(Base)로 변환하는 비율 (1 WalletUnit = X USD)
+  // 이 스냅샷은 해당 라운드의 실적을 USD로 통합 집계(티어 승급 심사 등)하는 데 사용됩니다.
+  usdExchangeRate Decimal @default(0) @map("usd_exchange_rate") @db.Decimal(32, 18)
+
+  compRate Decimal @default(0) @map("comp_rate") @db.Decimal(8, 4) // 콤프 요율 스냅샷
 
   // 통계 및 검증용 스냅샷 (실제 원장은 WalletTransaction 집계)
   totalBetAmount            Decimal @default(0) @map("total_bet_amount") @db.Decimal(32, 18) // Wallet Currency 기준

@@ -1,17 +1,25 @@
 model Tier {
-  id             BigInt  @id @default(autoincrement())
-  uid            String  @unique
-  priority       Int     @unique // Lower value means lower tier (e.g., 1=Bronze, 2=Silver)
-  code           String  @unique // e.g., "BRONZE", "SILVER"
-  // requirement_usd: 승급에 필요한 누적 롤링액 (Cumulative Rolling Amount required for upgrade)
-  requirementUsd Decimal @map("requirement_usd") @db.Decimal(32, 18)
+  id                    BigInt  @id @default(autoincrement())
+  priority              Int     @unique // Lower value means lower tier (e.g., 1=Bronze, 2=Silver)
+  // code: 시스템 내부 식별자 (불변), 어드민/백오피스 및 코드 레벨 참조용 (e.g., "BRONZE", "VIP_GOLD")
+  code                  String  @unique
+  // requirement_usd: 승급에 필요한 누적 롤링액
+  requirementUsd        Decimal @map("requirement_usd") @db.Decimal(32, 18)
+  // requirement_deposit_usd: 승급에 필요한 누적 입금액
+  requirementDepositUsd Decimal @default(0) @map("requirement_deposit_usd") @db.Decimal(32, 18)
+  // maintenance_rolling_usd: 등급 유지를 위해 필요한 기간 내 최소 롤링액
+  maintenanceRollingUsd Decimal @default(0) @map("maintenance_rolling_usd") @db.Decimal(32, 18)
 
   // Benefits
   levelUpBonusUsd Decimal @default(0) @map("level_up_bonus") @db.Decimal(32, 18)
-  compRate        Decimal @default(0) @map("comp_rate") @db.Decimal(8, 4) // Integrated Comp Rate
+  compRate        Decimal @default(0) @map("comp_rate") @db.Decimal(8, 4) // 통합 컴프 요율
+  lossbackRate    Decimal @default(0) @map("lossback_rate") @db.Decimal(8, 4) // 손실 기반 캐시백 요율
+  rakebackRate    Decimal @default(0) @map("rakeback_rate") @db.Decimal(8, 4) // 롤링 기반 레이크백 요율
 
-  // Affiliate Benefits (어필리에이트 기본 커미션 요율)
-  affiliateCommissionRate Decimal @default(0) @map("affiliate_commission_rate") @db.Decimal(8, 4)
+  dailyWithdrawalLimitUsd Decimal @default(0) @map("daily_withdrawal_limit_usd") @db.Decimal(32, 18)
+  hasDedicatedManager     Boolean @default(false) @map("has_dedicated_manager")
+  isVIPEventEligible      Boolean @default(false) @map("is_vip_event_eligible")
+  reloadBonusRate         Decimal @default(0) @map("reload_bonus_rate") @db.Decimal(8, 4)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -26,8 +34,7 @@ model Tier {
 }
 
 model TierTranslation {
-  id  BigInt @id @default(autoincrement())
-  uid String @unique
+  id BigInt @id @default(autoincrement())
 
   tierId   BigInt   @map("tier_id")
   language Language
@@ -42,22 +49,18 @@ model TierTranslation {
 
 model UserTier {
   id     BigInt @id @default(autoincrement())
-  uid    String @unique
   userId BigInt @unique @map("user_id")
   tierId BigInt @map("tier_id")
 
   // 상태 데이터
-  cumulativeRollingUsd Decimal @default(0) @map("cumulative_rolling_usd") @db.Decimal(32, 18)
+  cumulativeRollingUsd    Decimal  @default(0) @map("cumulative_rolling_usd") @db.Decimal(32, 18)
+  currentPeriodRollingUsd Decimal  @default(0) @map("current_period_rolling_usd") @db.Decimal(32, 18)
+  evaluationDate          DateTime @default(now()) @map("evaluation_date")
 
   // 승급/강등 제어
   highestPromotedPriority Int      @default(0) @map("highest_promoted_priority") // 보너스 중복 지급 방지용
   isManualLock            Boolean  @default(false) @map("is_manual_lock") // 관리자 강제 등급 고정
   lastPromotedAt          DateTime @default(now()) @map("last_promoted_at")
-
-  // 어필리에이트 관련 필드
-  affiliateCustomRate         Decimal? @map("affiliate_custom_rate") @db.Decimal(8, 4)
-  isAffiliateCustomRate       Boolean  @default(false) @map("is_affiliate_custom_rate")
-  affiliateMonthlyWagerAmount Decimal  @default(0) @map("affiliate_monthly_wager_amount") @db.Decimal(32, 18)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -66,13 +69,11 @@ model UserTier {
   tier Tier @relation(fields: [tierId], references: [id])
 
   @@index([tierId])
-  @@index([affiliateMonthlyWagerAmount])
   @@map("user_tier")
 }
 
 model TierHistory {
   id     BigInt @id @default(autoincrement())
-  uid    String @unique
   userId BigInt @map("user_id")
 
   fromTierId BigInt?        @map("from_tier_id")

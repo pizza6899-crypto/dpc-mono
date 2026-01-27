@@ -4,8 +4,10 @@ model UserWallet {
     cash     Decimal              @default(0) @db.Decimal(32, 18)
     bonus    Decimal              @default(0) @db.Decimal(32, 18)
 
-    lock      Decimal          @default(0) @db.Decimal(32, 18)
-    vault     Decimal          @default(0) @db.Decimal(32, 18)
+    lock  Decimal @default(0) @db.Decimal(32, 18)
+    vault Decimal @default(0) @db.Decimal(32, 18)
+
+    createdAt DateTime         @default(now()) @map("created_at")
     updatedAt DateTime         @updatedAt @map("updated_at")
     user      User             @relation(fields: [userId], references: [id])
     status    UserWalletStatus @default(ACTIVE) @map("status")
@@ -33,12 +35,14 @@ model UserWalletTransaction {
 
     type        UserWalletTransactionType // 거래 성격
     balanceType UserWalletBalanceType // 어떤 잔액 타입이 변했는지 기록
+    status      UserWalletTransactionStatus @map("status") // 트랜잭션 처리 상태
 
     amount        Decimal @db.Decimal(32, 18) // 실제 변동액 (+/- 로직)
     balanceBefore Decimal @map("balance_before") @db.Decimal(32, 18) // 변동 전 잔액 (무결성 검증용)
     balanceAfter  Decimal @map("balance_after") @db.Decimal(32, 18) // 변동 후 최종 잔액 스냅샷
 
     referenceId BigInt? @map("reference_id") // type이 BET이면 GameLog ID, DEPOSIT이면 DepositRequest ID 등을 저장
+    groupId     BigInt? @map("group_id") // 복합 결제(Cash+Bonus) 등을 하나로 묶기 위한 그룹 ID (Snowflake)
     metadata    Json?   @map("metadata") // 상세 사유, 관리자 ID, 상태 변경 전후값 등 유연한 데이터 저장
 
     // 보안필드
@@ -53,7 +57,17 @@ model UserWalletTransaction {
     @@id([id, createdAt])
     @@index([userId, currency, createdAt(desc)])
     @@index([type, referenceId])
+    @@index([referenceId])
+    @@index([groupId])
+    @@index([status])
     @@map("user_wallet_transactions")
+}
+
+enum UserWalletTransactionStatus {
+    PENDING // 처리 대기/진행 중 (블록체인 승인 대기 등)
+    COMPLETED // 최종 처리 및 반영 완료
+    FAILED // 처리 실패/롤백됨
+    CANCELLED // 사용자/관리자에 의한 취소
 }
 
 enum UserWalletTransactionType {
@@ -84,6 +98,21 @@ model UserWalletTotalStats {
     totalDepositCash  Decimal @default(0) @map("total_deposit_cash") @db.Decimal(32, 18)
     totalWithdrawCash Decimal @default(0) @map("total_withdraw_cash") @db.Decimal(32, 18)
 
+    // USD 환산 통계 (Global Tier & Leveling)
+    totalBetCashUsd      Decimal @default(0) @map("total_bet_cash_usd") @db.Decimal(32, 18)
+    totalWinCashUsd      Decimal @default(0) @map("total_win_cash_usd") @db.Decimal(32, 18)
+    totalDepositCashUsd  Decimal @default(0) @map("total_deposit_cash_usd") @db.Decimal(32, 18)
+    totalWithdrawCashUsd Decimal @default(0) @map("total_withdraw_cash_usd") @db.Decimal(32, 18)
+
+    // [Hall of Fame] - 최고 기록
+    maxBetAmount    Decimal @default(0) @map("max_bet_amount") @db.Decimal(32, 18)
+    maxWinAmount    Decimal @default(0) @map("max_win_amount") @db.Decimal(32, 18)
+    maxWinAmountUsd Decimal @default(0) @map("max_win_amount_usd") @db.Decimal(32, 18)
+
+    // [Count Statistics] - 횟수 통계
+    totalBetCount BigInt @default(0) @map("total_bet_count")
+    totalWinCount BigInt @default(0) @map("total_win_count")
+
     // Bet/Win 분리
     totalBetCash  Decimal @default(0) @map("total_bet_cash") @db.Decimal(32, 18)
     totalWinCash  Decimal @default(0) @map("total_win_cash") @db.Decimal(32, 18)
@@ -101,6 +130,12 @@ model UserWalletTotalStats {
     // Vault (금고)
     totalVaultIn  Decimal @default(0) @map("total_vault_in") @db.Decimal(32, 18)
     totalVaultOut Decimal @default(0) @map("total_vault_out") @db.Decimal(32, 18)
+
+    // [Recency Statistics] - 유저 행동 타임라인
+    lastBetAt      DateTime? @map("last_bet_at")
+    lastWinAt      DateTime? @map("last_win_at")
+    lastDepositAt  DateTime? @map("last_deposit_at")
+    lastWithdrawAt DateTime? @map("last_withdraw_at")
 
     updatedAt DateTime @updatedAt @map("updated_at")
     user      User     @relation(fields: [userId], references: [id])
@@ -124,11 +159,33 @@ model UserWalletHourlyStats {
     totalBetCash      Decimal @default(0) @map("total_bet_cash") @db.Decimal(32, 18) // 현금 베팅
     totalWinCash      Decimal @default(0) @map("total_win_cash") @db.Decimal(32, 18) // 현금 승리
 
+    // [USD Statistics]
+    totalDepositCashUsd  Decimal @default(0) @map("total_deposit_cash_usd") @db.Decimal(32, 18)
+    totalWithdrawCashUsd Decimal @default(0) @map("total_withdraw_cash_usd") @db.Decimal(32, 18)
+    totalBetCashUsd      Decimal @default(0) @map("total_bet_cash_usd") @db.Decimal(32, 18)
+    totalWinCashUsd      Decimal @default(0) @map("total_win_cash_usd") @db.Decimal(32, 18)
+
+    // [Hall of Fame] - 시간별 최고 기록
+    maxBetAmount    Decimal @default(0) @map("max_bet_amount") @db.Decimal(32, 18)
+    maxWinAmount    Decimal @default(0) @map("max_win_amount") @db.Decimal(32, 18)
+    maxWinAmountUsd Decimal @default(0) @map("max_win_amount_usd") @db.Decimal(32, 18)
+
+    // [Count Statistics] - 시간별 횟수
+    totalBetCount    BigInt @default(0) @map("total_bet_count")
+    totalWinCount    BigInt @default(0) @map("total_win_count")
+    transactionCount BigInt @default(0) @map("transaction_count") // 해당 시간대의 트랜잭션 총 발생 수 (Audit용)
+
     // [Bonus Flow Statistics]
     totalBonusGiven Decimal @default(0) @map("total_bonus_given") @db.Decimal(32, 18) // 보너스 지급
     totalBonusUsed  Decimal @default(0) @map("total_bonus_used") @db.Decimal(32, 18) // 보너스 회수/만료
     totalBetBonus   Decimal @default(0) @map("total_bet_bonus") @db.Decimal(32, 18) // 보너스 베팅
     totalWinBonus   Decimal @default(0) @map("total_win_bonus") @db.Decimal(32, 18) // 보너스 승리
+
+    // [Recency Statistics] - 해당 시간대의 마지막 활동 시각 (구간 분석용)
+    lastBetAt      DateTime? @map("last_bet_at")
+    lastWinAt      DateTime? @map("last_win_at")
+    lastDepositAt  DateTime? @map("last_deposit_at")
+    lastWithdrawAt DateTime? @map("last_withdraw_at")
 
     // [Snapshots] - 기초/기말 잔액 분리
     startCash Decimal @default(0) @map("start_cash") @db.Decimal(32, 18)
