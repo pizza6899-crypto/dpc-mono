@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
-import { TierHistory, TierChangeType, TierHistoryReferenceType } from '@prisma/client';
+import { TierChangeType, TierHistoryReferenceType } from '@prisma/client';
+import { TierHistory } from '../domain/tier-history.entity';
 
 export interface CreateTierHistoryProps {
     userId: bigint;
@@ -36,12 +37,14 @@ export class TierHistoryRepository implements TierHistoryRepositoryPort {
     async save(props: CreateTierHistoryProps): Promise<TierHistory> {
         const id = this.snowflake.generate(new Date());
 
-        return this.prisma.tierHistory.create({
+        const record = await this.prisma.tierHistory.create({
             data: {
                 id,
                 ...props,
                 changeBy: props.changeBy || 'SYSTEM',
             }
         });
+
+        return TierHistory.fromPersistence(record);
     }
 }
