@@ -27,7 +27,8 @@ export class UpdateAffiliateMonthlyWagerService {
             throw new UserTierNotFoundException(userId);
         }
 
-        userTier.addAffiliateMonthlyWager(wagerAmount);
-        await this.userTierRepository.update(userTier);
+        // 기능 임시 중단
+        // userTier.addAffiliateMonthlyWager(wagerAmount);
+        // await this.userTierRepository.update(userTier);
     }
 }

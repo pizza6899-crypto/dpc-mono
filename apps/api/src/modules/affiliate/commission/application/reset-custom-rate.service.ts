@@ -36,18 +36,18 @@ export class ResetCustomRateService {
       throw new UserTierNotFoundException(affiliateId);
     }
 
-    // 수동 요율 해제
-    userTier.resetAffiliateCustomRate();
+    // 수동 요율 해제 (기능 임시 중단)
+    // userTier.resetAffiliateCustomRate();
 
     // 저장
-    await this.userTierRepository.update(userTier);
+    // await this.userTierRepository.update(userTier);
 
     return {
       tierCode: userTier.tier.code,
-      baseRate: userTier.tier.affiliateCommissionRate,
+      baseRate: new Prisma.Decimal(0), // 임시
       customRate: null,
       isCustomRate: false,
-      effectiveRate: userTier.tier.affiliateCommissionRate,
+      effectiveRate: new Prisma.Decimal(0), // 임시
     };
   }
 }

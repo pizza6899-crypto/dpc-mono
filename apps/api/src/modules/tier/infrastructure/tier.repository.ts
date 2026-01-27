@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { TierRepositoryPort } from '../ports/tier.repository.port';
 import { TierMapper } from './tier.mapper';
-import { generateUid } from 'src/utils/id.util';
 import { Tier } from '../domain';
 import { TierException } from '../domain/tier.exception';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
@@ -92,7 +91,6 @@ export class TierRepository implements TierRepositoryPort {
         } else {
             await this.tx.tierTranslation.create({
                 data: {
-                    uid: generateUid(),
                     tierId,
                     language: language as any,
                     name,

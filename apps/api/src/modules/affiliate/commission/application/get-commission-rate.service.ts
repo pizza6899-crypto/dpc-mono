@@ -39,8 +39,8 @@ export class GetCommissionRateService {
 
     return {
       tierCode: userTier.tier.code,
-      baseRate: userTier.tier.affiliateCommissionRate,
-      customRate: userTier.affiliateCustomRate,
+      baseRate: new Prisma.Decimal(0), // TODO: Tier 스토어에 어필리에이트 요율 필드 추가 필요
+      customRate: null, // TODO: UserTier 스토어에 커스텀 요율 필드 추가 필요
       isCustomRate: isCustom,
       effectiveRate,
     };

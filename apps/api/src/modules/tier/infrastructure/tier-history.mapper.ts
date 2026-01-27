@@ -7,7 +7,6 @@ export class TierHistoryMapper {
     toDomain(model: TierHistoryModel): TierHistory {
         return TierHistory.fromPersistence({
             id: model.id,
-            uid: model.uid,
             userId: model.userId,
             fromTierId: model.fromTierId,
             toTierId: model.toTierId,
@@ -22,7 +21,6 @@ export class TierHistoryMapper {
     toPersistence(domain: TierHistory): Prisma.TierHistoryUncheckedCreateInput {
         return {
             id: domain.id ?? undefined,
-            uid: domain.uid,
             userId: domain.userId,
             fromTierId: domain.fromTierId,
             toTierId: domain.toTierId,

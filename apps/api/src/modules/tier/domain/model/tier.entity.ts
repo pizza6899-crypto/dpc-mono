@@ -1,27 +1,30 @@
 import { Prisma } from '@prisma/client';
-import { generateUid } from 'src/utils/id.util';
 import { TierException } from '../tier.exception';
 
 /**
  * Tier Definition Entity
  * 
  * Represents a tier level based on the current schema.
- * - priority: Order of the tier
- * - code: Unique identifier (e.g. "BRONZE")
- * - requirementUsd: Cumulative rolling requirement
  */
 export class Tier {
     private constructor(
         public readonly id: bigint | null,
-        public readonly uid: string,
         public readonly priority: number,
         public readonly code: string,
         public readonly requirementUsd: Prisma.Decimal,
+        public readonly requirementDepositUsd: Prisma.Decimal,
+        public readonly maintenanceRollingUsd: Prisma.Decimal,
 
         // Benefits
         public readonly levelUpBonusUsd: Prisma.Decimal,
         public readonly compRate: Prisma.Decimal,
-        public readonly affiliateCommissionRate: Prisma.Decimal,
+        public readonly lossbackRate: Prisma.Decimal,
+        public readonly rakebackRate: Prisma.Decimal,
+
+        public readonly dailyWithdrawalLimitUsd: Prisma.Decimal,
+        public readonly hasDedicatedManager: boolean,
+        public readonly isVIPEventEligible: boolean,
+        public readonly reloadBonusRate: Prisma.Decimal,
 
         public readonly createdAt: Date,
         public readonly updatedAt: Date,
@@ -34,42 +37,30 @@ export class Tier {
     ) { }
 
     static create(params: {
-        id?: bigint; // Normally auto-generated, but can be passed
-        uid?: string; // Normally auto-generated
+        id?: bigint;
         priority: number;
         code: string;
         requirementUsd: Prisma.Decimal | number;
+        requirementDepositUsd?: Prisma.Decimal | number;
+        maintenanceRollingUsd?: Prisma.Decimal | number;
+
         levelUpBonusUsd?: Prisma.Decimal | number;
         compRate?: Prisma.Decimal | number;
-        affiliateCommissionRate?: Prisma.Decimal | number;
+        lossbackRate?: Prisma.Decimal | number;
+        rakebackRate?: Prisma.Decimal | number;
+
+        dailyWithdrawalLimitUsd?: Prisma.Decimal | number;
+        hasDedicatedManager?: boolean;
+        isVIPEventEligible?: boolean;
+        reloadBonusRate?: Prisma.Decimal | number;
+
         displayName?: string;
         translations?: { language: string; name: string }[];
     }): Tier {
-        const requirementUsd =
-            params.requirementUsd instanceof Prisma.Decimal
-                ? params.requirementUsd
-                : new Prisma.Decimal(params.requirementUsd);
+        const toDecimal = (val: Prisma.Decimal | number | undefined, df = 0) =>
+            val instanceof Prisma.Decimal ? val : new Prisma.Decimal(val ?? df);
 
-        const levelUpBonusUsd =
-            params.levelUpBonusUsd instanceof Prisma.Decimal
-                ? params.levelUpBonusUsd
-                : new Prisma.Decimal(params.levelUpBonusUsd ?? 0);
-
-        const compRate =
-            params.compRate instanceof Prisma.Decimal
-                ? params.compRate
-                : new Prisma.Decimal(params.compRate ?? 0);
-
-        const affiliateCommissionRate =
-            params.affiliateCommissionRate instanceof Prisma.Decimal
-                ? params.affiliateCommissionRate
-                : new Prisma.Decimal(params.affiliateCommissionRate ?? 0);
-
-        // Default empty ID/UID for creation if not provided (DB will handle)
-        // However, domain entity should ideally have valid data. 
-        // We strictly follow "New entity ... id=null or placeholder" until persisted.
         const id = params.id ?? null;
-        const uid = params.uid ?? generateUid();
 
         const translations = params.translations ?? [];
         const languages = new Set<string>();
@@ -82,42 +73,60 @@ export class Tier {
 
         return new Tier(
             id,
-            uid,
             params.priority,
             params.code,
-            requirementUsd,
-            levelUpBonusUsd,
-            compRate,
-            affiliateCommissionRate,
+            toDecimal(params.requirementUsd),
+            toDecimal(params.requirementDepositUsd),
+            toDecimal(params.maintenanceRollingUsd),
+            toDecimal(params.levelUpBonusUsd),
+            toDecimal(params.compRate),
+            toDecimal(params.lossbackRate),
+            toDecimal(params.rakebackRate),
+            toDecimal(params.dailyWithdrawalLimitUsd),
+            params.hasDedicatedManager ?? false,
+            params.isVIPEventEligible ?? false,
+            toDecimal(params.reloadBonusRate),
             new Date(),
             new Date(),
-            params.translations ?? [],
+            translations,
             params.displayName
         );
     }
 
     static fromPersistence(data: {
         id: bigint;
-        uid: string;
         priority: number;
         code: string;
         requirementUsd: Prisma.Decimal;
+        requirementDepositUsd: Prisma.Decimal;
+        maintenanceRollingUsd: Prisma.Decimal;
         levelUpBonusUsd: Prisma.Decimal;
         compRate: Prisma.Decimal;
-        affiliateCommissionRate: Prisma.Decimal;
+        lossbackRate: Prisma.Decimal;
+        rakebackRate: Prisma.Decimal;
+        dailyWithdrawalLimitUsd: Prisma.Decimal;
+        hasDedicatedManager: boolean;
+        isVIPEventEligible: boolean;
+        reloadBonusRate: Prisma.Decimal;
         createdAt: Date;
         updatedAt: Date;
         translations?: { language: string; name: string }[];
     }): Tier {
         return new Tier(
             data.id,
-            data.uid,
             data.priority,
             data.code,
             data.requirementUsd,
+            data.requirementDepositUsd,
+            data.maintenanceRollingUsd,
             data.levelUpBonusUsd,
             data.compRate,
-            data.affiliateCommissionRate,
+            data.lossbackRate,
+            data.rakebackRate,
+            data.dailyWithdrawalLimitUsd,
+            data.hasDedicatedManager,
+            data.isVIPEventEligible,
+            data.reloadBonusRate,
             data.createdAt,
             data.updatedAt,
             data.translations ?? [],
@@ -126,14 +135,20 @@ export class Tier {
 
     toPersistence() {
         return {
-            id: this.id,
-            uid: this.uid, // Persist layer often ignores this on create
+            id: this.id ?? undefined,
             priority: this.priority,
             code: this.code,
             requirementUsd: this.requirementUsd,
+            requirementDepositUsd: this.requirementDepositUsd,
+            maintenanceRollingUsd: this.maintenanceRollingUsd,
             levelUpBonusUsd: this.levelUpBonusUsd,
             compRate: this.compRate,
-            affiliateCommissionRate: this.affiliateCommissionRate,
+            lossbackRate: this.lossbackRate,
+            rakebackRate: this.rakebackRate,
+            dailyWithdrawalLimitUsd: this.dailyWithdrawalLimitUsd,
+            hasDedicatedManager: this.hasDedicatedManager,
+            isVIPEventEligible: this.isVIPEventEligible,
+            reloadBonusRate: this.reloadBonusRate,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt,
         };

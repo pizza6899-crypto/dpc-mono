@@ -22,14 +22,6 @@ export class UserTierRepository implements UserTierRepositoryPort {
         return model ? this.mapper.toDomain(model) : null;
     }
 
-    async findByUid(uid: string): Promise<UserTier | null> {
-        const model = await this.tx.userTier.findUnique({
-            where: { uid },
-            include: { tier: true },
-        });
-        return model ? this.mapper.toDomain(model) : null;
-    }
-
     async create(userTier: UserTier): Promise<UserTier> {
         const data = this.mapper.toPersistence(userTier);
         const model = await this.tx.userTier.create({

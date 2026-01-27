@@ -1,5 +1,4 @@
 import { Prisma } from '@prisma/client';
-import { generateUid } from 'src/utils/id.util';
 
 export enum TierChangeType {
     INITIAL = 'INITIAL',
@@ -15,7 +14,6 @@ export enum TierChangeType {
 export class TierHistory {
     private constructor(
         public readonly id: bigint | null,
-        public readonly uid: string,
         public readonly userId: bigint,
         public readonly fromTierId: bigint | null,
         public readonly toTierId: bigint,
@@ -28,7 +26,6 @@ export class TierHistory {
 
     static create(params: {
         id?: bigint;
-        uid?: string;
         userId: bigint;
         fromTierId?: bigint | null;
         toTierId: bigint;
@@ -47,7 +44,6 @@ export class TierHistory {
 
         return new TierHistory(
             params.id ?? null,
-            params.uid ?? generateUid(),
             params.userId,
             params.fromTierId ?? null,
             params.toTierId,
@@ -61,7 +57,6 @@ export class TierHistory {
 
     static fromPersistence(data: {
         id: bigint;
-        uid: string;
         userId: bigint;
         fromTierId: bigint | null;
         toTierId: bigint;
@@ -73,7 +68,6 @@ export class TierHistory {
     }): TierHistory {
         return new TierHistory(
             data.id,
-            data.uid,
             data.userId,
             data.fromTierId,
             data.toTierId,

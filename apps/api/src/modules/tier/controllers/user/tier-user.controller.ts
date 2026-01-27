@@ -56,7 +56,7 @@ export class TierUserController {
         return {
             id: this.sqidsService.encode(userTier.id!, SqidsPrefix.USER_TIER),
             tierCode: userTier.tier?.code ?? 'UNKNOWN',
-            totalRollingUsd: userTier.totalRollingUsd.toString(),
+            totalRollingUsd: userTier.cumulativeRollingUsd.toString(),
             highestPromotedPriority: userTier.highestPromotedPriority,
             isManualLock: userTier.isManualLock,
             lastPromotedAt: userTier.lastPromotedAt,

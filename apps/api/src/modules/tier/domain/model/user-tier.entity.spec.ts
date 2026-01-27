@@ -17,12 +17,19 @@ describe('UserTier Entity', () => {
     }> = {}): Tier => {
         return Tier.fromPersistence({
             id: params.id ?? BigInt(1),
-            uid: 'tier-uid',
             priority: params.priority ?? 1,
             code: params.code ?? 'BRONZE',
             requirementUsd: new Prisma.Decimal(params.requirementUsd ?? 0),
+            requirementDepositUsd: new Prisma.Decimal(0),
+            maintenanceRollingUsd: new Prisma.Decimal(0),
             levelUpBonusUsd: new Prisma.Decimal(params.levelUpBonusUsd ?? 0),
             compRate: new Prisma.Decimal(0),
+            lossbackRate: new Prisma.Decimal(0),
+            rakebackRate: new Prisma.Decimal(0),
+            dailyWithdrawalLimitUsd: new Prisma.Decimal(0),
+            hasDedicatedManager: false,
+            isVIPEventEligible: false,
+            reloadBonusRate: new Prisma.Decimal(0),
             createdAt: new Date(),
             updatedAt: new Date(),
         });
@@ -36,10 +43,9 @@ describe('UserTier Entity', () => {
             });
 
             expect(userTier.id).toBeNull();
-            expect(userTier.uid).toBeDefined();
             expect(userTier.userId).toBe(userId);
             expect(userTier.tierId).toBe(tierId);
-            expect(userTier.totalRollingUsd).toEqual(new Prisma.Decimal(0));
+            expect(userTier.cumulativeRollingUsd).toEqual(new Prisma.Decimal(0));
             expect(userTier.highestPromotedPriority).toBe(0);
             expect(userTier.isManualLock).toBe(false);
             expect(userTier.lastPromotedAt).toBeInstanceOf(Date);
@@ -53,10 +59,9 @@ describe('UserTier Entity', () => {
 
             const userTier = UserTier.create({
                 id: BigInt(10),
-                uid: 'custom-uid',
                 userId,
                 tierId,
-                totalRollingUsd: 50000,
+                cumulativeRollingUsd: 50000,
                 highestPromotedPriority: 3,
                 isManualLock: true,
                 lastPromotedAt: promotedAt,
@@ -64,22 +69,21 @@ describe('UserTier Entity', () => {
             });
 
             expect(userTier.id).toBe(BigInt(10));
-            expect(userTier.uid).toBe('custom-uid');
-            expect(userTier.totalRollingUsd).toEqual(new Prisma.Decimal(50000));
+            expect(userTier.cumulativeRollingUsd).toEqual(new Prisma.Decimal(50000));
             expect(userTier.highestPromotedPriority).toBe(3);
             expect(userTier.isManualLock).toBe(true);
             expect(userTier.lastPromotedAt).toBe(promotedAt);
             expect(userTier.tier).toBe(tier);
         });
 
-        it('should accept Prisma.Decimal as totalRollingUsd', () => {
+        it('should accept Prisma.Decimal as cumulativeRollingUsd', () => {
             const userTier = UserTier.create({
                 userId,
                 tierId,
-                totalRollingUsd: new Prisma.Decimal(12345.67),
+                cumulativeRollingUsd: new Prisma.Decimal(12345.67),
             });
 
-            expect(userTier.totalRollingUsd).toEqual(new Prisma.Decimal(12345.67));
+            expect(userTier.cumulativeRollingUsd).toEqual(new Prisma.Decimal(12345.67));
         });
     });
 
@@ -90,10 +94,11 @@ describe('UserTier Entity', () => {
 
             const userTier = UserTier.fromPersistence({
                 id: BigInt(5),
-                uid: 'ut-uid',
                 userId,
                 tierId,
-                totalRollingUsd: new Prisma.Decimal(25000),
+                cumulativeRollingUsd: new Prisma.Decimal(25000),
+                currentPeriodRollingUsd: new Prisma.Decimal(0),
+                evaluationDate: now,
                 highestPromotedPriority: 2,
                 isManualLock: false,
                 lastPromotedAt: now,
@@ -103,10 +108,9 @@ describe('UserTier Entity', () => {
             });
 
             expect(userTier.id).toBe(BigInt(5));
-            expect(userTier.uid).toBe('ut-uid');
             expect(userTier.userId).toBe(userId);
             expect(userTier.tierId).toBe(tierId);
-            expect(userTier.totalRollingUsd).toEqual(new Prisma.Decimal(25000));
+            expect(userTier.cumulativeRollingUsd).toEqual(new Prisma.Decimal(25000));
             expect(userTier.highestPromotedPriority).toBe(2);
             expect(userTier.isManualLock).toBe(false);
             expect(userTier.lastPromotedAt).toBe(now);
@@ -119,26 +123,26 @@ describe('UserTier Entity', () => {
             const userTier = UserTier.create({
                 userId,
                 tierId,
-                totalRollingUsd: 10000,
+                cumulativeRollingUsd: 10000,
             });
 
             userTier.addRolling(new Prisma.Decimal(5000));
 
-            expect(userTier.totalRollingUsd).toEqual(new Prisma.Decimal(15000));
+            expect(userTier.cumulativeRollingUsd).toEqual(new Prisma.Decimal(15000));
         });
 
         it('should accumulate multiple rolling additions', () => {
             const userTier = UserTier.create({
                 userId,
                 tierId,
-                totalRollingUsd: 0,
+                cumulativeRollingUsd: 0,
             });
 
             userTier.addRolling(new Prisma.Decimal(1000));
             userTier.addRolling(new Prisma.Decimal(2500));
             userTier.addRolling(new Prisma.Decimal(500));
 
-            expect(userTier.totalRollingUsd).toEqual(new Prisma.Decimal(4000));
+            expect(userTier.cumulativeRollingUsd).toEqual(new Prisma.Decimal(4000));
         });
 
         it('should throw error for zero amount', () => {
@@ -167,12 +171,12 @@ describe('UserTier Entity', () => {
             const userTier = UserTier.create({
                 userId,
                 tierId,
-                totalRollingUsd: new Prisma.Decimal('100.12'),
+                cumulativeRollingUsd: new Prisma.Decimal('100.12'),
             });
 
             userTier.addRolling(new Prisma.Decimal('50.88'));
 
-            expect(userTier.totalRollingUsd).toEqual(new Prisma.Decimal('151'));
+            expect(userTier.cumulativeRollingUsd).toEqual(new Prisma.Decimal('151'));
         });
     });
 
@@ -184,7 +188,7 @@ describe('UserTier Entity', () => {
             const userTier = UserTier.create({
                 userId,
                 tierId: BigInt(1),
-                totalRollingUsd: 15000,
+                cumulativeRollingUsd: 15000,
                 tier: currentTier,
             });
 
@@ -198,7 +202,7 @@ describe('UserTier Entity', () => {
             const userTier = UserTier.create({
                 userId,
                 tierId: BigInt(1),
-                totalRollingUsd: 5000,
+                cumulativeRollingUsd: 5000,
                 tier: currentTier,
             });
 
@@ -212,7 +216,7 @@ describe('UserTier Entity', () => {
             const userTier = UserTier.create({
                 userId,
                 tierId: BigInt(2),
-                totalRollingUsd: 50000,
+                cumulativeRollingUsd: 50000,
                 tier: currentTier,
             });
 
@@ -226,7 +230,7 @@ describe('UserTier Entity', () => {
             const userTier = UserTier.create({
                 userId,
                 tierId: BigInt(1),
-                totalRollingUsd: 50000,
+                cumulativeRollingUsd: 50000,
                 isManualLock: true,
                 tier: currentTier,
             });
@@ -241,7 +245,7 @@ describe('UserTier Entity', () => {
             const userTier = UserTier.create({
                 userId,
                 tierId: BigInt(1),
-                totalRollingUsd: 50000,
+                cumulativeRollingUsd: 50000,
                 isManualLock: true,
                 tier: currentTier,
             });
@@ -256,7 +260,7 @@ describe('UserTier Entity', () => {
             const userTier = UserTier.create({
                 userId,
                 tierId: BigInt(1),
-                totalRollingUsd: 10000,
+                cumulativeRollingUsd: 10000,
                 tier: currentTier,
             });
 
@@ -273,7 +277,7 @@ describe('UserTier Entity', () => {
             const userTier = UserTier.create({
                 userId,
                 tierId: BigInt(1),
-                totalRollingUsd: 15000,
+                cumulativeRollingUsd: 15000,
                 lastPromotedAt: oldPromotedAt,
                 tier: currentTier,
             });
@@ -291,7 +295,7 @@ describe('UserTier Entity', () => {
             const userTier = UserTier.create({
                 userId,
                 tierId: BigInt(1),
-                totalRollingUsd: 30000,
+                cumulativeRollingUsd: 30000,
                 highestPromotedPriority: 1,
                 tier: currentTier,
             });
@@ -308,7 +312,7 @@ describe('UserTier Entity', () => {
             const userTier = UserTier.create({
                 userId,
                 tierId: BigInt(1),
-                totalRollingUsd: 15000,
+                cumulativeRollingUsd: 15000,
                 highestPromotedPriority: 5, // 이전에 더 높은 티어 도달
                 tier: currentTier,
             });
@@ -329,7 +333,7 @@ describe('UserTier Entity', () => {
             const userTier = UserTier.create({
                 userId,
                 tierId: BigInt(1),
-                totalRollingUsd: 50000,
+                cumulativeRollingUsd: 50000,
                 tier: currentTier,
             });
 
@@ -345,7 +349,7 @@ describe('UserTier Entity', () => {
             const userTier = UserTier.create({
                 userId,
                 tierId: BigInt(1),
-                totalRollingUsd: 5000, // 요구량 미달
+                cumulativeRollingUsd: 5000, // 요구량 미달
                 tier: currentTier,
             });
 

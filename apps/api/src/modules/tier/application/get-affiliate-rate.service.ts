@@ -18,25 +18,9 @@ export class GetAffiliateRateService {
     ) { }
 
     async execute(userId: bigint): Promise<GetAffiliateRateResult> {
-        const userTier = await this.userTierRepository.findByUserId(userId);
-
-        if (!userTier) {
-            throw new UserTierNotFoundException(userId);
-        }
-
-        if (!userTier.tier) {
-            throw new UserTierNotFoundException(userId);
-        }
-
-        if (userTier.isAffiliateCustomRate && userTier.affiliateCustomRate) {
-            return {
-                rate: userTier.affiliateCustomRate,
-                isCustom: true,
-            };
-        }
-
+        // TODO: Tier/UserTier 스키마에 어필리에이트 요율 필드가 정의될 때까지 임시로 0 반환
         return {
-            rate: userTier.tier.affiliateCommissionRate,
+            rate: new Prisma.Decimal(0),
             isCustom: false,
         };
     }

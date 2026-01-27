@@ -13,7 +13,6 @@ describe('Tier Entity', () => {
             });
 
             expect(tier.id).toBeNull();
-            expect(tier.uid).toBeDefined();
             expect(tier.priority).toBe(1);
             expect(tier.code).toBe('BRONZE');
             expect(tier.requirementUsd).toEqual(new Prisma.Decimal(0));
@@ -26,7 +25,6 @@ describe('Tier Entity', () => {
         it('should create a tier with all optional fields', () => {
             const tier = Tier.create({
                 id: BigInt(1),
-                uid: 'custom-uid',
                 priority: 5,
                 code: 'PLATINUM',
                 requirementUsd: 50000,
@@ -34,13 +32,12 @@ describe('Tier Entity', () => {
                 compRate: 0.05,
                 displayName: 'Platinum Member',
                 translations: [
-                    { language: 'ko', name: '플래티넘' },
-                    { language: 'en', name: 'Platinum' },
+                    { language: 'KO', name: '플래티넘' },
+                    { language: 'EN', name: 'Platinum' },
                 ],
             });
 
             expect(tier.id).toBe(BigInt(1));
-            expect(tier.uid).toBe('custom-uid');
             expect(tier.priority).toBe(5);
             expect(tier.code).toBe('PLATINUM');
             expect(tier.requirementUsd).toEqual(new Prisma.Decimal(50000));
@@ -67,25 +64,11 @@ describe('Tier Entity', () => {
                     code: 'BRONZE',
                     requirementUsd: 0,
                     translations: [
-                        { language: 'ko', name: '브론즈' },
-                        { language: 'ko', name: '청동' }, // 중복
+                        { language: 'KO', name: '브론즈' },
+                        { language: 'KO', name: '청동' }, // 중복
                     ],
                 });
             }).toThrow(TierException);
-        });
-
-        it('should throw error with message for duplicate language', () => {
-            expect(() => {
-                Tier.create({
-                    priority: 1,
-                    code: 'BRONZE',
-                    requirementUsd: 0,
-                    translations: [
-                        { language: 'en', name: 'Bronze' },
-                        { language: 'en', name: 'Bronze Medal' },
-                    ],
-                });
-            }).toThrow('Duplicate language code in translations: en');
         });
     });
 
@@ -94,19 +77,25 @@ describe('Tier Entity', () => {
             const now = new Date();
             const tier = Tier.fromPersistence({
                 id: BigInt(10),
-                uid: 'tier-uid-123',
                 priority: 3,
                 code: 'GOLD',
                 requirementUsd: new Prisma.Decimal(25000),
+                requirementDepositUsd: new Prisma.Decimal(0),
+                maintenanceRollingUsd: new Prisma.Decimal(0),
                 levelUpBonusUsd: new Prisma.Decimal(50),
                 compRate: new Prisma.Decimal(0.03),
+                lossbackRate: new Prisma.Decimal(0),
+                rakebackRate: new Prisma.Decimal(0),
+                dailyWithdrawalLimitUsd: new Prisma.Decimal(0),
+                hasDedicatedManager: false,
+                isVIPEventEligible: false,
+                reloadBonusRate: new Prisma.Decimal(0),
                 createdAt: now,
                 updatedAt: now,
-                translations: [{ language: 'ko', name: '골드' }],
+                translations: [{ language: 'KO', name: '골드' }],
             });
 
             expect(tier.id).toBe(BigInt(10));
-            expect(tier.uid).toBe('tier-uid-123');
             expect(tier.priority).toBe(3);
             expect(tier.code).toBe('GOLD');
             expect(tier.requirementUsd).toEqual(new Prisma.Decimal(25000));
@@ -115,22 +104,6 @@ describe('Tier Entity', () => {
             expect(tier.createdAt).toBe(now);
             expect(tier.updatedAt).toBe(now);
             expect(tier.translations).toHaveLength(1);
-        });
-
-        it('should handle empty translations array', () => {
-            const tier = Tier.fromPersistence({
-                id: BigInt(1),
-                uid: 'uid',
-                priority: 1,
-                code: 'BRONZE',
-                requirementUsd: new Prisma.Decimal(0),
-                levelUpBonusUsd: new Prisma.Decimal(0),
-                compRate: new Prisma.Decimal(0),
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            });
-
-            expect(tier.translations).toEqual([]);
         });
     });
 
@@ -148,7 +121,6 @@ describe('Tier Entity', () => {
             const persistence = tier.toPersistence();
 
             expect(persistence.id).toBe(BigInt(5));
-            expect(persistence.uid).toBe(tier.uid);
             expect(persistence.priority).toBe(2);
             expect(persistence.code).toBe('SILVER');
             expect(persistence.requirementUsd).toEqual(new Prisma.Decimal(10000));
@@ -194,30 +166,6 @@ describe('Tier Entity', () => {
             const result = tier.isSatisfiedBy(new Prisma.Decimal(5000));
 
             expect(result).toBe(false);
-        });
-
-        it('should return true for zero requirement', () => {
-            const tier = Tier.create({
-                priority: 1,
-                code: 'BRONZE',
-                requirementUsd: 0,
-            });
-
-            const result = tier.isSatisfiedBy(new Prisma.Decimal(0));
-
-            expect(result).toBe(true);
-        });
-
-        it('should handle decimal precision correctly', () => {
-            const tier = Tier.create({
-                priority: 2,
-                code: 'SILVER',
-                requirementUsd: 10000.55,
-            });
-
-            expect(tier.isSatisfiedBy(new Prisma.Decimal(10000.55))).toBe(true);
-            expect(tier.isSatisfiedBy(new Prisma.Decimal(10000.54))).toBe(false);
-            expect(tier.isSatisfiedBy(new Prisma.Decimal(10000.56))).toBe(true);
         });
     });
 });

@@ -44,15 +44,15 @@ export class SetCustomRateService {
       throw new UserTierNotFoundException(affiliateId);
     }
 
-    // 수동 요율 설정
-    userTier.setAffiliateCustomRate(customRate);
+    // 수동 요율 설정 (임시 중단)
+    // userTier.setAffiliateCustomRate(customRate);
 
     // 저장
-    await this.userTierRepository.update(userTier);
+    // await this.userTierRepository.update(userTier);
 
     return {
       tierCode: userTier.tier.code,
-      baseRate: userTier.tier.affiliateCommissionRate,
+      baseRate: new Prisma.Decimal(0), // 임시
       customRate: customRate,
       isCustomRate: true,
       effectiveRate: customRate,

@@ -42,7 +42,7 @@ export class UnlockUserTierService {
             toTierId: userTier.tierId,
             changeType: TierChangeType.MANUAL_UPDATE,
             reason: reason || 'Admin unlocked tier',
-            rollingSnapshot: userTier.totalRollingUsd,
+            rollingSnapshot: userTier.cumulativeRollingUsd,
             bonusAmount: 0
         });
 

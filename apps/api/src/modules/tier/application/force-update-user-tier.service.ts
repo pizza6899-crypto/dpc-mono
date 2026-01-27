@@ -50,7 +50,7 @@ export class ForceUpdateUserTierService {
             toTierId: targetTier.id,
             changeType: TierChangeType.MANUAL_UPDATE,
             reason: reason || 'Admin Manual Adjustment',
-            rollingSnapshot: userTier.totalRollingUsd,
+            rollingSnapshot: userTier.cumulativeRollingUsd,
             bonusAmount: 0
         });
 

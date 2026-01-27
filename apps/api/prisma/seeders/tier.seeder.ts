@@ -1,6 +1,4 @@
 import { PrismaClient, Language } from '@prisma/client';
-import { createId } from '@paralleldrive/cuid2';
-
 
 export async function seedTiers(prisma: PrismaClient) {
     console.log('🏆 티어 시딩을 시작합니다...');
@@ -91,7 +89,6 @@ export async function seedTiers(prisma: PrismaClient) {
                 compRate: tierData.compRate,
             },
             create: {
-                uid: createId(),
                 priority: tierData.priority,
                 code: tierData.code,
                 requirementUsd: tierData.requirementUsd,
@@ -113,7 +110,6 @@ export async function seedTiers(prisma: PrismaClient) {
                     name: name,
                 },
                 create: {
-                    uid: createId(),
                     tierId: tier.id,
                     language: lang as Language,
                     name: name,

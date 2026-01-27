@@ -81,7 +81,7 @@ export class TierAdminController {
         return {
             id: userTier.id?.toString() ?? '',
             tierCode: userTier.tier?.code ?? 'UNKNOWN',
-            totalRollingUsd: userTier.totalRollingUsd.toString(),
+            totalRollingUsd: userTier.cumulativeRollingUsd.toString(),
             highestPromotedPriority: userTier.highestPromotedPriority,
             isManualLock: userTier.isManualLock,
             lastPromotedAt: userTier.lastPromotedAt,
@@ -399,7 +399,7 @@ export class TierAdminController {
             data: users.map(userTier => ({
                 id: userTier.id?.toString() ?? '',
                 tierCode: userTier.tier?.code ?? 'UNKNOWN',
-                totalRollingUsd: userTier.totalRollingUsd.toString(),
+                totalRollingUsd: userTier.cumulativeRollingUsd.toString(),
                 highestPromotedPriority: userTier.highestPromotedPriority,
                 isManualLock: userTier.isManualLock,
                 lastPromotedAt: userTier.lastPromotedAt,

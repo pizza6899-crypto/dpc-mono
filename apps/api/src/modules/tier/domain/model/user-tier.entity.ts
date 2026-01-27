@@ -1,5 +1,4 @@
 import { Prisma } from '@prisma/client';
-import { generateUid } from 'src/utils/id.util';
 import { Tier } from './tier.entity';
 import { InvalidRollingAmountException, TierException } from '../tier.exception';
 
@@ -10,22 +9,18 @@ import { InvalidRollingAmountException, TierException } from '../tier.exception'
 export class UserTier {
     private constructor(
         public readonly id: bigint | null,
-        public readonly uid: string,
         public readonly userId: bigint,
         private _tierId: bigint,
 
         // Status
-        private _totalRollingUsd: Prisma.Decimal,
+        private _cumulativeRollingUsd: Prisma.Decimal,
+        private _currentPeriodRollingUsd: Prisma.Decimal,
+        private _evaluationDate: Date,
 
         // Control
         private _highestPromotedPriority: number,
         private _isManualLock: boolean,
         private _lastPromotedAt: Date,
-
-        // Affiliate fields
-        private _affiliateCustomRate: Prisma.Decimal | null,
-        private _isAffiliateCustomRate: boolean,
-        private _affiliateMonthlyWagerAmount: Prisma.Decimal,
 
         public readonly createdAt: Date,
         public readonly updatedAt: Date,
@@ -36,40 +31,29 @@ export class UserTier {
 
     static create(params: {
         id?: bigint;
-        uid?: string;
         userId: bigint;
         tierId: bigint;
-        totalRollingUsd?: Prisma.Decimal | number;
+        cumulativeRollingUsd?: Prisma.Decimal | number;
+        currentPeriodRollingUsd?: Prisma.Decimal | number;
+        evaluationDate?: Date;
         highestPromotedPriority?: number;
         isManualLock?: boolean;
         lastPromotedAt?: Date;
-        affiliateCustomRate?: Prisma.Decimal | null;
-        isAffiliateCustomRate?: boolean;
-        affiliateMonthlyWagerAmount?: Prisma.Decimal | number;
         tier?: Tier;
     }): UserTier {
-        const rolling =
-            params.totalRollingUsd instanceof Prisma.Decimal
-                ? params.totalRollingUsd
-                : new Prisma.Decimal(params.totalRollingUsd ?? 0);
-
-        const affiliateMonthlyWager =
-            params.affiliateMonthlyWagerAmount instanceof Prisma.Decimal
-                ? params.affiliateMonthlyWagerAmount
-                : new Prisma.Decimal(params.affiliateMonthlyWagerAmount ?? 0);
+        const toDecimal = (val: Prisma.Decimal | number | undefined, df = 0) =>
+            val instanceof Prisma.Decimal ? val : new Prisma.Decimal(val ?? df);
 
         return new UserTier(
             params.id ?? null,
-            params.uid ?? generateUid(),
             params.userId,
             params.tierId,
-            rolling,
+            toDecimal(params.cumulativeRollingUsd),
+            toDecimal(params.currentPeriodRollingUsd),
+            params.evaluationDate ?? new Date(),
             params.highestPromotedPriority ?? 0,
             params.isManualLock ?? false,
             params.lastPromotedAt ?? new Date(),
-            params.affiliateCustomRate ?? null,
-            params.isAffiliateCustomRate ?? false,
-            affiliateMonthlyWager,
             new Date(),
             new Date(),
             params.tier
@@ -78,32 +62,28 @@ export class UserTier {
 
     static fromPersistence(data: {
         id: bigint;
-        uid: string;
         userId: bigint;
         tierId: bigint;
-        totalRollingUsd: Prisma.Decimal;
+        cumulativeRollingUsd: Prisma.Decimal;
+        currentPeriodRollingUsd: Prisma.Decimal;
+        evaluationDate: Date;
         highestPromotedPriority: number;
         isManualLock: boolean;
         lastPromotedAt: Date;
-        affiliateCustomRate: Prisma.Decimal | null;
-        isAffiliateCustomRate: boolean;
-        affiliateMonthlyWagerAmount: Prisma.Decimal;
         createdAt: Date;
         updatedAt: Date;
         tier?: Tier;
     }): UserTier {
         return new UserTier(
             data.id,
-            data.uid,
             data.userId,
             data.tierId,
-            data.totalRollingUsd,
+            data.cumulativeRollingUsd,
+            data.currentPeriodRollingUsd,
+            data.evaluationDate,
             data.highestPromotedPriority,
             data.isManualLock,
             data.lastPromotedAt,
-            data.affiliateCustomRate,
-            data.isAffiliateCustomRate,
-            data.affiliateMonthlyWagerAmount,
             data.createdAt,
             data.updatedAt,
             data.tier
@@ -112,19 +92,19 @@ export class UserTier {
 
     // Getters
     get tierId(): bigint { return this._tierId; }
-    get totalRollingUsd(): Prisma.Decimal { return this._totalRollingUsd; }
+    get cumulativeRollingUsd(): Prisma.Decimal { return this._cumulativeRollingUsd; }
+    get currentPeriodRollingUsd(): Prisma.Decimal { return this._currentPeriodRollingUsd; }
+    get evaluationDate(): Date { return this._evaluationDate; }
     get highestPromotedPriority(): number { return this._highestPromotedPriority; }
     get isManualLock(): boolean { return this._isManualLock; }
     get lastPromotedAt(): Date { return this._lastPromotedAt; }
-    get affiliateCustomRate(): Prisma.Decimal | null { return this._affiliateCustomRate; }
-    get isAffiliateCustomRate(): boolean { return this._isAffiliateCustomRate; }
-    get affiliateMonthlyWagerAmount(): Prisma.Decimal { return this._affiliateMonthlyWagerAmount; }
 
     // Business Logic
 
     addRolling(amount: Prisma.Decimal): void {
         if (amount.lte(0)) throw new InvalidRollingAmountException(amount.toString());
-        this._totalRollingUsd = this._totalRollingUsd.add(amount);
+        this._cumulativeRollingUsd = this._cumulativeRollingUsd.add(amount);
+        this._currentPeriodRollingUsd = this._currentPeriodRollingUsd.add(amount);
     }
 
     /**
@@ -139,7 +119,7 @@ export class UserTier {
         // Ensure accurate priority comparison if current tier loaded
         if (this.tier && targetTier.priority <= this.tier.priority) return false;
 
-        return this._totalRollingUsd.gte(targetTier.requirementUsd);
+        return this._cumulativeRollingUsd.gte(targetTier.requirementUsd);
     }
 
     /**
@@ -155,7 +135,7 @@ export class UserTier {
         if (!this.canUpgradeTo(targetTier, true)) { // Internal check
             // You might throw or just return. Throwing is safer for logic enforcement.
             throw new InvalidRollingAmountException(
-                `Cannot upgrade to ${targetTier.code}. Rolling ${this._totalRollingUsd} < Req ${targetTier.requirementUsd}`
+                `Cannot upgrade to ${targetTier.code}. Rolling ${this._cumulativeRollingUsd} < Req ${targetTier.requirementUsd}`
             );
         }
 
@@ -181,7 +161,7 @@ export class UserTier {
 
         this._tierId = targetTier.id;
         this._isManualLock = shouldLock;
-        // Don't necessarily change totalRollingUsd, but maybe we should if requirement not met?
+        // Don't necessarily change cumulativeRollingUsd, but maybe we should if requirement not met?
         // User requested "force set", implying override.
         // We preserve rolling amount unless explicitly asked (not in requirements yet).
 
@@ -195,38 +175,5 @@ export class UserTier {
 
     unlock(): void {
         this._isManualLock = false;
-    }
-
-    // Affiliate Business Logic
-
-    /**
-     * 어필리에이트 월간 베팅 금액 추가
-     */
-    addAffiliateMonthlyWager(amount: Prisma.Decimal): void {
-        if (amount.lte(0)) throw new InvalidRollingAmountException(amount.toString());
-        this._affiliateMonthlyWagerAmount = this._affiliateMonthlyWagerAmount.add(amount);
-    }
-
-    /**
-     * 어필리에이트 월간 베팅 금액 초기화 (월간 리셋)
-     */
-    resetAffiliateMonthlyWager(): void {
-        this._affiliateMonthlyWagerAmount = new Prisma.Decimal(0);
-    }
-
-    /**
-     * 수동 커미션 요율 설정
-     */
-    setAffiliateCustomRate(rate: Prisma.Decimal): void {
-        this._affiliateCustomRate = rate;
-        this._isAffiliateCustomRate = true;
-    }
-
-    /**
-     * 수동 커미션 요율 해제 (기본 요율로 복귀)
-     */
-    resetAffiliateCustomRate(): void {
-        this._affiliateCustomRate = null;
-        this._isAffiliateCustomRate = false;
     }
 }

@@ -76,7 +76,7 @@ export class AddUserRollingService {
 
             // Capture state for history
             const fromTierId = userTier.tierId;
-            const rollingSnapshot = userTier.totalRollingUsd;
+            const rollingSnapshot = userTier.cumulativeRollingUsd;
 
             // Perform Update
             userTier.upgradeTo(targetTier);
