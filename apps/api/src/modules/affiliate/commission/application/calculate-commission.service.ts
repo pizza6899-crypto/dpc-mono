@@ -8,8 +8,6 @@ import { AFFILIATE_WALLET_REPOSITORY } from '../ports/out/affiliate-wallet.repos
 import type { AffiliateWalletRepositoryPort } from '../ports/out/affiliate-wallet.repository.port';
 import { FindReferralBySubUserIdService } from '../../referral/application/find-referral-by-sub-user-id.service';
 import { Transactional } from '@nestjs-cls/transactional';
-import { GetAffiliateRateService } from '../../../tier/application/get-affiliate-rate.service';
-import { UpdateAffiliateMonthlyWagerService } from '../../../tier/application/update-affiliate-monthly-wager.service';
 
 interface CalculateCommissionParams {
   subUserId: bigint; // 게임 플레이한 유저
@@ -28,8 +26,6 @@ export class CalculateCommissionService {
     @Inject(AFFILIATE_WALLET_REPOSITORY)
     private readonly walletRepository: AffiliateWalletRepositoryPort,
     private readonly findReferralService: FindReferralBySubUserIdService,
-    private readonly getAffiliateRateService: GetAffiliateRateService,
-    private readonly updateAffiliateMonthlyWagerService: UpdateAffiliateMonthlyWagerService,
     private readonly policy: CommissionPolicy,
   ) { }
 
@@ -60,8 +56,7 @@ export class CalculateCommissionService {
     }
 
     // 3. 티어 기반 요율 조회 (GetAffiliateRateService 사용)
-    const { rate: effectiveRate } =
-      await this.getAffiliateRateService.execute(affiliateId);
+    const effectiveRate = new Prisma.Decimal('0.05'); // 임시 데이터: 5%
 
     // 4. 커미션 금액 계산 (wagerAmount * rate)
     const commission = this.policy.calculateCommission(
@@ -101,12 +96,6 @@ export class CalculateCommissionService {
     // 7. 월렛에 pendingBalance 추가 (addPendingCommission)
     wallet.addPendingCommission(commission);
     await this.walletRepository.upsert(wallet);
-
-    // 8. 월간 베팅 금액 업데이트 (UserTier에 저장)
-    await this.updateAffiliateMonthlyWagerService.execute({
-      userId: affiliateId,
-      wagerAmount,
-    });
 
     return savedCommission;
   }

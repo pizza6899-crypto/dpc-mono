@@ -1,7 +1,6 @@
 // src/modules/affiliate/commission/commission.module.ts
 import { Module } from '@nestjs/common';
 import { AffiliateReferralModule } from '../referral/referral.module';
-import { TierModule } from '../../tier/tier.module';
 import { CommissionPolicy } from './domain';
 
 // Use Case Services
@@ -10,9 +9,6 @@ import { AccumulateCommissionService } from './application/accumulate-commission
 import { SettleDailyCommissionsService } from './application/settle-daily-commissions.service';
 import { GetWalletBalanceService } from './application/get-wallet-balance.service';
 import { WithdrawCommissionService } from './application/withdraw-commission.service';
-import { GetCommissionRateService } from './application/get-commission-rate.service';
-import { SetCustomRateService } from './application/set-custom-rate.service';
-import { ResetCustomRateService } from './application/reset-custom-rate.service';
 import { FindCommissionsService } from './application/find-commissions.service';
 import { FindCommissionByIdService } from './application/find-commission-by-id.service';
 
@@ -40,7 +36,6 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
     EnvModule,
     ConcurrencyModule,
     AffiliateReferralModule, // 레퍼럴 관계 조회를 위해 필요
-    TierModule, // 어필리에이트 요율 조회를 위해 필요
   ],
   providers: [
     // Domain Policy
@@ -64,9 +59,6 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
     FindCommissionByIdService,
     FindCommissionsService,
     GetWalletBalanceService,
-    GetCommissionRateService,
-    SetCustomRateService,
-    ResetCustomRateService,
     CalculateCommissionService,
     AccumulateCommissionService,
     SettleDailyCommissionsService,
@@ -81,7 +73,6 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
     CalculateCommissionService, // 게임 모듈에서 사용
     AccumulateCommissionService, // 게임 모듈에서 사용
     GetWalletBalanceService,
-    GetCommissionRateService,
   ],
 })
 export class AffiliateCommissionModule { }

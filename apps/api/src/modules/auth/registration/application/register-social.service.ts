@@ -1,6 +1,5 @@
-import { Injectable, Inject, Logger, HttpStatus } from '@nestjs/common';
+import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LogType } from 'src/modules/audit-log/domain';
@@ -13,7 +12,6 @@ import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.reposit
 import { CreateUserService } from 'src/modules/user/application/create-user.service';
 import { UserAlreadyExistsException } from 'src/modules/user/domain/user.exception';
 import { InitializeUserWalletsService } from 'src/modules/wallet/application/initialize-user-wallets.service';
-import { AssignDefaultTierService } from 'src/modules/tier/application/assign-default-tier.service';
 
 export interface SocialUserInfo {
   socialId: string;
@@ -47,7 +45,6 @@ export class RegisterSocialService {
     private readonly createCodeService: CreateCodeService,
     private readonly createUserService: CreateUserService,
     private readonly initializeUserWalletsService: InitializeUserWalletsService,
-    private readonly assignDefaultTierService: AssignDefaultTierService,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
   ) { }
@@ -93,8 +90,6 @@ export class RegisterSocialService {
           campaignName: 'Default',
         });
 
-        // 4. VIP 멤버십 생성 (기본 티어 할당)
-        await this.assignDefaultTierService.execute(user.id);
       } catch (error) {
         if (error instanceof UserAlreadyExistsException) {
           throw error;

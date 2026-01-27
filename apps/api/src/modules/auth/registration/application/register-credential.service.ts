@@ -1,4 +1,4 @@
-import { Injectable, Inject, Logger, HttpStatus } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { hashPassword } from 'src/utils/password.util';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
@@ -14,7 +14,6 @@ import {
   ReferralCodeExpiredException,
 } from 'src/modules/affiliate/referral/domain/referral.exception';
 import { InitializeUserWalletsService } from 'src/modules/wallet/application/initialize-user-wallets.service';
-import { AssignDefaultTierService } from 'src/modules/tier/application/assign-default-tier.service';
 import { UserRoleType } from '@prisma/client';
 import { CreateUserService } from 'src/modules/user/application/create-user.service';
 import { UserAlreadyExistsException } from 'src/modules/user/domain/user.exception';
@@ -45,7 +44,6 @@ export class RegisterCredentialService {
     private readonly createCodeService: CreateCodeService,
     private readonly createUserService: CreateUserService,
     private readonly initializeUserWalletsService: InitializeUserWalletsService,
-    private readonly assignDefaultTierService: AssignDefaultTierService,
   ) { }
 
   @Transactional()
@@ -110,8 +108,6 @@ export class RegisterCredentialService {
         campaignName: 'Default',
       });
 
-      // 4.1 VIP 멤버십 전용 티어 할당 (기본 티어)
-      await this.assignDefaultTierService.execute(user.id);
     } catch (error) {
       if (error instanceof UserAlreadyExistsException) {
         throw error;

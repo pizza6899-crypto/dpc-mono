@@ -16,7 +16,6 @@ import {
 import { UserRoleType, UserStatus } from '@prisma/client';
 import { CreateUserService } from 'src/modules/user/application/create-user.service';
 import { UserAlreadyExistsException } from 'src/modules/user/domain/user.exception';
-import { AssignDefaultTierService } from 'src/modules/tier/application/assign-default-tier.service';
 import { InitializeUserWalletsService } from 'src/modules/wallet/application/initialize-user-wallets.service';
 
 export interface RegisterCredentialAdminParams {
@@ -51,7 +50,6 @@ export class RegisterCredentialAdminService {
     private readonly createCodeService: CreateCodeService,
     private readonly createUserService: CreateUserService,
     private readonly initializeUserWalletsService: InitializeUserWalletsService,
-    private readonly assignDefaultTierService: AssignDefaultTierService,
   ) { }
 
   @Transactional()
@@ -133,9 +131,6 @@ export class RegisterCredentialAdminService {
       }
       throw error;
     }
-
-    // 5. VIP 멤버십 생성 (일반 사용자만)
-    await this.assignDefaultTierService.execute(user.id);
 
     // 6. 레퍼럴 코드가 제공된 경우 레퍼럴 관계 생성
     // 사전 검증을 통과했으므로 여기서는 셀프 추천 및 중복 레퍼럴만 체크됨

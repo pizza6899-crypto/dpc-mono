@@ -24,7 +24,6 @@ import { Prisma } from '@prisma/client';
 import { FindCommissionsService } from '../../application/find-commissions.service';
 import { FindCommissionByIdService } from '../../application/find-commission-by-id.service';
 import { GetWalletBalanceService } from '../../application/get-wallet-balance.service';
-import { GetCommissionRateService } from '../../application/get-commission-rate.service';
 import { WithdrawCommissionService } from '../../application/withdraw-commission.service';
 import { FindCommissionsQueryDto } from './dto/request/find-commissions-query.dto';
 import { WithdrawCommissionDto } from './dto/request/withdraw-commission.dto';
@@ -46,7 +45,6 @@ export class AffiliateCommissionController {
     private readonly findCommissionsService: FindCommissionsService,
     private readonly findCommissionByIdService: FindCommissionByIdService,
     private readonly getWalletBalanceService: GetWalletBalanceService,
-    private readonly getCommissionRateService: GetCommissionRateService,
     private readonly withdrawCommissionService: WithdrawCommissionService,
     private readonly sqidsService: SqidsService,
   ) { }
@@ -199,45 +197,6 @@ export class AffiliateCommissionController {
         pendingBalance: wallet.pendingBalance.toString(),
         totalEarned: wallet.totalEarned.toString(),
       })),
-    };
-  }
-
-  /**
-   * 커미션 요율 조회
-   */
-  @Get('rate')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Get commission rate / 커미션 요율 조회',
-  })
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    category: 'COMMISSION',
-    action: 'COMMISSION_RATE_VIEW',
-    extractMetadata: (_, args, result) => ({
-      tier: result?.tier,
-      effectiveRate: result?.effectiveRate,
-    }),
-  })
-  @ApiStandardResponse(CommissionRateResponseDto, {
-    status: 200,
-    description:
-      'Successfully retrieved commission rate / 커미션 요율 조회 성공',
-  })
-  async getCommissionRate(
-    @CurrentUser() user: CurrentUserWithSession,
-    @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<CommissionRateResponseDto> {
-    const rate = await this.getCommissionRateService.execute({
-      affiliateId: user.id,
-    });
-
-    return {
-      tierCode: rate.tierCode,
-      baseRate: rate.baseRate.toString(),
-      customRate: rate.customRate?.toString() || null,
-      isCustomRate: rate.isCustomRate,
-      effectiveRate: rate.effectiveRate.toString(),
     };
   }
 

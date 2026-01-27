@@ -15,7 +15,6 @@ import { ExchangeModule } from '../exchange/exchange.module';
 import { AuditLogModule } from '../audit-log/audit-log.module';
 import { WalletModule } from '../wallet/wallet.module';
 import { WageringModule } from '../wagering/wagering.module';
-import { TierModule } from '../tier/tier.module';
 import { CompModule } from '../comp/comp.module';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { LaunchGameService } from './application/launch-game.service';
@@ -53,7 +52,6 @@ import { CasinoSimulatorService } from './dev-simulator/casino-simulator.service
     AuditLogModule,
     WalletModule,
     WageringModule,
-    TierModule,
     CompModule,
     SnowflakeModule,
   ],

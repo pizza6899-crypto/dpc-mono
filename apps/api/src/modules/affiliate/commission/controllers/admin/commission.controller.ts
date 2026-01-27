@@ -2,9 +2,7 @@
 import {
   Controller,
   Get,
-  Post,
   Param,
-  Body,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
@@ -13,18 +11,9 @@ import {
   ApiStandardResponse,
   ApiStandardErrors,
 } from 'src/common/http/decorators/api-response.decorator';
-import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
-import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
-import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@prisma/client';
-import { Prisma } from '@prisma/client';
 import { FindCommissionByIdService } from '../../application/find-commission-by-id.service';
-import { SetCustomRateService } from '../../application/set-custom-rate.service';
-import { ResetCustomRateService } from '../../application/reset-custom-rate.service';
-import { SetCustomRateDto } from './dto/request/set-custom-rate.dto';
-import { ResetCustomRateDto } from './dto/request/reset-custom-rate.dto';
 import { CommissionAdminResponseDto } from './dto/response/commission-admin.response.dto';
 import { CommissionRateAdminResponseDto } from './dto/response/commission-rate-admin.response.dto';
 import { AffiliateCommission, CommissionNotFoundException } from '../../domain';
@@ -38,8 +27,6 @@ import { LogType } from 'src/modules/audit-log/domain';
 export class AdminCommissionController {
   constructor(
     private readonly findCommissionByIdService: FindCommissionByIdService,
-    private readonly setCustomRateService: SetCustomRateService,
-    private readonly resetCustomRateService: ResetCustomRateService,
   ) { }
 
   /**
@@ -76,74 +63,6 @@ export class AdminCommissionController {
     }
 
     return this.toCommissionResponse(commission);
-  }
-
-  /**
-   * 수동 요율 설정
-   */
-  @Post('rate/set')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Set custom commission rate / 수동 커미션 요율 설정',
-  })
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    category: 'COMMISSION',
-    action: 'COMMISSION_RATE_SET',
-    extractMetadata: (_, args, result) => ({
-      affiliateId: args[1]?.affiliateId?.toString(),
-      customRate: args[1]?.customRate,
-      setBy: args[0]?.id?.toString(),
-    }),
-  })
-  @ApiStandardResponse(CommissionRateAdminResponseDto, {
-    status: 200,
-    description: 'Successfully set custom rate / 수동 요율 설정 성공',
-  })
-  async setCustomRate(
-    @CurrentUser() user: CurrentUserWithSession,
-    @Body() dto: SetCustomRateDto,
-    @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<CommissionRateAdminResponseDto> {
-    const result = await this.setCustomRateService.execute({
-      affiliateId: dto.affiliateId,
-      customRate: new Prisma.Decimal(dto.customRate),
-    });
-
-    return this.toRateResponse(result);
-  }
-
-  /**
-   * 수동 요율 해제
-   */
-  @Post('rate/reset')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Reset custom commission rate / 수동 커미션 요율 해제',
-  })
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    category: 'COMMISSION',
-    action: 'COMMISSION_RATE_RESET',
-    extractMetadata: (_, args, result) => ({
-      affiliateId: args[1]?.affiliateId?.toString(),
-      resetBy: args[0]?.id?.toString(),
-    }),
-  })
-  @ApiStandardResponse(CommissionRateAdminResponseDto, {
-    status: 200,
-    description: 'Successfully reset custom rate / 수동 요율 해제 성공',
-  })
-  async resetCustomRate(
-    @CurrentUser() user: CurrentUserWithSession,
-    @Body() dto: ResetCustomRateDto,
-    @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<CommissionRateAdminResponseDto> {
-    const result = await this.resetCustomRateService.execute({
-      affiliateId: dto.affiliateId,
-    });
-
-    return this.toRateResponse(result);
   }
 
   /**

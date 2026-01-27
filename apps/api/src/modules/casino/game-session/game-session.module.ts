@@ -5,10 +5,9 @@ import { CasinoGameSessionMapper } from './infrastructure/mapper/casino-game-ses
 import { CasinoGameSessionRepository } from './infrastructure/repository/casino-game-session.repository';
 import { CASINO_GAME_SESSION_REPOSITORY } from './ports/casino-game-session.repository.token';
 import { ExchangeModule } from '../../exchange/exchange.module';
-import { TierModule } from '../../tier/tier.module';
 
 @Module({
-    imports: [ExchangeModule, TierModule],
+    imports: [ExchangeModule],
     providers: [
         CasinoGameSessionMapper,
         {

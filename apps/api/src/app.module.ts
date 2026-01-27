@@ -22,7 +22,6 @@ import { AuditLogModule } from './modules/audit-log/audit-log.module';
 import { AuditLogInterceptor } from './modules/audit-log/infrastructure/audit-log.interceptor';
 import { RequestInfoInterceptor } from './common/http/interceptors/request-info.interceptor';
 import { PromotionModule } from './modules/promotion/promotion.module';
-import { TierModule } from './modules/tier/tier.module';
 import { WageringModule } from './modules/wagering/wagering.module';
 import { CompModule } from './modules/comp/comp.module';
 import { NodeIdentityModule } from './common/node-identity/node-identity.module';
@@ -70,7 +69,6 @@ import { FileModule } from './modules/file/file.module';
     AffiliateModule,
     WalletModule,
     PromotionModule,
-    TierModule,
     WageringModule,
     CompModule,
     NotificationModule,

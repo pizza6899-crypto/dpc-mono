@@ -2,7 +2,6 @@ import { Injectable, Logger, Inject } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma, ExchangeCurrencyCode } from '@prisma/client'; // ExchangeCurrencyCode 추가
 import { ProcessWageringContributionService } from 'src/modules/wagering/application';
-import { AddUserRollingService } from 'src/modules/tier/application/add-user-rolling.service';
 import { EarnCompService } from 'src/modules/comp/application/earn-comp.service';
 import { GAME_ROUND_REPOSITORY_TOKEN } from '../ports/out/game-round.repository.token';
 import type { GameRoundRepositoryPort } from '../ports/out/game-round.repository.port';
@@ -23,7 +22,6 @@ export class CasinoGamePostProcessService {
         @Inject(GAME_ROUND_REPOSITORY_TOKEN)
         private readonly gameRoundRepository: GameRoundRepositoryPort,
         private readonly wageringService: ProcessWageringContributionService,
-        private readonly tierService: AddUserRollingService,
         private readonly earnCompService: EarnCompService,
     ) { }
 
@@ -48,7 +46,6 @@ export class CasinoGamePostProcessService {
 
         // 4. Processing Steps
         await this.processWagering(gameRound, context);
-        await this.processTierRolling(gameRound, context);
         await this.processCompEarning(gameRound, context);
 
         this.logger.log(`게임 후처리 완료: gameRoundId=${gameRoundId}`);
@@ -98,16 +95,6 @@ export class CasinoGamePostProcessService {
             betAmount: context.betAmount,
             gameContributionRate: gameRound.gameContributionRate?.toNumber() ?? 1,
         });
-    }
-
-    private async processTierRolling(gameRound: GameRoundPostProcessContext, context: ProcessingContext) {
-        try {
-            const rollingAmountUsd = context.betAmount.mul(context.usdExchangeRate);
-            await this.tierService.execute(gameRound.userId, rollingAmountUsd);
-            this.logger.log(`티어 롤링 누적: userId=${gameRound.userId}, amount=${rollingAmountUsd}`);
-        } catch (error) {
-            this.logger.error(`티어 롤링 실패: ${error.message}`, error.stack);
-        }
     }
 
     private async processCompEarning(gameRound: GameRoundPostProcessContext, context: ProcessingContext) {

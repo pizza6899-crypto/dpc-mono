@@ -11,7 +11,6 @@ import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { UserModule } from '../../user/user.module';
 import { WalletModule } from '../../wallet/wallet.module';
-import { TierModule } from 'src/modules/tier/tier.module';
 
 @Module({
   imports: [
@@ -22,7 +21,6 @@ import { TierModule } from 'src/modules/tier/tier.module';
     AuditLogModule,
     UserModule, // user 모듈의 CreateUserService 사용을 위해 추가
     WalletModule, // 월렛 생성을 위해 추가
-    TierModule, // 티어 생성을 위해 추가
   ],
   controllers: [RegistrationController, RegistrationAdminController],
   providers: [
