@@ -8,6 +8,8 @@ import type { UserWalletTransactionRepositoryPort } from '../ports/out/user-wall
 import { ExchangeCurrencyCode, Prisma, UserWalletTransactionType, UserWalletBalanceType, AdjustmentReasonCode } from '@prisma/client';
 import { UserWalletTransaction, WalletNotFoundException, UserWallet, UserWalletPolicy, UpdateOperation, InvalidWalletBalanceTypeException, WalletActionName, AnyWalletTransactionMetadata } from '../domain';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { USER_WALLET_STATS_REPOSITORY } from '../ports/out/user-wallet-stats.repository.token';
+import type { UserWalletStatsRepositoryPort, UpdateWalletStatsDto } from '../ports/out/user-wallet-stats.repository.port';
 
 export interface BalanceUpdateContext {
     // Admin Context
@@ -44,6 +46,8 @@ export class UpdateUserBalanceService {
         private readonly transactionRepository: UserWalletTransactionRepositoryPort,
         private readonly walletPolicy: UserWalletPolicy,
         private readonly advisoryLockService: AdvisoryLockService,
+        @Inject(USER_WALLET_STATS_REPOSITORY)
+        private readonly statsRepository: UserWalletStatsRepositoryPort,
     ) { }
 
     /**
@@ -106,6 +110,23 @@ export class UpdateUserBalanceService {
         });
 
         await this.transactionRepository.create(transaction);
+
+        // 6. Update Wallet Stats (Sync)
+        const statsDto = this.buildStatsUpdateDto(
+            userId,
+            currency,
+            amount,
+            operation,
+            balanceType,
+            transactionType,
+            { cash: wallet.cash, bonus: wallet.bonus },
+            transaction.createdAt // 트랜잭션 시간 전달
+        );
+
+        if (statsDto) {
+            await this.statsRepository.increaseTotalStats(statsDto);
+            await this.statsRepository.updateHourlyStats(statsDto);
+        }
 
         return savedWallet;
     }
@@ -198,5 +219,85 @@ export class UpdateUserBalanceService {
                 default: throw new InvalidWalletBalanceTypeException(type);
             }
         }
+    }
+
+    private buildStatsUpdateDto(
+        userId: bigint,
+        currency: ExchangeCurrencyCode,
+        amount: Prisma.Decimal,
+        op: UpdateOperation,
+        balanceType: UserWalletBalanceType,
+        transactionType: UserWalletTransactionType,
+        currentBalance: { cash: Prisma.Decimal, bonus: Prisma.Decimal },
+        timestamp: Date
+    ): UpdateWalletStatsDto | null {
+        // 통계에 반영하지 않아도 되는 트랜잭션 타입 필터링 (필요시)
+
+        let updateDto: UpdateWalletStatsDto = {
+            userId,
+            currency,
+            currentBalance,
+            timestamp, // 시간 동기화
+        };
+
+        // 0보다 큰 금액일 경우에만 통계 증감 필드 매핑
+        if (amount.gt(0)) {
+            // Signed Amount calculation for correct stats update
+            // Note: Stats fields (TotalDeposit, TotalBet etc) are always POSITIVE accumulations.
+            // We only map specific transaction types to specific stats counters.
+
+            // 1. Deposit (Cash)
+            // 입금(ADD) -> 통계 증가, 회수/취소(SUBTRACT) -> 통계 감소 (Net Deposit 유지)
+            if (transactionType === UserWalletTransactionType.DEPOSIT && balanceType === UserWalletBalanceType.CASH) {
+                updateDto.depositCash = op === UpdateOperation.ADD ? amount : amount.neg();
+            }
+
+            // 2. Withdraw (Cash)
+            // 출금신청(SUBTRACT) -> 통계 증가, 반려/취소(ADD) -> 통계 감소 (Net Withdraw 유지)
+            else if (transactionType === UserWalletTransactionType.WITHDRAW && balanceType === UserWalletBalanceType.CASH) {
+                updateDto.withdrawCash = op === UpdateOperation.SUBTRACT ? amount : amount.neg();
+            }
+
+            // 3. Bet / Win (Cash & Bonus)
+            else if (transactionType === UserWalletTransactionType.BET) {
+                if (balanceType === UserWalletBalanceType.CASH) updateDto.betCash = amount;
+                if (balanceType === UserWalletBalanceType.BONUS) updateDto.betBonus = amount;
+            } else if (transactionType === UserWalletTransactionType.WIN) {
+                if (balanceType === UserWalletBalanceType.CASH) updateDto.winCash = amount;
+                if (balanceType === UserWalletBalanceType.BONUS) updateDto.winBonus = amount;
+            }
+
+            // 3. Bonus Given / Used
+            else if (transactionType === UserWalletTransactionType.BONUS_IN || transactionType === UserWalletTransactionType.BONUS_CONVERSION || transactionType === UserWalletTransactionType.REFUND) {
+                // BONUS_IN: 지급 (Given)
+                if (transactionType === UserWalletTransactionType.BONUS_IN) {
+                    updateDto.bonusGiven = amount;
+                }
+                // REFUND Notice:
+                // REFUND 트랜잭션은 보통 TotalBet을 차감(감소)해야 하지만, 이는 비즈니스 로직(예: Pushed Bet, Game Cancel)에 따라
+                // 별도의 서비스(UpdatePushedBetService 등)에서 정교하게 계산하여 직접 처리합니다.
+                // 따라서 이곳 범용 서비스에서는 REFUND에 대한 통계 업데이트를 수행하지 않습니다 (중복 차감 방지).
+            }
+            else if (transactionType === UserWalletTransactionType.BONUS_OUT) {
+                updateDto.bonusUsed = amount; // 회수/만료
+            }
+
+            // 4. Comp
+            else if (transactionType === UserWalletTransactionType.COMP_CLAIM) {
+                updateDto.compUsed = amount; // 콤프 사용 (전환)
+                // Note: compEarned is usually triggered by game result, not wallet transaction directly? 
+                // If comp claim adds CASH, it's irrelevant to compEarned stats unless defined.
+            }
+
+            // 5. Vault
+            else if (transactionType === UserWalletTransactionType.VAULT_IN) {
+                updateDto.vaultIn = amount;
+            } else if (transactionType === UserWalletTransactionType.VAULT_OUT) {
+                updateDto.vaultOut = amount;
+            }
+        }
+
+        // 유의미한 통계 업데이트가 있는지 확인 (기말 잔액 업데이트는 항상 수행하므로 반환)
+        return updateDto;
     }
 }

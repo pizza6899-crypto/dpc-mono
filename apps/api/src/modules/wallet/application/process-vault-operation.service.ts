@@ -1,13 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { ExchangeCurrencyCode, UserWalletTransactionType, UserWalletBalanceType } from '@prisma/client';
-import { USER_WALLET_REPOSITORY } from '../ports/out/user-wallet.repository.token';
-import type { UserWalletRepositoryPort } from '../ports/out/user-wallet.repository.port';
-import { USER_WALLET_TRANSACTION_REPOSITORY } from '../ports/out/user-wallet-transaction.repository.token';
-import type { UserWalletTransactionRepositoryPort } from '../ports/out/user-wallet-transaction.repository.port';
-import { UserWallet, UserWalletTransaction, WalletNotFoundException } from '../domain';
+import { UpdateUserBalanceService } from './update-user-balance.service';
+import { UserWallet, UpdateOperation, WalletActionName, InvalidWalletBalanceException } from '../domain';
 import { Prisma } from '@prisma/client';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 export enum VaultOperation {
     DEPOSIT = 'DEPOSIT',   // Cash -> Vault
@@ -25,83 +21,61 @@ export interface ProcessVaultOperationParams {
  * 금고 관리 서비스 (User Use Case)
  * 
  * 사용자가 자신의 가용 자산을 금고로 옮기거나 다시 꺼내는 기능을 처리합니다.
+ * UpdateUserBalanceService를 사용하여 통계(Stats) 및 트랜잭션 정합성을 유지합니다.
  */
 @Injectable()
 export class ProcessVaultOperationService {
     constructor(
-        @Inject(USER_WALLET_REPOSITORY)
-        private readonly walletRepository: UserWalletRepositoryPort,
-        @Inject(USER_WALLET_TRANSACTION_REPOSITORY)
-        private readonly transactionRepository: UserWalletTransactionRepositoryPort,
-        private readonly advisoryLockService: AdvisoryLockService,
+        private readonly userBalanceService: UpdateUserBalanceService,
     ) { }
 
     @Transactional()
     async execute({ userId, currency, amount, operation }: ProcessVaultOperationParams): Promise<UserWallet> {
         if (amount.isNegative() || amount.isZero()) {
-            throw new Error('Amount must be positive');
+            throw new InvalidWalletBalanceException('Amount must be positive');
         }
 
-        // 1. Lock & Get Wallet
-        await this.advisoryLockService.acquireLock(LockNamespace.USER_WALLET, userId.toString(), {
-            throwThrottleError: true,
-        });
-        const wallet = await this.walletRepository.findByUserIdAndCurrency(userId, currency);
-        if (!wallet) {
-            throw new WalletNotFoundException(userId, currency);
-        }
+        const isDeposit = operation === VaultOperation.DEPOSIT;
+        const transactionType = isDeposit
+            ? UserWalletTransactionType.VAULT_IN
+            : UserWalletTransactionType.VAULT_OUT;
 
-        // Snapshot before update
-        const cashBefore = wallet.cash;
-        const vaultBefore = wallet.vault;
+        const actionName = WalletActionName.VAULT_OPERATION;
+        const metadata = {
+            operation,
+            description: `Vault ${operation.toLowerCase()}`,
+        };
 
-        // 2. Perform Operation
-        if (operation === VaultOperation.DEPOSIT) {
-            wallet.depositToVault(amount);
-        } else {
-            wallet.withdrawFromVault(amount);
-        }
-
-        // 3. Save Wallet
-        const savedWallet = await this.walletRepository.update(wallet);
-
-        // 4. Record Transactions (Dual Records for Cash & Vault)
-        // 4-1. Cash Side Transaction
-        const cashTransaction = UserWalletTransaction.create({
+        // 1. Source Balance Processing (돈이 나가는 쪽)
+        await this.userBalanceService.updateBalance({
             userId,
             currency,
-            type: UserWalletTransactionType.ADJUSTMENT,
-            balanceType: UserWalletBalanceType.CASH,
-            amount: operation === VaultOperation.DEPOSIT ? amount.neg() : amount,
-            balanceBefore: cashBefore,
-            balanceAfter: wallet.cash,
+            amount,
+            operation: UpdateOperation.SUBTRACT,
+            balanceType: isDeposit ? UserWalletBalanceType.CASH : UserWalletBalanceType.VAULT,
+            transactionType,
+        }, {
+            actionName,
             metadata: {
-                operation,
-                description: `Vault ${operation.toLowerCase()} - Cash side`,
-                cashBefore: cashBefore.toString(),
-                cashAfter: wallet.cash.toString(),
+                ...metadata,
+                description: `${metadata.description} (Source)`,
             },
         });
-        await this.transactionRepository.create(cashTransaction);
 
-        // 4-2. Vault Side Transaction
-        const vaultTransaction = UserWalletTransaction.create({
+        // 2. Destination Balance Processing (돈이 들어오는 쪽)
+        return this.userBalanceService.updateBalance({
             userId,
             currency,
-            type: UserWalletTransactionType.ADJUSTMENT,
-            balanceType: UserWalletBalanceType.VAULT,
-            amount: operation === VaultOperation.DEPOSIT ? amount : amount.neg(),
-            balanceBefore: vaultBefore,
-            balanceAfter: wallet.vault,
+            amount,
+            operation: UpdateOperation.ADD,
+            balanceType: isDeposit ? UserWalletBalanceType.VAULT : UserWalletBalanceType.CASH,
+            transactionType,
+        }, {
+            actionName,
             metadata: {
-                operation,
-                description: `Vault ${operation.toLowerCase()} - Vault side`,
-                vaultBefore: vaultBefore.toString(),
-                vaultAfter: wallet.vault.toString(),
+                ...metadata,
+                description: `${metadata.description} (Destination)`,
             },
         });
-        await this.transactionRepository.create(vaultTransaction);
-
-        return savedWallet;
     }
 }

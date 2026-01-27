@@ -21,6 +21,8 @@ import { UserWalletTransactionRepository } from './infrastructure/wallet-transac
 import { UpdateUserBalanceService } from './application/update-user-balance.service';
 import { UserWalletPolicy } from './domain';
 import { SqidsModule } from 'src/common/sqids/sqids.module';
+import { USER_WALLET_STATS_REPOSITORY } from './ports/out/user-wallet-stats.repository.token';
+import { UserWalletStatsRepository } from './infrastructure/user-wallet-stats.repository';
 
 /**
  * Wallet 모듈
@@ -55,6 +57,10 @@ import { SqidsModule } from 'src/common/sqids/sqids.module';
       provide: USER_WALLET_TRANSACTION_REPOSITORY,
       useClass: UserWalletTransactionRepository,
     },
+    {
+      provide: USER_WALLET_STATS_REPOSITORY,
+      useClass: UserWalletStatsRepository,
+    },
     FindUserWalletService,
     UpdateUserBalanceService,
     UpdateWalletStatusService,
@@ -81,6 +87,7 @@ import { SqidsModule } from 'src/common/sqids/sqids.module';
     FindUserWalletsService,
     FindWalletStatisticsService,
     UserWalletStatsMapper,
+    USER_WALLET_STATS_REPOSITORY,
   ],
 })
 export class WalletModule { }
