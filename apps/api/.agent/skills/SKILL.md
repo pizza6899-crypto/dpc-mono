@@ -17,28 +17,38 @@ When encountering a task related to the following categories, you MUST load the 
 
 ### 1. Database & ORM
 **When to use:** creating or modifying database schemas, writing complex SQL queries, or handling transactions.
-*   **Skill Name:** `kysely_implementation`
-*   **Path:** `apps/api/.agent/skills/kysely/SKILL.md`
-*   **Key Rules:**
-    *   Use **Kysely** for complex queries, **Prisma** for simple CRUD.
-    *   Always use `nestjs-cls` for transaction management (`@InjectTransaction()`).
 
-### 1-A. Prisma Schema Management
-**When to use:** creating or modifying Prisma schema files (*.prisma).
+#### 1-A. Prisma Schema Design
 *   **Skill Name:** `prisma_schema_guide`
 *   **Path:** `apps/api/.agent/skills/prisma-schema-guide/SKILL.md`
 *   **Key Rules:**
-    *   Follow `snake_case` mapping for DB tables/columns.
-    *   Separate models by domain files.
+    *   ID Strategy: All BigInt, mapping to `snake_case` in DB.
+    *   No Optimistic Lock fields; use Decimal(32, 18) for currency.
 
-### 2. NestJS Controllers & API Design
-**When to use:** creating new endpoints, defining DTOs, or implementing controllers.
-*   **Skill Name:** `controller_skill`
-*   **Path:** `apps/api/.agent/skills/controller/SKILL.md`
+#### 1-B. Prisma Workflow & Transaction
+*   **Skill Name:** `prisma_schema_management`
+*   **Path:** `apps/api/.agent/skills/prisma/SKILL.md`
 *   **Key Rules:**
-    *   Strict separation between User and Admin APIs.
-    *   User IDs must be obfuscated using Sqids; Admin APIs use raw IDs.
-    *   Response DTOs must use `@Expose()` and `plainToInstance`.
+    *   Multi-file schema management (`apps/api/prisma/schema/*.prisma`).
+    *   Use `@InjectTransaction()` for transaction proxy.
+
+#### 1-C. Complex Queries (Kysely)
+*   **Skill Name:** `kysely_implementation`
+*   *Path:** `apps/api/.agent/skills/kysely/SKILL.md`
+*   **Key Rules:**
+    *   Use **Kysely** for complex queries, **Prisma** for simple CRUD.
+
+### 2. NestJS Architecture & Module Standards
+**When to use:** creating a new module, refactoring existing modules, or deciding where to place business logic.
+*   **Skill Name:** `hexagonal-module-standard`
+*   **Path:** `apps/api/.agent/skills/hexagonal-module-standard/SKILL.md`
+*   **Key Rules:** 5-layer separation, Rich Domain Entities, DIP via Ports.
+
+### 2-A. NestJS Controller Standard
+**When to use:** implementing controllers, designing APIs, or handling DTOs and ID obfuscation.
+*   **Skill Name:** `controller-standard`
+*   **Path:** `apps/api/.agent/skills/controller-standard/SKILL.md`
+*   **Key Rules:** User/Admin separation, Sqids ID obfuscation, AuditLog, Swagger standards.
 
 ### 3. Casino Aggregator Integrations
 **When to use:** integrating with external casino providers (DCS, Whitecliff).
@@ -54,27 +64,32 @@ When encountering a task related to the following categories, you MUST load the 
 *   **Context:** Refer to "WHITECLIFF_en.html".
 
 ### 4. Core Infrastructure
-**When to use:** Handling distributed node IDs, concurrency control, or Snowflake ID generation.
+**When to use:** Handling distributed node IDs, concurrency control, schedulers, or Snowflake ID generation.
 
 #### Concurrency & Locking
 *   **Skill Name:** `concurrency_control`
 *   **Path:** `apps/api/.agent/skills/concurrency/SKILL.md`
 *   **Key Rules:**
-    *   Use **Advisory Lock** for short, transaction-bound business logic.
-    *   Use **Global Lock** table for long-running tasks (schedulers, etc.).
+    *   Use **Advisory Lock** for short business logic.
+    *   Use **Global Lock** table for long-running tasks.
+
+#### Scheduler (Cron Job)
+*   **Skill Name:** `scheduler-implementation`
+*   **Path:** `apps/api/.agent/skills/scheduler-implementation/SKILL.md`
+*   **Key Rules:**
+    *   Use Table-based **GlobalLock** for distributed safety.
+    *   Implement Zombie Lock recovery and history logging.
 
 #### Node Identity & Snowflake
-**When to use**: Handling distributed node IDs or generating Snowflake unique IDs.
-*   **Skill Name**: `distributed_infrastructure`
-*   **Path**: `apps/api/.agent/skills/distributed-infrastructure/SKILL.md`
-*   **Skill Name**: `snowflake_id_generation`
+*   **Skill Name**: `distributed_infrastructure` (Node ID)
+*   **Skill Name**: `snowflake_id_generation` (ID Generation)
 *   **Path**: `apps/api/.agent/skills/snowflake/SKILL.md`
 *   **Key Rules**:
     *   Instances must have unique node IDs (0-1023) for Snowflake generation.
     *   Snowflake generation MUST throw `SnowflakeClockBackwardsException` on time retrograde.
 
 ### 5. Development Workflow
-**When to use:** committing changes, writing commit messages, or following project collaboration rules.
+**When to use:** committing changes or following project collaboration rules.
 *   **Skill Name:** `git-commit-guide`
 *   **Path:** `apps/api/.agent/skills/git-commit-guide/SKILL.md`
 *   **Key Rules:**
@@ -82,10 +97,15 @@ When encountering a task related to the following categories, you MUST load the 
     *   Use **Korean** for commit subjects and descriptions.
     *   Include detailed information in the body if the change is complex.
 
-### 6. Skill Management
+### 6. Meta-Skills (Internal)
+**When to use:** Creating or managing skills for the agent.
+*   **Skill Name:** `skill_creator`
+*   **Path:** `apps/api/.agent/skills/skill-creator/SKILL.md`
+
+### 7. Skill Management (General)
 
 ## Usage Workflow
 
-1.  **Analyze Task**: Determine the domain (DB, API, Integration, Meta).
+1.  **Analyze Task**: Determine the domain (DB, API, Infrastructure, etc.).
 2.  **Load Sub-skill**: Use `view_file` to read the specific `SKILL.md` identified above.
 3.  **Execute**: Follow the detailed instructions within that sub-skill.

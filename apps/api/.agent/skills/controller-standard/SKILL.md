@@ -1,0 +1,76 @@
+---
+name: controller-standard
+description: NestJS 컨트롤러 구현 표준 (API 디자인, Sqids 난독화, 감사 로그 및 Swagger 가이드)
+---
+
+# 🎮 NestJS Controller Implementation Standard
+
+## Overview
+이 가이드는 프로젝트의 일관된 API 디자인을 위한 컨트롤러 구현 표준을 정의합니다. 사용자(User)와 관리자(Admin) API의 엄격한 분리, 보안을 위한 ID 난독화, 그리고 운영을 위한 감사 로그(AuditLog) 적용이 핵심입니다.
+
+## 📁 디렉토리 및 파일 명명 규칙
+*   **User Controller**: `modules/**/controllers/user/{name}.controller.ts`
+*   **Admin Controller**: `modules/**/controllers/admin/{name}-admin.controller.ts`
+*   **DTO 위치**: 해당 컨트롤러 하위의 `dto/request/`, `dto/response/`에 위치.
+
+---
+
+## ✅ 필수 구현 규칙
+
+### 1. 사용자(User) vs 관리자(Admin) API 분리
+*   **User API**: 
+    *   경로: `/api/v1/{module-name}/...`
+    *   **ID 보안**: 외부 노출 ID는 반드시 `SqidsService`를 통해 난독화.
+*   **Admin API**:
+    *   경로: `/api/v1/admin/{module-name}/...`
+    *   **ID 정책**: 내부 운영용이므로 **Raw ID (BigInt -> string)** 사용.
+    *   **권한**: `@Admin()` 또는 `@RequireRoles()` 데코레이터 필수.
+
+### 2. ID 난독화 (Sqids)
+사용자용 API에서 ID를 노출하거나 전달받을 때 필수 적용합니다.
+*   **Response**: `this.sqidsService.encode(id, SqidsPrefix.PREFIX)`
+*   **Request (Param)**: `this.sqidsService.decode(id, SqidsPrefix.PREFIX)`
+*   **중요**: `SqidsPrefix` 상수를 확인하여 도메인에 맞는 접두어를 사용하십시오.
+
+### 3. 감사 로그 (AuditLog)
+상태 변경(생성, 수정, 삭제)이 발생하는 모든 엔드포인트에 적용합니다.
+*   **Decorator**: `@AuditLog({ type, category, action, extractMetadata })`
+*   **Metadata**: `extractMetadata`를 구현하여 변경된 대상의 ID나 주요 정보를 반드시 기록합니다.
+
+### 4. Swagger & API 문서화
+*   **@ApiTags**: **영어만 사용** (예: `@ApiTags('Wallet')`).
+*   **@ApiOperation**: `summary`에 `'English / 한글 설명'` 형식으로 작성.
+*   **응답 표준**: `@ApiStandardResponse()` 및 `@ApiPaginatedResponse()` 사용.
+
+### 5. 페이지네이션 (Pagination)
+*   **List Queries**: 목록 반환 시 `@Paginated()` 데코레이터 사용.
+*   **응답 타입**: `PaginatedData<T>` 형식을 준수하여 `{ data, total, page, limit }` 구조로 반환.
+
+---
+
+## 💻 구현 템플릿
+
+```typescript
+@Controller('wallet')
+@ApiTags('Wallet')
+export class WalletController {
+  constructor(private readonly sqidsService: SqidsService) {}
+
+  @Get('transactions')
+  @Paginated()
+  @ApiOperation({ summary: 'Get transaction history / 트랜잭션 이력 조회' })
+  @ApiPaginatedResponse(UserWalletTransactionResponseDto)
+  async getTransactionHistory(@Query() query: GetHistoryQueryDto): Promise<PaginatedData<UserWalletTransactionResponseDto>> {
+    const { items, total } = await this.service.execute(query);
+    
+    return {
+      data: items.map(tx => ({
+        id: this.sqidsService.encode(tx.id, SqidsPrefix.WALLET_TRANSACTION),
+        amount: tx.amount.toString(),
+        // ...
+      })),
+      total, page: query.page, limit: query.limit
+    };
+  }
+}
+```
