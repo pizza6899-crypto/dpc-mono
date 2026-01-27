@@ -134,10 +134,16 @@ export class ProcessCasinoBetService {
         // 5-1. 현금(Cash) 차감
         if (cashDeduction.gt(0)) {
             newCashTxId = this.snowflakeService.generate(betTime);
+            // USD 환산 금액 계산 (Session 스냅샷 환율 기준)
+            const cashDeductionUsd = session.walletCurrency === 'USD'
+                ? cashDeduction
+                : (session.usdExchangeRate && !session.usdExchangeRate.isZero() ? cashDeduction.div(session.usdExchangeRate) : undefined);
+
             updatedWallet = await this.updateUserBalanceService.updateBalance({
                 userId: session.userId,
                 currency: session.walletCurrency,
                 amount: cashDeduction,
+                amountUsd: cashDeductionUsd, // [Inject] USD Amount
                 operation: UpdateOperation.SUBTRACT,
                 balanceType: UserWalletBalanceType.CASH,
                 transactionType: UserWalletTransactionType.BET,
@@ -159,10 +165,15 @@ export class ProcessCasinoBetService {
         // 5-2. 보너스(Bonus) 차감
         if (bonusDeduction.gt(0)) {
             newBonusTxId = this.snowflakeService.generate(betTime);
+            const bonusDeductionUsd = session.walletCurrency === 'USD'
+                ? bonusDeduction
+                : (session.usdExchangeRate && !session.usdExchangeRate.isZero() ? bonusDeduction.div(session.usdExchangeRate) : undefined);
+
             updatedWallet = await this.updateUserBalanceService.updateBalance({
                 userId: session.userId,
                 currency: session.walletCurrency,
                 amount: bonusDeduction,
+                amountUsd: bonusDeductionUsd, // [Inject] USD Amount
                 operation: UpdateOperation.SUBTRACT,
                 balanceType: UserWalletBalanceType.BONUS,
                 transactionType: UserWalletTransactionType.BET,

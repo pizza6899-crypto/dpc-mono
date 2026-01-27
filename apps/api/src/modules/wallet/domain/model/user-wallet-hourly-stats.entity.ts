@@ -18,11 +18,33 @@ export class UserWalletHourlyStats {
         private _totalBetCash: Prisma.Decimal,
         private _totalWinCash: Prisma.Decimal,
 
+        // USD Statistics
+        private _totalDepositCashUsd: Prisma.Decimal,
+        private _totalWithdrawCashUsd: Prisma.Decimal,
+        private _totalBetCashUsd: Prisma.Decimal,
+        private _totalWinCashUsd: Prisma.Decimal,
+
+        // Hall of Fame
+        private _maxBetAmount: Prisma.Decimal,
+        private _maxWinAmount: Prisma.Decimal,
+        private _maxWinAmountUsd: Prisma.Decimal,
+
+        // Count Statistics
+        private _totalBetCount: bigint,
+        private _totalWinCount: bigint,
+        private _transactionCount: bigint,
+
         // Bonus Flow
         private _totalBonusGiven: Prisma.Decimal,
         private _totalBonusUsed: Prisma.Decimal,
         private _totalBetBonus: Prisma.Decimal,
         private _totalWinBonus: Prisma.Decimal,
+
+        // Recency Statistics
+        public lastBetAt: Date | null,
+        public lastWinAt: Date | null,
+        public lastDepositAt: Date | null,
+        public lastWithdrawAt: Date | null,
 
         // Snapshots
         private _startCash: Prisma.Decimal,
@@ -44,14 +66,35 @@ export class UserWalletHourlyStats {
             params.userId,
             params.currency,
             params.date,
+            // Cash Flow
             new Prisma.Decimal(0),
             new Prisma.Decimal(0),
             new Prisma.Decimal(0),
             new Prisma.Decimal(0),
+            // USD Statistics
             new Prisma.Decimal(0),
             new Prisma.Decimal(0),
             new Prisma.Decimal(0),
             new Prisma.Decimal(0),
+            // Hall of Fame
+            new Prisma.Decimal(0),
+            new Prisma.Decimal(0),
+            new Prisma.Decimal(0),
+            // Count Statistics
+            BigInt(0),
+            BigInt(0),
+            BigInt(0),
+            // Bonus Flow
+            new Prisma.Decimal(0),
+            new Prisma.Decimal(0),
+            new Prisma.Decimal(0),
+            new Prisma.Decimal(0),
+            // Recency
+            null,
+            null,
+            null,
+            null,
+            // Snapshots
             params.startCash,
             params.startCash, // 초기 end값은 start와 동일
             params.startBonus,
@@ -68,10 +111,30 @@ export class UserWalletHourlyStats {
         totalWithdrawCash: Prisma.Decimal;
         totalBetCash: Prisma.Decimal;
         totalWinCash: Prisma.Decimal;
+        // USD
+        totalDepositCashUsd: Prisma.Decimal;
+        totalWithdrawCashUsd: Prisma.Decimal;
+        totalBetCashUsd: Prisma.Decimal;
+        totalWinCashUsd: Prisma.Decimal;
+        // Hall of Fame
+        maxBetAmount: Prisma.Decimal;
+        maxWinAmount: Prisma.Decimal;
+        maxWinAmountUsd: Prisma.Decimal;
+        // Count
+        totalBetCount: bigint;
+        totalWinCount: bigint;
+        transactionCount: bigint;
+        // Bonus
         totalBonusGiven: Prisma.Decimal;
         totalBonusUsed: Prisma.Decimal;
         totalBetBonus: Prisma.Decimal;
         totalWinBonus: Prisma.Decimal;
+        // Recency
+        lastBetAt: Date | null;
+        lastWinAt: Date | null;
+        lastDepositAt: Date | null;
+        lastWithdrawAt: Date | null;
+        // Snapshots
         startCash: Prisma.Decimal;
         endCash: Prisma.Decimal;
         startBonus: Prisma.Decimal;
@@ -86,10 +149,24 @@ export class UserWalletHourlyStats {
             data.totalWithdrawCash,
             data.totalBetCash,
             data.totalWinCash,
+            data.totalDepositCashUsd,
+            data.totalWithdrawCashUsd,
+            data.totalBetCashUsd,
+            data.totalWinCashUsd,
+            data.maxBetAmount,
+            data.maxWinAmount,
+            data.maxWinAmountUsd,
+            data.totalBetCount,
+            data.totalWinCount,
+            data.transactionCount,
             data.totalBonusGiven,
             data.totalBonusUsed,
             data.totalBetBonus,
             data.totalWinBonus,
+            data.lastBetAt,
+            data.lastWinAt,
+            data.lastDepositAt,
+            data.lastWithdrawAt,
             data.startCash,
             data.endCash,
             data.startBonus,
@@ -103,43 +180,30 @@ export class UserWalletHourlyStats {
     get totalWithdrawCash(): Prisma.Decimal { return this._totalWithdrawCash; }
     get totalBetCash(): Prisma.Decimal { return this._totalBetCash; }
     get totalWinCash(): Prisma.Decimal { return this._totalWinCash; }
+    // USD
+    get totalDepositCashUsd(): Prisma.Decimal { return this._totalDepositCashUsd; }
+    get totalWithdrawCashUsd(): Prisma.Decimal { return this._totalWithdrawCashUsd; }
+    get totalBetCashUsd(): Prisma.Decimal { return this._totalBetCashUsd; }
+    get totalWinCashUsd(): Prisma.Decimal { return this._totalWinCashUsd; }
+    // Hall of Fame
+    get maxBetAmount(): Prisma.Decimal { return this._maxBetAmount; }
+    get maxWinAmount(): Prisma.Decimal { return this._maxWinAmount; }
+    get maxWinAmountUsd(): Prisma.Decimal { return this._maxWinAmountUsd; }
+    // Count
+    get totalBetCount(): bigint { return this._totalBetCount; }
+    get totalWinCount(): bigint { return this._totalWinCount; }
+    get transactionCount(): bigint { return this._transactionCount; }
+    // Bonus
     get totalBonusGiven(): Prisma.Decimal { return this._totalBonusGiven; }
     get totalBonusUsed(): Prisma.Decimal { return this._totalBonusUsed; }
     get totalBetBonus(): Prisma.Decimal { return this._totalBetBonus; }
     get totalWinBonus(): Prisma.Decimal { return this._totalWinBonus; }
+    // Snapshots
     get startCash(): Prisma.Decimal { return this._startCash; }
     get endCash(): Prisma.Decimal { return this._endCash; }
     get startBonus(): Prisma.Decimal { return this._startBonus; }
     get endBonus(): Prisma.Decimal { return this._endBonus; }
 
-    // Update Logic
-    recordCashFlow(params: {
-        deposit?: Prisma.Decimal;
-        withdraw?: Prisma.Decimal;
-        bet?: Prisma.Decimal;
-        win?: Prisma.Decimal;
-        finalCash: Prisma.Decimal;
-    }): void {
-        if (params.deposit) this._totalDepositCash = this._totalDepositCash.add(params.deposit);
-        if (params.withdraw) this._totalWithdrawCash = this._totalWithdrawCash.add(params.withdraw);
-        if (params.bet) this._totalBetCash = this._totalBetCash.add(params.bet);
-        if (params.win) this._totalWinCash = this._totalWinCash.add(params.win);
-        this._endCash = params.finalCash;
-    }
-
-    recordBonusFlow(params: {
-        given?: Prisma.Decimal;
-        used?: Prisma.Decimal;
-        bet?: Prisma.Decimal;
-        win?: Prisma.Decimal;
-        finalBonus: Prisma.Decimal;
-    }): void {
-        if (params.given) this._totalBonusGiven = this._totalBonusGiven.add(params.given);
-        if (params.used) this._totalBonusUsed = this._totalBonusUsed.add(params.used);
-        if (params.bet) this._totalBetBonus = this._totalBetBonus.add(params.bet);
-        if (params.win) this._totalWinBonus = this._totalWinBonus.add(params.win);
-        this._endBonus = params.finalBonus;
-    }
 
     // Analytics Methods
     get cashGgr(): Prisma.Decimal {

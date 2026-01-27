@@ -21,6 +21,12 @@ export type UpdateWalletStatsDto = {
         bonus: Prisma.Decimal;
     };
     timestamp?: Date; // 트랜잭션 발생 시간 (Hourly stats 파티셔닝 기준)
+
+    // USD Values (Optional) - 환율 적용된 가치
+    depositCashUsd?: Prisma.Decimal;
+    withdrawCashUsd?: Prisma.Decimal;
+    betCashUsd?: Prisma.Decimal;
+    winCashUsd?: Prisma.Decimal;
 };
 
 export interface UserWalletStatsRepositoryPort {

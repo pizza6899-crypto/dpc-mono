@@ -172,10 +172,16 @@ export class ProcessCasinoCreditService {
                 throw new UserBalanceNotFoundException(session.userId, session.walletCurrency);
             }
         } else {
+            // USD 환산 금액 계산 (Session 스냅샷 환율 기준)
+            const walletAmountUsd = session.walletCurrency === 'USD'
+                ? walletAmount
+                : (session.usdExchangeRate && !session.usdExchangeRate.isZero() ? walletAmount.div(session.usdExchangeRate) : undefined);
+
             updatedWallet = await this.updateUserBalanceService.updateBalance({
                 userId: session.userId,
                 currency: session.walletCurrency,
                 amount: walletAmount,
+                amountUsd: walletAmountUsd, // [Inject] USD Amount
                 operation: UpdateOperation.ADD,
                 balanceType: UserWalletBalanceType.CASH,
                 transactionType: walletTxType,

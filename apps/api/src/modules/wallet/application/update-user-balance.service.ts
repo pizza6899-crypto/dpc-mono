@@ -10,6 +10,7 @@ import { UserWalletTransaction, WalletNotFoundException, UserWallet, UserWalletP
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { USER_WALLET_STATS_REPOSITORY } from '../ports/out/user-wallet-stats.repository.token';
 import type { UserWalletStatsRepositoryPort, UpdateWalletStatsDto } from '../ports/out/user-wallet-stats.repository.port';
+import { ExchangeRateService } from '../../exchange/application/exchange-rate.service';
 
 export interface BalanceUpdateContext {
     // Admin Context
@@ -32,6 +33,12 @@ export interface BalanceUpdateParams {
     balanceType: UserWalletBalanceType;
     transactionType: UserWalletTransactionType;
     referenceId?: bigint;
+    /**
+     * USD 환산 금액 (선택 사항)
+     * - 게임 세션 등에서 확정된 환율이 있는 경우 명시적으로 전달
+     * - 전달되지 않을 경우, 현재 시점의 환율로 자동 계산됨
+     */
+    amountUsd?: Prisma.Decimal;
 }
 
 @Injectable()
@@ -48,6 +55,7 @@ export class UpdateUserBalanceService {
         private readonly advisoryLockService: AdvisoryLockService,
         @Inject(USER_WALLET_STATS_REPOSITORY)
         private readonly statsRepository: UserWalletStatsRepositoryPort,
+        private readonly exchangeRateService: ExchangeRateService,
     ) { }
 
     /**
@@ -59,6 +67,27 @@ export class UpdateUserBalanceService {
         context: BalanceUpdateContext = {},
     ): Promise<UserWallet> {
         const { userId, currency, amount, operation, balanceType, transactionType, referenceId } = params;
+
+        // 0. Hybrid Strategy: USD 환산 금액 준비
+        // 파라미터로 전달된 값이 있으면 사용하고 (게임 세션 정합성),
+        // 없으면 현재 실시간 환율로 계산하여 통계 누락 방지 (편의성)
+        let amountUsd = params.amountUsd;
+        if (!amountUsd) {
+            try {
+                if (currency === ExchangeCurrencyCode.USD) {
+                    amountUsd = amount;
+                } else {
+                    const rate = await this.exchangeRateService.getRate({
+                        fromCurrency: currency,
+                        toCurrency: ExchangeCurrencyCode.USD,
+                    });
+                    amountUsd = amount.mul(rate);
+                }
+            } catch (error) {
+                this.logger.warn(`Failed to fetch exchange rate for stats (Currency: ${currency}). Stats will act as 0 USD.`, error);
+                amountUsd = new Prisma.Decimal(0);
+            }
+        }
 
         // 1. Lock & Get Wallet
         await this.advisoryLockService.acquireLock(LockNamespace.USER_WALLET, userId.toString(), {
@@ -116,6 +145,7 @@ export class UpdateUserBalanceService {
             userId,
             currency,
             amount,
+            amountUsd, // USD Amount 전달
             operation,
             balanceType,
             transactionType,
@@ -225,6 +255,7 @@ export class UpdateUserBalanceService {
         userId: bigint,
         currency: ExchangeCurrencyCode,
         amount: Prisma.Decimal,
+        amountUsd: Prisma.Decimal,
         op: UpdateOperation,
         balanceType: UserWalletBalanceType,
         transactionType: UserWalletTransactionType,
@@ -250,33 +281,48 @@ export class UpdateUserBalanceService {
             // 입금(ADD) -> 통계 증가, 회수/취소(SUBTRACT) -> 통계 감소 (Net Deposit 유지)
             if (transactionType === UserWalletTransactionType.DEPOSIT && balanceType === UserWalletBalanceType.CASH) {
                 updateDto.depositCash = op === UpdateOperation.ADD ? amount : amount.neg();
+                // Deposit의 경우 보통 자산 가치 변동이므로 rate 적용
+                updateDto.depositCashUsd = op === UpdateOperation.ADD ? amountUsd : amountUsd.neg();
             }
 
             // 2. Withdraw (Cash)
             // 출금신청(SUBTRACT) -> 통계 증가, 반려/취소(ADD) -> 통계 감소 (Net Withdraw 유지)
             else if (transactionType === UserWalletTransactionType.WITHDRAW && balanceType === UserWalletBalanceType.CASH) {
                 updateDto.withdrawCash = op === UpdateOperation.SUBTRACT ? amount : amount.neg();
+                updateDto.withdrawCashUsd = op === UpdateOperation.SUBTRACT ? amountUsd : amountUsd.neg();
             }
 
             // 3. Bet / Win (Cash & Bonus)
             else if (transactionType === UserWalletTransactionType.BET) {
-                if (balanceType === UserWalletBalanceType.CASH) updateDto.betCash = amount;
+                if (balanceType === UserWalletBalanceType.CASH) {
+                    updateDto.betCash = amount;
+                    updateDto.betCashUsd = amountUsd;
+                }
                 if (balanceType === UserWalletBalanceType.BONUS) updateDto.betBonus = amount;
             } else if (transactionType === UserWalletTransactionType.WIN) {
-                if (balanceType === UserWalletBalanceType.CASH) updateDto.winCash = amount;
+                if (balanceType === UserWalletBalanceType.CASH) {
+                    updateDto.winCash = amount;
+                    updateDto.winCashUsd = amountUsd;
+                }
                 if (balanceType === UserWalletBalanceType.BONUS) updateDto.winBonus = amount;
             }
 
             // 3. Bonus Given / Used
-            else if (transactionType === UserWalletTransactionType.BONUS_IN || transactionType === UserWalletTransactionType.BONUS_CONVERSION || transactionType === UserWalletTransactionType.REFUND) {
+            else if (transactionType === UserWalletTransactionType.BONUS_IN || transactionType === UserWalletTransactionType.BONUS_CONVERSION) {
                 // BONUS_IN: 지급 (Given)
                 if (transactionType === UserWalletTransactionType.BONUS_IN) {
                     updateDto.bonusGiven = amount;
                 }
-                // REFUND Notice:
-                // REFUND 트랜잭션은 보통 TotalBet을 차감(감소)해야 하지만, 이는 비즈니스 로직(예: Pushed Bet, Game Cancel)에 따라
-                // 별도의 서비스(UpdatePushedBetService 등)에서 정교하게 계산하여 직접 처리합니다.
-                // 따라서 이곳 범용 서비스에서는 REFUND에 대한 통계 업데이트를 수행하지 않습니다 (중복 차감 방지).
+            }
+            // 4. REFUND (Bet Reversal) - Strict Mode
+            else if (transactionType === UserWalletTransactionType.REFUND) {
+                // REFUND는 베팅 취소로 간주하여 TotalBet 통계를 차감합니다.
+                if (balanceType === UserWalletBalanceType.CASH) {
+                    updateDto.betCash = amount.neg();
+                    updateDto.betCashUsd = amountUsd.neg();
+                } else if (balanceType === UserWalletBalanceType.BONUS) {
+                    updateDto.betBonus = amount.neg();
+                }
             }
             else if (transactionType === UserWalletTransactionType.BONUS_OUT) {
                 updateDto.bonusUsed = amount; // 회수/만료
@@ -291,9 +337,15 @@ export class UpdateUserBalanceService {
 
             // 5. Vault
             else if (transactionType === UserWalletTransactionType.VAULT_IN) {
-                updateDto.vaultIn = amount;
+                // Vault 잔액이 증가할 때만 통계 반영 (Cash 차감 시 중복 방지)
+                if (balanceType === UserWalletBalanceType.VAULT) {
+                    updateDto.vaultIn = amount;
+                }
             } else if (transactionType === UserWalletTransactionType.VAULT_OUT) {
-                updateDto.vaultOut = amount;
+                // Vault 잔액이 감소할 때만 통계 반영 (Cash 증가 시 중복 방지)
+                if (balanceType === UserWalletBalanceType.VAULT) {
+                    updateDto.vaultOut = amount;
+                }
             }
         }
 
