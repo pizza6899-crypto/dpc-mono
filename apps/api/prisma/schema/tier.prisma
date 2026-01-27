@@ -58,7 +58,7 @@ model Tier {
   translations        TierTranslation[]
   historyFrom         TierHistory[]         @relation("HistoryFrom")
   historyTo           TierHistory[]         @relation("HistoryTo")
-  dailyStats          TierDailyStats[]
+  stats               TierStats[]
   periodStats         UserTierPeriodStats[]
   demotionCurrentWarn TierDemotionWarning[] @relation("CurrentTier")
   demotionTargetWarn  TierDemotionWarning[] @relation("TargetTier")
@@ -194,15 +194,22 @@ model TierEvaluationLog {
   @@map("tier_evaluation_log")
 }
 
-// 1. 등급별 일별 요약 (마케팅 대시보드용)
-model TierDailyStats {
-  date   DateTime @db.Date
-  tierId BigInt   @map("tier_id")
+// 1. 등급별 통계 요약 (모니터링용)
+// 1. 등급별 시계열 통계 요약 (모니터링 및 대시보드용)
+model TierStats {
+  // timestamp: 해당 통계 구간의 시작 시각 (UTC)
+  // 시계열 분석을 위해 분/초를 0으로 맞춘 정시(Hourly) 단위 또는 00:00:00(Daily) 단위의 값을 가집니다.
+  timestamp DateTime @map("timestamp")
+  tierId    BigInt   @map("tier_id")
 
-  snapshotUserCount Int     @default(0) @map("snapshot_user_count")
+  // [Snapshot] 해당 시점의 해당 등급 총 유저 수
+  snapshotUserCount Int @default(0) @map("snapshot_user_count")
+
+  // [Metrics] 해당 구간(예: 1시간) 동안 발생한 합계 데이터
   totalBonusPaidUsd Decimal @default(0) @map("total_bonus_paid_usd") @db.Decimal(32, 18)
   totalRollingUsd   Decimal @default(0) @map("total_rolling_usd") @db.Decimal(32, 18)
 
+  // [Changes] 해당 구간 동안 발생한 티어 변동 인원 수
   promotedCount Int @default(0) @map("promoted_count")
   demotedCount  Int @default(0) @map("demoted_count")
 
@@ -210,8 +217,8 @@ model TierDailyStats {
 
   tier Tier @relation(fields: [tierId], references: [id])
 
-  @@id([date, tierId])
-  @@map("tier_daily_stats")
+  @@id([timestamp, tierId])
+  @@map("tier_stats")
 }
 
 // 2. 유저별 시계열 실적 (VIP 추이 분석용)

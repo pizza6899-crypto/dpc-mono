@@ -1,8 +1,8 @@
 import { Prisma } from '@prisma/client';
 
-export class TierDailyStats {
+export class TierStats {
     constructor(
-        public readonly date: Date,
+        public readonly timestamp: Date,
         public readonly tierId: bigint,
         public readonly snapshotUserCount: number,
         public readonly totalBonusPaidUsd: Prisma.Decimal,
@@ -12,9 +12,9 @@ export class TierDailyStats {
         public readonly updatedAt: Date,
     ) { }
 
-    static fromPersistence(data: any): TierDailyStats {
-        return new TierDailyStats(
-            data.date,
+    static fromPersistence(data: any): TierStats {
+        return new TierStats(
+            data.timestamp,
             data.tierId,
             data.snapshotUserCount,
             data.totalBonusPaidUsd,
