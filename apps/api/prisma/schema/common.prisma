@@ -69,6 +69,8 @@ model User {
   alerts                 Alert[]
   notificationLogs       NotificationLog[]
   casinoGameRounds       CasinoGameRound[]
+  userTierPeriodStats    UserTierPeriodStats[]
+  tierDemotionWarnings   TierDemotionWarning[]
 
   @@map("users")
 }

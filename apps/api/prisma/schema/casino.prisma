@@ -272,6 +272,7 @@ model CasinoGameRound {
   totalGameJackpotAmount    Decimal @default(0) @map("total_game_jackpot_amount") @db.Decimal(32, 18) // Game Currency 기준 (잭팟 당첨금)
   jackpotContributionAmount Decimal @default(0) @map("jackpot_contribution_amount") @db.Decimal(32, 18) // 잭팟 기여금 (통계)
   compEarned                Decimal @default(0) @map("comp_earned") @db.Decimal(32, 18) // 적립된 콤프 (통계)
+  tierContributionUsd       Decimal @default(0) @map("tier_contribution_usd") @db.Decimal(32, 18) // 티어 기여액 (USD 스냅샷)
 
   /**
    * 게임 결과 메타데이터 (URL, JSON 등 통합)

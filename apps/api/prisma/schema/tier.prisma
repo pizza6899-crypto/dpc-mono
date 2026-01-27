@@ -1,33 +1,67 @@
+model TierConfig {
+  id BigInt @id @default(autoincrement()) // 실제로는 id=1 인 row 하나만 사용
+
+  // [Master Switch] 시스템 제어
+  isPromotionEnabled Boolean @default(true) @map("is_promotion_enabled") // 승급 심사 전체 ON/OFF
+  isDowngradeEnabled Boolean @default(false) @map("is_downgrade_enabled") // 강등 심사 전체 ON/OFF
+
+  // [Scheduler] 배치 심사 실행 시간 (0-23 UTC)
+  evaluationHourUtc Int @default(0) @map("evaluation_hour_utc")
+
+  // [Audit] 누가 언제 바꿨나
+  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedBy String?  @map("updated_by") // 변경한 관리자 ID
+
+  @@map("tier_config")
+}
+
 model Tier {
-  id                    BigInt  @id @default(autoincrement())
-  priority              Int     @unique // Lower value means lower tier (e.g., 1=Bronze, 2=Silver)
+  id       BigInt @id @default(autoincrement())
+  priority Int    @unique // Lower value means lower tier (e.g., 1=Bronze, 2=Silver)
   // code: 시스템 내부 식별자 (불변), 어드민/백오피스 및 코드 레벨 참조용 (e.g., "BRONZE", "VIP_GOLD")
-  code                  String  @unique
+  code     String @unique
+
   // requirement_usd: 승급에 필요한 누적 롤링액
   requirementUsd        Decimal @map("requirement_usd") @db.Decimal(32, 18)
   // requirement_deposit_usd: 승급에 필요한 누적 입금액
   requirementDepositUsd Decimal @default(0) @map("requirement_deposit_usd") @db.Decimal(32, 18)
-  // maintenance_rolling_usd: 등급 유지를 위해 필요한 기간 내 최소 롤링액
+  // maintenance_rolling_usd: 등급 유지를 위해 평가 주기(evaluation_cycle) 동안 달성해야 할 최소 롤링액
+  // [Policy] 현재 정책상 강등(Demotion)은 없으므로 0으로 설정하여 비활성화합니다.
   maintenanceRollingUsd Decimal @default(0) @map("maintenance_rolling_usd") @db.Decimal(32, 18)
 
+  // evaluation_cycle: 등급 유지/강등 심사 주기
+  // NONE: 강등 없음, ROLLING_30_DAYS: 30일 평가, ROLLING_90_DAYS: 90일 평가
+  evaluationCycle TierEvaluationCycle @default(NONE) @map("evaluation_cycle")
+
   // Benefits
-  levelUpBonusUsd Decimal @default(0) @map("level_up_bonus") @db.Decimal(32, 18)
-  compRate        Decimal @default(0) @map("comp_rate") @db.Decimal(8, 4) // 통합 컴프 요율
-  lossbackRate    Decimal @default(0) @map("lossback_rate") @db.Decimal(8, 4) // 손실 기반 캐시백 요율
-  rakebackRate    Decimal @default(0) @map("rakeback_rate") @db.Decimal(8, 4) // 롤링 기반 레이크백 요율
+  levelUpBonusUsd                Decimal @default(0) @map("level_up_bonus_usd") @db.Decimal(32, 18)
+  levelUpBonusWageringMultiplier Decimal @default(0) @map("level_up_bonus_wagering_multiplier") @db.Decimal(8, 4) // 승급 보너스 베팅 요구 배수 (0=즉시 출금)
+  compRate                       Decimal @default(0) @map("comp_rate") @db.Decimal(8, 4) // 통합 컴프 요율
+  lossbackRate                   Decimal @default(0) @map("lossback_rate") @db.Decimal(8, 4) // 손실 기반 캐시백 요율
+  rakebackRate                   Decimal @default(0) @map("rakeback_rate") @db.Decimal(8, 4) // 롤링 기반 레이크백 요율
 
   dailyWithdrawalLimitUsd Decimal @default(0) @map("daily_withdrawal_limit_usd") @db.Decimal(32, 18)
-  hasDedicatedManager     Boolean @default(false) @map("has_dedicated_manager")
-  isVIPEventEligible      Boolean @default(false) @map("is_vip_event_eligible")
-  reloadBonusRate         Decimal @default(0) @map("reload_bonus_rate") @db.Decimal(8, 4)
+  isWithdrawalUnlimited   Boolean @default(false) @map("is_withdrawal_unlimited") // True일 경우 한도 무시 (무제한)
+
+  hasDedicatedManager Boolean @default(false) @map("has_dedicated_manager")
+  isVIPEventEligible  Boolean @default(false) @map("is_vip_event_eligible")
+  reloadBonusRate     Decimal @default(0) @map("reload_bonus_rate") @db.Decimal(8, 4)
+
+  // UI & Additional Info
+  imageUrl String? @map("image_url") // 등급 아이콘/뱃지 이미지 URL
+  benefits Json?   @map("benefits") // 기타 유동적인 혜택 레코드 (JSON 구조)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  userTiers    UserTier[]
-  translations TierTranslation[]
-  historyFrom  TierHistory[]     @relation("HistoryFrom")
-  historyTo    TierHistory[]     @relation("HistoryTo")
+  userTiers           UserTier[]
+  translations        TierTranslation[]
+  historyFrom         TierHistory[]         @relation("HistoryFrom")
+  historyTo           TierHistory[]         @relation("HistoryTo")
+  dailyStats          TierDailyStats[]
+  periodStats         UserTierPeriodStats[]
+  demotionCurrentWarn TierDemotionWarning[] @relation("CurrentTier")
+  demotionTargetWarn  TierDemotionWarning[] @relation("TargetTier")
 
   @@index([priority])
   @@map("tier")
@@ -36,9 +70,10 @@ model Tier {
 model TierTranslation {
   id BigInt @id @default(autoincrement())
 
-  tierId   BigInt   @map("tier_id")
-  language Language
-  name     String // Display name (e.g., "브론즈", "Bronze")
+  tierId      BigInt   @map("tier_id")
+  language    Language
+  name        String // Display name (e.g., "브론즈", "Bronze")
+  description String?  @db.Text // 등급 혜택 상세 설명 (UI 노출용)
 
   tier Tier @relation(fields: [tierId], references: [id], onDelete: Cascade)
 
@@ -53,27 +88,51 @@ model UserTier {
   tierId BigInt @map("tier_id")
 
   // 상태 데이터
-  cumulativeRollingUsd    Decimal  @default(0) @map("cumulative_rolling_usd") @db.Decimal(32, 18)
-  currentPeriodRollingUsd Decimal  @default(0) @map("current_period_rolling_usd") @db.Decimal(32, 18)
-  evaluationDate          DateTime @default(now()) @map("evaluation_date")
+  totalEffectiveRollingUsd Decimal  @default(0) @map("total_effective_rolling_usd") @db.Decimal(32, 18)
+  currentPeriodRollingUsd  Decimal  @default(0) @map("current_period_rolling_usd") @db.Decimal(32, 18)
+  lastEvaluationAt         DateTime @default(now()) @map("last_evaluation_at")
 
   // 승급/강등 제어
-  highestPromotedPriority Int      @default(0) @map("highest_promoted_priority") // 보너스 중복 지급 방지용
-  isManualLock            Boolean  @default(false) @map("is_manual_lock") // 관리자 강제 등급 고정
-  lastPromotedAt          DateTime @default(now()) @map("last_promoted_at")
+  // [Policy: Soft Landing & Reset]
+  // - 강등 확정 시: Priority 산술 연산(-1)이 아닌, 현재 등급보다 낮은 Priority 중에서 '가장 높은 등급'을 찾아 이동 (Next Lower Tier)
+  // - 평가 주기 리셋: 강등과 동시에 lastEvaluationAt을 현재(Now)로 갱신하여 즉시 재강등 방지 및 활동 기회 부여
+  highestPromotedPriority Int            @default(0) @map("highest_promoted_priority") // 보너스 중복 지급 방지용
+  status                  UserTierStatus @default(ACTIVE) @map("status") // ACTIVE, GRACE, LOCKED
+  graceEndsAt             DateTime?      @map("grace_ends_at") // 강등 유예 종료 시점
+  lastTierChangedAt       DateTime       @default(now()) @map("last_tier_changed_at")
+
+  // [Advanced Retention] VIP 매니저 오버라이드 (기본 Tier 혜택보다 우선 적용)
+  customCompRate        Decimal? @map("custom_comp_rate") @db.Decimal(8, 4)
+  customLossbackRate    Decimal? @map("custom_lossback_rate") @db.Decimal(8, 4)
+  customRakebackRate    Decimal? @map("custom_rakeback_rate") @db.Decimal(8, 4) // 추가: 레이크백 오버라이드
+  customReloadBonusRate Decimal? @map("custom_reload_bonus_rate") @db.Decimal(8, 4) // 추가: 리로드 보너스 오버라이드
+
+  customWithdrawalLimitUsd    Decimal? @map("custom_withdrawal_limit_usd") @db.Decimal(32, 18)
+  isCustomWithdrawalUnlimited Boolean? @map("is_custom_withdrawal_unlimited")
+
+  isCustomDedicatedManager Boolean? @map("is_custom_dedicated_manager") // 추가: 전담 매니저 여부 (Null=Tier따름)
+  isCustomVipEventEligible Boolean? @map("is_custom_vip_event_eligible") // 추가: VIP 이벤트 대상 여부 (Null=Tier따름)
+
+  note String? @map("note") // 관리자 메모 (e.g. "타사 VIP 영입")
+
+  // [Risk Management] 승급은 시키되 현금성 보너스 지급은 차단 (기본값 true=지급)
+  isBonusEligible Boolean @default(true) @map("is_bonus_eligible")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  nextEvaluationAt DateTime? @map("next_evaluation_at") // 다음 심사 예정 시각 (배치 최적화용)
 
   user User @relation(fields: [userId], references: [id])
   tier Tier @relation(fields: [tierId], references: [id])
 
   @@index([tierId])
+  @@index([nextEvaluationAt, status])
   @@map("user_tier")
 }
 
 model TierHistory {
-  id     BigInt @id @default(autoincrement())
+  id     BigInt // 스노우플레이크 처리 권장 (파티셔닝 대응)
   userId BigInt @map("user_id")
 
   fromTierId BigInt?        @map("from_tier_id")
@@ -82,20 +141,134 @@ model TierHistory {
   reason     String? // "Rolling requirement met", "Admin manual update"
 
   // Snapshot data (변경 시점의 데이터 기록)
-  rollingAmountSnap Decimal @map("rolling_amount_snap") @db.Decimal(32, 18)
+  rollingAmountSnap Decimal @default(0) @map("rolling_amount_snap") @db.Decimal(32, 18)
+  compRateSnap      Decimal @default(0) @map("comp_rate_snap") @db.Decimal(8, 4)
+  lossbackRateSnap  Decimal @default(0) @map("lossback_rate_snap") @db.Decimal(8, 4)
+  rakebackRateSnap  Decimal @default(0) @map("rakeback_rate_snap") @db.Decimal(8, 4)
 
-  bonusAmount Decimal? @map("bonus_amount") @db.Decimal(32, 18) // 지급된 승급 보너스 (없으면 null/0)
+  // [Snapshot: Rules & Status] 당시 정책 기준 및 유저 누적 상태
+  requirementUsdSnap        Decimal @default(0) @map("requirement_usd_snap") @db.Decimal(32, 18)
+  requirementDepositUsdSnap Decimal @default(0) @map("requirement_deposit_usd_snap") @db.Decimal(32, 18)
+  cumulativeDepositUsdSnap  Decimal @default(0) @map("cumulative_deposit_usd_snap") @db.Decimal(32, 18)
+
+  bonusAmount        Decimal? @map("bonus_amount") @db.Decimal(32, 18) // 지급된 승급 보너스 (없으면 null/0)
+  // [Audit] 지급이 제한(Skip)된 보너스 금액 및 사유
+  skippedBonusAmount Decimal? @default(0) @map("skipped_bonus_amount") @db.Decimal(32, 18)
+  skippedReason      String?  @map("skipped_reason") // 예: "BONUS_RESTRICTED", "INACTIVE_USER"
 
   changedAt DateTime @default(now()) @map("changed_at")
   changeBy  String?  @map("change_by") // "SYSTEM", "admin_uid"
+
+  // [Audit] 변경을 유발한 원천 데이터 참조
+  referenceType TierHistoryReferenceType? @map("reference_type")
+  referenceId   BigInt?                   @map("reference_id") // RoundID, TXID, LogID 등
 
   user     User  @relation(fields: [userId], references: [id])
   fromTier Tier? @relation("HistoryFrom", fields: [fromTierId], references: [id])
   toTier   Tier  @relation("HistoryTo", fields: [toTierId], references: [id])
 
-  @@index([userId])
-  @@index([changedAt])
+  @@id([id, changedAt]) // 파티셔닝 대응을 위한 복합 PK
+  @@index([userId, changedAt(sort: Desc)])
   @@map("tier_history")
+}
+
+model TierEvaluationLog {
+  id         BigInt    @id @default(autoincrement())
+  startedAt  DateTime  @default(now()) @map("started_at")
+  finishedAt DateTime? @map("finished_at")
+
+  // 상태: RUNNING, SUCCESS, FAILED, PARTIAL
+  status EvaluationStatus @map("status")
+
+  // 통계 지표 (심층 분석용)
+  totalProcessedCount Int @default(0) @map("total_processed_count")
+  promotedCount       Int @default(0) @map("promoted_count") // 승급자
+  demotedCount        Int @default(0) @map("demoted_count") // 강등 확정자
+  gracePeriodCount    Int @default(0) @map("grace_period_count") // 강등 유예자
+  maintainedCount     Int @default(0) @map("maintained_count") // 등급 유지자
+  skippedBonusCount   Int @default(0) @map("skipped_bonus_count") // 보너스 지급 제한 인원
+
+  errorMessage String? @map("error_message") @db.Text
+
+  @@index([startedAt])
+  @@map("tier_evaluation_log")
+}
+
+// 1. 등급별 일별 요약 (마케팅 대시보드용)
+model TierDailyStats {
+  date   DateTime @db.Date
+  tierId BigInt   @map("tier_id")
+
+  snapshotUserCount Int     @default(0) @map("snapshot_user_count")
+  totalBonusPaidUsd Decimal @default(0) @map("total_bonus_paid_usd") @db.Decimal(32, 18)
+  totalRollingUsd   Decimal @default(0) @map("total_rolling_usd") @db.Decimal(32, 18)
+
+  promotedCount Int @default(0) @map("promoted_count")
+  demotedCount  Int @default(0) @map("demoted_count")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  tier Tier @relation(fields: [tierId], references: [id])
+
+  @@id([date, tierId])
+  @@map("tier_daily_stats")
+}
+
+// 2. 유저별 시계열 실적 (VIP 추이 분석용)
+model UserTierPeriodStats {
+  id     BigInt // 스노우플레이크 처리 권장
+  userId BigInt @map("user_id")
+  year   Int
+  month  Int
+  tierId BigInt @map("tier_id")
+
+  monthlyRollingUsd Decimal @default(0) @map("monthly_rolling_usd") @db.Decimal(32, 18)
+  monthlyDepositUsd Decimal @default(0) @map("monthly_deposit_usd") @db.Decimal(32, 18)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+  tier Tier @relation(fields: [tierId], references: [id])
+
+  @@id([id, createdAt]) // 파티셔닝 대응
+  @@unique([userId, year, month, createdAt]) // 유니크 제약도 파티션 키 포함 필수
+  @@index([userId, year, month])
+  @@map("user_tier_period_stats")
+}
+
+// 3. 강등 위험군 관리 (CRM 캠페인용)
+model TierDemotionWarning {
+  id            BigInt @id @default(autoincrement())
+  userId        BigInt @unique @map("user_id")
+  currentTierId BigInt @map("current_tier_id")
+  targetTierId  BigInt @map("target_tier_id") // 강등될 등급
+
+  evaluationDueAt DateTime @map("evaluation_due_at") // 강등 예정 시각
+  requiredRolling Decimal  @map("required_rolling") @db.Decimal(32, 18)
+  currentRolling  Decimal  @map("current_rolling") @db.Decimal(32, 18)
+
+  lastNotifiedAt DateTime? @map("last_notified_at") // 마지막 경고 알림 시점
+
+  user        User @relation(fields: [userId], references: [id])
+  currentTier Tier @relation("CurrentTier", fields: [currentTierId], references: [id])
+  targetTier  Tier @relation("TargetTier", fields: [targetTierId], references: [id])
+
+  @@index([evaluationDueAt])
+  @@map("tier_demotion_warning")
+}
+
+enum EvaluationStatus {
+  RUNNING
+  SUCCESS
+  FAILED
+  PARTIAL // 일부 유저 처리 중 오류 발생
+}
+
+enum TierHistoryReferenceType {
+  CASINO_ROUND // 카지노 게임 결과 (Round 테이블 ID)
+  WALLET_TRANSACTION // 입금/출금 등 거래 (Transaction 테이블 ID)
+  ADMIN_LOG // 관리자 수동 조작 (AdminActionLog 테이블 ID)
+  EVALUATION_LOG // 티어 순환 심사 배치 결과 (TierEvaluationLog 테이블 ID)
 }
 
 enum TierChangeType {
@@ -103,4 +276,16 @@ enum TierChangeType {
   UPGRADE // 승급
   DOWNGRADE // 강등
   MANUAL_UPDATE // 관리자 수동 변경
+}
+
+enum TierEvaluationCycle {
+  NONE // 평가 없음 (강등 없음, 평생 유지)
+  ROLLING_30_DAYS // 최근 30일 기준 순환 평가
+  ROLLING_90_DAYS // 최근 90일 기준 순환 평가
+}
+
+enum UserTierStatus {
+  ACTIVE // 정상 유지
+  GRACE // 강등 유예 (Grace Period)
+  LOCKED // 등급 고정 (Retention Lock / 관리자 수동 고정)
 }
