@@ -2,11 +2,11 @@ import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { UserTier } from '../domain/user-tier.entity';
 import {
     USER_TIER_REPOSITORY,
-    UserTierRepositoryPort,
+    type UserTierRepositoryPort,
 } from '../infrastructure/user-tier.repository.port';
 import {
     TIER_REPOSITORY,
-    TierRepositoryPort,
+    type TierRepositoryPort,
 } from '../infrastructure/tier.repository.port';
 import { Prisma } from '@prisma/client';
 import { UserTierStatus } from '@prisma/client';

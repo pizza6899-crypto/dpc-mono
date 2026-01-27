@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { TierConfig } from '../domain/tier-config.entity';
 import {
     TIER_CONFIG_REPOSITORY,
-    TierConfigRepositoryPort,
+    type TierConfigRepositoryPort,
 } from '../infrastructure/tier-config.repository.port';
 
 @Injectable()
