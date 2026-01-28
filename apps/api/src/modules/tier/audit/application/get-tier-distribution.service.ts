@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { UserTierRepositoryPort } from '../infrastructure/user-tier.repository.port';
+import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository.port';
 import { TierRepositoryPort } from '../../master/infrastructure/master.repository.port';
-import { TierDistributionResponseDto } from '../controllers/admin/dto/user-tier-admin.request.dto';
+import { TierDistributionResponseDto } from '../controllers/admin/dto/tier-stats-admin.response.dto';
 
 @Injectable()
 export class GetTierDistributionService {

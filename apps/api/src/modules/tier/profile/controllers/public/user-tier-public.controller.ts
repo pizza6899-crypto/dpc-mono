@@ -8,8 +8,8 @@ import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { SessionAuthGuard } from 'src/common/auth/guards/session-auth.guard';
 import { User } from 'src/modules/user/domain/model/user.entity';
 
-@ApiTags('Tier (User)')
-@Controller('v1/tiers')
+@ApiTags('User Tiers')
+@Controller('tiers')
 @ApiBearerAuth()
 @UseGuards(SessionAuthGuard)
 export class UserTierPublicController {

@@ -5,7 +5,6 @@ import { InitializeUserTierService } from './application/initialize-user-tier.se
 import { GetUserTierService } from './application/get-user-tier.service';
 import { GetUserTierDetailService } from './application/get-user-tier-detail.service';
 import { GetUserTierHistoryService } from './application/get-user-tier-history.service';
-import { GetTierDistributionService } from './application/get-tier-distribution.service';
 import { GetUsersNeedingEvaluationService } from './application/get-users-needing-evaluation.service';
 import { UpdateUserTierCustomService } from './application/update-user-tier-custom.service';
 import { ForceUpdateUserTierService } from './application/force-update-user-tier.service';
@@ -28,7 +27,6 @@ import { TierMasterModule } from '../master/tier-master.module';
         GetUserTierService,
         GetUserTierDetailService,
         GetUserTierHistoryService,
-        GetTierDistributionService,
         GetUsersNeedingEvaluationService,
         UpdateUserTierCustomService,
         ForceUpdateUserTierService,
@@ -40,7 +38,6 @@ import { TierMasterModule } from '../master/tier-master.module';
         GetUserTierService,
         GetUserTierDetailService,
         GetUserTierHistoryService,
-        GetTierDistributionService,
         GetUsersNeedingEvaluationService,
         UpdateUserTierCustomService,
         ForceUpdateUserTierService,

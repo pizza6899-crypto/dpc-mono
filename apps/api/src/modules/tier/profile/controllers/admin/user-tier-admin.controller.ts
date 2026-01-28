@@ -2,7 +2,6 @@ import { Controller, Get, Post, Patch, Body, Param, UseGuards } from '@nestjs/co
 import { ApiOkResponse, ApiOperation, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { GetUserTierDetailService } from '../../application/get-user-tier-detail.service';
 import { GetUserTierHistoryService } from '../../application/get-user-tier-history.service';
-import { GetTierDistributionService } from '../../application/get-tier-distribution.service';
 import { GetUsersNeedingEvaluationService } from '../../application/get-users-needing-evaluation.service';
 import { UpdateUserTierCustomService } from '../../application/update-user-tier-custom.service';
 import { ForceUpdateUserTierService } from '../../application/force-update-user-tier.service';
@@ -13,14 +12,17 @@ import { UserTierHistoryResponseDto } from '../public/dto/user-tier-history.resp
 import {
     UpdateUserTierCustomRequestDto,
     ForceUpdateTierRequestDto,
-    TierDistributionResponseDto
+    UsersNeedingEvaluationResponseDto
 } from './dto/user-tier-admin.request.dto';
 
 import { SessionAuthGuard } from 'src/common/auth/guards/session-auth.guard';
 import { Admin } from 'src/common/auth/decorators/roles.decorator';
 
-@ApiTags('Tier (Admin)')
-@Controller('v1/admin/tiers')
+import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
+import { LogType } from 'src/modules/audit-log/domain';
+
+@ApiTags('Admin User Tiers')
+@Controller('admin/user-tiers')
 @ApiBearerAuth()
 @UseGuards(SessionAuthGuard)
 @Admin()
@@ -28,42 +30,42 @@ export class UserTierAdminController {
     constructor(
         private readonly getUserTierDetailService: GetUserTierDetailService,
         private readonly getUserTierHistoryService: GetUserTierHistoryService,
-        private readonly getTierDistributionService: GetTierDistributionService,
         private readonly getUsersNeedingEvaluationService: GetUsersNeedingEvaluationService,
         private readonly updateUserTierCustomService: UpdateUserTierCustomService,
         private readonly forceUpdateUserTierService: ForceUpdateUserTierService,
         private readonly resetUserTierPerformanceService: ResetUserTierPerformanceService,
     ) { }
 
-    @Get('stats/distribution')
-    @ApiOperation({ summary: 'Get distribution of users across tiers' })
-    @ApiOkResponse({ type: [TierDistributionResponseDto] })
-    async getTierDistribution(): Promise<TierDistributionResponseDto[]> {
-        return this.getTierDistributionService.execute();
-    }
-
     @Get('users/needing-evaluation')
-    @ApiOperation({ summary: 'Get list of users needing tier evaluation' })
-    async getUsersNeedingEvaluation(): Promise<any[]> {
+    @ApiOperation({ summary: 'Get users needing evaluation / 심사 대상자 목록 조회' })
+    @ApiOkResponse({ type: [UsersNeedingEvaluationResponseDto], description: 'Successfully retrieved users needing evaluation / 심사 대상자 목록 조회 성공' })
+    async getUsersNeedingEvaluation(): Promise<UsersNeedingEvaluationResponseDto[]> {
         return this.getUsersNeedingEvaluationService.execute();
     }
 
     @Get('users/:userId')
-    @ApiOperation({ summary: 'Get detailed tier status of a specific user' })
-    @ApiOkResponse({ type: UserTierAdminResponseDto })
+    @ApiOperation({ summary: 'Get user tier details / 유저 티어 상세 정보 조회' })
+    @ApiOkResponse({ type: UserTierAdminResponseDto, description: 'Successfully retrieved user tier details / 유저 티어 상세 정보 조회 성공' })
     async getUserTierDetail(@Param('userId') userId: string): Promise<UserTierAdminResponseDto> {
         return this.getUserTierDetailService.execute(BigInt(userId));
     }
 
     @Get('users/:userId/history')
-    @ApiOperation({ summary: 'Get tier change history of a specific user' })
-    @ApiOkResponse({ type: [UserTierHistoryResponseDto] })
+    @ApiOperation({ summary: 'Get user tier history / 유저 티어 변경 이력 조회' })
+    @ApiOkResponse({ type: [UserTierHistoryResponseDto], description: 'Successfully retrieved user tier history / 유저 티어 변경 이력 조회 성공' })
     async getUserTierHistory(@Param('userId') userId: string): Promise<UserTierHistoryResponseDto[]> {
         return this.getUserTierHistoryService.execute(BigInt(userId));
     }
 
     @Patch('users/:userId/custom')
-    @ApiOperation({ summary: 'Update custom tier settings for a user' })
+    @ApiOperation({ summary: 'Update custom tier benefits / 개별 티어 혜택 수정' })
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'TIER',
+        action: 'UPDATE_CUSTOM_BENEFITS',
+        extractMetadata: (req) => ({ userId: req.params.userId, body: req.body })
+    })
+    @ApiOkResponse({ description: 'Successfully updated custom benefits / 개별 혜택 수정 성공' })
     async updateUserTierCustom(
         @Param('userId') userId: string,
         @Body() dto: UpdateUserTierCustomRequestDto
@@ -72,7 +74,14 @@ export class UserTierAdminController {
     }
 
     @Post('users/:userId/force-update')
-    @ApiOperation({ summary: 'Forcefully update user tier' })
+    @ApiOperation({ summary: 'Force update user tier / 티어 강제 업데이트' })
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'TIER',
+        action: 'FORCE_UPDATE_TIER',
+        extractMetadata: (req) => ({ userId: req.params.userId, body: req.body })
+    })
+    @ApiOkResponse({ description: 'Successfully force updated user tier / 티어 강제 업데이트 성공' })
     async forceUpdateUserTier(
         @Param('userId') userId: string,
         @Body() dto: ForceUpdateTierRequestDto
@@ -81,7 +90,14 @@ export class UserTierAdminController {
     }
 
     @Post('users/:userId/reset')
-    @ApiOperation({ summary: 'Reset user tier performance for current period' })
+    @ApiOperation({ summary: 'Reset performance for current period / 현재 주기 실적 초기화' })
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'TIER',
+        action: 'RESET_PERFORMANCE',
+        extractMetadata: (req) => ({ userId: req.params.userId })
+    })
+    @ApiOkResponse({ description: 'Successfully reset performance / 실적 초기화 성공' })
     async resetUserTierPerformance(@Param('userId') userId: string): Promise<void> {
         return this.resetUserTierPerformanceService.execute(BigInt(userId));
     }

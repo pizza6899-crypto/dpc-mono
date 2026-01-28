@@ -17,14 +17,16 @@ description: NestJS 컨트롤러 구현 표준 (API 디자인, Sqids 난독화, 
 
 ## ✅ 필수 구현 규칙
 
-### 1. 사용자(User) vs 관리자(Admin) API 분리
-*   **User API**: 
-    *   경로: `/api/v1/{module-name}/...`
+### 1. 사용자(User) vs 관리자(Admin) vs 공용(Public) API 분리
+*   **User API (Authenticated)**: 
+    *   경로: `/{resource}` (예: `/wallet/balance`, `/tiers/my`)
     *   **ID 보안**: 외부 노출 ID는 반드시 `SqidsService`를 통해 난독화.
-*   **Admin API**:
-    *   경로: `/api/v1/admin/{module-name}/...`
+*   **Admin API (Backoffice)**:
+    *   경로: `/admin/{resource}` (예: `/admin/users`, `/admin/tiers`)
     *   **ID 정책**: 내부 운영용이므로 **Raw ID (BigInt -> string)** 사용.
     *   **권한**: `@Admin()` 또는 `@RequireRoles()` 데코레이터 필수.
+*   **Public API (Unauthenticated)**:
+    *   경로: `/public/{resource}` (예: `/public/tiers`, `/public/notices`)
 
 ### 2. ID 난독화 (Sqids)
 사용자용 API에서 ID를 노출하거나 전달받을 때 필수 적용합니다.
@@ -38,13 +40,27 @@ description: NestJS 컨트롤러 구현 표준 (API 디자인, Sqids 난독화, 
 *   **Metadata**: `extractMetadata`를 구현하여 변경된 대상의 ID나 주요 정보를 반드시 기록합니다.
 
 ### 4. Swagger & API 문서화
-*   **@ApiTags**: **관객/범위 접두사 필수 사용**. `Admin`, `Public`, `User` 중 하나로 시작해야 합니다 (예: `@ApiTags('Admin Tiers')`, `@ApiTags('User Profile')`).
+*   **@ApiTags**: **관객/범위 접두사 필수 사용**. `Admin`, `Public`, `User` 중 하나로 시작해야 합니다 (예: `@ApiTags('Admin User Tiers')`, `@ApiTags('User Tiers')`).
 *   **@ApiOperation**: `summary` 및 `description`은 반드시 **'English / 한글 설명'** 형식을 사용하여 병기 처리합니다. (예: `summary: 'Get Profile / 프로필 조회'`)
 *   **응답 표준**: `@ApiStandardResponse()` 및 `@ApiPaginatedResponse()` 사용.
 
 ### 5. 페이지네이션 (Pagination)
 *   **List Queries**: 목록 반환 시 `@Paginated()` 데코레이터 사용.
 *   **응답 타입**: `PaginatedData<T>` 형식을 준수하여 `{ data, total, page, limit }` 구조로 반환.
+
+### 6. DTO(Data Transfer Object) 표준
+프로젝트의 일관된 데이터 교환을 위해 형식을 엄격히 준수합니다.
+
+#### 6-1. Request DTO (Validation)
+*   **Decorator**: `IsString`, `IsNumber`, `IsOptional`, `IsEnum` 등 `class-validator`를 반드시 사용.
+*   **Swagger**: 모든 필드에 `@ApiProperty()` 설정. 필요 시 `example`, `description`, `nullable`, `enum` 명시.
+*   **Transform**: 중첩된 객체는 `@Type()`과 `ValidateNested()` 사용.
+
+#### 6-2. Response DTO (Serialization)
+*   **ID 변환**: `BigInt`는 반드시 `.toString()`을 통해 **string**으로 변환하여 반환.
+*   **Decimal 변환**: 금액 필드(`Decimal`)는 `.toString()` 또는 `.toNumber()` (정밀도 필요 시 string 권장)로 변환.
+*   **Constructor Mapping**: 엔티티에서 DTO로의 매핑을 위해 생성자(Constructor) 패턴 사용 권장.
+*   **Swagger**: 필수 필드는 `@ApiProperty()`, 선택 필드는 `@ApiProperty({ nullable: true })` 명시.
 
 ---
 

@@ -34,7 +34,10 @@ export class ForceUpdateTierRequestDto {
     reason: string;
 }
 
-export class TierDistributionResponseDto {
+export class UsersNeedingEvaluationResponseDto {
+    @ApiProperty()
+    userId: string;
+
     @ApiProperty()
     tierId: string;
 
@@ -42,5 +45,11 @@ export class TierDistributionResponseDto {
     tierName: string;
 
     @ApiProperty()
-    count: number;
+    nextEvaluationAt: Date | null;
+
+    @ApiProperty()
+    currentPeriodRollingUsd: string;
+
+    @ApiProperty()
+    maintenanceRollingUsd: string;
 }

@@ -105,19 +105,34 @@ export class UserTier {
     }
 
     /**
-     * 주기적 심사 완료 후 실적을 리셋하고 다음 심사일을 설정합니다.
+     * 주기적 심사 완료 후 실적을 리셋하고 상태를 ACTIVE로 복구합니다. (등급 유지 시 호출)
      */
     resetPeriodPerformance(evaluationCycleDays: number): void {
         this.currentPeriodRollingUsd = new Prisma.Decimal(0);
         this.currentPeriodDepositUsd = new Prisma.Decimal(0);
         this.lastEvaluationAt = new Date();
 
-        const nextDate = new Date();
-        nextDate.setUTCDate(nextDate.getUTCDate() + evaluationCycleDays);
-        this.nextEvaluationAt = nextDate;
+        // 상태 복구 및 경고 초기화
+        this.status = UserTierStatus.ACTIVE;
+        this.graceEndsAt = null;
+        this.demotionWarningIssuedAt = null;
+        this.demotionWarningTargetTierId = null;
+
+        if (evaluationCycleDays > 0) {
+            const nextDate = new Date();
+            nextDate.setUTCDate(nextDate.getUTCDate() + evaluationCycleDays);
+            this.nextEvaluationAt = nextDate;
+        } else {
+            this.nextEvaluationAt = null;
+        }
     }
 
-    static fromPersistence(data: Prisma.UserTierGetPayload<{ include: { tier: { include: { translations: true } } } }>): UserTier {
+    static fromPersistence(data: Prisma.UserTierGetPayload<{
+        include: {
+            tier: { include: { translations: true } },
+            demotionWarningTargetTier: { include: { translations: true } }
+        }
+    }>): UserTier {
         return new UserTier(
             data.id, data.userId, data.tierId,
             data.totalEffectiveRollingUsd, data.currentPeriodRollingUsd, data.currentPeriodDepositUsd, data.lastEvaluationAt,
@@ -128,7 +143,7 @@ export class UserTier {
             data.isBonusEligible, data.nextEvaluationAt, data.note,
             data.demotionWarningIssuedAt, data.demotionWarningTargetTierId,
             data.tier ? Tier.fromPersistence(data.tier) : undefined,
-            (data as any).demotionWarningTargetTier ? Tier.fromPersistence((data as any).demotionWarningTargetTier) : undefined
+            data.demotionWarningTargetTier ? Tier.fromPersistence(data.demotionWarningTargetTier) : undefined
         );
     }
 }

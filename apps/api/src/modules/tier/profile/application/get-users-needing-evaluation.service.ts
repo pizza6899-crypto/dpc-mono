@@ -8,13 +8,15 @@ import { GetUserTierDetailService } from './get-user-tier-detail.service'; // Re
 // Actually GetUserTierDetailService maps one. Let's make a mapper or just map in controller. 
 // Mapping services is cleaner. But for now let's map here.
 
+import { UsersNeedingEvaluationResponseDto } from '../controllers/admin/dto/user-tier-admin.request.dto';
+
 @Injectable()
 export class GetUsersNeedingEvaluationService {
     constructor(
         private readonly userTierRepository: UserTierRepositoryPort,
     ) { }
 
-    async execute(): Promise<any[]> { // Return simplified list or full DTO?
+    async execute(): Promise<UsersNeedingEvaluationResponseDto[]> {
         // Needing evaluation implies admin wants to check *who* needs it.
         const now = new Date();
         const users = await this.userTierRepository.findUsersNeedingEvaluation(now);
