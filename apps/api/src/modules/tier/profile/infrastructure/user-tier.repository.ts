@@ -14,7 +14,10 @@ export class UserTierRepository implements UserTierRepositoryPort {
     async findByUserId(userId: bigint): Promise<UserTier | null> {
         const record = await this.tx.userTier.findUnique({
             where: { userId },
-            include: { tier: { include: { translations: true } } }
+            include: {
+                tier: { include: { translations: true } },
+                demotionWarningTargetTier: { include: { translations: true } }
+            }
         });
         return record ? UserTier.fromPersistence(record) : null;
     }
@@ -50,7 +53,10 @@ export class UserTierRepository implements UserTierRepositoryPort {
             where: { userId: userTier.userId },
             create: { userId: userTier.userId, ...data },
             update: data,
-            include: { tier: { include: { translations: true } } }
+            include: {
+                tier: { include: { translations: true } },
+                demotionWarningTargetTier: { include: { translations: true } }
+            }
         });
 
         return UserTier.fromPersistence(record);
@@ -94,7 +100,10 @@ export class UserTierRepository implements UserTierRepositoryPort {
                     lte: now
                 }
             },
-            include: { tier: { include: { translations: true } } }
+            include: {
+                tier: { include: { translations: true } },
+                demotionWarningTargetTier: { include: { translations: true } }
+            }
         });
 
         return records.map(UserTier.fromPersistence);

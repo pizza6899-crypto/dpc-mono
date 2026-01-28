@@ -75,6 +75,15 @@ export class UserTierAdminResponseDto {
     @ApiProperty({ nullable: true })
     note: string | null;
 
+    @ApiProperty({ nullable: true })
+    demotionWarningIssuedAt: Date | null;
+
+    @ApiProperty({ nullable: true })
+    demotionWarningTargetTierId: string | null;
+
+    @ApiProperty({ nullable: true })
+    demotionWarningTargetTierName: string | null;
+
     @ApiProperty()
     currentBenefits: EffectiveBenefitsDto;
 }

@@ -29,7 +29,6 @@ export class UserTier {
         public graceEndsAt: Date | null,
         public lastTierChangedAt: Date,
         // Overrides
-        // Overrides
         public customCompRate: Prisma.Decimal | null,
         public customLossbackRate: Prisma.Decimal | null,
         public customRakebackRate: Prisma.Decimal | null,
@@ -39,7 +38,7 @@ export class UserTier {
         public isCustomDedicatedManager: boolean | null,
         public isCustomVipEventEligible: boolean | null,
         // Audit
-        public readonly isBonusEligible: boolean,
+        public isBonusEligible: boolean,
         public nextEvaluationAt: Date | null,
         public note: string | null,
         // Warning
@@ -47,6 +46,7 @@ export class UserTier {
         public demotionWarningTargetTierId: bigint | null,
         // Joined Data
         public readonly tier?: Tier,
+        public readonly demotionWarningTargetTier?: Tier,
     ) { }
 
     getEffectiveBenefits(baseTier?: Tier): EffectiveBenefits {
@@ -127,7 +127,8 @@ export class UserTier {
             data.isCustomDedicatedManager, data.isCustomVipEventEligible,
             data.isBonusEligible, data.nextEvaluationAt, data.note,
             data.demotionWarningIssuedAt, data.demotionWarningTargetTierId,
-            data.tier ? Tier.fromPersistence(data.tier) : undefined
+            data.tier ? Tier.fromPersistence(data.tier) : undefined,
+            (data as any).demotionWarningTargetTier ? Tier.fromPersistence((data as any).demotionWarningTargetTier) : undefined
         );
     }
 }

@@ -41,6 +41,9 @@ export class GetUserTierDetailService {
             isBonusEligible: userTier.isBonusEligible,
             nextEvaluationAt: userTier.nextEvaluationAt,
             note: userTier.note,
+            demotionWarningIssuedAt: userTier.demotionWarningIssuedAt,
+            demotionWarningTargetTierId: userTier.demotionWarningTargetTierId?.toString() ?? null,
+            demotionWarningTargetTierName: userTier.demotionWarningTargetTier?.getName() ?? null,
             currentBenefits: {
                 compRate: benefits.compRate.toString(),
                 lossbackRate: benefits.lossbackRate.toString(),
