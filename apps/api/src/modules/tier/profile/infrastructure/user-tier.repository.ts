@@ -5,6 +5,7 @@ import { UserTier } from '../domain/user-tier.entity';
 export abstract class UserTierRepositoryPort {
     abstract findByUserId(userId: bigint): Promise<UserTier | null>;
     abstract save(userTier: UserTier): Promise<UserTier>;
+    abstract countGroupByTierId(): Promise<{ tierId: bigint; count: number }[]>;
 }
 
 @Injectable()
@@ -50,5 +51,17 @@ export class UserTierRepository implements UserTierRepositoryPort {
         });
 
         return UserTier.fromPersistence(record);
+    }
+
+    async countGroupByTierId(): Promise<{ tierId: bigint; count: number }[]> {
+        const groups = await this.prisma.userTier.groupBy({
+            by: ['tierId'],
+            _count: { userId: true }
+        });
+
+        return groups.map(g => ({
+            tierId: g.tierId,
+            count: g._count.userId
+        }));
     }
 }

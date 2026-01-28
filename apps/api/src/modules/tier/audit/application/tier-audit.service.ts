@@ -3,7 +3,7 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { TierAuditRepositoryPort, CreateTierHistoryProps, UpdateEvaluationLogMetrics, UpdateTierStatsProps } from '../infrastructure/audit.repository.port';
 import { EvaluationStatus, Prisma } from '@prisma/client';
-import { TIER_AUDIT_QUEUE_NAME, TierAuditJobType, RecordStatsJobData, RecordPeriodStatsJobData, RecordDemotionWarningJobData } from '../infrastructure/tier-audit.constants';
+import { TIER_AUDIT_QUEUE_NAME, TierAuditJobType, RecordTierSnapshotJobData, RecordUserMonthlyStatsJobData, RecordDemotionWarningJobData } from '../infrastructure/tier-audit.constants';
 import { UserTierPeriodStats } from '../domain/tier-stats.entity';
 import { TierDemotionWarning } from '../domain/tier-demotion-warning.entity';
 import { TierEvaluationLog } from '../domain/tier-evaluation-log.entity';
@@ -34,6 +34,7 @@ export class TierAuditService {
 
     /**
      * 배치 심사 로그를 시작합니다.
+     * (주로 강등 및 등급 유지 심사를 위한 배치 작업입니다. 승급은 실시간으로 처리됩니다.)
      */
     async startEvaluationLog(): Promise<TierEvaluationLog> {
         return await this.auditRepository.createEvaluationLog(EvaluationStatus.RUNNING);
@@ -61,8 +62,8 @@ export class TierAuditService {
         promotedCount?: number;
         demotedCount?: number;
     }): Promise<void> {
-        await this.auditQueue.add(TierAuditJobType.RECORD_STATS, {
-            type: TierAuditJobType.RECORD_STATS,
+        await this.auditQueue.add(TierAuditJobType.RECORD_TIER_SNAPSHOT, {
+            type: TierAuditJobType.RECORD_TIER_SNAPSHOT,
             data: {
                 timestamp,
                 tierId: tierId.toString(),
@@ -85,8 +86,8 @@ export class TierAuditService {
         monthlyRollingUsd: Prisma.Decimal;
         monthlyDepositUsd: Prisma.Decimal;
     }): Promise<void> {
-        await this.auditQueue.add(TierAuditJobType.RECORD_PERIOD_STATS, {
-            type: TierAuditJobType.RECORD_PERIOD_STATS,
+        await this.auditQueue.add(TierAuditJobType.RECORD_USER_MONTHLY_STATS, {
+            type: TierAuditJobType.RECORD_USER_MONTHLY_STATS,
             data: {
                 userId: userId.toString(),
                 year: props.year,
@@ -126,7 +127,7 @@ export class TierAuditService {
     /**
      * [Internal] BullMQ 프로세서에서 호출하는 실제 통계 저장 로직입니다.
      */
-    async handleRecordStats(data: RecordStatsJobData): Promise<void> {
+    async handleRecordStats(data: RecordTierSnapshotJobData): Promise<void> {
         const { timestamp, tierId, metrics } = data;
 
         // 시간 단위(Hourly) 정규화
@@ -145,7 +146,7 @@ export class TierAuditService {
     /**
      * [Internal] BullMQ 프로세서에서 호출하는 실제 월별 실적 저장 로직입니다.
      */
-    async handleRecordUserPeriodStats(data: RecordPeriodStatsJobData): Promise<void> {
+    async handleRecordUserPeriodStats(data: RecordUserMonthlyStatsJobData): Promise<void> {
         const stats = new UserTierPeriodStats(
             0n,
             BigInt(data.userId),
