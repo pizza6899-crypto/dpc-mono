@@ -58,12 +58,12 @@ model Tier {
 
   updatedByUser User? @relation("TierUpdatedBy", fields: [updatedBy], references: [id])
 
-  userTiers           UserTier[]
-  translations        TierTranslation[]
-  historyFrom         TierHistory[]         @relation("HistoryFrom")
-  historyTo           TierHistory[]         @relation("HistoryTo")
-  stats               TierStats[]
-  periodStats         UserTierPeriodStats[]
+  userTiers    UserTier[]
+  translations TierTranslation[]
+  historyFrom  TierHistory[]     @relation("HistoryFrom")
+  historyTo    TierHistory[]     @relation("HistoryTo")
+  stats        TierStats[]
+
   demotionCurrentWarn TierDemotionWarning[] @relation("CurrentTier")
   demotionTargetWarn  TierDemotionWarning[] @relation("TargetTier")
 
@@ -94,6 +94,7 @@ model UserTier {
   // 상태 데이터
   totalEffectiveRollingUsd Decimal  @default(0) @map("total_effective_rolling_usd") @db.Decimal(32, 18)
   currentPeriodRollingUsd  Decimal  @default(0) @map("current_period_rolling_usd") @db.Decimal(32, 18)
+  currentPeriodDepositUsd  Decimal  @default(0) @map("current_period_deposit_usd") @db.Decimal(32, 18) // [추가] 이번 주기 누적 입금액 (승급 심사용)
   lastEvaluationAt         DateTime @default(now()) @map("last_evaluation_at")
 
   // 승급/강등 제어
@@ -101,6 +102,7 @@ model UserTier {
   // - 강등 확정 시: Priority 산술 연산(-1)이 아닌, 현재 등급보다 낮은 Priority 중에서 '가장 높은 등급'을 찾아 이동 (Next Lower Tier)
   // - 평가 주기 리셋: 강등과 동시에 lastEvaluationAt을 현재(Now)로 갱신하여 즉시 재강등 방지 및 활동 기회 부여
   highestPromotedPriority Int            @default(0) @map("highest_promoted_priority") // 보너스 중복 지급 방지용
+  lastBonusReceivedAt     DateTime?      @map("last_bonus_received_at") // [추가] 마지막 승급 보너스 수령 시점 (안전장치)
   status                  UserTierStatus @default(ACTIVE) @map("status") // ACTIVE, GRACE, LOCKED
   graceEndsAt             DateTime?      @map("grace_ends_at") // 강등 유예 종료 시점
   lastTierChangedAt       DateTime       @default(now()) @map("last_tier_changed_at")
@@ -224,28 +226,6 @@ model TierStats {
 
   @@id([timestamp, tierId])
   @@map("tier_stats")
-}
-
-// 2. 유저별 시계열 실적 (VIP 추이 분석용)
-model UserTierPeriodStats {
-  id     BigInt // 스노우플레이크 처리 권장
-  userId BigInt @map("user_id")
-  year   Int
-  month  Int
-  tierId BigInt @map("tier_id")
-
-  monthlyRollingUsd Decimal @default(0) @map("monthly_rolling_usd") @db.Decimal(32, 18)
-  monthlyDepositUsd Decimal @default(0) @map("monthly_deposit_usd") @db.Decimal(32, 18)
-
-  createdAt DateTime @default(now()) @map("created_at")
-
-  user User @relation(fields: [userId], references: [id])
-  tier Tier @relation(fields: [tierId], references: [id])
-
-  @@id([id, createdAt]) // 파티셔닝 대응
-  @@unique([userId, year, month, createdAt]) // 유니크 제약도 파티션 키 포함 필수
-  @@index([userId, year, month])
-  @@map("user_tier_period_stats")
 }
 
 // 3. 강등 위험군 관리 (CRM 캠페인용)

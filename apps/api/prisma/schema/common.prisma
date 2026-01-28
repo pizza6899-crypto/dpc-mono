@@ -69,10 +69,10 @@ model User {
   alerts                 Alert[]
   notificationLogs       NotificationLog[]
   casinoGameRounds       CasinoGameRound[]
-  userTierPeriodStats    UserTierPeriodStats[]
-  tierDemotionWarnings   TierDemotionWarning[]
-  tierConfigsUpdated     TierConfig[]            @relation("TierConfigUpdatedBy")
-  tiersUpdated           Tier[]                  @relation("TierUpdatedBy")
+
+  tierDemotionWarnings TierDemotionWarning[]
+  tierConfigsUpdated   TierConfig[]          @relation("TierConfigUpdatedBy")
+  tiersUpdated         Tier[]                @relation("TierUpdatedBy")
 
   @@map("users")
 }
