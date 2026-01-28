@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository';
+import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository.port';
 import { TierRepositoryPort } from '../../master/infrastructure/master.repository.port';
 import { PromotionPolicy } from '../domain/promotion.policy';
 import { PromotionService } from './promotion.service';

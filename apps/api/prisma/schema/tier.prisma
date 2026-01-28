@@ -62,10 +62,10 @@ model Tier {
   translations TierTranslation[]
   historyFrom  TierHistory[]     @relation("HistoryFrom")
   historyTo    TierHistory[]     @relation("HistoryTo")
-  stats        TierStats[]
 
-  demotionCurrentWarn TierDemotionWarning[] @relation("CurrentTier")
-  demotionTargetWarn  TierDemotionWarning[] @relation("TargetTier")
+  stats TierStats[]
+
+  demotionTargetUserTiers UserTier[] @relation("DemotionTarget")
 
   @@index([priority])
   @@map("tier")
@@ -129,9 +129,15 @@ model UserTier {
 
   nextEvaluationAt DateTime? @map("next_evaluation_at") // 다음 심사 예정 시각 (배치 최적화용)
 
-  user User @relation(fields: [userId], references: [id])
-  tier Tier @relation(fields: [tierId], references: [id])
+  // --- Demotion Warning State ---
+  demotionWarningIssuedAt     DateTime? @map("demotion_warning_issued_at")
+  demotionWarningTargetTierId BigInt?   @map("demotion_warning_target_tier_id")
 
+  user                      User  @relation(fields: [userId], references: [id])
+  tier                      Tier  @relation(fields: [tierId], references: [id])
+  demotionWarningTargetTier Tier? @relation("DemotionTarget", fields: [demotionWarningTargetTierId], references: [id])
+
+  @@index([userId])
   @@index([tierId])
   @@index([nextEvaluationAt, status])
   @@map("user_tier")
@@ -228,27 +234,6 @@ model TierStats {
 
   @@id([timestamp, tierId])
   @@map("tier_stats")
-}
-
-// 3. 강등 위험군 관리 (CRM 캠페인용)
-model TierDemotionWarning {
-  id            BigInt @id @default(autoincrement())
-  userId        BigInt @unique @map("user_id")
-  currentTierId BigInt @map("current_tier_id")
-  targetTierId  BigInt @map("target_tier_id") // 강등될 등급
-
-  evaluationDueAt DateTime @map("evaluation_due_at") // 강등 예정 시각
-  requiredRolling Decimal  @map("required_rolling") @db.Decimal(32, 18)
-  currentRolling  Decimal  @map("current_rolling") @db.Decimal(32, 18)
-
-  lastNotifiedAt DateTime? @map("last_notified_at") // 마지막 경고 알림 시점
-
-  user        User @relation(fields: [userId], references: [id])
-  currentTier Tier @relation("CurrentTier", fields: [currentTierId], references: [id])
-  targetTier  Tier @relation("TargetTier", fields: [targetTierId], references: [id])
-
-  @@index([evaluationDueAt])
-  @@map("tier_demotion_warning")
 }
 
 enum EvaluationStatus {

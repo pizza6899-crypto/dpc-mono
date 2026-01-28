@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { BullModule } from '@nestjs/bullmq';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
@@ -18,7 +18,7 @@ import { TierMasterModule } from '../master/tier-master.module';
         BullModule.registerQueue({
             name: TIER_AUDIT_QUEUE_NAME,
         }),
-        TierProfileModule,
+        forwardRef(() => TierProfileModule),
         TierMasterModule,
     ],
     providers: [

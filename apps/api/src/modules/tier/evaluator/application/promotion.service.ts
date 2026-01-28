@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository';
+import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository.port';
 import { TierAuditService } from '../../audit/application/tier-audit.service';
 import { Tier } from '../../master/domain/tier.entity';
 import { TierChangeType } from '@prisma/client';

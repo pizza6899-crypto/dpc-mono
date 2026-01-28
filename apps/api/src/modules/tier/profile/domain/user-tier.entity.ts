@@ -29,14 +29,15 @@ export class UserTier {
         public graceEndsAt: Date | null,
         public lastTierChangedAt: Date,
         // Overrides
-        public readonly customCompRate: Prisma.Decimal | null,
-        public readonly customLossbackRate: Prisma.Decimal | null,
-        public readonly customRakebackRate: Prisma.Decimal | null,
-        public readonly customReloadBonusRate: Prisma.Decimal | null,
-        public readonly customWithdrawalLimitUsd: Prisma.Decimal | null,
-        public readonly isCustomWithdrawalUnlimited: boolean | null,
-        public readonly isCustomDedicatedManager: boolean | null,
-        public readonly isCustomVipEventEligible: boolean | null,
+        // Overrides
+        public customCompRate: Prisma.Decimal | null,
+        public customLossbackRate: Prisma.Decimal | null,
+        public customRakebackRate: Prisma.Decimal | null,
+        public customReloadBonusRate: Prisma.Decimal | null,
+        public customWithdrawalLimitUsd: Prisma.Decimal | null,
+        public isCustomWithdrawalUnlimited: boolean | null,
+        public isCustomDedicatedManager: boolean | null,
+        public isCustomVipEventEligible: boolean | null,
         // Audit
         public readonly isBonusEligible: boolean,
         public nextEvaluationAt: Date | null,
