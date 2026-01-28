@@ -118,5 +118,22 @@ export async function seedTiers(prisma: PrismaClient) {
         }
     }
 
-    console.log('✅ 티어 시딩이 완료되었습니다.');
+    // 3. 글로벌 티어 설정 (TierConfig) 시딩
+    // id=1 인 단일 레코드 패턴을 유지하기 위해 1로 강제하거나 upsert 처리
+    await prisma.tierConfig.upsert({
+        where: { id: 1n },
+        update: {
+            isPromotionEnabled: true,
+            isDowngradeEnabled: false,
+            evaluationHourUtc: 20, // 매일 20:00 UTC(한국 시간 새벽 05:00)에 심사 (가장 트래픽이 적은 시간대)
+        },
+        create: {
+            id: 1n,
+            isPromotionEnabled: true,
+            isDowngradeEnabled: false,
+            evaluationHourUtc: 20,
+        },
+    });
+
+    console.log('✅ 티어 시딩이 완료되었습니다. (글로벌 설정 포함)');
 }

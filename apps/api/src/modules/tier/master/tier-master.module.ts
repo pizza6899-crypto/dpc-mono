@@ -1,15 +1,19 @@
 import { Module, Global } from '@nestjs/common';
-import { TierRepositoryPort, TierConfigRepositoryPort } from './infrastructure/master.repository.port';
+import { TierRepositoryPort, TierSettingsRepositoryPort } from './infrastructure/master.repository.port';
 import { TierRepository } from './infrastructure/tier.repository';
-import { TierConfigRepository } from './infrastructure/tier-config.repository';
+import { TierSettingsRepository } from './infrastructure/tier-settings.repository';
+import { TierSettingsService } from './application/tier-settings.service';
+import { TierSettingsAdminController } from './controllers/admin/tier-settings-admin.controller';
 
 @Global()
 @Module({
     imports: [],
+    controllers: [TierSettingsAdminController],
     providers: [
+        TierSettingsService,
         { provide: TierRepositoryPort, useClass: TierRepository },
-        { provide: TierConfigRepositoryPort, useClass: TierConfigRepository },
+        { provide: TierSettingsRepositoryPort, useClass: TierSettingsRepository },
     ],
-    exports: [TierRepositoryPort, TierConfigRepositoryPort],
+    exports: [TierRepositoryPort, TierSettingsRepositoryPort, TierSettingsService],
 })
 export class TierMasterModule { }

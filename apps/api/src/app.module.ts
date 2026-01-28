@@ -32,6 +32,7 @@ import { NotificationModule } from './modules/notification/notification.module';
 import { SocketModule } from './modules/socket/socket.module';
 import { StorageModule } from './infrastructure/storage/storage.module';
 import { FileModule } from './modules/file/file.module';
+import { TierModule } from './modules/tier/tier.module';
 
 @Module({
   imports: [
@@ -75,6 +76,7 @@ import { FileModule } from './modules/file/file.module';
     SocketModule,
     StorageModule,
     FileModule,
+    TierModule,
   ],
   providers: [
     Reflector,

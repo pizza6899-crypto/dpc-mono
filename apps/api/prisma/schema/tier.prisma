@@ -10,7 +10,9 @@ model TierConfig {
 
   // [Audit] 누가 언제 바꿨나
   updatedAt DateTime @updatedAt @map("updated_at")
-  updatedBy String?  @map("updated_by") // 변경한 관리자 ID
+  updatedBy BigInt?  @map("updated_by") // 변경한 관리자 ID
+
+  updatedByUser User? @relation("TierConfigUpdatedBy", fields: [updatedBy], references: [id])
 
   @@map("tier_config")
 }

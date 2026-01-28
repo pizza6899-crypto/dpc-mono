@@ -71,6 +71,7 @@ model User {
   casinoGameRounds       CasinoGameRound[]
   userTierPeriodStats    UserTierPeriodStats[]
   tierDemotionWarnings   TierDemotionWarning[]
+  tierConfigsUpdated     TierConfig[]            @relation("TierConfigUpdatedBy")
 
   @@map("users")
 }

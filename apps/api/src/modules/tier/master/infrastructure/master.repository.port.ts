@@ -1,5 +1,5 @@
 import { Tier } from '../domain/tier.entity';
-import { TierConfig } from '../domain/tier-config.entity';
+import { TierSettings } from '../domain/tier-settings.entity';
 
 export abstract class TierRepositoryPort {
     abstract findAll(): Promise<Tier[]>;
@@ -8,14 +8,14 @@ export abstract class TierRepositoryPort {
     abstract findByCode(code: string): Promise<Tier | null>;
 }
 
-export interface UpdateTierConfigProps {
+export interface UpdateTierSettingsProps {
     isPromotionEnabled?: boolean;
     isDowngradeEnabled?: boolean;
     evaluationHourUtc?: number;
-    updatedBy: string;
+    updatedBy: bigint;
 }
 
-export abstract class TierConfigRepositoryPort {
-    abstract find(): Promise<TierConfig | null>;
-    abstract update(props: UpdateTierConfigProps): Promise<TierConfig>;
+export abstract class TierSettingsRepositoryPort {
+    abstract find(): Promise<TierSettings | null>;
+    abstract update(props: UpdateTierSettingsProps): Promise<TierSettings>;
 }
