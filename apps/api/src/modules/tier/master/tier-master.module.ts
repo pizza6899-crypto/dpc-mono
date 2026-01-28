@@ -1,6 +1,7 @@
 import { Module, Global } from '@nestjs/common';
 import { TierRepositoryPort, TierConfigRepositoryPort } from './infrastructure/master.repository.port';
-import { TierRepository, TierConfigRepository } from './infrastructure/tier-master.repository';
+import { TierRepository } from './infrastructure/tier.repository';
+import { TierConfigRepository } from './infrastructure/tier-config.repository';
 
 @Global()
 @Module({

@@ -29,12 +29,12 @@ export class Tier {
         public readonly description: string | null = null,
     ) { }
 
-    static fromPersistence(data: any): Tier {
+    static fromPersistence(data: Prisma.TierGetPayload<{ include: { translations: true } }>): Tier {
         const translation = data.translations?.[0];
         return new Tier(
             data.id, data.priority, data.code,
             data.requirementUsd, data.requirementDepositUsd, data.maintenanceRollingUsd,
-            data.evaluationCycle as TierEvaluationCycle,
+            data.evaluationCycle,
             data.levelUpBonusUsd, data.levelUpBonusWageringMultiplier,
             data.compRate, data.lossbackRate, data.rakebackRate, data.reloadBonusRate,
             data.dailyWithdrawalLimitUsd, data.isWithdrawalUnlimited,

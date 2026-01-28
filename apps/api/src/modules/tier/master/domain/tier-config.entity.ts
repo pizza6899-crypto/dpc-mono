@@ -1,3 +1,5 @@
+import { Prisma } from '@prisma/client';
+
 export class TierConfig {
     constructor(
         public readonly id: bigint,
@@ -8,7 +10,7 @@ export class TierConfig {
         public readonly updatedBy: string | null,
     ) { }
 
-    static fromPersistence(data: any): TierConfig {
+    static fromPersistence(data: Prisma.TierConfigGetPayload<object>): TierConfig {
         return new TierConfig(
             data.id,
             data.isPromotionEnabled,
