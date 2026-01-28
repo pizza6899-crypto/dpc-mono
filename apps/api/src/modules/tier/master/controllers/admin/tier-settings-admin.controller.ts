@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Put } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Put, Req } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserRoleType } from '@prisma/client';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
@@ -45,22 +45,36 @@ export class TierSettingsAdminController {
         type: LogType.ACTIVITY,
         action: 'UPDATE_TIER_SETTINGS',
         category: 'TIER',
-        extractMetadata: (_, args) => {
-            const [dto] = args;
+        extractMetadata: (req) => {
             return {
-                isPromotionEnabled: dto?.isPromotionEnabled,
-                isDowngradeEnabled: dto?.isDowngradeEnabled,
+                before: req.__audit_before,
+                after: req.__audit_after,
             };
         },
     })
     async updateSettings(
         @Body() dto: UpdateTierSettingsAdminRequestDto,
         @CurrentUser() admin: AuthenticatedUser,
+        @Req() req: any,
     ): Promise<TierSettingsAdminResponseDto> {
+        // [1] 변경 전 데이터 조회
+        const before = await this.tierSettingsService.find();
+
         const settings = await this.tierSettingsService.update({
             ...dto,
             updatedBy: admin.id,
         });
+
+        // [2] 감사 로그용 메타데이터 기록 (Interceptor에서 사용)
+        req.__audit_before = {
+            isPromotionEnabled: before.isPromotionEnabled,
+            isDowngradeEnabled: before.isDowngradeEnabled,
+        };
+        req.__audit_after = {
+            isPromotionEnabled: settings.isPromotionEnabled,
+            isDowngradeEnabled: settings.isDowngradeEnabled,
+        };
+
         return this.mapToResponseDto(settings);
     }
 
