@@ -1,19 +1,25 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
+import { InjectTransaction } from '@nestjs-cls/transactional';
+import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { UserTier } from '../domain/user-tier.entity';
 
 export abstract class UserTierRepositoryPort {
     abstract findByUserId(userId: bigint): Promise<UserTier | null>;
     abstract save(userTier: UserTier): Promise<UserTier>;
     abstract countGroupByTierId(): Promise<{ tierId: bigint; count: number }[]>;
+    abstract incrementRolling(userId: bigint, amountUsd: number): Promise<void>;
+    abstract findUsersNeedingEvaluation(now: Date): Promise<UserTier[]>;
 }
 
 @Injectable()
 export class UserTierRepository implements UserTierRepositoryPort {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(
+        @InjectTransaction()
+        private readonly tx: PrismaTransaction,
+    ) { }
 
     async findByUserId(userId: bigint): Promise<UserTier | null> {
-        const record = await this.prisma.userTier.findUnique({
+        const record = await this.tx.userTier.findUnique({
             where: { userId },
             include: { tier: { include: { translations: true } } }
         });
@@ -43,7 +49,7 @@ export class UserTierRepository implements UserTierRepositoryPort {
             note: userTier.note
         };
 
-        const record = await this.prisma.userTier.upsert({
+        const record = await this.tx.userTier.upsert({
             where: { userId: userTier.userId },
             create: { userId: userTier.userId, ...data },
             update: data,
@@ -54,7 +60,7 @@ export class UserTierRepository implements UserTierRepositoryPort {
     }
 
     async countGroupByTierId(): Promise<{ tierId: bigint; count: number }[]> {
-        const groups = await this.prisma.userTier.groupBy({
+        const groups = await this.tx.userTier.groupBy({
             by: ['tierId'],
             _count: { userId: true }
         });
@@ -63,5 +69,28 @@ export class UserTierRepository implements UserTierRepositoryPort {
             tierId: g.tierId,
             count: g._count.userId
         }));
+    }
+
+    async incrementRolling(userId: bigint, amountUsd: number): Promise<void> {
+        await this.tx.userTier.updateMany({
+            where: { userId },
+            data: {
+                totalEffectiveRollingUsd: { increment: amountUsd },
+                currentPeriodRollingUsd: { increment: amountUsd },
+            }
+        });
+    }
+
+    async findUsersNeedingEvaluation(now: Date): Promise<UserTier[]> {
+        const records = await this.tx.userTier.findMany({
+            where: {
+                nextEvaluationAt: {
+                    lte: now
+                }
+            },
+            include: { tier: { include: { translations: true } } }
+        });
+
+        return records.map(UserTier.fromPersistence);
     }
 }

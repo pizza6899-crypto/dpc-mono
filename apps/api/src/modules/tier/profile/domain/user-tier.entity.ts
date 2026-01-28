@@ -37,8 +37,8 @@ export class UserTier {
         public readonly isCustomVipEventEligible: boolean | null,
         // Audit
         public readonly isBonusEligible: boolean,
-        public readonly nextEvaluationAt: Date | null,
-        public readonly note: string | null,
+        public nextEvaluationAt: Date | null,
+        public note: string | null,
         // Joined Data
         public readonly tier?: Tier,
     ) { }
@@ -59,7 +59,41 @@ export class UserTier {
         };
     }
 
-    static fromPersistence(data: any): UserTier {
+    /**
+     * 티어를 변경하고 상태를 초기화합니다.
+     */
+    updateTier(targetTierId: bigint, priority: number): void {
+        this.tierId = targetTierId;
+        this.highestPromotedPriority = Math.max(this.highestPromotedPriority, priority);
+        this.lastTierChangedAt = new Date();
+        this.status = UserTierStatus.ACTIVE;
+        this.graceEndsAt = null;
+        // 승급/강등 시 해당 주기의 실적은 리셋하지 않고 다음 심사 시점(lastEvaluationAt)만 갱신하거나 유지하는 정책 필요
+        // 여기서는 티어 자체만 변경
+    }
+
+    /**
+     * 실적을 누적합니다.
+     */
+    incrementRolling(amount: Prisma.Decimal | number): void {
+        const decimalAmount = new Prisma.Decimal(amount);
+        this.totalEffectiveRollingUsd = this.totalEffectiveRollingUsd.add(decimalAmount);
+        this.currentPeriodRollingUsd = this.currentPeriodRollingUsd.add(decimalAmount);
+    }
+
+    /**
+     * 주기적 심사 완료 후 실적을 리셋하고 다음 심사일을 설정합니다.
+     */
+    resetPeriodPerformance(evaluationCycleDays: number): void {
+        this.currentPeriodRollingUsd = new Prisma.Decimal(0);
+        this.lastEvaluationAt = new Date();
+
+        const nextDate = new Date();
+        nextDate.setUTCDate(nextDate.getUTCDate() + evaluationCycleDays);
+        this.nextEvaluationAt = nextDate;
+    }
+
+    static fromPersistence(data: Prisma.UserTierGetPayload<{ include: { tier: { include: { translations: true } } } }>): UserTier {
         return new UserTier(
             data.id, data.userId, data.tierId,
             data.totalEffectiveRollingUsd, data.currentPeriodRollingUsd, data.lastEvaluationAt,

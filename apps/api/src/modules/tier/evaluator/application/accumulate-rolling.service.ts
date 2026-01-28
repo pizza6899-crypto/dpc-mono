@@ -1,39 +1,33 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository';
 import { TierRepositoryPort } from '../../master/infrastructure/master.repository.port';
 import { PromotionPolicy } from '../domain/promotion.policy';
 import { PromotionService } from './promotion.service';
+import { Transactional } from '@nestjs-cls/transactional';
 
 @Injectable()
 export class AccumulateRollingService {
     private readonly logger = new Logger(AccumulateRollingService.name);
 
     constructor(
-        private readonly prisma: PrismaService,
         private readonly userTierRepository: UserTierRepositoryPort,
         private readonly tierRepository: TierRepositoryPort,
         private readonly promotionPolicy: PromotionPolicy,
         private readonly promotionService: PromotionService,
     ) { }
 
+    @Transactional()
     async execute(userId: bigint, amountUsd: number): Promise<void> {
         if (amountUsd <= 0) return;
 
         try {
-            // 1. 원자적 처리 (Atomic Update)
-            await this.prisma.userTier.updateMany({
-                where: { userId },
-                data: {
-                    totalEffectiveRollingUsd: { increment: amountUsd },
-                    currentPeriodRollingUsd: { increment: amountUsd },
-                }
-            });
+            // 1. 원자적 처리 (Repository 메서드 사용)
+            await this.userTierRepository.incrementRolling(userId, amountUsd);
 
-            // 2. 비동기 승급 심사
-            this.attemptPromotion(userId).catch(err => {
-                this.logger.error(`Promotion attempt failed for user ${userId}: ${err.message}`);
-            });
+            // 2. 비동기 승급 심사 (실제로 트랜잭션 밖으로 나가는 것이 안전할 수 있으나, 
+            // 현재 구조에서는 동기적으로 호출하여 한 트랜잭션으로 처리하거나 
+            // 별도 이벤트를 발행하는 것이 좋음. 여기서는 기존 로직 유지하되 Repository 사용)
+            await this.attemptPromotion(userId);
 
         } catch (error) {
             this.logger.error(`Failed to accumulate rolling: ${error.message}`);
