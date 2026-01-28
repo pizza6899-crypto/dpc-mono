@@ -13,6 +13,7 @@ import { nowUtc } from 'src/utils/date.util';
 import { OpenExchangeRatesApiService } from '../infrastructure/open-exchange-rates-api.service';
 import { ExchangeRateValidator } from '../application/exchange-rate-validator.service';
 import { ConcurrencyService } from 'src/common/concurrency/concurrency.service';
+import { GlobalLockKey } from 'src/common/concurrency/concurrency.constants';
 import { ExchangeRateService } from '../application/exchange-rate.service';
 
 @Injectable()
@@ -92,7 +93,7 @@ export class ExchangeRateUpdateScheduler implements OnApplicationBootstrap {
 
       // 다중 인스턴스에서 중복 실행 방지용 글로벌 락
       await this.concurrencyService.runExclusive(
-        'exchange-rate-update-scheduler',
+        GlobalLockKey.EXCHANGE_RATE_UPDATE,
         async () => {
           // Open Exchange Rates에서 최신 환율 조회
           const latestRates =

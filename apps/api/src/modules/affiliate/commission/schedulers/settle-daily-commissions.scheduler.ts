@@ -3,6 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { EnvService } from 'src/common/env/env.service';
 import { ConcurrencyService } from 'src/common/concurrency/concurrency.service';
+import { GlobalLockKey } from 'src/common/concurrency/concurrency.constants';
 import { SettleDailyCommissionsService } from '../application/settle-daily-commissions.service';
 import { nowUtc } from 'src/utils/date.util';
 import { ClsService } from 'nestjs-cls';
@@ -42,7 +43,7 @@ export class SettleDailyCommissionsScheduler {
 
       // 다중 인스턴스에서 중복 실행 방지용 글로벌 락
       await this.concurrencyService.runExclusive(
-        'settle-daily-commissions-scheduler',
+        GlobalLockKey.AFFILIATE_DAILY_COMMISSION,
         async () => {
           // 전날 날짜 기준으로 정산 (UTC 기준)
           const settlementDate = new Date(nowUtc());

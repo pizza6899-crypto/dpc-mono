@@ -4,6 +4,7 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { ClsService } from 'nestjs-cls';
 import { EnvService } from 'src/common/env/env.service';
 import { ConcurrencyService } from 'src/common/concurrency/concurrency.service';
+import { GlobalLockKey } from 'src/common/concurrency/concurrency.constants';
 import { ExpireSessionsBatchService } from '../application/expire-sessions-batch.service';
 
 @Injectable()
@@ -35,7 +36,7 @@ export class ExpireSessionsScheduler {
 
       // 다중 인스턴스에서 중복 실행 방지용 글로벌 락
       await this.concurrencyService.runExclusive(
-        'expire-sessions-scheduler',
+        GlobalLockKey.AUTH_EXPIRE_SESSIONS,
         async () => {
           this.logger.log('만료된 세션 일괄 처리 시작');
 

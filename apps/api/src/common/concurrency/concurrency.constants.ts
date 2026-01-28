@@ -27,3 +27,26 @@ export const CONCURRENCY_CONSTANTS = {
     // Database Advisory Lock Timeout
     DB_LOCK_TIMEOUT: '3s',
 };
+
+/**
+ * Global Lock (Table-based) Keys
+ * - 스케줄러 등 분산 락 식별자로 사용되는 키값 모음
+ */
+export const GlobalLockKey = {
+    // Tier Audit
+    TIER_AUDIT_HOURLY_STATS: 'tier-audit:hourly-stats',
+
+    // Affiliate
+    AFFILIATE_DAILY_COMMISSION: 'settle-daily-commissions-scheduler',
+
+    // Auth
+    AUTH_EXPIRE_SESSIONS: 'expire-sessions-scheduler',
+
+    // Exchange
+    EXCHANGE_RATE_UPDATE: 'exchange-rate-update-scheduler',
+
+    // Casino
+    WHITECLIFF_PUSHED_BET_HISTORY: 'whitecliff-pushed-bet-history-scheduler',
+} as const;
+
+export type GlobalLockKey = typeof GlobalLockKey[keyof typeof GlobalLockKey];

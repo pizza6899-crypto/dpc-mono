@@ -16,6 +16,7 @@ import {
 } from '@prisma/client';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
 import { ConcurrencyService } from 'src/common/concurrency/concurrency.service';
+import { GlobalLockKey } from 'src/common/concurrency/concurrency.constants';
 import { EnvService } from 'src/common/env/env.service';
 
 @Injectable()
@@ -58,7 +59,7 @@ export class WhitecliffPushedBetHistoryScheduler {
 
       // 글로벌 락을 사용하여 다중 인스턴스 환경에서 중복 실행 방지
       await this.concurrencyService.runExclusive(
-        'whitecliff-pushed-bet-history-scheduler',
+        GlobalLockKey.WHITECLIFF_PUSHED_BET_HISTORY,
         async () => {
           const endDate =
             nowUtcMinus({ seconds: 30 }).toISOString().slice(0, -5) + 'Z';

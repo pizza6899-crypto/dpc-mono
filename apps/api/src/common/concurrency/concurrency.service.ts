@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { sql } from 'kysely';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { NodeIdentityService } from 'src/common/node-identity/node-identity.service';
+import { GlobalLockKey } from './concurrency.constants';
 
 export interface LockOptions {
   timeoutSeconds?: number;
@@ -34,7 +35,7 @@ export class ConcurrencyService {
    * @param key 락 식별자
    * @param options.timeoutSeconds 좀비 락 자동 회수 시간 (기본값: 1800초)
    */
-  async tryAcquire(key: string, options: LockOptions = {}): Promise<boolean> {
+  async tryAcquire(key: GlobalLockKey, options: LockOptions = {}): Promise<boolean> {
     const timeoutSeconds = options.timeoutSeconds ?? 1800;
 
     try {
@@ -75,7 +76,7 @@ export class ConcurrencyService {
   /**
    * [GlobalLock] 락 해제 및 결과 기록
    */
-  async release(key: string, success: boolean, errorMessage?: string): Promise<void> {
+  async release(key: GlobalLockKey, success: boolean, errorMessage?: string): Promise<void> {
     try {
       // Prisma Proxy API를 사용하여 타입 안전하게 업데이트
       // 소유권 확인: 자기가 잡은 락만 해제할 수 있도록 instanceId 필터링 추가
@@ -107,7 +108,7 @@ export class ConcurrencyService {
    * [Helper] 락 실행 래퍼 함수 (Global Lock 전용)
    */
   async runExclusive(
-    key: string,
+    key: GlobalLockKey,
     task: () => Promise<void>,
     options: LockOptions = {}
   ): Promise<void> {

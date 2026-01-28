@@ -5,6 +5,7 @@ import { TierRepositoryPort } from '../../master/infrastructure/master.repositor
 import { TierAuditService } from '../application/tier-audit.service';
 import { ClsService } from 'nestjs-cls';
 import { ConcurrencyService } from 'src/common/concurrency/concurrency.service';
+import { GlobalLockKey } from 'src/common/concurrency/concurrency.constants';
 
 @Injectable()
 export class TierAuditScheduler {
@@ -26,7 +27,7 @@ export class TierAuditScheduler {
     async snapshotHourlyStats() {
         await this.cls.run(async () => {
             // Apply distributed lock to prevent duplicate execution across multiple instances
-            await this.concurrencyService.runExclusive('tier-audit:hourly-stats', async () => {
+            await this.concurrencyService.runExclusive(GlobalLockKey.TIER_AUDIT_HOURLY_STATS, async () => {
                 try {
                     const now = new Date();
                     const counts = await this.userTierRepository.countGroupByTierId();
