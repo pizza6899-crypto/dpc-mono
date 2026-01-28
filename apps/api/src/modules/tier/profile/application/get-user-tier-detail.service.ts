@@ -1,6 +1,46 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserTierRepositoryPort } from '../infrastructure/user-tier.repository.port';
-import { UserTierAdminResponseDto } from '../controllers/admin/dto/user-tier-admin.response.dto';
+import { UserTierStatus } from '@prisma/client';
+
+export interface UserTierDetailResult {
+    id: string;
+    userId: string;
+    tierId: string;
+    tierName: string;
+    totalEffectiveRollingUsd: string;
+    currentPeriodRollingUsd: string;
+    currentPeriodDepositUsd: string;
+    lastEvaluationAt: Date;
+    highestPromotedPriority: number;
+    lastBonusReceivedAt: Date | null;
+    status: UserTierStatus;
+    graceEndsAt: Date | null;
+    lastTierChangedAt: Date;
+    customCompRate: string | null;
+    customLossbackRate: string | null;
+    customRakebackRate: string | null;
+    customReloadBonusRate: string | null;
+    customWithdrawalLimitUsd: string | null;
+    isCustomWithdrawalUnlimited: boolean | null;
+    isCustomDedicatedManager: boolean | null;
+    isCustomVipEventEligible: boolean | null;
+    isBonusEligible: boolean;
+    nextEvaluationAt: Date | null;
+    note: string | null;
+    demotionWarningIssuedAt: Date | null;
+    demotionWarningTargetTierId: string | null;
+    demotionWarningTargetTierName: string | null;
+    currentBenefits: {
+        compRate: string;
+        lossbackRate: string;
+        rakebackRate: string;
+        reloadBonusRate: string;
+        dailyWithdrawalLimitUsd: string;
+        isWithdrawalUnlimited: boolean;
+        hasDedicatedManager: boolean;
+        isVIPEventEligible: boolean;
+    };
+}
 
 @Injectable()
 export class GetUserTierDetailService {
@@ -8,7 +48,7 @@ export class GetUserTierDetailService {
         private readonly userTierRepository: UserTierRepositoryPort,
     ) { }
 
-    async execute(userId: bigint): Promise<UserTierAdminResponseDto> {
+    async execute(userId: bigint): Promise<UserTierDetailResult> {
         const userTier = await this.userTierRepository.findByUserId(userId);
         if (!userTier || !userTier.tier) {
             throw new NotFoundException('User tier info not found');

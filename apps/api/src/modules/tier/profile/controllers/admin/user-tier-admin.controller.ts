@@ -1,19 +1,23 @@
-import { Controller, Get, Post, Patch, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Body, Param, UseGuards, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { GetUserTierDetailService } from '../../application/get-user-tier-detail.service';
 import { GetUserTierHistoryService } from '../../application/get-user-tier-history.service';
-import { GetUsersNeedingEvaluationService } from '../../application/get-users-needing-evaluation.service';
 import { UpdateUserTierCustomService } from '../../application/update-user-tier-custom.service';
 import { ForceUpdateUserTierService } from '../../application/force-update-user-tier.service';
 import { ResetUserTierPerformanceService } from '../../application/reset-user-tier-performance.service';
 
-import { UserTierAdminResponseDto } from './dto/user-tier-admin.response.dto';
+import { UserTierAdminResponseDto } from './dto/response/user-tier-admin.response.dto';
 import { UserTierHistoryResponseDto } from '../public/dto/user-tier-history.response.dto';
 import {
     UpdateUserTierCustomRequestDto,
     ForceUpdateTierRequestDto,
-    UsersNeedingEvaluationResponseDto
-} from './dto/user-tier-admin.request.dto';
+    ListUserTiersQueryDto
+} from './dto/request/user-tier-admin.request.dto';
+import { ListUserTiersService } from '../../application/list-user-tiers.service';
+import { ApiPaginatedResponse } from 'src/common/http/decorators/api-response.decorator';
+import { Paginated } from 'src/common/http/decorators/paginated.decorator';
+import { PaginatedData } from 'src/common/http/types/pagination.types';
+import { UserTierListItemResponseDto } from './dto/response/user-tier-list.response.dto';
 
 import { SessionAuthGuard } from 'src/common/auth/guards/session-auth.guard';
 import { Admin } from 'src/common/auth/decorators/roles.decorator';
@@ -28,26 +32,47 @@ import { LogType } from 'src/modules/audit-log/domain';
 @Admin()
 export class UserTierAdminController {
     constructor(
+        private readonly listUserTiersService: ListUserTiersService,
         private readonly getUserTierDetailService: GetUserTierDetailService,
         private readonly getUserTierHistoryService: GetUserTierHistoryService,
-        private readonly getUsersNeedingEvaluationService: GetUsersNeedingEvaluationService,
         private readonly updateUserTierCustomService: UpdateUserTierCustomService,
         private readonly forceUpdateUserTierService: ForceUpdateUserTierService,
         private readonly resetUserTierPerformanceService: ResetUserTierPerformanceService,
     ) { }
 
-    @Get('users/needing-evaluation')
-    @ApiOperation({ summary: 'Get users needing evaluation / 심사 대상자 목록 조회' })
-    @ApiOkResponse({ type: [UsersNeedingEvaluationResponseDto], description: 'Successfully retrieved users needing evaluation / 심사 대상자 목록 조회 성공' })
-    async getUsersNeedingEvaluation(): Promise<UsersNeedingEvaluationResponseDto[]> {
-        return this.getUsersNeedingEvaluationService.execute();
+    @Get()
+    @HttpCode(HttpStatus.OK)
+    @Paginated()
+    @ApiOperation({ summary: 'List user tiers / 유저 티어 목록 조회' })
+    @ApiPaginatedResponse(UserTierListItemResponseDto, {
+        description: 'Successfully retrieved user tier list / 유저 티어 목록 조회 성공'
+    })
+    async listUserTiers(
+        @Query() query: ListUserTiersQueryDto
+    ): Promise<PaginatedData<UserTierListItemResponseDto>> {
+        const result = await this.listUserTiersService.execute({
+            page: query.page ?? 1,
+            limit: query.limit ?? 20,
+            tierId: query.tierId ? BigInt(query.tierId) : undefined,
+            status: query.status,
+            search: query.search,
+        });
+
+        // Controller maps Service Result to Response DTO
+        return {
+            ...result,
+            data: result.data.map(item => ({ ...item }))
+        };
     }
 
     @Get('users/:userId')
     @ApiOperation({ summary: 'Get user tier details / 유저 티어 상세 정보 조회' })
     @ApiOkResponse({ type: UserTierAdminResponseDto, description: 'Successfully retrieved user tier details / 유저 티어 상세 정보 조회 성공' })
     async getUserTierDetail(@Param('userId') userId: string): Promise<UserTierAdminResponseDto> {
-        return this.getUserTierDetailService.execute(BigInt(userId));
+        const result = await this.getUserTierDetailService.execute(BigInt(userId));
+
+        // Controller maps Service Result to Response DTO
+        return { ...result };
     }
 
     @Get('users/:userId/history')

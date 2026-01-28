@@ -53,14 +53,20 @@ description: NestJS 컨트롤러 구현 표준 (API 디자인, Sqids 난독화, 
 
 #### 6-1. Request DTO (Validation)
 *   **Decorator**: `IsString`, `IsNumber`, `IsOptional`, `IsEnum` 등 `class-validator`를 반드시 사용.
-*   **Swagger**: 모든 필드에 `@ApiProperty()` 설정. 필요 시 `example`, `description`, `nullable`, `enum` 명시.
+*   **Swagger**: 모든 필드에 `@ApiProperty()` 설정.
+    *   `description`은 반드시 **'English / 한글 설명'** 형식을 사용하여 병기 처리합니다. (예: `description: 'User Email / 사용자 이메일'`)
+    *   필요 시 `example`, `nullable`, `enum` 명시.
 *   **Transform**: 중첩된 객체는 `@Type()`과 `ValidateNested()` 사용.
 
 #### 6-2. Response DTO (Serialization)
 *   **ID 변환**: `BigInt`는 반드시 `.toString()`을 통해 **string**으로 변환하여 반환.
 *   **Decimal 변환**: 금액 필드(`Decimal`)는 `.toString()` 또는 `.toNumber()` (정밀도 필요 시 string 권장)로 변환.
-*   **Constructor Mapping**: 엔티티에서 DTO로의 매핑을 위해 생성자(Constructor) 패턴 사용 권장.
-*   **Swagger**: 필수 필드는 `@ApiProperty()`, 선택 필드는 `@ApiProperty({ nullable: true })` 명시.
+*   **DTO 순수성 유지 (DTO Purity)**: 
+    *   Response DTO는 어플리케이션 계층의 **인터페이스(Result 등)를 직접 import 하지 않는 것**을 원칙으로 합니다. (레이어 간 결합도 최소화)
+    *   **매핑 방법**: 컨트롤러에서 객체 전개 연산자(`{ ...result }`)를 사용하거나, 별도의 매퍼 클래스/정적 메서드를 사용하여 매핑합니다.
+*   **Swagger**: 
+    *   `description`은 반드시 **'English / 한글 설명'** 형식을 사용하여 병기 처리합니다.
+    *   필수 필드는 `@ApiProperty()`, 선택 필드는 `@ApiProperty({ nullable: true })` 명시.
 
 ---
 

@@ -1,3 +1,4 @@
+import { UserTierStatus } from '@prisma/client';
 import { UserTier } from '../domain/user-tier.entity';
 
 export abstract class UserTierRepositoryPort {
@@ -7,4 +8,13 @@ export abstract class UserTierRepositoryPort {
     abstract incrementRolling(userId: bigint, amountUsd: number): Promise<void>;
     abstract incrementDeposit(userId: bigint, amountUsd: number): Promise<void>;
     abstract findUsersNeedingEvaluation(now: Date): Promise<UserTier[]>;
+    abstract findMany(params: {
+        tierId?: bigint;
+        status?: UserTierStatus;
+        userId?: bigint;
+        email?: string;
+        search?: string;
+        page: number;
+        limit: number;
+    }): Promise<{ items: UserTier[]; total: number }>;
 }

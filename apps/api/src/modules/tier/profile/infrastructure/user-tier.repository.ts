@@ -108,4 +108,57 @@ export class UserTierRepository implements UserTierRepositoryPort {
 
         return records.map(UserTier.fromPersistence);
     }
+
+    async findMany(params: {
+        tierId?: bigint;
+        status?: import('@prisma/client').UserTierStatus;
+        userId?: bigint;
+        email?: string;
+        search?: string;
+        page: number;
+        limit: number;
+    }): Promise<{ items: UserTier[]; total: number }> {
+        const { tierId, status, userId, email, search, page, limit } = params;
+        const skip = (page - 1) * limit;
+
+        const where: any = {};
+        if (tierId) where.tierId = tierId;
+        if (status) where.status = status;
+        if (userId) where.userId = userId;
+        if (email) {
+            where.user = { email: { contains: email, mode: 'insensitive' } };
+        }
+        if (search) {
+            const or: any[] = [
+                { user: { email: { contains: search, mode: 'insensitive' } } }
+            ];
+
+            // If search is numeric, also search by userId
+            if (/^\d+$/.test(search)) {
+                try {
+                    or.push({ userId: BigInt(search) });
+                } catch (e) { /* ignore if too large for BigInt */ }
+            }
+            where.OR = or;
+        }
+
+        const [records, total] = await Promise.all([
+            this.tx.userTier.findMany({
+                where,
+                include: {
+                    tier: { include: { translations: true } },
+                    demotionWarningTargetTier: { include: { translations: true } }
+                },
+                skip,
+                take: limit,
+                orderBy: { userId: 'asc' }
+            }),
+            this.tx.userTier.count({ where })
+        ]);
+
+        return {
+            items: records.map(UserTier.fromPersistence),
+            total
+        };
+    }
 }
