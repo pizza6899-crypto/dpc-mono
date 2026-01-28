@@ -3,8 +3,7 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { TierAuditRepositoryPort, CreateTierHistoryProps, UpdateEvaluationLogMetrics, UpdateTierStatsProps } from '../infrastructure/audit.repository.port';
 import { EvaluationStatus, Prisma } from '@prisma/client';
-import { TIER_AUDIT_QUEUE_NAME, TierAuditJobType, RecordTierSnapshotJobData, RecordDemotionWarningJobData } from '../infrastructure/tier-audit.constants';
-import { TierDemotionWarning } from '../domain/tier-demotion-warning.entity';
+import { TIER_AUDIT_QUEUE_NAME, TierAuditJobType, RecordTierSnapshotJobData } from '../infrastructure/tier-audit.constants';
 import { TierEvaluationLog } from '../domain/tier-evaluation-log.entity';
 
 @Injectable()
@@ -22,13 +21,6 @@ export class TierAuditService {
      */
     async recordTierChange(props: CreateTierHistoryProps): Promise<void> {
         await this.auditRepository.saveHistory(props);
-
-        // 승급 또는 강등 처리가 완료되면 기존 강등 경고 제거
-        if (props.changeType === 'UPGRADE' || props.changeType === 'DOWNGRADE') {
-            await this.auditRepository.deleteDemotionWarning(props.userId).catch((error) => {
-                this.logger.warn(`Failed to delete demotion warning for user ${props.userId}: ${error.message}`);
-            });
-        }
     }
 
     /**
@@ -78,30 +70,6 @@ export class TierAuditService {
     }
 
     /**
-     * 강등 경고 정보를 기록하거나 업데이트합니다.
-     */
-    async recordDemotionWarning(userId: bigint, props: {
-        currentTierId: bigint;
-        targetTierId: bigint;
-        evaluationDueAt: Date;
-        requiredRolling: Prisma.Decimal;
-        currentRolling: Prisma.Decimal;
-    }): Promise<void> {
-        await this.auditQueue.add(TierAuditJobType.RECORD_DEMOTION_WARNING, {
-            type: TierAuditJobType.RECORD_DEMOTION_WARNING,
-            data: {
-                userId: userId.toString(),
-                currentTierId: props.currentTierId.toString(),
-                targetTierId: props.targetTierId.toString(),
-                evaluationDueAt: props.evaluationDueAt.toISOString(),
-                requiredRolling: props.requiredRolling.toString(),
-                currentRolling: props.currentRolling.toString(),
-                lastNotifiedAt: null,
-            },
-        });
-    }
-
-    /**
      * [Internal] BullMQ 프로세서에서 호출하는 실제 통계 저장 로직입니다.
      */
     async handleRecordStats(data: RecordTierSnapshotJobData): Promise<void> {
@@ -119,22 +87,5 @@ export class TierAuditService {
         };
 
         await this.auditRepository.updateStats(normalizedTime, BigInt(tierId), normalizedMetrics);
-    }
-
-    /**
-     * [Internal] BullMQ 프로세서에서 호출하는 실제 강등 경고 저장 로직입니다.
-     */
-    async handleRecordDemotionWarning(data: RecordDemotionWarningJobData): Promise<void> {
-        const warning = new TierDemotionWarning(
-            0n,
-            BigInt(data.userId),
-            BigInt(data.currentTierId),
-            BigInt(data.targetTierId),
-            new Date(data.evaluationDueAt),
-            new Prisma.Decimal(data.requiredRolling),
-            new Prisma.Decimal(data.currentRolling),
-            data.lastNotifiedAt ? new Date(data.lastNotifiedAt) : null
-        );
-        await this.auditRepository.upsertDemotionWarning(warning);
     }
 }

@@ -44,6 +44,9 @@ export class InitializeUserTierService {
             true,                  // isBonusEligible
             nextEvaluationAt,      // nextEvaluationAt
             null,                  // note
+            // Warning
+            null,                  // demotionWarningIssuedAt
+            null,                  // demotionWarningTargetTierId
             baseTier               // Joined Tier data
         );
 

@@ -1,6 +1,5 @@
 import { TierHistory } from '../domain/tier-history.entity';
 import { TierEvaluationLog } from '../domain/tier-evaluation-log.entity';
-import { TierDemotionWarning } from '../domain/tier-demotion-warning.entity';
 import { Prisma, TierChangeType, TierHistoryReferenceType, EvaluationStatus } from '@prisma/client';
 
 export interface CreateTierHistoryProps {
@@ -51,10 +50,6 @@ export abstract class TierAuditRepositoryPort {
     // 2. Evaluation Log
     abstract createEvaluationLog(status: EvaluationStatus): Promise<TierEvaluationLog>;
     abstract updateEvaluationLog(id: bigint, startedAt: Date, data: UpdateEvaluationLogMetrics & { status?: EvaluationStatus, finishedAt?: Date, errorMessage?: string | null }): Promise<TierEvaluationLog>;
-
-    // 3. Demotion Warning
-    abstract upsertDemotionWarning(warning: TierDemotionWarning): Promise<TierDemotionWarning>;
-    abstract deleteDemotionWarning(userId: bigint): Promise<void>;
 
     // 4. Stats
     abstract updateStats(timestamp: Date, tierId: bigint, data: UpdateTierStatsProps): Promise<void>;

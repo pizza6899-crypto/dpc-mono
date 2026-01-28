@@ -41,7 +41,9 @@ export class UserTierRepository implements UserTierRepositoryPort {
             isCustomVipEventEligible: userTier.isCustomVipEventEligible,
             isBonusEligible: userTier.isBonusEligible,
             nextEvaluationAt: userTier.nextEvaluationAt,
-            note: userTier.note
+            note: userTier.note,
+            demotionWarningIssuedAt: userTier.demotionWarningIssuedAt,
+            demotionWarningTargetTierId: userTier.demotionWarningTargetTierId,
         };
 
         const record = await this.tx.userTier.upsert({

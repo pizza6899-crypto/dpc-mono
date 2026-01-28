@@ -25,12 +25,6 @@ export class TierAuditProcessor extends WorkerHost {
                     case TierAuditJobType.RECORD_TIER_SNAPSHOT:
                         await this.auditService.handleRecordStats(payload.data);
                         break;
-                    case TierAuditJobType.RECORD_DEMOTION_WARNING:
-                        await this.auditService.handleRecordDemotionWarning(payload.data);
-                        break;
-                    default:
-                        // @ts-expect-error - exhaustive check
-                        this.logger.warn(`Unknown job type: ${payload.type}`);
                 }
             } catch (error) {
                 this.logger.error(`Failed to process tier audit job [${payload.type}]: ${error.message}`, error.stack);

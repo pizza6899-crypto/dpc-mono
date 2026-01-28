@@ -6,9 +6,6 @@ import { DemotionPolicy } from './domain/demotion.policy';
 import { PromotionService } from './application/promotion.service';
 import { AccumulateRollingService } from './application/accumulate-rolling.service';
 import { BatchEvaluationService } from './application/batch-evaluation.service';
-import { TierDemotionWarningRepositoryPort } from './infrastructure/evaluator.repository.port';
-import { TierDemotionWarningRepository } from './infrastructure/tier-evaluator.repository';
-
 @Module({
     imports: [
         TierProfileModule,
@@ -20,8 +17,7 @@ import { TierDemotionWarningRepository } from './infrastructure/tier-evaluator.r
         PromotionService,
         AccumulateRollingService,
         BatchEvaluationService,
-        { provide: TierDemotionWarningRepositoryPort, useClass: TierDemotionWarningRepository },
     ],
-    exports: [AccumulateRollingService, BatchEvaluationService, TierDemotionWarningRepositoryPort],
+    exports: [AccumulateRollingService, BatchEvaluationService],
 })
 export class TierEvaluatorModule { }

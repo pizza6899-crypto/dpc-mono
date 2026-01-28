@@ -6,7 +6,6 @@ import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module'
 import { TierAuditRepositoryPort, CreateTierHistoryProps, UpdateEvaluationLogMetrics, UpdateTierStatsProps } from './audit.repository.port';
 import { TierHistory } from '../domain/tier-history.entity';
 import { TierEvaluationLog } from '../domain/tier-evaluation-log.entity';
-import { TierDemotionWarning } from '../domain/tier-demotion-warning.entity';
 
 @Injectable()
 export class TierAuditRepository implements TierAuditRepositoryPort {
@@ -63,28 +62,6 @@ export class TierAuditRepository implements TierAuditRepositoryPort {
             data
         });
         return TierEvaluationLog.fromPersistence(record);
-    }
-
-    // --- Demotion Warning ---
-    async upsertDemotionWarning(warning: TierDemotionWarning): Promise<TierDemotionWarning> {
-        const data = {
-            currentTierId: warning.currentTierId,
-            targetTierId: warning.targetTierId,
-            evaluationDueAt: warning.evaluationDueAt,
-            requiredRolling: warning.requiredRolling,
-            currentRolling: warning.currentRolling,
-            lastNotifiedAt: warning.lastNotifiedAt
-        };
-        const record = await this.tx.tierDemotionWarning.upsert({
-            where: { userId: warning.userId },
-            create: { userId: warning.userId, ...data },
-            update: data
-        });
-        return TierDemotionWarning.fromPersistence(record);
-    }
-
-    async deleteDemotionWarning(userId: bigint): Promise<void> {
-        await this.tx.tierDemotionWarning.deleteMany({ where: { userId } });
     }
 
     // --- Stats ---

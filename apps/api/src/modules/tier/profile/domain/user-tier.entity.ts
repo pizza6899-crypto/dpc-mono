@@ -42,6 +42,9 @@ export class UserTier {
         public readonly isBonusEligible: boolean,
         public nextEvaluationAt: Date | null,
         public note: string | null,
+        // Warning
+        public demotionWarningIssuedAt: Date | null,
+        public demotionWarningTargetTierId: bigint | null,
         // Joined Data
         public readonly tier?: Tier,
     ) { }
@@ -71,8 +74,17 @@ export class UserTier {
         this.lastTierChangedAt = new Date();
         this.status = UserTierStatus.ACTIVE;
         this.graceEndsAt = null;
+        this.demotionWarningIssuedAt = null;
+        this.demotionWarningTargetTierId = null;
         // 승급/강등 시 해당 주기의 실적은 리셋하지 않고 다음 심사 시점(lastEvaluationAt)만 갱신하거나 유지하는 정책 필요
         // 여기서는 티어 자체만 변경
+    }
+
+    setDemotionWarning(targetTierId: bigint, graceEndsAt: Date): void {
+        this.status = UserTierStatus.GRACE;
+        this.graceEndsAt = graceEndsAt;
+        this.demotionWarningIssuedAt = new Date();
+        this.demotionWarningTargetTierId = targetTierId;
     }
 
     /**
@@ -114,6 +126,7 @@ export class UserTier {
             data.customWithdrawalLimitUsd, data.isCustomWithdrawalUnlimited,
             data.isCustomDedicatedManager, data.isCustomVipEventEligible,
             data.isBonusEligible, data.nextEvaluationAt, data.note,
+            data.demotionWarningIssuedAt, data.demotionWarningTargetTierId,
             data.tier ? Tier.fromPersistence(data.tier) : undefined
         );
     }

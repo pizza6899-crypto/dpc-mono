@@ -72,18 +72,11 @@ export class BatchEvaluationService {
                 break;
             case 'GRACE':
                 metrics.gracePeriodCount++;
-                userTier.status = UserTierStatus.GRACE;
-                userTier.graceEndsAt = result.graceEndsAt!;
+                const targetTier = allTiers.find(t => t.priority < userTier.tier!.priority) ?? userTier.tier;
+                if (targetTier) {
+                    userTier.setDemotionWarning(targetTier.id, result.graceEndsAt!);
+                }
                 await this.userTierRepository.save(userTier);
-
-                // 경고 기록
-                await this.tierAuditService.recordDemotionWarning(userId, {
-                    currentTierId: userTier.tierId,
-                    targetTierId: allTiers.find(t => t.priority < userTier.tier!.priority)?.id ?? userTier.tierId,
-                    evaluationDueAt: result.graceEndsAt!,
-                    requiredRolling: userTier.tier.maintenanceRollingUsd,
-                    currentRolling: userTier.currentPeriodRollingUsd,
-                });
                 break;
             case 'DEMOTE':
                 metrics.demotedCount++;
