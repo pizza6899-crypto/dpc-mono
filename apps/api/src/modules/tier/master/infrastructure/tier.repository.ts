@@ -19,14 +19,6 @@ export class TierRepository implements TierRepositoryPort {
         return records.map(record => Tier.fromPersistence(record));
     }
 
-    async findById(id: bigint): Promise<Tier | null> {
-        const record = await this.tx.tier.findUnique({
-            where: { id },
-            include: { translations: true }
-        });
-        return record ? Tier.fromPersistence(record) : null;
-    }
-
     async findByPriority(priority: number): Promise<Tier | null> {
         const record = await this.tx.tier.findUnique({
             where: { priority },
@@ -44,16 +36,28 @@ export class TierRepository implements TierRepositoryPort {
     }
 
     async update(props: UpdateTierProps): Promise<Tier> {
-        const { id, translations, updatedBy, ...data } = props;
+        const { code, translations, updatedBy, ...data } = props;
+
+        // translations upsert를 위해 id를 먼저 조회 (tierId_language 복합키 대응)
+        const current = await this.tx.tier.findUnique({
+            where: { code },
+            select: { id: true }
+        });
+
+        if (!current) {
+            throw new Error(`Tier not found with code: ${code}`);
+        }
+
+        const tierId = current.id;
 
         const record = await this.tx.tier.update({
-            where: { id },
+            where: { code },
             data: {
                 ...data,
                 updatedBy,
                 translations: translations ? {
                     upsert: translations.map(t => ({
-                        where: { tierId_language: { tierId: id, language: t.language } },
+                        where: { tierId_language: { tierId: tierId, language: t.language } },
                         update: { name: t.name, description: t.description },
                         create: { language: t.language, name: t.name, description: t.description }
                     }))

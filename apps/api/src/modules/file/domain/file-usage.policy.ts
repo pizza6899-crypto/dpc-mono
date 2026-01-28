@@ -1,6 +1,8 @@
 import { SqidsPrefix, type SqidsPrefixType } from 'src/common/sqids/sqids.constants';
 import { FileAccessType } from './model/file.enum';
 import { FileUsageType } from './model/file-usage.type';
+import { FileValidationException } from './file.exception';
+import { MessageCode } from '@repo/shared';
 
 export interface FileUsageConfig {
     accessType: FileAccessType;
@@ -21,16 +23,19 @@ export const FILE_USAGE_CONFIGS: Record<FileUsageType, FileUsageConfig> = {
     [FileUsageType.CASINO_CATEGORY_BANNER]: {
         accessType: FileAccessType.PUBLIC,
     },
+    [FileUsageType.TIER_IMAGE]: {
+        accessType: FileAccessType.PUBLIC,
+        sqidsPrefix: SqidsPrefix.TIER,
+    },
 };
 
 export function getFileUsageConfig(type: FileUsageType): FileUsageConfig {
     const config = FILE_USAGE_CONFIGS[type];
     if (!config) {
-        // Default configuration if needed, or throw error based on strictness
-        // For now returning a safe default
-        return {
-            accessType: FileAccessType.PRIVATE,
-        };
+        throw new FileValidationException(
+            `File Usage Config not found for usage type: ${type}`,
+            MessageCode.FILE_POLICY_VIOLATION
+        );
     }
     return config;
 }

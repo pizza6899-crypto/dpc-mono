@@ -63,6 +63,11 @@ export class FilePolicy {
             accessType: FileAccessType.PUBLIC,
             uploadRoles: ['ADMIN', 'SUPER_ADMIN'],
         },
+        [FileUsageType.TIER_IMAGE]: {
+            folder: 'tier/image',
+            accessType: FileAccessType.PUBLIC,
+            uploadRoles: ['ADMIN', 'SUPER_ADMIN'],
+        },
     };
 
     static getConfig(usageType: FileUsageType): FilePolicyConfig {

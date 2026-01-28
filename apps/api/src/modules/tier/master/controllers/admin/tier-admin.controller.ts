@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Put, Req } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Put, Req } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserRoleType } from '@prisma/client';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
@@ -31,19 +31,7 @@ export class TierAdminController {
         return tiers.map(tier => this.mapToResponseDto(tier));
     }
 
-    @Get(':id')
-    @HttpCode(HttpStatus.OK)
-    @ApiOperation({
-        summary: 'Get tier by ID / 티어 상세 조회',
-        description: '특정 ID의 티어 상세 정보와 다국어 번역 정보를 조회합니다.',
-    })
-    @ApiStandardResponse(TierAdminResponseDto)
-    async getTier(@Param('id') id: string): Promise<TierAdminResponseDto> {
-        const tier = await this.tierService.findById(BigInt(id));
-        return this.mapToResponseDto(tier);
-    }
-
-    @Put(':id')
+    @Put(':code')
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
         summary: 'Update tier / 티어 정보 수정',
@@ -55,24 +43,22 @@ export class TierAdminController {
         action: 'UPDATE_TIER',
         category: 'TIER',
         extractMetadata: (req) => ({
-            tierId: req.params.id,
+            tierCode: req.params.code,
             before: req.__audit_before,
             after: req.__audit_after,
         }),
     })
     async updateTier(
-        @Param('id') id: string,
+        @Param('code') code: string,
         @Body() dto: UpdateTierAdminRequestDto,
         @CurrentUser() admin: AuthenticatedUser,
         @Req() req: any,
     ): Promise<TierAdminResponseDto> {
-        const tierId = BigInt(id);
-
         // Audit log용 이전 상태 기록
-        const before = await this.tierService.findById(tierId);
+        const before = await this.tierService.findByCode(code);
 
         const updated = await this.tierService.update({
-            id: tierId,
+            code,
             ...dto,
             updatedBy: admin.id,
         });
@@ -86,7 +72,6 @@ export class TierAdminController {
 
     private mapToResponseDto(tier: Tier): TierAdminResponseDto {
         return {
-            id: tier.id.toString(),
             priority: tier.priority,
             code: tier.code,
             requirementUsd: tier.requirementUsd.toString(),
@@ -121,11 +106,25 @@ export class TierAdminController {
             requirements: {
                 rolling: tier.requirementUsd.toString(),
                 deposit: tier.requirementDepositUsd.toString(),
+                maintenance: tier.maintenanceRollingUsd.toString(),
             },
             benefits: {
                 comp: tier.compRate.toString(),
                 rakeback: tier.rakebackRate.toString(),
                 lossback: tier.lossbackRate.toString(),
+                reload: tier.reloadBonusRate.toString(),
+                levelUp: {
+                    bonus: tier.levelUpBonusUsd.toString(),
+                    wager: tier.levelUpBonusWageringMultiplier.toString(),
+                }
+            },
+            limits: {
+                dailyWithdrawal: tier.dailyWithdrawalLimitUsd.toString(),
+                isUnlimited: tier.isWithdrawalUnlimited,
+            },
+            vips: {
+                dedicatedManager: tier.hasDedicatedManager,
+                eventEligible: tier.isVIPEventEligible,
             }
         };
     }

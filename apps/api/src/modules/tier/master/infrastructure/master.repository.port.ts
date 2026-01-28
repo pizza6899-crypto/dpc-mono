@@ -2,7 +2,7 @@ import { Tier } from '../domain/tier.entity';
 import { TierSettings } from '../domain/tier-settings.entity';
 
 export interface UpdateTierProps {
-    id: bigint;
+    code: string;
     requirementUsd?: number;
     requirementDepositUsd?: number;
     maintenanceRollingUsd?: number;
@@ -18,6 +18,7 @@ export interface UpdateTierProps {
     hasDedicatedManager?: boolean;
     isVIPEventEligible?: boolean;
     imageUrl?: string | null;
+    imageFileId?: string | null;
     translations?: {
         language: any; // Language
         name: string;
@@ -28,7 +29,6 @@ export interface UpdateTierProps {
 
 export abstract class TierRepositoryPort {
     abstract findAll(): Promise<Tier[]>;
-    abstract findById(id: bigint): Promise<Tier | null>;
     abstract findByPriority(priority: number): Promise<Tier | null>;
     abstract findByCode(code: string): Promise<Tier | null>;
     abstract update(props: UpdateTierProps): Promise<Tier>;

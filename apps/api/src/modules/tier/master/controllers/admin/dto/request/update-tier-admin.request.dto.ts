@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Language, TierEvaluationCycle } from '@prisma/client';
-import { IsBoolean, IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { IsBoolean, IsEnum, IsNumber, IsOptional, IsString, ValidateNested, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class TierTranslationRequestDto {
@@ -12,7 +12,7 @@ export class TierTranslationRequestDto {
     @IsString()
     name: string;
 
-    @ApiProperty({ required: false, nullable: true })
+    @ApiProperty({ type: String, required: false, nullable: true })
     @IsOptional()
     @IsString()
     description?: string | null;
@@ -22,16 +22,19 @@ export class UpdateTierAdminRequestDto {
     @ApiProperty({ required: false })
     @IsOptional()
     @IsNumber()
+    @Min(0)
     requirementUsd?: number;
 
     @ApiProperty({ required: false })
     @IsOptional()
     @IsNumber()
+    @Min(0)
     requirementDepositUsd?: number;
 
     @ApiProperty({ required: false })
     @IsOptional()
     @IsNumber()
+    @Min(0)
     maintenanceRollingUsd?: number;
 
     @ApiProperty({ enum: TierEvaluationCycle, required: false })
@@ -42,36 +45,43 @@ export class UpdateTierAdminRequestDto {
     @ApiProperty({ required: false })
     @IsOptional()
     @IsNumber()
+    @Min(0)
     levelUpBonusUsd?: number;
 
     @ApiProperty({ required: false })
     @IsOptional()
     @IsNumber()
+    @Min(0)
     levelUpBonusWageringMultiplier?: number;
 
     @ApiProperty({ required: false })
     @IsOptional()
     @IsNumber()
+    @Min(0)
     compRate?: number;
 
     @ApiProperty({ required: false })
     @IsOptional()
     @IsNumber()
+    @Min(0)
     lossbackRate?: number;
 
     @ApiProperty({ required: false })
     @IsOptional()
     @IsNumber()
+    @Min(0)
     rakebackRate?: number;
 
     @ApiProperty({ required: false })
     @IsOptional()
     @IsNumber()
+    @Min(0)
     reloadBonusRate?: number;
 
     @ApiProperty({ required: false })
     @IsOptional()
     @IsNumber()
+    @Min(0)
     dailyWithdrawalLimitUsd?: number;
 
     @ApiProperty({ required: false })
@@ -89,10 +99,10 @@ export class UpdateTierAdminRequestDto {
     @IsBoolean()
     isVIPEventEligible?: boolean;
 
-    @ApiProperty({ required: false, nullable: true })
+    @ApiProperty({ required: false, description: 'File ID for tier image (e.g., f_abc123)', nullable: true })
     @IsOptional()
     @IsString()
-    imageUrl?: string | null;
+    imageFileId?: string | null;
 
     @ApiProperty({ type: [TierTranslationRequestDto], required: false })
     @IsOptional()

@@ -8,14 +8,11 @@ export class TierTranslationResponseDto {
     @ApiProperty()
     name: string;
 
-    @ApiProperty({ required: false, nullable: true })
+    @ApiProperty({ type: String, required: false, nullable: true })
     description: string | null;
 }
 
 export class TierAdminResponseDto {
-    @ApiProperty({ type: String })
-    id: string;
-
     @ApiProperty()
     priority: number;
 

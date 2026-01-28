@@ -38,7 +38,7 @@ description: NestJS 컨트롤러 구현 표준 (API 디자인, Sqids 난독화, 
 *   **Metadata**: `extractMetadata`를 구현하여 변경된 대상의 ID나 주요 정보를 반드시 기록합니다.
 
 ### 4. Swagger & API 문서화
-*   **@ApiTags**: **영어만 사용** (예: `@ApiTags('Wallet')`).
+*   **@ApiTags**: **관객/범위 접두사 필수 사용**. `Admin`, `Public`, `User` 중 하나로 시작해야 합니다 (예: `@ApiTags('Admin Tiers')`, `@ApiTags('User Profile')`).
 *   **@ApiOperation**: `summary`에 `'English / 한글 설명'` 형식으로 작성.
 *   **응답 표준**: `@ApiStandardResponse()` 및 `@ApiPaginatedResponse()` 사용.
 
@@ -52,7 +52,7 @@ description: NestJS 컨트롤러 구현 표준 (API 디자인, Sqids 난독화, 
 
 ```typescript
 @Controller('wallet')
-@ApiTags('Wallet')
+@ApiTags('User Wallet')
 export class WalletController {
   constructor(private readonly sqidsService: SqidsService) {}
 

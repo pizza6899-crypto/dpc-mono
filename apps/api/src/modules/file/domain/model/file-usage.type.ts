@@ -3,6 +3,7 @@ export enum FileUsageType {
     CASINO_PROVIDER_LOGO = 'CASINO_PROVIDER_LOGO',
     CASINO_CATEGORY_ICON = 'CASINO_CATEGORY_ICON',
     CASINO_CATEGORY_BANNER = 'CASINO_CATEGORY_BANNER',
+    TIER_IMAGE = 'TIER_IMAGE',
     // Add more types here as needed
     // BANNER = 'BANNER',
     // POST_IMAGE = 'POST_IMAGE',

@@ -23,3 +23,13 @@ export class TierSettingsNotFoundException extends TierMasterException {
         this.name = 'TierSettingsNotFoundException';
     }
 }
+export class TierNotFoundException extends TierMasterException {
+    constructor() {
+        super(
+            'Tier not found',
+            MessageCode.TIER_NOT_FOUND,
+            HttpStatus.NOT_FOUND,
+        );
+        this.name = 'TierNotFoundException';
+    }
+}
