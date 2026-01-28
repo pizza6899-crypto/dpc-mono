@@ -72,6 +72,7 @@ model User {
   userTierPeriodStats    UserTierPeriodStats[]
   tierDemotionWarnings   TierDemotionWarning[]
   tierConfigsUpdated     TierConfig[]            @relation("TierConfigUpdatedBy")
+  tiersUpdated           Tier[]                  @relation("TierUpdatedBy")
 
   @@map("users")
 }

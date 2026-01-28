@@ -51,10 +51,12 @@ model Tier {
 
   // UI & Additional Info
   imageUrl String? @map("image_url") // 등급 아이콘/뱃지 이미지 URL
-  benefits Json?   @map("benefits") // 기타 유동적인 혜택 레코드 (JSON 구조)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+  updatedBy BigInt?  @map("updated_by") // 변경한 관리자 ID
+
+  updatedByUser User? @relation("TierUpdatedBy", fields: [updatedBy], references: [id])
 
   userTiers           UserTier[]
   translations        TierTranslation[]
