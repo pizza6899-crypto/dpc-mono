@@ -1,7 +1,6 @@
 import { TierHistory } from '../domain/tier-history.entity';
 import { TierEvaluationLog } from '../domain/tier-evaluation-log.entity';
 import { TierDemotionWarning } from '../domain/tier-demotion-warning.entity';
-import { UserTierPeriodStats } from '../domain/tier-stats.entity';
 import { Prisma, TierChangeType, TierHistoryReferenceType, EvaluationStatus } from '@prisma/client';
 
 export interface CreateTierHistoryProps {
@@ -11,6 +10,7 @@ export interface CreateTierHistoryProps {
     changeType: TierChangeType;
     reason?: string | null;
     rollingAmountSnap: Prisma.Decimal;
+    depositAmountSnap: Prisma.Decimal;
     compRateSnap: Prisma.Decimal;
     lossbackRateSnap: Prisma.Decimal;
     rakebackRateSnap: Prisma.Decimal;
@@ -29,6 +29,7 @@ export interface UpdateTierStatsProps {
     snapshotUserCount?: number;
     totalBonusPaidUsd?: Prisma.Decimal;
     totalRollingUsd?: Prisma.Decimal;
+    totalDepositUsd?: Prisma.Decimal;
     promotedCount?: number;
     demotedCount?: number;
 }
@@ -57,5 +58,4 @@ export abstract class TierAuditRepositoryPort {
 
     // 4. Stats
     abstract updateStats(timestamp: Date, tierId: bigint, data: UpdateTierStatsProps): Promise<void>;
-    abstract savePeriodStats(stats: UserTierPeriodStats): Promise<void>;
 }

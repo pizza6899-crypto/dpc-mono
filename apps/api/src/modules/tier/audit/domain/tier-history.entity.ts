@@ -11,6 +11,7 @@ export class TierHistory {
 
         // Snapshot: Data at the time of change
         public readonly rollingAmountSnap: Prisma.Decimal,
+        public readonly depositAmountSnap: Prisma.Decimal,
         public readonly compRateSnap: Prisma.Decimal,
         public readonly lossbackRateSnap: Prisma.Decimal,
         public readonly rakebackRateSnap: Prisma.Decimal,
@@ -42,6 +43,7 @@ export class TierHistory {
             data.changeType,
             data.reason,
             data.rollingAmountSnap,
+            data.depositAmountSnap,
             data.compRateSnap,
             data.lossbackRateSnap,
             data.rakebackRateSnap,

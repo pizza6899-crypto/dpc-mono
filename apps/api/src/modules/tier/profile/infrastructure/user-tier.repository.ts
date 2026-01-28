@@ -8,6 +8,7 @@ export abstract class UserTierRepositoryPort {
     abstract save(userTier: UserTier): Promise<UserTier>;
     abstract countGroupByTierId(): Promise<{ tierId: bigint; count: number }[]>;
     abstract incrementRolling(userId: bigint, amountUsd: number): Promise<void>;
+    abstract incrementDeposit(userId: bigint, amountUsd: number): Promise<void>;
     abstract findUsersNeedingEvaluation(now: Date): Promise<UserTier[]>;
 }
 
@@ -31,8 +32,10 @@ export class UserTierRepository implements UserTierRepositoryPort {
             tierId: userTier.tierId,
             totalEffectiveRollingUsd: userTier.totalEffectiveRollingUsd,
             currentPeriodRollingUsd: userTier.currentPeriodRollingUsd,
+            currentPeriodDepositUsd: userTier.currentPeriodDepositUsd,
             lastEvaluationAt: userTier.lastEvaluationAt,
             highestPromotedPriority: userTier.highestPromotedPriority,
+            lastBonusReceivedAt: userTier.lastBonusReceivedAt,
             status: userTier.status,
             graceEndsAt: userTier.graceEndsAt,
             lastTierChangedAt: userTier.lastTierChangedAt,
@@ -77,6 +80,15 @@ export class UserTierRepository implements UserTierRepositoryPort {
             data: {
                 totalEffectiveRollingUsd: { increment: amountUsd },
                 currentPeriodRollingUsd: { increment: amountUsd },
+            }
+        });
+    }
+
+    async incrementDeposit(userId: bigint, amountUsd: number): Promise<void> {
+        await this.tx.userTier.updateMany({
+            where: { userId },
+            data: {
+                currentPeriodDepositUsd: { increment: amountUsd },
             }
         });
     }

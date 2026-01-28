@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UserTierRepositoryPort } from '../infrastructure/user-tier.repository';
 import { TierRepositoryPort } from '../../master/infrastructure/master.repository.port';
 import { UserTier } from '../domain/user-tier.entity';
-import { Prisma, UserTierStatus } from '@prisma/client';
+import { Prisma, UserTierStatus, TierEvaluationCycle } from '@prisma/client';
 
 @Injectable()
 export class InitializeUserTierService {
@@ -16,18 +16,55 @@ export class InitializeUserTierService {
         if (existing) return existing;
 
         const allTiers = await this.tierRepository.findAll();
-        const baseTier = allTiers[0]; // 보통 브론즈(Priority 1)
+        // Since findAll is ordered by priority ASC in the repository, [0] is the base tier.
+        const baseTier = allTiers[0];
         if (!baseTier) throw new Error('Tier definitions missing');
 
+        // Calculate next evaluation date based on the tier's cycle
+        const nextEvaluationAt = this.calculateNextEvaluationAt(baseTier.evaluationCycle);
+
         const newUserTier = new UserTier(
-            0n, userId, baseTier.id,
-            new Prisma.Decimal(0), new Prisma.Decimal(0), new Date(),
-            baseTier.priority, UserTierStatus.ACTIVE, null, new Date(),
-            null, null, null, null, null, null, null, null, // No overrides
-            true, null, null,
-            baseTier
+            0n,
+            userId,
+            baseTier.id,
+            // States
+            new Prisma.Decimal(0), // totalEffectiveRollingUsd
+            new Prisma.Decimal(0), // currentPeriodRollingUsd
+            new Prisma.Decimal(0), // currentPeriodDepositUsd
+            new Date(),            // lastEvaluationAt
+            // Controls
+            baseTier.priority,     // highestPromotedPriority
+            null,                  // lastBonusReceivedAt
+            UserTierStatus.ACTIVE, // status
+            null,                  // graceEndsAt
+            new Date(),            // lastTierChangedAt
+            // Overrides (Default null)
+            null, null, null, null, null, null, null, null,
+            // Audit & Joined Data
+            true,                  // isBonusEligible
+            nextEvaluationAt,      // nextEvaluationAt
+            null,                  // note
+            baseTier               // Joined Tier data
         );
 
         return this.userTierRepository.save(newUserTier);
+    }
+
+    private calculateNextEvaluationAt(cycle: TierEvaluationCycle): Date | null {
+        const now = new Date();
+        switch (cycle) {
+            case TierEvaluationCycle.ROLLING_30_DAYS:
+                now.setUTCDate(now.getUTCDate() + 30);
+                return now;
+            case TierEvaluationCycle.ROLLING_90_DAYS:
+                now.setUTCDate(now.getUTCDate() + 90);
+                return now;
+            case TierEvaluationCycle.NONE:
+                return null;
+            default:
+                // Default to 30 days if unknown
+                now.setUTCDate(now.getUTCDate() + 30);
+                return now;
+        }
     }
 }

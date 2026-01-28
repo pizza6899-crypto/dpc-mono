@@ -25,9 +25,6 @@ export class TierAuditProcessor extends WorkerHost {
                     case TierAuditJobType.RECORD_TIER_SNAPSHOT:
                         await this.auditService.handleRecordStats(payload.data);
                         break;
-                    case TierAuditJobType.RECORD_USER_MONTHLY_STATS:
-                        await this.auditService.handleRecordUserPeriodStats(payload.data);
-                        break;
                     case TierAuditJobType.RECORD_DEMOTION_WARNING:
                         await this.auditService.handleRecordDemotionWarning(payload.data);
                         break;

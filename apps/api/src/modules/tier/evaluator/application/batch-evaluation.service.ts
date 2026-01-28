@@ -3,8 +3,8 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository';
 import { TierRepositoryPort } from '../../master/infrastructure/master.repository.port';
 import { TierAuditService } from '../../audit/application/tier-audit.service';
-import { DemotionPolicy, DemotionResult } from '../domain/demotion.policy';
-import { Prisma, TierChangeType, UserTierStatus, TierEvaluationCycle } from '@prisma/client';
+import { DemotionPolicy } from '../domain/demotion.policy';
+import { TierChangeType, UserTierStatus, TierEvaluationCycle } from '@prisma/client';
 import { nowUtc } from 'src/utils/date.util';
 
 @Injectable()
@@ -79,7 +79,7 @@ export class BatchEvaluationService {
                 // 경고 기록
                 await this.tierAuditService.recordDemotionWarning(userId, {
                     currentTierId: userTier.tierId,
-                    targetTierId: allTiers.find(t => t.priority < userTier.tier!.priority)?.id ?? userTier.tierId, // 예시
+                    targetTierId: allTiers.find(t => t.priority < userTier.tier!.priority)?.id ?? userTier.tierId,
                     evaluationDueAt: result.graceEndsAt!,
                     requiredRolling: userTier.tier.maintenanceRollingUsd,
                     currentRolling: userTier.currentPeriodRollingUsd,
@@ -99,13 +99,14 @@ export class BatchEvaluationService {
                     toTierId: result.targetTier!.id,
                     changeType: TierChangeType.DOWNGRADE,
                     reason: 'Failed to meet maintenance requirements after grace period',
-                    rollingAmountSnap: userTier.totalEffectiveRollingUsd,
+                    rollingAmountSnap: userTier.currentPeriodRollingUsd,
+                    depositAmountSnap: userTier.currentPeriodDepositUsd,
                     compRateSnap: userTier.customCompRate ?? result.targetTier!.compRate,
                     lossbackRateSnap: userTier.customLossbackRate ?? result.targetTier!.lossbackRate,
                     rakebackRateSnap: userTier.customRakebackRate ?? result.targetTier!.rakebackRate,
                     requirementUsdSnap: result.targetTier!.requirementUsd,
                     requirementDepositUsdSnap: result.targetTier!.requirementDepositUsd,
-                    cumulativeDepositUsdSnap: new Prisma.Decimal(0),
+                    cumulativeDepositUsdSnap: userTier.currentPeriodDepositUsd,
                 });
                 break;
         }

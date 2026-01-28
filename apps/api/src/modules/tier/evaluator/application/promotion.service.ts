@@ -2,9 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository';
 import { TierAuditService } from '../../audit/application/tier-audit.service';
 import { Tier } from '../../master/domain/tier.entity';
-import { Prisma, TierChangeType } from '@prisma/client';
+import { TierChangeType } from '@prisma/client';
 import { Transactional } from '@nestjs-cls/transactional';
-import { nowUtc } from 'src/utils/date.util';
 
 @Injectable()
 export class PromotionService {
@@ -34,13 +33,14 @@ export class PromotionService {
             toTierId: targetTier.id,
             changeType: TierChangeType.UPGRADE,
             reason,
-            rollingAmountSnap: userTier.totalEffectiveRollingUsd,
+            rollingAmountSnap: userTier.currentPeriodRollingUsd,
+            depositAmountSnap: userTier.currentPeriodDepositUsd,
             compRateSnap: userTier.customCompRate ?? targetTier.compRate,
             lossbackRateSnap: userTier.customLossbackRate ?? targetTier.lossbackRate,
             rakebackRateSnap: userTier.customRakebackRate ?? targetTier.rakebackRate,
             requirementUsdSnap: targetTier.requirementUsd,
             requirementDepositUsdSnap: targetTier.requirementDepositUsd,
-            cumulativeDepositUsdSnap: new Prisma.Decimal(0), // Profile 엔티티에 필드 추가 필요할 수 있음
+            cumulativeDepositUsdSnap: userTier.currentPeriodDepositUsd, // 임시로 현재 주기 입금액 사용 (추후 필요시 total 필드 추가)
         });
 
         this.logger.log(`User ${userId} promoted to ${targetTier.code} (from ${currentTier.code})`);

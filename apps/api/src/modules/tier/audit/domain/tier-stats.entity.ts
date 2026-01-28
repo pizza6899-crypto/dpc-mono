@@ -1,4 +1,4 @@
-import { Prisma, TierStats as PrismaTierStats, UserTierPeriodStats as PrismaUserTierPeriodStats } from '@prisma/client';
+import { Prisma, TierStats as PrismaTierStats } from '@prisma/client';
 
 export class TierStats {
     constructor(
@@ -7,6 +7,7 @@ export class TierStats {
         public readonly snapshotUserCount: number,
         public readonly totalBonusPaidUsd: Prisma.Decimal,
         public readonly totalRollingUsd: Prisma.Decimal,
+        public readonly totalDepositUsd: Prisma.Decimal,
         public readonly promotedCount: number,
         public readonly demotedCount: number,
         public readonly updatedAt: Date,
@@ -19,35 +20,10 @@ export class TierStats {
             data.snapshotUserCount,
             data.totalBonusPaidUsd,
             data.totalRollingUsd,
+            data.totalDepositUsd,
             data.promotedCount,
             data.demotedCount,
             data.updatedAt
-        );
-    }
-}
-
-export class UserTierPeriodStats {
-    constructor(
-        public readonly id: bigint,
-        public readonly userId: bigint,
-        public readonly year: number,
-        public readonly month: number,
-        public readonly tierId: bigint,
-        public readonly monthlyRollingUsd: Prisma.Decimal,
-        public readonly monthlyDepositUsd: Prisma.Decimal,
-        public readonly createdAt: Date,
-    ) { }
-
-    static fromPersistence(data: PrismaUserTierPeriodStats): UserTierPeriodStats {
-        return new UserTierPeriodStats(
-            data.id,
-            data.userId,
-            data.year,
-            data.month,
-            data.tierId,
-            data.monthlyRollingUsd,
-            data.monthlyDepositUsd,
-            data.createdAt
         );
     }
 }

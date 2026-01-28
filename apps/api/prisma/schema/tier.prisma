@@ -148,6 +148,7 @@ model TierHistory {
 
   // Snapshot data (변경 시점의 데이터 기록)
   rollingAmountSnap Decimal @default(0) @map("rolling_amount_snap") @db.Decimal(32, 18)
+  depositAmountSnap Decimal @default(0) @map("deposit_amount_snap") @db.Decimal(32, 18)
   compRateSnap      Decimal @default(0) @map("comp_rate_snap") @db.Decimal(8, 4)
   lossbackRateSnap  Decimal @default(0) @map("lossback_rate_snap") @db.Decimal(8, 4)
   rakebackRateSnap  Decimal @default(0) @map("rakeback_rate_snap") @db.Decimal(8, 4)
@@ -215,6 +216,7 @@ model TierStats {
   // [Metrics] 해당 구간(예: 1시간) 동안 발생한 합계 데이터
   totalBonusPaidUsd Decimal @default(0) @map("total_bonus_paid_usd") @db.Decimal(32, 18)
   totalRollingUsd   Decimal @default(0) @map("total_rolling_usd") @db.Decimal(32, 18)
+  totalDepositUsd   Decimal @default(0) @map("total_deposit_usd") @db.Decimal(32, 18) // [추가] 해당 구간 동안 발생한 합계 입금액
 
   // [Changes] 해당 구간 동안 발생한 티어 변동 인원 수
   promotedCount Int @default(0) @map("promoted_count")

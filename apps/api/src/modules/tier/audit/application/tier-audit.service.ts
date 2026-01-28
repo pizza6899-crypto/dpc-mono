@@ -3,8 +3,7 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { TierAuditRepositoryPort, CreateTierHistoryProps, UpdateEvaluationLogMetrics, UpdateTierStatsProps } from '../infrastructure/audit.repository.port';
 import { EvaluationStatus, Prisma } from '@prisma/client';
-import { TIER_AUDIT_QUEUE_NAME, TierAuditJobType, RecordTierSnapshotJobData, RecordUserMonthlyStatsJobData, RecordDemotionWarningJobData } from '../infrastructure/tier-audit.constants';
-import { UserTierPeriodStats } from '../domain/tier-stats.entity';
+import { TIER_AUDIT_QUEUE_NAME, TierAuditJobType, RecordTierSnapshotJobData, RecordDemotionWarningJobData } from '../infrastructure/tier-audit.constants';
 import { TierDemotionWarning } from '../domain/tier-demotion-warning.entity';
 import { TierEvaluationLog } from '../domain/tier-evaluation-log.entity';
 
@@ -59,6 +58,7 @@ export class TierAuditService {
         snapshotUserCount?: number;
         totalBonusPaidUsd?: Prisma.Decimal;
         totalRollingUsd?: Prisma.Decimal;
+        totalDepositUsd?: Prisma.Decimal;
         promotedCount?: number;
         demotedCount?: number;
     }): Promise<void> {
@@ -71,31 +71,8 @@ export class TierAuditService {
                     ...metrics,
                     totalBonusPaidUsd: metrics.totalBonusPaidUsd?.toString(),
                     totalRollingUsd: metrics.totalRollingUsd?.toString(),
+                    totalDepositUsd: metrics.totalDepositUsd?.toString(),
                 },
-            },
-        });
-    }
-
-    /**
-     * 유저의 월별 실적 스냅샷(UserTierPeriodStats)을 저장합니다.
-     */
-    async recordUserPeriodStats(userId: bigint, props: {
-        year: number;
-        month: number;
-        tierId: bigint;
-        monthlyRollingUsd: Prisma.Decimal;
-        monthlyDepositUsd: Prisma.Decimal;
-    }): Promise<void> {
-        await this.auditQueue.add(TierAuditJobType.RECORD_USER_MONTHLY_STATS, {
-            type: TierAuditJobType.RECORD_USER_MONTHLY_STATS,
-            data: {
-                userId: userId.toString(),
-                year: props.year,
-                month: props.month,
-                tierId: props.tierId.toString(),
-                monthlyRollingUsd: props.monthlyRollingUsd.toString(),
-                monthlyDepositUsd: props.monthlyDepositUsd.toString(),
-                createdAt: new Date().toISOString(),
             },
         });
     }
@@ -138,26 +115,10 @@ export class TierAuditService {
             ...metrics,
             totalBonusPaidUsd: metrics.totalBonusPaidUsd ? new Prisma.Decimal(metrics.totalBonusPaidUsd) : undefined,
             totalRollingUsd: metrics.totalRollingUsd ? new Prisma.Decimal(metrics.totalRollingUsd) : undefined,
+            totalDepositUsd: metrics.totalDepositUsd ? new Prisma.Decimal(metrics.totalDepositUsd) : undefined,
         };
 
         await this.auditRepository.updateStats(normalizedTime, BigInt(tierId), normalizedMetrics);
-    }
-
-    /**
-     * [Internal] BullMQ 프로세서에서 호출하는 실제 월별 실적 저장 로직입니다.
-     */
-    async handleRecordUserPeriodStats(data: RecordUserMonthlyStatsJobData): Promise<void> {
-        const stats = new UserTierPeriodStats(
-            0n,
-            BigInt(data.userId),
-            data.year,
-            data.month,
-            BigInt(data.tierId),
-            new Prisma.Decimal(data.monthlyRollingUsd),
-            new Prisma.Decimal(data.monthlyDepositUsd),
-            new Date(data.createdAt)
-        );
-        await this.auditRepository.savePeriodStats(stats);
     }
 
     /**

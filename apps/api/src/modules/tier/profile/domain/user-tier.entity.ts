@@ -20,9 +20,11 @@ export class UserTier {
         // States
         public totalEffectiveRollingUsd: Prisma.Decimal,
         public currentPeriodRollingUsd: Prisma.Decimal,
+        public currentPeriodDepositUsd: Prisma.Decimal,
         public lastEvaluationAt: Date,
         // Controls
         public highestPromotedPriority: number,
+        public lastBonusReceivedAt: Date | null,
         public status: UserTierStatus,
         public graceEndsAt: Date | null,
         public lastTierChangedAt: Date,
@@ -82,10 +84,19 @@ export class UserTier {
     }
 
     /**
+     * 입금 실적을 누적합니다.
+     */
+    incrementDeposit(amount: Prisma.Decimal | number): void {
+        const decimalAmount = new Prisma.Decimal(amount);
+        this.currentPeriodDepositUsd = this.currentPeriodDepositUsd.add(decimalAmount);
+    }
+
+    /**
      * 주기적 심사 완료 후 실적을 리셋하고 다음 심사일을 설정합니다.
      */
     resetPeriodPerformance(evaluationCycleDays: number): void {
         this.currentPeriodRollingUsd = new Prisma.Decimal(0);
+        this.currentPeriodDepositUsd = new Prisma.Decimal(0);
         this.lastEvaluationAt = new Date();
 
         const nextDate = new Date();
@@ -96,8 +107,8 @@ export class UserTier {
     static fromPersistence(data: Prisma.UserTierGetPayload<{ include: { tier: { include: { translations: true } } } }>): UserTier {
         return new UserTier(
             data.id, data.userId, data.tierId,
-            data.totalEffectiveRollingUsd, data.currentPeriodRollingUsd, data.lastEvaluationAt,
-            data.highestPromotedPriority, data.status as UserTierStatus, data.graceEndsAt, data.lastTierChangedAt,
+            data.totalEffectiveRollingUsd, data.currentPeriodRollingUsd, data.currentPeriodDepositUsd, data.lastEvaluationAt,
+            data.highestPromotedPriority, data.lastBonusReceivedAt, data.status as UserTierStatus, data.graceEndsAt, data.lastTierChangedAt,
             data.customCompRate, data.customLossbackRate, data.customRakebackRate, data.customReloadBonusRate,
             data.customWithdrawalLimitUsd, data.isCustomWithdrawalUnlimited,
             data.isCustomDedicatedManager, data.isCustomVipEventEligible,

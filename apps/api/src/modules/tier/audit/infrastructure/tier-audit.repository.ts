@@ -7,7 +7,6 @@ import { TierAuditRepositoryPort, CreateTierHistoryProps, UpdateEvaluationLogMet
 import { TierHistory } from '../domain/tier-history.entity';
 import { TierEvaluationLog } from '../domain/tier-evaluation-log.entity';
 import { TierDemotionWarning } from '../domain/tier-demotion-warning.entity';
-import { TierStats, UserTierPeriodStats } from '../domain/tier-stats.entity';
 
 @Injectable()
 export class TierAuditRepository implements TierAuditRepositoryPort {
@@ -94,21 +93,6 @@ export class TierAuditRepository implements TierAuditRepositoryPort {
             where: { timestamp_tierId: { timestamp, tierId } },
             create: { timestamp, tierId, ...data },
             update: data
-        });
-    }
-
-    async savePeriodStats(stats: UserTierPeriodStats): Promise<void> {
-        const id = this.snowflake.generate(new Date());
-        await this.tx.userTierPeriodStats.create({
-            data: {
-                id,
-                userId: stats.userId,
-                year: stats.year,
-                month: stats.month,
-                tierId: stats.tierId,
-                monthlyRollingUsd: stats.monthlyRollingUsd,
-                monthlyDepositUsd: stats.monthlyDepositUsd
-            }
         });
     }
 }
