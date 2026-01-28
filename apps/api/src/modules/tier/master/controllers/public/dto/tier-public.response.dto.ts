@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsBoolean, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class TierPublicRequirementDto {
     @ApiProperty()
@@ -61,11 +61,13 @@ export class TierPublicResponseDto {
     @IsString()
     name: string;
 
-    @ApiProperty({ description: 'Localized tier description', nullable: true })
+    @ApiProperty({ type: String, description: 'Localized tier description', nullable: true })
+    @IsOptional()
     @IsString()
     description: string | null;
 
-    @ApiProperty()
+    @ApiProperty({ type: String, nullable: true })
+    @IsOptional()
     @IsString()
     imageUrl: string | null;
 
@@ -81,7 +83,7 @@ export class TierPublicResponseDto {
     @Type(() => TierPublicLimitsDto)
     limits: TierPublicLimitsDto;
 
-    @ApiProperty()
-    @IsString()
+    @ApiProperty({ type: Number })
+    @IsNumber()
     priority: number;
 }

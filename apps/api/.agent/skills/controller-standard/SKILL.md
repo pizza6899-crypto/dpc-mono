@@ -39,7 +39,7 @@ description: NestJS 컨트롤러 구현 표준 (API 디자인, Sqids 난독화, 
 
 ### 4. Swagger & API 문서화
 *   **@ApiTags**: **관객/범위 접두사 필수 사용**. `Admin`, `Public`, `User` 중 하나로 시작해야 합니다 (예: `@ApiTags('Admin Tiers')`, `@ApiTags('User Profile')`).
-*   **@ApiOperation**: `summary`에 `'English / 한글 설명'` 형식으로 작성.
+*   **@ApiOperation**: `summary` 및 `description`은 반드시 **'English / 한글 설명'** 형식을 사용하여 병기 처리합니다. (예: `summary: 'Get Profile / 프로필 조회'`)
 *   **응답 표준**: `@ApiStandardResponse()` 및 `@ApiPaginatedResponse()` 사용.
 
 ### 5. 페이지네이션 (Pagination)

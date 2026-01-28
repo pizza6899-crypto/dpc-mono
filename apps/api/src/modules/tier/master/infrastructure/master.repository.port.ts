@@ -1,3 +1,4 @@
+import { TierEvaluationCycle, Language } from '@prisma/client';
 import { Tier } from '../domain/tier.entity';
 import { TierSettings } from '../domain/tier-settings.entity';
 
@@ -6,7 +7,7 @@ export interface UpdateTierProps {
     requirementUsd?: number;
     requirementDepositUsd?: number;
     maintenanceRollingUsd?: number;
-    evaluationCycle?: any; // TierEvaluationCycle
+    evaluationCycle?: TierEvaluationCycle;
     levelUpBonusUsd?: number;
     levelUpBonusWageringMultiplier?: number;
     compRate?: number;
@@ -20,7 +21,7 @@ export interface UpdateTierProps {
     imageUrl?: string | null;
     imageFileId?: string | null;
     translations?: {
-        language: any; // Language
+        language: Language;
         name: string;
         description?: string | null;
     }[];

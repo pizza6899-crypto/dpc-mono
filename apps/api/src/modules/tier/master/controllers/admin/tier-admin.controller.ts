@@ -23,7 +23,7 @@ export class TierAdminController {
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
         summary: 'List all tiers / 전체 티어 목록 조회',
-        description: '시스템에 설정된 모든 티어 정보와 혜택 목록을 조회합니다.',
+        description: 'Retrieves all tier information and benefits configured in the system. / 시스템에 설정된 모든 티어 정보와 혜택 목록을 조회합니다.',
     })
     @ApiStandardResponse(TierAdminResponseDto, { isArray: true })
     async getTiers(): Promise<TierAdminResponseDto[]> {
@@ -35,7 +35,7 @@ export class TierAdminController {
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
         summary: 'Update tier / 티어 정보 수정',
-        description: '티어의 승급 조건, 혜택, 다국어 명칭 등을 수정합니다.',
+        description: 'Updates tier promotion requirements, benefits, and localized names. / 티어의 승급 조건, 혜택, 다국어 명칭 등을 수정합니다.',
     })
     @ApiStandardResponse(TierAdminResponseDto)
     @AuditLog({

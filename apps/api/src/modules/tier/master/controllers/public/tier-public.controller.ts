@@ -4,9 +4,7 @@ import { Language } from '@prisma/client';
 import { ApiStandardResponse, ApiStandardErrors } from 'src/common/http/decorators/api-response.decorator';
 import { Public } from 'src/common/auth/decorators/roles.decorator';
 import { TierService } from '../../application/tier.service';
-import { TierSettingsService } from '../../application/tier-settings.service';
 import { TierPublicResponseDto } from './dto/tier-public.response.dto';
-import { TierSettingsPublicResponseDto } from './dto/tier-settings-public.response.dto';
 import { Tier } from '../../domain/tier.entity';
 
 @Controller('public/tiers')
@@ -15,7 +13,6 @@ import { Tier } from '../../domain/tier.entity';
 export class TierPublicController {
     constructor(
         private readonly tierService: TierService,
-        private readonly tierSettingsService: TierSettingsService,
     ) { }
 
     @Get()
@@ -23,36 +20,20 @@ export class TierPublicController {
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
         summary: 'List all tiers (Public) / 전체 티어 정보 조회',
-        description: '요청한 언어로 번역된 전체 티어 목록을 반환합니다. 언어가 지정되지 않으면 기본값(EN)을 사용합니다.',
+        description: 'Returns a list of all tiers translated into the requested language. Fallback to English if no language is specified. / 요청한 언어로 번역된 전체 티어 목록을 반환합니다. 언어가 지정되지 않으면 기본값을 사용합니다.',
     })
-    @ApiQuery({ name: 'lang', enum: Language, required: false, description: 'Default: EN' })
+    @ApiQuery({ name: 'lang', enum: Language, required: false, description: 'Default: JA' })
     @ApiStandardResponse(TierPublicResponseDto, { isArray: true })
     async getTiers(
         @Query('lang') lang?: Language,
     ): Promise<TierPublicResponseDto[]> {
-        const targetLang = lang || Language.EN;
+        const targetLang = lang || Language.JA;
         const tiers = await this.tierService.findAll();
 
         // Priority 순으로 정렬 (이미 되어있을 수 있으나 보장)
         const sortedTiers = tiers.sort((a, b) => a.priority - b.priority);
 
         return sortedTiers.map(tier => this.mapToResponseDto(tier, targetLang));
-    }
-
-    @Get('settings')
-    @Public()
-    @HttpCode(HttpStatus.OK)
-    @ApiOperation({
-        summary: 'Get tier settings (Public) / 티어 시스템 설정 조회',
-        description: '티어 승급/강등 프로모션 활성화 여부 등 공개 설정을 조회합니다.',
-    })
-    @ApiStandardResponse(TierSettingsPublicResponseDto)
-    async getSettings(): Promise<TierSettingsPublicResponseDto> {
-        const settings = await this.tierSettingsService.find();
-        return {
-            isPromotionEnabled: settings.isPromotionEnabled,
-            isDowngradeEnabled: settings.isDowngradeEnabled,
-        };
     }
 
     private mapToResponseDto(tier: Tier, lang: Language): TierPublicResponseDto {

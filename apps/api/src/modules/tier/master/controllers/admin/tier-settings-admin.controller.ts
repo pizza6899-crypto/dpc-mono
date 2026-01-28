@@ -23,7 +23,7 @@ export class TierSettingsAdminController {
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
         summary: 'Get tier settings / 티어 설정 조회',
-        description: '시스템의 전반적인 티어 심사 설정을 조회합니다.',
+        description: 'Retrieves the overall tier evaluation settings of the system. / 시스템의 전반적인 티어 심사 설정을 조회합니다.',
     })
     @ApiStandardResponse(TierSettingsAdminResponseDto)
     async getSettings(): Promise<TierSettingsAdminResponseDto> {
@@ -36,8 +36,8 @@ export class TierSettingsAdminController {
     @ApiOperation({
         summary: 'Update tier settings / 티어 설정 수정',
         description: `
-티어 승급 및 강등 심사 활성화 여부를 수정합니다.
-**주의**: 배치 심사 시간(evaluationHourUtc)은 이 API를 통해 수정할 수 없습니다.
+Enables or disables tier promotion and downgrade evaluation. / 티어 승급 및 강등 심사 활성화 여부를 수정합니다.
+**Note**: The evaluation batch hour (evaluationHourUtc) cannot be modified through this API. / **주의**: 배치 심사 시간(evaluationHourUtc)은 이 API를 통해 수정할 수 없습니다.
     `,
     })
     @ApiStandardResponse(TierSettingsAdminResponseDto)
