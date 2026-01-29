@@ -50,6 +50,7 @@ export abstract class TierAuditRepositoryPort {
     // 2. Evaluation Log
     abstract createEvaluationLog(status: EvaluationStatus): Promise<TierEvaluationLog>;
     abstract updateEvaluationLog(id: bigint, startedAt: Date, data: UpdateEvaluationLogMetrics & { status?: EvaluationStatus, finishedAt?: Date, errorMessage?: string | null }): Promise<TierEvaluationLog>;
+    abstract findEvaluationLogs(limit?: number): Promise<TierEvaluationLog[]>;
 
     // 4. Stats
     abstract updateStats(timestamp: Date, tierId: bigint, data: UpdateTierStatsProps): Promise<void>;

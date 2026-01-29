@@ -7,6 +7,7 @@ import { GetUserTierDetailService } from './application/get-user-tier-detail.ser
 import { GetUserTierHistoryService } from './application/get-user-tier-history.service';
 import { ListUserTiersService } from './application/list-user-tiers.service';
 import { UpdateUserTierCustomService } from './application/update-user-tier-custom.service';
+import { UpdateUserTierStatusService } from './application/update-user-tier-status.service';
 import { ForceUpdateUserTierService } from './application/force-update-user-tier.service';
 import { ResetUserTierPerformanceService } from './application/reset-user-tier-performance.service';
 
@@ -29,6 +30,7 @@ import { TierMasterModule } from '../master/tier-master.module';
         GetUserTierHistoryService,
         ListUserTiersService,
         UpdateUserTierCustomService,
+        UpdateUserTierStatusService,
         ForceUpdateUserTierService,
         ResetUserTierPerformanceService,
     ],
@@ -40,6 +42,7 @@ import { TierMasterModule } from '../master/tier-master.module';
         GetUserTierHistoryService,
         ListUserTiersService,
         UpdateUserTierCustomService,
+        UpdateUserTierStatusService,
         ForceUpdateUserTierService,
         ResetUserTierPerformanceService,
     ],

@@ -5,13 +5,12 @@ import { GetUserTierHistoryService } from '../../application/get-user-tier-histo
 import { UpdateUserTierCustomService } from '../../application/update-user-tier-custom.service';
 import { ForceUpdateUserTierService } from '../../application/force-update-user-tier.service';
 import { ResetUserTierPerformanceService } from '../../application/reset-user-tier-performance.service';
+import { UpdateUserTierStatusService } from '../../application/update-user-tier-status.service';
 import { UserTierAdminResponseDto } from './dto/response/user-tier-admin.response.dto';
 import { UserTierHistoryResponseDto } from '../public/dto/user-tier-history.response.dto';
-import {
-    UpdateUserTierCustomRequestDto,
-    ForceUpdateTierRequestDto,
-    ListUserTiersQueryDto
-} from './dto/request/user-tier-admin.request.dto';
+import { UpdateUserTierCustomRequestDto } from './dto/request/update-user-tier-custom.request.dto';
+import { ForceUpdateTierRequestDto } from './dto/request/force-update-tier.request.dto';
+import { ListUserTiersQueryDto } from './dto/request/list-user-tiers.query.dto';
 import { ListUserTiersService } from '../../application/list-user-tiers.service';
 import { ApiPaginatedResponse } from 'src/common/http/decorators/api-response.decorator';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
@@ -21,6 +20,7 @@ import { SessionAuthGuard } from 'src/common/auth/guards/session-auth.guard';
 import { Admin } from 'src/common/auth/decorators/roles.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
+import { UpdateUserTierStatusRequestDto } from './dto/request/update-user-tier-status.request.dto';
 
 @ApiTags('Admin User Tiers')
 @Controller('admin/user-tiers')
@@ -35,6 +35,7 @@ export class UserTierAdminController {
         private readonly updateUserTierCustomService: UpdateUserTierCustomService,
         private readonly forceUpdateUserTierService: ForceUpdateUserTierService,
         private readonly resetUserTierPerformanceService: ResetUserTierPerformanceService,
+        private readonly updateUserTierStatusService: UpdateUserTierStatusService,
     ) { }
 
     @Get()
@@ -122,5 +123,25 @@ export class UserTierAdminController {
     @ApiOkResponse({ description: 'Successfully reset performance / 실적 초기화 성공' })
     async resetUserTierPerformance(@Param('userId') userId: string): Promise<void> {
         return this.resetUserTierPerformanceService.execute(BigInt(userId));
+    }
+
+    @Patch('users/:userId/status')
+    @ApiOperation({ summary: 'Update user tier status (Lock/Unlock) / 유저 티어 상태 변경' })
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'TIER',
+        action: 'UPDATE_STATUS',
+        extractMetadata: (req) => ({ userId: req.params.userId, body: req.body })
+    })
+    @ApiOkResponse({ description: 'Successfully updated status / 상태 변경 성공' })
+    async updateUserTierStatus(
+        @Param('userId') userId: string,
+        @Body() dto: UpdateUserTierStatusRequestDto
+    ): Promise<void> {
+        return this.updateUserTierStatusService.execute({
+            userId: BigInt(userId),
+            status: dto.status,
+            reason: dto.reason,
+        });
     }
 }

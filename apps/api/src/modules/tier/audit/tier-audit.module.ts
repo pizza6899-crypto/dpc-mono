@@ -10,8 +10,9 @@ import { TIER_AUDIT_QUEUE_NAME } from './infrastructure/tier-audit.constants';
 import { TierAuditScheduler } from './schedulers/tier-audit.scheduler';
 import { TierProfileModule } from '../profile/tier-profile.module';
 import { TierMasterModule } from '../master/tier-master.module';
-import { TierStatsAdminController } from './controllers/admin/tier-stats-admin.controller';
+import { TierAuditAdminController } from './controllers/admin/tier-audit-admin.controller';
 import { GetTierDistributionService } from './application/get-tier-distribution.service';
+import { ListEvaluationLogsService } from './application/list-evaluation-logs.service';
 
 @Module({
     imports: [
@@ -23,14 +24,15 @@ import { GetTierDistributionService } from './application/get-tier-distribution.
         forwardRef(() => TierProfileModule),
         TierMasterModule,
     ],
-    controllers: [TierStatsAdminController],
+    controllers: [TierAuditAdminController],
     providers: [
         { provide: TierAuditRepositoryPort, useClass: TierAuditRepository },
         TierAuditService,
         TierAuditProcessor,
         TierAuditScheduler,
         GetTierDistributionService,
+        ListEvaluationLogsService,
     ],
-    exports: [TierAuditRepositoryPort, TierAuditService],
+    exports: [TierAuditRepositoryPort, TierAuditService, ListEvaluationLogsService],
 })
 export class TierAuditModule { }

@@ -17,6 +17,7 @@ import { UserRoleType, UserStatus } from '@prisma/client';
 import { CreateUserService } from 'src/modules/user/application/create-user.service';
 import { UserAlreadyExistsException } from 'src/modules/user/domain/user.exception';
 import { InitializeUserWalletsService } from 'src/modules/wallet/application/initialize-user-wallets.service';
+import { InitializeUserTierService } from 'src/modules/tier/profile/application/initialize-user-tier.service';
 
 export interface RegisterCredentialAdminParams {
   email: string;
@@ -50,6 +51,7 @@ export class RegisterCredentialAdminService {
     private readonly createCodeService: CreateCodeService,
     private readonly createUserService: CreateUserService,
     private readonly initializeUserWalletsService: InitializeUserWalletsService,
+    private readonly initializeUserTierService: InitializeUserTierService,
   ) { }
 
   @Transactional()
@@ -118,6 +120,9 @@ export class RegisterCredentialAdminService {
       // 4.1 모든 지원 통화에 대해 월렛 생성 (동기)
       // WALLET_CURRENCIES에 정의된 모든 통화의 지갑을 생성합니다.
       await this.initializeUserWalletsService.execute(user.id);
+
+      // 4.2 유저 티어 초기화 (동기)
+      await this.initializeUserTierService.execute(user.id);
 
       // 본인만의 기본 레퍼럴 코드 생성 (동기)
       // 첫 번째 코드이므로 자동으로 기본(default) 코드가 됨

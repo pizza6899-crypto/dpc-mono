@@ -12,6 +12,7 @@ import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.reposit
 import { CreateUserService } from 'src/modules/user/application/create-user.service';
 import { UserAlreadyExistsException } from 'src/modules/user/domain/user.exception';
 import { InitializeUserWalletsService } from 'src/modules/wallet/application/initialize-user-wallets.service';
+import { InitializeUserTierService } from 'src/modules/tier/profile/application/initialize-user-tier.service';
 
 export interface SocialUserInfo {
   socialId: string;
@@ -45,6 +46,7 @@ export class RegisterSocialService {
     private readonly createCodeService: CreateCodeService,
     private readonly createUserService: CreateUserService,
     private readonly initializeUserWalletsService: InitializeUserWalletsService,
+    private readonly initializeUserTierService: InitializeUserTierService,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
   ) { }
@@ -82,6 +84,9 @@ export class RegisterSocialService {
 
         // 3. 월렛 생성 (동기)
         await this.initializeUserWalletsService.execute(user.id);
+
+        // 3.1 유저 티어 초기화 (동기)
+        await this.initializeUserTierService.execute(user.id);
 
         // 본인만의 기본 레퍼럴 코드 생성 (동기)
         // 첫 번째 코드이므로 자동으로 기본(default) 코드가 됨
