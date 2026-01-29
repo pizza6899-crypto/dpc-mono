@@ -15,7 +15,7 @@ import { NowPaymentCallbackService } from '../application/now-payment-callback.s
 import { GuestOnly } from '../../../common/auth/decorators/roles.decorator';
 import { ObjectUtil } from '../../../utils/object.util';
 
-@ApiTags('NowPayment Callback')
+@ApiTags('Public Payment Callback')
 @Controller('nowpayments')
 @GuestOnly()
 @UseFilters() // 글로벌 예외 필터 비활성화

@@ -35,7 +35,7 @@ import { DcsCallbackService } from '../application/dcs-callback.service';
 import { DcsValidationPipe } from '../infrastructure/dcs-validation.pipe';
 import { DcsExceptionFilter } from '../infrastructure/dcs-exception.filter';
 
-@ApiTags('DCS Callback')
+@ApiTags('Public Casino Callback')
 @Controller('dopaminedev')
 @GuestOnly()
 @UseFilters(DcsExceptionFilter)

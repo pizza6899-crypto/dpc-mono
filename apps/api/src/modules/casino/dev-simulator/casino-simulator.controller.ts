@@ -4,7 +4,7 @@ import { CasinoSimulatorService } from './casino-simulator.service';
 import { SimulateRoundRequestDto } from './dto/simulate-round.dto';
 import { Public } from 'src/common/auth/decorators/roles.decorator';
 
-@ApiTags('[DEV] Casino Simulator')
+@ApiTags('Public Casino Simulator')
 @Controller('casino/dev/simulate')
 @Public() // 개발용이므로 Public (보안 주의)
 export class CasinoSimulatorController {

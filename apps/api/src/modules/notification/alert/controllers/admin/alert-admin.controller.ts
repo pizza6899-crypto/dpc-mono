@@ -26,7 +26,7 @@ import { FindAlertsQueryDto } from './dto/request/find-alerts-query.dto';
 import { AlertResponseDto } from './dto/response/alert.response.dto';
 import { MessageCode } from '@repo/shared';
 
-@ApiTags('Notification Admin')
+@ApiTags('Admin Notification Alert')
 @Controller('admin/notifications/alerts')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 @ApiStandardErrors()

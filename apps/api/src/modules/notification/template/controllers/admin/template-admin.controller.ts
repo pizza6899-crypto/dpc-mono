@@ -20,7 +20,7 @@ import {
     TemplateListItemResponseDto,
 } from './dto/response/template.response.dto';
 
-@ApiTags('Notification Template Admin')
+@ApiTags('Admin Notification Template')
 @Controller('admin/notifications/templates')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 @ApiStandardErrors()

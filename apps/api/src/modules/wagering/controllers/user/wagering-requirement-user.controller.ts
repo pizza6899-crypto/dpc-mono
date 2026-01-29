@@ -9,7 +9,7 @@ import { Paginated } from '../../../../common/http/decorators/paginated.decorato
 import { SqidsService } from '../../../../common/sqids/sqids.service';
 import { SqidsPrefix } from '../../../../common/sqids/sqids.constants';
 
-@ApiTags('Wagering Requirements')
+@ApiTags('User Wagering Requirement')
 @Controller('user/wagering-requirements')
 export class WageringRequirementUserController {
     constructor(

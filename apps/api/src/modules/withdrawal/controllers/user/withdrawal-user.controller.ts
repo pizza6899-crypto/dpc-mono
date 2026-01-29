@@ -48,7 +48,7 @@ import {
     WithdrawalOptionsResponseDto,
 } from './dto';
 
-@ApiTags('Withdrawal')
+@ApiTags('User Withdrawal')
 @Controller('withdrawals')
 @ApiBearerAuth()
 @ApiStandardErrors()

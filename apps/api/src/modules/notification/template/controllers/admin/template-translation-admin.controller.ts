@@ -21,7 +21,7 @@ import { TemplateResponseDto } from './dto/response/template.response.dto';
 import { TemplateTranslationParamDto } from './dto/request/template-translation.param.dto';
 import { UpdateTemplateTranslationRequestDto } from './dto/request/update-template-translation.request.dto';
 
-@ApiTags('Notification Template Admin')
+@ApiTags('Admin Notification Template')
 @Controller('admin/notifications/templates')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 @ApiStandardErrors()

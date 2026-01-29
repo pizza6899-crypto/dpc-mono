@@ -18,7 +18,7 @@ import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
 import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
 import { PaginatedData, PaginatedResponseDto } from 'src/common/http/types';
 
-@ApiTags('Exchange')
+@ApiTags('Public Exchange')
 @ApiBearerAuth()
 @Controller('exchange')
 export class ExchangeController {

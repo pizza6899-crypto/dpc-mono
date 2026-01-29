@@ -20,7 +20,7 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 
-@ApiTags('Comp')
+@ApiTags('User Comp')
 @Controller('user/comp')
 @ApiStandardErrors()
 export class CompUserController {

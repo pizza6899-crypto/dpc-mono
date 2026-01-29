@@ -30,7 +30,7 @@ import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
 
 @Controller('wallet')
-@ApiTags('Wallet')
+@ApiTags('User Wallet')
 @ApiStandardErrors()
 export class WalletController {
   constructor(

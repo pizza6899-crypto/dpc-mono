@@ -9,7 +9,7 @@ import { CategoryListRequestDto } from './dto/request/category-list.request.dto'
 import { PaginatedData } from 'src/common/http/types';
 import { Language } from '@prisma/client';
 
-@ApiTags('Casino Category')
+@ApiTags('User Casino Category')
 @Controller('casino/categories')
 export class CategoryUserController {
     constructor(private readonly findCategoriesService: FindCategoriesService) { }

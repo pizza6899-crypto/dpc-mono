@@ -18,7 +18,7 @@ import { CreditRequestDto, DebitRequestDto, BonusRequestDto, BonusResponseDto, G
 import { WhitecliffExceptionFilter } from '../infrastructure/whitecliff-exception.filter';
 import { WhitecliffValidationPipe } from '../infrastructure/whitecliff-validation.pipe';
 
-@ApiTags('Whitecliff Callback')
+@ApiTags('Public Casino Callback')
 @Controller('dopaminedev')
 @GuestOnly()
 @UseFilters(WhitecliffExceptionFilter)

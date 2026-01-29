@@ -41,7 +41,7 @@ import { ApplyCouponPromotionService } from '../../application/apply-coupon-prom
 import { GetMyPromotionsForUserService } from '../../application/get-my-promotions-for-user.service';
 
 @Controller('promotions')
-@ApiTags('Promotion')
+@ApiTags('User Promotion')
 @ApiBearerAuth()
 @ApiStandardErrors()
 export class PromotionUserController {

@@ -24,7 +24,7 @@ import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 
-@ApiTags('Casino Game')
+@ApiTags('User Casino Game')
 @Controller('casino/games')
 export class GameUserController {
     constructor(

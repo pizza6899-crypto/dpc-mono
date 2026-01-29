@@ -37,7 +37,7 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 
-@ApiTags('Affiliate Commission')
+@ApiTags('User Affiliate Commission')
 @Controller('commissions')
 @ApiStandardErrors()
 export class AffiliateCommissionController {

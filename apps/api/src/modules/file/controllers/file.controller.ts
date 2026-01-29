@@ -26,7 +26,7 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { FileSizeExceptionFilter } from '../filters/file-size.filter';
 
 @Controller('file')
-@ApiTags('File')
+@ApiTags('User File')
 @ApiStandardErrors()
 export class FileController {
     constructor(

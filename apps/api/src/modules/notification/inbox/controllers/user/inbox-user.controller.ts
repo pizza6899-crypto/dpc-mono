@@ -36,7 +36,7 @@ import {
     MarkAllAsReadResponseDto,
 } from './dto/response/notification.response.dto';
 
-@ApiTags('Notification')
+@ApiTags('User Notification')
 @Controller('user/inbox')
 @ApiStandardErrors()
 export class InboxUserController {
