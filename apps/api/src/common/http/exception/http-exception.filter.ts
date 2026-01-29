@@ -61,6 +61,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
     };
 
     response.status(status).json(errorResponse);
+
+    // 🛑 심각한 에러(500대 혹은 DB 에러)는 별도 Audit Log 기록
+    if (status >= HttpStatus.INTERNAL_SERVER_ERROR || messageCode === MessageCode.DB_QUERY_ERROR) {
+      this.dispatchCriticalError(request, exception, messageCode, finalMessage);
+    }
   }
 
   private resolveErrorDetails(exception: unknown): ErrorDetails {
@@ -113,27 +118,51 @@ export class HttpExceptionFilter implements ExceptionFilter {
       return this.handleNestHttpException(exception);
     }
 
+    const isProduction = process.env.NODE_ENV === 'production';
+    let message = exception instanceof Error ? exception.message : 'Unknown error';
+
+    if (isProduction) {
+      message = 'Internal Server Error';
+    }
+
     return {
       status: HttpStatus.INTERNAL_SERVER_ERROR,
       messageCode: MessageCode.INTERNAL_SERVER_ERROR,
-      message: exception instanceof Error ? exception.message : '',
+      message,
     };
   }
 
   private handlePrismaError(error: Prisma.PrismaClientKnownRequestError): ErrorDetails {
     let messageCode = MessageCode.DB_QUERY_ERROR;
+    let userMessage = 'Database request failed';
+    let status = HttpStatus.INTERNAL_SERVER_ERROR; // 기본값은 서버 에러 (500)
+
     switch (error.code) {
       case 'P2002':
+        // 중복 키 등 제약조건 위반 -> 유저 입력 실수 (409 Conflict가 맞으나 편의상 400 사용)
         messageCode = MessageCode.DB_CONSTRAINT_VIOLATION;
+        userMessage = 'Unique constraint violation';
+        status = HttpStatus.BAD_REQUEST;
         break;
       case 'P2025':
+        // 레코드를 찾을 수 없음 -> 유저 요청 리소스 부재 (404)
         messageCode = MessageCode.USER_NOT_FOUND;
+        userMessage = 'Record not found';
+        status = HttpStatus.NOT_FOUND;
         break;
+      default:
+        // 그 외 DB 연결 오류 등은 시스템 장애 (500)
+        if (process.env.NODE_ENV !== 'production') {
+          userMessage = error.message;
+        } else {
+          userMessage = 'An unexpected database error occurred';
+        }
     }
+
     return {
-      status: HttpStatus.BAD_REQUEST,
+      status,
       messageCode,
-      message: error.message,
+      message: userMessage,
     };
   }
 
@@ -224,6 +253,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
       message = (response as any).message;
     }
 
+    // [Security] Production 환경에서 500 에러 메시지 마스킹
+    if (status === HttpStatus.INTERNAL_SERVER_ERROR && process.env.NODE_ENV === 'production') {
+      message = 'Internal Server Error';
+    }
+
     return { status, messageCode, message };
   }
 
@@ -280,5 +314,55 @@ export class HttpExceptionFilter implements ExceptionFilter {
       },
       requestInfo,
     );
+  }
+
+  /**
+   * 심각한 에러(시스템 장애, DB 오류 등)를 Audit Log에 기록
+   */
+  private async dispatchCriticalError(
+    request: Request,
+    exception: unknown,
+    messageCode: MessageCode,
+    userMessage: string,
+  ): Promise<void> {
+    if (!this.dispatchLogService) return;
+
+    // 로깅 과정에서 에러가 나더라도 원본 요청 처리에 영향 주지 않도록 try-catch
+    try {
+      const requestInfo = extractClientInfo(request);
+      const userId =
+        (request as any).user?.id ||
+        (request as any).session?.userId;
+
+      const errorStack = exception instanceof Error ? exception.stack?.slice(0, 2000) : '';
+
+      await this.dispatchLogService.dispatch(
+        {
+          type: LogType.ERROR,
+          data: {
+            userId: userId ? userId.toString() : undefined,
+            errorCode: messageCode,
+            errorMessage: userMessage,
+            stackTrace: errorStack,
+            path: request.path,
+            method: request.method,
+            severity: 'CRITICAL', // 심각한 에러는 CRITICAL
+            country: requestInfo.country,
+            city: requestInfo.city,
+            isMobile: requestInfo.isMobile,
+            cfRay: requestInfo.cfRay,
+            ip: requestInfo.ip,
+            userAgent: requestInfo.userAgent,
+            metadata: {
+              url: request.url,
+              originalError: exception instanceof Error ? exception.message : String(exception),
+            },
+          },
+        },
+        requestInfo,
+      );
+    } catch (e) {
+      this.logger.error(`Failed to dispatch critical error log: ${e.message}`);
+    }
   }
 }
