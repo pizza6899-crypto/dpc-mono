@@ -2,15 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { UserTierRepositoryPort } from '../infrastructure/user-tier.repository.port';
 import { TierRepositoryPort } from '../../master/infrastructure/master.repository.port';
 import { UserTier } from '../domain/user-tier.entity';
-import { Prisma, UserTierStatus, TierEvaluationCycle } from '@prisma/client';
+import { Prisma, UserTierStatus, TierEvaluationCycle, TierChangeType } from '@prisma/client';
+import { TierAuditService } from '../../audit/application/tier-audit.service';
+import { Transactional } from '@nestjs-cls/transactional';
 
 @Injectable()
 export class InitializeUserTierService {
     constructor(
         private readonly userTierRepository: UserTierRepositoryPort,
         private readonly tierRepository: TierRepositoryPort,
+        private readonly tierAuditService: TierAuditService,
     ) { }
 
+    @Transactional()
     async execute(userId: bigint): Promise<UserTier> {
         const existing = await this.userTierRepository.findByUserId(userId);
         if (existing) return existing;
@@ -50,7 +54,27 @@ export class InitializeUserTierService {
             baseTier               // Joined Tier data
         );
 
-        return this.userTierRepository.save(newUserTier);
+        const savedUserTier = await this.userTierRepository.save(newUserTier);
+
+        // Record Initial Tier History
+        await this.tierAuditService.recordTierChange({
+            userId,
+            fromTierId: null,
+            toTierId: baseTier.id,
+            changeType: TierChangeType.INITIAL,
+            reason: 'User initialized with base tier',
+            rollingAmountSnap: new Prisma.Decimal(0),
+            depositAmountSnap: new Prisma.Decimal(0),
+            compRateSnap: baseTier.compRate,
+            lossbackRateSnap: baseTier.lossbackRate,
+            rakebackRateSnap: baseTier.rakebackRate,
+            requirementUsdSnap: baseTier.requirementUsd,
+            requirementDepositUsdSnap: baseTier.requirementDepositUsd,
+            cumulativeDepositUsdSnap: new Prisma.Decimal(0),
+            changeBy: 'SYSTEM',
+        });
+
+        return savedUserTier;
     }
 
     private calculateNextEvaluationAt(cycle: TierEvaluationCycle): Date | null {

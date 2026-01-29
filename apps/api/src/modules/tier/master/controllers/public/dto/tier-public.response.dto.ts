@@ -53,6 +53,10 @@ export class TierPublicLimitsDto {
 }
 
 export class TierPublicResponseDto {
+    @ApiProperty({ description: 'Encoded Tier ID' })
+    @IsString()
+    id: string;
+
     @ApiProperty()
     @IsString()
     code: string;

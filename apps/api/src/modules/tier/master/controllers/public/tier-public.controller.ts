@@ -5,7 +5,11 @@ import { ApiStandardResponse, ApiStandardErrors } from 'src/common/http/decorato
 import { Public } from 'src/common/auth/decorators/roles.decorator';
 import { TierService } from '../../application/tier.service';
 import { TierPublicResponseDto } from './dto/tier-public.response.dto';
+import { TierPublicQueryDto } from './dto/tier-public.query.dto';
 import { Tier } from '../../domain/tier.entity';
+
+import { SqidsService } from 'src/common/sqids/sqids.service';
+import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 
 @Controller('public/tiers')
 @ApiTags('Public Tiers')
@@ -13,6 +17,7 @@ import { Tier } from '../../domain/tier.entity';
 export class TierPublicController {
     constructor(
         private readonly tierService: TierService,
+        private readonly sqidsService: SqidsService,
     ) { }
 
     @Get()
@@ -22,15 +27,29 @@ export class TierPublicController {
         summary: 'List all tiers (Public) / 전체 티어 정보 조회',
         description: 'Returns a list of all tiers translated into the requested language. Fallback to English if no language is specified. / 요청한 언어로 번역된 전체 티어 목록을 반환합니다. 언어가 지정되지 않으면 기본값을 사용합니다.',
     })
-    @ApiQuery({ name: 'lang', enum: Language, required: false, description: 'Default: JA' })
     @ApiStandardResponse(TierPublicResponseDto, { isArray: true })
     async getTiers(
-        @Query('lang') lang?: Language,
+        @Query() query: TierPublicQueryDto,
     ): Promise<TierPublicResponseDto[]> {
-        const targetLang = lang || Language.JA;
-        const tiers = await this.tierService.findAll();
+        const targetLang = query.lang || Language.EN;
+        let tiers = await this.tierService.findAll();
 
-        // Priority 순으로 정렬 (이미 되어있을 수 있으나 보장)
+        // 1. Filter by Code
+        if (query.code) {
+            tiers = tiers.filter(t => t.code.toUpperCase() === query.code!.toUpperCase());
+        }
+
+        // 2. Filter by Encoded ID
+        if (query.id) {
+            const decodedId = this.sqidsService.decode(query.id, SqidsPrefix.TIER);
+            if (decodedId) {
+                tiers = tiers.filter(t => t.id === decodedId);
+            } else {
+                return []; // Invalid ID provided
+            }
+        }
+
+        // Priority 순으로 정렬
         const sortedTiers = tiers.sort((a, b) => a.priority - b.priority);
 
         return sortedTiers.map(tier => this.mapToResponseDto(tier, targetLang));
@@ -43,6 +62,7 @@ export class TierPublicController {
             || tier.translations[0];
 
         return {
+            id: this.sqidsService.encode(tier.id, SqidsPrefix.TIER),
             code: tier.code,
             name: translation?.name ?? tier.code,
             description: translation?.description ?? null,

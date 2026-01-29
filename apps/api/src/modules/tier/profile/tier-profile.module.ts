@@ -2,7 +2,8 @@ import { Module, forwardRef } from '@nestjs/common';
 import { UserTierRepository } from './infrastructure/user-tier.repository';
 import { UserTierRepositoryPort } from './infrastructure/user-tier.repository.port';
 import { InitializeUserTierService } from './application/initialize-user-tier.service';
-import { GetUserTierService } from './application/get-user-tier.service';
+import { GetMyTierService } from './application/get-my-tier.service';
+import { GetNextTierProgressService } from './application/get-next-tier-progress.service';
 import { GetUserTierDetailService } from './application/get-user-tier-detail.service';
 import { GetUserTierHistoryService } from './application/get-user-tier-history.service';
 import { ListUserTiersService } from './application/list-user-tiers.service';
@@ -26,7 +27,8 @@ import { TierMasterModule } from '../master/tier-master.module';
     providers: [
         { provide: UserTierRepositoryPort, useClass: UserTierRepository },
         InitializeUserTierService,
-        GetUserTierService,
+        GetMyTierService,
+        GetNextTierProgressService,
         GetUserTierDetailService,
         GetUserTierHistoryService,
         ListUserTiersService,
@@ -39,7 +41,8 @@ import { TierMasterModule } from '../master/tier-master.module';
     exports: [
         UserTierRepositoryPort,
         InitializeUserTierService,
-        GetUserTierService,
+        GetMyTierService,
+        GetNextTierProgressService,
         GetUserTierDetailService,
         GetUserTierHistoryService,
         ListUserTiersService,

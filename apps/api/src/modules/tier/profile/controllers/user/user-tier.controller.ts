@@ -1,9 +1,12 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
-import { GetUserTierService } from '../../application/get-user-tier.service';
+import { GetMyTierService } from '../../application/get-my-tier.service';
+import { GetNextTierProgressService } from '../../application/get-next-tier-progress.service';
 import { GetUserTierHistoryService } from '../../application/get-user-tier-history.service';
+import { TierRepositoryPort } from '../../../master/infrastructure/master.repository.port';
 import { UserTierResponseDto } from './dto/response/user-tier.response.dto';
 import { UserTierHistoryResponseDto } from './dto/response/user-tier-history.response.dto';
+import { GetUserTierQueryDto } from './dto/request/get-user-tier.query.dto';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { SessionAuthGuard } from 'src/common/auth/guards/session-auth.guard';
 import { User } from 'src/modules/user/domain/model/user.entity';
@@ -16,45 +19,59 @@ import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 @UseGuards(SessionAuthGuard)
 export class UserTierController {
     constructor(
-        private readonly getUserTierService: GetUserTierService,
+        private readonly getMyTierService: GetMyTierService,
+        private readonly getNextTierProgressService: GetNextTierProgressService,
         private readonly getUserTierHistoryService: GetUserTierHistoryService,
+        private readonly tierRepository: TierRepositoryPort,
         private readonly sqidsService: SqidsService,
     ) { }
 
     @Get('my')
     @ApiOperation({ summary: 'Get my tier status and progress / 내 티어 상태 및 진행률 조회' })
     @ApiOkResponse({ type: UserTierResponseDto })
-    async getMyTier(@CurrentUser() user: User): Promise<UserTierResponseDto> {
-        const result = await this.getUserTierService.execute(user.id);
+    async getMyTier(
+        @CurrentUser() user: User,
+        @Query() query: GetUserTierQueryDto
+    ): Promise<UserTierResponseDto> {
+        // 1. 필요한 데이터를 병렬로 조회 (DB I/O 최적화)
+        const [userTier, allTiers] = await Promise.all([
+            this.getMyTierService.findUserTier(user.id),
+            this.tierRepository.findAll()
+        ]);
+
+        // 2. 가공 서비스를 통한 결과 생성 (엔티티를 직접 전달)
+        const myTierResult = this.getMyTierService.execute(userTier, query.lang);
+        const progressResult = this.getNextTierProgressService.execute(userTier, allTiers, query.lang);
 
         return {
-            id: this.sqidsService.encode(result.id, SqidsPrefix.USER_TIER),
-            name: result.name,
-            priority: result.priority,
-            imageUrl: result.imageUrl,
-            status: result.status,
-            lastChangedAt: result.lastTierChangedAt,
-            nextEvaluationAt: result.nextEvaluationAt,
+            id: this.sqidsService.encode(myTierResult.id, SqidsPrefix.USER_TIER),
+            name: myTierResult.name,
+            imageUrl: myTierResult.imageUrl,
+            status: myTierResult.status,
+            lastChangedAt: myTierResult.lastTierChangedAt,
+            nextEvaluationAt: myTierResult.nextEvaluationAt,
             benefits: {
-                compRate: result.benefits.compRate.toString(),
-                lossbackRate: result.benefits.lossbackRate.toString(),
-                rakebackRate: result.benefits.rakebackRate.toString(),
-                reloadBonusRate: result.benefits.reloadBonusRate.toString(),
-                dailyWithdrawalLimitUsd: result.benefits.dailyWithdrawalLimitUsd.toString(),
-                isWithdrawalUnlimited: result.benefits.isWithdrawalUnlimited,
-                hasDedicatedManager: result.benefits.hasDedicatedManager,
-                isVIPEventEligible: result.benefits.isVIPEventEligible,
+                compRate: myTierResult.benefits.compRate.toString(),
+                lossbackRate: myTierResult.benefits.lossbackRate.toString(),
+                rakebackRate: myTierResult.benefits.rakebackRate.toString(),
+                reloadBonusRate: myTierResult.benefits.reloadBonusRate.toString(),
+                dailyWithdrawalLimitUsd: myTierResult.benefits.dailyWithdrawalLimitUsd.toString(),
+                isWithdrawalUnlimited: myTierResult.benefits.isWithdrawalUnlimited,
+                hasDedicatedManager: myTierResult.benefits.hasDedicatedManager,
+                isVIPEventEligible: myTierResult.benefits.isVIPEventEligible,
             },
-            nextTierProgress: result.nextTierProgress ? {
-                name: result.nextTierProgress.name,
-                requiredRolling: result.nextTierProgress.requiredRolling.toString(),
-                currentRolling: result.nextTierProgress.currentRolling.toString(),
-                remainingRolling: result.nextTierProgress.remainingRolling.toString(),
-                rollingProgressPercent: result.nextTierProgress.rollingProgressPercent,
-                requiredDeposit: result.nextTierProgress.requiredDeposit.toString(),
-                currentDeposit: result.nextTierProgress.currentDeposit.toString(),
-                remainingDeposit: result.nextTierProgress.remainingDeposit.toString(),
-                depositProgressPercent: result.nextTierProgress.depositProgressPercent,
+            nextTierProgress: progressResult ? {
+                id: this.sqidsService.encode(progressResult.id, SqidsPrefix.TIER),
+                name: progressResult.name,
+                imageUrl: progressResult.imageUrl,
+                requiredRolling: progressResult.requiredRolling.toString(),
+                currentRolling: progressResult.currentRolling.toString(),
+                remainingRolling: progressResult.remainingRolling.toString(),
+                rollingProgressPercent: progressResult.rollingProgressPercent,
+                requiredDeposit: progressResult.requiredDeposit.toString(),
+                currentDeposit: progressResult.currentDeposit.toString(),
+                remainingDeposit: progressResult.remainingDeposit.toString(),
+                depositProgressPercent: progressResult.depositProgressPercent,
             } : null,
         };
     }
@@ -66,7 +83,7 @@ export class UserTierController {
         const history = await this.getUserTierHistoryService.execute(user.id);
 
         return history.map(h => ({
-            id: this.sqidsService.encode(h.id, SqidsPrefix.USER_TIER), // Using USER_TIER prefix for history recs or separate if exists
+            id: this.sqidsService.encode(h.id, SqidsPrefix.USER_TIER),
             fromTierId: h.fromTierId ? this.sqidsService.encode(h.fromTierId, SqidsPrefix.TIER) : null,
             toTierId: this.sqidsService.encode(h.toTierId, SqidsPrefix.TIER),
             changeType: h.changeType,
