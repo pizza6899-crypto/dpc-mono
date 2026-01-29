@@ -155,7 +155,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
         if (process.env.NODE_ENV !== 'production') {
           userMessage = error.message;
         } else {
-          userMessage = 'An unexpected database error occurred';
+          // [Security] Production 환경에선 상세 원인 은폐
+          messageCode = MessageCode.INTERNAL_SERVER_ERROR;
+          userMessage = 'Internal Server Error';
         }
     }
 
@@ -336,6 +338,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
       const errorStack = exception instanceof Error ? exception.stack?.slice(0, 2000) : '';
 
+      const sanitizedBody = request.body;
+      const sanitizedQuery = request.query;
+
+      // Prisma 메타데이터 (어떤 컬럼이 문제인지 등)
+      const prismaMeta = exception instanceof Prisma.PrismaClientKnownRequestError ? exception.meta : undefined;
+
       await this.dispatchLogService.dispatch(
         {
           type: LogType.ERROR,
@@ -355,6 +363,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
             userAgent: requestInfo.userAgent,
             metadata: {
               url: request.url,
+              query: JSON.stringify(sanitizedQuery), // Query String
+              body: JSON.stringify(sanitizedBody)?.slice(0, 4000), // Body (너무 길면 자름)
+              prismaMeta, // Prisma 상세 에러 정보
               originalError: exception instanceof Error ? exception.message : String(exception),
             },
           },
