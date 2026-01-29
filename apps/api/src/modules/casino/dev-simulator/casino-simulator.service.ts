@@ -62,13 +62,13 @@ export class CasinoSimulatorService {
         }
 
         // 2. ID 생성
-        const now = new Date();
-        const roundId = this.snowflakeService.generate(now).toString();
-        const betTxId = this.snowflakeService.generate(now).toString();
+        // 2. ID 생성
+        const roundId = this.snowflakeService.generate(new Date()).toString();
+        const betTxId = this.snowflakeService.generate(new Date()).toString();
         // winTxId는 Bet 이후에 생성 (시간 역전 방지)
 
         // 3. Bet 실행
-        const betTime = now;
+        const betTime = new Date();
         const provider = providerCode ? (providerCode as GameProvider) : GameProvider.PRAGMATIC_PLAY_SLOTS;
 
         logs.push(`[Bet] 요청 시작: TxId=${betTxId}, Amount=${betAmount}`);
@@ -85,7 +85,7 @@ export class CasinoSimulatorService {
         logs.push(`[Bet] 완료. 잔액: ${betResult.balance}`);
 
         // 4. Win 실행
-        const winTxId = this.snowflakeService.generate(new Date(now.getTime() + 1)).toString();
+        const winTxId = this.snowflakeService.generate(new Date()).toString();
         logs.push(`[Win] 요청 시작: TxId=${winTxId}, Amount=${winAmount}`);
         // Win Time은 Bet Time + 1~2초
         const winTime = new Date(betTime.getTime() + 1000);

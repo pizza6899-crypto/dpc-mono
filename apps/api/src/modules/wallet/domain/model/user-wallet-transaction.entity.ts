@@ -1,4 +1,4 @@
-import { ExchangeCurrencyCode, Prisma, UserWalletBalanceType, UserWalletTransactionType } from "@prisma/client";
+import { ExchangeCurrencyCode, Prisma, UserWalletBalanceType, UserWalletTransactionType, UserWalletTransactionStatus } from "@prisma/client";
 import { AnyWalletTransactionMetadata } from "./user-wallet-transaction-metadata";
 
 /**
@@ -18,6 +18,7 @@ export class UserWalletTransaction {
         public readonly amount: Prisma.Decimal, // (+) 수입, (-) 지출
         public readonly balanceBefore: Prisma.Decimal,
         public readonly balanceAfter: Prisma.Decimal,
+        public readonly status: UserWalletTransactionStatus,
 
         // Reference & Detail
         public readonly referenceId: bigint | null,
@@ -45,6 +46,7 @@ export class UserWalletTransaction {
         ipAddress?: string | null;
         countryCode?: string | null;
         createdAt?: Date;
+        status?: UserWalletTransactionStatus;
     }): UserWalletTransaction {
         // 도메인 유효성 검사 (필요 시)
         return new UserWalletTransaction(
@@ -55,6 +57,7 @@ export class UserWalletTransaction {
             params.amount,
             params.balanceBefore,
             params.balanceAfter,
+            params.status ?? UserWalletTransactionStatus.COMPLETED,
             params.referenceId ?? null,
             params.metadata ?? null,
             params.ipAddress ?? null,
@@ -78,6 +81,7 @@ export class UserWalletTransaction {
         countryCode: string | null;
         userId: bigint;
         currency: ExchangeCurrencyCode;
+        status: UserWalletTransactionStatus;
     }): UserWalletTransaction {
         return new UserWalletTransaction(
             data.id,
@@ -87,6 +91,7 @@ export class UserWalletTransaction {
             data.amount,
             data.balanceBefore,
             data.balanceAfter,
+            data.status,
             data.referenceId,
             data.metadata as AnyWalletTransactionMetadata,
             data.ipAddress,

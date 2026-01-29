@@ -72,6 +72,7 @@ export class UpdateUserBalanceService {
         // 파라미터로 전달된 값이 있으면 사용하고 (게임 세션 정합성),
         // 없으면 현재 실시간 환율로 계산하여 통계 누락 방지 (편의성)
         let amountUsd = params.amountUsd;
+
         if (!amountUsd) {
             try {
                 if (currency === ExchangeCurrencyCode.USD) {

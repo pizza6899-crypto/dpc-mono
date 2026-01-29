@@ -7,6 +7,7 @@ import { UserWalletTransaction } from '../domain';
 import { UserWalletTransactionSearchOptions } from '../ports/out/user-wallet-transaction.search-options';
 import { Prisma } from '@prisma/client';
 import { UserWalletTransactionMapper } from './user-wallet-transaction.mapper';
+import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
 @Injectable()
 export class UserWalletTransactionRepository
@@ -15,13 +16,21 @@ export class UserWalletTransactionRepository
         @InjectTransaction()
         private readonly tx: PrismaTransaction,
         private readonly mapper: UserWalletTransactionMapper,
+        private readonly snowflakeService: SnowflakeService,
     ) { }
 
     async create(transaction: UserWalletTransaction): Promise<UserWalletTransaction> {
         const data = this.mapper.toPrisma(transaction);
 
+        // Generate Snowflake ID
+        // 트랜잭션의 생성 시각을 기준으로 ID를 생성하여 시간 정렬성을 보장합니다.
+        const id = this.snowflakeService.generate(transaction.createdAt);
+
         const result = await this.tx.userWalletTransaction.create({
-            data,
+            data: {
+                ...data,
+                id,
+            },
         });
 
         return this.mapper.toDomain(result);

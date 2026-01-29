@@ -24,6 +24,7 @@ import { SqidsModule } from 'src/common/sqids/sqids.module';
 import { USER_WALLET_STATS_REPOSITORY } from './ports/out/user-wallet-stats.repository.token';
 import { UserWalletStatsRepository } from './infrastructure/user-wallet-stats.repository';
 import { ExchangeModule } from '../exchange/exchange.module';
+import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 
 /**
  * Wallet 모듈
@@ -48,7 +49,7 @@ import { ExchangeModule } from '../exchange/exchange.module';
  * - UserBalanceStats (통계는 UserStatsModule에서 관리)
  */
 @Module({
-  imports: [UserModule, SqidsModule, ConcurrencyModule, ExchangeModule],
+  imports: [UserModule, SqidsModule, ConcurrencyModule, ExchangeModule, SnowflakeModule],
   providers: [
     {
       provide: USER_WALLET_REPOSITORY,
