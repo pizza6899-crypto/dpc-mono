@@ -4,6 +4,7 @@ import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.r
 import { TierRepositoryPort } from '../../master/infrastructure/master.repository.port';
 import { TierAuditService } from '../../audit/application/tier-audit.service';
 import { DemotionPolicy } from '../domain/demotion.policy';
+import { DemotionService } from './demotion.service';
 import { TierChangeType, UserTierStatus, TierEvaluationCycle } from '@prisma/client';
 import { nowUtc } from 'src/utils/date.util';
 
@@ -16,6 +17,7 @@ export class BatchEvaluationService {
         private readonly tierRepository: TierRepositoryPort,
         private readonly tierAuditService: TierAuditService,
         private readonly demotionPolicy: DemotionPolicy,
+        private readonly demotionService: DemotionService,
     ) { }
 
     /**
@@ -36,8 +38,8 @@ export class BatchEvaluationService {
             const allTiers = await this.tierRepository.findAll();
             const now = nowUtc();
 
-            // 1. 심사 대상 유저 조회
-            const targets = await this.userTierRepository.findUsersNeedingEvaluation(now);
+            // 1. 심사 대상 유저 조회 (과부하 방지를 위해 배치 크기 제한)
+            const targets = await this.userTierRepository.findUsersNeedingEvaluation(now, 100);
 
             for (const userTier of targets) {
                 try {
@@ -80,27 +82,15 @@ export class BatchEvaluationService {
                 break;
             case 'DEMOTE':
                 metrics.demotedCount++;
-                const oldTierId = userTier.tierId;
                 const demotedDays = this.getCycleDays(result.targetTier!.evaluationCycle);
-                userTier.updateTier(result.targetTier!.id, result.targetTier!.priority);
-                userTier.resetPeriodPerformance(demotedDays);
-                await this.userTierRepository.save(userTier);
 
-                await this.tierAuditService.recordTierChange({
+                // Delegate to DemotionService
+                await this.demotionService.execute(
                     userId,
-                    fromTierId: oldTierId,
-                    toTierId: result.targetTier!.id,
-                    changeType: TierChangeType.DOWNGRADE,
-                    reason: 'Failed to meet maintenance requirements after grace period',
-                    rollingAmountSnap: userTier.currentPeriodRollingUsd,
-                    depositAmountSnap: userTier.currentPeriodDepositUsd,
-                    compRateSnap: userTier.customCompRate ?? result.targetTier!.compRate,
-                    lossbackRateSnap: userTier.customLossbackRate ?? result.targetTier!.lossbackRate,
-                    rakebackRateSnap: userTier.customRakebackRate ?? result.targetTier!.rakebackRate,
-                    requirementUsdSnap: result.targetTier!.requirementUsd,
-                    requirementDepositUsdSnap: result.targetTier!.requirementDepositUsd,
-                    cumulativeDepositUsdSnap: userTier.currentPeriodDepositUsd,
-                });
+                    result.targetTier!,
+                    demotedDays,
+                    'Failed to meet maintenance requirements after grace period'
+                );
                 break;
         }
     }

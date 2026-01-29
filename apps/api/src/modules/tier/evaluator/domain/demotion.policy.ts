@@ -14,6 +14,11 @@ export class DemotionPolicy {
     evaluate(userTier: UserTier, allTiers: Tier[]): DemotionResult {
         if (!userTier.tier) return { action: 'MAINTAIN' };
 
+        // 0. 잠금 상태 확인 (LOCKED인 경우 심사 제외)
+        if (userTier.status === UserTierStatus.LOCKED) {
+            return { action: 'MAINTAIN' };
+        }
+
         // 1. 유지 조건 확인 (현재 기간 롤링액이 티어 유지 요구량보다 큰지)
         const isMaintenanceMet = userTier.currentPeriodRollingUsd.gte(userTier.tier.maintenanceRollingUsd);
         if (isMaintenanceMet) return { action: 'MAINTAIN' };

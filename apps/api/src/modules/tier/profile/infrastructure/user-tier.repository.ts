@@ -93,13 +93,14 @@ export class UserTierRepository implements UserTierRepositoryPort {
         });
     }
 
-    async findUsersNeedingEvaluation(now: Date): Promise<UserTier[]> {
+    async findUsersNeedingEvaluation(now: Date, limit?: number): Promise<UserTier[]> {
         const records = await this.tx.userTier.findMany({
             where: {
                 nextEvaluationAt: {
                     lte: now
                 }
             },
+            take: limit,
             include: {
                 tier: { include: { translations: true } },
                 demotionWarningTargetTier: { include: { translations: true } }

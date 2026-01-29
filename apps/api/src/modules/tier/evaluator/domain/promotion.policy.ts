@@ -5,10 +5,13 @@ import { UserTier } from '../../profile/domain/user-tier.entity';
 @Injectable()
 export class PromotionPolicy {
     /**
-     * 유저가 대상 티어의 자격 요건(롤링액 등)을 갖추었는지 확인합니다.
+     * 유저가 대상 티어의 자격 요건(롤링액 및 입금액)을 갖추었는지 확인합니다.
      */
     checkQualification(userTier: UserTier, candidateTier: Tier): boolean {
-        return userTier.totalEffectiveRollingUsd.gte(candidateTier.requirementUsd);
+        const isRollingMet = userTier.totalEffectiveRollingUsd.gte(candidateTier.requirementUsd);
+        const isDepositMet = userTier.currentPeriodDepositUsd.gte(candidateTier.requirementDepositUsd);
+
+        return isRollingMet && isDepositMet;
     }
 
     /**
