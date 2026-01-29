@@ -140,8 +140,6 @@ export class CompUserController {
                 balanceBefore: item.balanceBefore.toString(),
                 balanceAfter: item.balanceAfter.toString(),
                 type: item.type,
-                referenceId: item.referenceId?.toString(),
-                description: item.description ?? undefined,
                 createdAt: item.createdAt,
             })),
             total: result.total,

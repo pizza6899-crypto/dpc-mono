@@ -1,7 +1,38 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserTierRepositoryPort } from '../infrastructure/user-tier.repository.port';
 import { TierRepositoryPort } from '../../master/infrastructure/master.repository.port';
-import { UserTierPublicResponseDto, NextTierProgressDto } from '../controllers/public/dto/user-tier-public.response.dto';
+import { UserTierStatus, Prisma } from '@prisma/client';
+
+export interface UserTierResult {
+    id: bigint;
+    name: string;
+    priority: number;
+    imageUrl: string | null;
+    status: UserTierStatus;
+    lastTierChangedAt: Date;
+    nextEvaluationAt: Date | null;
+    benefits: {
+        compRate: Prisma.Decimal;
+        lossbackRate: Prisma.Decimal;
+        rakebackRate: Prisma.Decimal;
+        reloadBonusRate: Prisma.Decimal;
+        dailyWithdrawalLimitUsd: Prisma.Decimal;
+        isWithdrawalUnlimited: boolean;
+        hasDedicatedManager: boolean;
+        isVIPEventEligible: boolean;
+    };
+    nextTierProgress: {
+        name: string;
+        requiredRolling: Prisma.Decimal;
+        currentRolling: Prisma.Decimal;
+        remainingRolling: Prisma.Decimal;
+        rollingProgressPercent: number;
+        requiredDeposit: Prisma.Decimal;
+        currentDeposit: Prisma.Decimal;
+        remainingDeposit: Prisma.Decimal;
+        depositProgressPercent: number;
+    } | null;
+}
 
 @Injectable()
 export class GetUserTierService {
@@ -10,7 +41,7 @@ export class GetUserTierService {
         private readonly tierRepository: TierRepositoryPort,
     ) { }
 
-    async execute(userId: bigint): Promise<UserTierPublicResponseDto> {
+    async execute(userId: bigint): Promise<UserTierResult> {
         const userTier = await this.userTierRepository.findByUserId(userId);
         if (!userTier || !userTier.tier) {
             throw new NotFoundException('User tier info not initialized');
@@ -20,7 +51,7 @@ export class GetUserTierService {
         const allTiers = await this.tierRepository.findAll();
         const nextTier = allTiers.find(t => t.priority === currentTier.priority + 1);
 
-        let progress: NextTierProgressDto | null = null;
+        let progress: UserTierResult['nextTierProgress'] = null;
 
         if (nextTier) {
             // Rolling Progress
@@ -48,14 +79,14 @@ export class GetUserTierService {
 
             progress = {
                 name: nextTier.getName(),
-                requiredRolling: requiredRolling.toString(),
-                currentRolling: currentRolling.toString(),
-                remainingRolling: remainingRolling.isPositive() ? remainingRolling.toString() : '0',
+                requiredRolling: requiredRolling,
+                currentRolling: currentRolling,
+                remainingRolling: remainingRolling.isPositive() ? remainingRolling : new Prisma.Decimal(0),
                 rollingProgressPercent: Math.min(100, Math.max(0, rollingProgress)),
 
-                requiredDeposit: requiredDeposit.toString(),
-                currentDeposit: currentDeposit.toString(),
-                remainingDeposit: remainingDeposit.isPositive() ? remainingDeposit.toString() : '0',
+                requiredDeposit: requiredDeposit,
+                currentDeposit: currentDeposit,
+                remainingDeposit: remainingDeposit.isPositive() ? remainingDeposit : new Prisma.Decimal(0),
                 depositProgressPercent: Math.min(100, Math.max(0, depositProgress)),
             };
         }
@@ -63,19 +94,19 @@ export class GetUserTierService {
         const benefits = userTier.getEffectiveBenefits();
 
         return {
-            id: currentTier.id.toString(),
+            id: currentTier.id,
             name: currentTier.getName(),
             priority: currentTier.priority,
             imageUrl: currentTier.imageUrl,
             status: userTier.status,
-            lastChangedAt: userTier.lastTierChangedAt,
+            lastTierChangedAt: userTier.lastTierChangedAt,
             nextEvaluationAt: userTier.nextEvaluationAt,
             benefits: {
-                compRate: benefits.compRate.toString(),
-                lossbackRate: benefits.lossbackRate.toString(),
-                rakebackRate: benefits.rakebackRate.toString(),
-                reloadBonusRate: benefits.reloadBonusRate.toString(),
-                dailyWithdrawalLimitUsd: benefits.dailyWithdrawalLimitUsd.toString(),
+                compRate: benefits.compRate,
+                lossbackRate: benefits.lossbackRate,
+                rakebackRate: benefits.rakebackRate,
+                reloadBonusRate: benefits.reloadBonusRate,
+                dailyWithdrawalLimitUsd: benefits.dailyWithdrawalLimitUsd,
                 isWithdrawalUnlimited: benefits.isWithdrawalUnlimited,
                 hasDedicatedManager: benefits.hasDedicatedManager,
                 isVIPEventEligible: benefits.isVIPEventEligible,

@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { CompTransactionType } from '@prisma/client';
 
 export class CompTransactionResponseDto {
@@ -19,12 +19,6 @@ export class CompTransactionResponseDto {
 
     @ApiProperty({ enum: CompTransactionType, description: 'Transaction Type / 거래 유형' })
     type: CompTransactionType;
-
-    @ApiPropertyOptional({ description: 'Reference ID / 참조 ID' })
-    referenceId?: string;
-
-    @ApiPropertyOptional({ description: 'Description / 설명' })
-    description?: string;
 
     @ApiProperty({ description: 'Created At / 생성일' })
     createdAt: Date;

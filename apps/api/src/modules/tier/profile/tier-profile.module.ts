@@ -12,7 +12,7 @@ import { ForceUpdateUserTierService } from './application/force-update-user-tier
 import { ResetUserTierPerformanceService } from './application/reset-user-tier-performance.service';
 import { GetTierBenefitsService } from './application/get-tier-benefits.service';
 
-import { UserTierPublicController } from './controllers/public/user-tier-public.controller';
+import { UserTierController } from './controllers/user/user-tier.controller';
 import { UserTierAdminController } from './controllers/admin/user-tier-admin.controller';
 import { TierAuditModule } from '../audit/tier-audit.module';
 import { TierMasterModule } from '../master/tier-master.module';
@@ -22,7 +22,7 @@ import { TierMasterModule } from '../master/tier-master.module';
         forwardRef(() => TierAuditModule),
         TierMasterModule,
     ],
-    controllers: [UserTierPublicController, UserTierAdminController],
+    controllers: [UserTierController, UserTierAdminController],
     providers: [
         { provide: UserTierRepositoryPort, useClass: UserTierRepository },
         InitializeUserTierService,

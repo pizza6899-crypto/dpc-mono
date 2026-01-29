@@ -7,7 +7,7 @@ import { ForceUpdateUserTierService } from '../../application/force-update-user-
 import { ResetUserTierPerformanceService } from '../../application/reset-user-tier-performance.service';
 import { UpdateUserTierStatusService } from '../../application/update-user-tier-status.service';
 import { UserTierAdminResponseDto } from './dto/response/user-tier-admin.response.dto';
-import { UserTierHistoryResponseDto } from '../public/dto/user-tier-history.response.dto';
+import { UserTierHistoryAdminResponseDto } from './dto/response/user-tier-history-admin.response.dto';
 import { UpdateUserTierCustomRequestDto } from './dto/request/update-user-tier-custom.request.dto';
 import { ForceUpdateTierRequestDto } from './dto/request/force-update-tier.request.dto';
 import { ListUserTiersQueryDto } from './dto/request/list-user-tiers.query.dto';
@@ -75,9 +75,20 @@ export class UserTierAdminController {
 
     @Get('users/:userId/history')
     @ApiOperation({ summary: 'Get user tier history / 유저 티어 변경 이력 조회' })
-    @ApiOkResponse({ type: [UserTierHistoryResponseDto], description: 'Successfully retrieved user tier history / 유저 티어 변경 이력 조회 성공' })
-    async getUserTierHistory(@Param('userId') userId: string): Promise<UserTierHistoryResponseDto[]> {
-        return this.getUserTierHistoryService.execute(BigInt(userId));
+    @ApiOkResponse({ type: [UserTierHistoryAdminResponseDto], description: 'Successfully retrieved user tier history / 유저 티어 변경 이력 조회 성공' })
+    async getUserTierHistory(@Param('userId') userId: string): Promise<UserTierHistoryAdminResponseDto[]> {
+        const history = await this.getUserTierHistoryService.execute(BigInt(userId));
+
+        return history.map(h => ({
+            id: h.id.toString(),
+            fromTierId: h.fromTierId?.toString() ?? null,
+            toTierId: h.toTierId.toString(),
+            changeType: h.changeType,
+            reason: h.reason,
+            changedAt: h.changedAt,
+            rollingAmountSnap: h.rollingAmountSnap.toString(),
+            depositAmountSnap: h.depositAmountSnap.toString(),
+        }));
     }
 
     @Patch('users/:userId/custom')

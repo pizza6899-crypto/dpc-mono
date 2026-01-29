@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserTierStatus } from '@prisma/client';
-import { EffectiveBenefitsDto } from '../../../public/dto/user-tier-public.response.dto';
+import { EffectiveBenefitsAdminResponseDto } from './user-tier-benefits-admin.response.dto';
 
 export class UserTierAdminResponseDto {
     @ApiProperty({ description: 'Record ID / 레코드 고유 ID' })
@@ -85,5 +85,5 @@ export class UserTierAdminResponseDto {
     demotionWarningTargetTierName: string | null;
 
     @ApiProperty({ description: 'Final effective benefits including overrides / 오버라이드가 반영된 실질 혜택 정보' })
-    currentBenefits: EffectiveBenefitsDto;
+    currentBenefits: EffectiveBenefitsAdminResponseDto;
 }
