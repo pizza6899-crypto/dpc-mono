@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsString, IsNumber, IsBoolean, Min } from 'class-validator';
 import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
 import { UserTierStatus } from '@prisma/client';
-import { Type } from 'class-transformer';
 
 export class UpdateUserTierCustomRequestDto {
     @ApiProperty({ nullable: true, required: false, description: 'Custom comp rate override / 커스텀 컴프 요율 오버라이드' })

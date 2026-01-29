@@ -5,7 +5,6 @@ import { GetUserTierHistoryService } from '../../application/get-user-tier-histo
 import { UpdateUserTierCustomService } from '../../application/update-user-tier-custom.service';
 import { ForceUpdateUserTierService } from '../../application/force-update-user-tier.service';
 import { ResetUserTierPerformanceService } from '../../application/reset-user-tier-performance.service';
-
 import { UserTierAdminResponseDto } from './dto/response/user-tier-admin.response.dto';
 import { UserTierHistoryResponseDto } from '../public/dto/user-tier-history.response.dto';
 import {
@@ -18,10 +17,8 @@ import { ApiPaginatedResponse } from 'src/common/http/decorators/api-response.de
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
 import { UserTierListItemResponseDto } from './dto/response/user-tier-list.response.dto';
-
 import { SessionAuthGuard } from 'src/common/auth/guards/session-auth.guard';
 import { Admin } from 'src/common/auth/decorators/roles.decorator';
-
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 
