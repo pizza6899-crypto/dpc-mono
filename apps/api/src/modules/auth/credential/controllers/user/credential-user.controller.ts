@@ -45,7 +45,7 @@ import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 
 @Controller('auth')
-@ApiTags('UserAuth')
+@ApiTags('User Auth')
 @ApiStandardErrors()
 export class CredentialUserController {
   constructor(
