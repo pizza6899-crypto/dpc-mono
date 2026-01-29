@@ -123,11 +123,11 @@ export class CasinoGamePostProcessService {
 
     private async processTierRolling(gameRound: GameRoundPostProcessContext, context: ProcessingContext) {
         try {
-            // Calculate USD amount: betAmount * exchangeRate
+            // Calculate USD amount: betAmount * exchangeRate (Tier always accumulates 100% of rolling unlike Wagering)
             const usdAmount = context.betAmount.mul(context.usdExchangeRate);
 
             if (usdAmount.gt(0)) {
-                // Execute rolling accumulation (async but awaited here to ensure completion within job)
+                // Execute rolling accumulation
                 await this.accumulateRollingService.execute(
                     gameRound.userId,
                     usdAmount.toNumber()

@@ -6,8 +6,13 @@ import { CasinoGameSessionRepository } from './infrastructure/repository/casino-
 import { CASINO_GAME_SESSION_REPOSITORY } from './ports/casino-game-session.repository.token';
 import { ExchangeModule } from '../../exchange/exchange.module';
 
+import { TierProfileModule } from '../../tier/profile/tier-profile.module';
+
 @Module({
-    imports: [ExchangeModule],
+    imports: [
+        ExchangeModule,
+        TierProfileModule,
+    ],
     providers: [
         CasinoGameSessionMapper,
         {

@@ -19,12 +19,15 @@ interface CreateSessionParams {
     playerName: string;
 }
 
+import { GetTierBenefitsService } from 'src/modules/tier/profile/application/get-tier-benefits.service';
+
 @Injectable()
 export class CreateCasinoGameSessionService {
     constructor(
         @Inject(CASINO_GAME_SESSION_REPOSITORY)
         private readonly repository: CasinoGameSessionRepositoryPort,
         private readonly exchangeRateService: ExchangeRateService,
+        private readonly getTierBenefitsService: GetTierBenefitsService,
     ) { }
 
     async execute(params: CreateSessionParams): Promise<CasinoGameSession> {
@@ -50,8 +53,9 @@ export class CreateCasinoGameSessionService {
             toCurrency: ExchangeCurrencyCode.USD,
         });
 
-        // 3. 유저 티어 정보 조회 (콤프 요율 적용)
-        const compRate = new Prisma.Decimal(0);
+        // 3. 유저 티어 정보 조회 (콤프 요율 적용 - Public Service 사용)
+        const benefits = await this.getTierBenefitsService.execute(userId);
+        const compRate = benefits?.compRate ?? new Prisma.Decimal(0);
 
         // 4. 도메인 엔티티 생성
         const session = CasinoGameSession.create({

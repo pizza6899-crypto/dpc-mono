@@ -10,6 +10,7 @@ import { UpdateUserTierCustomService } from './application/update-user-tier-cust
 import { UpdateUserTierStatusService } from './application/update-user-tier-status.service';
 import { ForceUpdateUserTierService } from './application/force-update-user-tier.service';
 import { ResetUserTierPerformanceService } from './application/reset-user-tier-performance.service';
+import { GetTierBenefitsService } from './application/get-tier-benefits.service';
 
 import { UserTierPublicController } from './controllers/public/user-tier-public.controller';
 import { UserTierAdminController } from './controllers/admin/user-tier-admin.controller';
@@ -33,6 +34,7 @@ import { TierMasterModule } from '../master/tier-master.module';
         UpdateUserTierStatusService,
         ForceUpdateUserTierService,
         ResetUserTierPerformanceService,
+        GetTierBenefitsService,
     ],
     exports: [
         UserTierRepositoryPort,
@@ -45,6 +47,7 @@ import { TierMasterModule } from '../master/tier-master.module';
         UpdateUserTierStatusService,
         ForceUpdateUserTierService,
         ResetUserTierPerformanceService,
+        GetTierBenefitsService,
     ],
 })
 export class TierProfileModule { }
