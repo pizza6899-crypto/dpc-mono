@@ -45,7 +45,7 @@ import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 
 @Controller('auth')
-@ApiTags('Auth')
+@ApiTags('[USER] Auth Credential')
 @ApiStandardErrors()
 export class CredentialUserController {
   constructor(
@@ -77,10 +77,12 @@ export class CredentialUserController {
   @AuditLog({
     type: LogType.AUTH,
     action: 'LOGIN',
-    extractMetadata: (_, args) => {
+    extractMetadata: (_, args, result, error) => {
       const [dto] = args;
       return {
         email: dto.email,
+        success: !error,
+        failureReason: error ? error.message : undefined,
       };
     },
   })
@@ -151,78 +153,36 @@ export class CredentialUserController {
     @Req() req?: Request,
   ): Promise<CredentialUserLogoutResponseDto> {
     // 1. DB 세션 종료 (LogoutService에서 처리)
-    // 사용자가 있는 경우에만 로그아웃 서비스 실행 (에러 발생해도 무시)
     if (user && clientInfo) {
       try {
         const isAdmin =
           user.role === UserRoleType.ADMIN ||
           user.role === UserRoleType.SUPER_ADMIN;
 
-        // req.logout() 전에 sessionID 저장 (DB 세션 종료에 필요)
-        const sessionId = req?.sessionID;
-
         await this.logoutService.execute({
           userId: user.id,
-          sessionId,
+          sessionId: req?.sessionID,
           clientInfo,
           isAdmin,
         });
       } catch (error) {
-        // LogoutService 에러는 무시하고 성공 응답 반환
+        // LogoutService 에러는 무시
       }
     }
 
-    // 2. Express 세션 종료 (DB 세션 종료 후 처리)
-    // 에러가 발생해도 무시하고 성공 응답 반환
+    // 2. Express 세션 종료 및 쿠키 삭제
     if (req) {
-      try {
-        await new Promise<void>((resolve) => {
-          // 타임아웃 방지를 위해 최대 100ms 후 강제 resolve
-          const timeout = setTimeout(() => resolve(), 100);
-
-          const cleanup = () => {
-            clearTimeout(timeout);
+      await new Promise<void>((resolve) => {
+        // passport logout
+        req.logout((err) => {
+          // session destroy
+          req.session?.destroy(() => {
             resolve();
-          };
-
-          if (req.logout) {
-            try {
-              req.logout(() => {
-                // logout 콜백: 에러 여부와 관계없이 세션 destroy 시도
-                if (req.session?.destroy) {
-                  try {
-                    req.session.destroy(() => {
-                      cleanup();
-                    });
-                  } catch {
-                    cleanup();
-                  }
-                } else {
-                  cleanup();
-                }
-              });
-            } catch {
-              // logout 호출 자체가 실패하면 즉시 resolve
-              cleanup();
-            }
-          } else if (req.session?.destroy) {
-            try {
-              req.session.destroy(() => {
-                cleanup();
-              });
-            } catch {
-              cleanup();
-            }
-          } else {
-            cleanup();
-          }
+          });
         });
-      } catch (error) {
-        // 세션 종료 실패는 무시하고 성공 응답 반환
-      }
+      });
     }
 
-    // 항상 성공 응답 반환
     return {};
   }
 
