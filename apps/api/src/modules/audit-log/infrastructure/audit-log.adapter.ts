@@ -104,7 +104,7 @@ export class AuditLogAdapter implements AuditLogRepositoryPort {
         cfRay: payload.cfRay || null,
         ip: payload.ip || null,
         userAgent: payload.userAgent || null,
-        metadata: undefined,
+        metadata: payload.metadata || undefined,
       },
     });
   }
