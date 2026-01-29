@@ -74,23 +74,35 @@ export class UserTierRepository implements UserTierRepositoryPort {
         }));
     }
 
-    async incrementRolling(userId: bigint, amountUsd: number): Promise<void> {
-        await this.tx.userTier.updateMany({
+    async incrementRolling(userId: bigint, amountUsd: number): Promise<UserTier> {
+        const record = await this.tx.userTier.update({
             where: { userId },
             data: {
                 totalEffectiveRollingUsd: { increment: amountUsd },
                 currentPeriodRollingUsd: { increment: amountUsd },
+            },
+            include: {
+                tier: { include: { translations: true } },
+                demotionWarningTargetTier: { include: { translations: true } }
             }
         });
+
+        return UserTier.fromPersistence(record);
     }
 
-    async incrementDeposit(userId: bigint, amountUsd: number): Promise<void> {
-        await this.tx.userTier.updateMany({
+    async incrementDeposit(userId: bigint, amountUsd: number): Promise<UserTier> {
+        const record = await this.tx.userTier.update({
             where: { userId },
             data: {
                 currentPeriodDepositUsd: { increment: amountUsd },
+            },
+            include: {
+                tier: { include: { translations: true } },
+                demotionWarningTargetTier: { include: { translations: true } }
             }
         });
+
+        return UserTier.fromPersistence(record);
     }
 
     async findUsersNeedingEvaluation(now: Date, limit?: number): Promise<UserTier[]> {

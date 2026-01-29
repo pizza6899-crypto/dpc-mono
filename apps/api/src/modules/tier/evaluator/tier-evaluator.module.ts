@@ -8,11 +8,13 @@ import { DemotionService } from './application/demotion.service';
 import { AccumulateRollingService } from './application/accumulate-rolling.service';
 import { AccumulateDepositService } from './application/accumulate-deposit.service';
 import { BatchEvaluationService } from './application/batch-evaluation.service';
+import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 
 @Module({
     imports: [
         forwardRef(() => TierProfileModule),
         TierAuditModule,
+        ConcurrencyModule,
     ],
     providers: [
         PromotionPolicy,

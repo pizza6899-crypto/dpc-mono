@@ -6,6 +6,7 @@ import { EarnCompService } from 'src/modules/comp/application/earn-comp.service'
 import { GAME_ROUND_REPOSITORY_TOKEN } from '../ports/out/game-round.repository.token';
 import type { GameRoundRepositoryPort } from '../ports/out/game-round.repository.port';
 import { GameRoundPostProcessContext } from '../ports/out/game-round.repository.port';
+import { AccumulateRollingService } from 'src/modules/tier/evaluator/application/accumulate-rolling.service';
 
 interface ProcessingContext {
     betAmount: Prisma.Decimal;
@@ -13,6 +14,7 @@ interface ProcessingContext {
     compRate: Prisma.Decimal;
     categoryCode?: string;
 }
+
 
 @Injectable()
 export class CasinoGamePostProcessService {
@@ -23,6 +25,7 @@ export class CasinoGamePostProcessService {
         private readonly gameRoundRepository: GameRoundRepositoryPort,
         private readonly wageringService: ProcessWageringContributionService,
         private readonly earnCompService: EarnCompService,
+        private readonly accumulateRollingService: AccumulateRollingService,
     ) { }
 
     @Transactional()
@@ -47,6 +50,7 @@ export class CasinoGamePostProcessService {
         // 4. Processing Steps
         await this.processWagering(gameRound, context);
         await this.processCompEarning(gameRound, context);
+        await this.processTierRolling(gameRound, context);
 
         this.logger.log(`게임 후처리 완료: gameRoundId=${gameRoundId}`);
         return { success: true };
@@ -114,6 +118,25 @@ export class CasinoGamePostProcessService {
             }
         } catch (error) {
             this.logger.error(`콤프 적립 실패: ${error.message}`, error.stack);
+        }
+    }
+
+    private async processTierRolling(gameRound: GameRoundPostProcessContext, context: ProcessingContext) {
+        try {
+            // Calculate USD amount: betAmount * exchangeRate
+            const usdAmount = context.betAmount.mul(context.usdExchangeRate);
+
+            if (usdAmount.gt(0)) {
+                // Execute rolling accumulation (async but awaited here to ensure completion within job)
+                await this.accumulateRollingService.execute(
+                    gameRound.userId,
+                    usdAmount.toNumber()
+                );
+                this.logger.log(`티어 롤링 누적: userId=${gameRound.userId}, usdAmount=${usdAmount}`);
+            }
+        } catch (error) {
+            this.logger.error(`티어 롤링 누적 실패: ${error.message}`, error.stack);
+            // Don't throw, just log. Post-processing should continue or partially succeed.
         }
     }
 }

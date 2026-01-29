@@ -32,6 +32,7 @@ import { UpdatePushedBetService } from './application/update-pushed-bet.service'
 import { CasinoGamePostProcessService } from './application/casino-game-post-process.service';
 import { CasinoSimulatorController } from './dev-simulator/casino-simulator.controller';
 import { CasinoSimulatorService } from './dev-simulator/casino-simulator.service';
+import { TierEvaluatorModule } from '../tier/evaluator/tier-evaluator.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { CasinoSimulatorService } from './dev-simulator/casino-simulator.service
     WageringModule,
     CompModule,
     SnowflakeModule,
+    TierEvaluatorModule,
   ],
   controllers: [
     CasinoSimulatorController, // [DEV] Simulator
