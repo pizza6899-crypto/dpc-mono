@@ -25,6 +25,18 @@ export interface QueueConfig extends RegisterQueueOptions {
     workerOptions?: Omit<WorkerOptions, 'connection'> & {
         connection?: WorkerOptions['connection'];
     };
+    /**
+     * [Proposed Feature] 초기화 시 자동 등록할 반복 작업(Cron) 목록
+     * 나중에 BullMqSchedulerService가 이 필드를 읽어서 onModuleInit 시점에 add() 합니다.
+     */
+    repeatableJobs?: Array<{
+        name: string; // Job ID 역할 (스케줄러 고유 식별자)
+        data?: any; // Job Payload (옵션)
+        repeat: {
+            pattern: string; // Cron 패턴 (필수)
+            tz?: string; // 타임존 (예: 'Asia/Seoul')
+        };
+    }>;
 }
 
 /**

@@ -1,10 +1,10 @@
-// apps/api/src/modules/notification/processor/workers/email.worker.ts
+// apps/api/src/modules/notification/infrastructure/processors/sms.processor.ts
 
 import { Processor } from '@nestjs/bullmq';
 import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { ChannelSendParams } from '../../common';
-import { EmailSender } from '../channels/email/email.sender';
+import { SMSSender } from '../channels/sms/sms.sender';
 import { ClsService } from 'nestjs-cls';
 import {
     NOTIFICATION_LOG_REPOSITORY,
@@ -13,7 +13,7 @@ import {
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
 import { getQueueConfig } from 'src/infrastructure/bullmq/bullmq.constants';
 
-const queueConfig = getQueueConfig('NOTIFICATION', 'EMAIL');
+const queueConfig = getQueueConfig('NOTIFICATION', 'SMS');
 
 interface NotificationJobData {
     logId: string;
@@ -21,13 +21,13 @@ interface NotificationJobData {
 }
 
 @Processor(queueConfig.processorOptions, queueConfig.workerOptions)
-export class EmailWorker extends BaseProcessor<NotificationJobData, void> {
-    protected readonly logger = new Logger(EmailWorker.name);
+export class SMSProcessor extends BaseProcessor<NotificationJobData, void> {
+    protected readonly logger = new Logger(SMSProcessor.name);
 
     constructor(
         @Inject(NOTIFICATION_LOG_REPOSITORY)
         private readonly notificationLogRepository: NotificationLogRepositoryPort,
-        private readonly emailSender: EmailSender,
+        private readonly smsSender: SMSSender,
         protected readonly cls: ClsService,
     ) {
         super();
@@ -35,7 +35,7 @@ export class EmailWorker extends BaseProcessor<NotificationJobData, void> {
 
     protected async processJob(job: Job<NotificationJobData>): Promise<void> {
         const { data } = job;
-        this.logger.debug(`Processing email job ${job.id} for log ${data.logId}`);
+        this.logger.debug(`Processing SMS job ${job.id} for log ${data.logId}`);
 
         const log = await this.notificationLogRepository.getById(
             new Date(data.logCreatedAt),
@@ -59,12 +59,12 @@ export class EmailWorker extends BaseProcessor<NotificationJobData, void> {
         };
 
         // 발송
-        await this.emailSender.send(sendParams);
+        await this.smsSender.send(sendParams);
 
         // 성공 상태 업데이트
         log.markAsSuccess();
         await this.notificationLogRepository.update(log);
 
-        this.logger.debug(`Successfully sent email for log ${log.id}`);
+        this.logger.debug(`Successfully sent SMS for log ${log.id}`);
     }
 }

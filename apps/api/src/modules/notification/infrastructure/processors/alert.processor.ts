@@ -1,4 +1,4 @@
-// apps/api/src/modules/notification/processor/workers/alert.worker.ts
+// apps/api/src/modules/notification/infrastructure/processors/alert.processor.ts
 
 import { Processor } from '@nestjs/bullmq';
 import { Inject, Logger } from '@nestjs/common';
@@ -31,8 +31,8 @@ interface AlertJobData {
 }
 
 @Processor(queueConfig.processorOptions, queueConfig.workerOptions)
-export class AlertWorker extends BaseProcessor<AlertJobData, void> {
-    protected readonly logger = new Logger(AlertWorker.name);
+export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
+    protected readonly logger = new Logger(AlertProcessor.name);
 
     constructor(
         @Inject(ALERT_REPOSITORY)

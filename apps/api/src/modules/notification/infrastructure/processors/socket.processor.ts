@@ -1,4 +1,4 @@
-// apps/api/src/modules/notification/processor/workers/socket.worker.ts
+// apps/api/src/modules/notification/infrastructure/processors/socket.processor.ts
 
 import { Processor } from '@nestjs/bullmq';
 import { Inject, Logger } from '@nestjs/common';
@@ -26,8 +26,8 @@ interface VolatileJobData {
 }
 
 @Processor(queueConfig.processorOptions, queueConfig.workerOptions)
-export class SocketWorker extends BaseProcessor<NotificationJobData | VolatileJobData, void> {
-    protected readonly logger = new Logger(SocketWorker.name);
+export class SocketProcessor extends BaseProcessor<NotificationJobData | VolatileJobData, void> {
+    protected readonly logger = new Logger(SocketProcessor.name);
 
     constructor(
         @Inject(NOTIFICATION_LOG_REPOSITORY)

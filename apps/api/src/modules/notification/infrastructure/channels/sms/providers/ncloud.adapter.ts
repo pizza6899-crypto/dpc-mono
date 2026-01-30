@@ -1,4 +1,4 @@
-// apps/api/src/modules/notification/processor/channels/sms/providers/ncloud.adapter.ts
+// apps/api/src/modules/notification/infrastructure/channels/sms/providers/ncloud.adapter.ts
 
 import { Injectable, Logger } from '@nestjs/common';
 import {

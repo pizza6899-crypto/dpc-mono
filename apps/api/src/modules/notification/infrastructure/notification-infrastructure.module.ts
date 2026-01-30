@@ -1,4 +1,5 @@
-// apps/api/src/modules/notification/processor/processor.module.ts
+// apps/api/src/modules/notification/infrastructure/notification-infrastructure.module.ts
+
 import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
 import { BullModule } from '@nestjs/bullmq';
 import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
@@ -14,11 +15,11 @@ import { NodemailerAdapter } from './channels/email/providers/nodemailer.adapter
 import { SMSSender } from './channels/sms/sms.sender';
 import { NCloudAdapter } from './channels/sms/providers/ncloud.adapter';
 
-// Workers
-import { SocketWorker } from './workers/socket.worker';
-import { EmailWorker } from './workers/email.worker';
-import { SMSWorker } from './workers/sms.worker';
-import { AlertWorker } from './workers/alert.worker';
+// Processors
+import { SocketProcessor } from './processors/socket.processor';
+import { EmailProcessor } from './processors/email.processor';
+import { SMSProcessor } from './processors/sms.processor';
+import { AlertProcessor } from './processors/alert.processor';
 import { EnvModule } from 'src/common/env/env.module';
 
 @Module({
@@ -51,12 +52,12 @@ import { EnvModule } from 'src/common/env/env.module';
         EmailSender,
         SMSSender,
 
-        // Workers
-        SocketWorker,
-        EmailWorker,
-        SMSWorker,
-        AlertWorker,
+        // Processors
+        SocketProcessor,
+        EmailProcessor,
+        SMSProcessor,
+        AlertProcessor,
     ],
     exports: [SocketSender, EmailSender, SMSSender],
 })
-export class ProcessorModule { }
+export class NotificationInfrastructureModule { }

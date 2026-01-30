@@ -1,10 +1,11 @@
 // apps/api/src/infrastructure/bullmq/bullmq.module.ts
 
-import { Global, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bullmq';
 import { EnvModule } from 'src/common/env/env.module';
 import { EnvService } from 'src/common/env/env.service';
 import { ALL_BULLMQ_QUEUES } from './bullmq.constants';
+import { BullMqSchedulerService } from './bullmq.scheduler.service';
 
 /**
  * 프로젝트 전체의 BullMQ 인프라를 전용 모듈입니다.
@@ -45,6 +46,7 @@ import { ALL_BULLMQ_QUEUES } from './bullmq.constants';
         // 중앙 집중식 큐 등록
         BullModule.registerQueue(...ALL_BULLMQ_QUEUES),
     ],
+    providers: [BullMqSchedulerService],
     exports: [BullModule],
 })
 export class BullMqModule { }
