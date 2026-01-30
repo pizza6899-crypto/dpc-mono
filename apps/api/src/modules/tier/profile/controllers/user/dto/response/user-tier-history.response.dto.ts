@@ -14,15 +14,6 @@ export class UserTierHistoryResponseDto {
     @ApiProperty({ enum: TierChangeType, description: 'Change type / 변경 유형' })
     changeType: TierChangeType;
 
-    @ApiProperty({ nullable: true, description: 'Reason for change / 변경 사유' })
-    reason: string | null;
-
     @ApiProperty({ description: 'Date of change / 변경 일시' })
     changedAt: Date;
-
-    @ApiProperty({ description: 'Rolling amount snapshot / 롤링 금액 스냅샷' })
-    rollingAmountSnap: string;
-
-    @ApiProperty({ description: 'Deposit amount snapshot / 입금 금액 스냅샷' })
-    depositAmountSnap: string;
 }

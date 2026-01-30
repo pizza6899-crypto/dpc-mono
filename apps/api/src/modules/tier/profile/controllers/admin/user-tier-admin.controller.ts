@@ -11,6 +11,7 @@ import { UserTierHistoryAdminResponseDto } from './dto/response/user-tier-histor
 import { UpdateUserTierCustomRequestDto } from './dto/request/update-user-tier-custom.request.dto';
 import { ForceUpdateTierRequestDto } from './dto/request/force-update-tier.request.dto';
 import { ListUserTiersQueryDto } from './dto/request/list-user-tiers.query.dto';
+import { GetUserTierHistoryQueryDto } from '../user/dto/request/get-user-tier-history.query.dto';
 import { ListUserTiersService } from '../../application/list-user-tiers.service';
 import { ApiPaginatedResponse } from 'src/common/http/decorators/api-response.decorator';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
@@ -75,20 +76,31 @@ export class UserTierAdminController {
 
     @Get('users/:userId/history')
     @ApiOperation({ summary: 'Get user tier history / 유저 티어 변경 이력 조회' })
-    @ApiOkResponse({ type: [UserTierHistoryAdminResponseDto], description: 'Successfully retrieved user tier history / 유저 티어 변경 이력 조회 성공' })
-    async getUserTierHistory(@Param('userId') userId: string): Promise<UserTierHistoryAdminResponseDto[]> {
-        const history = await this.getUserTierHistoryService.execute(BigInt(userId));
+    @Paginated()
+    @ApiPaginatedResponse(UserTierHistoryAdminResponseDto, {
+        description: 'Successfully retrieved user tier history / 유저 티어 변경 이력 조회 성공'
+    })
+    async getUserTierHistory(
+        @Param('userId') userId: string,
+        @Query() query: GetUserTierHistoryQueryDto,
+    ): Promise<PaginatedData<UserTierHistoryAdminResponseDto>> {
+        const history = await this.getUserTierHistoryService.execute(BigInt(userId), query);
 
-        return history.map(h => ({
-            id: h.id.toString(),
-            fromTierId: h.fromTierId?.toString() ?? null,
-            toTierId: h.toTierId.toString(),
-            changeType: h.changeType,
-            reason: h.reason,
-            changedAt: h.changedAt,
-            rollingAmountSnap: h.rollingAmountSnap.toString(),
-            depositAmountSnap: h.depositAmountSnap.toString(),
-        }));
+        return {
+            data: history.data.map(h => ({
+                id: h.id.toString(),
+                fromTierId: h.fromTierId?.toString() ?? null,
+                toTierId: h.toTierId.toString(),
+                changeType: h.changeType,
+                reason: h.reason,
+                changedAt: h.changedAt,
+                rollingAmountSnap: h.rollingAmountSnap.toString(),
+                depositAmountSnap: h.depositAmountSnap.toString(),
+            })),
+            page: history.page,
+            limit: history.limit,
+            total: history.total,
+        };
     }
 
     @Patch('users/:userId/custom')

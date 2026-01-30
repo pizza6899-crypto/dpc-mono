@@ -1,6 +1,8 @@
 import { Controller, Get, UseGuards, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
-import { Prisma } from '@prisma/client';
+import { ApiPaginatedResponse } from 'src/common/http/decorators/api-response.decorator';
+import { Paginated } from 'src/common/http/decorators/paginated.decorator';
+import { PaginatedData } from 'src/common/http/types/pagination.types';
 import { GetMyTierService } from '../../application/get-my-tier.service';
 import { GetNextTierProgressService } from '../../application/get-next-tier-progress.service';
 import { GetUserTierHistoryService } from '../../application/get-user-tier-history.service';
@@ -8,6 +10,7 @@ import { TierRepositoryPort } from '../../../master/infrastructure/tier.reposito
 import { UserTierResponseDto } from './dto/response/user-tier.response.dto';
 import { UserTierHistoryResponseDto } from './dto/response/user-tier-history.response.dto';
 import { GetUserTierQueryDto } from './dto/request/get-user-tier.query.dto';
+import { GetUserTierHistoryQueryDto } from './dto/request/get-user-tier-history.query.dto';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { SessionAuthGuard } from 'src/common/auth/guards/session-auth.guard';
 import { User } from 'src/modules/user/domain/model/user.entity';
@@ -78,19 +81,25 @@ export class UserTierController {
 
     @Get('my/history')
     @ApiOperation({ summary: 'Get my tier change history / 내 티어 변경 이력 조회' })
-    @ApiOkResponse({ type: [UserTierHistoryResponseDto] })
-    async getMyTierHistory(@CurrentUser() user: User): Promise<UserTierHistoryResponseDto[]> {
-        const history = await this.getUserTierHistoryService.execute(user.id);
+    @Paginated()
+    @ApiPaginatedResponse(UserTierHistoryResponseDto)
+    async getMyTierHistory(
+        @CurrentUser() user: User,
+        @Query() query: GetUserTierHistoryQueryDto,
+    ): Promise<PaginatedData<UserTierHistoryResponseDto>> {
+        const history = await this.getUserTierHistoryService.execute(user.id, query);
 
-        return history.map(h => ({
-            id: this.sqidsService.encode(h.id, SqidsPrefix.USER_TIER_HISTORY),
-            fromTierId: h.fromTierId ? this.sqidsService.encode(h.fromTierId, SqidsPrefix.TIER) : null,
-            toTierId: this.sqidsService.encode(h.toTierId, SqidsPrefix.TIER),
-            changeType: h.changeType,
-            reason: h.reason,
-            changedAt: h.changedAt,
-            rollingAmountSnap: h.rollingAmountSnap.toFixed(2),
-            depositAmountSnap: h.depositAmountSnap.toFixed(2),
-        }));
+        return {
+            data: history.data.map(h => ({
+                id: this.sqidsService.encode(h.id, SqidsPrefix.USER_TIER_HISTORY),
+                fromTierId: h.fromTierId ? this.sqidsService.encode(h.fromTierId, SqidsPrefix.TIER) : null,
+                toTierId: this.sqidsService.encode(h.toTierId, SqidsPrefix.TIER),
+                changeType: h.changeType,
+                changedAt: h.changedAt,
+            })),
+            page: history.page,
+            limit: history.limit,
+            total: history.total,
+        };
     }
 }

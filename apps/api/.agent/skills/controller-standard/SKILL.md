@@ -45,8 +45,14 @@ description: NestJS 컨트롤러 구현 표준 (API 디자인, Sqids 난독화, 
 *   **응답 표준**: `@ApiStandardResponse()` 및 `@ApiPaginatedResponse()` 사용.
 
 ### 5. 페이지네이션 (Pagination)
-*   **List Queries**: 목록 반환 시 `@Paginated()` 데코레이터 사용.
-*   **응답 타입**: `PaginatedData<T>` 형식을 준수하여 `{ data, total, page, limit }` 구조로 반환.
+일관된 목록 조회를 위해 다음 규칙을 준수합니다.
+
+*   **Query DTO**: `src/common/http/types/pagination.types`의 `createPaginationQueryDto`를 상속받아 구현합니다.
+*   **Decorator**: 컨트롤러 메서드에 `@Paginated()` 데코레이터를 반드시 부착합니다. (인터셉터 트리거)
+*   **Swagger**: `@ApiPaginatedResponse(ResponseItemDto)`를 사용하여 문서화합니다.
+*   **Return Type**: 메서드는 `Promise<PaginatedData<ResponseItemDto>>`를 반환해야 합니다.
+    *   **구조**: `{ data: T[], total: number, page: number, limit: number }` 형태의 평탄화된 객체를 반환하십시오.
+    *   **주의**: `{ data: [...], pagination: {...} }` 형태로 직접 구조를 만들지 마십시오. 인터셉터가 이를 자동으로 변환합니다.
 
 ### 6. DTO(Data Transfer Object) 표준
 프로젝트의 일관된 데이터 교환을 위해 형식을 엄격히 준수합니다.
@@ -83,15 +89,16 @@ export class WalletController {
   @ApiOperation({ summary: 'Get transaction history / 트랜잭션 이력 조회' })
   @ApiPaginatedResponse(UserWalletTransactionResponseDto)
   async getTransactionHistory(@Query() query: GetHistoryQueryDto): Promise<PaginatedData<UserWalletTransactionResponseDto>> {
-    const { items, total } = await this.service.execute(query);
+    // Service returns PaginatedData<Entity> ({ data, total, page, limit })
+    const result = await this.service.execute(query);
     
     return {
-      data: items.map(tx => ({
+      ...result,
+      data: result.data.map(tx => ({
         id: this.sqidsService.encode(tx.id, SqidsPrefix.WALLET_TRANSACTION),
         amount: tx.amount.toString(),
         // ...
       })),
-      total, page: query.page, limit: query.limit
     };
   }
 }

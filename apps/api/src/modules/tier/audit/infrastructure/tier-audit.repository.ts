@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { EvaluationStatus } from '@prisma/client';
+import { EvaluationStatus, Prisma, TierChangeType } from '@prisma/client';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import {
@@ -10,6 +10,7 @@ import {
 } from './audit.repository.port';
 import { TierHistory } from '../domain/tier-history.entity';
 import { TierEvaluationLog } from '../domain/tier-evaluation-log.entity';
+import { PaginatedData } from 'src/common/http/types/pagination.types';
 
 @Injectable()
 export class TierAuditRepository implements TierAuditRepositoryPort {
@@ -31,14 +32,45 @@ export class TierAuditRepository implements TierAuditRepositoryPort {
 
     async findHistoryByUserId(
         userId: bigint,
-        limit: number = 20,
-    ): Promise<TierHistory[]> {
-        const records = await this.tx.tierHistory.findMany({
-            where: { userId },
-            take: limit,
-            orderBy: { changedAt: 'desc' },
-        });
-        return records.map(TierHistory.fromPersistence);
+        params: {
+            startDate?: Date;
+            endDate?: Date;
+            page?: number;
+            limit?: number;
+            changeType?: TierChangeType;
+        } = {},
+    ): Promise<PaginatedData<TierHistory>> {
+        const { startDate, endDate, page = 1, limit = 20, changeType } = params;
+        const where: Prisma.TierHistoryWhereInput = {
+            userId,
+        };
+
+        if (startDate || endDate) {
+            where.changedAt = {};
+            if (startDate) where.changedAt.gte = startDate;
+            if (endDate) where.changedAt.lte = endDate;
+        }
+
+        if (changeType) {
+            where.changeType = changeType;
+        }
+
+        const [total, records] = await Promise.all([
+            this.tx.tierHistory.count({ where }),
+            this.tx.tierHistory.findMany({
+                where,
+                skip: (page - 1) * limit,
+                take: limit,
+                orderBy: { changedAt: 'desc' },
+            }),
+        ]);
+
+        return {
+            data: records.map(TierHistory.fromPersistence),
+            total,
+            page,
+            limit,
+        };
     }
 
     // --- Evaluation Log ---

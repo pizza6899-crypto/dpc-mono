@@ -1,5 +1,6 @@
 import type { TierHistory } from '../domain/tier-history.entity';
 import type { TierEvaluationLog } from '../domain/tier-evaluation-log.entity';
+import { PaginatedData } from 'src/common/http/types/pagination.types';
 import type {
     Prisma,
     TierChangeType,
@@ -54,8 +55,14 @@ export abstract class TierAuditRepositoryPort {
     abstract saveHistory(props: CreateTierHistoryProps): Promise<TierHistory>;
     abstract findHistoryByUserId(
         userId: bigint,
-        limit?: number,
-    ): Promise<TierHistory[]>;
+        params?: {
+            startDate?: Date;
+            endDate?: Date;
+            page?: number;
+            limit?: number;
+            changeType?: TierChangeType;
+        },
+    ): Promise<PaginatedData<TierHistory>>;
 
     // 2. Evaluation Log
     abstract createEvaluationLog(
