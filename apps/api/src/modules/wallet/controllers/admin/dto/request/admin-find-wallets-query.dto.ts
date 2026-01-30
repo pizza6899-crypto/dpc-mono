@@ -4,7 +4,7 @@ import { ExchangeCurrencyCode, UserWalletStatus } from '@prisma/client';
 import { PaginationQueryDto } from 'src/common/http/types/pagination.types';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 
-export class FindWalletsQueryDto extends PaginationQueryDto {
+export class AdminFindWalletsQueryDto extends PaginationQueryDto {
     @ApiPropertyOptional({ description: 'User ID / 사용자 ID', example: '1' })
     @IsOptional()
     @IsString()

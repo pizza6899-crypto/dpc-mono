@@ -4,7 +4,7 @@ import { ExchangeCurrencyCode, UserWalletBalanceType, AdjustmentReasonCode } fro
 import { UpdateOperation } from '../../../../domain/wallet.constant';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 
-export class AdjustBalanceRequestDto {
+export class AdminAdjustBalanceRequestDto {
     @ApiProperty({ description: 'User ID / 사용자 ID', example: '1' })
     @IsNotEmpty()
     @IsString()

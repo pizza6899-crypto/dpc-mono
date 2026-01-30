@@ -18,7 +18,7 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { FindUserWalletService } from '../../application/find-user-wallet.service';
 import { FindWalletTransactionHistoryService } from '../../application/find-wallet-transaction-history.service';
 import { UserWalletListResponseDto } from './dto/response/user-wallet.response.dto';
-import { GetBalanceQueryDto } from './dto/request/get-balance-query.dto';
+import { GetUserBalanceQueryDto } from './dto/request/get-user-balance-query.dto';
 import { UserWallet, WalletNotFoundException } from '../../domain';
 import { UserWalletTransactionResponseDto } from './dto/response/wallet-transaction.response.dto';
 import { GetUserWalletTransactionHistoryQueryDto } from './dto/request/get-wallet-transaction-history-query.dto';
@@ -81,7 +81,7 @@ export class WalletController {
   })
   async getBalance(
     @CurrentUser() user: CurrentUserWithSession,
-    @Query() query: GetBalanceQueryDto,
+    @Query() query: GetUserBalanceQueryDto,
   ): Promise<UserWalletListResponseDto> {
     const userId = BigInt(user.id);
     let wallets: UserWallet[] = [];

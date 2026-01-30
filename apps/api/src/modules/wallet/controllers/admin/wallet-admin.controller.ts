@@ -25,9 +25,9 @@ import { UpdateWalletStatusService } from '../../application/update-wallet-statu
 import { FindUserWalletsService } from '../../application/find-user-wallets.service';
 import { FindWalletStatisticsService } from '../../application/find-wallet-statistics.service';
 import { FindWalletTransactionHistoryService } from '../../application/find-wallet-transaction-history.service';
-import { FindWalletsQueryDto } from './dto/request/find-wallets-query.dto';
-import { AdjustBalanceRequestDto } from './dto/request/adjust-balance.request.dto';
-import { UpdateWalletStatusRequestDto } from './dto/request/update-wallet-status.request.dto';
+import { AdminFindWalletsQueryDto } from './dto/request/admin-find-wallets-query.dto';
+import { AdminAdjustBalanceRequestDto } from './dto/request/admin-adjust-balance.request.dto';
+import { AdminUpdateWalletStatusRequestDto } from './dto/request/admin-update-wallet-status.request.dto';
 import { AdminTransactionQueryDto } from './dto/request/admin-transaction-query.dto';
 import { AdminWalletResponseDto } from './dto/response/admin-wallet-list.response.dto';
 import { AdjustBalanceResponseDto } from './dto/response/adjust-balance.response.dto';
@@ -64,7 +64,7 @@ export class WalletAdminController {
     description: 'Successfully retrieved wallets / 지갑 목록 조회 성공',
   })
   async listWallets(
-    @Query() query: FindWalletsQueryDto,
+    @Query() query: AdminFindWalletsQueryDto,
   ): Promise<PaginatedData<AdminWalletResponseDto>> {
     const page = query.page || 1;
     const limit = query.limit || 20;
@@ -139,7 +139,7 @@ export class WalletAdminController {
     }),
   })
   async adjustBalance(
-    @Body() dto: AdjustBalanceRequestDto,
+    @Body() dto: AdminAdjustBalanceRequestDto,
     @CurrentUser() admin: CurrentUserWithSession,
   ): Promise<AdjustBalanceResponseDto> {
     const wallet = await this.adjustUserBalanceService.execute({
@@ -258,7 +258,7 @@ export class WalletAdminController {
   })
   async updateStatus(
     @Param('userId') userId: string,
-    @Body() dto: UpdateWalletStatusRequestDto,
+    @Body() dto: AdminUpdateWalletStatusRequestDto,
     @CurrentUser() admin: CurrentUserWithSession,
   ): Promise<UpdateWalletStatusResponseDto> {
     const wallet = await this.updateWalletStatusService.execute({

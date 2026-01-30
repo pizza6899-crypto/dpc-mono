@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { ExchangeCurrencyCode, UserWalletStatus } from '@prisma/client';
 
-export class UpdateWalletStatusRequestDto {
+export class AdminUpdateWalletStatusRequestDto {
     @ApiProperty({ enum: ExchangeCurrencyCode, description: 'Currency Code / 통화 코드' })
     @IsEnum(ExchangeCurrencyCode)
     @IsNotEmpty()
