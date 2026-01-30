@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Language } from '@prisma/client';
 import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository.port';
 import { TierRepositoryPort } from '../../master/infrastructure/tier.repository.port';
 import { TierDistributionResponseDto } from '../controllers/admin/dto/tier-distribution.response.dto';
@@ -10,7 +11,7 @@ export class GetTierDistributionService {
         private readonly tierRepository: TierRepositoryPort,
     ) { }
 
-    async execute(): Promise<TierDistributionResponseDto[]> {
+    async execute(lang: Language = Language.EN): Promise<TierDistributionResponseDto[]> {
         const counts = await this.userTierRepository.countGroupByTierId();
         const allTiers = await this.tierRepository.findAll();
 
@@ -19,7 +20,8 @@ export class GetTierDistributionService {
 
         return allTiers.map(tier => ({
             tierId: tier.id.toString(),
-            tierName: tier.getName(),
+            tierCode: tier.code,
+            tierName: tier.getName(lang),
             count: countMap.get(tier.id.toString()) || 0
         }));
     }

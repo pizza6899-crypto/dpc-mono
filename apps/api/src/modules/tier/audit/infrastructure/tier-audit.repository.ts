@@ -111,12 +111,22 @@ export class TierAuditRepository implements TierAuditRepositoryPort {
         return TierEvaluationLog.fromPersistence(record);
     }
 
-    async findEvaluationLogs(limit: number = 20): Promise<TierEvaluationLog[]> {
-        const records = await this.tx.tierEvaluationLog.findMany({
-            take: limit,
-            orderBy: { startedAt: 'desc' },
-        });
-        return records.map(TierEvaluationLog.fromPersistence);
+    async findEvaluationLogs(page: number = 1, limit: number = 20): Promise<PaginatedData<TierEvaluationLog>> {
+        const [total, records] = await Promise.all([
+            this.tx.tierEvaluationLog.count(),
+            this.tx.tierEvaluationLog.findMany({
+                skip: (page - 1) * limit,
+                take: limit,
+                orderBy: { startedAt: 'desc' },
+            }),
+        ]);
+
+        return {
+            data: records.map(TierEvaluationLog.fromPersistence),
+            total,
+            page,
+            limit,
+        };
     }
 
     // --- Stats ---

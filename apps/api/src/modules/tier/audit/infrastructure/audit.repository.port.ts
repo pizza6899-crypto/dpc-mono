@@ -79,7 +79,10 @@ export abstract class TierAuditRepositoryPort {
             errorMessage?: string | null;
         },
     ): Promise<TierEvaluationLog>;
-    abstract findEvaluationLogs(limit?: number): Promise<TierEvaluationLog[]>;
+    abstract findEvaluationLogs(
+        page?: number,
+        limit?: number,
+    ): Promise<PaginatedData<TierEvaluationLog>>;
 
     // 4. Stats
     abstract updateStats(

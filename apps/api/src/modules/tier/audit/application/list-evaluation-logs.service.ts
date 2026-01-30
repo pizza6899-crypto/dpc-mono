@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { TierAuditRepositoryPort } from '../infrastructure/audit.repository.port';
 import { TierEvaluationLog } from '../domain/tier-evaluation-log.entity';
+import { PaginatedData } from 'src/common/http/types/pagination.types';
+import { ListEvaluationLogsQueryDto } from '../controllers/admin/dto/request/list-evaluation-logs.query.dto';
 
 @Injectable()
 export class ListEvaluationLogsService {
@@ -8,10 +10,7 @@ export class ListEvaluationLogsService {
         private readonly auditRepository: TierAuditRepositoryPort,
     ) { }
 
-    async execute(limit: number = 20): Promise<TierEvaluationLog[]> {
-        // We might need to add this to the repository port if not exists.
-        // For now, let's assume we add it.
-        // @ts-ignore
-        return this.auditRepository.findEvaluationLogs(limit);
+    async execute(query: ListEvaluationLogsQueryDto): Promise<PaginatedData<TierEvaluationLog>> {
+        return this.auditRepository.findEvaluationLogs(query.page, query.limit);
     }
 }
