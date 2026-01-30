@@ -1,6 +1,6 @@
 import { Controller, Get, HttpCode, HttpStatus, Query } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { Language } from '@prisma/client';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Language, Prisma } from '@prisma/client';
 import { ApiStandardResponse, ApiStandardErrors } from 'src/common/http/decorators/api-response.decorator';
 import { Public } from 'src/common/auth/decorators/roles.decorator';
 import { TierService } from '../../application/tier.service';
@@ -56,10 +56,13 @@ export class TierPublicController {
     }
 
     private mapToResponseDto(tier: Tier, lang: Language): TierPublicResponseDto {
-        // Find translation for requested language, or fallback to EN, or fallback to first available
         const translation = tier.translations.find(t => t.language === lang)
             || tier.translations.find(t => t.language === Language.EN)
             || tier.translations[0];
+
+        // Decimal 포맷팅 유틸리티 (필요시 common/utils로 이동 가능)
+        const formatUsd = (v: Prisma.Decimal) => v.toFixed(2);
+        const formatRate = (v: Prisma.Decimal) => v.toFixed(4);
 
         return {
             id: this.sqidsService.encode(tier.id, SqidsPrefix.TIER),
@@ -69,20 +72,20 @@ export class TierPublicController {
             imageUrl: tier.imageUrl,
             priority: tier.priority,
             requirements: {
-                rolling: tier.requirementUsd.toString(),
-                deposit: tier.requirementDepositUsd.toString(),
-                maintenance: tier.maintenanceRollingUsd.toString(),
+                rolling: formatUsd(tier.requirementUsd),
+                deposit: formatUsd(tier.requirementDepositUsd),
+                maintenance: formatUsd(tier.maintenanceRollingUsd),
             },
             benefits: {
-                comp: tier.compRate.toString(),
-                rakeback: tier.rakebackRate.toString(),
-                lossback: tier.lossbackRate.toString(),
-                reload: tier.reloadBonusRate.toString(),
-                levelUpBonus: tier.levelUpBonusUsd.toString(),
-                levelUpWager: tier.levelUpBonusWageringMultiplier.toString(),
+                comp: formatRate(tier.compRate),
+                rakeback: formatRate(tier.rakebackRate),
+                lossback: formatRate(tier.lossbackRate),
+                reload: formatRate(tier.reloadBonusRate),
+                levelUpBonus: formatUsd(tier.levelUpBonusUsd),
+                levelUpWager: tier.levelUpBonusWageringMultiplier.toFixed(0), // 배수는 보통 정수
             },
             limits: {
-                dailyWithdrawal: tier.dailyWithdrawalLimitUsd.toString(),
+                dailyWithdrawal: formatUsd(tier.dailyWithdrawalLimitUsd),
                 isUnlimited: tier.isWithdrawalUnlimited,
             },
         };

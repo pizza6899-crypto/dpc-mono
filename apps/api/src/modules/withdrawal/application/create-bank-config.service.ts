@@ -54,8 +54,7 @@ export class CreateBankConfigService {
         }
 
         // 데이터가 전혀 없으면 신규 생성
-        const now = new Date();
-        const id = this.snowflakeService.generate(now);
+        const { id } = this.snowflakeService.generate();
         const config = BankWithdrawConfig.createNew(id, {
             currency: params.currency,
             bankName: params.bankName,

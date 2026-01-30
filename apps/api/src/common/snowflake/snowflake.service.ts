@@ -2,6 +2,11 @@ import { Injectable, Logger } from '@nestjs/common';
 import { NodeIdentityService } from '../node-identity/node-identity.service';
 import { SnowflakeClockBackwardsException } from './snowflake.exception';
 
+export interface GeneratedSnowflake {
+    id: bigint;
+    timestamp: Date;
+}
+
 @Injectable()
 export class SnowflakeService {
     private readonly logger = new Logger(SnowflakeService.name);
@@ -17,145 +22,125 @@ export class SnowflakeService {
     private readonly SEQUENCE_MASK = 0xfffn; // 12 bits (4095)
     private readonly NODE_ID_MASK = 0x3ffn; // 10 bits (1023)
 
-    // 시퀀스 관리
+    // 외부 주입 시각용 노드 오프셋 (Bit 9를 1로 설정하여 512~1023 범위 사용)
+    private readonly EXTERNAL_NODE_OFFSET = 512n;
+
+    // 시퀀스 관리 (실시간/내부 생성용)
     private sequence = 0n;
     private lastTimestamp = -1n;
+
+    // 외부 주입용 시퀀스 저장소 (최근 1000개의 밀리초별 시퀀스 기억)
+    private readonly externalSequenceMap = new Map<bigint, bigint>();
 
     constructor(
         private readonly nodeIdentityService: NodeIdentityService,
     ) { }
 
-    /**
-     * 할당된 Node ID를 반환합니다.
-     */
-    getNodeId(): bigint {
-        return BigInt(this.nodeIdentityService.getNodeId());
+    private getNodeId(): bigint {
+        return BigInt(this.nodeIdentityService.getNodeId()) & 0x1ffn; // 하위 9비트(0~511)만 사용
     }
 
     /**
-     * 특정 타임스탬프를 기준으로 Snowflake ID를 생성합니다.
-     * DB 레코드 생성 시 ID와 시간을 함께 처리하기 위해 타임스탬프를 명시적으로 받습니다.
+     * Snowflake ID와 생성에 사용된 정확한 타임스탬프를 함께 반환합니다.
      * 
-     * @param {Date | bigint | number} targetTime - ID에 심을 대상 시간
-     * @returns {bigint} 생성된 Snowflake ID
-     * 
-     * @example
-     * // 현재 시간 기준 ID 생성
-     * const now = new Date();
-     * const id = snowflakeService.generate(now);
-     * await prisma.create({ id, createdAt: now });
-     * 
-     * @example
-     * // 특정 시간 기준 ID 생성 (외부 이벤트 시간 반영)
-     * const wonAt = new Date(externalEvent.timestamp);
-     * const id = snowflakeService.generate(wonAt);
-     * await prisma.create({ id, wonAt });
+     * @param targetTime - 외부 타임스탬프 (생략 시 현재 시스템 시각 사용)
+     * @returns {GeneratedSnowflake} - { id, timestamp }
      */
-    generate(targetTime: Date | bigint | number): bigint {
+    generate(targetTime?: Date | bigint | number): GeneratedSnowflake {
         let timestamp: bigint;
-        if (targetTime instanceof Date) {
-            timestamp = BigInt(targetTime.getTime());
+        let isExternal = false;
+
+        if (targetTime === undefined) {
+            // 인자 없음: 실시간 내부 생성 -> 내부 노드(0~511) 사용
+            timestamp = BigInt(Date.now());
         } else {
-            timestamp = BigInt(targetTime);
+            // 인자 있음: 외부 주입 생성 -> 외부 노드(512~1023) 사용
+            timestamp = typeof targetTime === 'object' ? BigInt(targetTime.getTime()) : BigInt(targetTime);
+            isExternal = true;
         }
 
-        return this.internalGenerate(timestamp);
+        // 모드에 따라 생성 로직 분기
+        const id = isExternal ? this.generateExternal(timestamp) : this.internalGenerate(timestamp);
+
+        return {
+            id,
+            timestamp: new Date(Number(timestamp))
+        };
     }
 
     /**
-     * 내부적으로 타임스탬프와 시퀀스를 관리하며 ID를 생성합니다.
+     * 외부 시스템 시각(External Event Time)을 위한 ID 생성
+     * 네트워크 지연으로 인해 동일 밀리초 데이터가 뒤섞여 들어와도 중복을 방지합니다.
      */
+    private generateExternal(timestamp: bigint): bigint {
+        const nodeId = this.getNodeId() | this.EXTERNAL_NODE_OFFSET;
+
+        // 최근 해당 타임스탬프로 생성한 시퀀스가 있는지 확인
+        const currentSeq = this.externalSequenceMap.get(timestamp) ?? -1n;
+        const nextSeq = (currentSeq + 1n) & this.SEQUENCE_MASK;
+
+        // 시퀀스 상태 업데이트
+        this.externalSequenceMap.set(timestamp, nextSeq);
+
+        // LRU 정책: 최근 1000개의 타임스탬프 상태만 유지 (메모리 관리)
+        if (this.externalSequenceMap.size > 1000) {
+            const firstKey = this.externalSequenceMap.keys().next().value;
+            this.externalSequenceMap.delete(firstKey);
+        }
+
+        return this.buildIdWithNode(timestamp, nextSeq, nodeId);
+    }
+
     private internalGenerate(timestamp: bigint): bigint {
-        // 과거 타임스탬프가 명시적으로 들어온 경우
+        // 시계가 뒤로 돌아간 경우 (Clock Skew)
         if (timestamp < this.lastTimestamp) {
             const diff = this.lastTimestamp - timestamp;
-            this.logger.error(
-                `Clock moved backwards. Refusing to generate id for ${diff}ms. ` +
-                `Current timestamp: ${timestamp}, Last timestamp: ${this.lastTimestamp}`
-            );
-            throw new SnowflakeClockBackwardsException(diff);
-        } else if (timestamp === this.lastTimestamp) {
-            // 같은 밀리초 내에서 호출된 경우 시퀀스 증가
+            if (diff < 2000n) {
+                this.logger.warn(`Clock moved backwards by ${diff}ms. Waiting...`);
+                timestamp = this.waitNextMillis(this.lastTimestamp);
+            } else {
+                throw new SnowflakeClockBackwardsException(diff);
+            }
+        }
+
+        if (timestamp === this.lastTimestamp) {
             this.sequence = (this.sequence + 1n) & this.SEQUENCE_MASK;
-
-            // 시퀀스 오버플로우 발생 (4096번 초과)
             if (this.sequence === 0n) {
-                // 현재 시간 기준 생성인지 확인 (±10ms 허용)
-                const currentTime = BigInt(Date.now());
-                const isRealtimeGeneration = timestamp >= currentTime - 10n && timestamp <= currentTime + 10n;
-
-                if (isRealtimeGeneration) {
-                    // 실시간 생성: 다음 밀리초까지 대기
-                    this.logger.warn(`Sequence overflow. Waiting for next millisecond.`);
-                    timestamp = this.waitNextMillis(this.lastTimestamp);
-                } else {
-                    // 고정 타임스탬프 생성: 에러 발생 (무한 루프 방지)
-                    throw new Error(
-                        `Sequence overflow for fixed timestamp: ${timestamp}. ` +
-                        `Cannot generate more than 4096 IDs for the same millisecond.`
-                    );
-                }
+                timestamp = this.waitNextMillis(this.lastTimestamp);
             }
         } else {
-            // 새로운 밀리초인 경우 시퀀스 초기화
             this.sequence = 0n;
         }
 
         this.lastTimestamp = timestamp;
-
-        return this.buildId(timestamp, this.sequence);
+        return this.buildIdWithNode(timestamp, this.sequence, this.getNodeId());
     }
 
-    /**
-     * 타임스탬프, 노드 ID, 시퀀스를 조합하여 64비트 ID를 빌드합니다.
-     */
-    private buildId(timestamp: bigint, sequence: bigint): bigint {
+    private buildIdWithNode(timestamp: bigint, sequence: bigint, nodeId: bigint): bigint {
         return ((timestamp - this.EPOCH) << this.TIMESTAMP_SHIFT) |
-            (this.getNodeId() << this.NODE_ID_SHIFT) |
+            (nodeId << this.NODE_ID_SHIFT) |
             (sequence & this.SEQUENCE_MASK);
     }
 
-    /**
-     * 현재 타임스탬프를 밀리초 단위로 반환합니다.
-     */
-    private getCurrentTimestamp(): bigint {
-        return BigInt(Date.now());
-    }
-
-    /**
-     * 다음 밀리초까지 대기합니다.
-     */
     private waitNextMillis(lastTimestamp: bigint): bigint {
-        let timestamp = this.getCurrentTimestamp();
+        let timestamp = BigInt(Date.now());
         while (timestamp <= lastTimestamp) {
-            timestamp = this.getCurrentTimestamp();
+            timestamp = BigInt(Date.now());
         }
         return timestamp;
     }
 
-    /**
-     * Snowflake ID를 파싱하여 구성 요소를 반환합니다.
-     * 디버깅 및 분석 용도로 사용합니다.
-     * 
-     * @param {bigint} id - 파싱할 Snowflake ID
-     * @returns {{ timestamp: bigint; nodeId: bigint; sequence: bigint; date: Date }}
-     */
-    parse(id: bigint): {
-        timestamp: bigint;
-        nodeId: bigint;
-        sequence: bigint;
-        date: Date;
-    } {
-        const timestamp =
-            (id >> this.TIMESTAMP_SHIFT) + this.EPOCH;
+    parse(id: bigint) {
+        const timestamp = (id >> this.TIMESTAMP_SHIFT) + this.EPOCH;
         const nodeId = (id >> this.NODE_ID_SHIFT) & this.NODE_ID_MASK;
-        const sequence = id & this.SEQUENCE_MASK;
+        const isExternal = (nodeId & this.EXTERNAL_NODE_OFFSET) !== 0n;
 
         return {
             timestamp,
-            nodeId,
-            sequence,
             date: new Date(Number(timestamp)),
+            nodeId: isExternal ? nodeId ^ this.EXTERNAL_NODE_OFFSET : nodeId,
+            isExternal,
+            sequence: id & this.SEQUENCE_MASK,
         };
     }
 }

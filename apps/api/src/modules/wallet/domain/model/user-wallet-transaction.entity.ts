@@ -9,7 +9,7 @@ import { AnyWalletTransactionMetadata } from "./user-wallet-transaction-metadata
 export class UserWalletTransaction {
     private constructor(
         // Identity
-        public readonly id: bigint | null,
+        public readonly id: bigint,
         public readonly createdAt: Date,
 
         // Core fields
@@ -34,6 +34,7 @@ export class UserWalletTransaction {
     ) { }
 
     static create(params: {
+        id: bigint;
         userId: bigint;
         currency: ExchangeCurrencyCode;
         type: UserWalletTransactionType;
@@ -50,7 +51,7 @@ export class UserWalletTransaction {
     }): UserWalletTransaction {
         // 도메인 유효성 검사 (필요 시)
         return new UserWalletTransaction(
-            null, // DB 저장 시 자동 생성
+            params.id,
             params.createdAt ?? new Date(),
             params.type,
             params.balanceType,

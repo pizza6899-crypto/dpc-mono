@@ -77,7 +77,7 @@ export class EarnCompService {
 
         // 5. Record Transaction
         const transaction = CompTransaction.create({
-            id: this.snowflakeService.generate(new Date()),
+            id: this.snowflakeService.generate().id,
             compWalletId: savedWallet.id,
             amount: amount,
             balanceBefore: balanceBefore,

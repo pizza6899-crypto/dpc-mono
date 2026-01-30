@@ -11,6 +11,7 @@ import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { USER_WALLET_STATS_REPOSITORY } from '../ports/out/user-wallet-stats.repository.token';
 import type { UserWalletStatsRepositoryPort, UpdateWalletStatsDto } from '../ports/out/user-wallet-stats.repository.port';
 import { ExchangeRateService } from '../../exchange/application/exchange-rate.service';
+import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
 export interface BalanceUpdateContext {
     // Admin Context
@@ -56,6 +57,7 @@ export class UpdateUserBalanceService {
         @Inject(USER_WALLET_STATS_REPOSITORY)
         private readonly statsRepository: UserWalletStatsRepositoryPort,
         private readonly exchangeRateService: ExchangeRateService,
+        private readonly snowflakeService: SnowflakeService,
     ) { }
 
     /**
@@ -127,7 +129,12 @@ export class UpdateUserBalanceService {
             balanceType
         });
 
+        // Generate Snowflake ID & Timestamp exactly here
+        const { id: txId, timestamp: txCreatedAt } = this.snowflakeService.generate();
+
         const transaction = UserWalletTransaction.create({
+            id: txId,
+            createdAt: txCreatedAt,
             userId,
             currency,
             type: transactionType,

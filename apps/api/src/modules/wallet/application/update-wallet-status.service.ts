@@ -8,6 +8,7 @@ import type { UserWalletTransactionRepositoryPort } from '../ports/out/user-wall
 import { UserWallet, UserWalletTransaction, UserWalletPolicy, WalletNotFoundException, WalletStatusException } from '../domain';
 import { Prisma } from '@prisma/client';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
 export interface UpdateWalletStatusParams {
     userId: bigint;
@@ -31,6 +32,7 @@ export class UpdateWalletStatusService {
         private readonly transactionRepository: UserWalletTransactionRepositoryPort,
         private readonly walletPolicy: UserWalletPolicy,
         private readonly advisoryLockService: AdvisoryLockService,
+        private readonly snowflakeService: SnowflakeService,
     ) { }
 
     @Transactional()
@@ -80,7 +82,11 @@ export class UpdateWalletStatusService {
         const savedWallet = await this.walletRepository.update(wallet);
 
         // 5. Record Status Change Transaction
+        const { id, timestamp } = this.snowflakeService.generate();
+
         const transaction = UserWalletTransaction.create({
+            id,
+            createdAt: timestamp,
             userId,
             currency,
             type: UserWalletTransactionType.STATUS_CHANGE,

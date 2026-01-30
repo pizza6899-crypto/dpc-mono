@@ -71,7 +71,7 @@ export class ClaimCompService {
 
         // 5. Record Comp Transaction
         const compTx = CompTransaction.create({
-            id: this.snowflakeService.generate(new Date()),
+            id: this.snowflakeService.generate().id,
             compWalletId: savedCompWallet.id,
             amount: amount.negated(),
             balanceBefore: balanceBefore,

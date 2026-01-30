@@ -43,6 +43,7 @@ export const SqidsPrefix = {
     COM_TRANSACTION: 'ctx',
     NOTIFICATION: 'n',
     FILE: 'f',
+    USER_TIER_HISTORY: 'uth',
     // 필요에 따라 추가 (기존 값 수정 금지)
 } as const;
 

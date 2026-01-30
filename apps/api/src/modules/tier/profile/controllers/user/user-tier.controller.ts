@@ -1,5 +1,6 @@
 import { Controller, Get, UseGuards, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Prisma } from '@prisma/client';
 import { GetMyTierService } from '../../application/get-my-tier.service';
 import { GetNextTierProgressService } from '../../application/get-next-tier-progress.service';
 import { GetUserTierHistoryService } from '../../application/get-user-tier-history.service';
@@ -50,11 +51,11 @@ export class UserTierController {
             lastChangedAt: myTierResult.lastTierChangedAt,
             nextEvaluationAt: myTierResult.nextEvaluationAt,
             benefits: {
-                compRate: myTierResult.benefits.compRate.toString(),
-                lossbackRate: myTierResult.benefits.lossbackRate.toString(),
-                rakebackRate: myTierResult.benefits.rakebackRate.toString(),
-                reloadBonusRate: myTierResult.benefits.reloadBonusRate.toString(),
-                dailyWithdrawalLimitUsd: myTierResult.benefits.dailyWithdrawalLimitUsd.toString(),
+                compRate: myTierResult.benefits.compRate.toFixed(4),
+                lossbackRate: myTierResult.benefits.lossbackRate.toFixed(4),
+                rakebackRate: myTierResult.benefits.rakebackRate.toFixed(4),
+                reloadBonusRate: myTierResult.benefits.reloadBonusRate.toFixed(4),
+                dailyWithdrawalLimitUsd: myTierResult.benefits.dailyWithdrawalLimitUsd.toFixed(2),
                 isWithdrawalUnlimited: myTierResult.benefits.isWithdrawalUnlimited,
                 hasDedicatedManager: myTierResult.benefits.hasDedicatedManager,
                 isVIPEventEligible: myTierResult.benefits.isVIPEventEligible,
@@ -63,14 +64,14 @@ export class UserTierController {
                 id: this.sqidsService.encode(progressResult.id, SqidsPrefix.TIER),
                 name: progressResult.name,
                 imageUrl: progressResult.imageUrl,
-                requiredRolling: progressResult.requiredRolling.toString(),
-                currentRolling: progressResult.currentRolling.toString(),
-                remainingRolling: progressResult.remainingRolling.toString(),
-                rollingProgressPercent: progressResult.rollingProgressPercent,
-                requiredDeposit: progressResult.requiredDeposit.toString(),
-                currentDeposit: progressResult.currentDeposit.toString(),
-                remainingDeposit: progressResult.remainingDeposit.toString(),
-                depositProgressPercent: progressResult.depositProgressPercent,
+                requiredRolling: progressResult.requiredRolling.toFixed(2),
+                currentRolling: progressResult.currentRolling.toFixed(2),
+                remainingRolling: progressResult.remainingRolling.toFixed(2),
+                rollingProgressPercent: Number(progressResult.rollingProgressPercent.toFixed(2)),
+                requiredDeposit: progressResult.requiredDeposit.toFixed(2),
+                currentDeposit: progressResult.currentDeposit.toFixed(2),
+                remainingDeposit: progressResult.remainingDeposit.toFixed(2),
+                depositProgressPercent: Number(progressResult.depositProgressPercent.toFixed(2)),
             } : null,
         };
     }
@@ -82,14 +83,14 @@ export class UserTierController {
         const history = await this.getUserTierHistoryService.execute(user.id);
 
         return history.map(h => ({
-            id: this.sqidsService.encode(h.id, SqidsPrefix.USER_TIER),
+            id: this.sqidsService.encode(h.id, SqidsPrefix.USER_TIER_HISTORY),
             fromTierId: h.fromTierId ? this.sqidsService.encode(h.fromTierId, SqidsPrefix.TIER) : null,
             toTierId: this.sqidsService.encode(h.toTierId, SqidsPrefix.TIER),
             changeType: h.changeType,
             reason: h.reason,
             changedAt: h.changedAt,
-            rollingAmountSnap: h.rollingAmountSnap.toString(),
-            depositAmountSnap: h.depositAmountSnap.toString(),
+            rollingAmountSnap: h.rollingAmountSnap.toFixed(2),
+            depositAmountSnap: h.depositAmountSnap.toFixed(2),
         }));
     }
 }

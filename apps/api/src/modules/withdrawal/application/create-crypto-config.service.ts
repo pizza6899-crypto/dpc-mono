@@ -52,8 +52,7 @@ export class CreateCryptoConfigService {
         }
 
         // 데이터가 전혀 없으면 신규 생성
-        const now = new Date();
-        const id = this.snowflakeService.generate(now);
+        const { id } = this.snowflakeService.generate();
         const config = CryptoWithdrawConfig.createNew(id, {
             symbol: params.symbol,
             network: params.network,

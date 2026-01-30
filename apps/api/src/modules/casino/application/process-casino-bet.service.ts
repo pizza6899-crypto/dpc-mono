@@ -76,7 +76,7 @@ export class ProcessCasinoBetService {
             }
 
             // Use betTime for Snowflake ID generation timestamp
-            const newRoundId = this.snowflakeService.generate(betTime);
+            const { id: newRoundId } = this.snowflakeService.generate(betTime);
             round = GameRound.create(
                 newRoundId,
                 session.userId,
@@ -133,7 +133,8 @@ export class ProcessCasinoBetService {
 
         // 5-1. 현금(Cash) 차감
         if (cashDeduction.gt(0)) {
-            newCashTxId = this.snowflakeService.generate(betTime);
+            const { id } = this.snowflakeService.generate(betTime);
+            newCashTxId = id;
 
             // USD 환산 금액 계산 (Session 스냅샷 환율 기준)
             const cashDeductionUsd = session.walletCurrency === 'USD'
@@ -165,7 +166,8 @@ export class ProcessCasinoBetService {
 
         // 5-2. 보너스(Bonus) 차감
         if (bonusDeduction.gt(0)) {
-            newBonusTxId = this.snowflakeService.generate(betTime);
+            const { id } = this.snowflakeService.generate(betTime);
+            newBonusTxId = id;
             const bonusDeductionUsd = session.walletCurrency === 'USD'
                 ? bonusDeduction
                 : (session.usdExchangeRate && !session.usdExchangeRate.isZero() ? bonusDeduction.mul(session.usdExchangeRate) : undefined);

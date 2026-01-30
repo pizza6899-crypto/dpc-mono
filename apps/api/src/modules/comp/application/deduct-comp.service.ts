@@ -64,7 +64,7 @@ export class DeductCompService {
 
         // 4. Record Transaction
         const transaction = CompTransaction.create({
-            id: this.snowflakeService.generate(new Date()),
+            id: this.snowflakeService.generate().id,
             compWalletId: savedWallet.id,
             amount: amount.negated(),
             balanceBefore: balanceBefore,

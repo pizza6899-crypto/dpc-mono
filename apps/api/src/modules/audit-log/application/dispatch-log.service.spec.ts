@@ -20,7 +20,10 @@ describe('DispatchLogService', () => {
   };
 
   const mockSnowflakeService = {
-    generate: jest.fn().mockReturnValue(1234567890n),
+    generate: jest.fn().mockReturnValue({
+      id: 1234567890n,
+      timestamp: new Date(),
+    }),
   };
 
   beforeEach(async () => {
@@ -78,7 +81,7 @@ describe('DispatchLogService', () => {
           }),
         }),
         expect.objectContaining({
-          jobId: '1234567890',
+          jobId: 'log_1234567890',
           removeOnComplete: true,
           attempts: 10,
         }),
@@ -240,9 +243,9 @@ describe('DispatchLogService', () => {
       // generate가 호출되었는지 확인
       expect(snowflakeService.generate).toHaveBeenCalledTimes(1);
 
-      // 호출된 인자가 Date 객체인지 확인
+      // 호출된 인자가 undefined인지 확인 (내부 시간 사용)
       const callArg = (snowflakeService.generate as jest.Mock).mock.calls[0][0];
-      expect(callArg).toBeInstanceOf(Date);
+      expect(callArg).toBeUndefined();
     });
 
     it('생성된 ID와 타임스탬프를 큐 데이터에 포함해야 함', async () => {

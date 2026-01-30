@@ -83,7 +83,7 @@ export class ProcessCasinoCreditService {
                 throw new Error(`Casino Game Session has no valid gameId: ${session.id}`);
             }
 
-            const newRoundId = this.snowflakeService.generate(winTime);
+            const { id: newRoundId } = this.snowflakeService.generate(winTime);
             round = GameRound.create(
                 newRoundId,
                 session.userId,
@@ -146,7 +146,7 @@ export class ProcessCasinoCreditService {
 
         // 4. 지급 처리 (현금 잔액으로 지급)
         const walletAmount = finalRefundAmount.div(session.exchangeRate);
-        const newTxId = this.snowflakeService.generate(winTime);
+        const { id: newTxId } = this.snowflakeService.generate(winTime);
 
         let actionName: WalletActionName = WalletActionName.CASINO_WIN;
         let walletTxType: UserWalletTransactionType = UserWalletTransactionType.WIN;
