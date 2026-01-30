@@ -1,4 +1,3 @@
-export const TIER_AUDIT_QUEUE_NAME = 'tier-audit';
 
 export enum TierAuditJobType {
     RECORD_TIER_SNAPSHOT = 'RECORD_TIER_SNAPSHOT',

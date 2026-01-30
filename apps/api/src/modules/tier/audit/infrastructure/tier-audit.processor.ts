@@ -2,7 +2,7 @@ import { Processor } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { Logger } from '@nestjs/common';
 import { ClsService } from 'nestjs-cls';
-import { TierAuditJobType, TierAuditJobPayload } from './tier-audit.constants';
+import { TierAuditJobType, TierAuditJobPayload } from './tier-audit.types';
 import { TierAuditService } from '../application/tier-audit.service';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
 import { BULLMQ_QUEUES, getQueueConfig } from 'src/infrastructure/bullmq/bullmq.constants';

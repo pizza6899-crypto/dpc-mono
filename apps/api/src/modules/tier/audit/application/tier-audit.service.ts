@@ -14,7 +14,7 @@ import { TierEvaluationLog } from '../domain/tier-evaluation-log.entity';
 import {
     TierAuditJobType,
     RecordTierSnapshotJobData,
-} from '../infrastructure/tier-audit.constants';
+} from '../infrastructure/tier-audit.types';
 
 @Injectable()
 export class TierAuditService {
