@@ -5,9 +5,9 @@ import { Logger } from '@nestjs/common';
 import { GamePostProcessData } from '../casino-queue.types';
 import { CasinoGamePostProcessService } from 'src/modules/casino/application/casino-game-post-process.service';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
-import { getQueueConfig } from 'src/infrastructure/bullmq/bullmq.constants';
+import { BULLMQ_QUEUES, getQueueConfig } from 'src/infrastructure/bullmq/bullmq.constants';
 
-const queueConfig = getQueueConfig('CASINO', 'GAME_POST_PROCESS');
+const queueConfig = getQueueConfig(BULLMQ_QUEUES.CASINO.GAME_POST_PROCESS);
 
 @Processor(queueConfig.processorOptions, queueConfig.workerOptions)
 export class GamePostProcessProcessor extends BaseProcessor<GamePostProcessData, { success: boolean; message: string }> {

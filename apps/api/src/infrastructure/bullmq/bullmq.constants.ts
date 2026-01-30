@@ -1,43 +1,9 @@
 // apps/api/src/infrastructure/bullmq/bullmq.constants.ts
 
 import { RegisterQueueOptions } from '@nestjs/bullmq';
-import { WorkerOptions } from 'bullmq';
+import { ProcessorOptions, QueueConfig } from './bullmq.types';
 
-import { Scope } from '@nestjs/common';
-
-/**
- * NestJS BullMQ 전용 프로세서 설정
- */
-export interface ProcessorOptions {
-    name?: string;
-    scope?: Scope;
-    configKey?: string;
-}
-
-/**
- * 큐 설정 통합 인터페이스
- */
-export interface QueueConfig extends RegisterQueueOptions {
-    name: string;
-    // NestJS 프로세서 데코레이터용 설정
-    processorOptions?: ProcessorOptions;
-    // BullMQ 워커 인스턴스용 설정 (connection을 선택적으로 만들어 NestJS와 호환)
-    workerOptions?: Omit<WorkerOptions, 'connection'> & {
-        connection?: WorkerOptions['connection'];
-    };
-    /**
-     * [Proposed Feature] 초기화 시 자동 등록할 반복 작업(Cron) 목록
-     * 나중에 BullMqSchedulerService가 이 필드를 읽어서 onModuleInit 시점에 add() 합니다.
-     */
-    repeatableJobs?: Array<{
-        name: string; // Job ID 역할 (스케줄러 고유 식별자)
-        data?: any; // Job Payload (옵션)
-        repeat: {
-            pattern: string; // Cron 패턴 (필수)
-            tz?: string; // 타임존 (예: 'Asia/Seoul')
-        };
-    }>;
-}
+export * from './bullmq.types';
 
 /**
  * 전역 BullMQ 큐 설정 레지스트리
@@ -74,17 +40,14 @@ export const BULLMQ_QUEUES = {
     // 카지노 도메인
     CASINO: {
         GAME_POST_PROCESS: {
-            name: 'casino-game-post-process', // BullMQ v5+ naming convention
+            name: 'casino-game-post-process',
             defaultJobOptions: {
-                attempts: 999999, // 무제한 재시도 (중요 로직)
+                attempts: 999999,
                 backoff: { type: 'fixed', delay: 5000 },
-                delay: 5000,
                 removeOnComplete: 1000,
                 removeOnFail: 5000,
             },
-            workerOptions: {
-                concurrency: 5,
-            },
+            workerOptions: { concurrency: 5 },
         },
         GAME_RESULT_FETCH: {
             name: 'casino-game-result-fetch',
@@ -95,9 +58,23 @@ export const BULLMQ_QUEUES = {
                 removeOnComplete: 1000,
                 removeOnFail: 5000,
             },
-            workerOptions: {
-                concurrency: 5,
+            workerOptions: { concurrency: 5 },
+        },
+        WHITECLIFF_HISTORY: {
+            name: 'casino-whitecliff-history',
+            defaultJobOptions: {
+                attempts: 3,
+                backoff: { type: 'exponential', delay: 5000 },
+                removeOnComplete: 100,
+                removeOnFail: 500,
             },
+            workerOptions: { concurrency: 1 },
+            repeatableJobs: [
+                {
+                    name: 'whitecliff-pushed-bet-history',
+                    repeat: { pattern: '0 * * * * *' }, // 매 분 0초
+                },
+            ],
         },
     },
     // 알림 도메인 (Notification)
@@ -154,6 +131,69 @@ export const BULLMQ_QUEUES = {
                 removeOnFail: 5000,
             },
             workerOptions: { concurrency: 1 },
+            repeatableJobs: [
+                {
+                    name: 'tier-hourly-snapshot',
+                    repeat: { pattern: '0 0 * * * *' }, // 매 시 정각
+                },
+            ],
+        },
+    },
+    // 제휴 도메인 (Affiliate)
+    AFFILIATE: {
+        COMMISSION: {
+            name: 'affiliate-commission',
+            defaultJobOptions: {
+                attempts: 5,
+                backoff: { type: 'exponential', delay: 5000 },
+                removeOnComplete: 100,
+                removeOnFail: 500,
+            },
+            workerOptions: { concurrency: 1 },
+            repeatableJobs: [
+                {
+                    name: 'settle-daily-commissions',
+                    repeat: { pattern: '0 0 1 * * *', tz: 'UTC' }, // 매일 01:00 UTC
+                },
+            ],
+        },
+    },
+    // 환율 도메인 (Exchange)
+    EXCHANGE: {
+        RATE_SYNC: {
+            name: 'exchange-rate-sync',
+            defaultJobOptions: {
+                attempts: 3,
+                backoff: { type: 'exponential', delay: 5000 },
+                removeOnComplete: 100,
+                removeOnFail: 500,
+            },
+            workerOptions: { concurrency: 1 },
+            repeatableJobs: [
+                {
+                    name: 'update-fiat-exchange-rates',
+                    repeat: { pattern: '0 5 * * * *' }, // 매 시 5분 (정각 직후 지연 회피)
+                },
+            ],
+        },
+    },
+    // 인증/보안 도메인 (Auth)
+    AUTH: {
+        SESSION_CLEANUP: {
+            name: 'auth-session-cleanup',
+            defaultJobOptions: {
+                attempts: 3,
+                backoff: { type: 'exponential', delay: 5000 },
+                removeOnComplete: 100,
+                removeOnFail: 500,
+            },
+            workerOptions: { concurrency: 1 },
+            repeatableJobs: [
+                {
+                    name: 'expire-sessions-batch',
+                    repeat: { pattern: '0 */5 * * * *' }, // 매 5분마다
+                },
+            ],
         },
     },
 } as const satisfies Record<string, Record<string, QueueConfig>>;
@@ -178,12 +218,9 @@ export const ALL_BULLMQ_QUEUES: RegisterQueueOptions[] = Object.values(BULLMQ_QU
 );
 
 /**
- * 특정 큐의 전체 설정을 이름을 기반으로 찾습니다.
+ * 특정 큐의 전체 설정을 보강합니다.
  */
-export function getQueueConfig(domain: keyof typeof BULLMQ_QUEUES, queueKey: string): QueueConfig & { processorOptions: ProcessorOptions; workerOptions: any } {
-    const config = (BULLMQ_QUEUES[domain] as any)[queueKey] as QueueConfig;
-    if (!config) throw new Error(`Queue config not found: ${domain}.${queueKey}`);
-
+export function getQueueConfig(config: QueueConfig): QueueConfig & { processorOptions: ProcessorOptions; workerOptions: any } {
     return {
         ...config,
         processorOptions: {

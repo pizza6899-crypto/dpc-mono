@@ -10,9 +10,9 @@ import {
     type NotificationLogRepositoryPort,
 } from '../../inbox/ports';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
-import { getQueueConfig } from 'src/infrastructure/bullmq/bullmq.constants';
+import { BULLMQ_QUEUES, getQueueConfig } from 'src/infrastructure/bullmq/bullmq.constants';
 
-const queueConfig = getQueueConfig('NOTIFICATION', 'SOCKET');
+const queueConfig = getQueueConfig(BULLMQ_QUEUES.NOTIFICATION.SOCKET);
 
 interface NotificationJobData {
     logId: string;

@@ -47,4 +47,14 @@ export const CACHE_CONFIG = {
             store: CacheStore.REDIS,
         }),
     },
+    /**
+     * 카지노 관련
+     */
+    CASINO: {
+        WHITECLIFF_PROCESSED_TIME: (currency: string, prdId: number) => ({
+            key: `whitecliff:pushed-bet-history:last-processed:${currency}:${prdId}`,
+            ttlSeconds: 86400, // 24시간
+            store: CacheStore.REDIS,
+        }),
+    },
 } as const;

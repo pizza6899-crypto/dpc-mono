@@ -23,7 +23,7 @@ import { NotificationLog } from '../../inbox/domain';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
 import { getQueueConfig, BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
 
-const queueConfig = getQueueConfig('NOTIFICATION', 'ALERT');
+const queueConfig = getQueueConfig(BULLMQ_QUEUES.NOTIFICATION.ALERT);
 
 interface AlertJobData {
     alertId: string;

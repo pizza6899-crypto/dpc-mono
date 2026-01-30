@@ -6,10 +6,10 @@ import type { AuditLogRepositoryPort } from '../../ports/out';
 import type { LogJobData } from '../../domain';
 import { LogType } from '../../domain';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
-import { getQueueConfig } from 'src/infrastructure/bullmq/bullmq.constants';
+import { BULLMQ_QUEUES, getQueueConfig } from 'src/infrastructure/bullmq/bullmq.constants';
 import { ClsService } from 'nestjs-cls';
 
-const heavyConfig = getQueueConfig('AUDIT', 'HEAVY');
+const heavyConfig = getQueueConfig(BULLMQ_QUEUES.AUDIT.HEAVY);
 
 interface LogQueueJobData {
     id: string;

@@ -2,7 +2,8 @@ import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { getQueueToken } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
-import { ALL_BULLMQ_QUEUES, QueueConfig } from './bullmq.constants';
+import { ALL_BULLMQ_QUEUES } from './bullmq.constants';
+import { QueueConfig } from './bullmq.types';
 
 @Injectable()
 export class BullMqSchedulerService implements OnModuleInit {

@@ -14,17 +14,20 @@ import { UserSessionMapper } from './infrastructure/user-session.mapper';
 import {
   USER_SESSION_REPOSITORY,
 } from './ports/out';
-import { ExpireSessionsScheduler } from './schedulers/expire-sessions.scheduler';
-import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { ExpireSessionsProcessor } from '../infrastructure/processors/expire-sessions.processor';
+import { BullModule } from '@nestjs/bullmq';
+import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
 import { EnvModule } from 'src/common/env/env.module';
 import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 
 @Module({
   imports: [
     RedisModule, // SessionTrackerService가 RedisService 사용
-    ConcurrencyModule, // ExpireSessionsScheduler가 ConcurrencyService 사용
     EnvModule, // ExpireSessionsScheduler가 EnvService 사용
     AuditLogModule, // Audit 로그 사용
+    BullModule.registerQueue({
+      name: BULLMQ_QUEUES.AUTH.SESSION_CLEANUP.name,
+    }),
   ],
   controllers: [
     SessionAdminController,
@@ -40,8 +43,8 @@ import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
     // Domain Policies
     SessionPolicy,
 
-    // Schedulers
-    ExpireSessionsScheduler,
+    // Processors
+    ExpireSessionsProcessor,
 
     // Infrastructure
     SessionTrackerService,
@@ -61,5 +64,5 @@ import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
     USER_SESSION_REPOSITORY, // SessionSerializer에서 사용
   ],
 })
-export class SessionModule {}
+export class SessionModule { }
 

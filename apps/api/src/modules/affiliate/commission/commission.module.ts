@@ -27,15 +27,18 @@ import { AffiliateCommissionController } from './controllers/user/commission.con
 import { AdminCommissionController } from './controllers/admin/commission.controller';
 
 // Schedulers
-import { SettleDailyCommissionsScheduler } from './schedulers/settle-daily-commissions.scheduler';
+import { SettleDailyCommissionsProcessor } from '../infrastructure/processors/settle-daily-commissions.processor';
+import { BullModule } from '@nestjs/bullmq';
+import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
 import { EnvModule } from 'src/common/env/env.module';
-import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 
 @Module({
   imports: [
     EnvModule,
-    ConcurrencyModule,
     AffiliateReferralModule, // 레퍼럴 관계 조회를 위해 필요
+    BullModule.registerQueue({
+      name: BULLMQ_QUEUES.AFFILIATE.COMMISSION.name,
+    }),
   ],
   providers: [
     // Domain Policy
@@ -64,8 +67,8 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
     SettleDailyCommissionsService,
     WithdrawCommissionService,
 
-    // Schedulers
-    SettleDailyCommissionsScheduler,
+    // Processors
+    SettleDailyCommissionsProcessor,
   ],
   controllers: [AffiliateCommissionController, AdminCommissionController],
   exports: [

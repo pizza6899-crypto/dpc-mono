@@ -11,9 +11,9 @@ import { GAME_ROUND_REPOSITORY_TOKEN } from '../../../ports/out/game-round.repos
 import type { GameRoundRepositoryPort } from '../../../ports/out/game-round.repository.port';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
-import { getQueueConfig } from 'src/infrastructure/bullmq/bullmq.constants';
+import { BULLMQ_QUEUES, getQueueConfig } from 'src/infrastructure/bullmq/bullmq.constants';
 
-const queueConfig = getQueueConfig('CASINO', 'GAME_RESULT_FETCH');
+const queueConfig = getQueueConfig(BULLMQ_QUEUES.CASINO.GAME_RESULT_FETCH);
 
 @Processor(queueConfig.processorOptions, queueConfig.workerOptions)
 export class GameResultFetchProcessor extends BaseProcessor<GameResultFetchData, void> {
