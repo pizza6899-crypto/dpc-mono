@@ -29,14 +29,14 @@ import { FindLoginAttemptsService } from '../../application/find-login-attempts.
 import { ChangePasswordService } from '../../application/change-password.service';
 import { ResetUserPasswordAdminService } from '../../application/reset-user-password-admin.service';
 import { CheckUserStatusService } from '../../application/check-user-status.service';
-import { CredentialUserLoginRequestDto } from '../user/dto/request/login.request.dto';
-import { CredentialUserLoginResponseDto } from '../user/dto/response/login.response.dto';
-import { CredentialUserLogoutResponseDto } from '../user/dto/response/logout.response.dto';
-import { CredentialUserAuthStatusResponseDto } from '../user/dto/response/auth-status.response.dto';
+import { CredentialAdminLoginRequestDto } from './dto/request/login.request.dto';
+import { CredentialAdminLoginResponseDto } from './dto/response/login.response.dto';
+import { CredentialAdminLogoutResponseDto } from './dto/response/logout.response.dto';
+import { CredentialAdminAuthStatusResponseDto } from './dto/response/auth-status.response.dto';
 import { LoginAttemptResponseDto } from './dto/response/login-attempt.response.dto';
 import { FindLoginAttemptsQueryDto } from './dto/request/find-login-attempts-query.dto';
-import { ChangePasswordRequestDto } from '../user/dto/request/change-password.request.dto';
-import { ChangePasswordResponseDto } from '../user/dto/response/change-password.response.dto';
+import { AdminChangePasswordRequestDto } from './dto/request/change-password.request.dto';
+import { AdminChangePasswordResponseDto } from './dto/response/change-password.response.dto';
 import { ResetUserPasswordRequestDto } from './dto/request/reset-user-password.request.dto';
 import { ResetUserPasswordResponseDto } from './dto/response/reset-user-password.response.dto';
 import { UserRoleType } from '@prisma/client';
@@ -69,7 +69,7 @@ export class CredentialAdminController {
     summary: 'Admin Login (관리자 로그인)',
     description: 'Email/Password 기반 관리자 로그인',
   })
-  @ApiStandardResponse(CredentialUserLoginResponseDto, {
+  @ApiStandardResponse(CredentialAdminLoginResponseDto, {
     status: HttpStatus.OK,
     description: 'Login Success',
   })
@@ -100,10 +100,10 @@ export class CredentialAdminController {
     },
   })
   async login(
-    @Body() dto: CredentialUserLoginRequestDto,
+    @Body() dto: CredentialAdminLoginRequestDto,
     @RequestClientInfoParam() clientInfo: RequestClientInfo,
     @Req() req: Request,
-  ): Promise<CredentialUserLoginResponseDto> {
+  ): Promise<CredentialAdminLoginResponseDto> {
     // 1. 관리자 자격 증명 인증 (이메일/비밀번호 검증, 계정 잠금 체크, 실패 시도 기록)
     const authenticatedUser =
       await this.authenticateCredentialAdminService.execute({
@@ -149,7 +149,7 @@ export class CredentialAdminController {
     summary: 'Admin Logout (관리자 로그아웃)',
     description: '현재 세션 종료. 인증 상태와 관계없이 항상 성공 응답을 반환합니다.',
   })
-  @ApiStandardResponse(CredentialUserLogoutResponseDto, {
+  @ApiStandardResponse(CredentialAdminLogoutResponseDto, {
     status: HttpStatus.OK,
     description: 'Logout Success',
   })
@@ -163,7 +163,7 @@ export class CredentialAdminController {
     @CurrentUser() user?: CurrentUserWithSession,
     @RequestClientInfoParam() clientInfo?: RequestClientInfo,
     @Req() req?: Request,
-  ): Promise<CredentialUserLogoutResponseDto> {
+  ): Promise<CredentialAdminLogoutResponseDto> {
     // 1. DB 세션 종료 (LogoutService에서 처리)
     // 사용자가 있는 경우에만 로그아웃 서비스 실행 (에러 발생해도 무시)
     if (user && clientInfo) {
@@ -247,13 +247,13 @@ export class CredentialAdminController {
     summary: 'Admin Auth Status (관리자 인증 상태)',
     description: '현재 관리자 로그인 세션 유효 여부 확인 (DB 검증 포함)',
   })
-  @ApiStandardResponse(CredentialUserAuthStatusResponseDto, {
+  @ApiStandardResponse(CredentialAdminAuthStatusResponseDto, {
     status: HttpStatus.OK,
   })
   async checkStatus(
     @Req() req: Request,
     @CurrentUser() user?: CurrentUserWithSession,
-  ): Promise<CredentialUserAuthStatusResponseDto> {
+  ): Promise<CredentialAdminAuthStatusResponseDto> {
     // 관리자 역할 체크
     const isAdmin =
       user?.role === UserRoleType.ADMIN ||
@@ -322,7 +322,7 @@ export class CredentialAdminController {
     summary: 'Change Admin Password / 관리자 비밀번호 변경',
     description: '로그인한 관리자가 현재 비밀번호를 알고 있는 상태에서 비밀번호를 변경합니다.',
   })
-  @ApiStandardResponse(ChangePasswordResponseDto, {
+  @ApiStandardResponse(AdminChangePasswordResponseDto, {
     status: HttpStatus.OK,
     description: 'Password changed successfully / 비밀번호 변경 성공',
   })
@@ -340,9 +340,9 @@ export class CredentialAdminController {
   })
   async changePassword(
     @CurrentUser() admin: CurrentUserWithSession,
-    @Body() dto: ChangePasswordRequestDto,
+    @Body() dto: AdminChangePasswordRequestDto,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<ChangePasswordResponseDto> {
+  ): Promise<AdminChangePasswordResponseDto> {
     await this.changePasswordService.execute({
       userId: admin.id,
       currentPassword: dto.currentPassword,
