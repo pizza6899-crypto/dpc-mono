@@ -27,9 +27,10 @@ export class RedisService {
       const value = await this.redisClient.get(key);
       if (!value) return null;
 
-      // ISO 날짜 문자열을 Date 객체로 자동 복원
-      const isoDatePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
-      return JSON.parse(value, (_, v) => {
+      // 직렬화된 데이터 복구 (Date 객체 등)
+      return JSON.parse(value, (key, v) => {
+        // Date 패턴 (ISO String) 복구
+        const isoDatePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
         if (typeof v === 'string' && isoDatePattern.test(v)) {
           return new Date(v);
         }

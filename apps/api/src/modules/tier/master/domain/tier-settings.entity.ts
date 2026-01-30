@@ -1,4 +1,7 @@
 import { Prisma } from '@prisma/client';
+import { Cast, PersistenceOf } from 'src/infrastructure/persistence/persistence.util';
+
+export type TierSettingsRawPayload = Prisma.TierConfigGetPayload<object>;
 
 export class TierSettings {
     public static readonly SINGLETON_ID = 1n;
@@ -11,14 +14,13 @@ export class TierSettings {
         public readonly updatedBy: bigint | null,
     ) { }
 
-    static fromPersistence(data: Prisma.TierConfigGetPayload<object>): TierSettings {
+    static fromPersistence(data: PersistenceOf<TierSettingsRawPayload>): TierSettings {
         return new TierSettings(
             data.isPromotionEnabled,
             data.isDowngradeEnabled,
             data.evaluationHourUtc,
-            data.updatedAt,
-            // @ts-ignore: Prisma Client type sync lag (Schema is BigInt)
-            data.updatedBy
+            Cast.date(data.updatedAt),
+            data.updatedBy ? Cast.bigint(data.updatedBy) : null,
         );
     }
 }
