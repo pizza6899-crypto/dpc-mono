@@ -44,10 +44,8 @@
  */
 import { Module } from '@nestjs/common';
 import { AuditLogAdapter } from './infrastructure/audit-log.adapter';
-import {
-  CriticalLogProcessor,
-  HeavyLogProcessor,
-} from './infrastructure/audit-log.processor';
+import { CriticalLogProcessor } from './infrastructure/processors/critical-log.processor';
+import { HeavyLogProcessor } from './infrastructure/processors/heavy-log.processor';
 import { DispatchLogService } from './application/dispatch-log.service';
 import { AuditLogInterceptor } from './infrastructure/audit-log.interceptor';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
