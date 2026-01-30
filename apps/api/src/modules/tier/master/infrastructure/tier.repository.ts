@@ -2,21 +2,35 @@ import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { Tier } from '../domain/tier.entity';
-import { TierRepositoryPort, UpdateTierProps } from './master.repository.port';
+import { TierRepositoryPort, UpdateTierProps } from './tier.repository.port';
 
 @Injectable()
 export class TierRepository implements TierRepositoryPort {
+    private cachedTiers: Tier[] | null = null;
+    private lastFetched: number = 0;
+    private readonly CACHE_TTL = 60 * 1000; // 1분
+
     constructor(
         @InjectTransaction()
         private readonly tx: PrismaTransaction,
     ) { }
 
     async findAll(): Promise<Tier[]> {
+        const now = Date.now();
+        if (this.cachedTiers && (now - this.lastFetched < this.CACHE_TTL)) {
+            return this.cachedTiers;
+        }
+
         const records = await this.tx.tier.findMany({
             include: { translations: true },
             orderBy: { priority: 'asc' }
         });
-        return records.map(record => Tier.fromPersistence(record));
+
+        const tiers = records.map(record => Tier.fromPersistence(record));
+        this.cachedTiers = tiers;
+        this.lastFetched = now;
+
+        return tiers;
     }
 
     async findByPriority(priority: number): Promise<Tier | null> {
@@ -30,6 +44,15 @@ export class TierRepository implements TierRepositoryPort {
     async findByCode(code: string): Promise<Tier | null> {
         const record = await this.tx.tier.findUnique({
             where: { code },
+            include: { translations: true }
+        });
+        return record ? Tier.fromPersistence(record) : null;
+    }
+
+    async findNextTierByPriority(priority: number): Promise<Tier | null> {
+        const record = await this.tx.tier.findFirst({
+            where: { priority: { gt: priority } },
+            orderBy: { priority: 'asc' },
             include: { translations: true }
         });
         return record ? Tier.fromPersistence(record) : null;
@@ -66,6 +89,9 @@ export class TierRepository implements TierRepositoryPort {
             include: { translations: true }
         });
 
-        return Tier.fromPersistence(record);
+        const updated = Tier.fromPersistence(record);
+        this.cachedTiers = null;
+        this.lastFetched = 0;
+        return updated;
     }
 }

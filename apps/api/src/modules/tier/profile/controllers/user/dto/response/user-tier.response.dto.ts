@@ -68,8 +68,11 @@ export class EffectiveBenefitsDto {
 }
 
 export class UserTierResponseDto {
-    @ApiProperty({ description: 'Tier ID / 티어 ID' })
+    @ApiProperty({ description: 'User tier status record ID / 유저 티어 상태 레코드 ID' })
     id: string;
+
+    @ApiProperty({ description: 'Master tier ID / 마스터 티어 ID' })
+    tierId: string;
 
     @ApiProperty({ description: 'Tier Name / 티어 이름' })
     name: string;

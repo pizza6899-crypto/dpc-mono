@@ -1,6 +1,5 @@
 import { TierEvaluationCycle, Language } from '@prisma/client';
 import { Tier } from '../domain/tier.entity';
-import { TierSettings } from '../domain/tier-settings.entity';
 
 export interface UpdateTierProps {
     code: string;
@@ -32,17 +31,6 @@ export abstract class TierRepositoryPort {
     abstract findAll(): Promise<Tier[]>;
     abstract findByPriority(priority: number): Promise<Tier | null>;
     abstract findByCode(code: string): Promise<Tier | null>;
+    abstract findNextTierByPriority(priority: number): Promise<Tier | null>;
     abstract update(props: UpdateTierProps): Promise<Tier>;
-}
-
-export interface UpdateTierSettingsProps {
-    isPromotionEnabled?: boolean;
-    isDowngradeEnabled?: boolean;
-    evaluationHourUtc?: number;
-    updatedBy: bigint;
-}
-
-export abstract class TierSettingsRepositoryPort {
-    abstract find(): Promise<TierSettings | null>;
-    abstract update(props: UpdateTierSettingsProps): Promise<TierSettings>;
 }

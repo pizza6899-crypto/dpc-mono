@@ -4,7 +4,8 @@ import { UserTierStatus, Prisma, Language } from '@prisma/client';
 import { UserTier } from '../domain/user-tier.entity';
 
 export interface MyTierResult {
-    id: bigint;
+    userTierId: bigint;
+    tierId: bigint;
     name: string;
     imageUrl: string | null;
     status: UserTierStatus;
@@ -47,7 +48,8 @@ export class GetMyTierService {
         const benefits = userTier.getEffectiveBenefits();
 
         return {
-            id: currentTier.id,
+            userTierId: userTier.id,
+            tierId: currentTier.id,
             name: currentTier.getName(language),
             imageUrl: currentTier.imageUrl,
             status: userTier.status,

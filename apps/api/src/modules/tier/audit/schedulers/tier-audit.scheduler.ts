@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository.port';
-import { TierRepositoryPort } from '../../master/infrastructure/master.repository.port';
+import { TierRepositoryPort } from '../../master/infrastructure/tier.repository.port';
 import { TierAuditService } from '../application/tier-audit.service';
 import { ClsService } from 'nestjs-cls';
 import { ConcurrencyService } from 'src/common/concurrency/concurrency.service';

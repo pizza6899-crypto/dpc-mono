@@ -3,7 +3,7 @@ import { ApiOkResponse, ApiOperation, ApiTags, ApiBearerAuth } from '@nestjs/swa
 import { GetMyTierService } from '../../application/get-my-tier.service';
 import { GetNextTierProgressService } from '../../application/get-next-tier-progress.service';
 import { GetUserTierHistoryService } from '../../application/get-user-tier-history.service';
-import { TierRepositoryPort } from '../../../master/infrastructure/master.repository.port';
+import { TierRepositoryPort } from '../../../master/infrastructure/tier.repository.port';
 import { UserTierResponseDto } from './dto/response/user-tier.response.dto';
 import { UserTierHistoryResponseDto } from './dto/response/user-tier-history.response.dto';
 import { GetUserTierQueryDto } from './dto/request/get-user-tier.query.dto';
@@ -33,18 +33,17 @@ export class UserTierController {
         @CurrentUser() user: User,
         @Query() query: GetUserTierQueryDto
     ): Promise<UserTierResponseDto> {
-        // 1. 필요한 데이터를 병렬로 조회 (DB I/O 최적화)
-        const [userTier, allTiers] = await Promise.all([
-            this.getMyTierService.findUserTier(user.id),
-            this.tierRepository.findAll()
-        ]);
+        // 1. 필요한 데이터를 병렬로 조회 (DB I/O 최적화 - 전체 조회가 아닌 필요한 단건만 조회)
+        const userTier = await this.getMyTierService.findUserTier(user.id);
+        const nextTier = await this.tierRepository.findNextTierByPriority(userTier.tier!.priority);
 
         // 2. 가공 서비스를 통한 결과 생성 (엔티티를 직접 전달)
         const myTierResult = this.getMyTierService.execute(userTier, query.lang);
-        const progressResult = this.getNextTierProgressService.execute(userTier, allTiers, query.lang);
+        const progressResult = this.getNextTierProgressService.execute(userTier, nextTier, query.lang);
 
         return {
-            id: this.sqidsService.encode(myTierResult.id, SqidsPrefix.USER_TIER),
+            id: this.sqidsService.encode(myTierResult.userTierId, SqidsPrefix.USER_TIER),
+            tierId: this.sqidsService.encode(myTierResult.tierId, SqidsPrefix.TIER),
             name: myTierResult.name,
             imageUrl: myTierResult.imageUrl,
             status: myTierResult.status,

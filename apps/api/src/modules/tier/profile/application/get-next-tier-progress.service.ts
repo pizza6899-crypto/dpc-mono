@@ -23,14 +23,8 @@ export class GetNextTierProgressService {
      * 유저의 현재 티어 정보를 바탕으로 다음 티어 승급 진행률을 계산합니다.
      * 엔티티를 직접 전달받아 DB 조회를 최소화합니다.
      */
-    execute(userTier: UserTier, allTiers: Tier[], language: Language): NextTierProgressResult | null {
-        if (!userTier.tier) return null;
-
-        const currentTier = userTier.tier;
-
-        // Find next tier by priority
-        const nextTier = allTiers.find(t => t.priority === currentTier.priority + 1);
-        if (!nextTier) return null;
+    execute(userTier: UserTier, nextTier: Tier | null, language: Language): NextTierProgressResult | null {
+        if (!userTier.tier || !nextTier) return null;
 
         // Rolling Progress (Promotion is based on Lifetime/Total rolling as per requirementUsd policy)
         const requiredRolling = nextTier.requirementUsd;

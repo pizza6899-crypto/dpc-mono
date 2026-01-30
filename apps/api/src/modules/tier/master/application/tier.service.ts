@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { TierRepositoryPort } from '../infrastructure/master.repository.port';
-import type { UpdateTierProps } from '../infrastructure/master.repository.port';
+import { TierRepositoryPort } from '../infrastructure/tier.repository.port';
+import type { UpdateTierProps } from '../infrastructure/tier.repository.port';
 import { Tier } from '../domain/tier.entity';
 import { TierNotFoundException } from '../domain/tier-master.exception';
 import { TierMasterPolicy } from '../domain/tier-master.policy';
@@ -11,10 +11,6 @@ import { Transactional } from '@nestjs-cls/transactional';
 
 @Injectable()
 export class TierService {
-    private cachedTiers: Tier[] | null = null;
-    private lastFetched: number = 0;
-    private readonly CACHE_TTL = 60 * 1000; // 1분
-
     constructor(
         private readonly repository: TierRepositoryPort,
         private readonly policy: TierMasterPolicy,
@@ -23,15 +19,7 @@ export class TierService {
     ) { }
 
     async findAll(): Promise<Tier[]> {
-        const now = Date.now();
-        if (this.cachedTiers && (now - this.lastFetched < this.CACHE_TTL)) {
-            return this.cachedTiers;
-        }
-
-        const tiers = await this.repository.findAll();
-        this.cachedTiers = tiers;
-        this.lastFetched = now;
-        return tiers;
+        return this.repository.findAll();
     }
 
     async findByCode(code: string): Promise<Tier> {
@@ -83,12 +71,6 @@ export class TierService {
             ...(imageUrl !== undefined ? { imageUrl } : {}),
         };
 
-        const updated = await this.repository.update(updatePayload);
-
-        // 캐시 즉시 갱신
-        this.cachedTiers = null;
-        this.lastFetched = 0;
-
-        return updated;
+        return this.repository.update(updatePayload);
     }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository.port';
-import { TierRepositoryPort } from '../../master/infrastructure/master.repository.port';
+import { TierRepositoryPort } from '../../master/infrastructure/tier.repository.port';
 import { TierDistributionResponseDto } from '../controllers/admin/dto/tier-distribution.response.dto';
 
 @Injectable()

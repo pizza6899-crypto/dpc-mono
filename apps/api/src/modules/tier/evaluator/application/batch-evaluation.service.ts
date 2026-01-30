@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository.port';
-import { TierRepositoryPort } from '../../master/infrastructure/master.repository.port';
+import { TierRepositoryPort } from '../../master/infrastructure/tier.repository.port';
 import { TierAuditService } from '../../audit/application/tier-audit.service';
 import { DemotionPolicy } from '../domain/demotion.policy';
 import { DemotionService } from './demotion.service';

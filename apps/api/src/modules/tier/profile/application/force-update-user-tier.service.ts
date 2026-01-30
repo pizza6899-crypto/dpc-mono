@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserTierRepositoryPort } from '../infrastructure/user-tier.repository.port';
 import { TierAuditService } from '../../audit/application/tier-audit.service';
-import { TierRepositoryPort } from '../../master/infrastructure/master.repository.port';
+import { TierRepositoryPort } from '../../master/infrastructure/tier.repository.port';
 import { TierChangeType } from '@prisma/client';
 
 @Injectable()
