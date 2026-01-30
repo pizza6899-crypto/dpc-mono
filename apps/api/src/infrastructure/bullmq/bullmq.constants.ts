@@ -59,6 +59,91 @@ export const BULLMQ_QUEUES = {
             },
         },
     },
+    // 카지노 도메인
+    CASINO: {
+        GAME_POST_PROCESS: {
+            name: 'casino-game-post-process', // BullMQ v5+ naming convention
+            defaultJobOptions: {
+                attempts: 999999, // 무제한 재시도 (중요 로직)
+                backoff: { type: 'fixed', delay: 5000 },
+                delay: 5000,
+                removeOnComplete: 1000,
+                removeOnFail: 5000,
+            },
+            workerOptions: {
+                concurrency: 5,
+            },
+        },
+        GAME_RESULT_FETCH: {
+            name: 'casino-game-result-fetch',
+            defaultJobOptions: {
+                attempts: 10,
+                backoff: { type: 'exponential', delay: 5000 },
+                delay: 5000,
+                removeOnComplete: 1000,
+                removeOnFail: 5000,
+            },
+            workerOptions: {
+                concurrency: 5,
+            },
+        },
+    },
+    // 알림 도메인 (Notification)
+    NOTIFICATION: {
+        ALERT: {
+            name: 'notification-alert',
+            defaultJobOptions: {
+                attempts: 5,
+                backoff: { type: 'exponential', delay: 2000 },
+                removeOnComplete: 1000,
+                removeOnFail: 5000,
+            },
+            workerOptions: { concurrency: 5 },
+        },
+        EMAIL: {
+            name: 'notification-channel-email',
+            defaultJobOptions: {
+                attempts: 3,
+                backoff: { type: 'exponential', delay: 5000 },
+                removeOnComplete: 1000,
+                removeOnFail: 5000,
+            },
+            workerOptions: { concurrency: 10 },
+        },
+        SMS: {
+            name: 'notification-channel-sms',
+            defaultJobOptions: {
+                attempts: 3,
+                backoff: { type: 'exponential', delay: 5000 },
+                removeOnComplete: 1000,
+                removeOnFail: 5000,
+            },
+            workerOptions: { concurrency: 10 },
+        },
+        SOCKET: {
+            name: 'notification-channel-socket',
+            defaultJobOptions: {
+                attempts: 5,
+                backoff: { type: 'exponential', delay: 1000 },
+                removeOnComplete: 1000,
+                removeOnFail: 5000,
+            },
+            workerOptions: { concurrency: 20 },
+        },
+    },
+    // 등급 시스템 도메인 (Tier)
+    TIER: {
+        AUDIT: {
+            name: 'tier-audit',
+            defaultJobOptions: {
+                attempts: 3,
+                backoff: { type: 'exponential', delay: 5000 },
+                removeOnComplete: 1000,
+                removeOnFail: 5000,
+            },
+            workerOptions: { concurrency: 1 },
+        },
+    },
 } as const satisfies Record<string, Record<string, QueueConfig>>;
 
 /**

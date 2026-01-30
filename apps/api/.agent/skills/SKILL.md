@@ -88,6 +88,14 @@ When encountering a task related to the following categories, you MUST load the 
     *   Instances must have unique node IDs (0-1023) for Snowflake generation.
     *   Snowflake generation MUST throw `SnowflakeClockBackwardsException` on time retrograde.
 
+#### BullMQ Worker
+*   **Skill Name:** `bullmq-worker-standard`
+*   **Path:** `apps/api/.agent/skills/bullmq-worker-standard/SKILL.md`
+*   **Key Rules:**
+    *   Inherit `BaseProcessor` for all workers.
+    *   Define queues in `bullmq.constants.ts`.
+    *   Use connection sharing config and handle truncated logging.
+
 ### 5. Development Workflow
 **When to use:** committing changes or following project collaboration rules.
 *   **Skill Name:** `git-commit-guide`

@@ -1,35 +1,35 @@
-import { Processor, WorkerHost } from '@nestjs/bullmq';
+import { Processor } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { Logger } from '@nestjs/common';
 import { ClsService } from 'nestjs-cls';
-import { TIER_AUDIT_QUEUE_NAME, TierAuditJobType, TierAuditJobPayload } from './tier-audit.constants';
+import { TierAuditJobType, TierAuditJobPayload } from './tier-audit.constants';
 import { TierAuditService } from '../application/tier-audit.service';
+import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
+import { getQueueConfig } from 'src/infrastructure/bullmq/bullmq.constants';
 
-@Processor(TIER_AUDIT_QUEUE_NAME)
-export class TierAuditProcessor extends WorkerHost {
-    private readonly logger = new Logger(TierAuditProcessor.name);
+const queueConfig = getQueueConfig('TIER', 'AUDIT');
+
+@Processor(queueConfig.processorOptions, queueConfig.workerOptions)
+export class TierAuditProcessor extends BaseProcessor<TierAuditJobPayload, void> {
+    protected readonly logger = new Logger(TierAuditProcessor.name);
 
     constructor(
         private readonly auditService: TierAuditService,
-        private readonly cls: ClsService,
+        protected readonly cls: ClsService,
     ) {
         super();
     }
 
-    async process(job: Job<TierAuditJobPayload>): Promise<void> {
-        await this.cls.run(async () => {
-            const payload = job.data;
+    protected async processJob(job: Job<TierAuditJobPayload>): Promise<void> {
+        const payload = job.data;
 
-            try {
-                switch (payload.type) {
-                    case TierAuditJobType.RECORD_TIER_SNAPSHOT:
-                        await this.auditService.handleRecordStats(payload.data);
-                        break;
-                }
-            } catch (error) {
-                this.logger.error(`Failed to process tier audit job [${payload.type}]: ${error.message}`, error.stack);
-                throw error;
-            }
-        });
+        // 타입 가드 형태로 분기 처리
+        switch (payload.type) {
+            case TierAuditJobType.RECORD_TIER_SNAPSHOT:
+                await this.auditService.handleRecordStats(payload.data);
+                break;
+            default:
+                this.logger.warn(`Unknown tier audit job type: ${(payload as any).type}`);
+        }
     }
 }
