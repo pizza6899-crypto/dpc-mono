@@ -1,36 +1,38 @@
 // apps/api/src/modules/notification/processor/workers/alert.worker.ts
 
-import { Processor, WorkerHost } from '@nestjs/bullmq';
-import { Inject, Logger, OnApplicationShutdown } from '@nestjs/common';
-import { Job } from 'bullmq';
-import { NOTIFICATION_QUEUES, ChannelSendParams } from '../../common';
+import { Processor } from '@nestjs/bullmq';
+import { Inject, Logger } from '@nestjs/common';
+import { Job, Queue } from 'bullmq';
+import { InjectQueue } from '@nestjs/bullmq';
+import { ChannelType, Language } from '@prisma/client';
+import { ClsService } from 'nestjs-cls';
 import {
     ALERT_REPOSITORY,
+    type AlertRepositoryPort,
 } from '../../alert/ports';
-import type { AlertRepositoryPort } from '../../alert/ports';
 import {
     NOTIFICATION_LOG_REPOSITORY,
+    type NotificationLogRepositoryPort,
 } from '../../inbox/ports';
-import type { NotificationLogRepositoryPort } from '../../inbox/ports';
 import { RenderTemplateService } from '../../template/application/render-template.service';
-import { NOTIFICATION_TEMPLATE_REPOSITORY } from '../../template/ports';
-import type { NotificationTemplateRepositoryPort } from '../../template/ports';
+import {
+    NOTIFICATION_TEMPLATE_REPOSITORY,
+    type NotificationTemplateRepositoryPort,
+} from '../../template/ports';
 import { NotificationLog } from '../../inbox/domain';
-import { InjectQueue } from '@nestjs/bullmq';
-import { Queue } from 'bullmq';
-import { AlertStatus, ChannelType, Language } from '@prisma/client';
+import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
+import { getQueueConfig, BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
+
+const queueConfig = getQueueConfig('NOTIFICATION', 'ALERT');
 
 interface AlertJobData {
     alertId: string;
     alertCreatedAt: string;
 }
 
-import { Transactional } from '@nestjs-cls/transactional';
-import { ClsService } from 'nestjs-cls';
-
-@Processor(NOTIFICATION_QUEUES.ALERT)
-export class AlertWorker extends WorkerHost implements OnApplicationShutdown {
-    private readonly logger = new Logger(AlertWorker.name);
+@Processor(queueConfig.processorOptions, queueConfig.workerOptions)
+export class AlertWorker extends BaseProcessor<AlertJobData, void> {
+    protected readonly logger = new Logger(AlertWorker.name);
 
     constructor(
         @Inject(ALERT_REPOSITORY)
@@ -40,146 +42,110 @@ export class AlertWorker extends WorkerHost implements OnApplicationShutdown {
         @Inject(NOTIFICATION_TEMPLATE_REPOSITORY)
         private readonly templateRepository: NotificationTemplateRepositoryPort,
         private readonly renderService: RenderTemplateService,
-        @InjectQueue(NOTIFICATION_QUEUES.EMAIL) private readonly emailQueue: Queue,
-        @InjectQueue(NOTIFICATION_QUEUES.SMS) private readonly smsQueue: Queue,
-        @InjectQueue(NOTIFICATION_QUEUES.SOCKET) private readonly socketQueue: Queue,
-        private readonly cls: ClsService,
+        @InjectQueue(BULLMQ_QUEUES.NOTIFICATION.EMAIL.name) private readonly emailQueue: Queue,
+        @InjectQueue(BULLMQ_QUEUES.NOTIFICATION.SMS.name) private readonly smsQueue: Queue,
+        @InjectQueue(BULLMQ_QUEUES.NOTIFICATION.SOCKET.name) private readonly socketQueue: Queue,
+        protected readonly cls: ClsService,
     ) {
         super();
     }
 
-    @Transactional()
-    async process(job: Job<AlertJobData>): Promise<void> {
-        return this.cls.run(async () => {
-            const { data } = job;
-            this.logger.debug(`Processing alert job ${job.id} for alert ${data.alertId}`);
+    protected async processJob(job: Job<AlertJobData>): Promise<void> {
+        const { data } = job;
+        this.logger.debug(`Processing alert job ${job.id} for alert ${data.alertId}`);
 
+        // 1. Fetch Alert
+        const alert = await this.alertRepository.getById(
+            new Date(data.alertCreatedAt),
+            BigInt(data.alertId),
+        );
+
+        // Status update to PROCESSING
+        alert.startProcessing();
+        await this.alertRepository.update(alert);
+
+        // 2. Identify Target User
+        const userId = alert.userId;
+        if (!userId) {
+            this.logger.warn(`Alert ${alert.id} has no userId. Skipping.`);
+            alert.complete();
+            await this.alertRepository.update(alert);
+            return;
+        }
+
+        // 3. Find applicable templates for this event
+        const templates = await this.templateRepository.findByEvent(alert.event);
+        if (templates.length === 0) {
+            this.logger.warn(`No templates found for event ${alert.event}. Skipping.`);
+            alert.complete();
+            await this.alertRepository.update(alert);
+            return;
+        }
+
+        // 4. Process for each channel (template)
+        for (const template of templates) {
             try {
-                // 1. Fetch Alert
-                const alert = await this.alertRepository.getById(
-                    new Date(data.alertCreatedAt),
-                    BigInt(data.alertId),
+                // Render Template
+                // Locale: Hardcoded 'ko' for now, or fetch from User entity if available
+                const locale = Language.JA;
+                const renderResult = await this.renderService.execute({
+                    event: alert.event,
+                    channel: template.channel,
+                    locale,
+                    variables: alert.payload as Record<string, unknown>,
+                });
+
+                // Create NotificationLog
+                const log = NotificationLog.create({
+                    alertId: alert.id!,
+                    alertCreatedAt: alert.createdAt,
+                    receiverId: userId,
+                    channel: template.channel,
+                    title: renderResult.title,
+                    body: renderResult.body,
+                    actionUri: renderResult.actionUri,
+                    templateId: template.id,
+                    templateEvent: alert.event, // snapshot
+                    locale,
+                    target: this.extractTarget(alert, template.channel), // Helper to get email/phone
+                });
+
+                const savedLog = await this.notificationLogRepository.create(log);
+
+                // Dispatch to Channel Queue
+                const jobData = {
+                    logId: savedLog.id!.toString(),
+                    logCreatedAt: savedLog.createdAt.toISOString(),
+                };
+
+                if (template.channel === ChannelType.EMAIL) {
+                    await this.emailQueue.add('send-email', jobData);
+                } else if (template.channel === ChannelType.SMS) {
+                    await this.smsQueue.add('send-sms', jobData);
+                } else if (template.channel === ChannelType.IN_APP) {
+                    await this.socketQueue.add('send-in-app', jobData);
+                } else {
+                    this.logger.warn(`Unsupported channel type for queuing: ${template.channel}`);
+                }
+
+            } catch (innerError) {
+                this.logger.error(
+                    `Failed to process template ${template.id} for alert ${alert.id}:`,
+                    innerError,
                 );
-
-                // Status update to PROCESSING
-                alert.startProcessing();
-                await this.alertRepository.update(alert);
-
-                // 2. Identify Target User
-                // For MVP, we assume alert.userId is present.
-                // If targetGroup exists, we would need logic to expand that to multiple users.
-                // Doing single user for now.
-                const userId = alert.userId;
-                if (!userId) {
-                    this.logger.warn(`Alert ${alert.id} has no userId. Skipping.`);
-                    alert.complete(); // Or fail?
-                    await this.alertRepository.update(alert);
-                    return;
-                }
-
-                // 3. Find applicable templates for this event
-                const templates = await this.templateRepository.findByEvent(alert.event);
-                if (templates.length === 0) {
-                    this.logger.warn(`No templates found for event ${alert.event}. Skipping.`);
-                    alert.complete();
-                    await this.alertRepository.update(alert);
-                    return;
-                }
-
-                // 4. Process for each channel (template)
-                for (const template of templates) {
-                    try {
-                        // Render Template
-                        // Locale: Hardcoded 'ko' for now, or fetch from User entity if available
-                        const locale = Language.JA;
-                        const renderResult = await this.renderService.execute({
-                            event: alert.event,
-                            channel: template.channel,
-                            locale,
-                            variables: alert.payload as Record<string, unknown>,
-                        });
-
-                        // Create NotificationLog
-                        const log = NotificationLog.create({
-                            alertId: alert.id!,
-                            alertCreatedAt: alert.createdAt,
-                            receiverId: userId,
-                            channel: template.channel,
-                            title: renderResult.title,
-                            body: renderResult.body,
-                            actionUri: renderResult.actionUri,
-                            templateId: template.id,
-                            templateEvent: alert.event, // snapshot
-                            locale,
-                            target: this.extractTarget(alert, template.channel), // Helper to get email/phone
-                        });
-
-                        const savedLog = await this.notificationLogRepository.create(log);
-
-                        // Dispatch to Channel Queue
-                        const jobData = {
-                            logId: savedLog.id!.toString(),
-                            logCreatedAt: savedLog.createdAt.toISOString(),
-                        };
-
-                        if (template.channel === ChannelType.EMAIL) {
-                            await this.emailQueue.add('send-email', jobData);
-                        } else if (template.channel === ChannelType.SMS) {
-                            await this.smsQueue.add('send-sms', jobData);
-                        } else if (template.channel === ChannelType.IN_APP) {
-                            await this.socketQueue.add('send-in-app', jobData);
-                        } else {
-                            this.logger.warn(`Unsupported channel type for queuing: ${template.channel}`);
-                        }
-
-                    } catch (innerError) {
-                        this.logger.error(
-                            `Failed to process template ${template.id} for alert ${alert.id}:`,
-                            innerError,
-                        );
-                        // Continue to next template? Yes.
-                    }
-                }
-
-                alert.complete();
-                await this.alertRepository.update(alert);
-                this.logger.debug(`Successfully processed alert ${alert.id}`);
-
-            } catch (error: any) {
-                this.logger.error(`Failed to process alert job ${job.id}:`, error);
-                // Let BullMQ retry?
-                // If alert fetch failed, maybe.
-                throw error;
+                // Continue to next template? Yes.
             }
-        });
+        }
+
+        alert.complete();
+        await this.alertRepository.update(alert);
+        this.logger.debug(`Successfully processed alert ${alert.id}`);
     }
 
     private extractTarget(alert: any, channel: ChannelType): string | undefined {
-        // In a real app, we would fetch User entity to get email/phone.
-        // For this MVP, we might expect it in payload or we need UserRepository.
-        // Let's assume payload has target info for now to simplify, 
-        // OR we can't send without user info.
-        //
-        // CRITICAL for MVP: Since we don't have easy User entity access in this worker yet (UserModule separation),
-        // we will look for target in `alert.payload.target` or `alert.payload.email`/`phone`.
-        // OR just use a placeholder if user integration is missing.
-        //
-        // Let's look in payload first.
         const payload = alert.payload as any;
         if (channel === ChannelType.EMAIL) return payload.email ?? payload.target;
         if (channel === ChannelType.SMS) return payload.phone ?? payload.phoneNumber ?? payload.target;
         return undefined;
-    }
-
-    async onApplicationShutdown(signal?: string): Promise<void> {
-        try {
-            const worker = this.worker;
-            if (worker) {
-                await worker.close();
-                this.logger.log('AlertWorker closed successfully');
-            }
-        } catch (error) {
-            this.logger.error('Failed to close AlertWorker:', error);
-        }
     }
 }
