@@ -3,36 +3,28 @@ import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { TierSettings } from '../domain/tier-settings.entity';
 import { TierSettingsRepositoryPort, UpdateTierSettingsProps } from './tier-settings.repository.port';
+import { CacheService } from 'src/common/cache/cache.service';
+import { CACHE_CONFIG } from 'src/common/cache/cache.constants';
 
 @Injectable()
 export class TierSettingsRepository implements TierSettingsRepositoryPort {
-    private cachedSettings: TierSettings | null = null;
-    private lastFetched: number = 0;
-    private readonly CACHE_TTL = 60 * 1000; // 1분
-
     constructor(
         @InjectTransaction()
         private readonly tx: PrismaTransaction,
+        private readonly cacheService: CacheService,
     ) { }
 
     async find(): Promise<TierSettings | null> {
-        const now = Date.now();
-        if (this.cachedSettings && (now - this.lastFetched < this.CACHE_TTL)) {
-            return this.cachedSettings;
-        }
+        const record = await this.cacheService.getOrSet(
+            CACHE_CONFIG.TIER.SETTINGS,
+            async () => {
+                return await this.tx.tierConfig.findUnique({
+                    where: { id: TierSettings.SINGLETON_ID }
+                });
+            }
+        );
 
-        // 싱글톤 ID로 유일한 레코드 조회
-        const record = await this.tx.tierConfig.findUnique({
-            where: { id: TierSettings.SINGLETON_ID }
-        });
-
-        if (!record) return null;
-
-        const settings = TierSettings.fromPersistence(record);
-        this.cachedSettings = settings;
-        this.lastFetched = now;
-
-        return settings;
+        return record ? TierSettings.fromPersistence(record) : null;
     }
 
     async update(props: UpdateTierSettingsProps): Promise<TierSettings> {
@@ -48,8 +40,7 @@ export class TierSettingsRepository implements TierSettingsRepositoryPort {
         });
 
         const updatedSettings = TierSettings.fromPersistence(updated);
-        this.cachedSettings = updatedSettings;
-        this.lastFetched = Date.now();
+        await this.cacheService.set(CACHE_CONFIG.TIER.SETTINGS, updatedSettings);
 
         return updatedSettings;
     }

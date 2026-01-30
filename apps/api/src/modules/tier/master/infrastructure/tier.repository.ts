@@ -3,70 +3,57 @@ import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { Tier } from '../domain/tier.entity';
 import { TierRepositoryPort, UpdateTierProps } from './tier.repository.port';
+import { CacheService } from 'src/common/cache/cache.service';
+import { CACHE_CONFIG } from 'src/common/cache/cache.constants';
 
 @Injectable()
 export class TierRepository implements TierRepositoryPort {
-    private cachedTiers: Tier[] | null = null;
-    private lastFetched: number = 0;
-    private readonly CACHE_TTL = 60 * 1000; // 1분
-
     constructor(
         @InjectTransaction()
         private readonly tx: PrismaTransaction,
+        private readonly cacheService: CacheService,
     ) { }
 
     async findAll(): Promise<Tier[]> {
-        const now = Date.now();
-        if (this.cachedTiers && (now - this.lastFetched < this.CACHE_TTL)) {
-            return this.cachedTiers;
-        }
+        const records = await this.cacheService.getOrSet(
+            CACHE_CONFIG.TIER.LIST,
+            async () => {
+                return await this.tx.tier.findMany({
+                    include: { translations: true },
+                    orderBy: { priority: 'asc' }
+                });
+            }
+        );
 
-        const records = await this.tx.tier.findMany({
-            include: { translations: true },
-            orderBy: { priority: 'asc' }
-        });
-
-        const tiers = records.map(record => Tier.fromPersistence(record));
-        this.cachedTiers = tiers;
-        this.lastFetched = now;
-
-        return tiers;
+        return records.map(record => Tier.fromPersistence(record));
     }
 
     async findByPriority(priority: number): Promise<Tier | null> {
-        const record = await this.tx.tier.findUnique({
-            where: { priority },
-            include: { translations: true }
-        });
-        return record ? Tier.fromPersistence(record) : null;
+        const tiers = await this.findAll();
+        return tiers.find(tier => tier.priority === priority) || null;
     }
 
     async findByCode(code: string): Promise<Tier | null> {
-        const record = await this.tx.tier.findUnique({
-            where: { code },
-            include: { translations: true }
-        });
-        return record ? Tier.fromPersistence(record) : null;
+        const tiers = await this.findAll();
+        return tiers.find(tier => tier.code === code) || null;
     }
 
     async findNextTierByPriority(priority: number): Promise<Tier | null> {
-        const record = await this.tx.tier.findFirst({
+        const records = await this.tx.tier.findMany({
             where: { priority: { gt: priority } },
             orderBy: { priority: 'asc' },
+            take: 1,
             include: { translations: true }
         });
-        return record ? Tier.fromPersistence(record) : null;
+
+        if (records.length === 0) return null;
+        return Tier.fromPersistence(records[0]);
     }
 
     async update(props: UpdateTierProps): Promise<Tier> {
-        const { code, translations, updatedBy, ...data } = props;
+        const { code, updatedBy, translations, ...data } = props;
 
-        // translations upsert를 위해 id를 먼저 조회 (tierId_language 복합키 대응)
-        const current = await this.tx.tier.findUnique({
-            where: { code },
-            select: { id: true }
-        });
-
+        const current = await this.tx.tier.findUnique({ where: { code } });
         if (!current) {
             throw new Error(`Tier not found with code: ${code}`);
         }
@@ -90,8 +77,7 @@ export class TierRepository implements TierRepositoryPort {
         });
 
         const updated = Tier.fromPersistence(record);
-        this.cachedTiers = null;
-        this.lastFetched = 0;
+        await this.cacheService.del(CACHE_CONFIG.TIER.LIST);
         return updated;
     }
 }

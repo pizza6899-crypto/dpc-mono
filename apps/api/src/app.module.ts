@@ -33,11 +33,13 @@ import { SocketModule } from './modules/socket/socket.module';
 import { StorageModule } from './infrastructure/storage/storage.module';
 import { FileModule } from './modules/file/file.module';
 import { TierModule } from './modules/tier/tier.module';
+import { CacheModule } from './common/cache/cache.module';
 
 @Module({
   imports: [
     EnvModule,
     PrismaModule,
+    CacheModule,
     ThrottleModule,
     CommonLoggerModule,
     WebsocketModule,

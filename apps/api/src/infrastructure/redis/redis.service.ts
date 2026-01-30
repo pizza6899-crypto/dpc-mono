@@ -25,7 +25,16 @@ export class RedisService {
   async get<T>(key: string): Promise<T | null> {
     try {
       const value = await this.redisClient.get(key);
-      return value ? (JSON.parse(value) as T) : null;
+      if (!value) return null;
+
+      // ISO 날짜 문자열을 Date 객체로 자동 복원
+      const isoDatePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
+      return JSON.parse(value, (_, v) => {
+        if (typeof v === 'string' && isoDatePattern.test(v)) {
+          return new Date(v);
+        }
+        return v;
+      }) as T;
     } catch (error) {
       this.logger.error(error, `Redis GET 에러: ${key}`);
       return null;
@@ -35,8 +44,18 @@ export class RedisService {
   // 캐시에 데이터 저장
   async set<T>(key: string, value: T, ttl_sec = 30): Promise<boolean> {
     try {
-      const serializedValue = JSON.stringify(value);
-      const finalTtl = ttl_sec + Math.floor(Math.random() * 10);
+      // BigInt 및 Decimal(Prisma) 보수 처리가 가능하도록 직렬화 환경 개선
+      const serializedValue = JSON.stringify(value, (_, v) => {
+        if (typeof v === 'bigint') return v.toString();
+        if (v?.constructor?.name === 'Decimal') return v.toString(); // Prisma.Decimal 대응
+        return v;
+      });
+      // TTL Jitter: 동시 만료 방지를 위해 랜덤 시간 추가
+      // 비율 5%, 최대 120초 제한 (긴 TTL에도 과도하게 늘어나지 않도록 함)
+      const maxJitter = Math.min(ttl_sec * 0.05, 120);
+      const jitter = Math.floor(maxJitter * Math.random());
+
+      const finalTtl = ttl_sec + jitter;
       await this.redisClient.set(key, serializedValue, 'EX', finalTtl);
       return true;
     } catch (error) {
