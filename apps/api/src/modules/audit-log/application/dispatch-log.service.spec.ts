@@ -4,10 +4,7 @@ import { DispatchLogService } from './dispatch-log.service';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { LogType } from '../domain';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import {
-  CRITICAL_LOG_QUEUE_NAME,
-  HEAVY_LOG_QUEUE_NAME,
-} from '../infrastructure/queue.constants';
+import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
 
 describe('DispatchLogService', () => {
   let service: DispatchLogService;
@@ -31,11 +28,11 @@ describe('DispatchLogService', () => {
       providers: [
         DispatchLogService,
         {
-          provide: getQueueToken(CRITICAL_LOG_QUEUE_NAME),
+          provide: getQueueToken(BULLMQ_QUEUES.AUDIT.CRITICAL.name),
           useValue: mockQueue,
         },
         {
-          provide: getQueueToken(HEAVY_LOG_QUEUE_NAME),
+          provide: getQueueToken(BULLMQ_QUEUES.AUDIT.HEAVY.name),
           useValue: mockQueue,
         },
         {
@@ -46,8 +43,8 @@ describe('DispatchLogService', () => {
     }).compile();
 
     service = module.get<DispatchLogService>(DispatchLogService);
-    criticalQueue = module.get(getQueueToken(CRITICAL_LOG_QUEUE_NAME));
-    heavyQueue = module.get(getQueueToken(HEAVY_LOG_QUEUE_NAME));
+    criticalQueue = module.get(getQueueToken(BULLMQ_QUEUES.AUDIT.CRITICAL.name));
+    heavyQueue = module.get(getQueueToken(BULLMQ_QUEUES.AUDIT.HEAVY.name));
     snowflakeService = module.get<SnowflakeService>(SnowflakeService);
 
     jest.clearAllMocks();

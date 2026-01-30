@@ -43,7 +43,6 @@
  * ```
  */
 import { Module } from '@nestjs/common';
-import { BullModule } from '@nestjs/bullmq';
 import { AuditLogAdapter } from './infrastructure/audit-log.adapter';
 import {
   CriticalLogProcessor,
@@ -53,18 +52,14 @@ import { DispatchLogService } from './application/dispatch-log.service';
 import { AuditLogInterceptor } from './infrastructure/audit-log.interceptor';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { AUDIT_LOG_REPOSITORY } from './ports/out';
-import {
-  CRITICAL_LOG_QUEUE_CONFIG,
-  HEAVY_LOG_QUEUE_CONFIG,
-} from './infrastructure/queue.constants';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
 
 @Module({
   imports: [
     PrismaModule,
     SnowflakeModule,
-    BullModule.registerQueue(CRITICAL_LOG_QUEUE_CONFIG),
-    BullModule.registerQueue(HEAVY_LOG_QUEUE_CONFIG),
+    BullMqModule,
   ],
   providers: [
     {

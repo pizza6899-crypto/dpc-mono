@@ -1,14 +1,16 @@
-import { Processor, WorkerHost } from '@nestjs/bullmq';
+import { Processor } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
-import { Logger, OnApplicationShutdown, Inject } from '@nestjs/common';
+import { Logger, Inject } from '@nestjs/common';
 import { AUDIT_LOG_REPOSITORY } from '../ports/out';
 import type { AuditLogRepositoryPort } from '../ports/out';
 import type { LogJobData } from '../domain';
 import { LogType } from '../domain';
-import {
-  CRITICAL_LOG_QUEUE_NAME,
-  HEAVY_LOG_QUEUE_NAME,
-} from './queue.constants';
+import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
+import { getQueueConfig } from 'src/infrastructure/bullmq/bullmq.constants';
+import { ClsService } from 'nestjs-cls';
+
+const criticalConfig = getQueueConfig('AUDIT', 'CRITICAL');
+const heavyConfig = getQueueConfig('AUDIT', 'HEAVY');
 
 interface LogQueueJobData {
   id: string;
@@ -20,20 +22,19 @@ interface LogQueueJobData {
  * Critical Log Processor
  * AUTH, INTEGRATION 로그를 처리
  */
-@Processor(CRITICAL_LOG_QUEUE_NAME)
-export class CriticalLogProcessor
-  extends WorkerHost
-  implements OnApplicationShutdown {
-  private readonly logger = new Logger(CriticalLogProcessor.name);
+@Processor(criticalConfig.processorOptions, criticalConfig.workerOptions)
+export class CriticalLogProcessor extends BaseProcessor<LogQueueJobData, void> {
+  protected readonly logger = new Logger(CriticalLogProcessor.name);
 
   constructor(
     @Inject(AUDIT_LOG_REPOSITORY)
     private readonly auditLogRepository: AuditLogRepositoryPort,
+    protected readonly cls: ClsService,
   ) {
     super();
   }
 
-  async process(job: Job<LogQueueJobData>): Promise<void> {
+  protected async processJob(job: Job<LogQueueJobData>): Promise<void> {
     const { id, createdAt, payload } = job.data;
     const snowflakeId = BigInt(id);
     const timestamp = new Date(createdAt);
@@ -57,48 +58,25 @@ export class CriticalLogProcessor
     }
   }
 
-  async onApplicationShutdown(signal?: string): Promise<void> {
-    try {
-      // Worker가 초기화되지 않았을 수 있으므로 try-catch로 안전하게 처리
-      const worker = this.worker;
-      if (worker) {
-        await worker.close();
-        this.logger.log('워커가 안전하게 종료되었습니다.');
-      }
-    } catch (error) {
-      // Worker가 초기화되지 않은 경우 에러를 무시 (테스트 환경 등)
-      if (
-        error instanceof Error &&
-        error.message.includes('has not yet been initialized')
-      ) {
-        return;
-      }
-      this.logger.error(
-        'CriticalLogProcessor 종료 중 오류 발생',
-        error instanceof Error ? error.stack : String(error),
-      );
-    }
-  }
 }
 
 /**
  * Heavy Log Processor
  * ACTIVITY, ERROR 로그를 처리
  */
-@Processor(HEAVY_LOG_QUEUE_NAME)
-export class HeavyLogProcessor
-  extends WorkerHost
-  implements OnApplicationShutdown {
-  private readonly logger = new Logger(HeavyLogProcessor.name);
+@Processor(heavyConfig.processorOptions, heavyConfig.workerOptions)
+export class HeavyLogProcessor extends BaseProcessor<LogQueueJobData, void> {
+  protected readonly logger = new Logger(HeavyLogProcessor.name);
 
   constructor(
     @Inject(AUDIT_LOG_REPOSITORY)
     private readonly auditLogRepository: AuditLogRepositoryPort,
+    protected readonly cls: ClsService,
   ) {
     super();
   }
 
-  async process(job: Job<LogQueueJobData>): Promise<void> {
+  protected async processJob(job: Job<LogQueueJobData>): Promise<void> {
     const { id, createdAt, payload } = job.data;
     const snowflakeId = BigInt(id);
     const timestamp = new Date(createdAt);
@@ -120,27 +98,5 @@ export class HeavyLogProcessor
     }
   }
 
-  async onApplicationShutdown(signal?: string): Promise<void> {
-    try {
-      // Worker가 초기화되지 않았을 수 있으므로 try-catch로 안전하게 처리
-      const worker = this.worker;
-      if (worker) {
-        await worker.close();
-        this.logger.log('워커가 안전하게 종료되었습니다.');
-      }
-    } catch (error) {
-      // Worker가 초기화되지 않은 경우 에러를 무시 (테스트 환경 등)
-      if (
-        error instanceof Error &&
-        error.message.includes('has not yet been initialized')
-      ) {
-        return;
-      }
-      this.logger.error(
-        'HeavyLogProcessor 종료 중 오류 발생',
-        error instanceof Error ? error.stack : String(error),
-      );
-    }
-  }
 }
 

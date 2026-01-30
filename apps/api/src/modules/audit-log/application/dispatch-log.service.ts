@@ -5,10 +5,7 @@ import type {
   LogJobData,
 } from '../domain';
 import { LogType } from '../domain';
-import {
-  CRITICAL_LOG_QUEUE_NAME,
-  HEAVY_LOG_QUEUE_NAME,
-} from '../infrastructure/queue.constants';
+import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { sanitizeAndTruncate } from 'src/utils/log-sanitizer.util';
@@ -29,9 +26,9 @@ export class DispatchLogService {
   private readonly logger = new Logger(DispatchLogService.name);
 
   constructor(
-    @InjectQueue(CRITICAL_LOG_QUEUE_NAME)
+    @InjectQueue(BULLMQ_QUEUES.AUDIT.CRITICAL.name)
     private readonly criticalLogQueue: Queue<LogQueueJobData>,
-    @InjectQueue(HEAVY_LOG_QUEUE_NAME)
+    @InjectQueue(BULLMQ_QUEUES.AUDIT.HEAVY.name)
     private readonly heavyLogQueue: Queue<LogQueueJobData>,
     private readonly snowflakeService: SnowflakeService,
   ) { }
