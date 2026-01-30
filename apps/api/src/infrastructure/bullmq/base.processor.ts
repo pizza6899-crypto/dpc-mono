@@ -78,6 +78,20 @@ export abstract class BaseProcessor<T = any, R = any> extends WorkerHost impleme
         const logQueues: string[] = [BULLMQ_QUEUES.AUDIT.CRITICAL.name, BULLMQ_QUEUES.AUDIT.HEAVY.name];
         if (logQueues.includes(job.queueName)) return;
 
+        // Job Data 안전 처리 (길이 제한 및 순환 참조 방지)
+        let safeJobData: any = job.data;
+        try {
+            const stringified = JSON.stringify(job.data);
+            if (stringified.length > 5000) {
+                safeJobData = {
+                    _warning: 'Data truncated due to size limit',
+                    preview: stringified.substring(0, 1000) + '...',
+                };
+            }
+        } catch {
+            safeJobData = { _error: 'Failed to stringify job data' };
+        }
+
         if (this.dispatchLogService) {
             try {
                 await this.dispatchLogService.dispatch({
@@ -93,9 +107,7 @@ export abstract class BaseProcessor<T = any, R = any> extends WorkerHost impleme
                             queue: job.queueName,
                             attempt: job.attemptsMade + 1,
                             duration: `${duration}ms`,
-                            // 주의: job.data가 매우 클 경우 DB 성능 저하의 원인이 될 수 있습니다.
-                            // 프로덕션 환경에서는 민감한 정보 마스킹이나 데이터 길이 제한(truncation)이 권장됩니다.
-                            input: job.data,
+                            input: safeJobData,
                             status: 'FAIL',
                         },
                     },
@@ -117,11 +129,16 @@ export abstract class BaseProcessor<T = any, R = any> extends WorkerHost impleme
         this.logger.log(`${this.constructor.name} 종료 프로세스 시작... (Signal: ${signal || 'N/A'})`);
 
         try {
-            await worker.pause();
+            // 이미 닫혔거나 닫히는 중인지 확인 (BullMQ 내부 상태 접근이 어렵다면 try-catch로 방어)
+            if (!worker.isPaused()) {
+                await worker.pause();
+            }
             await worker.close();
             this.logger.log(`${this.constructor.name} 워커가 안전하게 종료되었습니다.`);
         } catch (error) {
-            if (!(error instanceof Error && error.message.includes('has not yet been initialized'))) {
+            const msg = error instanceof Error ? error.message : String(error);
+            // 일반적인 '이미 닫힘' 류의 에러는 무시
+            if (!msg.includes('closed') && !msg.includes('has not yet been initialized')) {
                 this.logger.error(`${this.constructor.name} 종료 중 오류 발생`, error);
             }
         }
