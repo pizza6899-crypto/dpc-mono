@@ -4,12 +4,13 @@ import { Processor } from '@nestjs/bullmq';
 import { Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { ClsService } from 'nestjs-cls';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import {
     ExchangeCurrencyCode,
     ExchangeRateProvider,
     Prisma,
 } from '@prisma/client';
+import { InjectTransaction } from '@nestjs-cls/transactional';
+import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { nowUtc } from 'src/utils/date.util';
 import { OpenExchangeRatesApiService } from '../open-exchange-rates-api.service';
 import { ExchangeRateValidator } from '../../application/exchange-rate-validator.service';
@@ -24,7 +25,8 @@ export class ExchangeRateUpdateProcessor extends BaseProcessor<any, void> implem
     protected readonly logger = new Logger(ExchangeRateUpdateProcessor.name);
 
     constructor(
-        private readonly prismaService: PrismaService,
+        @InjectTransaction()
+        private readonly tx: PrismaTransaction,
         private readonly openExchangeRatesApiService: OpenExchangeRatesApiService,
         private readonly exchangeRateValidator: ExchangeRateValidator,
         private readonly exchangeRateService: ExchangeRateService,
@@ -36,7 +38,7 @@ export class ExchangeRateUpdateProcessor extends BaseProcessor<any, void> implem
     async onApplicationBootstrap() {
         await this.cls.run(async () => {
             // 초기 데이터가 없는 경우 즉시 업데이트 시도
-            const count = await this.prismaService.exchangeRate.count({
+            const count = await this.tx.exchangeRate.count({
                 where: {
                     provider: ExchangeRateProvider.OPEN_EXCHANGE_RATES,
                     isValid: true,
@@ -80,7 +82,7 @@ export class ExchangeRateUpdateProcessor extends BaseProcessor<any, void> implem
                 const rate = latestRates.rates[currency];
                 if (!rate || rate <= 0) continue;
 
-                const previousRate = await this.prismaService.exchangeRate.findUnique({
+                const previousRate = await this.tx.exchangeRate.findUnique({
                     where: {
                         baseCurrency_quoteCurrency_provider: {
                             baseCurrency: ExchangeCurrencyCode.USD,
@@ -98,7 +100,7 @@ export class ExchangeRateUpdateProcessor extends BaseProcessor<any, void> implem
                     currency,
                 );
 
-                await this.prismaService.exchangeRate.upsert({
+                await this.tx.exchangeRate.upsert({
                     where: {
                         baseCurrency_quoteCurrency_provider: {
                             baseCurrency: ExchangeCurrencyCode.USD,
