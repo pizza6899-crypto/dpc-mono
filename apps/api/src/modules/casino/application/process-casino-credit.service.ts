@@ -14,7 +14,9 @@ import { GameTransaction } from '../domain/model/game-transaction.entity';
 import { CheckCasinoBalanceService } from './check-casino-balance.service';
 import { GameRound } from '../domain/model/game-round.entity';
 import { CasinoWinMetadata } from 'src/modules/wallet/domain/model/user-wallet-transaction-metadata';
-import { CasinoQueueService } from '../infrastructure/queue/casino-queue.service';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+import { CasinoQueueNames } from '../infrastructure/queue/casino-queue.types';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { UserBalanceNotFoundException } from '../domain/casino.exception';
 
@@ -51,7 +53,10 @@ export class ProcessCasinoCreditService {
         private readonly gameTransactionRepository: GameTransactionRepositoryPort,
         private readonly updateUserBalanceService: UpdateUserBalanceService,
         private readonly checkCasinoBalanceService: CheckCasinoBalanceService,
-        private readonly casinoQueueService: CasinoQueueService,
+        @InjectQueue(CasinoQueueNames.GAME_POST_PROCESS)
+        private readonly gamePostProcessQueue: Queue,
+        @InjectQueue(CasinoQueueNames.GAME_RESULT_FETCH)
+        private readonly gameResultFetchQueue: Queue,
         private readonly advisoryLockService: AdvisoryLockService,
         private readonly findUserWalletService: FindUserWalletService, // [Inject] Added
     ) { }
@@ -242,12 +247,12 @@ export class ProcessCasinoCreditService {
         if (txType === CasinoGameTransactionType.WIN || txType === CasinoGameTransactionType.CANCEL) {
             // 시뮬레이션이 아닐 때만 실제 결과 조회를 큐에 넣음
             if (!command.isSimulation) {
-                await this.casinoQueueService.addGameResultFetchJob({
+                await this.gameResultFetchQueue.add('process-fetch-game-result', {
                     gameRoundId: round.id.toString(),
                 });
             }
 
-            await this.casinoQueueService.addGamePostProcessJob({
+            await this.gamePostProcessQueue.add('process-game-post', {
                 gameRoundId: round.id.toString(),
             });
         }

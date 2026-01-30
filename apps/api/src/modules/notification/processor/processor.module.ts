@@ -1,7 +1,8 @@
 // apps/api/src/modules/notification/processor/processor.module.ts
-
+import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
+import { BullModule } from '@nestjs/bullmq';
+import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
 import { Module, forwardRef } from '@nestjs/common';
-import { NotificationQueueModule } from '../common/notification-queue.module';
 import { InboxModule } from '../inbox/inbox.module';
 import { AlertModule } from '../alert/alert.module';
 import { TemplateModule } from '../template/template.module';
@@ -26,7 +27,19 @@ import { EnvModule } from 'src/common/env/env.module';
         forwardRef(() => InboxModule),
         AlertModule,
         TemplateModule,
-        NotificationQueueModule,
+        BullMqModule,
+        BullModule.registerQueue({
+            name: BULLMQ_QUEUES.NOTIFICATION.ALERT.name,
+        }),
+        BullModule.registerQueue({
+            name: BULLMQ_QUEUES.NOTIFICATION.EMAIL.name,
+        }),
+        BullModule.registerQueue({
+            name: BULLMQ_QUEUES.NOTIFICATION.SMS.name,
+        }),
+        BullModule.registerQueue({
+            name: BULLMQ_QUEUES.NOTIFICATION.SOCKET.name,
+        }),
     ],
     providers: [
         // Providers
