@@ -200,7 +200,7 @@ export class DispatchLogService {
         sanitizedPayload.type === LogType.INTEGRATION
       ) {
         await this.criticalLogQueue.add(
-          `${sanitizedPayload.type.toLowerCase()}-log`,
+          BULLMQ_QUEUES.AUDIT.CRITICAL.name,
           jobData,
           {
             jobId: `log_${id.toString()}`,
@@ -212,7 +212,7 @@ export class DispatchLogService {
       } else {
         // ACTIVITY, ERROR
         await this.heavyLogQueue.add(
-          `${enrichedPayload.type.toLowerCase()}-log`,
+          BULLMQ_QUEUES.AUDIT.HEAVY.name,
           jobData,
           {
             jobId: `log_${id.toString()}`,

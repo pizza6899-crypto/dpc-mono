@@ -5,6 +5,8 @@ import { ProcessorOptions, QueueConfig } from './bullmq.types';
 
 export * from './bullmq.types';
 
+const DEFAULT_TIMEZONE = 'Asia/Tokyo';
+
 /**
  * 전역 BullMQ 큐 설정 레지스트리
  * 모든 도메인의 큐 이름, 기본 옵션, 동시성, 속도 제한을 여기서 중앙 관리합니다.
@@ -13,7 +15,7 @@ export const BULLMQ_QUEUES = {
     // 감사 로그 도메인
     AUDIT: {
         CRITICAL: {
-            name: 'audit-critical',
+            name: 'audit-log-critical',
             defaultJobOptions: {
                 attempts: 10,
                 backoff: { type: 'exponential', delay: 1000 },
@@ -25,7 +27,7 @@ export const BULLMQ_QUEUES = {
             },
         },
         HEAVY: {
-            name: 'audit-heavy',
+            name: 'audit-log-heavy',
             defaultJobOptions: {
                 attempts: 3,
                 backoff: { type: 'exponential', delay: 2000 },
@@ -61,7 +63,7 @@ export const BULLMQ_QUEUES = {
             workerOptions: { concurrency: 5 },
         },
         WHITECLIFF_HISTORY: {
-            name: 'casino-whitecliff-history',
+            name: 'casino-whitecliff-pushed-bets',
             defaultJobOptions: {
                 attempts: 3,
                 backoff: { type: 'exponential', delay: 5000 },
@@ -71,8 +73,8 @@ export const BULLMQ_QUEUES = {
             workerOptions: { concurrency: 1 },
             repeatableJobs: [
                 {
-                    name: 'whitecliff-pushed-bet-history',
-                    repeat: { pattern: '0 * * * * *' }, // 매 분 0초
+                    name: 'casino-whitecliff-pushed-bets',
+                    repeat: { pattern: '0 * * * * *', tz: DEFAULT_TIMEZONE }, // 매 분 0초
                 },
             ],
         },
@@ -123,7 +125,7 @@ export const BULLMQ_QUEUES = {
     // 등급 시스템 도메인 (Tier)
     TIER: {
         AUDIT: {
-            name: 'tier-audit',
+            name: 'tier-stats-snapshot',
             defaultJobOptions: {
                 attempts: 3,
                 backoff: { type: 'exponential', delay: 5000 },
@@ -133,8 +135,8 @@ export const BULLMQ_QUEUES = {
             workerOptions: { concurrency: 1 },
             repeatableJobs: [
                 {
-                    name: 'tier-hourly-snapshot',
-                    repeat: { pattern: '0 0 * * * *' }, // 매 시 정각
+                    name: 'tier-stats-snapshot',
+                    repeat: { pattern: '0 0 * * * *', tz: DEFAULT_TIMEZONE }, // 매 시 정각
                 },
             ],
         },
@@ -142,7 +144,7 @@ export const BULLMQ_QUEUES = {
     // 제휴 도메인 (Affiliate)
     AFFILIATE: {
         COMMISSION: {
-            name: 'affiliate-commission',
+            name: 'affiliate-commission-settle',
             defaultJobOptions: {
                 attempts: 5,
                 backoff: { type: 'exponential', delay: 5000 },
@@ -152,8 +154,8 @@ export const BULLMQ_QUEUES = {
             workerOptions: { concurrency: 1 },
             repeatableJobs: [
                 {
-                    name: 'settle-daily-commissions',
-                    repeat: { pattern: '0 0 1 * * *', tz: 'UTC' }, // 매일 01:00 UTC
+                    name: 'affiliate-commission-settle',
+                    repeat: { pattern: '0 0 1 * * *', tz: DEFAULT_TIMEZONE }, // 매일 01:00 (KST/JST)
                 },
             ],
         },
@@ -171,8 +173,8 @@ export const BULLMQ_QUEUES = {
             workerOptions: { concurrency: 1 },
             repeatableJobs: [
                 {
-                    name: 'update-fiat-exchange-rates',
-                    repeat: { pattern: '0 5 * * * *' }, // 매 시 5분 (정각 직후 지연 회피)
+                    name: 'exchange-rate-sync',
+                    repeat: { pattern: '0 5 * * * *', tz: DEFAULT_TIMEZONE }, // 매 시 5분
                 },
             ],
         },
@@ -190,8 +192,8 @@ export const BULLMQ_QUEUES = {
             workerOptions: { concurrency: 1 },
             repeatableJobs: [
                 {
-                    name: 'expire-sessions-batch',
-                    repeat: { pattern: '0 */5 * * * *' }, // 매 5분마다
+                    name: 'auth-session-cleanup',
+                    repeat: { pattern: '0 */5 * * * *', tz: DEFAULT_TIMEZONE }, // 매 5분마다
                 },
             ],
         },

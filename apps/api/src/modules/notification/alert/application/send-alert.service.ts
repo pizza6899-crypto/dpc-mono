@@ -6,6 +6,7 @@ import { Queue } from 'bullmq';
 import { Transactional } from '@nestjs-cls/transactional';
 import { ChannelType } from '@prisma/client';
 import { MessageCode } from '@repo/shared';
+import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
 import { Alert, DuplicateAlertException, AlertException } from '../domain';
 import { ALERT_REPOSITORY } from '../ports';
 import type { AlertRepositoryPort } from '../ports';
@@ -63,7 +64,7 @@ export class SendAlertService {
 
         // 4. BullMQ에 Job 추가 (비동기 처리)
         await this.alertQueue.add(
-            'process-alert',
+            BULLMQ_QUEUES.NOTIFICATION.ALERT.name,
             {
                 alertId: savedAlert.id!.toString(),
                 alertCreatedAt: savedAlert.createdAt.toISOString(),

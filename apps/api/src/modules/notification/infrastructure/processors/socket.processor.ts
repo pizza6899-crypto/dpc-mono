@@ -41,7 +41,7 @@ export class SocketProcessor extends BaseProcessor<NotificationJobData | Volatil
     protected async processJob(job: Job<NotificationJobData | VolatileJobData>): Promise<void> {
         const { name, data } = job;
 
-        if (name === 'send-in-app') {
+        if (name === BULLMQ_QUEUES.NOTIFICATION.SOCKET.name) {
             await this.processNotification(data as NotificationJobData);
         } else if (name === 'volatile') {
             await this.processVolatile(data as VolatileJobData);

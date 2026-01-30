@@ -26,15 +26,15 @@ export class TierAuditProcessor extends BaseProcessor<TierAuditJobPayload, void>
     }
 
     protected async processJob(job: Job<TierAuditJobPayload>): Promise<void> {
-        const { name, data: payload } = job;
+        const { data: payload } = job;
 
-        // 1. 반복 작업(Repeatable Job) 처리
-        if (name === BULLMQ_QUEUES.TIER.AUDIT.repeatableJobs![0].name) {
+        // 1. 페이로드가 없거나 type이 없으면 반복 작업(Cron)으로 간주
+        if (!payload || !payload.type) {
             await this.handleHourlySnapshot();
             return;
         }
 
-        // 2. 일반 큐 잡 처리
+        // 2. 일반 큐 잡 처리 (payload.type 기준)
         switch (payload.type) {
             case TierAuditJobType.RECORD_TIER_SNAPSHOT:
                 await this.auditService.handleRecordStats(payload.data);

@@ -119,11 +119,11 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
                 };
 
                 if (template.channel === ChannelType.EMAIL) {
-                    await this.emailQueue.add('send-email', jobData);
+                    await this.emailQueue.add(BULLMQ_QUEUES.NOTIFICATION.EMAIL.name, jobData);
                 } else if (template.channel === ChannelType.SMS) {
-                    await this.smsQueue.add('send-sms', jobData);
+                    await this.smsQueue.add(BULLMQ_QUEUES.NOTIFICATION.SMS.name, jobData);
                 } else if (template.channel === ChannelType.IN_APP) {
-                    await this.socketQueue.add('send-in-app', jobData);
+                    await this.socketQueue.add(BULLMQ_QUEUES.NOTIFICATION.SOCKET.name, jobData);
                 } else {
                     this.logger.warn(`Unsupported channel type for queuing: ${template.channel}`);
                 }

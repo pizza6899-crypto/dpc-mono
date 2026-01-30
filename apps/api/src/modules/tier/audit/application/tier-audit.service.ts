@@ -9,19 +9,19 @@ import {
     UpdateTierStatsProps,
 } from '../infrastructure/audit.repository.port';
 import { EvaluationStatus, Prisma } from '@prisma/client';
+import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
+import { TierEvaluationLog } from '../domain/tier-evaluation-log.entity';
 import {
-    TIER_AUDIT_QUEUE_NAME,
     TierAuditJobType,
     RecordTierSnapshotJobData,
 } from '../infrastructure/tier-audit.constants';
-import { TierEvaluationLog } from '../domain/tier-evaluation-log.entity';
 
 @Injectable()
 export class TierAuditService {
     constructor(
         private readonly snowflakeService: SnowflakeService,
         private readonly auditRepository: TierAuditRepositoryPort,
-        @InjectQueue(TIER_AUDIT_QUEUE_NAME)
+        @InjectQueue(BULLMQ_QUEUES.TIER.AUDIT.name)
         private readonly auditQueue: Queue,
     ) { }
 
@@ -84,7 +84,7 @@ export class TierAuditService {
             demotedCount?: number;
         },
     ): Promise<void> {
-        await this.auditQueue.add(TierAuditJobType.RECORD_TIER_SNAPSHOT, {
+        await this.auditQueue.add(BULLMQ_QUEUES.TIER.AUDIT.name, {
             type: TierAuditJobType.RECORD_TIER_SNAPSHOT,
             data: {
                 timestamp,

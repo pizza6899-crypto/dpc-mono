@@ -17,6 +17,7 @@ import { CasinoWinMetadata } from 'src/modules/wallet/domain/model/user-wallet-t
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { CasinoQueueNames } from '../infrastructure/queue/casino-queue.types';
+import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { UserBalanceNotFoundException } from '../domain/casino.exception';
 
@@ -247,12 +248,12 @@ export class ProcessCasinoCreditService {
         if (txType === CasinoGameTransactionType.WIN || txType === CasinoGameTransactionType.CANCEL) {
             // 시뮬레이션이 아닐 때만 실제 결과 조회를 큐에 넣음
             if (!command.isSimulation) {
-                await this.gameResultFetchQueue.add('process-fetch-game-result', {
+                await this.gameResultFetchQueue.add(BULLMQ_QUEUES.CASINO.GAME_RESULT_FETCH.name, {
                     gameRoundId: round.id.toString(),
                 });
             }
 
-            await this.gamePostProcessQueue.add('process-game-post', {
+            await this.gamePostProcessQueue.add(BULLMQ_QUEUES.CASINO.GAME_POST_PROCESS.name, {
                 gameRoundId: round.id.toString(),
             });
         }
