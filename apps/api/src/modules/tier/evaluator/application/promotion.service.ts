@@ -32,36 +32,49 @@ export class PromotionService {
 
         const currentTier = userTier.tier;
 
-        // 1. 유저 상태 업데이트
+        // 1. 유저 상태 업데이트 및 보너스 산정
         const previousHighestPriority = userTier.highestPromotedPriority;
-        const shouldAwardBonus = userTier.updateTier(targetTier.id, targetTier.priority);
+        const isEligibleForPromotionBonus = userTier.updateTier(targetTier.id, targetTier.priority);
 
-        await this.userTierRepository.save(userTier);
+        let earnedBonusAmount = new Prisma.Decimal(0);
+        let skippedReason: string | undefined;
+        let bonusClaimedAt: Date | null = null;
 
-        if (shouldAwardBonus) {
-            // 건너뛴 모든 티어의 보너스를 합산하여 지급 (유저 역차별 방지)
+        if (isEligibleForPromotionBonus) {
+            // [Logic] 지급 가능 여부와 관계없이, 이번 승급으로 인해 발생한 보너스 원천 금액을 먼저 계산합니다.
             const allTiers = await this.tierRepository.findAll();
             const eligibleTiers = allTiers.filter(t =>
                 t.priority > previousHighestPriority &&
                 t.priority <= targetTier.priority
             );
 
-            const totalBonus = eligibleTiers.reduce(
+            earnedBonusAmount = eligibleTiers.reduce(
                 (sum, t) => sum.add(t.levelUpBonusUsd),
                 new Prisma.Decimal(0)
             );
 
-            if (totalBonus.gt(0)) {
-                // TODO: 승급 보너스 지급 로직 통합 (Wallet/Bonus Module)
-                if (eligibleTiers.length > 1) {
-                    this.logger.log(`User ${userId} promoted multiple tiers at once. Total bonus sum: ${totalBonus} USD (Tiers: ${eligibleTiers.map(t => t.code).join(', ')})`);
+            // [Logic] 보너스 금액이 존재할 때만 지급 정책을 확인합니다.
+            if (earnedBonusAmount.gt(0)) {
+                if (config?.isBonusEnabled !== false) {
+                    if (targetTier.isImmediateBonusEnabled) {
+                        // [Action] 즉시 지급 대상 티어인 경우 (Wallet 모듈 연동 지점)
+                        this.logger.log(`[Promotion:Auto-Payout] User ${userId} received ${earnedBonusAmount} USD bonus.`);
+                        bonusClaimedAt = new Date();
+                    } else {
+                        // [Action] 클레임 대상 티어인 경우 (유저가 직접 버튼을 눌러야 함)
+                        this.logger.log(`[Promotion:Claim-Wait] User ${userId} earned ${earnedBonusAmount} USD bonus. Waiting for claim.`);
+                    }
                 } else {
-                    this.logger.log(`User ${userId} is eligible for level-up bonus: ${totalBonus} USD`);
+                    // [Policy] 시스템 설정에 의해 지급이 중단된 경우
+                    skippedReason = 'GLOBAL_BONUS_DISABLED';
+                    this.logger.debug(`Bonus is disabled globally. Skipping payout for user ${userId}, but recorded as skipped.`);
                 }
             }
         }
 
-        // 2. 히스토리 스냅샷 기록 (AuditService 사용)
+        await this.userTierRepository.save(userTier);
+
+        // 2. 히스토리 스냅샷 기록 (Audit 및 클레임 증빙용)
         await this.tierAuditService.recordTierChange({
             userId,
             fromTierId: currentTier.id,
@@ -75,7 +88,17 @@ export class PromotionService {
             rakebackRateSnap: userTier.customRakebackRate ?? targetTier.rakebackRate,
             requirementUsdSnap: targetTier.requirementUsd,
             requirementDepositUsdSnap: targetTier.requirementDepositUsd,
-            cumulativeDepositUsdSnap: userTier.currentPeriodDepositUsd, // 임시로 현재 주기 입금액 사용 (추후 필요시 total 필드 추가)
+            cumulativeDepositUsdSnap: userTier.totalDepositUsd,
+            bonusAmount: earnedBonusAmount.gt(0) && !skippedReason ? earnedBonusAmount : null,
+            bonusClaimedAt: bonusClaimedAt,
+            skippedBonusAmount: skippedReason ? earnedBonusAmount : null,
+            skippedReason: skippedReason,
+        });
+
+        // 3. 실시간 통계 갱신 (승급 카운트 증분)
+        await this.tierAuditService.incrementTierStats(new Date(), targetTier.id, {
+            promotedCount: 1,
+            totalBonusPaidUsd: bonusClaimedAt ? earnedBonusAmount : undefined,
         });
 
         this.logger.log(`User ${userId} promoted to ${targetTier.code} (from ${currentTier.code})`);

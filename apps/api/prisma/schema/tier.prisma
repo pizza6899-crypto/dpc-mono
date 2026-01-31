@@ -4,9 +4,13 @@ model TierConfig {
   // [Master Switch] 시스템 제어
   isPromotionEnabled Boolean @default(true) @map("is_promotion_enabled") // 승급 심사 전체 ON/OFF
   isDowngradeEnabled Boolean @default(false) @map("is_downgrade_enabled") // 강등 심사 전체 ON/OFF
+  isBonusEnabled     Boolean @default(true) @map("is_bonus_enabled") // 보너스 지급 전체 ON/OFF
 
-  // [Scheduler] 배치 심사 실행 시간 (0-23 UTC)
-  evaluationHourUtc Int @default(0) @map("evaluation_hour_utc")
+  // [Default Policy] 기본 정책
+  defaultGracePeriodDays Int @default(7) @map("default_grace_period_days") // 기본 강등 유예 기간 (Days)
+
+  // [Scheduler] 배치 심사 설정
+  triggerIntervalMinutes Int @default(60) @map("trigger_interval_minutes") // 심사 트리거 주기 (분 단위)
 
   // [Audit] 누가 언제 바꿨나
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -38,6 +42,7 @@ model Tier {
   // Benefits
   levelUpBonusUsd                Decimal @default(0) @map("level_up_bonus_usd") @db.Decimal(32, 18)
   levelUpBonusWageringMultiplier Decimal @default(0) @map("level_up_bonus_wagering_multiplier") @db.Decimal(8, 4) // 승급 보너스 베팅 요구 배수 (0=즉시 출금)
+  isImmediateBonusEnabled        Boolean @default(false) @map("is_immediate_bonus_enabled") // 해당 티어 승급 시 보너스 즉시 지급 여부
   compRate                       Decimal @default(0) @map("comp_rate") @db.Decimal(8, 4) // 통합 컴프 요율
   lossbackRate                   Decimal @default(0) @map("lossback_rate") @db.Decimal(8, 4) // 손실 기반 캐시백 요율
   rakebackRate                   Decimal @default(0) @map("rakeback_rate") @db.Decimal(8, 4) // 롤링 기반 레이크백 요율
@@ -94,7 +99,8 @@ model UserTier {
   // 상태 데이터
   totalEffectiveRollingUsd Decimal  @default(0) @map("total_effective_rolling_usd") @db.Decimal(32, 18)
   currentPeriodRollingUsd  Decimal  @default(0) @map("current_period_rolling_usd") @db.Decimal(32, 18)
-  currentPeriodDepositUsd  Decimal  @default(0) @map("current_period_deposit_usd") @db.Decimal(32, 18) // [추가] 이번 주기 누적 입금액 (승급 심사용)
+  totalDepositUsd          Decimal  @default(0) @map("total_deposit_usd") @db.Decimal(32, 18) // [추가] 평생 누적 입금액
+  currentPeriodDepositUsd  Decimal  @default(0) @map("current_period_deposit_usd") @db.Decimal(32, 18) // 이번 주기 누적 입금액
   lastEvaluationAt         DateTime @default(now()) @map("last_evaluation_at")
 
   // 승급/강등 제어
@@ -185,7 +191,6 @@ model TierHistory {
   @@map("tier_history")
 }
 
-// 1. 등급별 통계 요약 (모니터링용)
 // 1. 등급별 시계열 통계 요약 (모니터링 및 대시보드용)
 model TierStats {
   // timestamp: 해당 통계 구간의 시작 시각 (UTC)
@@ -201,9 +206,11 @@ model TierStats {
   totalRollingUsd   Decimal @default(0) @map("total_rolling_usd") @db.Decimal(32, 18)
   totalDepositUsd   Decimal @default(0) @map("total_deposit_usd") @db.Decimal(32, 18) // [추가] 해당 구간 동안 발생한 합계 입금액
 
-  // [Changes] 해당 구간 동안 발생한 티어 변동 인원 수
-  promotedCount Int @default(0) @map("promoted_count")
-  demotedCount  Int @default(0) @map("demoted_count")
+  // [Changes] 해당 구간 동안 발생한 티어 변동 및 심사 결과 인원 수
+  promotedCount   Int @default(0) @map("promoted_count") // 승급 인원
+  demotedCount    Int @default(0) @map("demoted_count") // 강등 인원
+  maintainedCount Int @default(0) @map("maintained_count") // 유지 인원
+  graceCount      Int @default(0) @map("grace_count") // 유예 대상 인원
 
   updatedAt DateTime @updatedAt @map("updated_at")
 

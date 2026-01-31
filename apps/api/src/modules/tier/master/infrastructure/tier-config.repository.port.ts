@@ -3,7 +3,9 @@ import { TierConfig } from '../domain/tier-config.entity';
 export interface UpdateTierConfigProps {
     isPromotionEnabled?: boolean;
     isDowngradeEnabled?: boolean;
-    evaluationHourUtc?: number;
+    isBonusEnabled?: boolean;
+    defaultGracePeriodDays?: number;
+    triggerIntervalMinutes?: number;
     updatedBy: bigint;
 }
 

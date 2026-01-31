@@ -21,13 +21,11 @@ export class TierConfigService {
     async update(props: {
         isPromotionEnabled?: boolean;
         isDowngradeEnabled?: boolean;
+        isBonusEnabled?: boolean;
+        defaultGracePeriodDays?: number;
+        triggerIntervalMinutes?: number;
         updatedBy: bigint;
     }): Promise<TierConfig> {
-        const existing = await this.find();
-
-        return this.repository.update({
-            ...props,
-            evaluationHourUtc: existing.evaluationHourUtc,
-        });
+        return this.repository.update(props);
     }
 }

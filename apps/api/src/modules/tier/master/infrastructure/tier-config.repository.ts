@@ -33,7 +33,9 @@ export class TierConfigRepository implements TierConfigRepositoryPort {
             data: {
                 isPromotionEnabled: props.isPromotionEnabled,
                 isDowngradeEnabled: props.isDowngradeEnabled,
-                evaluationHourUtc: props.evaluationHourUtc,
+                isBonusEnabled: props.isBonusEnabled,
+                defaultGracePeriodDays: props.defaultGracePeriodDays,
+                triggerIntervalMinutes: props.triggerIntervalMinutes,
                 // @ts-ignore: Prisma Client type sync lag (Schema is BigInt)
                 updatedBy: props.updatedBy,
             }

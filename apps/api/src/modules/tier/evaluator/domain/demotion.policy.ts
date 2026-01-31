@@ -11,7 +11,7 @@ export interface DemotionResult {
 
 @Injectable()
 export class DemotionPolicy {
-    evaluate(userTier: UserTier, allTiers: Tier[]): DemotionResult {
+    evaluate(userTier: UserTier, allTiers: Tier[], gracePeriodDays: number): DemotionResult {
         if (!userTier.tier) return { action: 'MAINTAIN' };
 
         // 0. 잠금 상태 확인 (LOCKED인 경우 심사 제외)
@@ -38,9 +38,9 @@ export class DemotionPolicy {
             }
             return { action: 'MAINTAIN' }; // 유예 기간 중이면 대기
         } else {
-            // 정상 상태에서 조건 미달 -> 유예 기간(Grace) 진입 (7일 부여)
+            // 정상 상태에서 조건 미달 -> 유예 기간(Grace) 진입 (설정된 유예 기간 부여)
             const graceEndsAt = new Date();
-            graceEndsAt.setDate(graceEndsAt.getDate() + 7);
+            graceEndsAt.setDate(graceEndsAt.getDate() + gracePeriodDays);
 
             const nextLowerTier = allTiers
                 .filter(t => t.priority < userTier.tier!.priority)

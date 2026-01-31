@@ -54,6 +54,11 @@ export class UpdateTierAdminRequestDto {
     @Min(0)
     levelUpBonusWageringMultiplier?: number;
 
+    @ApiProperty({ required: false, description: 'Whether to pay bonus immediately (true) or wait for claim (false)' })
+    @IsOptional()
+    @IsBoolean()
+    isImmediateBonusEnabled?: boolean;
+
     @ApiProperty({ required: false })
     @IsOptional()
     @IsNumber()

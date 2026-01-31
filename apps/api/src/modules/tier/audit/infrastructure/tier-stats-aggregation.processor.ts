@@ -31,19 +31,32 @@ export class TierStatsAggregationProcessor extends BaseProcessor<any, void> {
             // 현재 모든 티어의 기준 정보 조회
             const allTiers = await this.tierRepository.findAll();
 
-            // 각 티어별 현재 사용자 수 집계 (GROUP BY)
-            const counts = await this.userTierRepository.countGroupByTierId();
-            const countMap = new Map<string, number>();
-            counts.forEach(c => countMap.set(c.tierId.toString(), c.count));
+            // 각 티어 및 상태별 현재 사용자 수 집계 (GROUP BY tierId, status)
+            const stats = await this.userTierRepository.countGroupByTierAndStatus();
+
+            // 데이터 분석을 위한 맵 구성
+            const tierMap = new Map<string, { total: number; maintained: number; grace: number }>();
+
+            stats.forEach(s => {
+                const tid = s.tierId.toString();
+                const current = tierMap.get(tid) || { total: 0, maintained: 0, grace: 0 };
+
+                current.total += s.count;
+                if (s.status === 'ACTIVE') current.maintained += s.count;
+                if (s.status === 'GRACE') current.grace += s.count;
+
+                tierMap.set(tid, current);
+            });
 
             let processedCount = 0;
             for (const tier of allTiers) {
-                // 해당 티어에 유저가 없는 경우 0으로 처리
-                const userCount = countMap.get(tier.id.toString()) ?? 0;
+                const counts = tierMap.get(tier.id.toString()) || { total: 0, maintained: 0, grace: 0 };
 
-                // 개별 티어 스냅샷 기록을 위한 비동기 잡 생성
+                // 개별 티어 스냅샷 기록 (유지/유예 인원 포함)
                 await this.auditService.recordTierStats(now, tier.id, {
-                    snapshotUserCount: userCount
+                    snapshotUserCount: counts.total,
+                    maintainedCount: counts.maintained,
+                    graceCount: counts.grace
                 });
                 processedCount++;
             }

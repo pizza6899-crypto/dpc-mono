@@ -83,4 +83,32 @@ export class TierAuditRepository implements TierAuditRepositoryPort {
             update: data,
         });
     }
+
+    async incrementStats(
+        timestamp: Date,
+        tierId: bigint,
+        data: Partial<Record<keyof UpdateTierStatsProps, number | Prisma.Decimal>>,
+    ): Promise<void> {
+        const updateData: any = {};
+        for (const [key, value] of Object.entries(data)) {
+            updateData[key] = { increment: value };
+        }
+
+        await this.tx.tierStats.upsert({
+            where: { timestamp_tierId: { timestamp, tierId } },
+            create: {
+                timestamp,
+                tierId,
+                snapshotUserCount: typeof data.snapshotUserCount === 'number' ? data.snapshotUserCount : 0,
+                totalBonusPaidUsd: data.totalBonusPaidUsd instanceof Prisma.Decimal ? data.totalBonusPaidUsd : 0,
+                totalRollingUsd: data.totalRollingUsd instanceof Prisma.Decimal ? data.totalRollingUsd : 0,
+                totalDepositUsd: data.totalDepositUsd instanceof Prisma.Decimal ? data.totalDepositUsd : 0,
+                promotedCount: typeof data.promotedCount === 'number' ? data.promotedCount : 0,
+                demotedCount: typeof data.demotedCount === 'number' ? data.demotedCount : 0,
+                maintainedCount: typeof data.maintainedCount === 'number' ? data.maintainedCount : 0,
+                graceCount: typeof data.graceCount === 'number' ? data.graceCount : 0,
+            },
+            update: updateData,
+        });
+    }
 }

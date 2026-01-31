@@ -27,6 +27,7 @@ export class UserTierRepository implements UserTierRepositoryPort {
             tierId: userTier.tierId,
             totalEffectiveRollingUsd: userTier.totalEffectiveRollingUsd,
             currentPeriodRollingUsd: userTier.currentPeriodRollingUsd,
+            totalDepositUsd: userTier.totalDepositUsd,
             currentPeriodDepositUsd: userTier.currentPeriodDepositUsd,
             lastEvaluationAt: userTier.lastEvaluationAt,
             highestPromotedPriority: userTier.highestPromotedPriority,
@@ -74,6 +75,19 @@ export class UserTierRepository implements UserTierRepositoryPort {
         }));
     }
 
+    async countGroupByTierAndStatus(): Promise<{ tierId: bigint; status: import('@prisma/client').UserTierStatus; count: number }[]> {
+        const groups = await this.tx.userTier.groupBy({
+            by: ['tierId', 'status'],
+            _count: { userId: true }
+        });
+
+        return groups.map(g => ({
+            tierId: g.tierId,
+            status: g.status,
+            count: g._count.userId
+        }));
+    }
+
     async incrementRolling(userId: bigint, amountUsd: number): Promise<UserTier> {
         const record = await this.tx.userTier.update({
             where: { userId },
@@ -94,6 +108,7 @@ export class UserTierRepository implements UserTierRepositoryPort {
         const record = await this.tx.userTier.update({
             where: { userId },
             data: {
+                totalDepositUsd: { increment: amountUsd },
                 currentPeriodDepositUsd: { increment: amountUsd },
             },
             include: {

@@ -21,6 +21,7 @@ export interface CreateTierHistoryProps {
     requirementDepositUsdSnap: Prisma.Decimal;
     cumulativeDepositUsdSnap: Prisma.Decimal;
     bonusAmount?: Prisma.Decimal | null;
+    bonusClaimedAt?: Date | null;
     skippedBonusAmount?: Prisma.Decimal | null;
     skippedReason?: string | null;
     changeBy?: string | null;
@@ -37,6 +38,8 @@ export interface UpdateTierStatsProps {
     totalDepositUsd?: Prisma.Decimal;
     promotedCount?: number;
     demotedCount?: number;
+    maintainedCount?: number;
+    graceCount?: number;
 }
 
 
@@ -60,5 +63,11 @@ export abstract class TierAuditRepositoryPort {
         timestamp: Date,
         tierId: bigint,
         data: UpdateTierStatsProps,
+    ): Promise<void>;
+
+    abstract incrementStats(
+        timestamp: Date,
+        tierId: bigint,
+        data: Partial<Record<keyof UpdateTierStatsProps, number | Prisma.Decimal>>,
     ): Promise<void>;
 }

@@ -37,6 +37,9 @@ export class TierAdminResponseDto {
     @ApiProperty({ type: String })
     levelUpBonusWageringMultiplier: string;
 
+    @ApiProperty()
+    isImmediateBonusEnabled: boolean;
+
     @ApiProperty({ type: String })
     compRate: string;
 

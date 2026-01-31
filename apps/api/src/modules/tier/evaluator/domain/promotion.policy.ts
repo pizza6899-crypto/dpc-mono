@@ -9,7 +9,7 @@ export class PromotionPolicy {
      */
     checkQualification(userTier: UserTier, candidateTier: Tier): boolean {
         const isRollingMet = userTier.totalEffectiveRollingUsd.gte(candidateTier.requirementUsd);
-        const isDepositMet = userTier.currentPeriodDepositUsd.gte(candidateTier.requirementDepositUsd);
+        const isDepositMet = userTier.totalDepositUsd.gte(candidateTier.requirementDepositUsd);
 
         return isRollingMet && isDepositMet;
     }

@@ -41,7 +41,12 @@ export class DemotionService {
             rakebackRateSnap: userTier.customRakebackRate ?? targetTier.rakebackRate,
             requirementUsdSnap: targetTier.requirementUsd,
             requirementDepositUsdSnap: targetTier.requirementDepositUsd,
-            cumulativeDepositUsdSnap: userTier.currentPeriodDepositUsd,
+            cumulativeDepositUsdSnap: userTier.totalDepositUsd,
+        });
+
+        // 3. 실시간 통계 갱신 (강등 카운트 증분)
+        await this.tierAuditService.incrementTierStats(new Date(), targetTier.id, {
+            demotedCount: 1,
         });
 
         this.logger.log(`User ${userId} demoted to ${targetTier.code} (from ${currentTier.code})`);

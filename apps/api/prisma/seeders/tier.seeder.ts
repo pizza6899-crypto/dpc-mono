@@ -108,8 +108,19 @@ export async function seedTiers(prisma: PrismaClient) {
     // 글로벌 설정 초기화
     await prisma.tierConfig.upsert({
         where: { id: 1n },
-        update: { evaluationHourUtc: 20 },
-        create: { id: 1n, isPromotionEnabled: true, isDowngradeEnabled: false, evaluationHourUtc: 20 },
+        update: {
+            triggerIntervalMinutes: 60,
+            isBonusEnabled: true,
+            defaultGracePeriodDays: 7,
+        },
+        create: {
+            id: 1n,
+            isPromotionEnabled: true,
+            isDowngradeEnabled: false,
+            isBonusEnabled: true,
+            triggerIntervalMinutes: 60,
+            defaultGracePeriodDays: 7,
+        },
     });
 
     console.log(`✅ ${TIERS.length}개의 모든 필드가 명시된 티어 데이터 시딩이 완료되었습니다!`);

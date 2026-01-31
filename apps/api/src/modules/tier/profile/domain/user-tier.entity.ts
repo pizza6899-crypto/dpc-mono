@@ -20,6 +20,7 @@ export class UserTier {
         // States
         public totalEffectiveRollingUsd: Prisma.Decimal,
         public currentPeriodRollingUsd: Prisma.Decimal,
+        public totalDepositUsd: Prisma.Decimal,
         public currentPeriodDepositUsd: Prisma.Decimal,
         public lastEvaluationAt: Date,
         // Controls
@@ -105,6 +106,7 @@ export class UserTier {
      */
     incrementDeposit(amount: Prisma.Decimal | number): void {
         const decimalAmount = new Prisma.Decimal(amount);
+        this.totalDepositUsd = this.totalDepositUsd.add(decimalAmount);
         this.currentPeriodDepositUsd = this.currentPeriodDepositUsd.add(decimalAmount);
     }
 
@@ -139,7 +141,7 @@ export class UserTier {
     }>): UserTier {
         return new UserTier(
             data.id, data.userId, data.tierId,
-            data.totalEffectiveRollingUsd, data.currentPeriodRollingUsd, data.currentPeriodDepositUsd, data.lastEvaluationAt,
+            data.totalEffectiveRollingUsd, data.currentPeriodRollingUsd, data.totalDepositUsd, data.currentPeriodDepositUsd, data.lastEvaluationAt,
             data.highestPromotedPriority, data.lastBonusReceivedAt, data.status as UserTierStatus, data.graceEndsAt, data.lastTierChangedAt,
             data.customCompRate, data.customLossbackRate, data.customRakebackRate, data.customReloadBonusRate,
             data.customWithdrawalLimitUsd, data.isCustomWithdrawalUnlimited,

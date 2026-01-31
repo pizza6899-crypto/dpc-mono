@@ -34,6 +34,7 @@ export class InitializeUserTierService {
             // States
             new Prisma.Decimal(0), // totalEffectiveRollingUsd
             new Prisma.Decimal(0), // currentPeriodRollingUsd
+            new Prisma.Decimal(0), // totalDepositUsd [추가]
             new Prisma.Decimal(0), // currentPeriodDepositUsd
             new Date(),            // lastEvaluationAt
             // Controls

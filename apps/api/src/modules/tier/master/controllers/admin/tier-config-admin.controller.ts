@@ -1,4 +1,5 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Put, Req } from '@nestjs/common';
+import { Request } from 'express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserRoleType } from '@prisma/client';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
@@ -55,7 +56,7 @@ Enables or disables tier promotion and downgrade evaluation. / 티어 승급 및
     async updateConfig(
         @Body() dto: UpdateTierConfigAdminRequestDto,
         @CurrentUser() admin: AuthenticatedUser,
-        @Req() req: any,
+        @Req() req: Request & { __audit_before?: any; __audit_after?: any },
     ): Promise<TierConfigAdminResponseDto> {
         // [1] 변경 전 데이터 조회
         const before = await this.tierConfigService.find();
@@ -69,10 +70,12 @@ Enables or disables tier promotion and downgrade evaluation. / 티어 승급 및
         req.__audit_before = {
             isPromotionEnabled: before.isPromotionEnabled,
             isDowngradeEnabled: before.isDowngradeEnabled,
+            isBonusEnabled: before.isBonusEnabled,
         };
         req.__audit_after = {
             isPromotionEnabled: config.isPromotionEnabled,
             isDowngradeEnabled: config.isDowngradeEnabled,
+            isBonusEnabled: config.isBonusEnabled,
         };
 
         return this.mapToResponseDto(config);
@@ -82,7 +85,9 @@ Enables or disables tier promotion and downgrade evaluation. / 티어 승급 및
         return {
             isPromotionEnabled: config.isPromotionEnabled,
             isDowngradeEnabled: config.isDowngradeEnabled,
-            evaluationHourUtc: config.evaluationHourUtc,
+            isBonusEnabled: config.isBonusEnabled,
+            defaultGracePeriodDays: config.defaultGracePeriodDays,
+            triggerIntervalMinutes: config.triggerIntervalMinutes,
             updatedAt: config.updatedAt,
             updatedBy: config.updatedBy?.toString() ?? null,
         };

@@ -10,6 +10,7 @@ export interface UpdateTierProps {
     evaluationCycle?: TierEvaluationCycle;
     levelUpBonusUsd?: number;
     levelUpBonusWageringMultiplier?: number;
+    isImmediateBonusEnabled?: boolean;
     compRate?: number;
     lossbackRate?: number;
     rakebackRate?: number;

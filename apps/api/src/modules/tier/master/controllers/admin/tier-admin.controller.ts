@@ -80,6 +80,7 @@ export class TierAdminController {
             evaluationCycle: tier.evaluationCycle,
             levelUpBonusUsd: tier.levelUpBonusUsd.toString(),
             levelUpBonusWageringMultiplier: tier.levelUpBonusWageringMultiplier.toString(),
+            isImmediateBonusEnabled: tier.isImmediateBonusEnabled,
             compRate: tier.compRate.toString(),
             lossbackRate: tier.lossbackRate.toString(),
             rakebackRate: tier.rakebackRate.toString(),
@@ -116,6 +117,7 @@ export class TierAdminController {
                 levelUp: {
                     bonus: tier.levelUpBonusUsd.toString(),
                     wager: tier.levelUpBonusWageringMultiplier.toString(),
+                    isImmediate: tier.isImmediateBonusEnabled,
                 }
             },
             limits: {

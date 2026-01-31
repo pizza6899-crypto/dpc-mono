@@ -19,4 +19,13 @@ export class UpdateTierConfigAdminRequestDto {
     @IsBoolean()
     @IsOptional()
     isDowngradeEnabled?: boolean;
+
+    @ApiProperty({ description: 'Enable bonus / 보너스 활성화 여부', example: true, required: false })
+    @IsBoolean()
+    @IsOptional()
+    isBonusEnabled?: boolean;
+
+    @ApiProperty({ description: 'Default grace period days / 기본 강등 유예 기간 (일)', example: 7, required: false })
+    @IsOptional()
+    defaultGracePeriodDays?: number;
 }

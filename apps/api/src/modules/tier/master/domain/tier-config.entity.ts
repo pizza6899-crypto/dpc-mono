@@ -9,7 +9,9 @@ export class TierConfig {
     constructor(
         public readonly isPromotionEnabled: boolean,
         public readonly isDowngradeEnabled: boolean,
-        public readonly evaluationHourUtc: number,
+        public readonly isBonusEnabled: boolean,
+        public readonly defaultGracePeriodDays: number,
+        public readonly triggerIntervalMinutes: number,
         public readonly updatedAt: Date,
         public readonly updatedBy: bigint | null,
     ) { }
@@ -18,9 +20,11 @@ export class TierConfig {
         return new TierConfig(
             data.isPromotionEnabled,
             data.isDowngradeEnabled,
-            data.evaluationHourUtc,
-            Cast.date(data.updatedAt),
-            data.updatedBy ? Cast.bigint(data.updatedBy) : null,
+            data.isBonusEnabled,
+            data.defaultGracePeriodDays,
+            data.triggerIntervalMinutes,
+            new Date(data.updatedAt),
+            data.updatedBy ? BigInt(data.updatedBy.toString()) : null,
         );
     }
 }

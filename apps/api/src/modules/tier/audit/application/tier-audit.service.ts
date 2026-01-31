@@ -51,10 +51,43 @@ export class TierAuditService {
             totalDepositUsd?: Prisma.Decimal;
             promotedCount?: number;
             demotedCount?: number;
+            maintainedCount?: number;
+            graceCount?: number;
         },
     ): Promise<void> {
         await this.recordQueue.add(BULLMQ_QUEUES.TIER.STATS_RECORD.name, {
             type: TierAuditJobType.RECORD_TIER_SNAPSHOT,
+            data: {
+                timestamp,
+                tierId: tierId.toString(),
+                metrics: {
+                    ...metrics,
+                    totalBonusPaidUsd: metrics.totalBonusPaidUsd?.toString(),
+                    totalRollingUsd: metrics.totalRollingUsd?.toString(),
+                    totalDepositUsd: metrics.totalDepositUsd?.toString(),
+                },
+            },
+        });
+    }
+
+    /**
+     * 등급별 통계 수치를 누적(Increment)합니다. (승급/강등 이벤트 시 비동기 호출)
+     */
+    async incrementTierStats(
+        timestamp: Date,
+        tierId: bigint,
+        metrics: {
+            totalBonusPaidUsd?: Prisma.Decimal;
+            totalRollingUsd?: Prisma.Decimal;
+            totalDepositUsd?: Prisma.Decimal;
+            promotedCount?: number;
+            demotedCount?: number;
+            maintainedCount?: number;
+            graceCount?: number;
+        },
+    ): Promise<void> {
+        await this.recordQueue.add(BULLMQ_QUEUES.TIER.STATS_RECORD.name, {
+            type: TierAuditJobType.INCREMENT_TIER_STATS,
             data: {
                 timestamp,
                 tierId: tierId.toString(),
@@ -92,6 +125,34 @@ export class TierAuditService {
         };
 
         await this.auditRepository.updateStats(
+            normalizedTime,
+            BigInt(tierId),
+            normalizedMetrics,
+        );
+    }
+
+    /**
+     * [Internal] BullMQ 프로세서에서 호출하는 실제 통계 누적 로직입니다.
+     */
+    async handleIncrementStats(data: RecordTierSnapshotJobData): Promise<void> {
+        const { timestamp, tierId, metrics } = data;
+        const normalizedTime = new Date(timestamp);
+        normalizedTime.setUTCMinutes(0, 0, 0);
+
+        const normalizedMetrics: any = {
+            ...metrics,
+            totalBonusPaidUsd: metrics.totalBonusPaidUsd
+                ? new Prisma.Decimal(metrics.totalBonusPaidUsd)
+                : undefined,
+            totalRollingUsd: metrics.totalRollingUsd
+                ? new Prisma.Decimal(metrics.totalRollingUsd)
+                : undefined,
+            totalDepositUsd: metrics.totalDepositUsd
+                ? new Prisma.Decimal(metrics.totalDepositUsd)
+                : undefined,
+        };
+
+        await this.auditRepository.incrementStats(
             normalizedTime,
             BigInt(tierId),
             normalizedMetrics,

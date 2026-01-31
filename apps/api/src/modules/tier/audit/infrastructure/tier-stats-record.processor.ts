@@ -23,11 +23,15 @@ export class TierStatsRecordProcessor extends BaseProcessor<TierAuditJobPayload,
     protected async processJob(job: Job<TierAuditJobPayload>): Promise<void> {
         const { data: payload } = job;
 
-        if (!payload || payload.type !== TierAuditJobType.RECORD_TIER_SNAPSHOT) {
-            this.logger.warn(`Unknown or missing tier audit job type: ${payload?.type}`);
-            return;
+        switch (payload?.type) {
+            case TierAuditJobType.RECORD_TIER_SNAPSHOT:
+                await this.auditService.handleRecordStats(payload.data);
+                break;
+            case TierAuditJobType.INCREMENT_TIER_STATS:
+                await this.auditService.handleIncrementStats(payload.data);
+                break;
+            default:
+                this.logger.warn(`Unknown or missing tier audit job type: ${(payload as any)?.type}`);
         }
-
-        await this.auditService.handleRecordStats(payload.data);
     }
 }

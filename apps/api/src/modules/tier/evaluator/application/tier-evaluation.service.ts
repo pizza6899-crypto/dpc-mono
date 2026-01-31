@@ -26,12 +26,13 @@ export class TierEvaluationService {
         // 1. 글로벌 강등 설정 확인
         const config = await this.tierConfigRepository.find();
         const isDowngradeDisabled = config?.isDowngradeEnabled === false;
+        const gracePeriodDays = config?.defaultGracePeriodDays ?? 7;
 
-        let result = this.demotionPolicy.evaluate(userTier, allTiers);
+        let result = this.demotionPolicy.evaluate(userTier, allTiers, gracePeriodDays);
 
         // 강등이 비활성화된 경우, 어떤 결과가 나오더라도 MAINTAIN으로 강제 전환
         if (isDowngradeDisabled && result.action !== 'MAINTAIN') {
-            this.logger.debug(`Downgrade is disabled globally. Overriding evaluation result for user ${userId} to MAINTAIN.`);
+            this.logger.debug(`Downgrade is disabled globally (isDowngradeEnabled=false). Overriding evaluation result for user ${userId} to MAINTAIN.`);
             result = { action: 'MAINTAIN' };
         }
 
