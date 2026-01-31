@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserTierRepositoryPort } from '../infrastructure/user-tier.repository.port';
 import { UserTierStatus } from '@prisma/client';
+import { UserTierNotFoundException } from '../domain/tier-profile.exception';
 
 export interface UpdateUserTierStatusCommand {
     userId: bigint;
@@ -17,7 +18,7 @@ export class UpdateUserTierStatusService {
     async execute(command: UpdateUserTierStatusCommand): Promise<void> {
         const userTier = await this.userTierRepository.findByUserId(command.userId);
         if (!userTier) {
-            throw new NotFoundException(`User tier record not found for user ${command.userId}`);
+            throw new UserTierNotFoundException();
         }
 
         // Validate status transition if needed
