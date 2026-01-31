@@ -105,21 +105,19 @@ export class UserTierRepository implements UserTierRepositoryPort {
         return UserTier.fromPersistence(record);
     }
 
-    async findUsersNeedingEvaluation(now: Date, limit?: number): Promise<UserTier[]> {
+    async findIdsNeedingEvaluation(now: Date, limit: number, cursor?: bigint): Promise<bigint[]> {
         const records = await this.tx.userTier.findMany({
             where: {
-                nextEvaluationAt: {
-                    lte: now
-                }
+                nextEvaluationAt: { lte: now }
             },
             take: limit,
-            include: {
-                tier: { include: { translations: true } },
-                demotionWarningTargetTier: { include: { translations: true } }
-            }
+            skip: cursor ? 1 : 0,
+            cursor: cursor ? { userId: cursor } : undefined,
+            select: { userId: true },
+            orderBy: { userId: 'asc' }
         });
 
-        return records.map(UserTier.fromPersistence);
+        return records.map(r => r.userId);
     }
 
     async findMany(params: {

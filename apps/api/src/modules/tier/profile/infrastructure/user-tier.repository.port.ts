@@ -7,7 +7,7 @@ export abstract class UserTierRepositoryPort {
     abstract countGroupByTierId(): Promise<{ tierId: bigint; count: number }[]>;
     abstract incrementRolling(userId: bigint, amountUsd: number): Promise<UserTier>;
     abstract incrementDeposit(userId: bigint, amountUsd: number): Promise<UserTier>;
-    abstract findUsersNeedingEvaluation(now: Date, limit?: number): Promise<UserTier[]>;
+    abstract findIdsNeedingEvaluation(now: Date, limit: number, cursor?: bigint): Promise<bigint[]>;
     abstract findMany(params: {
         tierId?: bigint;
         status?: UserTierStatus;

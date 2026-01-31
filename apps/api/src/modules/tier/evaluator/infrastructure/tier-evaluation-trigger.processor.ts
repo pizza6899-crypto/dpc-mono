@@ -25,31 +25,47 @@ export class TierEvaluationTriggerProcessor extends BaseProcessor<any, void> {
     }
 
     protected async processJob(job: Job<any>): Promise<void> {
-        this.logger.log('Starting tier evaluation trigger...');
+        this.logger.log('Starting tier evaluation trigger (Cursor-based Streaming)...');
 
         try {
             const now = nowUtc();
-            // 심사가 필요한 유저들을 대량으로 조회 (한 번에 1000명 단위로 처리 가능하도록 페이징 처리 가능)
-            // 여기서는 단순화하여 일정 수량 가져오기
-            const targets = await this.userTierRepository.findUsersNeedingEvaluation(now, 500);
+            const BATCH_SIZE = 1000;
+            const hourKey = now.toISOString().substring(0, 13).replace(/[-T]/g, ''); // YYYYMMDDHH
 
-            if (targets.length === 0) {
-                this.logger.log('No users need evaluation at this time.');
-                return;
+            let cursor: bigint | undefined;
+            let totalQueued = 0;
+
+            while (true) {
+                // 1. 심사 대상 ID 조회 (커서 기반)
+                const userIds = await this.userTierRepository.findIdsNeedingEvaluation(now, BATCH_SIZE, cursor);
+
+                if (userIds.length === 0) break;
+
+                // 2. 개별 유저 심사 잡 생성 (중복 방지용 JobId 부여)
+                const evalJobs = userIds.map(userId => ({
+                    name: `evaluate-user-${userId}`,
+                    data: {
+                        type: TierEvaluationJobType.EVALUATE_USER,
+                        data: { userId: userId.toString() }
+                    } as TierEvaluationJobPayload,
+                    opts: {
+                        // 중복 방지 핵심: 같은 시각에 같은 유저에 대한 잡은 하나만 허용
+                        jobId: `eval:${userId}:${hourKey}`,
+                    }
+                }));
+
+                await this.userEvaluationQueue.addBulk(evalJobs);
+
+                totalQueued += userIds.length;
+                cursor = userIds[userIds.length - 1]; // 다음 루프를 위한 커서 갱신
+
+                this.logger.debug(`Queued ${userIds.length} users... (Total: ${totalQueued})`);
+
+                // 모든 데이터를 다 가져왔으면 종료
+                if (userIds.length < BATCH_SIZE) break;
             }
 
-            // 개별 유저 심사 잡 생성
-            const evalJobs = targets.map(target => ({
-                name: `evaluate-user-${target.userId}`,
-                data: {
-                    type: TierEvaluationJobType.EVALUATE_USER,
-                    data: { userId: target.userId.toString() }
-                } as TierEvaluationJobPayload,
-            }));
-
-            await this.userEvaluationQueue.addBulk(evalJobs);
-
-            this.logger.log(`Tier evaluation triggered for ${targets.length} users.`);
+            this.logger.log(`Tier evaluation trigger completed. Total dispatched: ${totalQueued}`);
         } catch (error) {
             this.logger.error('Failed to trigger tier evaluation:', error);
             throw error;
