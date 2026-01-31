@@ -29,7 +29,7 @@ export interface UpdateTierProps {
 }
 
 export abstract class TierRepositoryPort {
-    abstract findAll(): Promise<Tier[]>;
+    abstract findAll(options?: { ignoreCache?: boolean }): Promise<Tier[]>;
     abstract findByPriority(priority: number): Promise<Tier | null>;
     abstract findByCode(code: string): Promise<Tier | null>;
     abstract findNextTierByPriority(priority: number): Promise<Tier | null>;

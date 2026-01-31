@@ -14,16 +14,17 @@ export class TierRepository implements TierRepositoryPort {
         private readonly cacheService: CacheService,
     ) { }
 
-    async findAll(): Promise<Tier[]> {
-        const records = await this.cacheService.getOrSet(
-            CACHE_CONFIG.TIER.LIST,
-            async () => {
-                return await this.tx.tier.findMany({
-                    include: { translations: true },
-                    orderBy: { priority: 'asc' }
-                });
-            }
-        );
+    async findAll(options?: { ignoreCache?: boolean }): Promise<Tier[]> {
+        const fetcher = async () => {
+            return await this.tx.tier.findMany({
+                include: { translations: true },
+                orderBy: { priority: 'asc' }
+            });
+        };
+
+        const records = options?.ignoreCache
+            ? await fetcher()
+            : await this.cacheService.getOrSet(CACHE_CONFIG.TIER.LIST, fetcher);
 
         return records.map(record => Tier.fromPersistence(record));
     }

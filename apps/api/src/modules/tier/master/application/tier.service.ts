@@ -47,7 +47,8 @@ export class TierService {
         this.policy.validateUpdateProps(props);
 
         // 전체 티어 정합성 검증 (우선순위 중복 및 요건 역전 방지)
-        const allTiers = await this.findAll();
+        // 동시성 문제를 방지하기 위해 캐시를 무시하고 DB에서 최신 목록을 직접 가져옵니다.
+        const allTiers = await this.repository.findAll({ ignoreCache: true });
         const updatedTiers = allTiers.map(t => {
             if (t.code === props.code) {
                 // 수정될 티어의 가상 객체 생성 (Prisma.Decimal 호환을 위해 값 변환 필요할 수 있음)
