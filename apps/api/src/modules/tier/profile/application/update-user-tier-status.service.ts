@@ -28,8 +28,8 @@ export class UpdateUserTierStatusService {
         userTier.status = command.status;
 
         // If locked, we might want to clear grace periods or warnings?
-        // Or keep them but not evaluate? BatchEvaluation checks status?
-        // Let's check BatchEvaluationService filter.
+        // Or keep them but not evaluate? TierEvaluation checks status?
+        // Let's check TierEvaluationService filter.
 
         if (command.status === UserTierStatus.LOCKED) {
             userTier.note = command.reason ? `[LOCKED] ${command.reason}` : userTier.note;

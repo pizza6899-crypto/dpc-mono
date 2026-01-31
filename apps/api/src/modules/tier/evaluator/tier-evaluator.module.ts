@@ -8,7 +8,7 @@ import { PromotionService } from './application/promotion.service';
 import { DemotionService } from './application/demotion.service';
 import { AccumulateRollingService } from './application/accumulate-rolling.service';
 import { AccumulateDepositService } from './application/accumulate-deposit.service';
-import { BatchEvaluationService } from './application/batch-evaluation.service';
+import { TierEvaluationService } from './application/tier-evaluation.service';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
 import { TIER_EVALUATOR_QUEUES } from './infrastructure/tier-evaluator.bullmq';
@@ -35,10 +35,10 @@ import { TierMasterModule } from '../master/tier-master.module';
         DemotionService,
         AccumulateRollingService,
         AccumulateDepositService,
-        BatchEvaluationService,
+        TierEvaluationService,
         TierEvaluationTriggerProcessor,
         TierUserEvaluationProcessor,
     ],
-    exports: [AccumulateRollingService, AccumulateDepositService, BatchEvaluationService, DemotionService],
+    exports: [AccumulateRollingService, AccumulateDepositService, TierEvaluationService, DemotionService],
 })
 export class TierEvaluatorModule { }

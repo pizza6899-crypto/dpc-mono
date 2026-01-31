@@ -6,7 +6,7 @@ import {
     TierAuditRepositoryPort,
     CreateTierHistoryProps,
     UpdateTierStatsProps,
-} from '../infrastructure/audit.repository.port';
+} from '../infrastructure/tier-audit.repository.port';
 import { Prisma } from '@prisma/client';
 import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
 import {

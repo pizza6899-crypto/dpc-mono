@@ -6,7 +6,7 @@ import {
     TierAuditRepositoryPort,
     CreateTierHistoryProps,
     UpdateTierStatsProps,
-} from './audit.repository.port';
+} from './tier-audit.repository.port';
 import { TierHistory } from '../domain/tier-history.entity';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
 

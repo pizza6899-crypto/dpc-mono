@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { TierAuditRepositoryPort } from '../../audit/infrastructure/audit.repository.port';
+import { TierAuditRepositoryPort } from '../../audit/infrastructure/tier-audit.repository.port';
 import { TierHistory } from '../../audit/domain/tier-history.entity';
 import { GetUserTierHistoryQueryDto } from '../controllers/user/dto/request/get-user-tier-history.query.dto';
 import { PaginatedData } from 'src/common/http/types/pagination.types';

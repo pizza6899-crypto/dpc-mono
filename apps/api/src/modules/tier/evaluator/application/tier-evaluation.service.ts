@@ -6,8 +6,8 @@ import { DemotionService } from './demotion.service';
 import { TierEvaluationCycle } from '@prisma/client';
 
 @Injectable()
-export class BatchEvaluationService {
-    private readonly logger = new Logger(BatchEvaluationService.name);
+export class TierEvaluationService {
+    private readonly logger = new Logger(TierEvaluationService.name);
 
     constructor(
         private readonly userTierRepository: UserTierRepositoryPort,
