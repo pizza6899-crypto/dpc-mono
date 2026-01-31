@@ -3,7 +3,9 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository.port';
 import { DemotionPolicy } from '../domain/demotion.policy';
 import { DemotionService } from './demotion.service';
+import { Tier } from '../../master/domain/tier.entity';
 import { TierEvaluationCycle } from '@prisma/client';
+import { TierConfigRepositoryPort } from '../../master/infrastructure/tier-config.repository.port';
 
 @Injectable()
 export class TierEvaluationService {
@@ -11,16 +13,27 @@ export class TierEvaluationService {
 
     constructor(
         private readonly userTierRepository: UserTierRepositoryPort,
+        private readonly tierConfigRepository: TierConfigRepositoryPort,
         private readonly demotionPolicy: DemotionPolicy,
         private readonly demotionService: DemotionService,
     ) { }
 
     @Transactional()
-    async evaluateUser(userId: bigint, allTiers: any[]): Promise<void> {
+    async evaluateUser(userId: bigint, allTiers: Tier[]): Promise<void> {
         const userTier = await this.userTierRepository.findByUserId(userId);
         if (!userTier || !userTier.tier) return;
 
-        const result = this.demotionPolicy.evaluate(userTier, allTiers);
+        // 1. 글로벌 강등 설정 확인
+        const config = await this.tierConfigRepository.find();
+        const isDowngradeDisabled = config?.isDowngradeEnabled === false;
+
+        let result = this.demotionPolicy.evaluate(userTier, allTiers);
+
+        // 강등이 비활성화된 경우, 어떤 결과가 나오더라도 MAINTAIN으로 강제 전환
+        if (isDowngradeDisabled && result.action !== 'MAINTAIN') {
+            this.logger.debug(`Downgrade is disabled globally. Overriding evaluation result for user ${userId} to MAINTAIN.`);
+            result = { action: 'MAINTAIN' };
+        }
 
         switch (result.action) {
             case 'MAINTAIN':
@@ -29,9 +42,8 @@ export class TierEvaluationService {
                 await this.userTierRepository.save(userTier);
                 break;
             case 'GRACE':
-                const targetTier = allTiers.find(t => t.priority < userTier.tier!.priority) ?? userTier.tier;
-                if (targetTier) {
-                    userTier.setDemotionWarning(targetTier.id, result.graceEndsAt!);
+                if (result.targetTier) {
+                    userTier.setDemotionWarning(result.targetTier.id, result.graceEndsAt!);
                 }
                 await this.userTierRepository.save(userTier);
                 break;

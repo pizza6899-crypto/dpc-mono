@@ -41,7 +41,16 @@ export class DemotionPolicy {
             // 정상 상태에서 조건 미달 -> 유예 기간(Grace) 진입 (7일 부여)
             const graceEndsAt = new Date();
             graceEndsAt.setDate(graceEndsAt.getDate() + 7);
-            return { action: 'GRACE', graceEndsAt };
+
+            const nextLowerTier = allTiers
+                .filter(t => t.priority < userTier.tier!.priority)
+                .sort((a, b) => b.priority - a.priority)[0];
+
+            return {
+                action: 'GRACE',
+                graceEndsAt,
+                targetTier: nextLowerTier ?? undefined
+            };
         }
     }
 }
