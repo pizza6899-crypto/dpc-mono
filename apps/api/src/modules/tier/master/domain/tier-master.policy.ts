@@ -77,4 +77,55 @@ export class TierMasterPolicy {
             HttpStatus.BAD_REQUEST,
         );
     }
+
+    /**
+     * 전체 티어 목록의 정합성을 검증합니다.
+     * [Rule 1] 티어 간 우선순위(Priority)는 중복될 수 없습니다.
+     * [Rule 2] 높은 우선순위의 티어는 낮은 우선순위의 티어보다 요구 실적이 크거나 같아야 합니다.
+     * @param allTiers 검증할 전체 티어 객체 목록
+     */
+    validateTierIntegrity(allTiers: {
+        priority: number;
+        requirementUsd: { gte: (val: any) => boolean };
+        requirementDepositUsd: { gte: (val: any) => boolean };
+        maintenanceRollingUsd: { gte: (val: any) => boolean };
+        code: string;
+    }[]): void {
+        const sortedTiers = [...allTiers].sort((a, b) => a.priority - b.priority);
+
+        for (let i = 0; i < sortedTiers.length; i++) {
+            const current = sortedTiers[i];
+
+            // Rule 1: 우선순위 중복 체크
+            if (i > 0 && current.priority === sortedTiers[i - 1].priority) {
+                throw new TierMasterException(
+                    `Duplicate priority detected: ${current.priority} (Codes: ${sortedTiers[i - 1].code}, ${current.code})`,
+                    MessageCode.VALIDATION_ERROR,
+                    HttpStatus.BAD_REQUEST,
+                );
+            }
+
+            // Rule 2: 요구치 역전 체크 (이전 티어보다 요구치가 낮으면 안됨)
+            if (i > 0) {
+                const prev = sortedTiers[i - 1];
+                if (!current.requirementUsd.gte(prev.requirementUsd)) {
+                    this.throwInversionError('Requirement USD', current.code, prev.code);
+                }
+                if (!current.requirementDepositUsd.gte(prev.requirementDepositUsd)) {
+                    this.throwInversionError('Requirement Deposit USD', current.code, prev.code);
+                }
+                if (!current.maintenanceRollingUsd.gte(prev.maintenanceRollingUsd)) {
+                    this.throwInversionError('Maintenance Rolling USD', current.code, prev.code);
+                }
+            }
+        }
+    }
+
+    private throwInversionError(fieldName: string, higherCode: string, lowerCode: string): void {
+        throw new TierMasterException(
+            `${fieldName} of higher tier (${higherCode}) cannot be lower than that of lower tier (${lowerCode}).`,
+            MessageCode.VALIDATION_ERROR,
+            HttpStatus.BAD_REQUEST,
+        );
+    }
 }

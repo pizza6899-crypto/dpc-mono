@@ -4,6 +4,7 @@ import { Tier } from '../domain/tier.entity';
 export interface UpdateTierProps {
     code: string;
     requirementUsd?: number;
+    priority?: number;
     requirementDepositUsd?: number;
     maintenanceRollingUsd?: number;
     evaluationCycle?: TierEvaluationCycle;

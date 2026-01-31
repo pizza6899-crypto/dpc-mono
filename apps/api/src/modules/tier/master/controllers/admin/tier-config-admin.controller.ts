@@ -7,43 +7,43 @@ import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { ApiStandardResponse, ApiStandardErrors } from 'src/common/http/decorators/api-response.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
-import { TierSettingsService } from '../../application/tier-settings.service';
-import { TierSettings } from '../../domain/tier-settings.entity';
-import { TierSettingsAdminResponseDto } from './dto/response/tier-settings-admin.response.dto';
-import { UpdateTierSettingsAdminRequestDto } from './dto/request/update-tier-settings-admin.request.dto';
+import { TierConfigService } from '../../application/tier-config.service';
+import { TierConfig } from '../../domain/tier-config.entity';
+import { TierConfigAdminResponseDto } from './dto/response/tier-config-admin.response.dto';
+import { UpdateTierConfigAdminRequestDto } from './dto/request/update-tier-config-admin.request.dto';
 
-@Controller('admin/tier-settings')
-@ApiTags('Admin Tier Settings')
+@Controller('admin/tier-config')
+@ApiTags('Admin Tier Config')
 @ApiStandardErrors()
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
-export class TierSettingsAdminController {
-    constructor(private readonly tierSettingsService: TierSettingsService) { }
+export class TierConfigAdminController {
+    constructor(private readonly tierConfigService: TierConfigService) { }
 
     @Get()
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
-        summary: 'Get tier settings / 티어 설정 조회',
-        description: 'Retrieves the overall tier evaluation settings of the system. / 시스템의 전반적인 티어 심사 설정을 조회합니다.',
+        summary: 'Get tier config / 티어 설정 조회',
+        description: 'Retrieves the overall tier evaluation configuration of the system. / 시스템의 전반적인 티어 심사 설정을 조회합니다.',
     })
-    @ApiStandardResponse(TierSettingsAdminResponseDto)
-    async getSettings(): Promise<TierSettingsAdminResponseDto> {
-        const settings = await this.tierSettingsService.find();
-        return this.mapToResponseDto(settings);
+    @ApiStandardResponse(TierConfigAdminResponseDto)
+    async getConfig(): Promise<TierConfigAdminResponseDto> {
+        const config = await this.tierConfigService.find();
+        return this.mapToResponseDto(config);
     }
 
     @Put()
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
-        summary: 'Update tier settings / 티어 설정 수정',
+        summary: 'Update tier config / 티어 설정 수정',
         description: `
 Enables or disables tier promotion and downgrade evaluation. / 티어 승급 및 강등 심사 활성화 여부를 수정합니다.
 **Note**: The evaluation batch hour (evaluationHourUtc) cannot be modified through this API. / **주의**: 배치 심사 시간(evaluationHourUtc)은 이 API를 통해 수정할 수 없습니다.
     `,
     })
-    @ApiStandardResponse(TierSettingsAdminResponseDto)
+    @ApiStandardResponse(TierConfigAdminResponseDto)
     @AuditLog({
         type: LogType.ACTIVITY,
-        action: 'UPDATE_TIER_SETTINGS',
+        action: 'UPDATE_TIER_CONFIG',
         category: 'TIER',
         extractMetadata: (req) => {
             return {
@@ -52,15 +52,15 @@ Enables or disables tier promotion and downgrade evaluation. / 티어 승급 및
             };
         },
     })
-    async updateSettings(
-        @Body() dto: UpdateTierSettingsAdminRequestDto,
+    async updateConfig(
+        @Body() dto: UpdateTierConfigAdminRequestDto,
         @CurrentUser() admin: AuthenticatedUser,
         @Req() req: any,
-    ): Promise<TierSettingsAdminResponseDto> {
+    ): Promise<TierConfigAdminResponseDto> {
         // [1] 변경 전 데이터 조회
-        const before = await this.tierSettingsService.find();
+        const before = await this.tierConfigService.find();
 
-        const settings = await this.tierSettingsService.update({
+        const config = await this.tierConfigService.update({
             ...dto,
             updatedBy: admin.id,
         });
@@ -71,20 +71,20 @@ Enables or disables tier promotion and downgrade evaluation. / 티어 승급 및
             isDowngradeEnabled: before.isDowngradeEnabled,
         };
         req.__audit_after = {
-            isPromotionEnabled: settings.isPromotionEnabled,
-            isDowngradeEnabled: settings.isDowngradeEnabled,
+            isPromotionEnabled: config.isPromotionEnabled,
+            isDowngradeEnabled: config.isDowngradeEnabled,
         };
 
-        return this.mapToResponseDto(settings);
+        return this.mapToResponseDto(config);
     }
 
-    private mapToResponseDto(settings: TierSettings): TierSettingsAdminResponseDto {
+    private mapToResponseDto(config: TierConfig): TierConfigAdminResponseDto {
         return {
-            isPromotionEnabled: settings.isPromotionEnabled,
-            isDowngradeEnabled: settings.isDowngradeEnabled,
-            evaluationHourUtc: settings.evaluationHourUtc,
-            updatedAt: settings.updatedAt,
-            updatedBy: settings.updatedBy?.toString() ?? null,
+            isPromotionEnabled: config.isPromotionEnabled,
+            isDowngradeEnabled: config.isDowngradeEnabled,
+            evaluationHourUtc: config.evaluationHourUtc,
+            updatedAt: config.updatedAt,
+            updatedBy: config.updatedBy?.toString() ?? null,
         };
     }
 }

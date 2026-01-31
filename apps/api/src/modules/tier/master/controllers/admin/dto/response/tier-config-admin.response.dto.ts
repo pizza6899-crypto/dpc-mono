@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class TierSettingsAdminResponseDto {
+export class TierConfigAdminResponseDto {
     @ApiProperty({ description: 'Enable promotion / 승급 활성화 여부', example: true })
     isPromotionEnabled: boolean;
 

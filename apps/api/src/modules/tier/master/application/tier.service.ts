@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { TierRepositoryPort } from '../infrastructure/tier.repository.port';
 import type { UpdateTierProps } from '../infrastructure/tier.repository.port';
 import { Tier } from '../domain/tier.entity';
@@ -44,6 +45,24 @@ export class TierService {
         // 도메인 정책 검증
         this.policy.validateTranslations(props.translations, existingLanguages);
         this.policy.validateUpdateProps(props);
+
+        // 전체 티어 정합성 검증 (우선순위 중복 및 요건 역전 방지)
+        const allTiers = await this.findAll();
+        const updatedTiers = allTiers.map(t => {
+            if (t.code === props.code) {
+                // 수정될 티어의 가상 객체 생성 (Prisma.Decimal 호환을 위해 값 변환 필요할 수 있음)
+                // 실제 Tier.fromPersistence와 유사하게 동작하도록 구성
+                return {
+                    ...t,
+                    priority: props.priority ?? t.priority,
+                    requirementUsd: props.requirementUsd !== undefined ? new Prisma.Decimal(props.requirementUsd) : t.requirementUsd,
+                    requirementDepositUsd: props.requirementDepositUsd !== undefined ? new Prisma.Decimal(props.requirementDepositUsd) : t.requirementDepositUsd,
+                    maintenanceRollingUsd: props.maintenanceRollingUsd !== undefined ? new Prisma.Decimal(props.maintenanceRollingUsd) : t.maintenanceRollingUsd,
+                } as any;
+            }
+            return t;
+        });
+        this.policy.validateTierIntegrity(updatedTiers);
 
         // 이미지 처리 (monolithic way: AttachFileService 활용)
         const { imageFileId } = props;

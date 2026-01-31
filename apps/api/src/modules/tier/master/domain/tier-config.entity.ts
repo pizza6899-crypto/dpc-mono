@@ -1,9 +1,9 @@
 import { Prisma } from '@prisma/client';
 import { Cast, PersistenceOf } from 'src/infrastructure/persistence/persistence.util';
 
-export type TierSettingsRawPayload = Prisma.TierConfigGetPayload<object>;
+export type TierConfigRawPayload = Prisma.TierConfigGetPayload<object>;
 
-export class TierSettings {
+export class TierConfig {
     public static readonly SINGLETON_ID = 1n;
 
     constructor(
@@ -14,8 +14,8 @@ export class TierSettings {
         public readonly updatedBy: bigint | null,
     ) { }
 
-    static fromPersistence(data: PersistenceOf<TierSettingsRawPayload>): TierSettings {
-        return new TierSettings(
+    static fromPersistence(data: PersistenceOf<TierConfigRawPayload>): TierConfig {
+        return new TierConfig(
             data.isPromotionEnabled,
             data.isDowngradeEnabled,
             data.evaluationHourUtc,

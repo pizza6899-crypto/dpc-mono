@@ -13,14 +13,14 @@ export class TierMasterException extends DomainException {
     }
 }
 
-export class TierSettingsNotFoundException extends TierMasterException {
+export class TierConfigNotFoundException extends TierMasterException {
     constructor() {
         super(
-            'Tier settings not found', // 내부 ID 노출 없이 간결한 메시지 유지
+            'Tier configuration not found', // 내부 ID 노출 없이 간결한 메시지 유지
             MessageCode.TIER_NOT_FOUND,
             HttpStatus.NOT_FOUND,
         );
-        this.name = 'TierSettingsNotFoundException';
+        this.name = 'TierConfigNotFoundException';
     }
 }
 export class TierNotFoundException extends TierMasterException {
