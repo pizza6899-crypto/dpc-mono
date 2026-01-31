@@ -6,10 +6,11 @@ import type { AuditLogRepositoryPort } from '../../ports/out';
 import type { LogJobData } from '../../domain';
 import { LogType } from '../../domain';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
-import { BULLMQ_QUEUES, getQueueConfig } from 'src/infrastructure/bullmq/bullmq.constants';
+import { getQueueConfig } from 'src/infrastructure/bullmq/bullmq.constants';
+import { AUDIT_QUEUES } from '../audit-log.bullmq';
 import { ClsService } from 'nestjs-cls';
 
-const criticalConfig = getQueueConfig(BULLMQ_QUEUES.AUDIT.CRITICAL);
+const criticalConfig = getQueueConfig(AUDIT_QUEUES.CRITICAL);
 
 interface LogQueueJobData {
     id: string;

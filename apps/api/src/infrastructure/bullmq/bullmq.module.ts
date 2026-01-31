@@ -4,17 +4,18 @@ import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bullmq';
 import { EnvModule } from 'src/common/env/env.module';
 import { EnvService } from 'src/common/env/env.service';
-import { ALL_BULLMQ_QUEUES } from './bullmq.constants';
 import { BullMqSchedulerService } from './bullmq.scheduler.service';
 
 /**
- * 프로젝트 전체의 BullMQ 인프라를 전용 모듈입니다.
- * 1. Redis 연결 설정 (Root)
- * 2. 모든 도메인 큐 등록 (Register)
- * 3. 전역(Global) 모듈로 설정하여 어디서든 InjectQueue 가능
+ * 프로젝트 전체의 BullMQ 인프라를 담당하는 모듈입니다.
+ * 1. Redis 연결 설정 (Default & WORKER)
+ * 2. 공통 스케줄러(Cron) 관리
+ * 
+ * [주의] 각 도메인 큐는 해당 도메인 모듈(Feature Module)에서 직접 registerQueue() 해야 합니다.
  */
 @Module({
     imports: [
+        EnvModule,
         // 1. 인큐용 커넥션 (기본)
         BullModule.forRootAsync({
             imports: [EnvModule],
@@ -43,8 +44,6 @@ import { BullMqSchedulerService } from './bullmq.scheduler.service';
             }),
             inject: [EnvService],
         }),
-        // 중앙 집중식 큐 등록
-        BullModule.registerQueue(...ALL_BULLMQ_QUEUES),
     ],
     providers: [BullMqSchedulerService],
     exports: [BullModule],

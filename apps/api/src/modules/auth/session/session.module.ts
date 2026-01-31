@@ -19,14 +19,17 @@ import { BullModule } from '@nestjs/bullmq';
 import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
 import { EnvModule } from 'src/common/env/env.module';
 import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
+import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
+import { AUTH_QUEUES } from './infrastructure/session.bullmq';
 
 @Module({
   imports: [
     RedisModule, // SessionTrackerService가 RedisService 사용
     EnvModule, // ExpireSessionsScheduler가 EnvService 사용
     AuditLogModule, // Audit 로그 사용
+    BullMqModule,
     BullModule.registerQueue({
-      name: BULLMQ_QUEUES.AUTH.SESSION_CLEANUP.name,
+      name: AUTH_QUEUES.SESSION_CLEANUP.name,
     }),
   ],
   controllers: [

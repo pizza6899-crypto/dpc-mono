@@ -1,8 +1,8 @@
-// apps/api/src/infrastructure/bullmq/bullmq.types.ts
-
 import { RegisterQueueOptions } from '@nestjs/bullmq';
 import { WorkerOptions } from 'bullmq';
 import { Scope } from '@nestjs/common';
+
+export const BULLMQ_DEFAULT_TIMEZONE = 'Asia/Tokyo';
 
 /**
  * NestJS BullMQ 전용 프로세서 설정

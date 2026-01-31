@@ -16,6 +16,8 @@ import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 import { WalletModule } from 'src/modules/wallet/wallet.module';
 import { CasinoModule } from '../../casino.module';
 import { WhitecliffExceptionFilter } from './infrastructure/whitecliff-exception.filter';
+import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
+import { CASINO_QUEUES } from '../../infrastructure/casino.bullmq';
 
 @Module({
   imports: [
@@ -26,8 +28,9 @@ import { WhitecliffExceptionFilter } from './infrastructure/whitecliff-exception
     ExchangeModule,
     AuditLogModule,
     WalletModule,
+    BullMqModule,
     BullModule.registerQueue({
-      name: BULLMQ_QUEUES.CASINO.WHITECLIFF_HISTORY.name,
+      name: CASINO_QUEUES.WHITECLIFF_HISTORY.name,
     }),
   ],
   controllers: [

@@ -52,12 +52,20 @@ import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { AUDIT_LOG_REPOSITORY } from './ports/out';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
+import { BullModule } from '@nestjs/bullmq';
+import { AUDIT_QUEUES } from './infrastructure/audit-log.bullmq';
 
 @Module({
   imports: [
     PrismaModule,
     SnowflakeModule,
     BullMqModule,
+    BullModule.registerQueue({
+      name: AUDIT_QUEUES.CRITICAL.name,
+    }),
+    BullModule.registerQueue({
+      name: AUDIT_QUEUES.HEAVY.name,
+    }),
   ],
   providers: [
     {

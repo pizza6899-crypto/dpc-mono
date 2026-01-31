@@ -12,6 +12,8 @@ import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
 import { ExchangeRateValidator } from './application/exchange-rate-validator.service';
 import { ExchangeController } from './controllers/exchange.controller';
 import { AdminExchangeController } from './controllers/admin-exchange.controller';
+import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
+import { EXCHANGE_QUEUES } from './infrastructure/exchange.bullmq';
 
 @Module({
   imports: [
@@ -20,8 +22,9 @@ import { AdminExchangeController } from './controllers/admin-exchange.controller
     EnvModule,
     HttpModule,
     AuditLogModule,
+    BullMqModule,
     BullModule.registerQueue({
-      name: BULLMQ_QUEUES.EXCHANGE.RATE_SYNC.name,
+      name: EXCHANGE_QUEUES.RATE_SYNC.name,
     }),
   ],
   providers: [
