@@ -21,7 +21,7 @@ export class PasswordResetTokenRepository
     token: string;
     expiresAt: Date;
   }): Promise<PasswordResetTokenData> {
-    const result = await this.tx.userToken.create({
+    const result = await this.tx.verificationToken.create({
       data: {
         userId: params.userId,
         type: TokenType.PASSWORD_RESET,
@@ -42,7 +42,7 @@ export class PasswordResetTokenRepository
   }
 
   async findByToken(token: string): Promise<PasswordResetTokenData | null> {
-    const result = await this.tx.userToken.findFirst({
+    const result = await this.tx.verificationToken.findFirst({
       where: {
         token,
         type: TokenType.PASSWORD_RESET,
@@ -69,14 +69,14 @@ export class PasswordResetTokenRepository
   }
 
   async markAsUsed(tokenId: number): Promise<void> {
-    await this.tx.userToken.update({
+    await this.tx.verificationToken.update({
       where: { id: tokenId },
       data: { usedAt: new Date() },
     });
   }
 
   async deleteUnusedByUserId(userId: bigint): Promise<void> {
-    await this.tx.userToken.deleteMany({
+    await this.tx.verificationToken.deleteMany({
       where: {
         userId,
         type: TokenType.PASSWORD_RESET,

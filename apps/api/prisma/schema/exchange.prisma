@@ -1,0 +1,51 @@
+/**
+ * Exchange & Currency Management Schema
+ * 환율 및 통화 정보를 관리하기 위한 스키마
+ */
+
+model ExchangeRate {
+    id            Int                  @id @default(autoincrement())
+    baseCurrency  ExchangeCurrencyCode @map("base_currency")
+    quoteCurrency ExchangeCurrencyCode @map("quote_currency")
+    rate          Decimal              @db.Decimal(32, 18)
+    provider      ExchangeRateProvider
+    collectedAt   DateTime             @default(now()) @map("collected_at")
+    isActive      Boolean              @default(true) @map("is_active")
+    createdAt     DateTime             @default(now()) @map("created_at")
+    updatedAt     DateTime             @updatedAt @map("updated_at")
+    previousRate  Decimal?             @map("previous_rate") @db.Decimal(32, 18)
+    changeRate    Decimal?             @map("change_rate") @db.Decimal(8, 4)
+    isValid       Boolean              @default(true) @map("is_valid")
+
+    @@unique([baseCurrency, quoteCurrency, provider])
+    @@index([baseCurrency, quoteCurrency])
+    @@index([baseCurrency, quoteCurrency, provider])
+    @@index([collectedAt])
+    @@index([isActive, collectedAt])
+    @@map("exchange_rates")
+}
+
+enum ExchangeCurrencyCode {
+    USDT
+    USD
+    KRW
+    JPY
+    PHP
+    IDR
+    VND
+    BTC
+    ETH
+    SOL
+    XRP
+    DOGE
+    LTC
+    BCH
+    EOS
+    TRX
+}
+
+enum ExchangeRateProvider {
+    NOWPAYMENT
+    COINGECKO
+    OPEN_EXCHANGE_RATES
+}

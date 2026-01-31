@@ -58,7 +58,7 @@ model User {
   userPromotions         UserPromotion[]
   userSessions           UserSession[]           @relation("UserSessions")
   revokedSessions        UserSession[]           @relation("RevokedSessions")
-  userTokens             UserToken[]
+  verificationTokens     VerificationToken[]
   loginAttempts          LoginAttempt[]
   userTier               UserTier?
   tierHistory            TierHistory[]
@@ -73,47 +73,6 @@ model User {
   tiersUpdated           Tier[]                  @relation("TierUpdatedBy")
 
   @@map("users")
-}
-
-model ExchangeRate {
-  id            Int                  @id @default(autoincrement())
-  baseCurrency  ExchangeCurrencyCode @map("base_currency")
-  quoteCurrency ExchangeCurrencyCode @map("quote_currency")
-  rate          Decimal              @db.Decimal(32, 18)
-  provider      ExchangeRateProvider
-  collectedAt   DateTime             @default(now()) @map("collected_at")
-  isActive      Boolean              @default(true) @map("is_active")
-  createdAt     DateTime             @default(now()) @map("created_at")
-  updatedAt     DateTime             @updatedAt @map("updated_at")
-  previousRate  Decimal?             @map("previous_rate") @db.Decimal(32, 18)
-  changeRate    Decimal?             @map("change_rate") @db.Decimal(8, 4)
-  isValid       Boolean              @default(true) @map("is_valid")
-
-  @@unique([baseCurrency, quoteCurrency, provider])
-  @@index([baseCurrency, quoteCurrency])
-  @@index([baseCurrency, quoteCurrency, provider])
-  @@index([collectedAt])
-  @@index([isActive, collectedAt])
-  @@map("exchange_rates")
-}
-
-model UserToken {
-  id        Int       @id @default(autoincrement())
-  userId    BigInt    @map("user_id")
-  type      TokenType
-  token     String    @unique
-  expiresAt DateTime  @map("expires_at")
-  usedAt    DateTime? @map("used_at")
-  metadata  Json?     @default("{}")
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId, type])
-  @@index([type, expiresAt])
-  @@index([userId, type, usedAt])
-  @@index([expiresAt])
-  @@map("user_tokens")
 }
 
 enum SocialType {
@@ -135,25 +94,6 @@ enum UserStatus {
   CLOSED
 }
 
-enum ExchangeCurrencyCode {
-  USDT
-  USD
-  KRW
-  JPY
-  PHP
-  IDR
-  VND
-  BTC
-  ETH
-  SOL
-  XRP
-  DOGE
-  LTC
-  BCH
-  EOS
-  TRX
-}
-
 enum Language {
   EN
   KO
@@ -164,70 +104,4 @@ enum KycLevel {
   NONE
   BASIC
   FULL
-}
-
-enum GameAggregatorType {
-  WHITECLIFF
-  DC
-}
-
-enum GameProvider {
-  EVOLUTION
-  EVOLUTION_ASIA
-  EVOLUTION_INDIA
-  EVOLUTION_KOREA
-  PRAGMATIC_PLAY_LIVE
-  PG_SOFT
-  PRAGMATIC_PLAY_SLOTS
-  RELAX_GAMING
-  PLAYNGO
-}
-
-enum ExchangeRateProvider {
-  NOWPAYMENT
-  COINGECKO
-  OPEN_EXCHANGE_RATES
-}
-
-enum TokenType {
-  PASSWORD_RESET
-}
-
-enum LoginAttemptResult {
-  SUCCESS
-  FAILED
-}
-
-enum LoginFailureReason {
-  INVALID_CREDENTIALS
-  USER_NOT_FOUND
-  ACCOUNT_SUSPENDED
-  ACCOUNT_CLOSED
-  THROTTLE_LIMIT_EXCEEDED
-  UNKNOWN
-}
-
-model LoginAttempt {
-  id                BigInt              @id @default(autoincrement())
-  uid               String              @unique
-  userId            BigInt?             @map("user_id")
-  result            LoginAttemptResult
-  failureReason     LoginFailureReason? @map("failure_reason")
-  ipAddress         String?             @map("ip_address") @db.Inet
-  userAgent         String?             @map("user_agent")
-  deviceFingerprint String?             @map("device_fingerprint")
-  isMobile          Boolean?            @map("is_mobile")
-  attemptedAt       DateTime            @default(now()) @map("attempted_at")
-  email             String?
-  isAdmin           Boolean             @default(false) @map("is_admin")
-  user              User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
-
-  @@index([userId])
-  @@index([email])
-  @@index([ipAddress])
-  @@index([attemptedAt])
-  @@index([result])
-  @@index([email, attemptedAt])
-  @@index([ipAddress, attemptedAt])
-  @@map("login_attempts")
 }

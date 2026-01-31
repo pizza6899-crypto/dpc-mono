@@ -346,3 +346,20 @@ enum CasinoGameTransactionType {
   ROLLBACK
   JACKPOT
 }
+
+enum GameAggregatorType {
+  WHITECLIFF
+  DC
+}
+
+enum GameProvider {
+  EVOLUTION
+  EVOLUTION_ASIA
+  EVOLUTION_INDIA
+  EVOLUTION_KOREA
+  PRAGMATIC_PLAY_LIVE
+  PG_SOFT
+  PRAGMATIC_PLAY_SLOTS
+  RELAX_GAMING
+  PLAYNGO
+}
