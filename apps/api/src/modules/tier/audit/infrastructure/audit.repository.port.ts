@@ -1,11 +1,9 @@
 import type { TierHistory } from '../domain/tier-history.entity';
-import type { TierEvaluationLog } from '../domain/tier-evaluation-log.entity';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
 import type {
     Prisma,
     TierChangeType,
     TierHistoryReferenceType,
-    EvaluationStatus,
 } from '@prisma/client';
 
 export interface CreateTierHistoryProps {
@@ -41,14 +39,6 @@ export interface UpdateTierStatsProps {
     demotedCount?: number;
 }
 
-export interface UpdateEvaluationLogMetrics {
-    totalProcessedCount?: number;
-    promotedCount?: number;
-    demotedCount?: number;
-    gracePeriodCount?: number;
-    maintainedCount?: number;
-    skippedBonusCount?: number;
-}
 
 export abstract class TierAuditRepositoryPort {
     // 1. History
@@ -64,25 +54,6 @@ export abstract class TierAuditRepositoryPort {
         },
     ): Promise<PaginatedData<TierHistory>>;
 
-    // 2. Evaluation Log
-    abstract createEvaluationLog(
-        id: bigint,
-        timestamp: Date,
-        status: EvaluationStatus,
-    ): Promise<TierEvaluationLog>;
-    abstract updateEvaluationLog(
-        id: bigint,
-        startedAt: Date,
-        data: UpdateEvaluationLogMetrics & {
-            status?: EvaluationStatus;
-            finishedAt?: Date;
-            errorMessage?: string | null;
-        },
-    ): Promise<TierEvaluationLog>;
-    abstract findEvaluationLogs(
-        page?: number,
-        limit?: number,
-    ): Promise<PaginatedData<TierEvaluationLog>>;
 
     // 4. Stats
     abstract updateStats(

@@ -5,12 +5,10 @@ import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import {
     TierAuditRepositoryPort,
     CreateTierHistoryProps,
-    UpdateEvaluationLogMetrics,
     UpdateTierStatsProps,
 } from '../infrastructure/audit.repository.port';
-import { EvaluationStatus, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
-import { TierEvaluationLog } from '../domain/tier-evaluation-log.entity';
 import {
     TierAuditJobType,
     RecordTierSnapshotJobData,
@@ -39,35 +37,6 @@ export class TierAuditService {
         });
     }
 
-    /**
-     * 배치 심사 로그를 시작합니다.
-     * (주로 강등 및 등급 유지 심사를 위한 배치 작업입니다. 승급은 실시간으로 처리됩니다.)
-     */
-    async startEvaluationLog(): Promise<TierEvaluationLog> {
-        const { id, timestamp } = this.snowflakeService.generate();
-        return await this.auditRepository.createEvaluationLog(
-            id,
-            timestamp,
-            EvaluationStatus.RUNNING,
-        );
-    }
-
-    /**
-     * 배치 심사 로그를 완료하거나 에러를 기록합니다.
-     */
-    async finishEvaluationLog(
-        id: bigint,
-        startedAt: Date,
-        metrics: UpdateEvaluationLogMetrics,
-        error?: string,
-    ): Promise<void> {
-        await this.auditRepository.updateEvaluationLog(id, startedAt, {
-            ...metrics,
-            status: error ? EvaluationStatus.FAILED : EvaluationStatus.SUCCESS,
-            finishedAt: new Date(),
-            errorMessage: error ?? null,
-        });
-    }
 
     /**
      * 등급별 통계(TierStats)를 기록하거나 업데이트합니다.

@@ -36,19 +36,7 @@ export class TierUserEvaluationProcessor extends BaseProcessor<TierEvaluationJob
             // 모든 티어 정보 조회 (성능을 위해 캐시 활용 - TierRepository에서 내부적으로 캐싱됨)
             const allTiers = await this.tierRepository.findAll();
 
-            // 실제 유저 심사 로직 실행
-            // BatchEvaluationService.evaluateUser 메서드는 @Transactional이 걸려 있어 안전하게 수행됩니다.
-            // metrics 객체는 통계용 로그 기록을 위해 전달합니다 (단일 잡이므로 더미 카운터 전달)
-            const dummyMetrics = {
-                totalProcessedCount: 0,
-                promotedCount: 0,
-                demotedCount: 0,
-                gracePeriodCount: 0,
-                maintainedCount: 0,
-                skippedBonusCount: 0,
-            };
-
-            await this.batchEvaluationService.evaluateUser(userId, allTiers, dummyMetrics);
+            await this.batchEvaluationService.evaluateUser(userId, allTiers);
 
         } catch (error) {
             this.logger.error(`Failed to evaluate user ${userId}:`, error);

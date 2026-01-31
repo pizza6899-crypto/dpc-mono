@@ -185,29 +185,6 @@ model TierHistory {
   @@map("tier_history")
 }
 
-model TierEvaluationLog {
-  id         BigInt
-  startedAt  DateTime  @default(now()) @map("started_at")
-  finishedAt DateTime? @map("finished_at")
-
-  // 상태: RUNNING, SUCCESS, FAILED, PARTIAL
-  status EvaluationStatus @map("status")
-
-  // 통계 지표 (심층 분석용)
-  totalProcessedCount Int @default(0) @map("total_processed_count")
-  promotedCount       Int @default(0) @map("promoted_count") // 승급자
-  demotedCount        Int @default(0) @map("demoted_count") // 강등 확정자
-  gracePeriodCount    Int @default(0) @map("grace_period_count") // 강등 유예자
-  maintainedCount     Int @default(0) @map("maintained_count") // 등급 유지자
-  skippedBonusCount   Int @default(0) @map("skipped_bonus_count") // 보너스 지급 제한 인원
-
-  errorMessage String? @map("error_message") @db.Text
-
-  @@id([id, startedAt])
-  @@index([startedAt])
-  @@map("tier_evaluation_log")
-}
-
 // 1. 등급별 통계 요약 (모니터링용)
 // 1. 등급별 시계열 통계 요약 (모니터링 및 대시보드용)
 model TierStats {
@@ -236,18 +213,10 @@ model TierStats {
   @@map("tier_stats")
 }
 
-enum EvaluationStatus {
-  RUNNING
-  SUCCESS
-  FAILED
-  PARTIAL // 일부 유저 처리 중 오류 발생
-}
-
 enum TierHistoryReferenceType {
   CASINO_ROUND // 카지노 게임 결과 (Round 테이블 ID)
   WALLET_TRANSACTION // 입금/출금 등 거래 (Transaction 테이블 ID)
   ADMIN_LOG // 관리자 수동 조작 (AdminActionLog 테이블 ID)
-  EVALUATION_LOG // 티어 순환 심사 배치 결과 (TierEvaluationLog 테이블 ID)
 }
 
 enum TierChangeType {
