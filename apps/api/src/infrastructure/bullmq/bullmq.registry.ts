@@ -4,6 +4,7 @@ import { AUDIT_QUEUES } from 'src/modules/audit-log/infrastructure/audit-log.bul
 import { CASINO_QUEUES } from 'src/modules/casino/infrastructure/casino.bullmq';
 import { NOTIFICATION_QUEUES } from 'src/modules/notification/infrastructure/notification.bullmq';
 import { TIER_QUEUES } from 'src/modules/tier/audit/infrastructure/tier-audit.bullmq';
+import { TIER_EVALUATOR_QUEUES } from 'src/modules/tier/evaluator/infrastructure/tier-evaluator.bullmq';
 import { AFFILIATE_QUEUES } from 'src/modules/affiliate/commission/infrastructure/commission.bullmq';
 import { EXCHANGE_QUEUES } from 'src/modules/exchange/infrastructure/exchange.bullmq';
 import { AUTH_QUEUES } from 'src/modules/auth/session/infrastructure/session.bullmq';
@@ -17,6 +18,7 @@ export const BULLMQ_REGISTRY = {
     CASINO: CASINO_QUEUES,
     NOTIFICATION: NOTIFICATION_QUEUES,
     TIER: TIER_QUEUES,
+    TIER_EVALUATOR: TIER_EVALUATOR_QUEUES,
     AFFILIATE: AFFILIATE_QUEUES,
     EXCHANGE: EXCHANGE_QUEUES,
     AUTH: AUTH_QUEUES,

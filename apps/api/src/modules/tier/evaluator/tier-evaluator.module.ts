@@ -1,4 +1,5 @@
 import { Module, forwardRef } from '@nestjs/common';
+import { BullModule } from '@nestjs/bullmq';
 import { TierProfileModule } from '../profile/tier-profile.module';
 import { TierAuditModule } from '../audit/tier-audit.module';
 import { PromotionPolicy } from './domain/promotion.policy';
@@ -9,12 +10,23 @@ import { AccumulateRollingService } from './application/accumulate-rolling.servi
 import { AccumulateDepositService } from './application/accumulate-deposit.service';
 import { BatchEvaluationService } from './application/batch-evaluation.service';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
+import { TIER_EVALUATOR_QUEUES } from './infrastructure/tier-evaluator.bullmq';
+import { TierEvaluationTriggerProcessor } from './infrastructure/tier-evaluation-trigger.processor';
+import { TierUserEvaluationProcessor } from './infrastructure/tier-user-evaluation.processor';
+import { TierMasterModule } from '../master/tier-master.module';
 
 @Module({
     imports: [
         forwardRef(() => TierProfileModule),
+        TierMasterModule,
         TierAuditModule,
         ConcurrencyModule,
+        BullMqModule,
+        BullModule.registerQueue(
+            { name: TIER_EVALUATOR_QUEUES.EVALUATION_TRIGGER.name },
+            { name: TIER_EVALUATOR_QUEUES.USER_EVALUATION.name },
+        ),
     ],
     providers: [
         PromotionPolicy,
@@ -24,6 +36,8 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
         AccumulateRollingService,
         AccumulateDepositService,
         BatchEvaluationService,
+        TierEvaluationTriggerProcessor,
+        TierUserEvaluationProcessor,
     ],
     exports: [AccumulateRollingService, AccumulateDepositService, BatchEvaluationService, DemotionService],
 })
