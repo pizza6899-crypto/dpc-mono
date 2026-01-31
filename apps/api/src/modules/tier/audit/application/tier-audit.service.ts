@@ -21,8 +21,8 @@ export class TierAuditService {
     constructor(
         private readonly snowflakeService: SnowflakeService,
         private readonly auditRepository: TierAuditRepositoryPort,
-        @InjectQueue(BULLMQ_QUEUES.TIER.AUDIT.name)
-        private readonly auditQueue: Queue,
+        @InjectQueue(BULLMQ_QUEUES.TIER.STATS_RECORD.name)
+        private readonly recordQueue: Queue,
     ) { }
 
     /**
@@ -84,7 +84,7 @@ export class TierAuditService {
             demotedCount?: number;
         },
     ): Promise<void> {
-        await this.auditQueue.add(BULLMQ_QUEUES.TIER.AUDIT.name, {
+        await this.recordQueue.add(BULLMQ_QUEUES.TIER.STATS_RECORD.name, {
             type: TierAuditJobType.RECORD_TIER_SNAPSHOT,
             data: {
                 timestamp,
