@@ -1,69 +1,68 @@
-# Tier Module Architecture
+# Tier Module (티어 시스템)
 
-DPC의 **Tier Module**은 높은 복잡도를 가진 티어 시스템을 체계적으로 관리하기 위해 **4-Submodules Architecture**를 채택하고 있습니다.
-각 서브 모듈은 명확한 책임(Single Responsibility)을 가지며, 상호 의존성을 최소화하는 방향으로 설계되었습니다.
+## 1. 개요 (Overview)
+티어 모듈은 유저의 활동(입금, 롤링) 실적에 따라 등급(Tier)을 부여하고, 이에 따른 혜택(보너스, 요율 등)을 관리하는 핵심 도메인입니다.
+**DDD(Domain-Driven Design)** 원칙에 따라 설계되었으며, `Evaluator`(심사), `Profile`(상태), `Definitions`(설정)으로 역할이 명확히 분리되어 있습니다.
 
----
+## 2. 아키텍처 및 구조 (Architecture)
 
-## 🏛️ Architecture Overview
-
-티어 시스템은 다음 4개의 서브 모듈로 구성됩니다.
-
-| 서브 모듈 | 역할 요약 | 핵심 키워드 | 담당 영역 |
-| :--- | :--- | :--- | :--- |
-| **1. Definitions** | **기준 정보 관리** | `Definition`, `Policy`, `Rule` | 티어 등급 정의, 요구 실적(Requirements), 혜택(Benefits) 설정 |
-| **2. Profile** | **유저 상태 관리** | `State`, `Status`, `UserTier` | 유저의 현재 티어, 누적 실적, 유효 기간 등 "상태" 저장 및 조회 |
-| **3. Evaluator** | **판정 및 엔진** | `Engine`, `Calculate`, `Promotion` | 승급/강등 판정, 실적 계산, 유예 기간 부여 등 "비즈니스 로직" 수행 |
-| **4. Audit** | **감사 및 이력** | `History`, `Log`, `Stats` | 티어 변경 이력 기록, 배치 심사 로그, 통계 데이터 집계 |
+### 디렉토리 구조
+- **`definitions/`**: 티어 레벨, 설정, 환경 등 메타데이터 및 불변 정책 (Config)
+- **`profile/`**: 유저별 티어 현황(`UserTier`) 및 상태 관리 (State)
+- **`evaluator/`**: 승급/강등 심사 로직 및 정책 구현 (Brain)
+- **`reward/`**: 승급 보너스 지급 및 회수 관련 로직 (Reward)
+- **`audit/`**: 이력(`TierHistory`) 및 통계(`TierStats`) 기록 (Log)
 
 ---
 
-## 🚦 Traffic Control (When to use What)
+## 3. 핵심 정책 (Core Policies)
 
-기능을 구현할 때 어떤 모듈을 수정하거나 호출해야 할지 결정하는 가이드입니다.
+### A. 승급 (Promotion)
+승급은 **실시간(Real-time)**으로 이루어지며, 유저의 실적이 발생하는 즉시 트리거됩니다.
 
-### 🟢 Use **Evaluator** When...
-- 유저의 게임 실적(배팅액, 입금액)을 누적해야 할 때
-- 유저를 승급시키거나 강등 여부를 판단해야 할 때
-- **(주의)**: Evaluator는 로직을 수행할 뿐, 최종 상태 저장은 Profile 모듈의 Repository를 통해 수행합니다.
+1.  **트리거 시점**:
+    - 입금 발생 시: `AccumulateUserDepositService`
+    - 롤링(베팅) 발생 시: `AccumulateUserRollingService`
+2.  **자격 요건**:
+    - `statusRollingUsd` (현재 등급에서의 롤링 누적액) ≥ 목표 티어 요구량
+    - **AND** `lifetimeDepositUsd` (평생 입금액) ≥ 목표 티어 요구량
+3.  **주요 특징**:
+    - **점프 승급 (Jump Promotion)**: 자격 충족 시 여러 단계를 한 번에 승급할 수 있으며(예: Bronze → Gold), 건너뛴 중간 티어의 승급 보너스까지 합산하여 지급합니다.
+    - **중복 지급 방지**: `maxLevelAchieved`(최고 달성 레벨)을 기록하여, 강등 후 재승급 시에는 보너스를 중복 지급하지 않습니다.
+    - **보상 만료**: 승급 보너스는 설정된 기간(`rewardExpiryDays`) 내에 수령하지 않으면 만료됩니다.
 
-### 🟢 Use **Profile** When...
-- 특정 유저의 현재 티어 정보를 조회해야 할 때 (`My Page`, `Admin User Detail`)
-- 유저의 티어 정보를 강제로 수정해야 할 때 (관리자 기능)
-- 유저 생성 시 초기 티어를 할당해야 할 때
+### B. 강등 (Demotion)
+강등은 시스템 부하를 고려하여 **주기적 배치(Scheduled Batch)** 작업으로 수행됩니다.
 
-### 🟢 Use **Definitions** When...
-- 새로운 티어 등급을 만들거나 기존 혜택 수치를 조정해야 할 때
-- 티어 목록을 보여줘야 할 때 (UI, Admin)
-
-### 🟢 Use **Audit** When...
-- "이 유저가 언제 승급했지?" 이력을 조회해야 할 때
-- 전체 티어 분포 통계를 보고 싶을 때
-- 지난 밤 배치 작업이 성공했는지 로그를 확인해야 할 때
-
----
-
-## 🔄 Data Flow Example
-
-**Scenario: 유저가 $1,000 배팅을 하여 승급 조건을 달성함**
-
-1.  **Input**: 외부 게임 서버로부터 `BettingEvent` 발생
-2.  **Evaluator (`AccumulateRollingService`)**:
-    -   `Profile`에서 유저 현재 상태 조회 (`UserTier`)
-    -   `Definitions`에서 승급 기준 조회 (`Tier`)
-    -   실적 누적 후 승급 조건 충족 판정 (`PromotionPolicy`)
-3.  **Action**:
-    -   승급이 결정되면 `Profile`을 통해 유저 티어 정보 업데이트
-    -   변경 사실을 `Audit`에 기록 (`TierHistory`)
+1.  **트리거 시점**: `EvaluateUserTierService` 실행 시 (주로 일 1회 배치).
+2.  **심사 로직 (Maintenance Check)**:
+    - 현재 주기 실적(`currentPeriodRollingUsd`) < 유지 요구량(`maintainRollingRequiredUsd`) 일 경우 심사 대상이 됩니다.
+3.  **상태 흐름 (State Transition)**:
+    - **ACTIVE → GRACE**: 실적 미달 시 즉시 강등되지 않고 '유예 기간'을 부여합니다.
+    - **GRACE → MAINTAIN**: 유예 기간 내에 실적을 달성하면 정상 상태로 복구됩니다.
+    - **GRACE → DEMOTE**: 유예 기간이 종료될 때까지 실적을 못 채우면 강등됩니다.
+4.  **Soft Landing & Penalty**:
+    - 강등 시, 무조건 1단계 하락이 아니라 **현재보다 낮은 활성 티어 중 가장 높은 티어**로 이동합니다.
+    - 강등된 즉시 재승급하는 것을 막기 위해, 승급용 실적(`statusRollingUsd`)을 강등된 티어의 승급 요구량 한도(Cap)로 삭감합니다.
 
 ---
 
-## ⛔️ Anti-Patterns (하지 말아야 할 것)
+## 4. 기술적 구현 및 안전 장치 (Technical Details)
 
-1.  **Circular Dependency**:
-    -   `Definitions`는 다른 모듈을 참조하지 않아야 합니다. (가장 기반이 되는 모듈)
-    -   `Audit`는 비즈니스 로직(`Evaluator`)에 영향을 주면 안 됩니다.
-2.  **Direct Database Access**:
-    -   `Evaluator`가 직접 `UserTier` 테이블에 `UPDATE` 쿼리를 날리는 것보다, 도메인 메서드를 통해 상태를 변경하고 저장해야 합니다.
-3.  **Mixed Responsibilities**:
-    -   `Profile` 서비스 안에서 "승급 계산 로직"을 짜지 마십시오. 그건 `Evaluator`의 역할입니다.
+### 동시성 제어 (Concurrency Control)
+시스템 안정성을 위해 **Advisory Lock (`LOCK:USER_TIER:{userId}`)**을 적극적으로 사용합니다.
+- **시나리오**: 유저가 게임을 플레이하여 실시간으로 실적이 쌓이는 시점(Accumulate)과, 정기 심사(Evaluate) 배치가 동시에 실행될 경우 데이터 정합성이 깨질 수 있습니다.
+- **해결**: 두 프로세스 모두 유저 ID 기반의 락을 획득하여 순차적으로 실행되도록 강제함으로써, 실적 누락이나 상태 꼬임(Race Condition)을 원천 차단했습니다.
+
+### 데이터 무결성 (Integrity)
+- 모든 상태 변경은 `UserTier` 엔티티 내부의 도메인 메서드(`upgradeTier`, `downgradeTier`, `resetPeriodPerformance`)를 통해서만 이루어집니다.
+- 이를 통해 상태(Status), 레벨(Level), 날짜(Date) 등의 연관 데이터가 항상 일관성 있게 함께 변경됩니다.
+
+### 운영 유연성 (Operations)
+- **LOCKED 상태**: 특정 유저의 등급을 관리자가 고정(`LOCKED`)하면, 자동 심사 로직에서 제외되어 시스템이 임의로 승급/강등시키지 않습니다. (VIP Care 목적)
+- **Config**: 시스템 전체의 승급/강등/보너스 기능을 `TierConfig`를 통해 마스터 스위치로 On/Off 할 수 있습니다.
+
+---
+
+## 5. 향후 개선 과제 (TODO)
+- [ ] **캐싱 적용**: `AccumulateService`에서 `tierRepository.findAll()` 호출 빈도가 매우 높습니다(매 스핀마다 호출). Redis 등을 활용한 티어 정의 캐싱이 필요합니다.

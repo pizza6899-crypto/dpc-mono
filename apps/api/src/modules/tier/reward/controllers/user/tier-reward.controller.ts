@@ -33,7 +33,7 @@ export class TierRewardController {
         @CurrentUser() user: User,
         @Query() query: GetAvailableRewardsQueryDto,
     ): Promise<TierRewardResponseDto[]> {
-        const rewards = await this.getAvailableRewardsService.execute(user.id, query.lang);
+        const rewards = await this.getAvailableRewardsService.execute(user.id);
 
         return rewards.map(r => ({
             id: this.sqidsService.encode(r.id, SqidsPrefix.TIER_REWARD),

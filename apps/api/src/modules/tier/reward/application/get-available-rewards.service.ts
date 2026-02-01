@@ -1,16 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { TierRewardRepositoryPort } from '../infrastructure/tier-reward.repository.port';
 import { TierReward } from '../domain/tier-reward.entity';
-import { Language } from '@prisma/client';
-
-export interface AvailableRewardResult {
-    id: string; // sqid
-    tierName: string;
-    amount: string;
-    wageringMultiplier: string;
-    expiresAt: Date | null;
-    createdAt: Date;
-}
 
 @Injectable()
 export class GetAvailableRewardsService {
@@ -18,7 +8,10 @@ export class GetAvailableRewardsService {
         private readonly rewardRepository: TierRewardRepositoryPort,
     ) { }
 
-    async execute(userId: bigint, language: Language = Language.EN): Promise<TierReward[]> {
+    /**
+     * 유저의 수령 대기 중인 보상 목록을 조회합니다.
+     */
+    async execute(userId: bigint): Promise<TierReward[]> {
         return this.rewardRepository.findPendingByUserId(userId);
     }
 }
