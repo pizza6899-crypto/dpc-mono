@@ -49,8 +49,8 @@ export class TierPublicController {
             }
         }
 
-        // Priority 순으로 정렬
-        const sortedTiers = tiers.sort((a, b) => a.priority - b.priority);
+        // Rank 순으로 정렬
+        const sortedTiers = tiers.sort((a, b) => a.rank - b.rank);
 
         return sortedTiers.map(tier => this.mapToResponseDto(tier, targetLang));
     }
@@ -70,7 +70,7 @@ export class TierPublicController {
             name: translation?.name ?? tier.code,
             description: translation?.description ?? null,
             imageUrl: tier.imageUrl,
-            priority: tier.priority,
+            rank: tier.rank,
             requirements: {
                 rolling: formatUsd(tier.requirementUsd),
                 deposit: formatUsd(tier.requirementDepositUsd),

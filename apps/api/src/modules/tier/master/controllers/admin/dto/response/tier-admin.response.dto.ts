@@ -14,7 +14,7 @@ export class TierTranslationResponseDto {
 
 export class TierAdminResponseDto {
     @ApiProperty()
-    priority: number;
+    rank: number;
 
     @ApiProperty()
     code: string;

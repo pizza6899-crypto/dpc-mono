@@ -89,5 +89,5 @@ export class TierPublicResponseDto {
 
     @ApiProperty({ type: Number })
     @IsNumber()
-    priority: number;
+    rank: number;
 }

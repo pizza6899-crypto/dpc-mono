@@ -4,7 +4,7 @@ import { Tier } from '../domain/tier.entity';
 export interface UpdateTierProps {
     code: string;
     requirementUsd?: number;
-    priority?: number;
+    rank?: number;
     requirementDepositUsd?: number;
     maintenanceRollingUsd?: number;
     evaluationCycle?: TierEvaluationCycle;
@@ -31,8 +31,8 @@ export interface UpdateTierProps {
 
 export abstract class TierRepositoryPort {
     abstract findAll(options?: { ignoreCache?: boolean }): Promise<Tier[]>;
-    abstract findByPriority(priority: number): Promise<Tier | null>;
+    abstract findByRank(rank: number): Promise<Tier | null>;
     abstract findByCode(code: string): Promise<Tier | null>;
-    abstract findNextTierByPriority(priority: number): Promise<Tier | null>;
+    abstract findNextTierByRank(rank: number): Promise<Tier | null>;
     abstract update(props: UpdateTierProps): Promise<Tier>;
 }

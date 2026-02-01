@@ -71,6 +71,7 @@ model User {
   casinoGameRounds       CasinoGameRound[]
   tierConfigsUpdated     TierConfig[]            @relation("TierConfigUpdatedBy")
   tiersUpdated           Tier[]                  @relation("TierUpdatedBy")
+  tierLevelUpRewards     TierLevelUpReward[]
 
   @@map("users")
 }

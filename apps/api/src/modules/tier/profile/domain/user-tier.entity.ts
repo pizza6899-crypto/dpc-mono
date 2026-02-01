@@ -24,7 +24,7 @@ export class UserTier {
         public currentPeriodDepositUsd: Prisma.Decimal,
         public lastEvaluationAt: Date,
         // Controls
-        public highestPromotedPriority: number,
+        public highestPromotedRank: number,
         public lastBonusReceivedAt: Date | null,
         public status: UserTierStatus,
         public graceEndsAt: Date | null,
@@ -70,12 +70,12 @@ export class UserTier {
      * 티어를 변경하고 상태를 초기화합니다.
      * @returns 승급 보너스 지급 대상 여부
      */
-    updateTier(targetTierId: bigint, priority: number): boolean {
+    updateTier(targetTierId: bigint, rank: number): boolean {
         // 이전에 도달했던 최고 등급보다 높은 등급으로 승급할 때만 보너스 지급
-        const isBonusEligibleJump = priority > this.highestPromotedPriority;
+        const isBonusEligibleJump = rank > this.highestPromotedRank;
 
         this.tierId = targetTierId;
-        this.highestPromotedPriority = Math.max(this.highestPromotedPriority, priority);
+        this.highestPromotedRank = Math.max(this.highestPromotedRank, rank);
         this.lastTierChangedAt = new Date();
         this.status = UserTierStatus.ACTIVE;
         this.graceEndsAt = null;
@@ -142,7 +142,7 @@ export class UserTier {
         return new UserTier(
             data.id, data.userId, data.tierId,
             data.totalEffectiveRollingUsd, data.currentPeriodRollingUsd, data.totalDepositUsd, data.currentPeriodDepositUsd, data.lastEvaluationAt,
-            data.highestPromotedPriority, data.lastBonusReceivedAt, data.status as UserTierStatus, data.graceEndsAt, data.lastTierChangedAt,
+            data.highestPromotedRank, data.lastBonusReceivedAt, data.status as UserTierStatus, data.graceEndsAt, data.lastTierChangedAt,
             data.customCompRate, data.customLossbackRate, data.customRakebackRate, data.customReloadBonusRate,
             data.customWithdrawalLimitUsd, data.isCustomWithdrawalUnlimited,
             data.isCustomDedicatedManager, data.isCustomVipEventEligible,

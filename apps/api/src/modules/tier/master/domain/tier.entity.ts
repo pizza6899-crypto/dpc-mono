@@ -12,7 +12,7 @@ export type TierRawPayload = Prisma.TierGetPayload<{ include: { translations: tr
 export class Tier {
     constructor(
         public readonly id: bigint,
-        public readonly priority: number,
+        public readonly rank: number,
         public readonly code: string,
         public readonly requirementUsd: Prisma.Decimal,
         public readonly requirementDepositUsd: Prisma.Decimal,
@@ -74,7 +74,7 @@ export class Tier {
 
         return new Tier(
             Cast.bigint(data.id),
-            data.priority,
+            data.rank,
             data.code,
             Cast.decimal(data.requirementUsd),
             Cast.decimal(data.requirementDepositUsd),

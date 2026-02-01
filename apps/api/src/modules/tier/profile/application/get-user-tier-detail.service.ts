@@ -11,7 +11,7 @@ export interface UserTierDetailResult {
     currentPeriodRollingUsd: string;
     currentPeriodDepositUsd: string;
     lastEvaluationAt: Date;
-    highestPromotedPriority: number;
+    highestPromotedRank: number;
     lastBonusReceivedAt: Date | null;
     status: UserTierStatus;
     graceEndsAt: Date | null;
@@ -65,7 +65,7 @@ export class GetUserTierDetailService {
             currentPeriodRollingUsd: userTier.currentPeriodRollingUsd.toString(),
             currentPeriodDepositUsd: userTier.currentPeriodDepositUsd.toString(),
             lastEvaluationAt: userTier.lastEvaluationAt,
-            highestPromotedPriority: userTier.highestPromotedPriority,
+            highestPromotedRank: userTier.highestPromotedRank,
             lastBonusReceivedAt: userTier.lastBonusReceivedAt,
             status: userTier.status,
             graceEndsAt: userTier.graceEndsAt,

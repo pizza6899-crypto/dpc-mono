@@ -36,7 +36,7 @@ export class GetNextTierProgressService {
 
         // Deposit Progress
         const requiredDeposit = nextTier.requirementDepositUsd;
-        const currentDeposit = userTier.currentPeriodDepositUsd;
+        const currentDeposit = userTier.totalDepositUsd;
         const remainingDeposit = requiredDeposit.minus(currentDeposit);
         const depositProgress = requiredDeposit.gt(0)
             ? currentDeposit.div(requiredDeposit).mul(100).toNumber()

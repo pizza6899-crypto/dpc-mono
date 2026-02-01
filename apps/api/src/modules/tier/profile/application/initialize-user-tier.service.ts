@@ -20,7 +20,7 @@ export class InitializeUserTierService {
         if (existing) return existing;
 
         const allTiers = await this.tierRepository.findAll();
-        // Since findAll is ordered by priority ASC in the repository, [0] is the base tier.
+        // Since findAll is ordered by rank ASC in the repository, [0] is the base tier.
         const baseTier = allTiers[0];
         if (!baseTier) throw new Error('Tier definitions missing');
 
@@ -38,7 +38,7 @@ export class InitializeUserTierService {
             new Prisma.Decimal(0), // currentPeriodDepositUsd
             new Date(),            // lastEvaluationAt
             // Controls
-            baseTier.priority,     // highestPromotedPriority
+            baseTier.rank,         // highestPromotedRank
             null,                  // lastBonusReceivedAt
             UserTierStatus.ACTIVE, // status
             null,                  // graceEndsAt
@@ -72,6 +72,8 @@ export class InitializeUserTierService {
             requirementUsdSnap: baseTier.requirementUsd,
             requirementDepositUsdSnap: baseTier.requirementDepositUsd,
             cumulativeDepositUsdSnap: new Prisma.Decimal(0),
+            hasBonusGenerated: false,
+            bonusAmountSnap: new Prisma.Decimal(0),
             changeBy: 'SYSTEM',
         });
 

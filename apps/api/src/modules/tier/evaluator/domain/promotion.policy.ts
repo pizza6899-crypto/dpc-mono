@@ -18,11 +18,11 @@ export class PromotionPolicy {
      * 전체 티어 목록 중 유저가 도달할 수 있는 가장 높은 티어를 찾습니다.
      */
     findEligibleTier(userTier: UserTier, allTiers: Tier[]): Tier | null {
-        const currentPriority = userTier.tier?.priority ?? 0;
+        const currentRank = userTier.tier?.rank ?? 0;
 
         return allTiers
-            .filter(t => t.priority > currentPriority)
-            .sort((a, b) => b.priority - a.priority) // 높은 우선순위 우선
+            .filter(t => t.rank > currentRank)
+            .sort((a, b) => b.rank - a.rank) // 높은 rank 우선
             .find(t => this.checkQualification(userTier, t)) ?? null;
     }
 }

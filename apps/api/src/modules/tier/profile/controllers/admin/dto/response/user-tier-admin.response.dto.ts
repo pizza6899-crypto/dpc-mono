@@ -27,8 +27,8 @@ export class UserTierAdminResponseDto {
     @ApiProperty({ description: 'Date of the last evaluation / 마지막 심사 수행 일시' })
     lastEvaluationAt: Date;
 
-    @ApiProperty({ description: 'Highest priority (tier) ever reached / 역대 최고 달성 등급 우선순위' })
-    highestPromotedPriority: number;
+    @ApiProperty({ description: 'Highest rank ever reached / 역대 최고 달성 등급 rank' })
+    highestPromotedRank: number;
 
     @ApiProperty({ nullable: true, description: 'Date when the last promotion bonus was received / 마지막 승급 보너스 수령 일시' })
     lastBonusReceivedAt: Date | null;

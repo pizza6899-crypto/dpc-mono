@@ -55,7 +55,7 @@ export class TierService {
                 // 실제 Tier.fromPersistence와 유사하게 동작하도록 구성
                 return {
                     ...t,
-                    priority: props.priority ?? t.priority,
+                    rank: props.rank ?? t.rank,
                     requirementUsd: props.requirementUsd !== undefined ? new Prisma.Decimal(props.requirementUsd) : t.requirementUsd,
                     requirementDepositUsd: props.requirementDepositUsd !== undefined ? new Prisma.Decimal(props.requirementDepositUsd) : t.requirementDepositUsd,
                     maintenanceRollingUsd: props.maintenanceRollingUsd !== undefined ? new Prisma.Decimal(props.maintenanceRollingUsd) : t.maintenanceRollingUsd,

@@ -29,8 +29,8 @@ export class DemotionPolicy {
             if (userTier.graceEndsAt && userTier.graceEndsAt < now) {
                 // 유예 기간 종료 -> 강등 (Soft Landing: 한 단계 아래 등급 중 가장 높은 곳)
                 const nextLowerTier = allTiers
-                    .filter(t => t.priority < userTier.tier!.priority)
-                    .sort((a, b) => b.priority - a.priority)[0];
+                    .filter(t => t.rank < userTier.tier!.rank)
+                    .sort((a, b) => b.rank - a.rank)[0];
 
                 return nextLowerTier
                     ? { action: 'DEMOTE', targetTier: nextLowerTier }
@@ -43,8 +43,8 @@ export class DemotionPolicy {
             graceEndsAt.setDate(graceEndsAt.getDate() + gracePeriodDays);
 
             const nextLowerTier = allTiers
-                .filter(t => t.priority < userTier.tier!.priority)
-                .sort((a, b) => b.priority - a.priority)[0];
+                .filter(t => t.rank < userTier.tier!.rank)
+                .sort((a, b) => b.rank - a.rank)[0];
 
             return {
                 action: 'GRACE',

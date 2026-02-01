@@ -39,7 +39,7 @@ export class UserTierController {
     ): Promise<UserTierResponseDto> {
         // 1. 필요한 데이터를 병렬로 조회 (DB I/O 최적화 - 전체 조회가 아닌 필요한 단건만 조회)
         const userTier = await this.getMyTierService.findUserTier(user.id);
-        const nextTier = await this.tierRepository.findNextTierByPriority(userTier.tier!.priority);
+        const nextTier = await this.tierRepository.findNextTierByRank(userTier.tier!.rank);
 
         // 2. 가공 서비스를 통한 결과 생성 (엔티티를 직접 전달)
         const myTierResult = this.getMyTierService.execute(userTier, query.lang);

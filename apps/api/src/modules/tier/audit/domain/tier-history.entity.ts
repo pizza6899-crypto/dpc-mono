@@ -1,4 +1,5 @@
 import { Prisma, TierChangeType, TierHistoryReferenceType, TierHistory as PrismaTierHistory } from '@prisma/client';
+import { Cast } from 'src/infrastructure/persistence/persistence.util';
 
 export class TierHistory {
     constructor(
@@ -22,8 +23,8 @@ export class TierHistory {
         public readonly cumulativeDepositUsdSnap: Prisma.Decimal,
 
         // Bonus Info
-        public readonly bonusAmount: Prisma.Decimal | null,
-        public readonly skippedBonusAmount: Prisma.Decimal | null,
+        public readonly hasBonusGenerated: boolean,
+        public readonly bonusAmountSnap: Prisma.Decimal,
         public readonly skippedReason: string | null,
 
         public readonly changedAt: Date,
@@ -36,27 +37,27 @@ export class TierHistory {
 
     static fromPersistence(data: PrismaTierHistory): TierHistory {
         return new TierHistory(
-            data.id,
-            data.userId,
-            data.fromTierId,
-            data.toTierId,
+            Cast.bigint(data.id),
+            Cast.bigint(data.userId),
+            Cast.bigint(data.fromTierId),
+            Cast.bigint(data.toTierId),
             data.changeType,
             data.reason,
-            data.rollingAmountSnap,
-            data.depositAmountSnap,
-            data.compRateSnap,
-            data.lossbackRateSnap,
-            data.rakebackRateSnap,
-            data.requirementUsdSnap,
-            data.requirementDepositUsdSnap,
-            data.cumulativeDepositUsdSnap,
-            data.bonusAmount,
-            data.skippedBonusAmount,
+            Cast.decimal(data.rollingAmountSnap),
+            Cast.decimal(data.depositAmountSnap),
+            Cast.decimal(data.compRateSnap),
+            Cast.decimal(data.lossbackRateSnap),
+            Cast.decimal(data.rakebackRateSnap),
+            Cast.decimal(data.requirementUsdSnap),
+            Cast.decimal(data.requirementDepositUsdSnap),
+            Cast.decimal(data.cumulativeDepositUsdSnap),
+            data.hasBonusGenerated,
+            Cast.decimal(data.bonusAmountSnap),
             data.skippedReason,
-            data.changedAt,
+            Cast.date(data.changedAt),
             data.changeBy,
             data.referenceType,
-            data.referenceId
+            Cast.bigint(data.referenceId)
         );
     }
 }

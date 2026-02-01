@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository.port';
 import { TierAuditService } from '../../audit/application/tier-audit.service';
 import { Tier } from '../../master/domain/tier.entity';
-import { TierChangeType } from '@prisma/client';
+import { TierChangeType, Prisma } from '@prisma/client';
 import { Transactional } from '@nestjs-cls/transactional';
 
 @Injectable()
@@ -22,7 +22,7 @@ export class DemotionService {
         const currentTier = userTier.tier;
 
         // 1. 상태 업데이트 (티어 변경 및 실적 리셋)
-        userTier.updateTier(targetTier.id, targetTier.priority);
+        userTier.updateTier(targetTier.id, targetTier.rank);
         userTier.resetPeriodPerformance(cycleDays);
 
         await this.userTierRepository.save(userTier);
@@ -42,6 +42,8 @@ export class DemotionService {
             requirementUsdSnap: targetTier.requirementUsd,
             requirementDepositUsdSnap: targetTier.requirementDepositUsd,
             cumulativeDepositUsdSnap: userTier.totalDepositUsd,
+            hasBonusGenerated: false,
+            bonusAmountSnap: new Prisma.Decimal(0),
         });
 
         // 3. 실시간 통계 갱신 (강등 카운트 증분)

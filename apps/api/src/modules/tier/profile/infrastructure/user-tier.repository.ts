@@ -30,7 +30,7 @@ export class UserTierRepository implements UserTierRepositoryPort {
             totalDepositUsd: userTier.totalDepositUsd,
             currentPeriodDepositUsd: userTier.currentPeriodDepositUsd,
             lastEvaluationAt: userTier.lastEvaluationAt,
-            highestPromotedPriority: userTier.highestPromotedPriority,
+            highestPromotedRank: userTier.highestPromotedRank,
             lastBonusReceivedAt: userTier.lastBonusReceivedAt,
             status: userTier.status,
             graceEndsAt: userTier.graceEndsAt,

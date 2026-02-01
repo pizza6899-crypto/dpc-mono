@@ -22,10 +22,10 @@ model TierConfig {
 }
 
 model Tier {
-  id       BigInt @id @default(autoincrement())
-  priority Int    @unique // Lower value means lower tier (e.g., 1=Bronze, 2=Silver)
+  id   BigInt @id @default(autoincrement())
+  rank Int    @unique // Higher value means higher tier (e.g., 1=Bronze, 2=Silver)
   // code: 시스템 내부 식별자 (불변), 어드민/백오피스 및 코드 레벨 참조용 (e.g., "BRONZE", "VIP_GOLD")
-  code     String @unique
+  code String @unique
 
   // requirement_usd: 승급에 필요한 누적 롤링액
   requirementUsd        Decimal @map("requirement_usd") @db.Decimal(32, 18)
@@ -70,9 +70,10 @@ model Tier {
 
   stats TierStats[]
 
-  demotionTargetUserTiers UserTier[] @relation("DemotionTarget")
+  demotionTargetUserTiers UserTier[]          @relation("DemotionTarget")
+  bonusLevelUpRewards     TierLevelUpReward[]
 
-  @@index([priority])
+  @@index([rank])
   @@map("tier")
 }
 
@@ -105,13 +106,13 @@ model UserTier {
 
   // 승급/강등 제어
   // [Policy: Soft Landing & Reset]
-  // - 강등 확정 시: Priority 산술 연산(-1)이 아닌, 현재 등급보다 낮은 Priority 중에서 '가장 높은 등급'을 찾아 이동 (Next Lower Tier)
+  // - 강등 확정 시: Rank 산술 연산(-1)이 아닌, 현재 등급보다 낮은 Rank 중에서 '가장 높은 등급'을 찾아 이동 (Next Lower Tier)
   // - 평가 주기 리셋: 강등과 동시에 lastEvaluationAt을 현재(Now)로 갱신하여 즉시 재강등 방지 및 활동 기회 부여
-  highestPromotedPriority Int            @default(0) @map("highest_promoted_priority") // 보너스 중복 지급 방지용
-  lastBonusReceivedAt     DateTime?      @map("last_bonus_received_at") // [추가] 마지막 승급 보너스 수령 시점 (안전장치)
-  status                  UserTierStatus @default(ACTIVE) @map("status") // ACTIVE, GRACE, LOCKED
-  graceEndsAt             DateTime?      @map("grace_ends_at") // 강등 유예 종료 시점
-  lastTierChangedAt       DateTime       @default(now()) @map("last_tier_changed_at")
+  highestPromotedRank Int            @default(0) @map("highest_promoted_rank") // 보너스 중복 지급 방지용
+  lastBonusReceivedAt DateTime?      @map("last_bonus_received_at") // [추가] 마지막 승급 보너스 수령 시점 (안전장치)
+  status              UserTierStatus @default(ACTIVE) @map("status") // ACTIVE, GRACE, LOCKED
+  graceEndsAt         DateTime?      @map("grace_ends_at") // 강등 유예 종료 시점
+  lastTierChangedAt   DateTime       @default(now()) @map("last_tier_changed_at")
 
   // [Advanced Retention] VIP 매니저 오버라이드 (기본 Tier 혜택보다 우선 적용)
   customCompRate        Decimal? @map("custom_comp_rate") @db.Decimal(8, 4)
@@ -170,17 +171,17 @@ model TierHistory {
   requirementDepositUsdSnap Decimal @default(0) @map("requirement_deposit_usd_snap") @db.Decimal(32, 18)
   cumulativeDepositUsdSnap  Decimal @default(0) @map("cumulative_deposit_usd_snap") @db.Decimal(32, 18)
 
-  bonusAmount        Decimal? @map("bonus_amount") @db.Decimal(32, 18) // 지급된 승급 보너스 (없으면 null/0)
-  // [Audit] 지급이 제한(Skip)된 보너스 금액 및 사유
-  skippedBonusAmount Decimal? @default(0) @map("skipped_bonus_amount") @db.Decimal(32, 18)
-  skippedReason      String?  @map("skipped_reason") // 예: "BONUS_RESTRICTED", "INACTIVE_USER"
+  // [Reward Audit] 보너스 지급 관련
+  hasBonusGenerated Boolean @default(false) @map("has_bonus_generated") // 보너스 객체(TierLevelUpReward) 생성 여부
+  bonusAmountSnap   Decimal @default(0) @map("bonus_amount_snap") @db.Decimal(32, 18) // 지급된 보너스 금액 스냅샷
+  skippedReason     String? @map("skipped_reason") // 지급이 아예 제외(Skip)된 사유
 
   changedAt DateTime @default(now()) @map("changed_at")
   changeBy  String?  @map("change_by") // "SYSTEM", "admin_uid"
 
   // [Audit] 변경을 유발한 원천 데이터 참조
   referenceType TierHistoryReferenceType? @map("reference_type")
-  referenceId   BigInt?                   @map("reference_id") // RoundID, TXID, LogID 등
+  referenceId   BigInt?                   @map("reference_id") // RoundID, TXID, AdminLogID 등 (원인 데이터)
 
   user     User  @relation(fields: [userId], references: [id])
   fromTier Tier? @relation("HistoryFrom", fields: [fromTierId], references: [id])
@@ -243,4 +244,37 @@ enum UserTierStatus {
   ACTIVE // 정상 유지
   GRACE // 강등 유예 (Grace Period)
   LOCKED // 등급 고정 (Retention Lock / 관리자 수동 고정)
+}
+
+model TierLevelUpReward {
+  id     BigInt @id @default(autoincrement())
+  userId BigInt @map("user_id")
+  tierId BigInt @map("tier_id") // 승급된 목표 티어 ID
+
+  // 승급 시점의 보너스 설정 스냅샷
+  bonusAmount        Decimal @map("bonus_amount") @db.Decimal(32, 18)
+  wageringMultiplier Decimal @map("wagering_multiplier") @db.Decimal(8, 4)
+
+  status TierLevelUpRewardStatus @default(PENDING) @map("status")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  claimedAt DateTime? @map("claimed_at") // 실제 수령 시각
+
+  // 사후 추적을 위한 참조 ID
+  walletTxId      BigInt? @map("wallet_tx_id") // 지갑 트랜잭션 ID
+  userPromotionId BigInt? @map("user_promotion_id") // 생성된 프로모션(롤링) ID
+  tierHistoryId   BigInt? @map("tier_history_id") // 생성 원인이 된 승급 히스토리 ID (Snowflake)
+
+  user User @relation(fields: [userId], references: [id])
+  tier Tier @relation(fields: [tierId], references: [id])
+
+  @@index([userId, status])
+  @@index([tierId])
+  @@map("tier_level_up_reward")
+}
+
+enum TierLevelUpRewardStatus {
+  PENDING // 수령 대기
+  CLAIMED // 수령 완료
+  CANCELLED // 관리자 취소
 }

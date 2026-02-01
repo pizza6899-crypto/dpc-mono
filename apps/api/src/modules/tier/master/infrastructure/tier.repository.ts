@@ -18,7 +18,7 @@ export class TierRepository implements TierRepositoryPort {
         const fetcher = async () => {
             return await this.tx.tier.findMany({
                 include: { translations: true },
-                orderBy: { priority: 'asc' }
+                orderBy: { rank: 'asc' }
             });
         };
 
@@ -29,9 +29,9 @@ export class TierRepository implements TierRepositoryPort {
         return records.map(record => Tier.fromPersistence(record));
     }
 
-    async findByPriority(priority: number): Promise<Tier | null> {
+    async findByRank(rank: number): Promise<Tier | null> {
         const tiers = await this.findAll();
-        return tiers.find(tier => tier.priority === priority) || null;
+        return tiers.find(tier => tier.rank === rank) || null;
     }
 
     async findByCode(code: string): Promise<Tier | null> {
@@ -39,16 +39,10 @@ export class TierRepository implements TierRepositoryPort {
         return tiers.find(tier => tier.code === code) || null;
     }
 
-    async findNextTierByPriority(priority: number): Promise<Tier | null> {
-        const records = await this.tx.tier.findMany({
-            where: { priority: { gt: priority } },
-            orderBy: { priority: 'asc' },
-            take: 1,
-            include: { translations: true }
-        });
-
-        if (records.length === 0) return null;
-        return Tier.fromPersistence(records[0]);
+    async findNextTierByRank(rank: number): Promise<Tier | null> {
+        const tiers = await this.findAll();
+        // findAll()은 이미 rank ASC로 정렬되어 있으므로, 현재 rank보다 큰 첫 번째 티어가 다음 티어임.
+        return tiers.find(t => t.rank > rank) || null;
     }
 
     async update(props: UpdateTierProps): Promise<Tier> {

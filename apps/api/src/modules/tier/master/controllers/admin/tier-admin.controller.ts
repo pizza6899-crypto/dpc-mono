@@ -72,7 +72,7 @@ export class TierAdminController {
 
     private mapToResponseDto(tier: Tier): TierAdminResponseDto {
         return {
-            priority: tier.priority,
+            rank: tier.rank,
             code: tier.code,
             requirementUsd: tier.requirementUsd.toString(),
             requirementDepositUsd: tier.requirementDepositUsd.toString(),
@@ -102,7 +102,7 @@ export class TierAdminController {
 
     private mapToAuditData(tier: Tier) {
         return {
-            priority: tier.priority,
+            rank: tier.rank,
             code: tier.code,
             requirements: {
                 rolling: tier.requirementUsd.toString(),

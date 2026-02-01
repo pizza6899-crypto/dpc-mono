@@ -24,7 +24,7 @@ export interface UserTierListItemResult {
     status: UserTierStatus;
     lastTierChangedAt: Date;
     nextEvaluationAt: Date | null;
-    highestPromotedPriority: number;
+    highestPromotedRank: number;
     lastBonusReceivedAt: Date | null;
     graceEndsAt: Date | null;
     isBonusEligible: boolean;
@@ -68,7 +68,7 @@ export class ListUserTiersService {
                     status: ut.status,
                     lastTierChangedAt: ut.lastTierChangedAt,
                     nextEvaluationAt: ut.nextEvaluationAt,
-                    highestPromotedPriority: ut.highestPromotedPriority,
+                    highestPromotedRank: ut.highestPromotedRank,
                     lastBonusReceivedAt: ut.lastBonusReceivedAt,
                     graceEndsAt: ut.graceEndsAt,
                     isBonusEligible: ut.isBonusEligible,

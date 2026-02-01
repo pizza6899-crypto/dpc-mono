@@ -33,8 +33,8 @@ export class PromotionService {
         const currentTier = userTier.tier;
 
         // 1. 유저 상태 업데이트 및 보너스 산정
-        const previousHighestPriority = userTier.highestPromotedPriority;
-        const isEligibleForPromotionBonus = userTier.updateTier(targetTier.id, targetTier.priority);
+        const previousHighestRank = userTier.highestPromotedRank;
+        const isEligibleForPromotionBonus = userTier.updateTier(targetTier.id, targetTier.rank);
 
         let earnedBonusAmount = new Prisma.Decimal(0);
         let skippedReason: string | undefined;
@@ -44,8 +44,8 @@ export class PromotionService {
             // [Logic] 지급 가능 여부와 관계없이, 이번 승급으로 인해 발생한 보너스 원천 금액을 먼저 계산합니다.
             const allTiers = await this.tierRepository.findAll();
             const eligibleTiers = allTiers.filter(t =>
-                t.priority > previousHighestPriority &&
-                t.priority <= targetTier.priority
+                t.rank > previousHighestRank &&
+                t.rank <= targetTier.rank
             );
 
             earnedBonusAmount = eligibleTiers.reduce(
@@ -89,9 +89,8 @@ export class PromotionService {
             requirementUsdSnap: targetTier.requirementUsd,
             requirementDepositUsdSnap: targetTier.requirementDepositUsd,
             cumulativeDepositUsdSnap: userTier.totalDepositUsd,
-            bonusAmount: earnedBonusAmount.gt(0) && !skippedReason ? earnedBonusAmount : null,
-            bonusClaimedAt: bonusClaimedAt,
-            skippedBonusAmount: skippedReason ? earnedBonusAmount : null,
+            hasBonusGenerated: earnedBonusAmount.gt(0) && !skippedReason,
+            bonusAmountSnap: earnedBonusAmount,
             skippedReason: skippedReason,
         });
 

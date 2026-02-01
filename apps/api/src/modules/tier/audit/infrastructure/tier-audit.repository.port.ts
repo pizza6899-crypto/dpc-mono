@@ -20,9 +20,8 @@ export interface CreateTierHistoryProps {
     requirementUsdSnap: Prisma.Decimal;
     requirementDepositUsdSnap: Prisma.Decimal;
     cumulativeDepositUsdSnap: Prisma.Decimal;
-    bonusAmount?: Prisma.Decimal | null;
-    bonusClaimedAt?: Date | null;
-    skippedBonusAmount?: Prisma.Decimal | null;
+    hasBonusGenerated: boolean;
+    bonusAmountSnap: Prisma.Decimal;
     skippedReason?: string | null;
     changeBy?: string | null;
     referenceType?: TierHistoryReferenceType | null;
