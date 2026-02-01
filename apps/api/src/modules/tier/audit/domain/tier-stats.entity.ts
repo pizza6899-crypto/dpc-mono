@@ -5,11 +5,18 @@ export class TierStats {
         public readonly timestamp: Date,
         public readonly tierId: bigint,
         public readonly snapshotUserCount: number,
-        public readonly totalBonusPaidUsd: Prisma.Decimal,
-        public readonly totalRollingUsd: Prisma.Decimal,
-        public readonly totalDepositUsd: Prisma.Decimal,
-        public readonly promotedCount: number,
-        public readonly demotedCount: number,
+
+        // Metrics
+        public readonly periodBonusPaidUsd: Prisma.Decimal,
+        public readonly periodRollingUsd: Prisma.Decimal,
+        public readonly periodDepositUsd: Prisma.Decimal,
+
+        // Changes
+        public readonly upgradedCount: number,
+        public readonly downgradedCount: number,
+        public readonly maintainedCount: number,
+        public readonly graceCount: number,
+
         public readonly updatedAt: Date,
     ) { }
 
@@ -18,12 +25,14 @@ export class TierStats {
             data.timestamp,
             data.tierId,
             data.snapshotUserCount,
-            data.totalBonusPaidUsd,
-            data.totalRollingUsd,
-            data.totalDepositUsd,
-            data.promotedCount,
-            data.demotedCount,
-            data.updatedAt
+            data.periodBonusPaidUsd,
+            data.periodRollingUsd,
+            data.periodDepositUsd,
+            data.upgradedCount,
+            data.downgradedCount,
+            data.maintainedCount,
+            data.graceCount,
+            data.updatedAt,
         );
     }
 }

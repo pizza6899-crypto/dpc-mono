@@ -14,28 +14,31 @@ export class TierTranslationResponseDto {
 
 export class TierAdminResponseDto {
     @ApiProperty()
-    rank: number;
+    level: number;
 
     @ApiProperty()
     code: string;
 
     @ApiProperty({ type: String })
-    requirementUsd: string;
+    upgradeRollingRequiredUsd: string;
 
     @ApiProperty({ type: String })
-    requirementDepositUsd: string;
+    upgradeDepositRequiredUsd: string;
 
     @ApiProperty({ type: String })
-    maintenanceRollingUsd: string;
+    maintainRollingRequiredUsd: string;
 
     @ApiProperty({ enum: TierEvaluationCycle })
     evaluationCycle: TierEvaluationCycle;
 
     @ApiProperty({ type: String })
-    levelUpBonusUsd: string;
+    upgradeBonusUsd: string;
 
     @ApiProperty({ type: String })
-    levelUpBonusWageringMultiplier: string;
+    upgradeBonusWageringMultiplier: string;
+
+    @ApiProperty({ type: Number, nullable: true })
+    rewardExpiryDays: number | null;
 
     @ApiProperty()
     isImmediateBonusEnabled: boolean;
@@ -44,13 +47,10 @@ export class TierAdminResponseDto {
     compRate: string;
 
     @ApiProperty({ type: String })
-    lossbackRate: string;
+    weeklyLossbackRate: string;
 
     @ApiProperty({ type: String })
-    rakebackRate: string;
-
-    @ApiProperty({ type: String })
-    reloadBonusRate: string;
+    monthlyLossbackRate: string;
 
     @ApiProperty({ type: String })
     dailyWithdrawalLimitUsd: string;
@@ -62,7 +62,13 @@ export class TierAdminResponseDto {
     hasDedicatedManager: boolean;
 
     @ApiProperty()
-    isVIPEventEligible: boolean;
+    isActive: boolean;
+
+    @ApiProperty()
+    isHidden: boolean;
+
+    @ApiProperty()
+    isManualOnly: boolean;
 
     @ApiProperty({ required: false, nullable: true })
     imageUrl: string | null;

@@ -38,33 +38,31 @@ export class TierMasterPolicy {
      * 티어 수정 시 입력 데이터의 유효성을 검증합니다.
      */
     validateUpdateProps(props: {
-        requirementUsd?: number;
-        requirementDepositUsd?: number;
-        maintenanceRollingUsd?: number;
-        levelUpBonusUsd?: number;
+        upgradeRollingRequiredUsd?: number;
+        upgradeDepositRequiredUsd?: number;
+        maintainRollingRequiredUsd?: number;
+        upgradeBonusUsd?: number;
         compRate?: number;
-        lossbackRate?: number;
-        rakebackRate?: number;
-        reloadBonusRate?: number;
+        weeklyLossbackRate?: number;
+        monthlyLossbackRate?: number;
         dailyWithdrawalLimitUsd?: number;
     }): void {
         const {
-            requirementUsd, requirementDepositUsd, maintenanceRollingUsd,
-            levelUpBonusUsd, compRate, lossbackRate, rakebackRate,
-            reloadBonusRate, dailyWithdrawalLimitUsd
+            upgradeRollingRequiredUsd, upgradeDepositRequiredUsd, maintainRollingRequiredUsd,
+            upgradeBonusUsd, compRate, weeklyLossbackRate, monthlyLossbackRate,
+            dailyWithdrawalLimitUsd
         } = props;
 
         // [Rule] 금액 및 요건 관련 수치는 음수일 수 없습니다.
-        if (requirementUsd !== undefined && requirementUsd < 0) this.throwNegativeError('Requirement USD');
-        if (requirementDepositUsd !== undefined && requirementDepositUsd < 0) this.throwNegativeError('Requirement Deposit USD');
-        if (maintenanceRollingUsd !== undefined && maintenanceRollingUsd < 0) this.throwNegativeError('Maintenance Rolling USD');
-        if (levelUpBonusUsd !== undefined && levelUpBonusUsd < 0) this.throwNegativeError('Level up bonus USD');
+        if (upgradeRollingRequiredUsd !== undefined && upgradeRollingRequiredUsd < 0) this.throwNegativeError('Upgrade Rolling Required USD');
+        if (upgradeDepositRequiredUsd !== undefined && upgradeDepositRequiredUsd < 0) this.throwNegativeError('Upgrade Deposit Required USD');
+        if (maintainRollingRequiredUsd !== undefined && maintainRollingRequiredUsd < 0) this.throwNegativeError('Maintain Rolling Required USD');
+        if (upgradeBonusUsd !== undefined && upgradeBonusUsd < 0) this.throwNegativeError('Upgrade bonus USD');
 
         // [Rule] 각종 요율(Rate)은 0 이상의 값이어야 합니다.
         if (compRate !== undefined && compRate < 0) this.throwNegativeError('Comp rate');
-        if (lossbackRate !== undefined && lossbackRate < 0) this.throwNegativeError('Lossback rate');
-        if (rakebackRate !== undefined && rakebackRate < 0) this.throwNegativeError('Rakeback rate');
-        if (reloadBonusRate !== undefined && reloadBonusRate < 0) this.throwNegativeError('Reload bonus rate');
+        if (weeklyLossbackRate !== undefined && weeklyLossbackRate < 0) this.throwNegativeError('Weekly Lossback rate');
+        if (monthlyLossbackRate !== undefined && monthlyLossbackRate < 0) this.throwNegativeError('Monthly Lossback rate');
 
         // [Rule] 한도 관련
         if (dailyWithdrawalLimitUsd !== undefined && dailyWithdrawalLimitUsd < 0) this.throwNegativeError('Daily withdrawal limit');
@@ -80,26 +78,26 @@ export class TierMasterPolicy {
 
     /**
      * 전체 티어 목록의 정합성을 검증합니다.
-     * [Rule 1] 티어 간 rank는 중복될 수 없습니다.
-     * [Rule 2] 높은 rank의 티어는 낮은 rank의 티어보다 요구 실적이 크거나 같아야 합니다.
+     * [Rule 1] 티어 간 level은 중복될 수 없습니다.
+     * [Rule 2] 높은 level의 티어는 낮은 level의 티어보다 요구 실적이 크거나 같아야 합니다.
      * @param allTiers 검증할 전체 티어 객체 목록
      */
     validateTierIntegrity(allTiers: {
-        rank: number;
-        requirementUsd: { gte: (val: any) => boolean };
-        requirementDepositUsd: { gte: (val: any) => boolean };
-        maintenanceRollingUsd: { gte: (val: any) => boolean };
+        level: number;
+        upgradeRollingRequiredUsd: { gte: (val: any) => boolean };
+        upgradeDepositRequiredUsd: { gte: (val: any) => boolean };
+        maintainRollingRequiredUsd: { gte: (val: any) => boolean };
         code: string;
     }[]): void {
-        const sortedTiers = [...allTiers].sort((a, b) => a.rank - b.rank);
+        const sortedTiers = [...allTiers].sort((a, b) => a.level - b.level);
 
         for (let i = 0; i < sortedTiers.length; i++) {
             const current = sortedTiers[i];
 
-            // Rule 1: rank 중복 체크
-            if (i > 0 && current.rank === sortedTiers[i - 1].rank) {
+            // Rule 1: level 중복 체크
+            if (i > 0 && current.level === sortedTiers[i - 1].level) {
                 throw new TierMasterException(
-                    `Duplicate rank detected: ${current.rank} (Codes: ${sortedTiers[i - 1].code}, ${current.code})`,
+                    `Duplicate level detected: ${current.level} (Codes: ${sortedTiers[i - 1].code}, ${current.code})`,
                     MessageCode.VALIDATION_ERROR,
                     HttpStatus.BAD_REQUEST,
                 );
@@ -108,14 +106,14 @@ export class TierMasterPolicy {
             // Rule 2: 요구치 역전 체크 (이전 티어보다 요구치가 낮으면 안됨)
             if (i > 0) {
                 const prev = sortedTiers[i - 1];
-                if (!current.requirementUsd.gte(prev.requirementUsd)) {
-                    this.throwInversionError('Requirement USD', current.code, prev.code);
+                if (!current.upgradeRollingRequiredUsd.gte(prev.upgradeRollingRequiredUsd)) {
+                    this.throwInversionError('Upgrade Rolling Required USD', current.code, prev.code);
                 }
-                if (!current.requirementDepositUsd.gte(prev.requirementDepositUsd)) {
-                    this.throwInversionError('Requirement Deposit USD', current.code, prev.code);
+                if (!current.upgradeDepositRequiredUsd.gte(prev.upgradeDepositRequiredUsd)) {
+                    this.throwInversionError('Upgrade Deposit Required USD', current.code, prev.code);
                 }
-                if (!current.maintenanceRollingUsd.gte(prev.maintenanceRollingUsd)) {
-                    this.throwInversionError('Maintenance Rolling USD', current.code, prev.code);
+                if (!current.maintainRollingRequiredUsd.gte(prev.maintainRollingRequiredUsd)) {
+                    this.throwInversionError('Maintain Rolling Required USD', current.code, prev.code);
                 }
             }
         }

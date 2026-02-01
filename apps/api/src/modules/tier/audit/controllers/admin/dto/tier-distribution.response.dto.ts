@@ -10,6 +10,9 @@ export class TierDistributionResponseDto {
     @ApiProperty({ description: 'Tier Name / 티어 이름' })
     tierName: string;
 
+    @ApiProperty({ description: 'Tier Level / 티어 레벨' })
+    tierLevel: number;
+
     @ApiProperty({ description: 'User Count / 해당 티어 유저 수' })
     count: number;
 }

@@ -72,23 +72,25 @@ export class TierAdminController {
 
     private mapToResponseDto(tier: Tier): TierAdminResponseDto {
         return {
-            rank: tier.rank,
+            level: tier.level,
             code: tier.code,
-            requirementUsd: tier.requirementUsd.toString(),
-            requirementDepositUsd: tier.requirementDepositUsd.toString(),
-            maintenanceRollingUsd: tier.maintenanceRollingUsd.toString(),
+            upgradeRollingRequiredUsd: tier.upgradeRollingRequiredUsd.toString(),
+            upgradeDepositRequiredUsd: tier.upgradeDepositRequiredUsd.toString(),
+            maintainRollingRequiredUsd: tier.maintainRollingRequiredUsd.toString(),
             evaluationCycle: tier.evaluationCycle,
-            levelUpBonusUsd: tier.levelUpBonusUsd.toString(),
-            levelUpBonusWageringMultiplier: tier.levelUpBonusWageringMultiplier.toString(),
+            upgradeBonusUsd: tier.upgradeBonusUsd.toString(),
+            upgradeBonusWageringMultiplier: tier.upgradeBonusWageringMultiplier.toString(),
+            rewardExpiryDays: tier.rewardExpiryDays,
             isImmediateBonusEnabled: tier.isImmediateBonusEnabled,
             compRate: tier.compRate.toString(),
-            lossbackRate: tier.lossbackRate.toString(),
-            rakebackRate: tier.rakebackRate.toString(),
-            reloadBonusRate: tier.reloadBonusRate.toString(),
+            weeklyLossbackRate: tier.weeklyLossbackRate.toString(),
+            monthlyLossbackRate: tier.monthlyLossbackRate.toString(),
             dailyWithdrawalLimitUsd: tier.dailyWithdrawalLimitUsd.toString(),
             isWithdrawalUnlimited: tier.isWithdrawalUnlimited,
             hasDedicatedManager: tier.hasDedicatedManager,
-            isVIPEventEligible: tier.isVIPEventEligible,
+            isActive: tier.isActive,
+            isHidden: tier.isHidden,
+            isManualOnly: tier.isManualOnly,
             imageUrl: tier.imageUrl,
             translations: tier.translations.map(t => ({
                 language: t.language,
@@ -102,31 +104,35 @@ export class TierAdminController {
 
     private mapToAuditData(tier: Tier) {
         return {
-            rank: tier.rank,
+            level: tier.level,
             code: tier.code,
             requirements: {
-                rolling: tier.requirementUsd.toString(),
-                deposit: tier.requirementDepositUsd.toString(),
-                maintenance: tier.maintenanceRollingUsd.toString(),
+                upgradeRolling: tier.upgradeRollingRequiredUsd.toString(),
+                upgradeDeposit: tier.upgradeDepositRequiredUsd.toString(),
+                maintenance: tier.maintainRollingRequiredUsd.toString(),
             },
             benefits: {
                 comp: tier.compRate.toString(),
-                rakeback: tier.rakebackRate.toString(),
-                lossback: tier.lossbackRate.toString(),
-                reload: tier.reloadBonusRate.toString(),
-                levelUp: {
-                    bonus: tier.levelUpBonusUsd.toString(),
-                    wager: tier.levelUpBonusWageringMultiplier.toString(),
+                weeklyLossback: tier.weeklyLossbackRate.toString(),
+                monthlyLossback: tier.monthlyLossbackRate.toString(),
+                upgrade: {
+                    bonus: tier.upgradeBonusUsd.toString(),
+                    wager: tier.upgradeBonusWageringMultiplier.toString(),
                     isImmediate: tier.isImmediateBonusEnabled,
-                }
+                },
+                rewardExpiryDays: tier.rewardExpiryDays,
             },
             limits: {
                 dailyWithdrawal: tier.dailyWithdrawalLimitUsd.toString(),
                 isUnlimited: tier.isWithdrawalUnlimited,
             },
+            control: {
+                isActive: tier.isActive,
+                isHidden: tier.isHidden,
+                isManualOnly: tier.isManualOnly,
+            },
             vips: {
                 dedicatedManager: tier.hasDedicatedManager,
-                eventEligible: tier.isVIPEventEligible,
             }
         };
     }

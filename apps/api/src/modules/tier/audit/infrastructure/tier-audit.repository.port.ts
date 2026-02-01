@@ -7,36 +7,46 @@ import type {
 } from '@prisma/client';
 
 export interface CreateTierHistoryProps {
+    id: bigint;
     userId: bigint;
     fromTierId: bigint | null;
     toTierId: bigint;
     changeType: TierChangeType;
     reason?: string | null;
-    rollingAmountSnap: Prisma.Decimal;
-    depositAmountSnap: Prisma.Decimal;
+
+    // Snapshot: Data
+    statusRollingUsdSnap: Prisma.Decimal;
+    currentPeriodDepositUsdSnap: Prisma.Decimal;
     compRateSnap: Prisma.Decimal;
-    lossbackRateSnap: Prisma.Decimal;
-    rakebackRateSnap: Prisma.Decimal;
-    requirementUsdSnap: Prisma.Decimal;
-    requirementDepositUsdSnap: Prisma.Decimal;
-    cumulativeDepositUsdSnap: Prisma.Decimal;
+    weeklyLossbackRateSnap: Prisma.Decimal;
+    monthlyLossbackRateSnap: Prisma.Decimal;
+
+    // Snapshot: Rules & Status
+    upgradeRollingRequiredUsdSnap: Prisma.Decimal;
+    upgradeDepositRequiredUsdSnap: Prisma.Decimal;
+    lifetimeRollingUsdSnap: Prisma.Decimal;
+    lifetimeDepositUsdSnap: Prisma.Decimal;
+
+    // Bonus Info
     hasBonusGenerated: boolean;
-    bonusAmountSnap: Prisma.Decimal;
+    bonusAmountUsdSnap: Prisma.Decimal;
     skippedReason?: string | null;
+
+    changedAt: Date;
     changeBy?: string | null;
+
+    // Audit Reference
     referenceType?: TierHistoryReferenceType | null;
     referenceId?: bigint | null;
-    id: bigint;
-    changedAt: Date;
 }
 
 export interface UpdateTierStatsProps {
     snapshotUserCount?: number;
-    totalBonusPaidUsd?: Prisma.Decimal;
-    totalRollingUsd?: Prisma.Decimal;
-    totalDepositUsd?: Prisma.Decimal;
-    promotedCount?: number;
-    demotedCount?: number;
+    periodBonusPaidUsd?: Prisma.Decimal;
+    periodRollingUsd?: Prisma.Decimal;
+    periodDepositUsd?: Prisma.Decimal;
+    upgradedCount?: number;
+    downgradedCount?: number;
     maintainedCount?: number;
     graceCount?: number;
 }

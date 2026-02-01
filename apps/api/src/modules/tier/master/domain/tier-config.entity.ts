@@ -7,24 +7,24 @@ export class TierConfig {
     public static readonly SINGLETON_ID = 1n;
 
     constructor(
-        public readonly isPromotionEnabled: boolean,
+        public readonly isUpgradeEnabled: boolean,
         public readonly isDowngradeEnabled: boolean,
         public readonly isBonusEnabled: boolean,
-        public readonly defaultGracePeriodDays: number,
-        public readonly triggerIntervalMinutes: number,
+        public readonly defaultDowngradeGracePeriodDays: number,
+        public readonly defaultRewardExpiryDays: number,
         public readonly updatedAt: Date,
         public readonly updatedBy: bigint | null,
     ) { }
 
     static fromPersistence(data: PersistenceOf<TierConfigRawPayload>): TierConfig {
         return new TierConfig(
-            data.isPromotionEnabled,
+            data.isUpgradeEnabled,
             data.isDowngradeEnabled,
             data.isBonusEnabled,
-            data.defaultGracePeriodDays,
-            data.triggerIntervalMinutes,
-            new Date(data.updatedAt),
-            data.updatedBy ? BigInt(data.updatedBy.toString()) : null,
+            data.defaultDowngradeGracePeriodDays,
+            data.defaultRewardExpiryDays,
+            Cast.date(data.updatedAt),
+            Cast.bigint(data.updatedBy),
         );
     }
 }

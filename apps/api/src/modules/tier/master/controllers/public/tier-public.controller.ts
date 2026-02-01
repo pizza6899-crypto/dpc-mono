@@ -49,8 +49,8 @@ export class TierPublicController {
             }
         }
 
-        // Rank 순으로 정렬
-        const sortedTiers = tiers.sort((a, b) => a.rank - b.rank);
+        // Level 순으로 정렬
+        const sortedTiers = tiers.sort((a, b) => a.level - b.level);
 
         return sortedTiers.map(tier => this.mapToResponseDto(tier, targetLang));
     }
@@ -60,29 +60,29 @@ export class TierPublicController {
             || tier.translations.find(t => t.language === Language.EN)
             || tier.translations[0];
 
-        // Decimal 포맷팅 유틸리티 (필요시 common/utils로 이동 가능)
+        // Decimal 포맷팅 유틸리티
         const formatUsd = (v: Prisma.Decimal) => v.toFixed(2);
         const formatRate = (v: Prisma.Decimal) => v.toFixed(4);
 
         return {
             id: this.sqidsService.encode(tier.id, SqidsPrefix.TIER),
             code: tier.code,
+            level: tier.level,
             name: translation?.name ?? tier.code,
             description: translation?.description ?? null,
             imageUrl: tier.imageUrl,
-            rank: tier.rank,
             requirements: {
-                rolling: formatUsd(tier.requirementUsd),
-                deposit: formatUsd(tier.requirementDepositUsd),
-                maintenance: formatUsd(tier.maintenanceRollingUsd),
+                upgradeRolling: formatUsd(tier.upgradeRollingRequiredUsd),
+                upgradeDeposit: formatUsd(tier.upgradeDepositRequiredUsd),
+                maintenance: formatUsd(tier.maintainRollingRequiredUsd),
             },
             benefits: {
                 comp: formatRate(tier.compRate),
-                rakeback: formatRate(tier.rakebackRate),
-                lossback: formatRate(tier.lossbackRate),
-                reload: formatRate(tier.reloadBonusRate),
-                levelUpBonus: formatUsd(tier.levelUpBonusUsd),
-                levelUpWager: tier.levelUpBonusWageringMultiplier.toFixed(0), // 배수는 보통 정수
+                weeklyLossback: formatRate(tier.weeklyLossbackRate),
+                monthlyLossback: formatRate(tier.monthlyLossbackRate),
+                upgradeBonus: formatUsd(tier.upgradeBonusUsd),
+                upgradeBonusWager: tier.upgradeBonusWageringMultiplier.toFixed(0),
+                rewardExpiryDays: tier.rewardExpiryDays,
             },
             limits: {
                 dailyWithdrawal: formatUsd(tier.dailyWithdrawalLimitUsd),

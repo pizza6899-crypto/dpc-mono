@@ -5,11 +5,11 @@ import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 export class TierPublicRequirementDto {
     @ApiProperty()
     @IsString()
-    rolling: string;
+    upgradeRolling: string;
 
     @ApiProperty()
     @IsString()
-    deposit: string;
+    upgradeDeposit: string;
 
     @ApiProperty()
     @IsString()
@@ -23,23 +23,23 @@ export class TierPublicBenefitsDto {
 
     @ApiProperty()
     @IsString()
-    rakeback: string;
+    weeklyLossback: string;
 
     @ApiProperty()
     @IsString()
-    lossback: string;
+    monthlyLossback: string;
 
     @ApiProperty()
     @IsString()
-    reload: string;
+    upgradeBonus: string;
 
     @ApiProperty()
     @IsString()
-    levelUpBonus: string;
+    upgradeBonusWager: string;
 
-    @ApiProperty()
-    @IsString()
-    levelUpWager: string;
+    @ApiProperty({ type: Number, nullable: true })
+    @IsOptional()
+    rewardExpiryDays: number | null;
 }
 
 export class TierPublicLimitsDto {
@@ -89,5 +89,5 @@ export class TierPublicResponseDto {
 
     @ApiProperty({ type: Number })
     @IsNumber()
-    rank: number;
+    level: number;
 }

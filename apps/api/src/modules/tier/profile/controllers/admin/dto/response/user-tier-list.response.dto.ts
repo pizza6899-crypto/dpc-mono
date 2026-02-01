@@ -15,8 +15,14 @@ export class UserTierListItemResponseDto {
     @ApiProperty({ description: 'Tier Name / 티어 이름' })
     tierName: string;
 
+    @ApiProperty({ description: 'Tier Code / 티어 코드' })
+    tierCode: string;
+
+    @ApiProperty({ description: 'Tier Level / 티어 레벨' })
+    level: number;
+
     @ApiProperty({ description: 'Cumulative rolling amount (lifetime) / 누적 롤링 금액 (전체 가간)' })
-    totalEffectiveRollingUsd: string;
+    lifetimeRollingUsd: string;
 
     @ApiProperty({ description: 'Rolling amount for the current evaluation period / 현재 심사 주기 내 롤링 금액' })
     currentPeriodRollingUsd: string;
@@ -33,29 +39,14 @@ export class UserTierListItemResponseDto {
     @ApiProperty({ nullable: true, description: 'Next scheduled evaluation date / 다음 심사 예정 일시' })
     nextEvaluationAt: Date | null;
 
-    @ApiProperty({ description: 'Highest rank ever reached / 역대 최고 달성 등급 rank' })
-    highestPromotedRank: number;
-
-    @ApiProperty({ nullable: true, description: 'Date when the last promotion bonus was received / 마지막 승급 보너스 수령 일시' })
-    lastBonusReceivedAt: Date | null;
+    @ApiProperty({ description: 'Max level reached / 역대 최고 달성 레벨' })
+    maxLevelAchieved: number;
 
     @ApiProperty({ nullable: true, description: 'End date of the grace period / 강등 유예 종료 일시' })
-    graceEndsAt: Date | null;
+    downgradeGracePeriodEndsAt: Date | null;
 
     @ApiProperty({ description: 'Whether the user is eligible for promotion bonuses / 승급 보너스 지급 대상 여부' })
     isBonusEligible: boolean;
-
-    @ApiProperty({ nullable: true, description: 'Admin note for the user tier / 관리자 메모' })
-    note: string | null;
-
-    @ApiProperty({ nullable: true, description: 'Date when the demotion warning was issued / 강등 경고 발생 일시' })
-    demotionWarningIssuedAt: Date | null;
-
-    @ApiProperty({ nullable: true, description: 'Target tier ID if demoted / 강등 시 대상 티어 ID' })
-    demotionWarningTargetTierId: string | null;
-
-    @ApiProperty({ nullable: true, description: 'Target tier name if demoted / 강등 시 대상 티어 이름' })
-    demotionWarningTargetTierName: string | null;
 
     @ApiProperty({ description: 'Summary: Has any custom benefit overrides / 커스텀 혜택 오버라이드 존재 여부' })
     hasCustomOverrides: boolean;

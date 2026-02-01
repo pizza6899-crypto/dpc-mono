@@ -3,7 +3,7 @@ import { UserTierRepositoryPort } from '../infrastructure/user-tier.repository.p
 import { TierRepositoryPort } from '../../master/infrastructure/tier.repository.port';
 import { UserTier } from '../domain/user-tier.entity';
 import { Prisma, UserTierStatus, TierEvaluationCycle, TierChangeType } from '@prisma/client';
-import { TierAuditService } from '../../audit/application/tier-audit.service';
+import { RecordTierHistoryService } from '../../audit/application/record-tier-history.service';
 import { Transactional } from '@nestjs-cls/transactional';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class InitializeUserTierService {
     constructor(
         private readonly userTierRepository: UserTierRepositoryPort,
         private readonly tierRepository: TierRepositoryPort,
-        private readonly tierAuditService: TierAuditService,
+        private readonly recordTierHistoryService: RecordTierHistoryService,
     ) { }
 
     @Transactional()
@@ -20,61 +20,70 @@ export class InitializeUserTierService {
         if (existing) return existing;
 
         const allTiers = await this.tierRepository.findAll();
-        // Since findAll is ordered by rank ASC in the repository, [0] is the base tier.
+        // findAll()은 이미 level ASC로 정렬되어 있으므로 [0]이 최하위 기초 티어입니다.
         const baseTier = allTiers[0];
         if (!baseTier) throw new Error('Tier definitions missing');
 
-        // Calculate next evaluation date based on the tier's cycle
+        // 티어 주기에 따른 초기 심사일 계산
         const nextEvaluationAt = this.calculateNextEvaluationAt(baseTier.evaluationCycle);
 
         const newUserTier = new UserTier(
             0n,
             userId,
             baseTier.id,
-            // States
-            new Prisma.Decimal(0), // totalEffectiveRollingUsd
+            // States (초기화)
+            new Prisma.Decimal(0), // lifetimeRollingUsd
+            new Prisma.Decimal(0), // statusRollingUsd
             new Prisma.Decimal(0), // currentPeriodRollingUsd
-            new Prisma.Decimal(0), // totalDepositUsd [추가]
+            new Prisma.Decimal(0), // lifetimeDepositUsd
             new Prisma.Decimal(0), // currentPeriodDepositUsd
             new Date(),            // lastEvaluationAt
-            // Controls
-            baseTier.rank,         // highestPromotedRank
+            // 승급/강등 제어
+            baseTier.level,        // currentLevel
+            baseTier.level,        // maxLevelAchieved
             null,                  // lastBonusReceivedAt
             UserTierStatus.ACTIVE, // status
-            null,                  // graceEndsAt
+            null,                  // downgradeGracePeriodEndsAt
             new Date(),            // lastTierChangedAt
-            // Overrides (Default null)
-            null, null, null, null, null, null, null, null,
-            // Audit & Joined Data
+            null,                  // lastUpgradeAt (초기화 시점이므로 null)
+            null,                  // lastDowngradeAt
+            // Overrides
+            null,                  // customCompRate
+            null,                  // customWeeklyLossbackRate
+            null,                  // customMonthlyLossbackRate
+            null,                  // customWithdrawalLimitUsd
+            null,                  // isCustomWithdrawalUnlimited
+            null,                  // isCustomDedicatedManager
+            // Audit & Misc
+            null,                  // note
             true,                  // isBonusEligible
             nextEvaluationAt,      // nextEvaluationAt
-            null,                  // note
-            // Warning
-            null,                  // demotionWarningIssuedAt
-            null,                  // demotionWarningTargetTierId
+            // Warning State
+            null,                  // downgradeWarningIssuedAt
+            null,                  // downgradeWarningTargetTierId
             baseTier               // Joined Tier data
         );
 
         const savedUserTier = await this.userTierRepository.save(newUserTier);
 
-        // Record Initial Tier History
-        await this.tierAuditService.recordTierChange({
+        // 초기 티어 할당 이력 기록
+        await this.recordTierHistoryService.execute({
             userId,
             fromTierId: null,
             toTierId: baseTier.id,
             changeType: TierChangeType.INITIAL,
             reason: 'User initialized with base tier',
-            rollingAmountSnap: new Prisma.Decimal(0),
-            depositAmountSnap: new Prisma.Decimal(0),
+            statusRollingUsdSnap: new Prisma.Decimal(0),
+            currentPeriodDepositUsdSnap: new Prisma.Decimal(0),
             compRateSnap: baseTier.compRate,
-            lossbackRateSnap: baseTier.lossbackRate,
-            rakebackRateSnap: baseTier.rakebackRate,
-            requirementUsdSnap: baseTier.requirementUsd,
-            requirementDepositUsdSnap: baseTier.requirementDepositUsd,
-            cumulativeDepositUsdSnap: new Prisma.Decimal(0),
+            weeklyLossbackRateSnap: baseTier.weeklyLossbackRate,
+            monthlyLossbackRateSnap: baseTier.monthlyLossbackRate,
+            upgradeRollingRequiredUsdSnap: baseTier.upgradeRollingRequiredUsd,
+            upgradeDepositRequiredUsdSnap: baseTier.upgradeDepositRequiredUsd,
+            lifetimeRollingUsdSnap: new Prisma.Decimal(0),
+            lifetimeDepositUsdSnap: new Prisma.Decimal(0),
             hasBonusGenerated: false,
-            bonusAmountSnap: new Prisma.Decimal(0),
-            changeBy: 'SYSTEM',
+            bonusAmountUsdSnap: new Prisma.Decimal(0),
         });
 
         return savedUserTier;
@@ -92,7 +101,7 @@ export class InitializeUserTierService {
             case TierEvaluationCycle.NONE:
                 return null;
             default:
-                // Default to 30 days if unknown
+                // 기본값 30일
                 now.setUTCDate(now.getUTCDate() + 30);
                 return now;
         }

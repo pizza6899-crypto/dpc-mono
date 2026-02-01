@@ -46,19 +46,17 @@ export class TierService {
         this.policy.validateTranslations(props.translations, existingLanguages);
         this.policy.validateUpdateProps(props);
 
-        // 전체 티어 정합성 검증 (우선순위 중복 및 요건 역전 방지)
+        // 전체 티어 정합성 검증 (레벨 중복 및 요건 역전 방지)
         // 동시성 문제를 방지하기 위해 캐시를 무시하고 DB에서 최신 목록을 직접 가져옵니다.
         const allTiers = await this.repository.findAll({ ignoreCache: true });
         const updatedTiers = allTiers.map(t => {
             if (t.code === props.code) {
-                // 수정될 티어의 가상 객체 생성 (Prisma.Decimal 호환을 위해 값 변환 필요할 수 있음)
-                // 실제 Tier.fromPersistence와 유사하게 동작하도록 구성
                 return {
                     ...t,
-                    rank: props.rank ?? t.rank,
-                    requirementUsd: props.requirementUsd !== undefined ? new Prisma.Decimal(props.requirementUsd) : t.requirementUsd,
-                    requirementDepositUsd: props.requirementDepositUsd !== undefined ? new Prisma.Decimal(props.requirementDepositUsd) : t.requirementDepositUsd,
-                    maintenanceRollingUsd: props.maintenanceRollingUsd !== undefined ? new Prisma.Decimal(props.maintenanceRollingUsd) : t.maintenanceRollingUsd,
+                    level: props.level ?? t.level,
+                    upgradeRollingRequiredUsd: props.upgradeRollingRequiredUsd !== undefined ? new Prisma.Decimal(props.upgradeRollingRequiredUsd) : t.upgradeRollingRequiredUsd,
+                    upgradeDepositRequiredUsd: props.upgradeDepositRequiredUsd !== undefined ? new Prisma.Decimal(props.upgradeDepositRequiredUsd) : t.upgradeDepositRequiredUsd,
+                    maintainRollingRequiredUsd: props.maintainRollingRequiredUsd !== undefined ? new Prisma.Decimal(props.maintainRollingRequiredUsd) : t.maintainRollingRequiredUsd,
                 } as any;
             }
             return t;
@@ -83,9 +81,6 @@ export class TierService {
         // imageFileId는 DB 필드가 아니므로 제외하고, 대신 imageUrl을 포함시킴
         const { imageFileId: _, ...repoData } = props;
 
-        // UpdateTierProps 인터페이스에 imageUrl이 정식으로 포함되어 있지 않다면
-        // Repository 레벨에서 이를 처리할 수 있도록 타입을 맞추거나 확장이 필요합니다.
-        // 현재는 전개를 통해 값을 전달합니다.
         const updatePayload: UpdateTierProps = {
             ...repoData,
             ...(imageUrl !== undefined ? { imageUrl } : {}),

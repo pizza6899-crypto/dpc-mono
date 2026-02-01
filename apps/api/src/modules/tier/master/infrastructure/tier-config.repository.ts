@@ -31,12 +31,11 @@ export class TierConfigRepository implements TierConfigRepositoryPort {
         const updated = await this.tx.tierConfig.update({
             where: { id: TierConfig.SINGLETON_ID },
             data: {
-                isPromotionEnabled: props.isPromotionEnabled,
+                isUpgradeEnabled: props.isUpgradeEnabled,
                 isDowngradeEnabled: props.isDowngradeEnabled,
                 isBonusEnabled: props.isBonusEnabled,
-                defaultGracePeriodDays: props.defaultGracePeriodDays,
-                triggerIntervalMinutes: props.triggerIntervalMinutes,
-                // @ts-ignore: Prisma Client type sync lag (Schema is BigInt)
+                defaultDowngradeGracePeriodDays: props.defaultDowngradeGracePeriodDays,
+                defaultRewardExpiryDays: props.defaultRewardExpiryDays,
                 updatedBy: props.updatedBy,
             }
         });

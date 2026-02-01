@@ -3,7 +3,9 @@ import { BullModule } from '@nestjs/bullmq';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { TierAuditRepositoryPort } from './infrastructure/tier-audit.repository.port';
 import { TierAuditRepository } from './infrastructure/tier-audit.repository';
-import { TierAuditService } from './application/tier-audit.service';
+import { RecordTierHistoryService } from './application/record-tier-history.service';
+import { TierStatsService } from './application/tier-stats.service';
+import { HandleTierStatsService } from './application/handle-tier-stats.service';
 import { TierStatsAggregationProcessor } from './infrastructure/tier-stats-aggregation.processor';
 import { TierStatsRecordProcessor } from './infrastructure/tier-stats-record.processor';
 import { TierProfileModule } from '../profile/tier-profile.module';
@@ -27,11 +29,18 @@ import { TIER_QUEUES } from './infrastructure/tier-audit.bullmq';
     controllers: [TierAuditAdminController],
     providers: [
         { provide: TierAuditRepositoryPort, useClass: TierAuditRepository },
-        TierAuditService,
+        RecordTierHistoryService,
+        TierStatsService,
+        HandleTierStatsService,
         TierStatsAggregationProcessor,
         TierStatsRecordProcessor,
         GetTierDistributionService,
     ],
-    exports: [TierAuditRepositoryPort, TierAuditService],
+    exports: [
+        TierAuditRepositoryPort,
+        RecordTierHistoryService,
+        TierStatsService,
+        HandleTierStatsService,
+    ],
 })
 export class TierAuditModule { }

@@ -3,7 +3,7 @@ import { Job } from 'bullmq';
 import { Logger } from '@nestjs/common';
 import { ClsService } from 'nestjs-cls';
 import { TierAuditJobType, TierAuditJobPayload } from './tier-audit.types';
-import { TierAuditService } from '../application/tier-audit.service';
+import { HandleTierStatsService } from '../application/handle-tier-stats.service';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
 import { BULLMQ_QUEUES, getQueueConfig } from 'src/infrastructure/bullmq/bullmq.constants';
 
@@ -14,7 +14,7 @@ export class TierStatsRecordProcessor extends BaseProcessor<TierAuditJobPayload,
     protected readonly logger = new Logger(TierStatsRecordProcessor.name);
 
     constructor(
-        private readonly auditService: TierAuditService,
+        private readonly handleStatsService: HandleTierStatsService,
         protected readonly cls: ClsService,
     ) {
         super();
@@ -25,10 +25,10 @@ export class TierStatsRecordProcessor extends BaseProcessor<TierAuditJobPayload,
 
         switch (payload?.type) {
             case TierAuditJobType.RECORD_TIER_SNAPSHOT:
-                await this.auditService.handleRecordStats(payload.data);
+                await this.handleStatsService.handleRecord(payload.data);
                 break;
             case TierAuditJobType.INCREMENT_TIER_STATS:
-                await this.auditService.handleIncrementStats(payload.data);
+                await this.handleStatsService.handleIncrement(payload.data);
                 break;
             default:
                 this.logger.warn(`Unknown or missing tier audit job type: ${(payload as any)?.type}`);

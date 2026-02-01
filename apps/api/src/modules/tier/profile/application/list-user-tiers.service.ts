@@ -18,30 +18,25 @@ export interface UserTierListItemResult {
     userId: string;
     tierId: string;
     tierName: string;
-    totalEffectiveRollingUsd: string;
+    tierCode: string;
+    level: number;
+    lifetimeRollingUsd: string;
     currentPeriodRollingUsd: string;
     currentPeriodDepositUsd: string;
     status: UserTierStatus;
     lastTierChangedAt: Date;
     nextEvaluationAt: Date | null;
-    highestPromotedRank: number;
-    lastBonusReceivedAt: Date | null;
-    graceEndsAt: Date | null;
+    maxLevelAchieved: number;
+    downgradeGracePeriodEndsAt: Date | null;
     isBonusEligible: boolean;
-    note: string | null;
-    demotionWarningIssuedAt: Date | null;
-    demotionWarningTargetTierId: string | null;
-    demotionWarningTargetTierName: string | null;
     hasCustomOverrides: boolean;
     currentBenefits: {
         compRate: string;
-        lossbackRate: string;
-        rakebackRate: string;
-        reloadBonusRate: string;
+        weeklyLossbackRate: string;
+        monthlyLossbackRate: string;
         dailyWithdrawalLimitUsd: string;
         isWithdrawalUnlimited: boolean;
         hasDedicatedManager: boolean;
-        isVIPEventEligible: boolean;
     };
 }
 
@@ -62,39 +57,32 @@ export class ListUserTiersService {
                     userId: ut.userId.toString(),
                     tierId: ut.tierId.toString(),
                     tierName: ut.tier?.getName() ?? 'Unknown',
-                    totalEffectiveRollingUsd: ut.totalEffectiveRollingUsd.toString(),
+                    tierCode: ut.tier?.code ?? 'UNKNOWN',
+                    level: ut.currentLevel,
+                    lifetimeRollingUsd: ut.lifetimeRollingUsd.toString(),
                     currentPeriodRollingUsd: ut.currentPeriodRollingUsd.toString(),
                     currentPeriodDepositUsd: ut.currentPeriodDepositUsd.toString(),
                     status: ut.status,
                     lastTierChangedAt: ut.lastTierChangedAt,
                     nextEvaluationAt: ut.nextEvaluationAt,
-                    highestPromotedRank: ut.highestPromotedRank,
-                    lastBonusReceivedAt: ut.lastBonusReceivedAt,
-                    graceEndsAt: ut.graceEndsAt,
+                    maxLevelAchieved: ut.maxLevelAchieved,
+                    downgradeGracePeriodEndsAt: ut.downgradeGracePeriodEndsAt,
                     isBonusEligible: ut.isBonusEligible,
-                    note: ut.note,
-                    demotionWarningIssuedAt: ut.demotionWarningIssuedAt,
-                    demotionWarningTargetTierId: ut.demotionWarningTargetTierId?.toString() ?? null,
-                    demotionWarningTargetTierName: ut.demotionWarningTargetTier?.getName() ?? null,
                     hasCustomOverrides: !!(
                         ut.customCompRate ||
-                        ut.customLossbackRate ||
-                        ut.customRakebackRate ||
-                        ut.customReloadBonusRate ||
+                        ut.customWeeklyLossbackRate ||
+                        ut.customMonthlyLossbackRate ||
                         ut.customWithdrawalLimitUsd ||
                         ut.isCustomWithdrawalUnlimited !== null ||
-                        ut.isCustomDedicatedManager !== null ||
-                        ut.isCustomVipEventEligible !== null
+                        ut.isCustomDedicatedManager !== null
                     ),
                     currentBenefits: {
                         compRate: benefits.compRate.toString(),
-                        lossbackRate: benefits.lossbackRate.toString(),
-                        rakebackRate: benefits.rakebackRate.toString(),
-                        reloadBonusRate: benefits.reloadBonusRate.toString(),
+                        weeklyLossbackRate: benefits.weeklyLossbackRate.toString(),
+                        monthlyLossbackRate: benefits.monthlyLossbackRate.toString(),
                         dailyWithdrawalLimitUsd: benefits.dailyWithdrawalLimitUsd.toString(),
                         isWithdrawalUnlimited: benefits.isWithdrawalUnlimited,
                         hasDedicatedManager: benefits.hasDedicatedManager,
-                        isVIPEventEligible: benefits.isVIPEventEligible,
                     },
                 };
             }),

@@ -3,6 +3,7 @@ import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { UserTier } from '../domain/user-tier.entity';
 import { UserTierRepositoryPort } from './user-tier.repository.port';
+import { UserTierStatus } from '@prisma/client';
 
 @Injectable()
 export class UserTierRepository implements UserTierRepositoryPort {
@@ -16,7 +17,7 @@ export class UserTierRepository implements UserTierRepositoryPort {
             where: { userId },
             include: {
                 tier: { include: { translations: true } },
-                demotionWarningTargetTier: { include: { translations: true } }
+                downgradeWarningTargetTier: { include: { translations: true } }
             }
         });
         return record ? UserTier.fromPersistence(record) : null;
@@ -25,29 +26,31 @@ export class UserTierRepository implements UserTierRepositoryPort {
     async save(userTier: UserTier): Promise<UserTier> {
         const data = {
             tierId: userTier.tierId,
-            totalEffectiveRollingUsd: userTier.totalEffectiveRollingUsd,
+            lifetimeRollingUsd: userTier.lifetimeRollingUsd,
+            statusRollingUsd: userTier.statusRollingUsd,
             currentPeriodRollingUsd: userTier.currentPeriodRollingUsd,
-            totalDepositUsd: userTier.totalDepositUsd,
+            lifetimeDepositUsd: userTier.lifetimeDepositUsd,
             currentPeriodDepositUsd: userTier.currentPeriodDepositUsd,
             lastEvaluationAt: userTier.lastEvaluationAt,
-            highestPromotedRank: userTier.highestPromotedRank,
+            currentLevel: userTier.currentLevel,
+            maxLevelAchieved: userTier.maxLevelAchieved,
             lastBonusReceivedAt: userTier.lastBonusReceivedAt,
             status: userTier.status,
-            graceEndsAt: userTier.graceEndsAt,
+            downgradeGracePeriodEndsAt: userTier.downgradeGracePeriodEndsAt,
             lastTierChangedAt: userTier.lastTierChangedAt,
+            lastUpgradeAt: userTier.lastUpgradeAt,
+            lastDowngradeAt: userTier.lastDowngradeAt,
             customCompRate: userTier.customCompRate,
-            customLossbackRate: userTier.customLossbackRate,
-            customRakebackRate: userTier.customRakebackRate,
-            customReloadBonusRate: userTier.customReloadBonusRate,
+            customWeeklyLossbackRate: userTier.customWeeklyLossbackRate,
+            customMonthlyLossbackRate: userTier.customMonthlyLossbackRate,
             customWithdrawalLimitUsd: userTier.customWithdrawalLimitUsd,
             isCustomWithdrawalUnlimited: userTier.isCustomWithdrawalUnlimited,
             isCustomDedicatedManager: userTier.isCustomDedicatedManager,
-            isCustomVipEventEligible: userTier.isCustomVipEventEligible,
             isBonusEligible: userTier.isBonusEligible,
             nextEvaluationAt: userTier.nextEvaluationAt,
             note: userTier.note,
-            demotionWarningIssuedAt: userTier.demotionWarningIssuedAt,
-            demotionWarningTargetTierId: userTier.demotionWarningTargetTierId,
+            downgradeWarningIssuedAt: userTier.downgradeWarningIssuedAt,
+            downgradeWarningTargetTierId: userTier.downgradeWarningTargetTierId,
         };
 
         const record = await this.tx.userTier.upsert({
@@ -56,7 +59,7 @@ export class UserTierRepository implements UserTierRepositoryPort {
             update: data,
             include: {
                 tier: { include: { translations: true } },
-                demotionWarningTargetTier: { include: { translations: true } }
+                downgradeWarningTargetTier: { include: { translations: true } }
             }
         });
 
@@ -75,7 +78,7 @@ export class UserTierRepository implements UserTierRepositoryPort {
         }));
     }
 
-    async countGroupByTierAndStatus(): Promise<{ tierId: bigint; status: import('@prisma/client').UserTierStatus; count: number }[]> {
+    async countGroupByTierAndStatus(): Promise<{ tierId: bigint; status: UserTierStatus; count: number }[]> {
         const groups = await this.tx.userTier.groupBy({
             by: ['tierId', 'status'],
             _count: { userId: true }
@@ -83,7 +86,7 @@ export class UserTierRepository implements UserTierRepositoryPort {
 
         return groups.map(g => ({
             tierId: g.tierId,
-            status: g.status,
+            status: g.status as UserTierStatus,
             count: g._count.userId
         }));
     }
@@ -92,12 +95,13 @@ export class UserTierRepository implements UserTierRepositoryPort {
         const record = await this.tx.userTier.update({
             where: { userId },
             data: {
-                totalEffectiveRollingUsd: { increment: amountUsd },
+                lifetimeRollingUsd: { increment: amountUsd },
+                statusRollingUsd: { increment: amountUsd },
                 currentPeriodRollingUsd: { increment: amountUsd },
             },
             include: {
                 tier: { include: { translations: true } },
-                demotionWarningTargetTier: { include: { translations: true } }
+                downgradeWarningTargetTier: { include: { translations: true } }
             }
         });
 
@@ -108,12 +112,12 @@ export class UserTierRepository implements UserTierRepositoryPort {
         const record = await this.tx.userTier.update({
             where: { userId },
             data: {
-                totalDepositUsd: { increment: amountUsd },
+                lifetimeDepositUsd: { increment: amountUsd },
                 currentPeriodDepositUsd: { increment: amountUsd },
             },
             include: {
                 tier: { include: { translations: true } },
-                demotionWarningTargetTier: { include: { translations: true } }
+                downgradeWarningTargetTier: { include: { translations: true } }
             }
         });
 
@@ -137,7 +141,7 @@ export class UserTierRepository implements UserTierRepositoryPort {
 
     async findMany(params: {
         tierId?: bigint;
-        status?: import('@prisma/client').UserTierStatus;
+        status?: UserTierStatus;
         userId?: bigint;
         email?: string;
         search?: string;
@@ -159,11 +163,10 @@ export class UserTierRepository implements UserTierRepositoryPort {
                 { user: { email: { contains: search, mode: 'insensitive' } } }
             ];
 
-            // If search is numeric, also search by userId
             if (/^\d+$/.test(search)) {
                 try {
                     or.push({ userId: BigInt(search) });
-                } catch (e) { /* ignore if too large for BigInt */ }
+                } catch (e) { /* ignore */ }
             }
             where.OR = or;
         }
@@ -173,7 +176,7 @@ export class UserTierRepository implements UserTierRepositoryPort {
                 where,
                 include: {
                     tier: { include: { translations: true } },
-                    demotionWarningTargetTier: { include: { translations: true } }
+                    downgradeWarningTargetTier: { include: { translations: true } }
                 },
                 skip,
                 take: limit,

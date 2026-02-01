@@ -2,7 +2,7 @@ import { Processor } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { Logger } from '@nestjs/common';
 import { ClsService } from 'nestjs-cls';
-import { TierAuditService } from '../application/tier-audit.service';
+import { TierStatsService } from '../application/tier-stats.service';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
 import { BULLMQ_QUEUES, getQueueConfig } from 'src/infrastructure/bullmq/bullmq.constants';
 import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository.port';
@@ -15,7 +15,7 @@ export class TierStatsAggregationProcessor extends BaseProcessor<any, void> {
     protected readonly logger = new Logger(TierStatsAggregationProcessor.name);
 
     constructor(
-        private readonly auditService: TierAuditService,
+        private readonly tierStatsService: TierStatsService,
         private readonly userTierRepository: UserTierRepositoryPort,
         private readonly tierRepository: TierRepositoryPort,
         protected readonly cls: ClsService,
@@ -53,10 +53,10 @@ export class TierStatsAggregationProcessor extends BaseProcessor<any, void> {
                 const counts = tierMap.get(tier.id.toString()) || { total: 0, maintained: 0, grace: 0 };
 
                 // 개별 티어 스냅샷 기록 (유지/유예 인원 포함)
-                await this.auditService.recordTierStats(now, tier.id, {
+                await this.tierStatsService.record(now, tier.id, {
                     snapshotUserCount: counts.total,
                     maintainedCount: counts.maintained,
-                    graceCount: counts.grace
+                    graceCount: counts.grace,
                 });
                 processedCount++;
             }

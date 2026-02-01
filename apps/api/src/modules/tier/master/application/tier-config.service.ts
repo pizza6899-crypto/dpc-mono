@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { TierConfigRepositoryPort } from '../infrastructure/tier-config.repository.port';
+import { TierConfigRepositoryPort, UpdateTierConfigProps } from '../infrastructure/tier-config.repository.port';
 import { TierConfig } from '../domain/tier-config.entity';
 import { TierConfigNotFoundException } from '../domain/tier-master.exception';
 
@@ -18,14 +18,7 @@ export class TierConfigService {
         return config;
     }
 
-    async update(props: {
-        isPromotionEnabled?: boolean;
-        isDowngradeEnabled?: boolean;
-        isBonusEnabled?: boolean;
-        defaultGracePeriodDays?: number;
-        triggerIntervalMinutes?: number;
-        updatedBy: bigint;
-    }): Promise<TierConfig> {
+    async update(props: UpdateTierConfigProps): Promise<TierConfig> {
         return this.repository.update(props);
     }
 }

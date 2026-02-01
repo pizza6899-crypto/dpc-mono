@@ -23,19 +23,25 @@ export class UpdateTierAdminRequestDto {
     @IsOptional()
     @IsNumber()
     @Min(0)
-    requirementUsd?: number;
+    level?: number;
 
     @ApiProperty({ required: false })
     @IsOptional()
     @IsNumber()
     @Min(0)
-    requirementDepositUsd?: number;
+    upgradeRollingRequiredUsd?: number;
 
     @ApiProperty({ required: false })
     @IsOptional()
     @IsNumber()
     @Min(0)
-    maintenanceRollingUsd?: number;
+    upgradeDepositRequiredUsd?: number;
+
+    @ApiProperty({ required: false })
+    @IsOptional()
+    @IsNumber()
+    @Min(0)
+    maintainRollingRequiredUsd?: number;
 
     @ApiProperty({ enum: TierEvaluationCycle, required: false })
     @IsOptional()
@@ -46,13 +52,19 @@ export class UpdateTierAdminRequestDto {
     @IsOptional()
     @IsNumber()
     @Min(0)
-    levelUpBonusUsd?: number;
+    upgradeBonusUsd?: number;
 
     @ApiProperty({ required: false })
     @IsOptional()
     @IsNumber()
     @Min(0)
-    levelUpBonusWageringMultiplier?: number;
+    upgradeBonusWageringMultiplier?: number;
+
+    @ApiProperty({ required: false, description: 'Bonus reward expiry days', nullable: true })
+    @IsOptional()
+    @IsNumber()
+    @Min(1)
+    rewardExpiryDays?: number | null;
 
     @ApiProperty({ required: false, description: 'Whether to pay bonus immediately (true) or wait for claim (false)' })
     @IsOptional()
@@ -69,19 +81,13 @@ export class UpdateTierAdminRequestDto {
     @IsOptional()
     @IsNumber()
     @Min(0)
-    lossbackRate?: number;
+    weeklyLossbackRate?: number;
 
     @ApiProperty({ required: false })
     @IsOptional()
     @IsNumber()
     @Min(0)
-    rakebackRate?: number;
-
-    @ApiProperty({ required: false })
-    @IsOptional()
-    @IsNumber()
-    @Min(0)
-    reloadBonusRate?: number;
+    monthlyLossbackRate?: number;
 
     @ApiProperty({ required: false })
     @IsOptional()
@@ -102,7 +108,17 @@ export class UpdateTierAdminRequestDto {
     @ApiProperty({ required: false })
     @IsOptional()
     @IsBoolean()
-    isVIPEventEligible?: boolean;
+    isActive?: boolean;
+
+    @ApiProperty({ required: false })
+    @IsOptional()
+    @IsBoolean()
+    isHidden?: boolean;
+
+    @ApiProperty({ required: false })
+    @IsOptional()
+    @IsBoolean()
+    isManualOnly?: boolean;
 
     @ApiProperty({ required: false, description: 'File ID for tier image (e.g., f_abc123)', nullable: true })
     @IsOptional()

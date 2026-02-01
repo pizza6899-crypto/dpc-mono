@@ -20,9 +20,18 @@ export class UserTierHistoryAdminResponseDto {
     @ApiProperty({ description: 'Date of change / 변경 일시' })
     changedAt: Date;
 
-    @ApiProperty({ description: 'Rolling amount snapshot at the time of change / 변경 시점의 롤링 금액 스냅샷' })
-    rollingAmountSnap: string;
+    @ApiProperty({ description: 'Promotion rolling amount snapshot / 판정용 롤링 금액 스냅샷' })
+    statusRollingUsdSnap: string;
 
-    @ApiProperty({ description: 'Deposit amount snapshot at the time of change / 변경 시점의 입금 금액 스냅샷' })
-    depositAmountSnap: string;
+    @ApiProperty({ description: 'Period deposit amount snapshot / 기간 입금 금액 스냅샷' })
+    currentPeriodDepositUsdSnap: string;
+
+    @ApiProperty({ description: 'Lifetime rolling amount snapshot / 전체 누적 롤링 금액 스냅샷' })
+    lifetimeRollingUsdSnap: string;
+
+    @ApiProperty({ description: 'Lifetime deposit amount snapshot / 전체 누적 입금 금액 스냅샷' })
+    lifetimeDepositUsdSnap: string;
+
+    @ApiProperty({ description: 'Bonus amount generated / 발생한 보너스 금액' })
+    bonusAmountUsdSnap: string;
 }

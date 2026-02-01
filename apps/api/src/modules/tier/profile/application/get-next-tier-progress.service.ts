@@ -23,20 +23,22 @@ export class GetNextTierProgressService {
      * 유저의 현재 티어 정보를 바탕으로 다음 티어 승급 진행률을 계산합니다.
      * 엔티티를 직접 전달받아 DB 조회를 최소화합니다.
      */
-    execute(userTier: UserTier, nextTier: Tier | null, language: Language): NextTierProgressResult | null {
+    execute(userTier: UserTier, nextTier: Tier | null, language: Language = Language.EN): NextTierProgressResult | null {
         if (!userTier.tier || !nextTier) return null;
 
-        // Rolling Progress (Promotion is based on Lifetime/Total rolling as per requirementUsd policy)
-        const requiredRolling = nextTier.requirementUsd;
-        const currentRolling = userTier.totalEffectiveRollingUsd;
+        // [Policy] Promotion progress is calculated based on statusRollingUsd and lifetimeDepositUsd
+
+        // Rolling Progress (Upgrade Rolling Required)
+        const requiredRolling = nextTier.upgradeRollingRequiredUsd;
+        const currentRolling = userTier.statusRollingUsd;
         const remainingRolling = requiredRolling.minus(currentRolling);
         const rollingProgress = requiredRolling.gt(0)
             ? currentRolling.div(requiredRolling).mul(100).toNumber()
             : 100;
 
-        // Deposit Progress
-        const requiredDeposit = nextTier.requirementDepositUsd;
-        const currentDeposit = userTier.totalDepositUsd;
+        // Deposit Progress (Upgrade Deposit Required)
+        const requiredDeposit = nextTier.upgradeDepositRequiredUsd;
+        const currentDeposit = userTier.lifetimeDepositUsd;
         const remainingDeposit = requiredDeposit.minus(currentDeposit);
         const depositProgress = requiredDeposit.gt(0)
             ? currentDeposit.div(requiredDeposit).mul(100).toNumber()

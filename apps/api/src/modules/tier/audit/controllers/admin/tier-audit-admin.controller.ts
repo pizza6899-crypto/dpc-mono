@@ -23,7 +23,15 @@ export class TierAuditAdminController {
         description: 'Successfully retrieved tier distribution / 티어별 분포 조회 성공'
     })
     async getTierDistribution(@Query() query: GetTierDistributionQueryDto): Promise<TierDistributionResponseDto[]> {
-        return this.getTierDistributionService.execute(query.lang);
+        const results = await this.getTierDistributionService.execute(query.lang);
+
+        return results.map(result => ({
+            tierId: result.tierId.toString(),
+            tierCode: result.tierCode,
+            tierName: result.tierName,
+            tierLevel: result.tierLevel,
+            count: result.count,
+        }));
     }
 
 }

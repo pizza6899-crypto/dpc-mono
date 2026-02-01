@@ -18,7 +18,7 @@ export class TierRepository implements TierRepositoryPort {
         const fetcher = async () => {
             return await this.tx.tier.findMany({
                 include: { translations: true },
-                orderBy: { rank: 'asc' }
+                orderBy: { level: 'asc' }
             });
         };
 
@@ -29,9 +29,9 @@ export class TierRepository implements TierRepositoryPort {
         return records.map(record => Tier.fromPersistence(record));
     }
 
-    async findByRank(rank: number): Promise<Tier | null> {
+    async findByLevel(level: number): Promise<Tier | null> {
         const tiers = await this.findAll();
-        return tiers.find(tier => tier.rank === rank) || null;
+        return tiers.find(tier => tier.level === level) || null;
     }
 
     async findByCode(code: string): Promise<Tier | null> {
@@ -39,10 +39,10 @@ export class TierRepository implements TierRepositoryPort {
         return tiers.find(tier => tier.code === code) || null;
     }
 
-    async findNextTierByRank(rank: number): Promise<Tier | null> {
+    async findNextTierByLevel(level: number): Promise<Tier | null> {
         const tiers = await this.findAll();
-        // findAll()은 이미 rank ASC로 정렬되어 있으므로, 현재 rank보다 큰 첫 번째 티어가 다음 티어임.
-        return tiers.find(t => t.rank > rank) || null;
+        // findAll()은 이미 level ASC로 정렬되어 있으므로, 현재 level보다 큰 첫 번째 티어가 다음 티어임.
+        return tiers.find(t => t.level > level) || null;
     }
 
     async update(props: UpdateTierProps): Promise<Tier> {

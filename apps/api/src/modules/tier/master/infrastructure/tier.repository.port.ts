@@ -3,22 +3,24 @@ import { Tier } from '../domain/tier.entity';
 
 export interface UpdateTierProps {
     code: string;
-    requirementUsd?: number;
-    rank?: number;
-    requirementDepositUsd?: number;
-    maintenanceRollingUsd?: number;
+    level?: number;
+    upgradeRollingRequiredUsd?: number;
+    upgradeDepositRequiredUsd?: number;
+    maintainRollingRequiredUsd?: number;
     evaluationCycle?: TierEvaluationCycle;
-    levelUpBonusUsd?: number;
-    levelUpBonusWageringMultiplier?: number;
+    upgradeBonusUsd?: number;
+    upgradeBonusWageringMultiplier?: number;
+    rewardExpiryDays?: number | null;
     isImmediateBonusEnabled?: boolean;
     compRate?: number;
-    lossbackRate?: number;
-    rakebackRate?: number;
-    reloadBonusRate?: number;
+    weeklyLossbackRate?: number;
+    monthlyLossbackRate?: number;
     dailyWithdrawalLimitUsd?: number;
     isWithdrawalUnlimited?: boolean;
     hasDedicatedManager?: boolean;
-    isVIPEventEligible?: boolean;
+    isActive?: boolean;
+    isHidden?: boolean;
+    isManualOnly?: boolean;
     imageUrl?: string | null;
     imageFileId?: string | null;
     translations?: {
@@ -31,8 +33,8 @@ export interface UpdateTierProps {
 
 export abstract class TierRepositoryPort {
     abstract findAll(options?: { ignoreCache?: boolean }): Promise<Tier[]>;
-    abstract findByRank(rank: number): Promise<Tier | null>;
+    abstract findByLevel(level: number): Promise<Tier | null>;
     abstract findByCode(code: string): Promise<Tier | null>;
-    abstract findNextTierByRank(rank: number): Promise<Tier | null>;
+    abstract findNextTierByLevel(level: number): Promise<Tier | null>;
     abstract update(props: UpdateTierProps): Promise<Tier>;
 }

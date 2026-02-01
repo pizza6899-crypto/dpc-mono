@@ -11,20 +11,21 @@ export class TierHistory {
         public readonly reason: string | null,
 
         // Snapshot: Data at the time of change
-        public readonly rollingAmountSnap: Prisma.Decimal,
-        public readonly depositAmountSnap: Prisma.Decimal,
+        public readonly statusRollingUsdSnap: Prisma.Decimal,
+        public readonly currentPeriodDepositUsdSnap: Prisma.Decimal,
         public readonly compRateSnap: Prisma.Decimal,
-        public readonly lossbackRateSnap: Prisma.Decimal,
-        public readonly rakebackRateSnap: Prisma.Decimal,
+        public readonly weeklyLossbackRateSnap: Prisma.Decimal,
+        public readonly monthlyLossbackRateSnap: Prisma.Decimal,
 
         // Snapshot: Rules & Status
-        public readonly requirementUsdSnap: Prisma.Decimal,
-        public readonly requirementDepositUsdSnap: Prisma.Decimal,
-        public readonly cumulativeDepositUsdSnap: Prisma.Decimal,
+        public readonly upgradeRollingRequiredUsdSnap: Prisma.Decimal,
+        public readonly upgradeDepositRequiredUsdSnap: Prisma.Decimal,
+        public readonly lifetimeRollingUsdSnap: Prisma.Decimal,
+        public readonly lifetimeDepositUsdSnap: Prisma.Decimal,
 
         // Bonus Info
         public readonly hasBonusGenerated: boolean,
-        public readonly bonusAmountSnap: Prisma.Decimal,
+        public readonly bonusAmountUsdSnap: Prisma.Decimal,
         public readonly skippedReason: string | null,
 
         public readonly changedAt: Date,
@@ -43,21 +44,22 @@ export class TierHistory {
             Cast.bigint(data.toTierId),
             data.changeType,
             data.reason,
-            Cast.decimal(data.rollingAmountSnap),
-            Cast.decimal(data.depositAmountSnap),
+            Cast.decimal(data.statusRollingUsdSnap),
+            Cast.decimal(data.currentPeriodDepositUsdSnap),
             Cast.decimal(data.compRateSnap),
-            Cast.decimal(data.lossbackRateSnap),
-            Cast.decimal(data.rakebackRateSnap),
-            Cast.decimal(data.requirementUsdSnap),
-            Cast.decimal(data.requirementDepositUsdSnap),
-            Cast.decimal(data.cumulativeDepositUsdSnap),
+            Cast.decimal(data.weeklyLossbackRateSnap),
+            Cast.decimal(data.monthlyLossbackRateSnap),
+            Cast.decimal(data.upgradeRollingRequiredUsdSnap),
+            Cast.decimal(data.upgradeDepositRequiredUsdSnap),
+            Cast.decimal(data.lifetimeRollingUsdSnap),
+            Cast.decimal(data.lifetimeDepositUsdSnap),
             data.hasBonusGenerated,
-            Cast.decimal(data.bonusAmountSnap),
+            Cast.decimal(data.bonusAmountUsdSnap),
             data.skippedReason,
             Cast.date(data.changedAt),
             data.changeBy,
             data.referenceType,
-            Cast.bigint(data.referenceId)
+            Cast.bigint(data.referenceId),
         );
     }
 }

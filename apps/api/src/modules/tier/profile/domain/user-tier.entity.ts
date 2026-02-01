@@ -3,13 +3,11 @@ import { Tier } from '../../master/domain/tier.entity';
 
 export interface EffectiveBenefits {
     compRate: Prisma.Decimal;
-    lossbackRate: Prisma.Decimal;
-    rakebackRate: Prisma.Decimal;
-    reloadBonusRate: Prisma.Decimal;
+    weeklyLossbackRate: Prisma.Decimal;
+    monthlyLossbackRate: Prisma.Decimal;
     dailyWithdrawalLimitUsd: Prisma.Decimal;
     isWithdrawalUnlimited: boolean;
     hasDedicatedManager: boolean;
-    isVIPEventEligible: boolean;
 }
 
 export class UserTier {
@@ -17,37 +15,45 @@ export class UserTier {
         public readonly id: bigint,
         public readonly userId: bigint,
         public tierId: bigint,
-        // States
-        public totalEffectiveRollingUsd: Prisma.Decimal,
+
+        // 상태 데이터
+        public lifetimeRollingUsd: Prisma.Decimal,
+        public statusRollingUsd: Prisma.Decimal,
         public currentPeriodRollingUsd: Prisma.Decimal,
-        public totalDepositUsd: Prisma.Decimal,
+        public lifetimeDepositUsd: Prisma.Decimal,
         public currentPeriodDepositUsd: Prisma.Decimal,
         public lastEvaluationAt: Date,
-        // Controls
-        public highestPromotedRank: number,
+
+        // 승급/강등 제어
+        public currentLevel: number,
+        public maxLevelAchieved: number,
         public lastBonusReceivedAt: Date | null,
         public status: UserTierStatus,
-        public graceEndsAt: Date | null,
+        public downgradeGracePeriodEndsAt: Date | null,
         public lastTierChangedAt: Date,
+        public lastUpgradeAt: Date | null,
+        public lastDowngradeAt: Date | null,
+
         // Overrides
         public customCompRate: Prisma.Decimal | null,
-        public customLossbackRate: Prisma.Decimal | null,
-        public customRakebackRate: Prisma.Decimal | null,
-        public customReloadBonusRate: Prisma.Decimal | null,
+        public customWeeklyLossbackRate: Prisma.Decimal | null,
+        public customMonthlyLossbackRate: Prisma.Decimal | null,
         public customWithdrawalLimitUsd: Prisma.Decimal | null,
         public isCustomWithdrawalUnlimited: boolean | null,
         public isCustomDedicatedManager: boolean | null,
-        public isCustomVipEventEligible: boolean | null,
-        // Audit
+
+        // Audit & Misc
+        public note: string | null,
         public isBonusEligible: boolean,
         public nextEvaluationAt: Date | null,
-        public note: string | null,
-        // Warning
-        public demotionWarningIssuedAt: Date | null,
-        public demotionWarningTargetTierId: bigint | null,
+
+        // Warning State
+        public downgradeWarningIssuedAt: Date | null,
+        public downgradeWarningTargetTierId: bigint | null,
+
         // Joined Data
         public readonly tier?: Tier,
-        public readonly demotionWarningTargetTier?: Tier,
+        public readonly downgradeWarningTargetTier?: Tier,
     ) { }
 
     getEffectiveBenefits(baseTier?: Tier): EffectiveBenefits {
@@ -56,40 +62,60 @@ export class UserTier {
 
         return {
             compRate: this.customCompRate ?? tier.compRate,
-            lossbackRate: this.customLossbackRate ?? tier.lossbackRate,
-            rakebackRate: this.customRakebackRate ?? tier.rakebackRate,
-            reloadBonusRate: this.customReloadBonusRate ?? tier.reloadBonusRate,
+            weeklyLossbackRate: this.customWeeklyLossbackRate ?? tier.weeklyLossbackRate,
+            monthlyLossbackRate: this.customMonthlyLossbackRate ?? tier.monthlyLossbackRate,
             dailyWithdrawalLimitUsd: this.customWithdrawalLimitUsd ?? tier.dailyWithdrawalLimitUsd,
             isWithdrawalUnlimited: this.isCustomWithdrawalUnlimited ?? tier.isWithdrawalUnlimited,
             hasDedicatedManager: this.isCustomDedicatedManager ?? tier.hasDedicatedManager,
-            isVIPEventEligible: this.isCustomVipEventEligible ?? tier.isVIPEventEligible,
         };
     }
 
     /**
-     * 티어를 변경하고 상태를 초기화합니다.
+     * 티어를 변경하고 상태를 초기화합니다 (승급 시).
      * @returns 승급 보너스 지급 대상 여부
      */
-    updateTier(targetTierId: bigint, rank: number): boolean {
-        // 이전에 도달했던 최고 등급보다 높은 등급으로 승급할 때만 보너스 지급
-        const isBonusEligibleJump = rank > this.highestPromotedRank;
+    upgradeTier(targetTierId: bigint, level: number): boolean {
+        // 이전에 도달했던 최고 레벨보다 높은 레벨로 승급할 때만 보너스 지급
+        const isBonusEligibleJump = level > this.maxLevelAchieved;
 
         this.tierId = targetTierId;
-        this.highestPromotedRank = Math.max(this.highestPromotedRank, rank);
+        this.currentLevel = level;
+        this.maxLevelAchieved = Math.max(this.maxLevelAchieved, level);
         this.lastTierChangedAt = new Date();
+        this.lastUpgradeAt = new Date();
         this.status = UserTierStatus.ACTIVE;
-        this.graceEndsAt = null;
-        this.demotionWarningIssuedAt = null;
-        this.demotionWarningTargetTierId = null;
+        this.downgradeGracePeriodEndsAt = null;
+        this.downgradeWarningIssuedAt = null;
+        this.downgradeWarningTargetTierId = null;
 
         return isBonusEligibleJump && this.isBonusEligible;
     }
 
-    setDemotionWarning(targetTierId: bigint, graceEndsAt: Date): void {
+    /**
+     * 티어를 강등하고 상태를 초기화합니다.
+     */
+    downgradeTier(targetTier: Tier): void {
+        this.tierId = targetTier.id;
+        this.currentLevel = targetTier.level;
+        this.lastTierChangedAt = new Date();
+        this.lastDowngradeAt = new Date();
+        this.status = UserTierStatus.ACTIVE;
+        this.downgradeGracePeriodEndsAt = null;
+        this.downgradeWarningIssuedAt = null;
+        this.downgradeWarningTargetTierId = null;
+
+        // [Policy] 강등 시 승급용 실적(statusRollingUsd)을 새 티어의 요구치로 Cap 처리합니다.
+        // 이는 강등된 유저가 바로 다시 승급하는 것을 방지하고, 해당 등급에서 일정 실적을 다시 쌓게 하기 위함입니다.
+        if (this.statusRollingUsd.gt(targetTier.upgradeRollingRequiredUsd)) {
+            this.statusRollingUsd = targetTier.upgradeRollingRequiredUsd;
+        }
+    }
+
+    setDowngradeWarning(targetTierId: bigint, graceEndsAt: Date): void {
         this.status = UserTierStatus.GRACE;
-        this.graceEndsAt = graceEndsAt;
-        this.demotionWarningIssuedAt = new Date();
-        this.demotionWarningTargetTierId = targetTierId;
+        this.downgradeGracePeriodEndsAt = graceEndsAt;
+        this.downgradeWarningIssuedAt = new Date();
+        this.downgradeWarningTargetTierId = targetTierId;
     }
 
     /**
@@ -97,7 +123,8 @@ export class UserTier {
      */
     incrementRolling(amount: Prisma.Decimal | number): void {
         const decimalAmount = new Prisma.Decimal(amount);
-        this.totalEffectiveRollingUsd = this.totalEffectiveRollingUsd.add(decimalAmount);
+        this.lifetimeRollingUsd = this.lifetimeRollingUsd.add(decimalAmount);
+        this.statusRollingUsd = this.statusRollingUsd.add(decimalAmount);
         this.currentPeriodRollingUsd = this.currentPeriodRollingUsd.add(decimalAmount);
     }
 
@@ -106,7 +133,7 @@ export class UserTier {
      */
     incrementDeposit(amount: Prisma.Decimal | number): void {
         const decimalAmount = new Prisma.Decimal(amount);
-        this.totalDepositUsd = this.totalDepositUsd.add(decimalAmount);
+        this.lifetimeDepositUsd = this.lifetimeDepositUsd.add(decimalAmount);
         this.currentPeriodDepositUsd = this.currentPeriodDepositUsd.add(decimalAmount);
     }
 
@@ -120,9 +147,9 @@ export class UserTier {
 
         // 상태 복구 및 경고 초기화
         this.status = UserTierStatus.ACTIVE;
-        this.graceEndsAt = null;
-        this.demotionWarningIssuedAt = null;
-        this.demotionWarningTargetTierId = null;
+        this.downgradeGracePeriodEndsAt = null;
+        this.downgradeWarningIssuedAt = null;
+        this.downgradeWarningTargetTierId = null;
 
         if (evaluationCycleDays > 0) {
             const nextDate = new Date();
@@ -136,20 +163,43 @@ export class UserTier {
     static fromPersistence(data: Prisma.UserTierGetPayload<{
         include: {
             tier: { include: { translations: true } },
-            demotionWarningTargetTier: { include: { translations: true } }
+            downgradeWarningTargetTier: { include: { translations: true } }
         }
     }>): UserTier {
+        const tier = data.tier ? Tier.fromPersistence(data.tier) : undefined;
+        const downgradeWarningTargetTier = data.downgradeWarningTargetTier ? Tier.fromPersistence(data.downgradeWarningTargetTier) : undefined;
+
         return new UserTier(
-            data.id, data.userId, data.tierId,
-            data.totalEffectiveRollingUsd, data.currentPeriodRollingUsd, data.totalDepositUsd, data.currentPeriodDepositUsd, data.lastEvaluationAt,
-            data.highestPromotedRank, data.lastBonusReceivedAt, data.status as UserTierStatus, data.graceEndsAt, data.lastTierChangedAt,
-            data.customCompRate, data.customLossbackRate, data.customRakebackRate, data.customReloadBonusRate,
-            data.customWithdrawalLimitUsd, data.isCustomWithdrawalUnlimited,
-            data.isCustomDedicatedManager, data.isCustomVipEventEligible,
-            data.isBonusEligible, data.nextEvaluationAt, data.note,
-            data.demotionWarningIssuedAt, data.demotionWarningTargetTierId,
-            data.tier ? Tier.fromPersistence(data.tier) : undefined,
-            data.demotionWarningTargetTier ? Tier.fromPersistence(data.demotionWarningTargetTier) : undefined
+            data.id,
+            data.userId,
+            data.tierId,
+            data.lifetimeRollingUsd,
+            data.statusRollingUsd,
+            data.currentPeriodRollingUsd,
+            data.lifetimeDepositUsd,
+            data.currentPeriodDepositUsd,
+            data.lastEvaluationAt,
+            data.currentLevel,
+            data.maxLevelAchieved,
+            data.lastBonusReceivedAt,
+            data.status as UserTierStatus,
+            data.downgradeGracePeriodEndsAt,
+            data.lastTierChangedAt,
+            data.lastUpgradeAt,
+            data.lastDowngradeAt,
+            data.customCompRate,
+            data.customWeeklyLossbackRate,
+            data.customMonthlyLossbackRate,
+            data.customWithdrawalLimitUsd,
+            data.isCustomWithdrawalUnlimited,
+            data.isCustomDedicatedManager,
+            data.note,
+            data.isBonusEligible,
+            data.nextEvaluationAt,
+            data.downgradeWarningIssuedAt,
+            data.downgradeWarningTargetTierId,
+            tier,
+            downgradeWarningTargetTier,
         );
     }
 }

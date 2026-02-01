@@ -9,11 +9,11 @@ export interface RecordTierSnapshotJobData {
     tierId: string;
     metrics: {
         snapshotUserCount?: number;
-        totalBonusPaidUsd?: string;
-        totalRollingUsd?: string;
-        totalDepositUsd?: string;
-        promotedCount?: number;
-        demotedCount?: number;
+        periodBonusPaidUsd?: string;
+        periodRollingUsd?: string;
+        periodDepositUsd?: string;
+        upgradedCount?: number;
+        downgradedCount?: number;
         maintainedCount?: number;
         graceCount?: number;
     };

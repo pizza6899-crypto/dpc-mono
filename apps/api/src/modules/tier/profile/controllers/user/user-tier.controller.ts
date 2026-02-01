@@ -39,7 +39,7 @@ export class UserTierController {
     ): Promise<UserTierResponseDto> {
         // 1. 필요한 데이터를 병렬로 조회 (DB I/O 최적화 - 전체 조회가 아닌 필요한 단건만 조회)
         const userTier = await this.getMyTierService.findUserTier(user.id);
-        const nextTier = await this.tierRepository.findNextTierByRank(userTier.tier!.rank);
+        const nextTier = await this.tierRepository.findNextTierByLevel(userTier.currentLevel);
 
         // 2. 가공 서비스를 통한 결과 생성 (엔티티를 직접 전달)
         const myTierResult = this.getMyTierService.execute(userTier, query.lang);
@@ -48,20 +48,20 @@ export class UserTierController {
         return {
             id: this.sqidsService.encode(myTierResult.userTierId, SqidsPrefix.USER_TIER),
             tierId: this.sqidsService.encode(myTierResult.tierId, SqidsPrefix.TIER),
+            code: myTierResult.code,
             name: myTierResult.name,
+            level: myTierResult.level,
             imageUrl: myTierResult.imageUrl,
             status: myTierResult.status,
             lastChangedAt: myTierResult.lastTierChangedAt,
             nextEvaluationAt: myTierResult.nextEvaluationAt,
             benefits: {
                 compRate: myTierResult.benefits.compRate.toFixed(4),
-                lossbackRate: myTierResult.benefits.lossbackRate.toFixed(4),
-                rakebackRate: myTierResult.benefits.rakebackRate.toFixed(4),
-                reloadBonusRate: myTierResult.benefits.reloadBonusRate.toFixed(4),
+                weeklyLossbackRate: myTierResult.benefits.weeklyLossbackRate.toFixed(4),
+                monthlyLossbackRate: myTierResult.benefits.monthlyLossbackRate.toFixed(4),
                 dailyWithdrawalLimitUsd: myTierResult.benefits.dailyWithdrawalLimitUsd.toFixed(2),
                 isWithdrawalUnlimited: myTierResult.benefits.isWithdrawalUnlimited,
                 hasDedicatedManager: myTierResult.benefits.hasDedicatedManager,
-                isVIPEventEligible: myTierResult.benefits.isVIPEventEligible,
             },
             nextTierProgress: progressResult ? {
                 id: this.sqidsService.encode(progressResult.id, SqidsPrefix.TIER),

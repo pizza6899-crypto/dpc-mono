@@ -1,15 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsOptional } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, Min } from 'class-validator';
 
 export class UpdateTierConfigAdminRequestDto {
     @ApiProperty({
-        description: 'Enable/Disable promotion / 승급 활성화 여부',
+        description: 'Enable/Disable upgrade / 승급 활성화 여부',
         example: true,
         required: false,
     })
     @IsBoolean()
     @IsOptional()
-    isPromotionEnabled?: boolean;
+    isUpgradeEnabled?: boolean;
 
     @ApiProperty({
         description: 'Enable/Disable downgrade / 강등 활성화 여부',
@@ -25,7 +25,15 @@ export class UpdateTierConfigAdminRequestDto {
     @IsOptional()
     isBonusEnabled?: boolean;
 
-    @ApiProperty({ description: 'Default grace period days / 기본 강등 유예 기간 (일)', example: 7, required: false })
+    @ApiProperty({ description: 'Default downgrade grace period days / 기본 강등 유예 기간 (일)', example: 7, required: false })
+    @IsNumber()
+    @Min(0)
     @IsOptional()
-    defaultGracePeriodDays?: number;
+    defaultDowngradeGracePeriodDays?: number;
+
+    @ApiProperty({ description: 'Default reward expiry days / 기본 보너스 유효 기간 (일)', example: 30, required: false })
+    @IsNumber()
+    @Min(1)
+    @IsOptional()
+    defaultRewardExpiryDays?: number;
 }

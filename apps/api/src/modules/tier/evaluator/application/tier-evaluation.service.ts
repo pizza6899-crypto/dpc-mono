@@ -26,7 +26,7 @@ export class TierEvaluationService {
         // 1. 글로벌 강등 설정 확인
         const config = await this.tierConfigRepository.find();
         const isDowngradeDisabled = config?.isDowngradeEnabled === false;
-        const gracePeriodDays = config?.defaultGracePeriodDays ?? 7;
+        const gracePeriodDays = config?.defaultDowngradeGracePeriodDays ?? 7;
 
         let result = this.demotionPolicy.evaluate(userTier, allTiers, gracePeriodDays);
 
@@ -44,7 +44,7 @@ export class TierEvaluationService {
                 break;
             case 'GRACE':
                 if (result.targetTier) {
-                    userTier.setDemotionWarning(result.targetTier.id, result.graceEndsAt!);
+                    userTier.setDowngradeWarning(result.targetTier.id, result.graceEndsAt!);
                 }
                 await this.userTierRepository.save(userTier);
                 break;
@@ -65,7 +65,7 @@ export class TierEvaluationService {
         switch (cycle) {
             case TierEvaluationCycle.ROLLING_30_DAYS: return 30;
             case TierEvaluationCycle.ROLLING_90_DAYS: return 90;
-            case TierEvaluationCycle.NONE: return 9999; // 사실상 무제한
+            case TierEvaluationCycle.NONE: return 0; // 0으로 전달하여 nextEvaluationAt을 null로 설정
             default: return 30;
         }
     }
