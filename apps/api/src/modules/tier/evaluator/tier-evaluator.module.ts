@@ -4,22 +4,24 @@ import { TierProfileModule } from '../profile/tier-profile.module';
 import { TierAuditModule } from '../audit/tier-audit.module';
 import { PromotionPolicy } from './domain/promotion.policy';
 import { DemotionPolicy } from './domain/demotion.policy';
-import { PromotionService } from './application/promotion.service';
-import { DemotionService } from './application/demotion.service';
-import { AccumulateRollingService } from './application/accumulate-rolling.service';
-import { AccumulateDepositService } from './application/accumulate-deposit.service';
-import { TierEvaluationService } from './application/tier-evaluation.service';
+import { PromoteUserTierService } from './application/promote-user-tier.service';
+import { DemoteUserTierService } from './application/demote-user-tier.service';
+import { AccumulateUserRollingService } from './application/accumulate-user-rolling.service';
+import { AccumulateUserDepositService } from './application/accumulate-user-deposit.service';
+import { EvaluateUserTierService } from './application/evaluate-user-tier.service';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
 import { TIER_EVALUATOR_QUEUES } from './infrastructure/tier-evaluator.bullmq';
 import { TierEvaluationTriggerProcessor } from './infrastructure/tier-evaluation-trigger.processor';
 import { TierUserEvaluationProcessor } from './infrastructure/tier-user-evaluation.processor';
 import { TierDefinitionsModule } from '../definitions/tier-definitions.module';
+import { TierRewardModule } from '../reward/tier-reward.module';
 
 @Module({
     imports: [
         forwardRef(() => TierProfileModule),
         TierDefinitionsModule,
+        TierRewardModule,
         TierAuditModule,
         ConcurrencyModule,
         BullMqModule,
@@ -31,14 +33,14 @@ import { TierDefinitionsModule } from '../definitions/tier-definitions.module';
     providers: [
         PromotionPolicy,
         DemotionPolicy,
-        PromotionService,
-        DemotionService,
-        AccumulateRollingService,
-        AccumulateDepositService,
-        TierEvaluationService,
+        PromoteUserTierService,
+        DemoteUserTierService,
+        AccumulateUserRollingService,
+        AccumulateUserDepositService,
+        EvaluateUserTierService,
         TierEvaluationTriggerProcessor,
         TierUserEvaluationProcessor,
     ],
-    exports: [AccumulateRollingService, AccumulateDepositService, TierEvaluationService, DemotionService],
+    exports: [AccumulateUserRollingService, AccumulateUserDepositService, EvaluateUserTierService, DemoteUserTierService],
 })
 export class TierEvaluatorModule { }

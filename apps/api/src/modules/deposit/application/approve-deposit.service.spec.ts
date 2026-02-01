@@ -14,22 +14,26 @@ import { ApproveDepositService } from './approve-deposit.service';
 import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
 import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
 import { DepositDetail } from '../domain';
-import { DepositMethod } from '../domain/model/value-objects/deposit-method.vo';
-import { DepositAmount } from '../domain/model/value-objects/deposit-amount.vo';
 import { DepositAlreadyProcessedException } from '../domain';
-import { UpdateUserBalanceAdminService } from '../../wallet/application/update-user-balance-admin.service';
+import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
+import { FindUserWalletService } from '../../wallet/application/find-user-wallet.service';
 import { GrantPromotionBonusService } from '../../promotion/application/grant-promotion-bonus.service';
 import { CreateWageringRequirementService } from '../../wagering/application/create-wagering-requirement.service';
-import { AnalyticsQueueService } from '../../analytics/application/analytics-queue.service';
+import { AdvisoryLockService } from 'src/common/concurrency';
+import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';
+import { AccumulateUserDepositService } from 'src/modules/tier/evaluator/application/accumulate-user-deposit.service';
 
 describe('ApproveDepositService', () => {
     let module: TestingModule;
     let service: ApproveDepositService;
     let mockRepository: jest.Mocked<DepositDetailRepositoryPort>;
-    let mockUpdateBalanceService: jest.Mocked<UpdateUserBalanceAdminService>;
+    let mockFindWalletService: jest.Mocked<FindUserWalletService>;
+    let mockUpdateBalanceService: jest.Mocked<UpdateUserBalanceService>;
     let mockGrantPromotionService: jest.Mocked<GrantPromotionBonusService>;
     let mockWageringService: jest.Mocked<CreateWageringRequirementService>;
-    let mockAnalyticsQueue: jest.Mocked<AnalyticsQueueService>;
+    let mockAdvisoryLockService: jest.Mocked<AdvisoryLockService>;
+    let mockExchangeRateService: jest.Mocked<ExchangeRateService>;
+    let mockAccumulateDepositService: jest.Mocked<AccumulateUserDepositService>;
 
     const userId = BigInt(100);
     const adminId = BigInt(1);
@@ -85,13 +89,19 @@ describe('ApproveDepositService', () => {
             existsPendingByUserId: jest.fn(),
             acquireUserLock: jest.fn(),
             acquireDepositLock: jest.fn(),
-        };
+        } as any;
+
+        mockFindWalletService = {
+            findWallet: jest.fn().mockResolvedValue({
+                cash: new Prisma.Decimal(100),
+                bonus: new Prisma.Decimal(0),
+            }),
+        } as any;
 
         mockUpdateBalanceService = {
-            execute: jest.fn().mockResolvedValue({
-                beforeMainBalance: new Prisma.Decimal(0),
-                afterMainBalance: new Prisma.Decimal(100),
-                mainBalanceChange: new Prisma.Decimal(100),
+            updateBalance: jest.fn().mockResolvedValue({
+                cash: new Prisma.Decimal(200),
+                bonus: new Prisma.Decimal(0),
             }),
         } as any;
 
@@ -105,8 +115,17 @@ describe('ApproveDepositService', () => {
             execute: jest.fn().mockResolvedValue({}),
         } as any;
 
-        mockAnalyticsQueue = {
-            enqueueDeposit: jest.fn().mockResolvedValue(undefined),
+        mockAdvisoryLockService = {
+            acquireLock: jest.fn().mockResolvedValue(undefined),
+            releaseLock: jest.fn().mockResolvedValue(undefined),
+        } as any;
+
+        mockExchangeRateService = {
+            getRate: jest.fn().mockResolvedValue(new Prisma.Decimal(1)),
+        } as any;
+
+        mockAccumulateDepositService = {
+            execute: jest.fn().mockResolvedValue(undefined),
         } as any;
 
         module = await Test.createTestingModule({
@@ -114,10 +133,13 @@ describe('ApproveDepositService', () => {
             providers: [
                 ApproveDepositService,
                 { provide: DEPOSIT_DETAIL_REPOSITORY, useValue: mockRepository },
-                { provide: UpdateUserBalanceAdminService, useValue: mockUpdateBalanceService },
+                { provide: FindUserWalletService, useValue: mockFindWalletService },
+                { provide: UpdateUserBalanceService, useValue: mockUpdateBalanceService },
                 { provide: GrantPromotionBonusService, useValue: mockGrantPromotionService },
                 { provide: CreateWageringRequirementService, useValue: mockWageringService },
-                { provide: AnalyticsQueueService, useValue: mockAnalyticsQueue },
+                { provide: AdvisoryLockService, useValue: mockAdvisoryLockService },
+                { provide: ExchangeRateService, useValue: mockExchangeRateService },
+                { provide: AccumulateUserDepositService, useValue: mockAccumulateDepositService },
             ],
         }).compile();
 
@@ -134,7 +156,7 @@ describe('ApproveDepositService', () => {
             const deposit = createPendingDeposit();
             const transactionId = BigInt(50);
 
-            mockRepository.acquireDepositLock.mockResolvedValue(undefined);
+            mockAdvisoryLockService.acquireLock.mockResolvedValue(undefined);
             mockRepository.getById.mockResolvedValue(deposit);
             mockRepository.createTransaction.mockResolvedValue(transactionId);
             mockRepository.update.mockResolvedValue(deposit);
@@ -150,11 +172,11 @@ describe('ApproveDepositService', () => {
 
             expect(result.transactionId).toBe(transactionId.toString());
             expect(result.actuallyPaid).toBe('100');
-            expect(mockRepository.acquireDepositLock).toHaveBeenCalledWith(depositId);
-            expect(mockUpdateBalanceService.execute).toHaveBeenCalled();
+            expect(mockAdvisoryLockService.acquireLock).toHaveBeenCalled();
+            expect(mockUpdateBalanceService.updateBalance).toHaveBeenCalled();
             expect(mockRepository.createTransaction).toHaveBeenCalled();
             expect(mockRepository.update).toHaveBeenCalled();
-            expect(mockAnalyticsQueue.enqueueDeposit).toHaveBeenCalled();
+            expect(mockAccumulateDepositService.execute).toHaveBeenCalled();
         });
 
         it('should throw error when deposit already processed', async () => {
@@ -193,7 +215,7 @@ describe('ApproveDepositService', () => {
                 failedAt: null,
             });
 
-            mockRepository.acquireDepositLock.mockResolvedValue(undefined);
+            mockAdvisoryLockService.acquireLock.mockResolvedValue(undefined);
             mockRepository.getById.mockResolvedValue(completedDeposit);
 
             await expect(
@@ -211,7 +233,7 @@ describe('ApproveDepositService', () => {
         it('should grant promotion bonus when promotionId exists', async () => {
             const deposit = createPendingDeposit(BigInt(5));
 
-            mockRepository.acquireDepositLock.mockResolvedValue(undefined);
+            mockAdvisoryLockService.acquireLock.mockResolvedValue(undefined);
             mockRepository.getById.mockResolvedValue(deposit);
             mockRepository.createTransaction.mockResolvedValue(BigInt(50));
             mockRepository.update.mockResolvedValue(deposit);
@@ -239,7 +261,7 @@ describe('ApproveDepositService', () => {
         it('should create wagering requirement when no promotionId', async () => {
             const deposit = createPendingDeposit(null);
 
-            mockRepository.acquireDepositLock.mockResolvedValue(undefined);
+            mockAdvisoryLockService.acquireLock.mockResolvedValue(undefined);
             mockRepository.getById.mockResolvedValue(deposit);
             mockRepository.createTransaction.mockResolvedValue(BigInt(50));
             mockRepository.update.mockResolvedValue(deposit);

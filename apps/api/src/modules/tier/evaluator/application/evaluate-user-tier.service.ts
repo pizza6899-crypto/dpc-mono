@@ -2,20 +2,20 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository.port';
 import { DemotionPolicy } from '../domain/demotion.policy';
-import { DemotionService } from './demotion.service';
+import { DemoteUserTierService } from './demote-user-tier.service';
 import { Tier } from '../../definitions/domain/tier.entity';
 import { TierEvaluationCycle } from '@prisma/client';
 import { TierConfigRepositoryPort } from '../../definitions/infrastructure/tier-config.repository.port';
 
 @Injectable()
-export class TierEvaluationService {
-    private readonly logger = new Logger(TierEvaluationService.name);
+export class EvaluateUserTierService {
+    private readonly logger = new Logger(EvaluateUserTierService.name);
 
     constructor(
         private readonly userTierRepository: UserTierRepositoryPort,
         private readonly tierConfigRepository: TierConfigRepositoryPort,
         private readonly demotionPolicy: DemotionPolicy,
-        private readonly demotionService: DemotionService,
+        private readonly demoteUserTierService: DemoteUserTierService,
     ) { }
 
     @Transactional()
@@ -51,7 +51,7 @@ export class TierEvaluationService {
             case 'DEMOTE':
                 const demotedDays = this.getCycleDays(result.targetTier!.evaluationCycle);
 
-                await this.demotionService.execute(
+                await this.demoteUserTierService.execute(
                     userId,
                     result.targetTier!,
                     demotedDays,

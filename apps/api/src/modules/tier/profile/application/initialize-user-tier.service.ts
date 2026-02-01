@@ -58,6 +58,7 @@ export class InitializeUserTierService {
             null,                  // note
             true,                  // isBonusEligible
             nextEvaluationAt,      // nextEvaluationAt
+            null,                  // preferredRewardCurrency
             // Warning State
             null,                  // downgradeWarningIssuedAt
             null,                  // downgradeWarningTargetTierId

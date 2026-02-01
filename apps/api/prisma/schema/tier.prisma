@@ -133,6 +133,9 @@ model UserTier {
   // [Risk Management] 승급은 시키되 현금성 보너스 지급은 차단 (기본값 true=지급)
   isBonusEligible Boolean @default(true) @map("is_bonus_eligible")
 
+  // [Preference] 보너스 자동 지급 및 클레임 기본 통화 (없으면 즉시지급 X)
+  preferredRewardCurrency ExchangeCurrencyCode? @map("preferred_reward_currency")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -271,6 +274,11 @@ model TierUpgradeReward {
 
   cancelledAt  DateTime? @map("cancelled_at") // 취소 시각
   cancelReason String?   @map("cancel_reason") // 취소 사유
+
+  // [Snapshot] 수령 시점 정보 (통화 변출 시 기록)
+  claimedCurrency ExchangeCurrencyCode? @map("claimed_currency")
+  exchangeRate    Decimal?              @map("exchange_rate") @db.Decimal(32, 18) // USD -> 수령 통화 환율
+  claimedAmount   Decimal?              @map("claimed_amount") @db.Decimal(32, 18) // 실제 지급된 통화 금액
 
   // 사후 추적을 위한 참조 ID
   walletTxId    BigInt? @map("wallet_tx_id") // 지갑 트랜잭션 ID

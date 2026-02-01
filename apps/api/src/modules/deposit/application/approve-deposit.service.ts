@@ -14,6 +14,8 @@ import { UserWalletBalanceType, UserWalletTransactionType, ExchangeCurrencyCode 
 import { GrantPromotionBonusService } from '../../promotion/application/grant-promotion-bonus.service';
 import { CreateWageringRequirementService } from '../../wagering/application/create-wagering-requirement.service';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';
+import { AccumulateUserDepositService } from 'src/modules/tier/evaluator/application/accumulate-user-deposit.service';
 
 interface ApproveDepositParams {
   id: bigint;
@@ -41,6 +43,8 @@ export class ApproveDepositService {
     private readonly grantPromotionBonusService: GrantPromotionBonusService,
     private readonly createWageringRequirementService: CreateWageringRequirementService,
     private readonly advisoryLockService: AdvisoryLockService,
+    private readonly exchangeRateService: ExchangeRateService,
+    private readonly accumulateUserDepositService: AccumulateUserDepositService,
   ) { }
 
   @Transactional()
@@ -76,15 +80,27 @@ export class ApproveDepositService {
 
     const beforeTotalAmount = walletBefore.cash.add(walletBefore.bonus);
 
-    // 4. 잔액 업데이트
+    // 4. USD 환산 산정 (티어 실적 반영용)
+    const depositCurrency = deposit.depositCurrency as unknown as ExchangeCurrencyCode;
+    let amountUsd = actuallyPaid;
+    if (depositCurrency !== ExchangeCurrencyCode.USD) {
+      const rate = await this.exchangeRateService.getRate({
+        fromCurrency: depositCurrency,
+        toCurrency: ExchangeCurrencyCode.USD,
+      });
+      amountUsd = actuallyPaid.mul(rate);
+    }
+
+    // 5. 잔액 업데이트
     const updatedWallet = await this.updateUserBalanceService.updateBalance({
       userId: deposit.userId,
-      currency: deposit.depositCurrency as unknown as ExchangeCurrencyCode,
+      currency: depositCurrency,
       amount: actuallyPaid,
       operation: UpdateOperation.ADD,
       balanceType: UserWalletBalanceType.CASH,
       transactionType: UserWalletTransactionType.DEPOSIT,
       referenceId: deposit.id!,
+      amountUsd, // 산정된 USD 금액 전달
     }, {
       adminUserId: adminId,
       reasonCode: AdjustmentReasonCode.MANUAL_DEPOSIT,
@@ -94,7 +110,10 @@ export class ApproveDepositService {
 
     const afterTotalAmount = updatedWallet.cash.add(updatedWallet.bonus);
 
-    // 4. Transaction 생성 (지연 생성)
+    // 6. 티어 입금 실적 누적
+    await this.accumulateUserDepositService.execute(deposit.userId, amountUsd.toNumber());
+
+    // 7. Transaction 생성 (지연 생성)
     let transactionId = deposit.transactionId;
     if (!transactionId) {
       transactionId = await this.depositRepository.createTransaction({
@@ -108,10 +127,10 @@ export class ApproveDepositService {
       });
     }
 
-    // 5. 엔티티 승인 처리 (상태 변경 및 트랜잭션 링크)
+    // 8. 엔티티 승인 처리 (상태 변경 및 트랜잭션 링크)
     deposit.approve(actuallyPaid, adminId, transactionHash, memo, transactionId);
 
-    // 6. DepositDetail 상태 업데이트 (엔티티의 변경사항 반영)
+    // 9. DepositDetail 상태 업데이트 (엔티티의 변경사항 반영)
     await this.depositRepository.update(deposit);
 
     // 7. 롤링(Wagering Requirement) 처리

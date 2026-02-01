@@ -1,4 +1,4 @@
-import { Prisma, TierUpgradeRewardStatus } from '@prisma/client';
+import { Prisma, TierUpgradeRewardStatus, ExchangeCurrencyCode } from '@prisma/client';
 import { Cast, PersistenceOf } from 'src/infrastructure/persistence/persistence.util';
 import { Tier } from '../../definitions/domain/tier.entity';
 import { RewardExpiredException, RewardNotPendingException } from './tier-reward.exception';
@@ -25,6 +25,11 @@ export class TierReward {
         public cancelledAt: Date | null,
         public cancelReason: string | null,
 
+        // Claim Snapshots
+        public claimedCurrency: ExchangeCurrencyCode | null,
+        public exchangeRate: Prisma.Decimal | null,
+        public claimedAmount: Prisma.Decimal | null,
+
         public walletTxId: bigint | null,
         public referenceId: bigint | null,
         public tierHistoryId: bigint | null,
@@ -32,21 +37,39 @@ export class TierReward {
         public readonly tier?: Tier,
     ) { }
 
-    claim(walletTxId: bigint): void {
-        if (this.status !== TierUpgradeRewardStatus.PENDING) {
+    // 상태 확인 헬퍼
+    get isPending(): boolean {
+        return this.status === TierUpgradeRewardStatus.PENDING;
+    }
+
+    // 만료 여부 확인 헬퍼
+    get isExpired(): boolean {
+        return this.expiresAt !== null && this.expiresAt < new Date();
+    }
+
+    claim(props: {
+        walletTxId: bigint;
+        currency: ExchangeCurrencyCode;
+        amount: Prisma.Decimal;
+        rate: Prisma.Decimal;
+    }): void {
+        if (!this.isPending) {
             throw new RewardNotPendingException(this.status);
         }
-        if (this.expiresAt && this.expiresAt < new Date()) {
+        if (this.isExpired) {
             throw new RewardExpiredException();
         }
 
         this.status = TierUpgradeRewardStatus.CLAIMED;
         this.claimedAt = new Date();
-        this.walletTxId = walletTxId;
+        this.walletTxId = props.walletTxId;
+        this.claimedCurrency = props.currency;
+        this.claimedAmount = props.amount;
+        this.exchangeRate = props.rate;
     }
 
     cancel(reason: string): void {
-        if (this.status !== TierUpgradeRewardStatus.PENDING) {
+        if (!this.isPending) {
             throw new RewardNotPendingException(this.status);
         }
         this.status = TierUpgradeRewardStatus.CANCELLED;
@@ -69,6 +92,9 @@ export class TierReward {
             Cast.date(data.expiresAt),
             Cast.date(data.cancelledAt),
             data.cancelReason,
+            data.claimedCurrency,
+            Cast.decimal(data.exchangeRate),
+            Cast.decimal(data.claimedAmount),
             Cast.bigint(data.walletTxId),
             Cast.bigint(data.referenceId),
             Cast.bigint(data.tierHistoryId),

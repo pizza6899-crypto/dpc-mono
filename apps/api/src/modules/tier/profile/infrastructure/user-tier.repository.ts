@@ -48,6 +48,7 @@ export class UserTierRepository implements UserTierRepositoryPort {
             isCustomDedicatedManager: userTier.isCustomDedicatedManager,
             isBonusEligible: userTier.isBonusEligible,
             nextEvaluationAt: userTier.nextEvaluationAt,
+            preferredRewardCurrency: userTier.preferredRewardCurrency,
             note: userTier.note,
             downgradeWarningIssuedAt: userTier.downgradeWarningIssuedAt,
             downgradeWarningTargetTierId: userTier.downgradeWarningTargetTierId,

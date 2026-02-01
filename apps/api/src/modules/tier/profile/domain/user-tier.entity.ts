@@ -1,4 +1,4 @@
-import { Prisma, UserTierStatus } from '@prisma/client';
+import { Prisma, UserTierStatus, ExchangeCurrencyCode } from '@prisma/client';
 import { Tier } from '../../definitions/domain/tier.entity';
 
 export interface EffectiveBenefits {
@@ -46,6 +46,7 @@ export class UserTier {
         public note: string | null,
         public isBonusEligible: boolean,
         public nextEvaluationAt: Date | null,
+        public preferredRewardCurrency: ExchangeCurrencyCode | null,
 
         // Warning State
         public downgradeWarningIssuedAt: Date | null,
@@ -196,6 +197,7 @@ export class UserTier {
             data.note,
             data.isBonusEligible,
             data.nextEvaluationAt,
+            data.preferredRewardCurrency,
             data.downgradeWarningIssuedAt,
             data.downgradeWarningTargetTierId,
             tier,

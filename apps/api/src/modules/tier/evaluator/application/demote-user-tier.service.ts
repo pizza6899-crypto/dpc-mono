@@ -8,8 +8,8 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { UserTierNotFoundException } from '../../profile/domain/tier-profile.exception';
 
 @Injectable()
-export class DemotionService {
-    private readonly logger = new Logger(DemotionService.name);
+export class DemoteUserTierService {
+    private readonly logger = new Logger(DemoteUserTierService.name);
 
     constructor(
         private readonly userTierRepository: UserTierRepositoryPort,

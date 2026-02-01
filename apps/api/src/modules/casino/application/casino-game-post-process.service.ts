@@ -6,7 +6,8 @@ import { EarnCompService } from 'src/modules/comp/application/earn-comp.service'
 import { GAME_ROUND_REPOSITORY_TOKEN } from '../ports/out/game-round.repository.token';
 import type { GameRoundRepositoryPort } from '../ports/out/game-round.repository.port';
 import { GameRoundPostProcessContext } from '../ports/out/game-round.repository.port';
-import { AccumulateRollingService } from 'src/modules/tier/evaluator/application/accumulate-rolling.service';
+import { AccumulateUserRollingService } from 'src/modules/tier/evaluator/application/accumulate-user-rolling.service';
+
 
 interface ProcessingContext {
     betAmount: Prisma.Decimal;
@@ -25,7 +26,7 @@ export class CasinoGamePostProcessService {
         private readonly gameRoundRepository: GameRoundRepositoryPort,
         private readonly wageringService: ProcessWageringContributionService,
         private readonly earnCompService: EarnCompService,
-        private readonly accumulateRollingService: AccumulateRollingService,
+        private readonly accumulateUserRollingService: AccumulateUserRollingService,
     ) { }
 
     @Transactional()
@@ -128,7 +129,7 @@ export class CasinoGamePostProcessService {
 
             if (usdAmount.gt(0)) {
                 // Execute rolling accumulation
-                await this.accumulateRollingService.execute(
+                await this.accumulateUserRollingService.execute(
                     gameRound.userId,
                     usdAmount.toNumber()
                 );

@@ -2,20 +2,20 @@ import { Injectable, Logger } from '@nestjs/common';
 import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository.port';
 import { TierRepositoryPort } from '../../definitions/infrastructure/tier.repository.port';
 import { PromotionPolicy } from '../domain/promotion.policy';
-import { PromotionService } from './promotion.service';
+import { PromoteUserTierService } from './promote-user-tier.service';
 import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { UserTier } from '../../profile/domain/user-tier.entity';
 
 @Injectable()
-export class AccumulateRollingService {
-    private readonly logger = new Logger(AccumulateRollingService.name);
+export class AccumulateUserRollingService {
+    private readonly logger = new Logger(AccumulateUserRollingService.name);
 
     constructor(
         private readonly userTierRepository: UserTierRepositoryPort,
         private readonly tierRepository: TierRepositoryPort,
         private readonly promotionPolicy: PromotionPolicy,
-        private readonly promotionService: PromotionService,
+        private readonly promoteUserTierService: PromoteUserTierService,
         private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
@@ -49,7 +49,7 @@ export class AccumulateRollingService {
         const nextTier = this.promotionPolicy.findEligibleTier(userTier, allTiers);
 
         if (nextTier) {
-            await this.promotionService.execute(userTier.userId, nextTier);
+            await this.promoteUserTierService.execute(userTier.userId, nextTier);
         }
     }
 }

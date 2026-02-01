@@ -1,5 +1,5 @@
 import { TierReward } from '../domain/tier-reward.entity';
-import { Prisma, TierUpgradeRewardStatus } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 export interface CreateTierRewardProps {
     userId: bigint;
@@ -13,9 +13,24 @@ export interface CreateTierRewardProps {
     expiresAt?: Date | null;
 }
 
+export interface FindRewardsQuery {
+    userId?: bigint;
+    status?: string[];
+    fromDate?: Date;
+    toDate?: Date;
+    page: number;
+    limit: number;
+}
+
+export interface PaginatedRewards {
+    items: TierReward[];
+    total: number;
+}
+
 export abstract class TierRewardRepositoryPort {
     abstract create(props: CreateTierRewardProps): Promise<TierReward>;
     abstract findById(id: bigint): Promise<TierReward | null>;
     abstract findPendingByUserId(userId: bigint): Promise<TierReward[]>;
+    abstract findAll(query: FindRewardsQuery): Promise<PaginatedRewards>;
     abstract save(reward: TierReward): Promise<TierReward>;
 }

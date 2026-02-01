@@ -9,6 +9,8 @@ import { PaymentModule } from '../payment/payment.module';
 import { WalletModule } from '../wallet/wallet.module';
 import { PromotionModule } from '../promotion/promotion.module';
 import { WageringModule } from '../wagering/wagering.module';
+import { TierEvaluatorModule } from '../tier/evaluator/tier-evaluator.module';
+import { ExchangeModule } from '../exchange/exchange.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { GetDepositStatsService } from './application/get-deposit-stats.service';
 import { GetDepositsService } from './application/get-deposits.service';
@@ -52,6 +54,8 @@ import {
     WalletModule, // UpdateUserBalanceAdminService 사용을 위해
     PromotionModule, // CheckEligiblePromotionsService 사용을 위해
     WageringModule,
+    TierEvaluatorModule,
+    ExchangeModule,
     ConcurrencyModule,
   ],
   providers: [
