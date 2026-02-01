@@ -147,7 +147,11 @@ export class UserTier {
         this.lastEvaluationAt = new Date();
 
         // 상태 복구 및 경고 초기화
-        this.status = UserTierStatus.ACTIVE;
+        // [Policy] LOCKED 상태인 경우 관리자에 의해 강제 고정된 것이므로 ACTIVE로 복구하지 않음
+        if (this.status !== UserTierStatus.LOCKED) {
+            this.status = UserTierStatus.ACTIVE;
+        }
+
         this.downgradeGracePeriodEndsAt = null;
         this.downgradeWarningIssuedAt = null;
         this.downgradeWarningTargetTierId = null;

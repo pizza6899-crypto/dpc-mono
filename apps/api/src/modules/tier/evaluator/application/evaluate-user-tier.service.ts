@@ -6,6 +6,7 @@ import { DemoteUserTierService } from './demote-user-tier.service';
 import { Tier } from '../../definitions/domain/tier.entity';
 import { TierEvaluationCycle } from '@prisma/client';
 import { TierConfigRepositoryPort } from '../../definitions/infrastructure/tier-config.repository.port';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 @Injectable()
 export class EvaluateUserTierService {
@@ -16,10 +17,14 @@ export class EvaluateUserTierService {
         private readonly tierConfigRepository: TierConfigRepositoryPort,
         private readonly demotionPolicy: DemotionPolicy,
         private readonly demoteUserTierService: DemoteUserTierService,
+        private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
     @Transactional()
     async evaluateUser(userId: bigint, allTiers: Tier[]): Promise<void> {
+        // [Concurrency Control] 정기 심사 중 실적 누적과의 충돌 방지
+        await this.advisoryLockService.acquireLock(LockNamespace.USER_TIER, userId.toString());
+
         const userTier = await this.userTierRepository.findByUserId(userId);
         if (!userTier || !userTier.tier) return;
 
