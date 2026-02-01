@@ -50,7 +50,7 @@ export class HandleTierStatsService {
         const normalizedTime = new Date(timestamp);
         normalizedTime.setUTCMinutes(0, 0, 0);
 
-        const normalizedMetrics: any = {
+        const normalizedMetrics: Partial<UpdateTierStatsProps> = {
             ...metrics,
             periodBonusPaidUsd: metrics.periodBonusPaidUsd
                 ? new Prisma.Decimal(metrics.periodBonusPaidUsd)

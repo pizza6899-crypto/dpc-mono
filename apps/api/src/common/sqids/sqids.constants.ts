@@ -44,6 +44,7 @@ export const SqidsPrefix = {
     NOTIFICATION: 'n',
     FILE: 'f',
     USER_TIER_HISTORY: 'uth',
+    TIER_REWARD: 'tr',
     // 필요에 따라 추가 (기존 값 수정 금지)
 } as const;
 
