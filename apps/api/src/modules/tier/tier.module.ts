@@ -1,18 +1,18 @@
 import { Module } from '@nestjs/common';
-import { TierMasterModule } from './master/tier-master.module';
+import { TierDefinitionsModule } from './definitions/tier-definitions.module';
 import { TierProfileModule } from './profile/tier-profile.module';
 import { TierEvaluatorModule } from './evaluator/tier-evaluator.module';
 import { TierAuditModule } from './audit/tier-audit.module';
 
 @Module({
     imports: [
-        TierMasterModule,
+        TierDefinitionsModule,
         TierProfileModule,
         TierEvaluatorModule,
         TierAuditModule,
     ],
     exports: [
-        TierMasterModule,
+        TierDefinitionsModule,
         TierProfileModule,
         TierEvaluatorModule,
         TierAuditModule,

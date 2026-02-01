@@ -5,7 +5,7 @@ import { ClsService } from 'nestjs-cls';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
 import { BULLMQ_QUEUES, getQueueConfig } from 'src/infrastructure/bullmq/bullmq.constants';
 import { TierEvaluationService } from '../application/tier-evaluation.service';
-import { TierRepositoryPort } from '../../master/infrastructure/tier.repository.port';
+import { TierRepositoryPort } from '../../definitions/infrastructure/tier.repository.port';
 import { TierEvaluationJobType, TierEvaluationJobPayload } from './tier-evaluation.types';
 
 const queueConfig = getQueueConfig(BULLMQ_QUEUES.TIER_EVALUATOR.USER_EVALUATION);

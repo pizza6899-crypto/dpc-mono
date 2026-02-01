@@ -65,7 +65,7 @@ export class UserTierResponseDto {
     @ApiProperty({ description: 'User tier status record ID / 유저 티어 상태 레코드 ID' })
     id: string;
 
-    @ApiProperty({ description: 'Master tier ID / 마스터 티어 ID' })
+    @ApiProperty({ description: 'Definitions tier ID / 정의 티어 ID' })
     tierId: string;
 
     @ApiProperty({ description: 'Tier Code / 티어 코드' })

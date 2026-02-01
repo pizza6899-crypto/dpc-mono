@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository.port';
 import { RecordTierHistoryService } from '../../audit/application/record-tier-history.service';
 import { TierStatsService } from '../../audit/application/tier-stats.service';
-import { Tier } from '../../master/domain/tier.entity';
+import { Tier } from '../../definitions/domain/tier.entity';
 import { TierChangeType, Prisma } from '@prisma/client';
 import { Transactional } from '@nestjs-cls/transactional';
 import { UserTierNotFoundException } from '../../profile/domain/tier-profile.exception';

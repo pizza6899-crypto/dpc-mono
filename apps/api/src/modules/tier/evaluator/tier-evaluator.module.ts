@@ -14,12 +14,12 @@ import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
 import { TIER_EVALUATOR_QUEUES } from './infrastructure/tier-evaluator.bullmq';
 import { TierEvaluationTriggerProcessor } from './infrastructure/tier-evaluation-trigger.processor';
 import { TierUserEvaluationProcessor } from './infrastructure/tier-user-evaluation.processor';
-import { TierMasterModule } from '../master/tier-master.module';
+import { TierDefinitionsModule } from '../definitions/tier-definitions.module';
 
 @Module({
     imports: [
         forwardRef(() => TierProfileModule),
-        TierMasterModule,
+        TierDefinitionsModule,
         TierAuditModule,
         ConcurrencyModule,
         BullMqModule,

@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository.port';
-import { TierRepositoryPort } from '../../master/infrastructure/tier.repository.port';
+import { TierRepositoryPort } from '../../definitions/infrastructure/tier.repository.port';
 import { PromotionPolicy } from '../domain/promotion.policy';
 import { PromotionService } from './promotion.service';
 import { Transactional } from '@nestjs-cls/transactional';

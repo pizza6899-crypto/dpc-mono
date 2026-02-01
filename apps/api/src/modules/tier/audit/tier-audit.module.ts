@@ -9,7 +9,7 @@ import { HandleTierStatsService } from './application/handle-tier-stats.service'
 import { TierStatsAggregationProcessor } from './infrastructure/tier-stats-aggregation.processor';
 import { TierStatsRecordProcessor } from './infrastructure/tier-stats-record.processor';
 import { TierProfileModule } from '../profile/tier-profile.module';
-import { TierMasterModule } from '../master/tier-master.module';
+import { TierDefinitionsModule } from '../definitions/tier-definitions.module';
 import { TierAuditAdminController } from './controllers/admin/tier-audit-admin.controller';
 import { GetTierDistributionService } from './application/get-tier-distribution.service';
 import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
@@ -24,7 +24,7 @@ import { TIER_QUEUES } from './infrastructure/tier-audit.bullmq';
             { name: TIER_QUEUES.STATS_RECORD.name },
         ),
         forwardRef(() => TierProfileModule),
-        TierMasterModule,
+        TierDefinitionsModule,
     ],
     controllers: [TierAuditAdminController],
     providers: [

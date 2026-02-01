@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { TierConfigRepositoryPort, UpdateTierConfigProps } from '../infrastructure/tier-config.repository.port';
 import { TierConfig } from '../domain/tier-config.entity';
-import { TierConfigNotFoundException } from '../domain/tier-master.exception';
+import { TierConfigNotFoundException } from '../domain/tier-definitions.exception';
 
 @Injectable()
 export class TierConfigService {

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, Language } from '@prisma/client';
 import { UserTier } from '../domain/user-tier.entity';
-import { Tier } from '../../master/domain/tier.entity';
+import { Tier } from '../../definitions/domain/tier.entity';
 
 export interface NextTierProgressResult {
     id: bigint;

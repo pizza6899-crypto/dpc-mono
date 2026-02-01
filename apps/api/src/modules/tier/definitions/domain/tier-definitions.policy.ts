@@ -1,14 +1,14 @@
 import { Injectable, HttpStatus } from '@nestjs/common';
 import { Language } from '@prisma/client';
-import { TierMasterException } from './tier-master.exception';
+import { TierDefinitionsException } from './tier-definitions.exception';
 import { MessageCode } from '@repo/shared';
 
 /**
- * 티어 마스터 도메인 정책 (Policy)
- * 티어 생성, 수정 및 마스터 설정과 관련된 비즈니스 규칙을 담당합니다.
+ * 티어 정의 도메인 정책 (Policy)
+ * 티어 생성, 수정 및 정의 설정과 관련된 비즈니스 규칙을 담당합니다.
  */
 @Injectable()
-export class TierMasterPolicy {
+export class TierDefinitionsPolicy {
     /**
      * 티어 번역 데이터의 무결성을 검증합니다.
      * [Rule] 모든 티어는 최종적으로 최소한 일본어(JA)와 영어(EN) 번역을 포함해야 합니다.
@@ -26,7 +26,7 @@ export class TierMasterPolicy {
         const finalLanguages = new Set([...existingLanguages, ...requestedLangs]);
 
         if (!finalLanguages.has(Language.JA) || !finalLanguages.has(Language.EN)) {
-            throw new TierMasterException(
+            throw new TierDefinitionsException(
                 'The final state of translations must include at least JA (Japanese) and EN (English).',
                 MessageCode.VALIDATION_ERROR,
                 HttpStatus.BAD_REQUEST,
@@ -69,7 +69,7 @@ export class TierMasterPolicy {
     }
 
     private throwNegativeError(fieldName: string): void {
-        throw new TierMasterException(
+        throw new TierDefinitionsException(
             `${fieldName} cannot be negative.`,
             MessageCode.VALIDATION_ERROR,
             HttpStatus.BAD_REQUEST,
@@ -96,7 +96,7 @@ export class TierMasterPolicy {
 
             // Rule 1: level 중복 체크
             if (i > 0 && current.level === sortedTiers[i - 1].level) {
-                throw new TierMasterException(
+                throw new TierDefinitionsException(
                     `Duplicate level detected: ${current.level} (Codes: ${sortedTiers[i - 1].code}, ${current.code})`,
                     MessageCode.VALIDATION_ERROR,
                     HttpStatus.BAD_REQUEST,
@@ -120,7 +120,7 @@ export class TierMasterPolicy {
     }
 
     private throwInversionError(fieldName: string, higherCode: string, lowerCode: string): void {
-        throw new TierMasterException(
+        throw new TierDefinitionsException(
             `${fieldName} of higher tier (${higherCode}) cannot be lower than that of lower tier (${lowerCode}).`,
             MessageCode.VALIDATION_ERROR,
             HttpStatus.BAD_REQUEST,

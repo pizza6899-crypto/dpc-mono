@@ -2,18 +2,18 @@ import { HttpStatus } from '@nestjs/common';
 import { MessageCode } from '@repo/shared';
 import { DomainException } from 'src/common/exception/domain.exception';
 
-export class TierMasterException extends DomainException {
+export class TierDefinitionsException extends DomainException {
     constructor(
         message: string,
         errorCode: MessageCode, // 명시적인 코드 사용을 위해 기본값 제거
         httpStatus: HttpStatus = HttpStatus.BAD_REQUEST,
     ) {
         super(message, errorCode, httpStatus);
-        this.name = 'TierMasterException';
+        this.name = 'TierDefinitionsException';
     }
 }
 
-export class TierConfigNotFoundException extends TierMasterException {
+export class TierConfigNotFoundException extends TierDefinitionsException {
     constructor() {
         super(
             'Tier configuration not found', // 내부 ID 노출 없이 간결한 메시지 유지
@@ -23,7 +23,7 @@ export class TierConfigNotFoundException extends TierMasterException {
         this.name = 'TierConfigNotFoundException';
     }
 }
-export class TierNotFoundException extends TierMasterException {
+export class TierNotFoundException extends TierDefinitionsException {
     constructor() {
         super(
             'Tier not found',

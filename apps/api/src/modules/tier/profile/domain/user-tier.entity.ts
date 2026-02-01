@@ -1,5 +1,5 @@
 import { Prisma, UserTierStatus } from '@prisma/client';
-import { Tier } from '../../master/domain/tier.entity';
+import { Tier } from '../../definitions/domain/tier.entity';
 
 export interface EffectiveBenefits {
     compRate: Prisma.Decimal;

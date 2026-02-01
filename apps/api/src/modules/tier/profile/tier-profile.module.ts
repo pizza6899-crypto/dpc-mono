@@ -16,12 +16,12 @@ import { GetTierBenefitsService } from './application/get-tier-benefits.service'
 import { UserTierController } from './controllers/user/user-tier.controller';
 import { UserTierAdminController } from './controllers/admin/user-tier-admin.controller';
 import { TierAuditModule } from '../audit/tier-audit.module';
-import { TierMasterModule } from '../master/tier-master.module';
+import { TierDefinitionsModule } from '../definitions/tier-definitions.module';
 
 @Module({
     imports: [
         forwardRef(() => TierAuditModule),
-        TierMasterModule,
+        TierDefinitionsModule,
     ],
     controllers: [UserTierController, UserTierAdminController],
     providers: [

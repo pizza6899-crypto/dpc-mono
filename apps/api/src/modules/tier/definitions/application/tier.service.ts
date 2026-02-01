@@ -3,8 +3,8 @@ import { Prisma } from '@prisma/client';
 import { TierRepositoryPort } from '../infrastructure/tier.repository.port';
 import type { UpdateTierProps } from '../infrastructure/tier.repository.port';
 import { Tier } from '../domain/tier.entity';
-import { TierNotFoundException } from '../domain/tier-master.exception';
-import { TierMasterPolicy } from '../domain/tier-master.policy';
+import { TierNotFoundException } from '../domain/tier-definitions.exception';
+import { TierDefinitionsPolicy } from '../domain/tier-definitions.policy';
 import { AttachFileService } from '../../../file/application/attach-file.service';
 import { EnvService } from 'src/common/env/env.service';
 import { FileUsageType } from '../../../file/domain';
@@ -14,7 +14,7 @@ import { Transactional } from '@nestjs-cls/transactional';
 export class TierService {
     constructor(
         private readonly repository: TierRepositoryPort,
-        private readonly policy: TierMasterPolicy,
+        private readonly policy: TierDefinitionsPolicy,
         private readonly attachFileService: AttachFileService,
         private readonly envService: EnvService,
     ) { }

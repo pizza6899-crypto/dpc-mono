@@ -6,7 +6,7 @@ import { TierStatsService } from '../application/tier-stats.service';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
 import { BULLMQ_QUEUES, getQueueConfig } from 'src/infrastructure/bullmq/bullmq.constants';
 import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository.port';
-import { TierRepositoryPort } from '../../master/infrastructure/tier.repository.port';
+import { TierRepositoryPort } from '../../definitions/infrastructure/tier.repository.port';
 
 const queueConfig = getQueueConfig(BULLMQ_QUEUES.TIER.STATS_AGGREGATION);
 

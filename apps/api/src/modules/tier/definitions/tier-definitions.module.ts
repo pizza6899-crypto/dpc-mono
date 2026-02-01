@@ -5,7 +5,7 @@ import { TierRepository } from './infrastructure/tier.repository';
 import { TierConfigRepository } from './infrastructure/tier-config.repository';
 import { TierConfigService } from './application/tier-config.service';
 import { TierService } from './application/tier.service';
-import { TierMasterPolicy } from './domain/tier-master.policy';
+import { TierDefinitionsPolicy } from './domain/tier-definitions.policy';
 import { TierConfigAdminController } from './controllers/admin/tier-config-admin.controller';
 import { TierAdminController } from './controllers/admin/tier-admin.controller';
 import { TierPublicController } from './controllers/public/tier-public.controller';
@@ -19,10 +19,10 @@ import { EnvModule } from 'src/common/env/env.module';
     providers: [
         TierConfigService,
         TierService,
-        TierMasterPolicy,
+        TierDefinitionsPolicy,
         { provide: TierRepositoryPort, useClass: TierRepository },
         { provide: TierConfigRepositoryPort, useClass: TierConfigRepository },
     ],
     exports: [TierRepositoryPort, TierConfigRepositoryPort, TierConfigService, TierService],
 })
-export class TierMasterModule { }
+export class TierDefinitionsModule { }
