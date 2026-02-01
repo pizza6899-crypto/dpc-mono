@@ -94,6 +94,12 @@ export enum MessageCode {
     USER_TIER_NOT_FOUND = 'USER_TIER_NOT_FOUND', // 사용자 티어 정보를 찾을 수 없을 때
     TIER_INVALID_ROLLING_AMOUNT = 'TIER_INVALID_ROLLING_AMOUNT', // 유효하지 않은 롤링 금액일 때
 
+    // --- 티어 보상 관련 ---
+    TIER_REWARD_NOT_FOUND = 'TIER_REWARD_NOT_FOUND', // 티어 보상을 찾을 수 없을 때
+    TIER_REWARD_NOT_PENDING = 'TIER_REWARD_NOT_PENDING', // 티어 보상이 대기 상태가 아닐 때
+    TIER_REWARD_EXPIRED = 'TIER_REWARD_EXPIRED', // 티어 보상이 만료되었을 때
+    TIER_REWARD_OWNER_MISMATCH = 'TIER_REWARD_OWNER_MISMATCH', // 티어 보상 소유자가 일치하지 않을 때
+
     // --- 롤링 관련 (Rolling) ---
     ROLLING_NOT_COMPLETED = 'ROLLING_NOT_COMPLETED', // 롤링 조건을 완료하지 않아 출금할 수 없을 때
 
