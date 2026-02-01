@@ -29,7 +29,7 @@
     "template": "plop",
     "swagger": "ts-node -r tsconfig-paths/register scripts/generate-swagger.ts",
     "prisma": "dotenv -e .env -- prisma",
-    "db:generate": "dotenv -e .env -- prisma generate",
+    "db:generate": "dotenv -e .env -- prisma generate && touch tsconfig.json",
     "db:migrate": "dotenv -e .env -- prisma migrate dev",
     "db:push": "dotenv -e .env -- prisma db push",
     "db:seed": "dotenv -e .env -- prisma db seed",
