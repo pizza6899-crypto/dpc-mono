@@ -31,7 +31,11 @@ export class DemotionPolicy {
                 // 유예 기간 종료 -> 강등 확정
                 // [Soft Landing] 현재 등급보다 낮은 레벨 중 가장 높은 등급을 찾음 (Next Lower Tier)
                 const nextLowerTier = allTiers
-                    .filter(t => t.level < userTier.currentLevel)
+                    .filter(t =>
+                        t.level < userTier.currentLevel &&
+                        t.isActive && // 활성 티어만 대상
+                        !t.isManualOnly // 자동 심사에서는 수동 전용 티어로 강등 방지
+                    )
                     .sort((a, b) => b.level - a.level)[0];
 
                 return nextLowerTier
@@ -46,7 +50,11 @@ export class DemotionPolicy {
 
             // 강등될 타겟 티어 미리 선정 (유예 기간 종료 후 이동할 곳)
             const nextLowerTier = allTiers
-                .filter(t => t.level < userTier.currentLevel)
+                .filter(t =>
+                    t.level < userTier.currentLevel &&
+                    t.isActive &&
+                    !t.isManualOnly
+                )
                 .sort((a, b) => b.level - a.level)[0];
 
             return {

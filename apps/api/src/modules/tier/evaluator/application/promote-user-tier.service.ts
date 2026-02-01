@@ -65,6 +65,15 @@ export class PromoteUserTierService {
             // [Logic] 보너스 금액이 존재할 때만 지급 정책을 확인합니다.
             if (earnedBonusAmount.gt(0)) {
                 if (config?.isBonusEnabled !== false) {
+                    // 0. 보상 만료일 계산 (티어별 설정 우선, 없으면 글로벌 설정 적용. 둘 다 없으면 무기한)
+                    const expiryDays = targetTier.rewardExpiryDays ?? config?.defaultRewardExpiryDays;
+                    let expiresAt: Date | undefined;
+
+                    if (expiryDays && expiryDays > 0) {
+                        expiresAt = new Date();
+                        expiresAt.setDate(expiresAt.getDate() + expiryDays);
+                    }
+
                     // 1. 보상 레코드 생성 (PENDING 상태로 시작)
                     const reward = await this.issueRewardService.execute({
                         userId,
@@ -73,6 +82,7 @@ export class PromoteUserTierService {
                         toLevel: targetTier.level,
                         bonusAmountUsd: earnedBonusAmount,
                         wageringMultiplier: targetTier.upgradeBonusWageringMultiplier,
+                        expiresAt, // expiryDays가 없으면 undefined(DB에는 null)로 저장됨
                     });
 
                     if (targetTier.isImmediateBonusEnabled) {
