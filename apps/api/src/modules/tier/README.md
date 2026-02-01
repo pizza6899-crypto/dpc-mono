@@ -50,13 +50,14 @@
 ## 4. 기술적 구현 및 안전 장치 (Technical Details)
 
 ### 동시성 제어 (Concurrency Control)
-시스템 안정성을 위해 **Advisory Lock (`LOCK:USER_TIER:{userId}`)**을 적극적으로 사용합니다.
-- **시나리오**: 유저가 게임을 플레이하여 실시간으로 실적이 쌓이는 시점(Accumulate)과, 정기 심사(Evaluate) 배치가 동시에 실행될 경우 데이터 정합성이 깨질 수 있습니다.
-- **해결**: 두 프로세스 모두 유저 ID 기반의 락을 획득하여 순차적으로 실행되도록 강제함으로써, 실적 누락이나 상태 꼬임(Race Condition)을 원천 차단했습니다.
+시스템 안정성을 위해 **Advisory Lock**을 적극적으로 사용합니다.
+
+1.  **`LOCK:USER_TIER:{userId}`**: 실시간 실적 누적(Accumulate)과 정기 심사(Evaluate) 간의 경합 방지.
+2.  **`LOCK:TIER_REWARD:{userId}`**: 보상 수령(Claim) 시 중복 클릭 및 동시 요청 방지.
 
 ### 데이터 무결성 (Integrity)
-- 모든 상태 변경은 `UserTier` 엔티티 내부의 도메인 메서드(`upgradeTier`, `downgradeTier`, `resetPeriodPerformance`)를 통해서만 이루어집니다.
-- 이를 통해 상태(Status), 레벨(Level), 날짜(Date) 등의 연관 데이터가 항상 일관성 있게 함께 변경됩니다.
+- **도메인 메서드 사용**: 모든 상태 변경은 `UserTier` 엔티티 내부의 도메인 메서드(`upgradeTier` 등)를 통해 이루어집니다. 이를 통해 상태, 레벨, 날짜 데이터의 일관성을 보장합니다.
+- **자금 흐름 추적 (Audit)**: 보상 수령 시 생성되는 **지갑 트랜잭션**은 `tier_upgrade_reward.id`를 `referenceId`로 기록하여, 언제든 보상 내역과 지금 내역을 1:1로 대조할 수 있습니다.
 
 ### 운영 유연성 (Operations)
 - **LOCKED 상태**: 특정 유저의 등급을 관리자가 고정(`LOCKED`)하면, 자동 심사 로직에서 제외되어 시스템이 임의로 승급/강등시키지 않습니다. (VIP Care 목적)
