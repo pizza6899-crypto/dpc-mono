@@ -57,4 +57,14 @@ export const CACHE_CONFIG = {
             store: CacheStore.REDIS,
         }),
     },
+    /**
+     * 웨이저링 관련
+     */
+    WAGERING: {
+        CONFIG: {
+            key: 'wagering:config:global',
+            ttlSeconds: 300, // 5분
+            store: CacheStore.MEMORY,
+        },
+    },
 } as const;

@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { WAGERING_CONFIG_REPOSITORY } from '../ports/wagering-config.repository.port';
-import type { WageringRequirementRepositoryPort } from '../../requirement/ports/wagering-requirement.repository.port'; // 오타 방지
 import type { WageringConfigRepositoryPort } from '../ports/wagering-config.repository.port';
 import { WageringConfig } from '../domain/wagering-config.entity';
 import { Transactional } from '@nestjs-cls/transactional';
