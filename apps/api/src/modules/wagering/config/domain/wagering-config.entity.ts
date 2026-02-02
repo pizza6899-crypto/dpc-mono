@@ -11,7 +11,12 @@ export class WageringConfig {
         public readonly isAutoCancellationEnabled: boolean,
         public readonly updatedAt: Date,
         public readonly updatedBy: bigint | null,
-    ) { }
+    ) {
+        // 도메인 검증
+        if (defaultBonusExpiryDays < 1) {
+            throw new Error('Default bonus expiry days must be at least 1 day');
+        }
+    }
 
     /**
      * 특정 통화의 설정을 가져오거나 기본값을 반환합니다.
