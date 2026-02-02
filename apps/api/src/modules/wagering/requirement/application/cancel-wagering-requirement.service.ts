@@ -9,6 +9,8 @@ import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module'
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LogType } from 'src/modules/audit-log/domain';
 
+import { Transactional } from '@nestjs-cls/transactional';
+
 @Injectable()
 export class CancelWageringRequirementService {
     private readonly logger = new Logger(CancelWageringRequirementService.name);
@@ -28,6 +30,7 @@ export class CancelWageringRequirementService {
      * @param currency 통화 코드
      * @param currentTotalBalance 현재 총 잔액 (Main + Bonus)
      */
+    @Transactional()
     async execute(userId: bigint, currency: ExchangeCurrencyCode, currentTotalBalance: Prisma.Decimal): Promise<void> {
         const activeRequirements = await this.repository.findActiveByUserIdAndCurrency(userId, currency);
 
