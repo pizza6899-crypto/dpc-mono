@@ -6,7 +6,9 @@ import {
     CreateWageringRequirementService,
     ProcessWageringContributionService,
     CancelWageringRequirementService,
-    FindWageringRequirementsService
+    FindWageringRequirementsService,
+    SettleWageringRequirementService,
+    VoidWageringRequirementService
 } from './application';
 import { WageringPolicy } from './domain';
 import { WAGERING_REQUIREMENT_REPOSITORY } from './ports';
@@ -15,7 +17,6 @@ import { WageringRequirementUserController } from './controllers/user/wagering-r
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { WageringConfigModule } from '../config/wagering-config.module';
 import { WalletModule } from '../../wallet/wallet.module';
-import { SettleWageringRequirementService } from './application/settle-wagering-requirement.service';
 
 @Module({
     imports: [AuditLogModule, SnowflakeModule, WageringConfigModule, WalletModule],
@@ -40,6 +41,7 @@ import { SettleWageringRequirementService } from './application/settle-wagering-
         CancelWageringRequirementService,
         FindWageringRequirementsService,
         SettleWageringRequirementService,
+        VoidWageringRequirementService,
     ],
     exports: [
         CreateWageringRequirementService,
@@ -47,6 +49,7 @@ import { SettleWageringRequirementService } from './application/settle-wagering-
         CancelWageringRequirementService,
         FindWageringRequirementsService,
         SettleWageringRequirementService,
+        VoidWageringRequirementService,
         WAGERING_REQUIREMENT_REPOSITORY
     ],
 })

@@ -1,17 +1,17 @@
 import { Controller, Get, Post, Body, Param, Query, Inject } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { Admin } from '../../../../../common/auth/decorators/roles.decorator';
-import { FindWageringRequirementsService } from '../../application/find-wagering-requirements.service';
+import { FindWageringRequirementsService, VoidWageringRequirementService } from '../../application';
 import { GetWageringRequirementsAdminQueryDto } from './dto/request/get-wagering-requirements-admin-query.dto';
 import { WageringRequirementAdminResponseDto } from './dto/response/wagering-requirement-admin.response.dto';
 import { VoidWageringRequirementDto } from './dto/request/void-wagering.dto';
-import { WAGERING_REQUIREMENT_REPOSITORY } from '../../ports';
-import type { WageringRequirementRepositoryPort } from '../../ports';
 import { AuditLog } from '../../../../../modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from '../../../../../modules/audit-log/domain';
-import { WageringRequirementNotFoundException, WageringRequirement } from '../../domain';
+import { WageringRequirement } from '../../domain';
 import { Paginated } from '../../../../../common/http/decorators/paginated.decorator';
 import { ApiStandardResponse, ApiStandardErrors } from '../../../../../common/http/decorators/api-response.decorator';
+import { CurrentUser } from '../../../../../common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from '../../../../../common/auth/types/auth.types';
 import type { PaginatedData } from 'src/common/http/types/pagination.types';
 
 @ApiTags('Admin Wagering Requirements')
@@ -20,8 +20,7 @@ import type { PaginatedData } from 'src/common/http/types/pagination.types';
 export class WageringRequirementAdminController {
     constructor(
         private readonly findService: FindWageringRequirementsService,
-        @Inject(WAGERING_REQUIREMENT_REPOSITORY)
-        private readonly repository: WageringRequirementRepositoryPort,
+        private readonly voidService: VoidWageringRequirementService,
     ) { }
 
     @Get()
@@ -68,16 +67,15 @@ export class WageringRequirementAdminController {
     @ApiStandardResponse(WageringRequirementAdminResponseDto)
     @ApiStandardErrors()
     async voidRequirement(
+        @CurrentUser() user: AuthenticatedUser,
         @Param('id') id: string,
         @Body() dto: VoidWageringRequirementDto,
     ): Promise<WageringRequirementAdminResponseDto> {
-        const requirement = await this.findService.findById(BigInt(id));
-        if (!requirement) {
-            throw new WageringRequirementNotFoundException(id);
-        }
-
-        requirement.void(dto.reason);
-        const updated = await this.repository.save(requirement);
+        const updated = await this.voidService.execute({
+            id: BigInt(id),
+            reason: dto.reason,
+            adminUserId: BigInt(user.id),
+        });
 
         return this.mapToResponse(updated);
     }

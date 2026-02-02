@@ -16,7 +16,7 @@ export class GetWageringRequirementsAdminQueryDto extends createPaginationQueryD
     ['createdAt', 'updatedAt', 'priority', 'id'],
 ) {
     @ApiPropertyOptional({
-        description: 'User ID Filter (유저 ID 필터)',
+        description: 'User ID Filter / 유저 ID 필터',
         example: '1234567890',
     })
     @IsOptional()
@@ -24,7 +24,7 @@ export class GetWageringRequirementsAdminQueryDto extends createPaginationQueryD
     userId?: string;
 
     @ApiPropertyOptional({
-        description: 'Filter by Status (상태 필터, 여러 개일 경우 콤마로 구분)',
+        description: 'Filter by Status / 상태 필터 (여러 개일 경우 콤마로 구분)',
         enum: ['ACTIVE', 'COMPLETED', 'CANCELLED', 'VOIDED', 'EXPIRED'],
         isArray: true,
     })
@@ -38,7 +38,7 @@ export class GetWageringRequirementsAdminQueryDto extends createPaginationQueryD
     statuses?: WageringStatus[];
 
     @ApiPropertyOptional({
-        description: 'Source Type Filter (소스 타입 필터)',
+        description: 'Source Type Filter / 소스 타입 필터',
         enum: WageringSourceType,
     })
     @IsOptional()
@@ -46,7 +46,7 @@ export class GetWageringRequirementsAdminQueryDto extends createPaginationQueryD
     sourceType?: WageringSourceType;
 
     @ApiPropertyOptional({
-        description: 'Currency Filter (통화 필터)',
+        description: 'Currency Filter / 통화 필터',
         enum: ExchangeCurrencyCode,
     })
     @IsOptional()
@@ -54,7 +54,7 @@ export class GetWageringRequirementsAdminQueryDto extends createPaginationQueryD
     currency?: ExchangeCurrencyCode;
 
     @ApiPropertyOptional({
-        description: 'From Date Filter (시작 날짜)',
+        description: 'From Date Filter / 시작 날짜 조회 범위',
         example: '2024-01-01T00:00:00Z',
     })
     @IsOptional()
@@ -62,7 +62,7 @@ export class GetWageringRequirementsAdminQueryDto extends createPaginationQueryD
     fromAt?: Date;
 
     @ApiPropertyOptional({
-        description: 'To Date Filter (종료 날짜)',
+        description: 'To Date Filter / 종료 날짜 조회 범위',
         example: '2024-12-31T23:59:59Z',
     })
     @IsOptional()

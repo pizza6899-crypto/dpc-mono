@@ -1,6 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsInt, IsOptional, IsBoolean, IsObject, Min, IsNumber, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsInt, IsOptional, IsBoolean, IsObject, Min, IsNumber } from 'class-validator';
 
 export class UpdateWageringCurrencySettingDto {
     @ApiPropertyOptional({ description: 'Cancellation threshold amount / 오링 기준액', example: 500 })
