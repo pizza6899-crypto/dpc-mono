@@ -42,18 +42,17 @@ export class ProcessWageringContributionService {
 
         // 0.1 최소/최대 베팅 기여 범위 체크 (글로벌 설정)
         const config = await this.getConfigService.execute();
-        const minBet = config.getMinBetAmount(currency);
-        const maxBetLimit = config.getMaxBetAmount(currency);
+        const setting = config.getSetting(currency);
 
-        if (betAmount.lessThan(minBet)) {
-            this.logger.debug(`Bet amount ${betAmount} is less than minBet ${minBet} for ${currency}. Skipping contribution.`);
+        if (betAmount.lessThan(setting.minBetAmount)) {
+            this.logger.debug(`Bet amount ${betAmount} is less than minBet ${setting.minBetAmount} for ${currency}. Skipping contribution.`);
             return;
         }
 
         // 0.2 최대 기여 한도 적용 (Capping)
         // 실제 베팅액이 설정된 maxBetLimit보다 크면 한도까지만 기여액으로 산정
-        const effectiveBetForContribution = (!maxBetLimit.isZero() && betAmount.greaterThan(maxBetLimit))
-            ? maxBetLimit
+        const effectiveBetForContribution = (!setting.maxBetAmount.isZero() && betAmount.greaterThan(setting.maxBetAmount))
+            ? setting.maxBetAmount
             : betAmount;
 
         // 1. 활성 롤링 조건 조회 (우선순위 DESC, 생성일 ASC)

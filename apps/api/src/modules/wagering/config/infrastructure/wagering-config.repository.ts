@@ -45,7 +45,7 @@ export class WageringConfigRepository implements WageringConfigRepositoryPort {
         const data = this.mapper.toPrisma(config);
         const result = await this.tx.wageringConfig.update({
             where: { id: config.id },
-            data: data as any,
+            data,
         });
 
         const domain = this.mapper.toDomain(result);

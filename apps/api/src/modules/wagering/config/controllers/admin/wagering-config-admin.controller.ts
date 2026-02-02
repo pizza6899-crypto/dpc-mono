@@ -53,9 +53,14 @@ export class WageringConfigAdminController {
     }
 
     private mapToResponse(config: WageringConfig): WageringConfigAdminResponseDto {
+        const rawSettings: Record<string, any> = {};
+        for (const [currency, setting] of Object.entries(config.currencySettings)) {
+            rawSettings[currency] = setting.toRaw();
+        }
+
         return {
             defaultBonusExpiryDays: config.defaultBonusExpiryDays,
-            currencySettings: config.currencySettings,
+            currencySettings: rawSettings,
             isWageringCheckEnabled: config.isWageringCheckEnabled,
             isAutoCancellationEnabled: config.isAutoCancellationEnabled,
             updatedAt: config.updatedAt,
