@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import { InvalidWageringConfigException } from '../wagering-config.exception';
 
 export class WageringCurrencySetting {
     constructor(
@@ -7,9 +8,9 @@ export class WageringCurrencySetting {
         public readonly maxBetAmount: Prisma.Decimal,
     ) {
         // 도메인 검증: 금액 관련 수치는 음수일 수 없음
-        if (cancellationThreshold.isNeg()) throw new Error('Cancellation threshold cannot be negative');
-        if (minBetAmount.isNeg()) throw new Error('Minimum bet amount cannot be negative');
-        if (maxBetAmount.isNeg()) throw new Error('Maximum bet amount cannot be negative');
+        if (cancellationThreshold.isNeg()) throw new InvalidWageringConfigException('Cancellation threshold cannot be negative');
+        if (minBetAmount.isNeg()) throw new InvalidWageringConfigException('Minimum bet amount cannot be negative');
+        if (maxBetAmount.isNeg()) throw new InvalidWageringConfigException('Maximum bet amount cannot be negative');
     }
 
     /**

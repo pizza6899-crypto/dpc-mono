@@ -1,4 +1,5 @@
 import { WageringCurrencySetting } from './value-objects/wagering-currency-setting.vo';
+import { InvalidWageringConfigException } from './wagering-config.exception';
 
 export class WageringConfig {
     public static readonly SINGLETON_ID = 1n;
@@ -14,7 +15,7 @@ export class WageringConfig {
     ) {
         // 도메인 검증
         if (defaultBonusExpiryDays < 1) {
-            throw new Error('Default bonus expiry days must be at least 1 day');
+            throw new InvalidWageringConfigException('Default bonus expiry days must be at least 1 day');
         }
     }
 
