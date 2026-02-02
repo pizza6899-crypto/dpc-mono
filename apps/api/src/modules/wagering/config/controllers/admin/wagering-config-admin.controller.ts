@@ -9,7 +9,7 @@ import { AuditLog } from '../../../../audit-log/infrastructure/audit-log.decorat
 import { LogType } from '../../../../audit-log/domain';
 import { ApiStandardResponse, ApiStandardErrors } from '../../../../../common/http/decorators/api-response.decorator';
 import { UpdateWageringConfigDto } from './dto/request/update-wagering-config.dto';
-import { WageringConfigAdminResponseDto } from './dto/response/wagering-config-admin.response.dto';
+import { WageringConfigAdminResponseDto, WageringCurrencySettingResponseDto } from './dto/response/wagering-config-admin.response.dto';
 import { WageringConfig } from '../../domain';
 
 @ApiTags('Admin Wagering Config')
@@ -55,9 +55,9 @@ export class WageringConfigAdminController {
     }
 
     private mapToResponse(config: WageringConfig): WageringConfigAdminResponseDto {
-        const rawSettings: Record<string, any> = {};
+        const rawSettings: Record<string, WageringCurrencySettingResponseDto> = {};
         for (const [currency, setting] of Object.entries(config.currencySettings)) {
-            rawSettings[currency] = setting.toRaw();
+            rawSettings[currency] = setting.toRaw() as unknown as WageringCurrencySettingResponseDto;
         }
 
         return {
