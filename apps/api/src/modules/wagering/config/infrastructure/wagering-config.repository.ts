@@ -6,6 +6,7 @@ import { WageringConfig } from '../domain/wagering-config.entity';
 import { WageringConfigMapper } from './wagering-config.mapper';
 import { CacheService } from 'src/common/cache/cache.service';
 import { CACHE_CONFIG } from 'src/common/cache/cache.constants';
+import type { WageringConfig as PrismaWageringConfig } from '@prisma/client';
 
 @Injectable()
 export class WageringConfigRepository implements WageringConfigRepositoryPort {
@@ -20,12 +21,12 @@ export class WageringConfigRepository implements WageringConfigRepositoryPort {
     ) { }
 
     async getConfig(): Promise<WageringConfig> {
-        // 캐시 모듈을 사용하여 조회 부하 최적화
-        return await this.cacheService.getOrSet(
+        // 캐시에는 '순수 데이터(Plain Object)'만 저장하여 직렬화 문제를 방지합니다.
+        const raw = await this.cacheService.getOrSet(
             CACHE_CONFIG.WAGERING.CONFIG,
             async () => {
                 this.logger.debug(`Fetching WageringConfig from DB (Cache Miss)`);
-                const config = await this.tx.wageringConfig.upsert({
+                return await this.tx.wageringConfig.upsert({
                     where: { id: this.CONFIG_ID },
                     update: {},
                     create: {
@@ -35,10 +36,12 @@ export class WageringConfigRepository implements WageringConfigRepositoryPort {
                         isWageringCheckEnabled: true,
                         isAutoCancellationEnabled: true,
                     }
-                });
-                return this.mapper.toDomain(config);
+                }) as PrismaWageringConfig;
             }
         );
+
+        // 캐시에서 꺼낸 데이터를 Mapper를 통해 항상 최신 도메인 엔티티 인스턴스로 변환합니다.
+        return this.mapper.toDomain(raw);
     }
 
     async save(config: WageringConfig): Promise<WageringConfig> {
@@ -48,11 +51,9 @@ export class WageringConfigRepository implements WageringConfigRepositoryPort {
             data,
         });
 
-        const domain = this.mapper.toDomain(result);
+        // 저장 시 캐시 업데이트 (원시 데이터로 저장)
+        await this.cacheService.set(CACHE_CONFIG.WAGERING.CONFIG, result);
 
-        // 저장 시 캐시 업데이트 (무효화 대신 새 값으로 갱신)
-        await this.cacheService.set(CACHE_CONFIG.WAGERING.CONFIG, domain);
-
-        return domain;
+        return this.mapper.toDomain(result);
     }
 }
