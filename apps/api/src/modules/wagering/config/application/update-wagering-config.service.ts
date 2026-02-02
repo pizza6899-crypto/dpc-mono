@@ -5,6 +5,8 @@ import { WageringConfig } from '../domain/wagering-config.entity';
 import { WageringCurrencySetting } from '../domain/value-objects/wagering-currency-setting.vo';
 import { Transactional } from '@nestjs-cls/transactional';
 
+import { ExchangeCurrencyCode } from '@prisma/client';
+import { InvalidWageringConfigException } from '../domain/wagering-config.exception';
 import { UpdateWageringCurrencySettingDto } from '../controllers/admin/dto/request/update-wagering-config.dto';
 
 interface UpdateWageringConfigCommand {
@@ -26,16 +28,23 @@ export class UpdateWageringConfigService {
     async execute(command: UpdateWageringConfigCommand): Promise<WageringConfig> {
         const current = await this.repository.getConfig();
 
-        // DTO에서 전달받은 원시 데이터를 VO 맵으로 변환
-        let updatedCurrencySettings = current.currencySettings;
+        // 1. 통화 설정 검증 및 반영
+        let updatedCurrencySettings = { ...current.currencySettings };
         if (command.currencySettings) {
-            updatedCurrencySettings = {};
+            const validCurrencies = Object.values(ExchangeCurrencyCode) as string[];
+
             for (const [currency, data] of Object.entries(command.currencySettings)) {
+                // 시스템 지원 통화 여부 체크
+                if (!validCurrencies.includes(currency)) {
+                    throw new InvalidWageringConfigException(`Unsupported currency: ${currency}`);
+                }
+
+                // VO로 변환 (내부적으로 금액 검증 수행)
                 updatedCurrencySettings[currency] = WageringCurrencySetting.fromRaw(data as any);
             }
         }
 
-        // 불변 엔티티 패턴: 기존 값을 기반으로 새로운 값 반영하여 인스턴스 생성
+        // 2. 불변 엔티티 패턴: 기존 값을 기반으로 새로운 값 반영하여 인스턴스 생성
         const updatedConfig = WageringConfig.fromPersistence({
             id: current.id,
             defaultBonusExpiryDays: command.defaultBonusExpiryDays ?? current.defaultBonusExpiryDays,
