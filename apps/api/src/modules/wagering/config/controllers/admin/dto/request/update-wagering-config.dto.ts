@@ -3,20 +3,23 @@ import { IsInt, IsOptional, IsBoolean, IsObject, Min, IsNumber, ValidateNested }
 import { Type } from 'class-transformer';
 
 export class UpdateWageringCurrencySettingDto {
-    @ApiProperty({ description: 'Cancellation threshold amount / 오링 기준액', example: 500 })
+    @ApiPropertyOptional({ description: 'Cancellation threshold amount / 오링 기준액', example: 500 })
+    @IsOptional()
     @IsNumber()
     @Min(0)
-    cancellationThreshold: number;
+    cancellationThreshold?: number;
 
-    @ApiProperty({ description: 'Minimum bet amount for contribution / 기여 인정 최소 베팅액', example: 100 })
+    @ApiPropertyOptional({ description: 'Minimum bet amount for contribution / 기여 인정 최소 베팅액', example: 100 })
+    @IsOptional()
     @IsNumber()
     @Min(0)
-    minBetAmount: number;
+    minBetAmount?: number;
 
-    @ApiProperty({ description: 'Maximum bet amount for contribution (Capping) / 기여 인정 최대 한도액 (0이면 무제한)', example: 0 })
+    @ApiPropertyOptional({ description: 'Maximum bet amount for contribution (Capping) / 기여 인정 최대 한도액 (0이면 무제한)', example: 0 })
+    @IsOptional()
     @IsNumber()
     @Min(0)
-    maxBetAmount: number;
+    maxBetAmount?: number;
 }
 
 export class UpdateWageringConfigDto {

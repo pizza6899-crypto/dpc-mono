@@ -39,8 +39,15 @@ export class UpdateWageringConfigService {
                     throw new InvalidWageringConfigException(`Unsupported currency: ${currency}`);
                 }
 
-                // VO로 변환 (내부적으로 금액 검증 수행)
-                updatedCurrencySettings[currency] = WageringCurrencySetting.fromRaw(data as any);
+                // 기존 설정이 있다면 가져오고, 없으면 빈 설정 생성
+                const existingSetting = current.getSetting(currency);
+
+                // VO로 변환 (기존 값 + 새 값 병합)
+                updatedCurrencySettings[currency] = WageringCurrencySetting.fromRaw({
+                    cancellationThreshold: data.cancellationThreshold ?? existingSetting.cancellationThreshold,
+                    minBetAmount: data.minBetAmount ?? existingSetting.minBetAmount,
+                    maxBetAmount: data.maxBetAmount ?? existingSetting.maxBetAmount,
+                });
             }
         }
 
