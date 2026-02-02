@@ -1,7 +1,6 @@
 import { Body, Controller, Get, Patch } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { RequireRoles } from '../../../../../common/auth/decorators/roles.decorator';
-import { UserRoleType } from '@prisma/client';
+import { Admin } from '../../../../../common/auth/decorators/roles.decorator';
 import { GetWageringConfigService } from '../../application/get-wagering-config.service';
 import { UpdateWageringConfigService } from '../../application/update-wagering-config.service';
 import { CurrentUser } from '../../../../../common/auth/decorators/current-user.decorator';
@@ -15,7 +14,7 @@ import { WageringConfig } from '../../domain';
 
 @ApiTags('Admin Wagering Config')
 @Controller('admin/wagering-configs')
-@RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
+@Admin()
 export class WageringConfigAdminController {
     constructor(
         private readonly getService: GetWageringConfigService,

@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Param, Query, UseGuards, Inject } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { RequireRoles } from '../../../../../common/auth/decorators/roles.decorator';
-import { UserRoleType } from '@prisma/client';
+import { Admin } from '../../../../../common/auth/decorators/roles.decorator';
 import { FindWageringRequirementsService } from '../../application/find-wagering-requirements.service';
 import { GetWageringRequirementsAdminQueryDto } from './dto/request/get-wagering-requirements-admin-query.dto';
 import { PaginatedWageringRequirementAdminResponseDto } from './dto/response/paginated-wagering-requirement-admin.response.dto';
@@ -15,7 +14,7 @@ import { Paginated } from '../../../../../common/http/decorators/paginated.decor
 
 @ApiTags('Admin Wagering Requirements')
 @Controller('admin/wagering-requirements')
-@RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
+@Admin()
 export class WageringRequirementAdminController {
     constructor(
         private readonly findService: FindWageringRequirementsService,
@@ -65,10 +64,10 @@ export class WageringRequirementAdminController {
             completedAt: item.completedAt,
             cancelledAt: item.cancelledAt,
             cancellationNote: item.cancellationNote,
-            cancellationReasonType: item.props.cancellationReasonType,
-            cancelledBy: item.props.cancelledBy,
-            balanceAtCancellation: item.props.balanceAtCancellation?.toString(),
-            forfeitedAmount: item.props.forfeitedAmount?.toString(),
+            cancellationReasonType: item.cancellationReasonType,
+            cancelledBy: item.cancelledBy,
+            balanceAtCancellation: item.balanceAtCancellation?.toString(),
+            forfeitedAmount: item.forfeitedAmount?.toString(),
             depositDetailId: item.depositDetailId?.toString(),
             userPromotionId: item.userPromotionId?.toString(),
             autoCancelThreshold: item.autoCancelThreshold?.toString(),
