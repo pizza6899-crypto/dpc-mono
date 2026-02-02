@@ -1,29 +1,71 @@
+model WageringConfig {
+  id BigInt @id @default(autoincrement()) // id=1 하나만 사용
+
+  // [Default Policy]
+  defaultBonusExpiryDays Int @default(30) @map("default_bonus_expiry_days") // 기본 보너스 유효기간 (일)
+
+  // [Currency Specific Policy]
+  // 화폐별 오링 기준(threshold) 및 최소 베팅 보정치 등을 JSON으로 관리
+  // 예: { "KRW": { "cancellationThreshold": 500 }, "USD": { "cancellationThreshold": 0.5 }, "BTC": { "cancellationThreshold": 0.00001 } }
+  currencySettings Json @default("{}") @map("currency_settings")
+
+  // [System Control]
+  isWageringCheckEnabled    Boolean @default(true) @map("is_wagering_check_enabled") // 출금 시 롤링 체크 활성 여부
+  isAutoCancellationEnabled Boolean @default(true) @map("is_auto_cancellation_enabled") // 오링 시 자동 취소 배치 활성 여부
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedBy BigInt?  @map("updated_by") // 변경한 관리자 ID
+
+  @@map("wagering_config")
+}
+
 model WageringRequirement {
-  id         BigInt               @id @default(autoincrement())
-  uid        String               @unique @default(cuid())
+  id         BigInt               @id // Snowflake ID (Application Generated)
   userId     BigInt               @map("user_id")
   currency   ExchangeCurrencyCode
   sourceType WageringSourceType   @default(DEPOSIT) @map("source_type")
 
   // 금액 관련
-  requiredAmount               Decimal  @map("required_amount") @db.Decimal(32, 18)
-  currentAmount                Decimal  @default(0) @map("current_amount") @db.Decimal(32, 18)
-  cancellationBalanceThreshold Decimal? @map("cancellation_balance_threshold") @db.Decimal(32, 18)
+  requiredAmount      Decimal  @map("required_amount") @db.Decimal(32, 18) // 목표 롤링 금액
+  fulfilledAmount     Decimal  @default(0) @map("fulfilled_amount") @db.Decimal(32, 18) // 현재까지 달성한 금액
+  autoCancelThreshold Decimal? @map("auto_cancel_threshold") @db.Decimal(32, 18) // 이 잔액 이하로 떨어지면 자동 취소(오링)
+  isAutoCancelable    Boolean  @default(true) @map("is_auto_cancelable") // 자동 취소(오링 처리) 허용 여부
+
+  // [메타 데이터] - 원본 추적 및 운영 편의성
+  principalAmount Decimal @default(0) @map("principal_amount") @db.Decimal(32, 18) // 롤링의 원본 금액 (예: 입금액, 보너스액)
+  multiplier      Decimal @default(1) @map("multiplier") @db.Decimal(8, 4) // 적용된 롤링 배수 (예: 3.0)
+  lockedAmount    Decimal @default(0) @map("locked_amount") @db.Decimal(32, 18) // 이 조건에 묶여있는(출금 제한된) 총금액 (원금+보너스)
+
+  // 생성 당시 적용된 Config/Rule의 사본 (정책 변경 추적용 스냅샷)
+  // 예: { "minBet": 0.1, "excludedGames": ["A", "B"] }
+  appliedConfig Json? @default("{}") @map("applied_config")
+
+  // [정산 규칙 및 결과]
+  maxCashConversion Decimal? @map("max_cash_conversion") @db.Decimal(32, 18) // 롤링 완료 시 Cash 전환 상한액 (NULL=무제한)
+  convertedAmount   Decimal? @map("converted_amount") @db.Decimal(32, 18) // 롤링 완료 후 실제 Cash로 전환된 금액
 
   // 상태
-  status WageringStatus @default(ACTIVE)
+  isPaused Boolean        @default(false) @map("is_paused") // 관리자 조사 등으로 인한 진행 일시 정지
+  status   WageringStatus @default(ACTIVE)
 
   // 링크
   depositDetailId BigInt? @map("deposit_detail_id")
   userPromotionId BigInt? @map("user_promotion_id")
 
   // 타임스탬프
-  createdAt        DateTime  @default(now()) @map("created_at")
-  updatedAt        DateTime  @updatedAt @map("updated_at")
-  expiresAt        DateTime? @map("expires_at")
-  completedAt      DateTime? @map("completed_at")
-  cancelledAt      DateTime? @map("cancelled_at")
-  cancellationNote String?   @map("cancellation_note")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+  expiresAt         DateTime? @map("expires_at")
+  lastContributedAt DateTime? @map("last_contributed_at") // 마지막 기여 발생 시간
+
+  // [완료/취소 이력]
+  completedAt            DateTime?                   @map("completed_at")
+  cancelledAt            DateTime?                   @map("cancelled_at")
+  cancellationNote       String?                     @map("cancellation_note") // 취소/무효화 사유 (자유 텍스트)
+  cancellationReasonType WageringCancellationReason? @map("cancellation_reason_type") // 시스템/관리자 취소 사유 코드
+  cancelledBy            String?                     @map("cancelled_by") // 취소 실행자 ('SYSTEM' or 'ADMIN:123')
+  balanceAtCancellation  Decimal?                    @map("balance_at_cancellation") @db.Decimal(32, 18) // 취소 시점의 유저 유효 잔액 (증빙용)
+  forfeitedAmount        Decimal?                    @map("forfeited_amount") @db.Decimal(32, 18) // 취소로 인해 실제 회수(차감)된 금액 (Delta)
 
   // 우선순위 (높을수록 먼저 차감, 예: 기간제 보너스 우선)
   priority Int @default(0)
@@ -44,7 +86,7 @@ model WageringRequirement {
 }
 
 model WageringContributionLog {
-  id                    BigInt @id @default(autoincrement())
+  id                    BigInt // Snowflake ID (Application Generated)
   wageringRequirementId BigInt @map("wagering_requirement_id")
   gameRoundId           BigInt @map("game_round_id")
 
@@ -56,14 +98,18 @@ model WageringContributionLog {
 
   wageringRequirement WageringRequirement @relation(fields: [wageringRequirementId], references: [id])
 
-  @@index([wageringRequirementId])
-  @@index([gameRoundId])
+  // [Partitioning] 시간 기반 파티셔닝을 위해 PK에 시간 포함
+  @@id([id, createdAt])
+  @@index([wageringRequirementId, createdAt]) // 특정 웨이저링 조건의 기여 내역 타임라인 조회
+  @@index([gameRoundId]) // 특정 게임 한 판이 기여한 로그 역추적
+  @@index([createdAt]) // 기간별 통계 조회용
   @@map("wagering_contribution_logs")
 }
 
 enum WageringSourceType {
   DEPOSIT
   PROMOTION_BONUS
+  TIER_BONUS
 }
 
 enum WageringStatus {
@@ -77,4 +123,19 @@ enum WageringStatus {
   EXPIRED
   /// 무효화됨 - 관리자 또는 시스템에 의한 강제 취소
   VOIDED
+}
+
+enum WageringCancellationReason {
+  /// 잔액 부족으로 인한 자동 취소 (오링)
+  BANKRUPTCY
+  /// 유효기간 만료
+  EXPIRED
+  /// 관리자에 의한 수동 취소
+  MANUAL_ADMIN
+  /// 유저 요청에 의한 포기
+  USER_FORFEIT
+  /// 시스템 오류 또는 롤백
+  SYSTEM_ERROR
+  /// 어뷰징 등 규정 위반으로 인한 몰수
+  VIOLATION
 }

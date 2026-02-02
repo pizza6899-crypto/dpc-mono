@@ -7,18 +7,21 @@ import { WageringRequirementMapper } from './wagering-requirement.mapper';
 import { type ExchangeCurrencyCode, type WageringStatus, type WageringSourceType } from '@prisma/client';
 import type { PaginatedData } from 'src/common/http/types/pagination.types';
 
+import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+
 @Injectable()
 export class WageringRequirementRepository implements WageringRequirementRepositoryPort {
     constructor(
         @InjectTransaction()
         private readonly tx: PrismaTransaction,
         private readonly mapper: WageringRequirementMapper,
+        private readonly snowflakeService: SnowflakeService,
     ) { }
 
     async create(wageringRequirement: WageringRequirement): Promise<WageringRequirement> {
         const data = this.mapper.toPrisma(wageringRequirement);
         const result = await this.tx.wageringRequirement.create({
-            data,
+            data: data as any,
         });
         return this.mapper.toDomain(result);
     }
@@ -56,13 +59,15 @@ export class WageringRequirementRepository implements WageringRequirementReposit
         // Update WageringRequirement
         const result = await this.tx.wageringRequirement.update({
             where: { id: wageringRequirement.id },
-            data,
+            data: data as any,
         });
 
         // Create Log if provided
         if (logData) {
+            const { id: logId } = this.snowflakeService.generate();
             await this.tx.wageringContributionLog.create({
                 data: {
+                    id: logId,
                     wageringRequirementId: wageringRequirement.id,
                     gameRoundId: logData.gameRoundId,
                     requestAmount: logData.requestAmount,
@@ -82,17 +87,10 @@ export class WageringRequirementRepository implements WageringRequirementReposit
         return result ? this.mapper.toDomain(result) : null;
     }
 
-    async findByUid(uid: string): Promise<WageringRequirement | null> {
-        const result = await this.tx.wageringRequirement.findUnique({
-            where: { uid },
-        });
-        return result ? this.mapper.toDomain(result) : null;
-    }
-
-    async getByUid(uid: string): Promise<WageringRequirement> {
-        const requirement = await this.findByUid(uid);
+    async getById(id: bigint): Promise<WageringRequirement> {
+        const requirement = await this.findById(id);
         if (!requirement) {
-            throw new WageringRequirementNotFoundException(uid);
+            throw new WageringRequirementNotFoundException(id);
         }
         return requirement;
     }

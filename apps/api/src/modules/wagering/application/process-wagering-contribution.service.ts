@@ -86,7 +86,7 @@ export class ProcessWageringContributionService {
                             metadata: {
                                 wageringId: requirement.id?.toString(),
                                 currency,
-                                finalAmount: requirement.props.currentAmount.toString(),
+                                finalAmount: requirement.fulfilledAmount.toString(),
                                 gameRoundId: gameRoundId.toString(),
                             }
                         }

@@ -35,14 +35,9 @@ export interface WageringRequirementRepositoryPort {
     findById(id: bigint): Promise<WageringRequirement | null>;
 
     /**
-     * UID로 롤링 조건을 조회합니다. (비즈니스용 식별)
+     * ID로 롤링 조건을 조회하고, 없으면 예외를 발생시킵니다.
      */
-    findByUid(uid: string): Promise<WageringRequirement | null>;
-
-    /**
-     * UID로 롤링 조건을 조회하고, 없으면 예외를 발생시킵니다.
-     */
-    getByUid(uid: string): Promise<WageringRequirement>;
+    getById(id: bigint): Promise<WageringRequirement>;
 
     /**
      * 유저의 모든 롤링 조건을 조회합니다. (필터링 가능)

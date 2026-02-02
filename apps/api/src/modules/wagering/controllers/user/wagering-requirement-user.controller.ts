@@ -42,7 +42,7 @@ export class WageringRequirementUserController {
             id: this.sqidsService.encode(item.id!, SqidsPrefix.WAGERING_REQUIREMENT),
             currency: item.currency,
             requiredAmount: item.requiredAmount?.toString(),
-            currentAmount: item.currentAmount?.toString(),
+            fulfilledAmount: item.fulfilledAmount?.toString(),
             remainingAmount: item.remainingAmount?.toString(),
             status: item.status,
             expiresAt: item.expiresAt,

@@ -11,8 +11,8 @@ export class WageringRequirementUserResponseDto {
     @ApiProperty({ description: 'Required Amount' })
     requiredAmount: string;
 
-    @ApiProperty({ description: 'Current Amount' })
-    currentAmount: string;
+    @ApiProperty({ description: 'Fulfilled Amount (현재까지 달성한 금액)' })
+    fulfilledAmount: string;
 
     @ApiProperty({ description: 'Remaining Amount' })
     remainingAmount: string;

@@ -8,6 +8,7 @@ import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LogType } from 'src/modules/audit-log/domain';
+import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import type { RequestClientInfo } from 'src/common/http/types';
 
 interface CreateWageringRequirementParams {
@@ -19,7 +20,7 @@ interface CreateWageringRequirementParams {
     depositDetailId?: bigint;
     userPromotionId?: bigint;
     expiresAt?: Date;
-    cancellationBalanceThreshold?: Prisma.Decimal;
+    autoCancelThreshold?: Prisma.Decimal;
     requestInfo?: RequestClientInfo;
 }
 
@@ -30,6 +31,7 @@ export class CreateWageringRequirementService {
     constructor(
         @Inject(WAGERING_REQUIREMENT_REPOSITORY)
         private readonly repository: WageringRequirementRepositoryPort,
+        private readonly snowflakeService: SnowflakeService,
         @InjectTransaction()
         private readonly tx: PrismaTransaction,
         private readonly dispatchLogService: DispatchLogService,
@@ -45,20 +47,19 @@ export class CreateWageringRequirementService {
             depositDetailId,
             userPromotionId,
             expiresAt,
-            cancellationBalanceThreshold,
+            autoCancelThreshold,
         } = params;
 
         this.logger.log(
             `Creating wagering requirement for user ${userId}, currency ${currency}, required ${requiredAmount}, source ${sourceType}`,
         );
 
-        // Factory method wrapper since we don't have a full factory class yet
-        // In a pure DDD approach, ID generation would happen here or in a factory.
-        // For now, we rely on the repository implementation to handle ID generation (DB AutoInc).
-        // The mapper handles reconstructing the entity from DB result.
+        // Snowflake ID 생성
+        const { id } = this.snowflakeService.generate();
 
         // Create using factory method
         const wageringRequirement = WageringRequirement.create({
+            id,
             userId,
             currency,
             sourceType,
@@ -67,7 +68,7 @@ export class CreateWageringRequirementService {
             depositDetailId,
             userPromotionId,
             expiresAt,
-            cancellationBalanceThreshold,
+            autoCancelThreshold,
         });
 
         const created = await this.repository.create(wageringRequirement);

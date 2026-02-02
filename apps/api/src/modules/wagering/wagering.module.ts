@@ -12,9 +12,10 @@ import { WageringPolicy } from './domain';
 import { WAGERING_REQUIREMENT_REPOSITORY } from './ports';
 import { WageringRequirementAdminController } from './controllers/admin/wagering-requirement-admin.controller';
 import { WageringRequirementUserController } from './controllers/user/wagering-requirement-user.controller';
+import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 
 @Module({
-    imports: [AuditLogModule],
+    imports: [AuditLogModule, SnowflakeModule],
     controllers: [
         WageringRequirementAdminController,
         WageringRequirementUserController

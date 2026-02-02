@@ -36,11 +36,16 @@ export class CancelWageringRequirementService {
         }
 
         for (const requirement of activeRequirements) {
-            // cancellationBalanceThreshold가 설정되어 있고, 현재 잔액이 그보다 작으면 취소
-            const threshold = requirement.props.cancellationBalanceThreshold;
+            // autoCancelThreshold가 설정되어 있고, 현재 잔액이 그보다 작으면 취소
+            const threshold = requirement.autoCancelThreshold;
 
             if (this.policy.canBeCancelled(currentTotalBalance, threshold)) {
-                requirement.cancel(`Insufficient balance (O-ring). Current: ${currentTotalBalance}, Threshold: ${threshold}`);
+                requirement.cancel({
+                    reason: 'BANKRUPTCY',
+                    note: `Insufficient balance (O-ring). Current: ${currentTotalBalance}, Threshold: ${threshold}`,
+                    cancelledBy: 'SYSTEM',
+                    balanceAtCancellation: currentTotalBalance,
+                });
                 await this.repository.save(requirement);
 
                 // Explicit Audit Log Dispatch
