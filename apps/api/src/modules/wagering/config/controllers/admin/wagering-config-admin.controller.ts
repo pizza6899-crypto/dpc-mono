@@ -8,8 +8,8 @@ import { CurrentUser } from '../../../../../common/auth/decorators/current-user.
 import type { AuthenticatedUser } from '../../../../../common/auth/types/auth.types';
 import { AuditLog } from '../../../../audit-log/infrastructure/audit-log.decorator';
 import { LogType } from '../../../../audit-log/domain';
-import { UpdateWageringConfigDto } from '../../dto/request/update-wagering-config.dto';
-import { WageringConfigAdminResponseDto } from '../../dto/response/wagering-config-admin.response.dto';
+import { UpdateWageringConfigDto } from './dto/request/update-wagering-config.dto';
+import { WageringConfigAdminResponseDto } from './dto/response/wagering-config-admin.response.dto';
 import { WageringConfig } from '../../domain';
 
 @ApiTags('Admin Wagering Config')
