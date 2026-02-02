@@ -13,12 +13,12 @@ import { WAGERING_REQUIREMENT_REPOSITORY } from './ports';
 import { WageringRequirementAdminController } from './controllers/admin/wagering-requirement-admin.controller';
 import { WageringRequirementUserController } from './controllers/user/wagering-requirement-user.controller';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
-import { ConfigModule } from '../config/config.module';
+import { WageringConfigModule } from '../config/wagering-config.module';
 import { WalletModule } from '../../wallet/wallet.module';
 import { SettleWageringRequirementService } from './application/settle-wagering-requirement.service';
 
 @Module({
-    imports: [AuditLogModule, SnowflakeModule, ConfigModule, WalletModule],
+    imports: [AuditLogModule, SnowflakeModule, WageringConfigModule, WalletModule],
     controllers: [
         WageringRequirementAdminController,
         WageringRequirementUserController

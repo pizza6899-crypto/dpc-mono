@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { RequirementModule } from './requirement/requirement.module';
-import { ConfigModule } from './config/config.module';
+import { WageringConfigModule } from './config/wagering-config.module';
 
 @Module({
-    imports: [RequirementModule, ConfigModule],
-    exports: [RequirementModule, ConfigModule],
+    imports: [RequirementModule, WageringConfigModule],
+    exports: [RequirementModule, WageringConfigModule],
 })
 export class WageringModule { }

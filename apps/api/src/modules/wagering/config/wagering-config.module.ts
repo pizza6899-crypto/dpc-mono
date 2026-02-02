@@ -25,4 +25,4 @@ import { CacheModule } from 'src/common/cache/cache.module';
         UpdateWageringConfigService,
     ],
 })
-export class ConfigModule { }
+export class WageringConfigModule { }
