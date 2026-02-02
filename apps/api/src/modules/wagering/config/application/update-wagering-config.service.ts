@@ -5,9 +5,11 @@ import { WageringConfig } from '../domain/wagering-config.entity';
 import { WageringCurrencySetting } from '../domain/value-objects/wagering-currency-setting.vo';
 import { Transactional } from '@nestjs-cls/transactional';
 
+import { UpdateWageringCurrencySettingDto } from '../controllers/admin/dto/request/update-wagering-config.dto';
+
 interface UpdateWageringConfigCommand {
     defaultBonusExpiryDays?: number;
-    currencySettings?: any;
+    currencySettings?: Record<string, UpdateWageringCurrencySettingDto>;
     isWageringCheckEnabled?: boolean;
     isAutoCancellationEnabled?: boolean;
     adminUserId: bigint;
