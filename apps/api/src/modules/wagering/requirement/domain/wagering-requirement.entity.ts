@@ -6,175 +6,74 @@ import type {
     WageringCancellationReason
 } from '@prisma/client';
 
-export interface WageringRequirementProps {
-    id: bigint | null;
-    userId: bigint;
-    currency: ExchangeCurrencyCode;
-    sourceType: WageringSourceType;
-
-    // 금액 관련
-    requiredAmount: Prisma.Decimal;
-    fulfilledAmount: Prisma.Decimal;
-    autoCancelThreshold: Prisma.Decimal | null;
-    isAutoCancelable: boolean;
-
-    // 메타 데이터 및 설정 스냅샷
-    principalAmount: Prisma.Decimal;
-    multiplier: Prisma.Decimal;
-    lockedAmount: Prisma.Decimal;
-    appliedConfig: any; // Json
-
-    // 정산 규칙 및 결과
-    maxCashConversion: Prisma.Decimal | null;
-    convertedAmount: Prisma.Decimal | null;
-
-    // 상태
-    isPaused: boolean;
-    status: WageringStatus;
-    priority: number;
-
-    // 링크
-    depositDetailId: bigint | null;
-    userPromotionId: bigint | null;
-
-    // 타임스탬프
-    createdAt: Date;
-    updatedAt: Date;
-    expiresAt: Date | null;
-    lastContributedAt: Date | null;
-
-    // 완료/취소 이력
-    completedAt: Date | null;
-    cancelledAt: Date | null;
-    cancellationNote: string | null;
-    cancellationReasonType: WageringCancellationReason | null;
-    cancelledBy: string | null;
-    balanceAtCancellation: Prisma.Decimal | null;
-    forfeitedAmount: Prisma.Decimal | null;
-}
-
 export class WageringRequirement {
-    private constructor(public readonly props: WageringRequirementProps) { }
+    private constructor(
+        public readonly id: bigint,
+        public readonly userId: bigint,
+        public readonly currency: ExchangeCurrencyCode,
+        public readonly sourceType: WageringSourceType,
+        private _requiredAmount: Prisma.Decimal,
+        private _fulfilledAmount: Prisma.Decimal,
+        private _autoCancelThreshold: Prisma.Decimal | null,
+        private _isAutoCancelable: boolean,
+        public readonly principalAmount: Prisma.Decimal,
+        public readonly multiplier: Prisma.Decimal,
+        public readonly lockedAmount: Prisma.Decimal,
+        public readonly appliedConfig: any,
+        private _maxCashConversion: Prisma.Decimal | null,
+        private _convertedAmount: Prisma.Decimal | null,
+        private _isPaused: boolean,
+        private _status: WageringStatus,
+        public readonly priority: number,
+        public readonly depositDetailId: bigint | null,
+        public readonly userPromotionId: bigint | null,
+        public readonly createdAt: Date,
+        private _updatedAt: Date,
+        public readonly expiresAt: Date | null,
+        private _lastContributedAt: Date | null,
+        private _completedAt: Date | null,
+        private _cancelledAt: Date | null,
+        private _cancellationNote: string | null,
+        private _cancellationReasonType: WageringCancellationReason | null,
+        private _cancelledBy: string | null,
+        private _balanceAtCancellation: Prisma.Decimal | null,
+        private _forfeitedAmount: Prisma.Decimal | null,
+    ) { }
 
-    get id(): bigint | null {
-        return this.props.id;
-    }
-
-    get userId(): bigint {
-        return this.props.userId;
-    }
-
-    get currency(): ExchangeCurrencyCode {
-        return this.props.currency;
-    }
-
-    get sourceType(): WageringSourceType {
-        return this.props.sourceType;
-    }
-
-    get requiredAmount(): Prisma.Decimal {
-        return this.props.requiredAmount;
-    }
-
-    get fulfilledAmount(): Prisma.Decimal {
-        return this.props.fulfilledAmount;
-    }
-
-    get autoCancelThreshold(): Prisma.Decimal | null {
-        return this.props.autoCancelThreshold;
-    }
-
-    get isAutoCancelable(): boolean {
-        return this.props.isAutoCancelable;
-    }
-
-    get principalAmount(): Prisma.Decimal {
-        return this.props.principalAmount;
-    }
-
-    get multiplier(): Prisma.Decimal {
-        return this.props.multiplier;
-    }
-
-    get lockedAmount(): Prisma.Decimal {
-        return this.props.lockedAmount;
-    }
-
-    get appliedConfig(): any {
-        return this.props.appliedConfig;
-    }
-
-    get maxCashConversion(): Prisma.Decimal | null {
-        return this.props.maxCashConversion;
-    }
-
-    get convertedAmount(): Prisma.Decimal | null {
-        return this.props.convertedAmount;
-    }
-
-    get isPaused(): boolean {
-        return this.props.isPaused;
-    }
-
-    get status(): WageringStatus {
-        return this.props.status;
-    }
-
-    get priority(): number {
-        return this.props.priority;
-    }
-
-    get createdAt(): Date {
-        return this.props.createdAt;
-    }
-
-    get updatedAt(): Date {
-        return this.props.updatedAt;
-    }
-
-    get expiresAt(): Date | null {
-        return this.props.expiresAt;
-    }
-
-    get lastContributedAt(): Date | null {
-        return this.props.lastContributedAt;
-    }
-
-    get completedAt(): Date | null {
-        return this.props.completedAt;
-    }
-
-    get cancelledAt(): Date | null {
-        return this.props.cancelledAt;
-    }
-
-    get cancellationNote(): string | null {
-        return this.props.cancellationNote;
-    }
-
-    get depositDetailId(): bigint | null {
-        return this.props.depositDetailId;
-    }
-
-    get userPromotionId(): bigint | null {
-        return this.props.userPromotionId;
-    }
+    // Getters
+    get requiredAmount(): Prisma.Decimal { return this._requiredAmount; }
+    get fulfilledAmount(): Prisma.Decimal { return this._fulfilledAmount; }
+    get autoCancelThreshold(): Prisma.Decimal | null { return this._autoCancelThreshold; }
+    get isAutoCancelable(): boolean { return this._isAutoCancelable; }
+    get maxCashConversion(): Prisma.Decimal | null { return this._maxCashConversion; }
+    get convertedAmount(): Prisma.Decimal | null { return this._convertedAmount; }
+    get isPaused(): boolean { return this._isPaused; }
+    get status(): WageringStatus { return this._status; }
+    get updatedAt(): Date { return this._updatedAt; }
+    get lastContributedAt(): Date | null { return this._lastContributedAt; }
+    get completedAt(): Date | null { return this._completedAt; }
+    get cancelledAt(): Date | null { return this._cancelledAt; }
+    get cancellationNote(): string | null { return this._cancellationNote; }
+    get cancellationReasonType(): WageringCancellationReason | null { return this._cancellationReasonType; }
+    get cancelledBy(): string | null { return this._cancelledBy; }
+    get balanceAtCancellation(): Prisma.Decimal | null { return this._balanceAtCancellation; }
+    get forfeitedAmount(): Prisma.Decimal | null { return this._forfeitedAmount; }
 
     get remainingAmount(): Prisma.Decimal {
-        const remaining = this.requiredAmount.sub(this.fulfilledAmount);
+        const remaining = this._requiredAmount.sub(this._fulfilledAmount);
         return remaining.isNeg() ? new Prisma.Decimal('0') : remaining;
     }
 
     get isCompleted(): boolean {
-        return this.props.status === 'COMPLETED';
+        return this._status === 'COMPLETED';
     }
 
     get isExpired(): boolean {
-        return this.props.expiresAt !== null && this.props.expiresAt < new Date();
+        return this.expiresAt !== null && this.expiresAt < new Date();
     }
 
     get isActive(): boolean {
-        return this.props.status === 'ACTIVE' && !this.props.isPaused && !this.isExpired;
+        return this._status === 'ACTIVE' && !this._isPaused && !this.isExpired;
     }
 
     /**
@@ -190,10 +89,11 @@ export class WageringRequirement {
             ? remaining
             : contributionAmount;
 
-        this.props.fulfilledAmount = this.props.fulfilledAmount.add(actualContribution);
-        this.props.lastContributedAt = new Date();
+        this._fulfilledAmount = this._fulfilledAmount.add(actualContribution);
+        this._lastContributedAt = new Date();
+        this._updatedAt = new Date();
 
-        if (this.props.fulfilledAmount.greaterThanOrEqualTo(this.props.requiredAmount)) {
+        if (this._fulfilledAmount.greaterThanOrEqualTo(this._requiredAmount)) {
             this.complete();
         }
 
@@ -201,26 +101,29 @@ export class WageringRequirement {
     }
 
     pause(): void {
-        this.props.isPaused = true;
+        this._isPaused = true;
+        this._updatedAt = new Date();
     }
 
     resume(): void {
-        this.props.isPaused = false;
+        this._isPaused = false;
+        this._updatedAt = new Date();
     }
 
     complete(finalBalance?: Prisma.Decimal): void {
-        if (this.props.status !== 'ACTIVE') return;
+        if (this._status !== 'ACTIVE') return;
 
-        this.props.status = 'COMPLETED';
-        this.props.completedAt = new Date();
+        this._status = 'COMPLETED';
+        this._completedAt = new Date();
+        this._updatedAt = new Date();
 
-        // 현금 전환 로직: maxCashConversion이 설정되어 있으면 해당 금액까지만 인정
-        if (finalBalance && this.props.maxCashConversion) {
-            this.props.convertedAmount = finalBalance.greaterThan(this.props.maxCashConversion)
-                ? this.props.maxCashConversion
+        // 현금 전환 로직
+        if (finalBalance && this._maxCashConversion) {
+            this._convertedAmount = finalBalance.greaterThan(this._maxCashConversion)
+                ? this._maxCashConversion
                 : finalBalance;
         } else if (finalBalance) {
-            this.props.convertedAmount = finalBalance;
+            this._convertedAmount = finalBalance;
         }
     }
 
@@ -231,32 +134,35 @@ export class WageringRequirement {
         balanceAtCancellation?: Prisma.Decimal;
         forfeitedAmount?: Prisma.Decimal;
     }): void {
-        if (this.props.status !== 'ACTIVE') return;
+        if (this._status !== 'ACTIVE') return;
 
-        this.props.status = 'CANCELLED';
-        this.props.cancelledAt = new Date();
-        this.props.cancellationReasonType = params.reason;
-        this.props.cancellationNote = params.note || null;
-        this.props.cancelledBy = params.cancelledBy || 'SYSTEM';
-        this.props.balanceAtCancellation = params.balanceAtCancellation || null;
-        this.props.forfeitedAmount = params.forfeitedAmount || null;
+        this._status = 'CANCELLED';
+        this._cancelledAt = new Date();
+        this._updatedAt = new Date();
+        this._cancellationReasonType = params.reason;
+        this._cancellationNote = params.note || null;
+        this._cancelledBy = params.cancelledBy || 'SYSTEM';
+        this._balanceAtCancellation = params.balanceAtCancellation || null;
+        this._forfeitedAmount = params.forfeitedAmount || null;
     }
 
     void(note?: string, cancelledBy?: string): void {
-        this.props.status = 'VOIDED';
-        this.props.cancelledAt = new Date();
-        this.props.cancellationReasonType = 'SYSTEM_ERROR';
-        this.props.cancellationNote = note || null;
-        this.props.cancelledBy = cancelledBy || 'SYSTEM';
+        this._status = 'VOIDED';
+        this._cancelledAt = new Date();
+        this._updatedAt = new Date();
+        this._cancellationReasonType = 'SYSTEM_ERROR';
+        this._cancellationNote = note || null;
+        this._cancelledBy = cancelledBy || 'SYSTEM';
     }
 
     expire(): void {
-        if (this.props.status !== 'ACTIVE') return;
+        if (this._status !== 'ACTIVE') return;
 
-        this.props.status = 'EXPIRED';
-        this.props.cancelledAt = new Date();
-        this.props.cancellationReasonType = 'EXPIRED';
-        this.props.cancelledBy = 'SYSTEM';
+        this._status = 'EXPIRED';
+        this._cancelledAt = new Date();
+        this._updatedAt = new Date();
+        this._cancellationReasonType = 'EXPIRED';
+        this._cancelledBy = 'SYSTEM';
     }
 
     static create(params: {
@@ -277,41 +183,103 @@ export class WageringRequirement {
         userPromotionId?: bigint | null;
         expiresAt?: Date | null;
     }): WageringRequirement {
-        return new WageringRequirement({
-            id: params.id,
-            userId: params.userId,
-            currency: params.currency,
-            sourceType: params.sourceType,
-            requiredAmount: params.requiredAmount,
-            fulfilledAmount: new Prisma.Decimal(0),
-            autoCancelThreshold: params.autoCancelThreshold ?? null,
-            isAutoCancelable: params.isAutoCancelable ?? true,
-            principalAmount: params.principalAmount ?? new Prisma.Decimal(0),
-            multiplier: params.multiplier ?? new Prisma.Decimal(1),
-            lockedAmount: params.lockedAmount ?? new Prisma.Decimal(0),
-            appliedConfig: params.appliedConfig ?? {},
-            maxCashConversion: params.maxCashConversion ?? null,
-            convertedAmount: null,
-            isPaused: false,
-            status: 'ACTIVE',
-            priority: params.priority ?? 0,
-            depositDetailId: params.depositDetailId ?? null,
-            userPromotionId: params.userPromotionId ?? null,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            expiresAt: params.expiresAt ?? null,
-            lastContributedAt: null,
-            completedAt: null,
-            cancelledAt: null,
-            cancellationNote: null,
-            cancellationReasonType: null,
-            cancelledBy: null,
-            balanceAtCancellation: null,
-            forfeitedAmount: null,
-        });
+        return new WageringRequirement(
+            params.id,
+            params.userId,
+            params.currency,
+            params.sourceType,
+            params.requiredAmount,
+            new Prisma.Decimal(0),
+            params.autoCancelThreshold ?? null,
+            params.isAutoCancelable ?? true,
+            params.principalAmount ?? new Prisma.Decimal(0),
+            params.multiplier ?? new Prisma.Decimal(1),
+            params.lockedAmount ?? new Prisma.Decimal(0),
+            params.appliedConfig ?? {},
+            params.maxCashConversion ?? null,
+            null,
+            false,
+            'ACTIVE',
+            params.priority ?? 0,
+            params.depositDetailId ?? null,
+            params.userPromotionId ?? null,
+            new Date(),
+            new Date(),
+            params.expiresAt ?? null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+        );
     }
 
-    static rehydrate(props: WageringRequirementProps): WageringRequirement {
-        return new WageringRequirement(props);
+    static fromPersistence(data: {
+        id: bigint;
+        userId: bigint;
+        currency: ExchangeCurrencyCode;
+        sourceType: WageringSourceType;
+        requiredAmount: Prisma.Decimal;
+        fulfilledAmount: Prisma.Decimal;
+        autoCancelThreshold: Prisma.Decimal | null;
+        isAutoCancelable: boolean;
+        principalAmount: Prisma.Decimal;
+        multiplier: Prisma.Decimal;
+        lockedAmount: Prisma.Decimal;
+        appliedConfig: any;
+        maxCashConversion: Prisma.Decimal | null;
+        convertedAmount: Prisma.Decimal | null;
+        isPaused: boolean;
+        status: WageringStatus;
+        priority: number;
+        depositDetailId: bigint | null;
+        userPromotionId: bigint | null;
+        createdAt: Date;
+        updatedAt: Date;
+        expiresAt: Date | null;
+        lastContributedAt: Date | null;
+        completedAt: Date | null;
+        cancelledAt: Date | null;
+        cancellationNote: string | null;
+        cancellationReasonType: WageringCancellationReason | null;
+        cancelledBy: string | null;
+        balanceAtCancellation: Prisma.Decimal | null;
+        forfeitedAmount: Prisma.Decimal | null;
+    }): WageringRequirement {
+        return new WageringRequirement(
+            data.id,
+            data.userId,
+            data.currency,
+            data.sourceType,
+            data.requiredAmount,
+            data.fulfilledAmount,
+            data.autoCancelThreshold,
+            data.isAutoCancelable,
+            data.principalAmount,
+            data.multiplier,
+            data.lockedAmount,
+            data.appliedConfig,
+            data.maxCashConversion,
+            data.convertedAmount,
+            data.isPaused,
+            data.status,
+            data.priority,
+            data.depositDetailId,
+            data.userPromotionId,
+            data.createdAt,
+            data.updatedAt,
+            data.expiresAt,
+            data.lastContributedAt,
+            data.completedAt,
+            data.cancelledAt,
+            data.cancellationNote,
+            data.cancellationReasonType,
+            data.cancelledBy,
+            data.balanceAtCancellation,
+            data.forfeitedAmount,
+        );
     }
 }

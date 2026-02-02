@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { WAGERING_CONFIG_REPOSITORY } from '../ports/wagering-config.repository.port';
+import type { WageringRequirementRepositoryPort } from '../../requirement/ports/wagering-requirement.repository.port'; // 오타 방지
 import type { WageringConfigRepositoryPort } from '../ports/wagering-config.repository.port';
 import { WageringConfig } from '../domain/wagering-config.entity';
 import { Transactional } from '@nestjs-cls/transactional';
@@ -21,16 +22,19 @@ export class UpdateWageringConfigService {
 
     @Transactional()
     async execute(command: UpdateWageringConfigCommand): Promise<WageringConfig> {
-        const config = await this.repository.getConfig();
+        const current = await this.repository.getConfig();
 
-        config.update({
-            defaultBonusExpiryDays: command.defaultBonusExpiryDays,
-            currencySettings: command.currencySettings,
-            isWageringCheckEnabled: command.isWageringCheckEnabled,
-            isAutoCancellationEnabled: command.isAutoCancellationEnabled,
+        // 불변 엔티티 패턴: 기존 값을 기반으로 새로운 값 반영하여 인스턴스 생성
+        const updatedConfig = WageringConfig.fromPersistence({
+            id: current.id,
+            defaultBonusExpiryDays: command.defaultBonusExpiryDays ?? current.defaultBonusExpiryDays,
+            currencySettings: command.currencySettings ?? current.currencySettings,
+            isWageringCheckEnabled: command.isWageringCheckEnabled ?? current.isWageringCheckEnabled,
+            isAutoCancellationEnabled: command.isAutoCancellationEnabled ?? current.isAutoCancellationEnabled,
             updatedBy: command.adminUserId,
+            updatedAt: new Date(),
         });
 
-        return await this.repository.save(config);
+        return await this.repository.save(updatedConfig);
     }
 }

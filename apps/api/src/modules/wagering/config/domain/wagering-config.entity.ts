@@ -6,32 +6,24 @@ export interface CurrencySetting {
     maxBetAmount: number;          // 롤링 기여 최대 인정 금액 (Capping)
 }
 
-export interface WageringConfigProps {
-    id: bigint;
-    defaultBonusExpiryDays: number;
-    currencySettings: Record<string, CurrencySetting>;
-    isWageringCheckEnabled: boolean;
-    isAutoCancellationEnabled: boolean;
-    updatedAt: Date;
-    updatedBy: bigint | null;
-}
-
 export class WageringConfig {
-    private constructor(private readonly props: WageringConfigProps) { }
+    public static readonly SINGLETON_ID = 1n;
 
-    get id(): bigint { return this.props.id; }
-    get defaultBonusExpiryDays(): number { return this.props.defaultBonusExpiryDays; }
-    get currencySettings(): Record<string, CurrencySetting> { return this.props.currencySettings; }
-    get isWageringCheckEnabled(): boolean { return this.props.isWageringCheckEnabled; }
-    get isAutoCancellationEnabled(): boolean { return this.props.isAutoCancellationEnabled; }
-    get updatedAt(): Date { return this.props.updatedAt; }
-    get updatedBy(): bigint | null { return this.props.updatedBy; }
+    constructor(
+        public readonly id: bigint,
+        public readonly defaultBonusExpiryDays: number,
+        public readonly currencySettings: Record<string, CurrencySetting>,
+        public readonly isWageringCheckEnabled: boolean,
+        public readonly isAutoCancellationEnabled: boolean,
+        public readonly updatedAt: Date,
+        public readonly updatedBy: bigint | null,
+    ) { }
 
     /**
      * 특정 통화의 오링 임계값을 가져옵니다.
      */
     getCancellationThreshold(currency: string): Prisma.Decimal {
-        const setting = this.props.currencySettings?.[currency];
+        const setting = this.currencySettings?.[currency];
         return new Prisma.Decimal(setting?.cancellationThreshold ?? 0);
     }
 
@@ -39,7 +31,7 @@ export class WageringConfig {
      * 특정 통화의 롤링 기여를 위한 최소 베팅 금액을 가져옵니다.
      */
     getMinBetAmount(currency: string): Prisma.Decimal {
-        const setting = this.props.currencySettings?.[currency];
+        const setting = this.currencySettings?.[currency];
         return new Prisma.Decimal(setting?.minBetAmount ?? 0);
     }
 
@@ -47,35 +39,31 @@ export class WageringConfig {
      * 특정 통화의 롤링 기여 최대 인정 금액(Capping)을 가져옵니다.
      */
     getMaxBetAmount(currency: string): Prisma.Decimal {
-        const setting = this.props.currencySettings?.[currency];
-        // 0이나 설정이 없으면 무제한(매우 큰 값)으로 처리하거나 0 그대로 반환 후 서비스에서 처리
+        const setting = this.currencySettings?.[currency];
         return new Prisma.Decimal(setting?.maxBetAmount ?? 0);
     }
 
-    update(params: {
-        defaultBonusExpiryDays?: number;
-        currencySettings?: Record<string, CurrencySetting>;
-        isWageringCheckEnabled?: boolean;
-        isAutoCancellationEnabled?: boolean;
-        updatedBy: bigint;
-    }): void {
-        if (params.defaultBonusExpiryDays !== undefined) {
-            if (params.defaultBonusExpiryDays < 1) throw new Error('Expiry days must be at least 1');
-            this.props.defaultBonusExpiryDays = params.defaultBonusExpiryDays;
-        }
-
-        if (params.currencySettings !== undefined) {
-            this.props.currencySettings = params.currencySettings;
-        }
-
-        if (params.isWageringCheckEnabled !== undefined) this.props.isWageringCheckEnabled = params.isWageringCheckEnabled;
-        if (params.isAutoCancellationEnabled !== undefined) this.props.isAutoCancellationEnabled = params.isAutoCancellationEnabled;
-
-        this.props.updatedBy = params.updatedBy;
-        this.props.updatedAt = new Date();
-    }
-
-    static rehydrate(props: WageringConfigProps): WageringConfig {
-        return new WageringConfig(props);
+    /**
+     * 프로젝트 스탠다드에 따라 설정 수정은 새로운 인스턴스를 생성하거나 
+     * 인프라 레이어에서 처리하도록 유도하며, 도메인 로직(getCancellationThreshold 등)만 유지합니다.
+     */
+    static fromPersistence(data: {
+        id: bigint;
+        defaultBonusExpiryDays: number;
+        currencySettings: Record<string, CurrencySetting>;
+        isWageringCheckEnabled: boolean;
+        isAutoCancellationEnabled: boolean;
+        updatedAt: Date;
+        updatedBy: bigint | null;
+    }): WageringConfig {
+        return new WageringConfig(
+            data.id,
+            data.defaultBonusExpiryDays,
+            data.currencySettings,
+            data.isWageringCheckEnabled,
+            data.isAutoCancellationEnabled,
+            data.updatedAt,
+            data.updatedBy,
+        );
     }
 }

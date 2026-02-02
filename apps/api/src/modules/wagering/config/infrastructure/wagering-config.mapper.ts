@@ -5,7 +5,7 @@ import { WageringConfig as PrismaWageringConfig, Prisma } from '@prisma/client';
 @Injectable()
 export class WageringConfigMapper {
     toDomain(prismaModel: PrismaWageringConfig): WageringConfig {
-        return WageringConfig.rehydrate({
+        return WageringConfig.fromPersistence({
             id: prismaModel.id,
             defaultBonusExpiryDays: prismaModel.defaultBonusExpiryDays,
             currencySettings: (prismaModel.currencySettings ?? {}) as unknown as Record<string, CurrencySetting>,
