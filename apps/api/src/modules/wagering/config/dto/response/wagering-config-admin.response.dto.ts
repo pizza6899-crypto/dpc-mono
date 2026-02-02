@@ -7,8 +7,8 @@ export class WageringConfigAdminResponseDto {
     @ApiProperty({
         description: 'Currency settings (thresholds)',
         example: {
-            KRW: { cancellationThreshold: 500, minBetAmount: 100, maxBetAmount: 5000 },
-            USD: { cancellationThreshold: 0.5, minBetAmount: 0.1, maxBetAmount: 5 }
+            KRW: { cancellationThreshold: 500, minBetAmount: 100, maxBetAmount: 0 },
+            USD: { cancellationThreshold: 0.5, minBetAmount: 0.1, maxBetAmount: 0 }
         }
     })
     currencySettings: any;
