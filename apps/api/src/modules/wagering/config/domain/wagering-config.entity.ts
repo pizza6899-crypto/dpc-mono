@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 export interface CurrencySetting {
     cancellationThreshold: number; // 오링 취소 기준점
     minBetAmount: number;          // 롤링 기여를 위한 최소 베팅 금액
+    maxBetAmount: number;          // 롤링 기여 최대 인정 금액 (Capping)
 }
 
 export interface WageringConfigProps {
@@ -40,6 +41,15 @@ export class WageringConfig {
     getMinBetAmount(currency: string): Prisma.Decimal {
         const setting = this.props.currencySettings?.[currency];
         return new Prisma.Decimal(setting?.minBetAmount ?? 0);
+    }
+
+    /**
+     * 특정 통화의 롤링 기여 최대 인정 금액(Capping)을 가져옵니다.
+     */
+    getMaxBetAmount(currency: string): Prisma.Decimal {
+        const setting = this.props.currencySettings?.[currency];
+        // 0이나 설정이 없으면 무제한(매우 큰 값)으로 처리하거나 0 그대로 반환 후 서비스에서 처리
+        return new Prisma.Decimal(setting?.maxBetAmount ?? 0);
     }
 
     update(params: {

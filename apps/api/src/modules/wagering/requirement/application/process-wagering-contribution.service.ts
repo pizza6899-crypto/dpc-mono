@@ -40,13 +40,21 @@ export class ProcessWageringContributionService {
             return;
         }
 
-        // 0.1 최소 베팅 기여 금액 체크 (글로벌 설정)
+        // 0.1 최소/최대 베팅 기여 범위 체크 (글로벌 설정)
         const config = await this.getConfigService.execute();
         const minBet = config.getMinBetAmount(currency);
+        const maxBetLimit = config.getMaxBetAmount(currency);
+
         if (betAmount.lessThan(minBet)) {
             this.logger.debug(`Bet amount ${betAmount} is less than minBet ${minBet} for ${currency}. Skipping contribution.`);
             return;
         }
+
+        // 0.2 최대 기여 한도 적용 (Capping)
+        // 실제 베팅액이 설정된 maxBetLimit보다 크면 한도까지만 기여액으로 산정
+        const effectiveBetForContribution = (!maxBetLimit.isZero() && betAmount.greaterThan(maxBetLimit))
+            ? maxBetLimit
+            : betAmount;
 
         // 1. 활성 롤링 조건 조회 (우선순위 DESC, 생성일 ASC)
         const activeRequirements = await this.repository.findActiveByUserIdAndCurrency(userId, currency);
@@ -56,8 +64,8 @@ export class ProcessWageringContributionService {
         }
 
         // 2. 실제 반영될 금액 계산 (게임별 기여도 적용)
-        // 예: 10,000원 베팅 * 50% = 5,000원 반영
-        let remainingContribution = this.policy.calculateContribution(betAmount, gameContributionRate);
+        // 예: 10,000원 베팅(한도 5,000원 적용 시) * 50% = 2,500원 반영
+        let remainingContribution = this.policy.calculateContribution(effectiveBetForContribution, gameContributionRate);
 
         // 원래 요청된 금액 (로그용)
         const totalRequestAmount = betAmount;
