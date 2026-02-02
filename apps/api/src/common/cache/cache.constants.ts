@@ -27,27 +27,6 @@ export const CACHE_CONFIG = {
     },
 
     /**
-     * 유저 프로필/상태 관련 (예시)
-     */
-    USER: {
-        PROFILE: (id: string | bigint) => ({
-            key: `user:profile:${id}`,
-            ttlSeconds: 3600, // 1시간
-            store: CacheStore.REDIS,
-        }),
-    },
-
-    /**
-     * 실시간 보안/인증 관련 (예시)
-     */
-    AUTH: {
-        SESSION: (token: string) => ({
-            key: `auth:session:${token}`,
-            ttlSeconds: 86400, // 1일
-            store: CacheStore.REDIS,
-        }),
-    },
-    /**
      * 카지노 관련
      */
     CASINO: {
@@ -63,7 +42,7 @@ export const CACHE_CONFIG = {
     WAGERING: {
         CONFIG: {
             key: 'wagering:config:global',
-            ttlSeconds: 300, // 5분
+            ttlSeconds: 60, // 1분
             store: CacheStore.MEMORY,
         },
     },
