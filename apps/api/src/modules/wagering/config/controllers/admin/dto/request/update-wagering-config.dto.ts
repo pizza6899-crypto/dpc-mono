@@ -39,8 +39,6 @@ export class UpdateWageringConfigDto {
     })
     @IsOptional()
     @IsObject()
-    @ValidateNested({ each: true })
-    @Type(() => UpdateWageringCurrencySettingDto)
     currencySettings?: Record<string, UpdateWageringCurrencySettingDto>;
 
     @ApiPropertyOptional({ description: 'Enable wagering check on withdrawal / 출금 시 롤링 체크 여부', example: true })
