@@ -36,7 +36,11 @@ export class UpdateWageringConfigService {
             for (const [currency, data] of Object.entries(command.currencySettings)) {
                 // 시스템 지원 통화 여부 체크
                 if (!validCurrencies.includes(currency)) {
-                    throw new InvalidWageringConfigException(`Unsupported currency: ${currency}`);
+                    throw new InvalidWageringConfigException(
+                        `Unsupported or invalid currency key: '${currency}'. ` +
+                        `Expected a currency code (e.g., 'KRW'), but got a property name. ` +
+                        `Please check if your JSON structure is nested correctly: { "currencySettings": { "KRW": { ... } } }`
+                    );
                 }
 
                 // 기존 설정이 있다면 가져오고, 없으면 빈 설정 생성
