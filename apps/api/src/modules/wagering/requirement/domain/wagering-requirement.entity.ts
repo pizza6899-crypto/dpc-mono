@@ -72,6 +72,13 @@ export class WageringRequirement {
         return this.expiresAt !== null && this.expiresAt < new Date();
     }
 
+    /**
+     * 롤링 조건(요구 금액)을 모두 충족했는지 여부
+     */
+    get isFulfilled(): boolean {
+        return this._fulfilledAmount.greaterThanOrEqualTo(this._requiredAmount);
+    }
+
     get isActive(): boolean {
         return this._status === 'ACTIVE' && !this._isPaused && !this.isExpired;
     }
@@ -92,10 +99,6 @@ export class WageringRequirement {
         this._fulfilledAmount = this._fulfilledAmount.add(actualContribution);
         this._lastContributedAt = new Date();
         this._updatedAt = new Date();
-
-        if (this._fulfilledAmount.greaterThanOrEqualTo(this._requiredAmount)) {
-            this.complete();
-        }
 
         return actualContribution;
     }

@@ -9,6 +9,8 @@ import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module'
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LogType } from 'src/modules/audit-log/domain';
 import { GetWageringConfigService } from '../../config/application/get-wagering-config.service';
+import { SettleWageringRequirementService } from './settle-wagering-requirement.service';
+import { Transactional } from '@nestjs-cls/transactional';
 
 interface ProcessWageringContributionParams {
     userId: bigint;
@@ -30,8 +32,10 @@ export class ProcessWageringContributionService {
         private readonly tx: PrismaTransaction,
         private readonly dispatchLogService: DispatchLogService,
         private readonly getConfigService: GetWageringConfigService,
+        private readonly settleService: SettleWageringRequirementService,
     ) { }
 
+    @Transactional()
     async execute(params: ProcessWageringContributionParams): Promise<void> {
         const { userId, currency, gameRoundId, betAmount, gameContributionRate = 1.0 } = params;
 
@@ -93,7 +97,11 @@ export class ProcessWageringContributionService {
                     contributedAmount: contributedForThis,
                 });
 
-                if (requirement.isCompleted) {
+                if (requirement.isFulfilled) {
+                    // 1. 실제 정산 처리 (지갑 잔액 전환 및 상태 업데이트)
+                    await this.settleService.execute({ requirementId: requirement.id });
+
+                    // 2. 감사 로그 디스패치 (정산 후 최신 상태 반영)
                     await this.dispatchLogService.dispatch({
                         type: LogType.ACTIVITY,
                         data: {
@@ -104,6 +112,7 @@ export class ProcessWageringContributionService {
                                 wageringId: requirement.id?.toString(),
                                 currency,
                                 finalAmount: requirement.fulfilledAmount.toString(),
+                                convertedAmount: requirement.convertedAmount?.toString(),
                                 gameRoundId: gameRoundId.toString(),
                             }
                         }

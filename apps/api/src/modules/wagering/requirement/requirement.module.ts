@@ -14,9 +14,11 @@ import { WageringRequirementAdminController } from './controllers/admin/wagering
 import { WageringRequirementUserController } from './controllers/user/wagering-requirement-user.controller';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { ConfigModule } from '../config/config.module';
+import { WalletModule } from '../../wallet/wallet.module';
+import { SettleWageringRequirementService } from './application/settle-wagering-requirement.service';
 
 @Module({
-    imports: [AuditLogModule, SnowflakeModule, ConfigModule],
+    imports: [AuditLogModule, SnowflakeModule, ConfigModule, WalletModule],
     controllers: [
         WageringRequirementAdminController,
         WageringRequirementUserController
@@ -37,12 +39,14 @@ import { ConfigModule } from '../config/config.module';
         ProcessWageringContributionService,
         CancelWageringRequirementService,
         FindWageringRequirementsService,
+        SettleWageringRequirementService,
     ],
     exports: [
         CreateWageringRequirementService,
         ProcessWageringContributionService,
         CancelWageringRequirementService,
         FindWageringRequirementsService,
+        SettleWageringRequirementService,
         WAGERING_REQUIREMENT_REPOSITORY
     ],
 })
