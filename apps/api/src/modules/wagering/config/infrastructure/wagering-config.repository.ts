@@ -35,7 +35,8 @@ export class WageringConfigRepository implements WageringConfigRepositoryPort {
                     throw new WageringConfigNotFoundException();
                 }
 
-                return config as PrismaWageringConfig;
+                // BigInt 포함 객체를 캐싱하기 위해 안전하게 변환 (JSON serialization issue 방지)
+                return JSON.parse(JSON.stringify(config, (_, v) => typeof v === 'bigint' ? v.toString() : v));
             }
         );
 
@@ -50,8 +51,8 @@ export class WageringConfigRepository implements WageringConfigRepositoryPort {
             data,
         });
 
-        // 저장 시 캐시 업데이트 (원시 데이터로 저장)
-        await this.cacheService.set(CACHE_CONFIG.WAGERING.CONFIG, result);
+        // 저장 시 캐시 무효화 (BigInt 직렬화 문제를 피하기 위해 단순히 삭제 후 다음 조회 시 갱신)
+        await this.cacheService.del(CACHE_CONFIG.WAGERING.CONFIG);
 
         return this.mapper.toDomain(result);
     }
