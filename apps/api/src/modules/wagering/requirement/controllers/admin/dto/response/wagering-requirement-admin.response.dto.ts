@@ -1,140 +1,94 @@
-import { Expose, Transform } from 'class-transformer';
 import type { ExchangeCurrencyCode, WageringSourceType, WageringStatus } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class WageringRequirementAdminResponseDto {
-    @Expose()
-    @ApiProperty({ description: 'ID', type: String })
-    @Transform(({ value }) => (value != null ? value.toString() : value))
-    id: bigint;
+    @ApiProperty({ description: 'ID / 식별자', example: '123456789' })
+    id: string;
 
-    @Expose()
-    @ApiProperty({ description: 'User ID', type: String })
-    @Transform(({ value }) => (value != null ? value.toString() : value))
-    userId: bigint;
+    @ApiProperty({ description: 'User ID / 유저 ID', example: '987654321' })
+    userId: string;
 
-    @Expose()
-    @ApiProperty({ description: 'Currency' })
+    @ApiProperty({ description: 'Currency / 통화' })
     currency: ExchangeCurrencyCode;
 
-    @Expose()
-    @ApiProperty({ description: 'Source Type (DEPOSIT, PROMOTION_BONUS, TIER_BONUS)' })
+    @ApiProperty({ description: 'Source Type / 생성 소스 (DEPOSIT, PROMOTION_BONUS, TIER_BONUS)' })
     sourceType: WageringSourceType;
 
-    @Expose()
-    @ApiProperty({ description: 'Required Amount (목표 롤링 금액)' })
-    @Transform(({ value }) => (value != null ? value.toString() : value))
-    requiredAmount: string;
-
-    @Expose()
-    @ApiProperty({ description: 'Fulfilled Amount (현재까지 달성한 금액)' })
-    @Transform(({ value }) => (value != null ? value.toString() : value))
-    fulfilledAmount: string;
-
-    @Expose()
-    @ApiProperty({ description: 'Remaining Amount (남은 롤링 금액)' })
-    @Transform(({ value }) => (value != null ? value.toString() : value))
-    remainingAmount: string;
-
-    @Expose()
-    @ApiProperty({ description: 'Principal Amount (원본 금액)' })
-    @Transform(({ value }) => (value != null ? value.toString() : value))
+    @ApiProperty({ description: 'Principal Amount / 원금 (배수 계산의 기준액)', example: '10000' })
     principalAmount: string;
 
-    @Expose()
-    @ApiProperty({ description: 'Multiplier (적용 배수)' })
-    @Transform(({ value }) => (value != null ? value.toString() : value))
+    @ApiProperty({ description: 'Multiplier / 롤링 배수', example: '10' })
     multiplier: string;
 
-    @Expose()
-    @ApiProperty({ description: 'Locked Amount (묶여있는 총 금액)' })
-    @Transform(({ value }) => (value != null ? value.toString() : value))
+    @ApiProperty({ description: 'Required Amount / 총 목표 롤링 금액', example: '100000' })
+    requiredAmount: string;
+
+    @ApiProperty({ description: 'Fulfilled Amount / 현재까지 달성액', example: '50000' })
+    fulfilledAmount: string;
+
+    @ApiProperty({ description: 'Remaining Amount / 남은 목표액', example: '50000' })
+    remainingAmount: string;
+
+    @ApiProperty({ description: 'Locked Amount / 묶여있는 총 금액 (원금 + 보너스)', example: '12000' })
     lockedAmount: string;
 
-    @Expose()
-    @ApiProperty({ description: 'Max Cash Conversion (현금 전환 상한)' })
-    @Transform(({ value }) => (value != null ? value.toString() : value))
+    @ApiProperty({ description: 'Max Cash Conversion / 최대 현금 전환 가능액', nullable: true })
     maxCashConversion: string | null;
 
-    @Expose()
-    @ApiProperty({ description: 'Converted Amount (실제 전환된 금액)' })
-    @Transform(({ value }) => (value != null ? value.toString() : value))
+    @ApiProperty({ description: 'Converted Amount / 실제 정산 전환액', nullable: true })
     convertedAmount: string | null;
 
-    @Expose()
-    @ApiProperty({ description: 'Is Paused (일시 정지 여부)' })
+    @ApiProperty({ description: 'Is Paused / 일시 정지 여부' })
     isPaused: boolean;
 
-    @Expose()
-    @ApiProperty({ description: 'Is Auto Cancelable (오링 자동 취소 허용 여부)' })
+    @ApiProperty({ description: 'Is Auto Cancelable / 오링 시 자동 취소 허용 여부' })
     isAutoCancelable: boolean;
 
-    @Expose()
-    @ApiProperty({ description: 'Status' })
+    @ApiProperty({ description: 'Auto Cancel Threshold / 자동 취소 기준 잔액', nullable: true })
+    autoCancelThreshold: string | null;
+
+    @ApiProperty({ description: 'Status / 상태' })
     status: WageringStatus;
 
-    @Expose()
-    @ApiProperty({ description: 'Priority' })
+    @ApiProperty({ description: 'Priority / 반영 우선순위' })
     priority: number;
 
-    @Expose()
-    @ApiProperty({ description: 'Created At' })
+    @ApiProperty({ description: 'Created At / 생성일' })
     createdAt: Date;
 
-    @Expose()
-    @ApiProperty({ description: 'Updated At' })
+    @ApiProperty({ description: 'Updated At / 최종 수정일' })
     updatedAt: Date;
 
-    @Expose()
-    @ApiProperty({ description: 'Expires At', required: false })
+    @ApiProperty({ description: 'Expires At / 만료 예정일', nullable: true })
     expiresAt: Date | null;
 
-    @Expose()
-    @ApiProperty({ description: 'Last Contributed At', required: false })
+    @ApiProperty({ description: 'Last Contributed At / 마지막 기여일', nullable: true })
     lastContributedAt: Date | null;
 
-    @Expose()
-    @ApiProperty({ description: 'Completed At', required: false })
+    @ApiProperty({ description: 'Completed At / 달성 완료일', nullable: true })
     completedAt: Date | null;
 
-    @Expose()
-    @ApiProperty({ description: 'Cancelled At', required: false })
+    @ApiProperty({ description: 'Cancelled At / 취소일', nullable: true })
     cancelledAt: Date | null;
 
-    @Expose()
-    @ApiProperty({ description: 'Cancellation Note', required: false })
+    @ApiProperty({ description: 'Cancellation Note / 취소 비고', nullable: true })
     cancellationNote: string | null;
 
-    @Expose()
-    @ApiProperty({ description: 'Cancellation Reason Type', required: false })
+    @ApiProperty({ description: 'Cancellation Reason Type / 취소 사유 코드', nullable: true })
     cancellationReasonType: string | null;
 
-    @Expose()
-    @ApiProperty({ description: 'Cancelled By', required: false })
+    @ApiProperty({ description: 'Cancelled By / 취소 수행자 ID (SYSTEM 또는 Admin ID)', nullable: true })
     cancelledBy: string | null;
 
-    @Expose()
-    @ApiProperty({ description: 'Balance At Cancellation', required: false })
-    @Transform(({ value }) => (value != null ? value.toString() : value))
+    @ApiProperty({ description: 'Balance At Cancellation / 취소 당시 잔액', nullable: true })
     balanceAtCancellation: string | null;
 
-    @Expose()
-    @ApiProperty({ description: 'Forfeited Amount', required: false })
-    @Transform(({ value }) => (value != null ? value.toString() : value))
+    @ApiProperty({ description: 'Forfeited Amount / 몰수된 보너스 금액', nullable: true })
     forfeitedAmount: string | null;
 
-    @Expose()
-    @ApiProperty({ description: 'Deposit Detail ID', required: false })
-    @Transform(({ value }) => (value != null ? value.toString() : value))
-    depositDetailId: bigint | null;
+    @ApiProperty({ description: 'Deposit Detail ID / 입금 상세 ID', nullable: true })
+    depositDetailId: string | null;
 
-    @Expose()
-    @ApiProperty({ description: 'User Promotion ID', required: false })
-    @Transform(({ value }) => (value != null ? value.toString() : value))
-    userPromotionId: bigint | null;
-
-    @Expose()
-    @ApiProperty({ description: 'Auto Cancel Threshold (오링 기준 잔액)', required: false })
-    @Transform(({ value }) => (value != null ? value.toString() : value))
-    autoCancelThreshold: string | null;
+    @ApiProperty({ description: 'User Promotion ID / 유저 프로모션참여 ID', nullable: true })
+    userPromotionId: string | null;
 }

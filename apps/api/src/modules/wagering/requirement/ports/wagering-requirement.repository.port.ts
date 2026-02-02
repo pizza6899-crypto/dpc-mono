@@ -1,5 +1,5 @@
 import type { WageringRequirement } from '../domain/wagering-requirement.entity';
-import type { ExchangeCurrencyCode, WageringStatus, WageringSourceType } from '@prisma/client';
+import type { ExchangeCurrencyCode, WageringStatus, WageringSourceType, Prisma } from '@prisma/client';
 import type { PaginatedData } from 'src/common/http/types/pagination.types';
 
 export interface WageringRequirementRepositoryPort {
@@ -23,9 +23,9 @@ export interface WageringRequirementRepositoryPort {
         wageringRequirement: WageringRequirement,
         logData?: {
             gameRoundId: bigint;
-            requestAmount: any; // Decimal
-            contributionRate: any; // Decimal
-            contributedAmount: any; // Decimal
+            requestAmount: Prisma.Decimal;
+            contributionRate: Prisma.Decimal;
+            contributedAmount: Prisma.Decimal;
         }
     ): Promise<WageringRequirement>;
 
