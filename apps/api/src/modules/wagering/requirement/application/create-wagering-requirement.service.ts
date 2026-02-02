@@ -12,8 +12,9 @@ import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import type { RequestClientInfo } from 'src/common/http/types';
 import { GetWageringConfigService } from '../../config/application/get-wagering-config.service';
 import { DateTime } from 'luxon';
+import { Transactional } from '@nestjs-cls/transactional';
 
-interface CreateWageringRequirementParams {
+interface CreateWageringRequirementCommand {
     userId: bigint;
     currency: ExchangeCurrencyCode;
     sourceType: WageringSourceType;
@@ -40,7 +41,8 @@ export class CreateWageringRequirementService {
         private readonly dispatchLogService: DispatchLogService,
     ) { }
 
-    async execute(params: CreateWageringRequirementParams): Promise<WageringRequirement> {
+    @Transactional()
+    async execute(command: CreateWageringRequirementCommand): Promise<WageringRequirement> {
         // 0. 글로벌 설정 조회
         const config = await this.getConfigService.execute();
 
@@ -52,12 +54,12 @@ export class CreateWageringRequirementService {
             priority = 0,
             depositDetailId,
             userPromotionId,
-            requestInfo,
-        } = params;
+        } = command;
 
         // 1. 설정 보정
-        const autoCancelThreshold = params.autoCancelThreshold ?? config.getCancellationThreshold(currency);
-        const expiresAt = params.expiresAt ?? DateTime.now().plus({ days: config.defaultBonusExpiryDays }).toJSDate();
+        const setting = config.getSetting(currency);
+        const autoCancelThreshold = command.autoCancelThreshold ?? setting.cancellationThreshold;
+        const expiresAt = command.expiresAt ?? DateTime.now().plus({ days: config.defaultBonusExpiryDays }).toJSDate();
 
         this.logger.log(
             `Creating wagering requirement for user ${userId}, currency ${currency}, required ${requiredAmount}, source ${sourceType}`,
@@ -82,7 +84,7 @@ export class CreateWageringRequirementService {
                 snapshot: {
                     defaultBonusExpiryDays: config.defaultBonusExpiryDays,
                     isWageringCheckEnabled: config.isWageringCheckEnabled,
-                    currencyThreshold: config.getCancellationThreshold(currency).toString(),
+                    currencyThreshold: setting.cancellationThreshold.toString(),
                 }
             }
         });
@@ -105,7 +107,7 @@ export class CreateWageringRequirementService {
                     userPromotionId: userPromotionId?.toString(),
                 }
             }
-        }, params.requestInfo);
+        }, command.requestInfo);
 
         return created;
     }

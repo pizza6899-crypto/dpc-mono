@@ -12,7 +12,7 @@ import { GetWageringConfigService } from '../../config/application/get-wagering-
 import { SettleWageringRequirementService } from './settle-wagering-requirement.service';
 import { Transactional } from '@nestjs-cls/transactional';
 
-interface ProcessWageringContributionParams {
+interface ProcessWageringContributionCommand {
     userId: bigint;
     currency: ExchangeCurrencyCode;
     gameRoundId: bigint;
@@ -36,8 +36,8 @@ export class ProcessWageringContributionService {
     ) { }
 
     @Transactional()
-    async execute(params: ProcessWageringContributionParams): Promise<void> {
-        const { userId, currency, gameRoundId, betAmount, gameContributionRate = 1.0 } = params;
+    async execute(command: ProcessWageringContributionCommand): Promise<void> {
+        const { userId, currency, gameRoundId, betAmount, gameContributionRate = 1.0 } = command;
 
         // 0. 베팅 금액이 0보다 작거나 같으면 무시
         if (betAmount.lte(0)) {
