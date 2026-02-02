@@ -12,6 +12,9 @@ export class WageringCurrencySettingResponseDto {
 }
 
 export class WageringConfigAdminResponseDto {
+    @ApiProperty({ description: 'Config ID (항상 1)', example: '1' })
+    id: string;
+
     @ApiProperty({ description: 'Default bonus expiry days (기본 보너스 만료일)', example: 30 })
     defaultBonusExpiryDays: number;
 

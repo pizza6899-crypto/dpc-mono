@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Patch } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { RequireRoles } from '../../../../../common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@prisma/client';
 import { GetWageringConfigService } from '../../application/get-wagering-config.service';
@@ -8,6 +8,7 @@ import { CurrentUser } from '../../../../../common/auth/decorators/current-user.
 import type { AuthenticatedUser } from '../../../../../common/auth/types/auth.types';
 import { AuditLog } from '../../../../audit-log/infrastructure/audit-log.decorator';
 import { LogType } from '../../../../audit-log/domain';
+import { ApiStandardResponse, ApiStandardErrors } from '../../../../../common/http/decorators/api-response.decorator';
 import { UpdateWageringConfigDto } from './dto/request/update-wagering-config.dto';
 import { WageringConfigAdminResponseDto } from './dto/response/wagering-config-admin.response.dto';
 import { WageringConfig } from '../../domain';
@@ -22,15 +23,16 @@ export class WageringConfigAdminController {
     ) { }
 
     @Get()
-    @ApiOperation({ summary: 'Get global wagering config (글로벌 롤링 설정 조회)' })
-    @ApiResponse({ type: WageringConfigAdminResponseDto })
+    @ApiOperation({ summary: 'Get global wagering config / 글로벌 롤링 설정 조회' })
+    @ApiStandardResponse(WageringConfigAdminResponseDto)
+    @ApiStandardErrors()
     async getConfig(): Promise<WageringConfigAdminResponseDto> {
         const config = await this.getService.execute();
         return this.mapToResponse(config);
     }
 
     @Patch()
-    @ApiOperation({ summary: 'Update global wagering config (글로벌 롤링 설정 수정)' })
+    @ApiOperation({ summary: 'Update global wagering config / 글로벌 롤링 설정 수정' })
     @AuditLog({
         type: LogType.ACTIVITY,
         action: 'UPDATE_WAGERING_CONFIG',
@@ -39,7 +41,8 @@ export class WageringConfigAdminController {
             updates: req.body
         })
     })
-    @ApiResponse({ type: WageringConfigAdminResponseDto })
+    @ApiStandardResponse(WageringConfigAdminResponseDto)
+    @ApiStandardErrors()
     async updateConfig(
         @CurrentUser() user: AuthenticatedUser,
         @Body() body: UpdateWageringConfigDto,
@@ -59,6 +62,7 @@ export class WageringConfigAdminController {
         }
 
         return {
+            id: config.id.toString(),
             defaultBonusExpiryDays: config.defaultBonusExpiryDays,
             currencySettings: rawSettings,
             isWageringCheckEnabled: config.isWageringCheckEnabled,
