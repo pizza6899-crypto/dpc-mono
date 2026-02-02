@@ -23,3 +23,14 @@ export class InvalidWageringConfigException extends WageringConfigException {
         this.name = 'InvalidWageringConfigException';
     }
 }
+
+export class WageringConfigNotFoundException extends WageringConfigException {
+    constructor() {
+        super(
+            'Global wagering configuration not found. Please run seeders.',
+            MessageCode.WAGERING_NOT_FOUND,
+            HttpStatus.INTERNAL_SERVER_ERROR, // 시스템 필수 데이터 부재는 서버 에러로 간주
+        );
+        this.name = 'WageringConfigNotFoundException';
+    }
+}

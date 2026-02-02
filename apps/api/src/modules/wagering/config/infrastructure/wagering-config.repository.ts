@@ -7,6 +7,7 @@ import { WageringConfigMapper } from './wagering-config.mapper';
 import { CacheService } from 'src/common/cache/cache.service';
 import { CACHE_CONFIG } from 'src/common/cache/cache.constants';
 import type { WageringConfig as PrismaWageringConfig } from '@prisma/client';
+import { WageringConfigNotFoundException } from '../domain/wagering-config.exception';
 
 @Injectable()
 export class WageringConfigRepository implements WageringConfigRepositoryPort {
@@ -26,17 +27,15 @@ export class WageringConfigRepository implements WageringConfigRepositoryPort {
             CACHE_CONFIG.WAGERING.CONFIG,
             async () => {
                 this.logger.debug(`Fetching WageringConfig from DB (Cache Miss)`);
-                return await this.tx.wageringConfig.upsert({
-                    where: { id: this.CONFIG_ID },
-                    update: {},
-                    create: {
-                        id: this.CONFIG_ID,
-                        defaultBonusExpiryDays: 30,
-                        currencySettings: {},
-                        isWageringCheckEnabled: true,
-                        isAutoCancellationEnabled: true,
-                    }
-                }) as PrismaWageringConfig;
+                const config = await this.tx.wageringConfig.findUnique({
+                    where: { id: this.CONFIG_ID }
+                });
+
+                if (!config) {
+                    throw new WageringConfigNotFoundException();
+                }
+
+                return config as PrismaWageringConfig;
             }
         );
 
