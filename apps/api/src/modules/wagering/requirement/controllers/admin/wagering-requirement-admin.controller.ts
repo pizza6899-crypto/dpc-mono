@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Query, UseGuards, Inject } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { RequireRoles } from '../../../../common/auth/decorators/roles.decorator';
+import { RequireRoles } from '../../../../../common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@prisma/client';
 import { FindWageringRequirementsService } from '../../application/find-wagering-requirements.service';
 import { GetWageringRequirementsAdminQueryDto } from './dto/request/get-wagering-requirements-admin-query.dto';
@@ -8,10 +8,10 @@ import { PaginatedWageringRequirementAdminResponseDto } from './dto/response/pag
 import { VoidWageringRequirementDto } from './dto/request/void-wagering.dto';
 import { WAGERING_REQUIREMENT_REPOSITORY } from '../../ports';
 import type { WageringRequirementRepositoryPort } from '../../ports';
-import { AuditLog } from '../../../../modules/audit-log/infrastructure/audit-log.decorator';
-import { LogType } from '../../../../modules/audit-log/domain';
+import { AuditLog } from '../../../../../modules/audit-log/infrastructure/audit-log.decorator';
+import { LogType } from '../../../../../modules/audit-log/domain';
 import { WageringRequirementNotFoundException } from '../../domain';
-import { Paginated } from '../../../../common/http/decorators/paginated.decorator';
+import { Paginated } from '../../../../../common/http/decorators/paginated.decorator';
 
 @ApiTags('Admin Wagering Requirements')
 @Controller('admin/wagering-requirements')

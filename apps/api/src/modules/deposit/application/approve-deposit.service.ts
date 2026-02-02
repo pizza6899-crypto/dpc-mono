@@ -12,10 +12,10 @@ import { FindUserWalletService } from 'src/modules/wallet/application/find-user-
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
 import { UserWalletBalanceType, UserWalletTransactionType, ExchangeCurrencyCode } from '@prisma/client';
 import { GrantPromotionBonusService } from '../../promotion/application/grant-promotion-bonus.service';
-import { CreateWageringRequirementService } from '../../wagering/application/create-wagering-requirement.service';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';
 import { AccumulateUserDepositService } from 'src/modules/tier/evaluator/application/accumulate-user-deposit.service';
+import { CreateWageringRequirementService } from 'src/modules/wagering/requirement/application';
 
 interface ApproveDepositParams {
   id: bigint;

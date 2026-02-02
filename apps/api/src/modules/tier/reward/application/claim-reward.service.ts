@@ -9,7 +9,7 @@ import {
 } from '../domain/tier-reward.exception';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
-import { CreateWageringRequirementService } from 'src/modules/wagering/application/create-wagering-requirement.service';
+import { CreateWageringRequirementService } from 'src/modules/wagering/requirement/application/create-wagering-requirement.service';
 import { ExchangeCurrencyCode, UserWalletBalanceType, UserWalletTransactionType, WageringSourceType, Prisma } from '@prisma/client';
 import { WalletActionName, UpdateOperation } from 'src/modules/wallet/domain';
 import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';

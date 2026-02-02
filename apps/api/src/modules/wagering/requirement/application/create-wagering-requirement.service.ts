@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { WageringRequirement, WageringPolicy } from '../domain';
+import { WageringRequirement } from '../domain';
 import { WAGERING_REQUIREMENT_REPOSITORY } from '../ports';
 import type { WageringRequirementRepositoryPort } from '../ports';
 import { Prisma } from '@prisma/client';
@@ -10,6 +10,8 @@ import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-l
 import { LogType } from 'src/modules/audit-log/domain';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import type { RequestClientInfo } from 'src/common/http/types';
+import { GetWageringConfigService } from '../../config/application/get-wagering-config.service';
+import { DateTime } from 'luxon';
 
 interface CreateWageringRequirementParams {
     userId: bigint;
@@ -32,12 +34,16 @@ export class CreateWageringRequirementService {
         @Inject(WAGERING_REQUIREMENT_REPOSITORY)
         private readonly repository: WageringRequirementRepositoryPort,
         private readonly snowflakeService: SnowflakeService,
+        private readonly getConfigService: GetWageringConfigService,
         @InjectTransaction()
         private readonly tx: PrismaTransaction,
         private readonly dispatchLogService: DispatchLogService,
     ) { }
 
     async execute(params: CreateWageringRequirementParams): Promise<WageringRequirement> {
+        // 0. 글로벌 설정 조회
+        const config = await this.getConfigService.execute();
+
         const {
             userId,
             currency,
@@ -46,9 +52,12 @@ export class CreateWageringRequirementService {
             priority = 0,
             depositDetailId,
             userPromotionId,
-            expiresAt,
-            autoCancelThreshold,
+            requestInfo,
         } = params;
+
+        // 1. 설정 보정
+        const autoCancelThreshold = params.autoCancelThreshold ?? config.getCancellationThreshold(currency);
+        const expiresAt = params.expiresAt ?? DateTime.now().plus({ days: config.defaultBonusExpiryDays }).toJSDate();
 
         this.logger.log(
             `Creating wagering requirement for user ${userId}, currency ${currency}, required ${requiredAmount}, source ${sourceType}`,
@@ -69,6 +78,13 @@ export class CreateWageringRequirementService {
             userPromotionId,
             expiresAt,
             autoCancelThreshold,
+            appliedConfig: {
+                snapshot: {
+                    defaultBonusExpiryDays: config.defaultBonusExpiryDays,
+                    isWageringCheckEnabled: config.isWageringCheckEnabled,
+                    currencyThreshold: config.getCancellationThreshold(currency).toString(),
+                }
+            }
         });
 
         const created = await this.repository.create(wageringRequirement);

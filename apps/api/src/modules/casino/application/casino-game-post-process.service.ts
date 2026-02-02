@@ -1,13 +1,12 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma, ExchangeCurrencyCode } from '@prisma/client'; // ExchangeCurrencyCode 추가
-import { ProcessWageringContributionService } from 'src/modules/wagering/application';
 import { EarnCompService } from 'src/modules/comp/application/earn-comp.service';
 import { GAME_ROUND_REPOSITORY_TOKEN } from '../ports/out/game-round.repository.token';
 import type { GameRoundRepositoryPort } from '../ports/out/game-round.repository.port';
 import { GameRoundPostProcessContext } from '../ports/out/game-round.repository.port';
 import { AccumulateUserRollingService } from 'src/modules/tier/evaluator/application/accumulate-user-rolling.service';
-
+import { ProcessWageringContributionService } from 'src/modules/wagering/requirement/application';
 
 interface ProcessingContext {
     betAmount: Prisma.Decimal;
@@ -15,7 +14,6 @@ interface ProcessingContext {
     compRate: Prisma.Decimal;
     categoryCode?: string;
 }
-
 
 @Injectable()
 export class CasinoGamePostProcessService {

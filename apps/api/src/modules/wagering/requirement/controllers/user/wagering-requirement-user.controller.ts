@@ -1,13 +1,13 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { CurrentUser } from '../../../../common/auth/decorators/current-user.decorator';
-import type { AuthenticatedUser } from '../../../../common/auth/types/auth.types';
+import { CurrentUser } from '../../../../../common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from '../../../../../common/auth/types/auth.types';
 import { FindWageringRequirementsService } from '../../application/find-wagering-requirements.service';
 import { GetMyWageringRequirementsQueryDto } from './dto/request/get-my-wagering-requirements-query.dto';
 import { PaginatedWageringRequirementUserResponseDto } from './dto/response/paginated-wagering-requirement-user.response.dto';
-import { Paginated } from '../../../../common/http/decorators/paginated.decorator';
-import { SqidsService } from '../../../../common/sqids/sqids.service';
-import { SqidsPrefix } from '../../../../common/sqids/sqids.constants';
+import { Paginated } from '../../../../../common/http/decorators/paginated.decorator';
+import { SqidsService } from '../../../../../common/sqids/sqids.service';
+import { SqidsPrefix } from '../../../../../common/sqids/sqids.constants';
 
 @ApiTags('User Wagering Requirement')
 @Controller('user/wagering-requirements')

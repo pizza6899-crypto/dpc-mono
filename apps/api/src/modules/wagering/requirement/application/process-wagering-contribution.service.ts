@@ -8,6 +8,7 @@ import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LogType } from 'src/modules/audit-log/domain';
+import { GetWageringConfigService } from '../../config/application/get-wagering-config.service';
 
 interface ProcessWageringContributionParams {
     userId: bigint;
@@ -28,6 +29,7 @@ export class ProcessWageringContributionService {
         @InjectTransaction()
         private readonly tx: PrismaTransaction,
         private readonly dispatchLogService: DispatchLogService,
+        private readonly getConfigService: GetWageringConfigService,
     ) { }
 
     async execute(params: ProcessWageringContributionParams): Promise<void> {
@@ -35,6 +37,14 @@ export class ProcessWageringContributionService {
 
         // 0. 베팅 금액이 0보다 작거나 같으면 무시
         if (betAmount.lte(0)) {
+            return;
+        }
+
+        // 0.1 최소 베팅 기여 금액 체크 (글로벌 설정)
+        const config = await this.getConfigService.execute();
+        const minBet = config.getMinBetAmount(currency);
+        if (betAmount.lessThan(minBet)) {
+            this.logger.debug(`Bet amount ${betAmount} is less than minBet ${minBet} for ${currency}. Skipping contribution.`);
             return;
         }
 

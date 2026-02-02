@@ -6,12 +6,12 @@ import { PromotionPolicy, PromotionNotFoundException } from '../domain';
 import type { Promotion, UserPromotion } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports/out';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
-import { CreateWageringRequirementService } from '../../wagering/application/create-wagering-requirement.service';
 import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
 import { UpdateOperation, WalletActionName } from '../../wallet/domain';
 import { UserWalletBalanceType, UserWalletTransactionType } from '@prisma/client';
 import type { RequestClientInfo } from 'src/common/http/types';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { CreateWageringRequirementService } from 'src/modules/wagering/requirement/application';
 
 interface GrantPromotionBonusParams {
   userId: bigint;

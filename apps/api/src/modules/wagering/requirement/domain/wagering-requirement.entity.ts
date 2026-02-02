@@ -169,8 +169,12 @@ export class WageringRequirement {
         return this.props.status === 'COMPLETED';
     }
 
+    get isExpired(): boolean {
+        return this.props.expiresAt !== null && this.props.expiresAt < new Date();
+    }
+
     get isActive(): boolean {
-        return this.props.status === 'ACTIVE' && !this.props.isPaused;
+        return this.props.status === 'ACTIVE' && !this.props.isPaused && !this.isExpired;
     }
 
     /**

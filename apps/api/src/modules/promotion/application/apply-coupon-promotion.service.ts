@@ -6,7 +6,6 @@ import { PromotionPolicy, PromotionNotFoundException, PromotionInvalidConfigurat
 import type { UserPromotion } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports/out';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
-import { CreateWageringRequirementService } from '../../wagering/application/create-wagering-requirement.service';
 import type { RequestClientInfo } from 'src/common/http/types';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
@@ -18,6 +17,7 @@ import { ChannelType } from '@prisma/client';
 import { PromotionMetadata } from '../../wallet/domain/model/user-wallet-transaction-metadata';
 
 import { AuthenticatedUser } from 'src/common/auth/types/auth.types';
+import { CreateWageringRequirementService } from 'src/modules/wagering/requirement/application';
 
 interface ApplyCouponPromotionParams {
     user: AuthenticatedUser;

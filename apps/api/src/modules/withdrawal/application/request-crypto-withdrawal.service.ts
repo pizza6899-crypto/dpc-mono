@@ -13,8 +13,8 @@ import {
   UserWalletBalanceType,
   UserWalletTransactionType,
 } from '@prisma/client';
-import { WAGERING_REQUIREMENT_REPOSITORY } from 'src/modules/wagering/ports';
-import type { WageringRequirementRepositoryPort } from 'src/modules/wagering/ports';
+import { WAGERING_REQUIREMENT_REPOSITORY } from 'src/modules/wagering/requirement/ports';
+import type { WageringRequirementRepositoryPort } from 'src/modules/wagering/requirement/ports';
 import {
   WithdrawalDetail,
   WithdrawalPolicy,
@@ -57,7 +57,7 @@ export class RequestCryptoWithdrawalService {
     private readonly updateUserBalanceService: UpdateUserBalanceService,
     private readonly findUserWalletService: FindUserWalletService,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(
