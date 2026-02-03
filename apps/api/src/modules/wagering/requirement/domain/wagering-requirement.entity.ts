@@ -18,7 +18,9 @@ export class WageringRequirement {
         private _isAutoCancelable: boolean,
         public readonly principalAmount: Prisma.Decimal,
         public readonly multiplier: Prisma.Decimal,
-        public readonly initialLockedAmount: Prisma.Decimal,
+        public readonly initialLockedCash: Prisma.Decimal,
+        public readonly grantedBonusAmount: Prisma.Decimal,
+        public readonly parentWageringId: bigint | null,
         public readonly appliedConfig: any,
         private _maxCashConversion: Prisma.Decimal | null,
         private _convertedAmount: Prisma.Decimal | null,
@@ -172,9 +174,12 @@ export class WageringRequirement {
         sourceType: WageringSourceType;
         sourceId: bigint;
         requiredAmount: Prisma.Decimal;
-        principalAmount?: Prisma.Decimal;
-        multiplier?: Prisma.Decimal;
-        initialLockedAmount?: Prisma.Decimal;
+        principalAmount: Prisma.Decimal;
+        multiplier: Prisma.Decimal;
+        initialLockedCash: Prisma.Decimal;
+        grantedBonusAmount: Prisma.Decimal;
+        parentWageringId?: bigint | null;
+        initialFulfilledAmount?: Prisma.Decimal;
         isAutoCancelable?: boolean;
         maxCashConversion?: Prisma.Decimal | null;
         appliedConfig?: any;
@@ -188,11 +193,13 @@ export class WageringRequirement {
             params.sourceType,
             params.sourceId,
             params.requiredAmount,
-            new Prisma.Decimal(0),
+            params.initialFulfilledAmount ?? new Prisma.Decimal(0),
             params.isAutoCancelable ?? true,
-            params.principalAmount ?? new Prisma.Decimal(0),
-            params.multiplier ?? new Prisma.Decimal(1),
-            params.initialLockedAmount ?? new Prisma.Decimal(0),
+            params.principalAmount,
+            params.multiplier,
+            params.initialLockedCash,
+            params.grantedBonusAmount,
+            params.parentWageringId ?? null,
             params.appliedConfig ?? {},
             params.maxCashConversion ?? null,
             null,
@@ -224,7 +231,9 @@ export class WageringRequirement {
         isAutoCancelable: boolean;
         principalAmount: Prisma.Decimal;
         multiplier: Prisma.Decimal;
-        initialLockedAmount: Prisma.Decimal;
+        initialLockedCash: Prisma.Decimal;
+        grantedBonusAmount: Prisma.Decimal;
+        parentWageringId: bigint | null;
         appliedConfig: any;
         maxCashConversion: Prisma.Decimal | null;
         convertedAmount: Prisma.Decimal | null;
@@ -254,7 +263,9 @@ export class WageringRequirement {
             data.isAutoCancelable,
             data.principalAmount,
             data.multiplier,
-            data.initialLockedAmount,
+            data.initialLockedCash,
+            data.grantedBonusAmount,
+            data.parentWageringId,
             data.appliedConfig,
             data.maxCashConversion,
             data.convertedAmount,

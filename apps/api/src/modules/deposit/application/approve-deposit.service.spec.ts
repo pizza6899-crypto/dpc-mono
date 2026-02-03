@@ -18,7 +18,7 @@ import { DepositAlreadyProcessedException } from '../domain';
 import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
 import { FindUserWalletService } from '../../wallet/application/find-user-wallet.service';
 import { GrantPromotionBonusService } from '../../promotion/application/grant-promotion-bonus.service';
-import { CreateWageringRequirementService } from '../../wagering/application/create-wagering-requirement.service';
+import { CreateWageringRequirementService } from '../../wagering/requirement/application/create-wagering-requirement.service';
 import { AdvisoryLockService } from 'src/common/concurrency';
 import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';
 import { AccumulateUserDepositService } from 'src/modules/tier/evaluator/application/accumulate-user-deposit.service';
@@ -279,7 +279,8 @@ describe('ApproveDepositService', () => {
                 expect.objectContaining({
                     userId,
                     sourceType: 'DEPOSIT',
-                    requiredAmount: new Prisma.Decimal(100),
+                    principalAmount: new Prisma.Decimal(100),
+                    multiplier: new Prisma.Decimal(1),
                 }),
             );
             expect(mockGrantPromotionService.execute).not.toHaveBeenCalled();

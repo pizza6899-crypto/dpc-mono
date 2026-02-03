@@ -21,6 +21,7 @@ export class WageringConfigMapper {
         return WageringConfig.fromPersistence({
             id: Cast.bigint(data.id),
             defaultBonusExpiryDays: data.defaultBonusExpiryDays,
+            defaultDepositMultiplier: data.defaultDepositMultiplier,
             currencySettings,
             isWageringCheckEnabled: data.isWageringCheckEnabled,
             isAutoCancellationEnabled: data.isAutoCancellationEnabled,
@@ -42,6 +43,7 @@ export class WageringConfigMapper {
         return {
             id: domain.id,
             defaultBonusExpiryDays: domain.defaultBonusExpiryDays,
+            defaultDepositMultiplier: domain.defaultDepositMultiplier,
             currencySettings: currencySettings as unknown as Prisma.InputJsonValue,
             isWageringCheckEnabled: domain.isWageringCheckEnabled,
             isAutoCancellationEnabled: domain.isAutoCancellationEnabled,

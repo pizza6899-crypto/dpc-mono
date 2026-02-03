@@ -2,7 +2,8 @@ model WageringConfig {
   id BigInt @id @default(autoincrement()) // id=1 하나만 사용
 
   // [Default Policy]
-  defaultBonusExpiryDays Int @default(30) @map("default_bonus_expiry_days") // 기본 보너스 유효기간 (일)
+  defaultBonusExpiryDays   Int     @default(30) @map("default_bonus_expiry_days") // 기본 보너스 유효기간 (일)
+  defaultDepositMultiplier Decimal @default(1.0) @map("default_deposit_multiplier") @db.Decimal(8, 4) // 자금세탁 방지용 기본 입금 롤링 배수
 
   // [Currency Specific Policy]
   // 화폐별 오링 기준(threshold) 및 최소 베팅 보정치 등을 JSON으로 관리
@@ -31,9 +32,10 @@ model WageringRequirement {
   isAutoCancelable Boolean @default(true) @map("is_auto_cancelable") // 자동 취소(오링 처리) 허용 여부
 
   // [메타 데이터] - 원본 추적 및 운영 편의성
-  principalAmount     Decimal @default(0) @map("principal_amount") @db.Decimal(32, 18) // 롤링의 원본 금액 (예: 입금액, 보너스액)
-  multiplier          Decimal @default(1) @map("multiplier") @db.Decimal(8, 4) // 적용된 롤링 배수 (예: 3.0)
-  initialLockedAmount Decimal @default(0) @map("initial_locked_amount") @db.Decimal(32, 18) // 생성 시점에 묶인(출금 제한된) 총금액 (원금+보너스) - 단순 기록용
+  principalAmount    Decimal @default(0) @map("principal_amount") @db.Decimal(32, 18) // 롤링 배수(multiplier)의 기준이 되는 총 금액 (Cash + Bonus 등)
+  multiplier         Decimal @default(1) @map("multiplier") @db.Decimal(8, 4) // 적용된 롤링 배수 (예: 3.0)
+  initialLockedCash  Decimal @default(0) @map("initial_locked_cash") @db.Decimal(32, 18) // 생성 시점에 실제로 잠긴 현금 원금 (Locked Cash)
+  grantedBonusAmount Decimal @default(0) @map("granted_bonus_amount") @db.Decimal(32, 18) // 지급된 보너스 금액 (Grant Amount)
 
   // 생성 당시 적용된 Config/Rule의 사본 (정책 변경 추적용 스냅샷)
   // 예: { "minBet": 0.1, "excludedGames": ["A", "B"] }
@@ -72,6 +74,11 @@ model WageringRequirement {
   // Relations
   user             User                      @relation(fields: [userId], references: [id])
   contributionLogs WageringContributionLog[]
+
+  // [Wagering History] 롤링 전환/파생 이력
+  parentWageringId BigInt?               @map("parent_wagering_id")
+  parentWagering   WageringRequirement?  @relation("WageringHistory", fields: [parentWageringId], references: [id])
+  childWagerings   WageringRequirement[] @relation("WageringHistory")
 
   @@index([userId, status, currency, priority])
   @@index([userId, status])

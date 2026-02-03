@@ -154,7 +154,8 @@ export class ApproveDepositService {
         currency: deposit.depositCurrency,
         sourceType: 'DEPOSIT',
         sourceId: deposit.id!,
-        requiredAmount: actuallyPaid, // 1배
+        principalAmount: actuallyPaid,
+        multiplier: new Prisma.Decimal(1),
         requestInfo: requestInfo,
       });
     }

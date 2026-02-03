@@ -11,6 +11,11 @@ export class WageringCurrencySetting {
         if (cancellationThreshold.isNeg()) throw new InvalidWageringConfigException('Cancellation threshold cannot be negative');
         if (minBetAmount.isNeg()) throw new InvalidWageringConfigException('Minimum bet amount cannot be negative');
         if (maxBetAmount.isNeg()) throw new InvalidWageringConfigException('Maximum bet amount cannot be negative');
+
+        // 최소 베팅액이 최대 베팅액보다 클 수 없음 (0은 무제한을 의미)
+        if (!maxBetAmount.isZero() && minBetAmount.greaterThan(maxBetAmount)) {
+            throw new InvalidWageringConfigException('Minimum bet amount cannot be greater than maximum bet amount');
+        }
     }
 
     /**

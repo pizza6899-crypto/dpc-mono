@@ -153,7 +153,8 @@ export class ApplyCouponPromotionService {
                 userId,
                 currency,
                 sourceType: 'PROMOTION_BONUS',
-                requiredAmount: targetRollingAmount,
+                principalAmount: bonusAmount,
+                multiplier: new Prisma.Decimal(rollingMultiplier),
                 sourceId: BigInt(userPromotion.id),
                 requestInfo,
             });

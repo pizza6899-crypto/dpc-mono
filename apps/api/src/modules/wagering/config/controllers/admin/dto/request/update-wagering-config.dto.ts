@@ -28,6 +28,12 @@ export class UpdateWageringConfigDto {
     @Min(1)
     defaultBonusExpiryDays?: number;
 
+    @ApiPropertyOptional({ description: 'Default deposit multiplier for AML / 자금세탁 방지용 기본 입금 롤링 배수', example: 1.0 })
+    @IsOptional()
+    @IsNumber()
+    @Min(0)
+    defaultDepositMultiplier?: number;
+
     @ApiPropertyOptional({
         description: 'Currency specific settings / 통화별 상세 설정',
         additionalProperties: { $ref: '#/components/schemas/UpdateWageringCurrencySettingDto' },

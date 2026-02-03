@@ -11,6 +11,7 @@ import { UpdateWageringCurrencySettingDto } from '../controllers/admin/dto/reque
 
 interface UpdateWageringConfigCommand {
     defaultBonusExpiryDays?: number;
+    defaultDepositMultiplier?: number;
     currencySettings?: Record<string, UpdateWageringCurrencySettingDto>;
     isWageringCheckEnabled?: boolean;
     isAutoCancellationEnabled?: boolean;
@@ -59,6 +60,7 @@ export class UpdateWageringConfigService {
         const updatedConfig = WageringConfig.fromPersistence({
             id: current.id,
             defaultBonusExpiryDays: command.defaultBonusExpiryDays ?? current.defaultBonusExpiryDays,
+            defaultDepositMultiplier: command.defaultDepositMultiplier ?? current.defaultDepositMultiplier,
             currencySettings: updatedCurrencySettings,
             isWageringCheckEnabled: command.isWageringCheckEnabled ?? current.isWageringCheckEnabled,
             isAutoCancellationEnabled: command.isAutoCancellationEnabled ?? current.isAutoCancellationEnabled,

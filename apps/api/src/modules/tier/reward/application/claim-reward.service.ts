@@ -86,13 +86,13 @@ export class ClaimRewardService {
 
             // 4. 베팅 요구 조건 생성 (보너스인 경우)
             if (!isCash) {
-                const requiredAmount = finalAmount.mul(reward.wageringMultiplier);
                 await this.createWageringService.execute({
                     userId,
                     currency: targetCurrency,
                     sourceType: 'TIER_BONUS',
                     sourceId: rewardId,
-                    requiredAmount,
+                    principalAmount: finalAmount,
+                    multiplier: reward.wageringMultiplier,
                     expiresAt: reward.expiresAt || undefined,
                 });
             }

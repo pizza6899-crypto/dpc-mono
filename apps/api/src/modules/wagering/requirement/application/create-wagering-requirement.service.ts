@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { WageringRequirement } from '../domain';
+import { WageringRequirement, WageringPolicy } from '../domain';
 import { WAGERING_REQUIREMENT_REPOSITORY } from '../ports';
 import type { WageringRequirementRepositoryPort } from '../ports';
 import { Prisma } from '@prisma/client';
@@ -19,7 +19,12 @@ interface CreateWageringRequirementCommand {
     currency: ExchangeCurrencyCode;
     sourceType: WageringSourceType;
     sourceId: bigint;
-    requiredAmount: Prisma.Decimal;
+    principalAmount: Prisma.Decimal;    // 배수 계산의 기준이 되는 총액 (Cash + Bonus 등)
+    multiplier: Prisma.Decimal;         // 적용 배수
+    initialLockedCash: Prisma.Decimal;  // 실제로 잠글 현금 원금
+    grantedBonusAmount: Prisma.Decimal; // 지급된 보너스 금액
+    parentWageringId?: bigint;          // 이전 롤링 연결 이력
+    initialFulfilledAmount?: Prisma.Decimal; // 시작 시 인정해줄 기여도 (이관용)
     priority?: number;
     expiresAt?: Date;
     requestInfo?: RequestClientInfo;
@@ -32,6 +37,7 @@ export class CreateWageringRequirementService {
     constructor(
         @Inject(WAGERING_REQUIREMENT_REPOSITORY)
         private readonly repository: WageringRequirementRepositoryPort,
+        private readonly policy: WageringPolicy,
         private readonly snowflakeService: SnowflakeService,
         private readonly getConfigService: GetWageringConfigService,
         @InjectTransaction()
@@ -41,28 +47,44 @@ export class CreateWageringRequirementService {
 
     @Transactional()
     async execute(command: CreateWageringRequirementCommand): Promise<WageringRequirement> {
-        // 0. 글로벌 설정 조회
-        const config = await this.getConfigService.execute();
-
         const {
             userId,
             currency,
             sourceType,
             sourceId,
-            requiredAmount,
+            principalAmount,
+            multiplier,
+            initialLockedCash,
+            grantedBonusAmount,
+            parentWageringId,
+            initialFulfilledAmount,
             priority = 0,
         } = command;
 
-        // 1. 설정 보정
+        // 1. 중복 생성 방지 (Idempotency)
+        const existing = await this.repository.findLatestBySource(userId, sourceType, sourceId);
+        if (existing) {
+            this.logger.warn(
+                `Wagering requirement already exists for user ${userId}, ${sourceType}(${sourceId}). Skipping creation.`,
+            );
+            return existing;
+        }
+
+        // 2. 비즈니스 정책 검증 (Domain Policy)
+        this.policy.validateCreation({ principalAmount, multiplier, sourceType });
+
+        // 0. 글로벌 설정 조회
+        const config = await this.getConfigService.execute();
+
+        // 3. 목표 금액 계산
+        const requiredAmount = principalAmount.mul(multiplier);
+
+        // 2. 설정 보정
         const setting = config.getSetting(currency);
         const expiresAt = command.expiresAt ?? DateTime.now().plus({ days: config.defaultBonusExpiryDays }).toJSDate();
 
-        // 생성 시점의 잠재적 락 금액 계산 (보조용 기록)
-        // 실제 비즈니스 로직에 따라 다르겠지만, 여기서는 기본 원금으로 기록
-        const initialLockedAmount = requiredAmount;
-
         this.logger.log(
-            `Creating wagering requirement for user ${userId}, currency ${currency}, required ${requiredAmount}, source ${sourceType}(${sourceId})`,
+            `Creating wagering requirement for user ${userId}, principal ${principalAmount} (x${multiplier}), lockedCash ${initialLockedCash}, grantedBonus ${grantedBonusAmount}`,
         );
 
         // Snowflake ID 생성
@@ -75,14 +97,20 @@ export class CreateWageringRequirementService {
             currency,
             sourceType,
             sourceId,
+            principalAmount,
+            multiplier,
             requiredAmount,
+            initialLockedCash,
+            grantedBonusAmount,
+            parentWageringId: parentWageringId ?? null,
+            initialFulfilledAmount: initialFulfilledAmount ?? new Prisma.Decimal(0),
             priority,
-            initialLockedAmount,
             isAutoCancelable: true,
             expiresAt,
             appliedConfig: {
                 snapshot: {
                     defaultBonusExpiryDays: config.defaultBonusExpiryDays,
+                    defaultDepositMultiplier: config.defaultDepositMultiplier.toString(),
                     isWageringCheckEnabled: config.isWageringCheckEnabled,
                     currencyThreshold: setting.cancellationThreshold.toString(),
                 }
@@ -99,10 +127,14 @@ export class CreateWageringRequirementService {
                 category: 'WAGERING',
                 action: 'CREATE_WAGERING_REQUIREMENT',
                 metadata: {
-                    wageringId: created.id?.toString(),
+                    wageringId: created.id.toString(),
                     sourceType,
                     sourceId: sourceId.toString(),
+                    principalAmount: principalAmount.toString(),
+                    multiplier: multiplier.toString(),
                     requiredAmount: requiredAmount.toString(),
+                    initialLockedCash: initialLockedCash.toString(),
+                    grantedBonusAmount: grantedBonusAmount.toString(),
                     currency,
                 }
             }
