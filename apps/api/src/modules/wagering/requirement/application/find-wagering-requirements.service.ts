@@ -35,4 +35,12 @@ export class FindWageringRequirementsService {
     }): Promise<PaginatedData<WageringRequirement>> {
         return await this.repository.findPaginated(params);
     }
+
+    /**
+     * 특정 소스(입금, 프로모션 등)로 생성된 가장 최근의 롤링 조건을 조회합니다.
+     * 외부 모듈(예: Promotion)에서 상태 확인용으로 사용합니다.
+     */
+    async findLatestBySource(userId: bigint, sourceType: WageringSourceType, sourceId: bigint): Promise<WageringRequirement | null> {
+        return await this.repository.findLatestBySource(userId, sourceType, sourceId);
+    }
 }

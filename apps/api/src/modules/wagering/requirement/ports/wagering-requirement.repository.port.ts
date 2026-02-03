@@ -21,6 +21,11 @@ export interface WageringRequirementRepositoryPort {
     save(wageringRequirement: WageringRequirement): Promise<WageringRequirement>;
 
     /**
+     * 특정 소스(입금, 프로모션 등)로 생성된 가장 최근의 롤링 조건을 조회합니다.
+     */
+    findLatestBySource(userId: bigint, sourceType: WageringSourceType, sourceId: bigint): Promise<WageringRequirement | null>;
+
+    /**
      * ID로 롤링 조건을 조회합니다.
      */
     findById(id: bigint): Promise<WageringRequirement | null>;

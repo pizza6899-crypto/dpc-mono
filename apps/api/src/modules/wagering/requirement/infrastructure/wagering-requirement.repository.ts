@@ -56,6 +56,19 @@ export class WageringRequirementRepository implements WageringRequirementReposit
         return this.mapper.toDomain(result);
     }
 
+    async findLatestBySource(userId: bigint, sourceType: WageringSourceType, sourceId: bigint): Promise<WageringRequirement | null> {
+        const result = await this.tx.wageringRequirement.findFirst({
+            where: {
+                userId,
+                sourceType,
+                sourceId,
+            },
+            orderBy: { createdAt: 'desc' },
+        });
+
+        return result ? this.mapper.toDomain(result) : null;
+    }
+
     async findById(id: bigint): Promise<WageringRequirement | null> {
         const result = await this.tx.wageringRequirement.findUnique({
             where: { id },
