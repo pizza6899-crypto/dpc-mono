@@ -18,12 +18,10 @@ interface CreateWageringRequirementCommand {
     userId: bigint;
     currency: ExchangeCurrencyCode;
     sourceType: WageringSourceType;
+    sourceId: bigint;
     requiredAmount: Prisma.Decimal;
     priority?: number;
-    depositDetailId?: bigint;
-    userPromotionId?: bigint;
     expiresAt?: Date;
-    autoCancelThreshold?: Prisma.Decimal;
     requestInfo?: RequestClientInfo;
 }
 
@@ -50,19 +48,21 @@ export class CreateWageringRequirementService {
             userId,
             currency,
             sourceType,
+            sourceId,
             requiredAmount,
             priority = 0,
-            depositDetailId,
-            userPromotionId,
         } = command;
 
         // 1. 설정 보정
         const setting = config.getSetting(currency);
-        const autoCancelThreshold = command.autoCancelThreshold ?? setting.cancellationThreshold;
         const expiresAt = command.expiresAt ?? DateTime.now().plus({ days: config.defaultBonusExpiryDays }).toJSDate();
 
+        // 생성 시점의 잠재적 락 금액 계산 (보조용 기록)
+        // 실제 비즈니스 로직에 따라 다르겠지만, 여기서는 기본 원금으로 기록
+        const initialLockedAmount = requiredAmount;
+
         this.logger.log(
-            `Creating wagering requirement for user ${userId}, currency ${currency}, required ${requiredAmount}, source ${sourceType}`,
+            `Creating wagering requirement for user ${userId}, currency ${currency}, required ${requiredAmount}, source ${sourceType}(${sourceId})`,
         );
 
         // Snowflake ID 생성
@@ -74,12 +74,12 @@ export class CreateWageringRequirementService {
             userId,
             currency,
             sourceType,
+            sourceId,
             requiredAmount,
             priority,
-            depositDetailId,
-            userPromotionId,
+            initialLockedAmount,
+            isAutoCancelable: true,
             expiresAt,
-            autoCancelThreshold,
             appliedConfig: {
                 snapshot: {
                     defaultBonusExpiryDays: config.defaultBonusExpiryDays,
@@ -101,10 +101,9 @@ export class CreateWageringRequirementService {
                 metadata: {
                     wageringId: created.id?.toString(),
                     sourceType,
+                    sourceId: sourceId.toString(),
                     requiredAmount: requiredAmount.toString(),
                     currency,
-                    depositDetailId: depositDetailId?.toString(),
-                    userPromotionId: userPromotionId?.toString(),
                 }
             }
         }, command.requestInfo);

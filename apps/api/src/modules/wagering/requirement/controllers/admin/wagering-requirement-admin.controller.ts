@@ -33,6 +33,7 @@ export class WageringRequirementAdminController {
             userId: query.userId ? BigInt(query.userId) : undefined,
             statuses: query.statuses,
             sourceType: query.sourceType,
+            sourceId: query.sourceId ? BigInt(query.sourceId) : undefined,
             currency: query.currency,
             fromAt: query.fromAt,
             toAt: query.toAt,
@@ -91,13 +92,14 @@ export class WageringRequirementAdminController {
             remainingAmount: item.remainingAmount?.toString(),
             principalAmount: item.principalAmount?.toString(),
             multiplier: item.multiplier?.toString(),
-            lockedAmount: item.lockedAmount?.toString(),
+            initialLockedAmount: item.initialLockedAmount?.toString(),
             maxCashConversion: item.maxCashConversion?.toString() || null,
             convertedAmount: item.convertedAmount?.toString() || null,
             isPaused: item.isPaused,
             isAutoCancelable: item.isAutoCancelable,
             status: item.status,
             priority: item.priority,
+            sourceId: item.sourceId?.toString(),
             createdAt: item.createdAt,
             updatedAt: item.updatedAt,
             expiresAt: item.expiresAt,
@@ -109,9 +111,6 @@ export class WageringRequirementAdminController {
             cancelledBy: item.cancelledBy,
             balanceAtCancellation: item.balanceAtCancellation?.toString() || null,
             forfeitedAmount: item.forfeitedAmount?.toString() || null,
-            depositDetailId: item.depositDetailId?.toString() || null,
-            userPromotionId: item.userPromotionId?.toString() || null,
-            autoCancelThreshold: item.autoCancelThreshold?.toString() || null,
         };
     }
 }

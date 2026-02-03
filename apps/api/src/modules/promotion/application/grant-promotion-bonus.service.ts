@@ -162,8 +162,7 @@ export class GrantPromotionBonusService {
         currency,
         sourceType: 'PROMOTION_BONUS',
         requiredAmount: targetRollingAmount,
-        depositDetailId,
-        userPromotionId: BigInt(userPromotion.id),
+        sourceId: BigInt(userPromotion.id),
         requestInfo,
       });
       rollingCreated = true;

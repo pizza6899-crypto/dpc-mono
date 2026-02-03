@@ -154,7 +154,7 @@ export class ApplyCouponPromotionService {
                 currency,
                 sourceType: 'PROMOTION_BONUS',
                 requiredAmount: targetRollingAmount,
-                userPromotionId: BigInt(userPromotion.id),
+                sourceId: BigInt(userPromotion.id),
                 requestInfo,
             });
         }

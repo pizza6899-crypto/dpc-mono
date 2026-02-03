@@ -29,8 +29,8 @@ export class WageringRequirementAdminResponseDto {
     @ApiProperty({ description: 'Remaining Amount / 남은 목표액', example: '50000' })
     remainingAmount: string;
 
-    @ApiProperty({ description: 'Locked Amount / 묶여있는 총 금액 (원금 + 보너스)', example: '12000' })
-    lockedAmount: string;
+    @ApiProperty({ description: 'Initial Locked Amount / 생성 시점에 묶인 총금액', example: '12000' })
+    initialLockedAmount: string;
 
     @ApiProperty({ description: 'Max Cash Conversion / 최대 현금 전환 가능액', nullable: true })
     maxCashConversion: string | null;
@@ -44,14 +44,14 @@ export class WageringRequirementAdminResponseDto {
     @ApiProperty({ description: 'Is Auto Cancelable / 오링 시 자동 취소 허용 여부' })
     isAutoCancelable: boolean;
 
-    @ApiProperty({ description: 'Auto Cancel Threshold / 자동 취소 기준 잔액', nullable: true })
-    autoCancelThreshold: string | null;
-
     @ApiProperty({ description: 'Status / 상태' })
     status: WageringStatus;
 
     @ApiProperty({ description: 'Priority / 반영 우선순위' })
     priority: number;
+
+    @ApiProperty({ description: 'Source ID / 연관된 데이터 식별자 (입금 ID, 프로모션 ID 등)', example: '123456789' })
+    sourceId: string;
 
     @ApiProperty({ description: 'Created At / 생성일' })
     createdAt: Date;
@@ -85,10 +85,4 @@ export class WageringRequirementAdminResponseDto {
 
     @ApiProperty({ description: 'Forfeited Amount / 몰수된 보너스 금액', nullable: true })
     forfeitedAmount: string | null;
-
-    @ApiProperty({ description: 'Deposit Detail ID / 입금 상세 ID', nullable: true })
-    depositDetailId: string | null;
-
-    @ApiProperty({ description: 'User Promotion ID / 유저 프로모션참여 ID', nullable: true })
-    userPromotionId: string | null;
 }

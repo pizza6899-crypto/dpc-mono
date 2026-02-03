@@ -24,6 +24,7 @@ export class FindWageringRequirementsService {
         userId?: bigint;
         statuses?: WageringStatus[];
         sourceType?: WageringSourceType;
+        sourceId?: bigint;
         currency?: ExchangeCurrencyCode;
         fromAt?: Date;
         toAt?: Date;

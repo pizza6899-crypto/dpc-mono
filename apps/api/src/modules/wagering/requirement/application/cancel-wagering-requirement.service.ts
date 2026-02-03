@@ -39,8 +39,9 @@ export class CancelWageringRequirementService {
         }
 
         for (const requirement of activeRequirements) {
-            // autoCancelThreshold가 설정되어 있고, 현재 잔액이 그보다 작으면 취소
-            const threshold = requirement.autoCancelThreshold;
+            // 적용된 설정 스냅샷에서 임계값 추출 (문자열로 저장된 값을 Decimal로 복구)
+            const snapshotThreshold = (requirement.appliedConfig as any)?.snapshot?.currencyThreshold;
+            const threshold = snapshotThreshold ? new Prisma.Decimal(snapshotThreshold) : null;
 
             if (this.policy.canBeCancelled(currentTotalBalance, threshold)) {
                 requirement.cancel({

@@ -153,8 +153,8 @@ export class ApproveDepositService {
         userId: deposit.userId,
         currency: deposit.depositCurrency,
         sourceType: 'DEPOSIT',
+        sourceId: deposit.id!,
         requiredAmount: actuallyPaid, // 1배
-        depositDetailId: deposit.id!,
         requestInfo: requestInfo,
       });
     }

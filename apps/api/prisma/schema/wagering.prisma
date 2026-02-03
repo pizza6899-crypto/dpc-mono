@@ -26,15 +26,14 @@ model WageringRequirement {
   sourceType WageringSourceType   @default(DEPOSIT) @map("source_type")
 
   // 금액 관련
-  requiredAmount      Decimal  @map("required_amount") @db.Decimal(32, 18) // 목표 롤링 금액
-  fulfilledAmount     Decimal  @default(0) @map("fulfilled_amount") @db.Decimal(32, 18) // 현재까지 달성한 금액
-  autoCancelThreshold Decimal? @map("auto_cancel_threshold") @db.Decimal(32, 18) // 이 잔액 이하로 떨어지면 자동 취소(오링)
-  isAutoCancelable    Boolean  @default(true) @map("is_auto_cancelable") // 자동 취소(오링 처리) 허용 여부
+  requiredAmount   Decimal @map("required_amount") @db.Decimal(32, 18) // 목표 롤링 금액
+  fulfilledAmount  Decimal @default(0) @map("fulfilled_amount") @db.Decimal(32, 18) // 현재까지 달성한 금액
+  isAutoCancelable Boolean @default(true) @map("is_auto_cancelable") // 자동 취소(오링 처리) 허용 여부
 
   // [메타 데이터] - 원본 추적 및 운영 편의성
-  principalAmount Decimal @default(0) @map("principal_amount") @db.Decimal(32, 18) // 롤링의 원본 금액 (예: 입금액, 보너스액)
-  multiplier      Decimal @default(1) @map("multiplier") @db.Decimal(8, 4) // 적용된 롤링 배수 (예: 3.0)
-  lockedAmount    Decimal @default(0) @map("locked_amount") @db.Decimal(32, 18) // 이 조건에 묶여있는(출금 제한된) 총금액 (원금+보너스)
+  principalAmount     Decimal @default(0) @map("principal_amount") @db.Decimal(32, 18) // 롤링의 원본 금액 (예: 입금액, 보너스액)
+  multiplier          Decimal @default(1) @map("multiplier") @db.Decimal(8, 4) // 적용된 롤링 배수 (예: 3.0)
+  initialLockedAmount Decimal @default(0) @map("initial_locked_amount") @db.Decimal(32, 18) // 생성 시점에 묶인(출금 제한된) 총금액 (원금+보너스) - 단순 기록용
 
   // 생성 당시 적용된 Config/Rule의 사본 (정책 변경 추적용 스냅샷)
   // 예: { "minBet": 0.1, "excludedGames": ["A", "B"] }
@@ -48,9 +47,9 @@ model WageringRequirement {
   isPaused Boolean        @default(false) @map("is_paused") // 관리자 조사 등으로 인한 진행 일시 정지
   status   WageringStatus @default(ACTIVE)
 
-  // 링크
-  depositDetailId BigInt? @map("deposit_detail_id")
-  userPromotionId BigInt? @map("user_promotion_id")
+  // 링크 (Polymorphic Association)
+  // sourceType(DEPOSIT, PROMOTION)과 조합하여 원천 데이터를 식별합니다.
+  sourceId BigInt @map("source_id")
 
   // 타임스탬프
   createdAt         DateTime  @default(now()) @map("created_at")
@@ -71,16 +70,12 @@ model WageringRequirement {
   priority Int @default(0)
 
   // Relations
-  depositDetail DepositDetail? @relation(fields: [depositDetailId], references: [id])
-
-  userPromotion    UserPromotion?            @relation(fields: [userPromotionId], references: [id])
   user             User                      @relation(fields: [userId], references: [id])
   contributionLogs WageringContributionLog[]
 
-  @@index([userId, currency, status, priority])
+  @@index([userId, status, currency, priority])
   @@index([userId, status])
-  @@index([sourceType])
-  @@index([userPromotionId])
+  @@index([sourceId, sourceType]) // 원천 데이터로 역조회 시 사용
   @@index([status])
   @@map("wagering_requirements")
 }

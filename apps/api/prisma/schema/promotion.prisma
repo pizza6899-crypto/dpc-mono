@@ -76,27 +76,26 @@ model PromotionCurrency {
 }
 
 model UserPromotion {
-  id                   BigInt                @id @default(autoincrement())
-  userId               BigInt                @map("user_id")
-  promotionId          BigInt                @map("promotion_id")
-  status               UserPromotionStatus   @default(ACTIVE)
-  depositAmount        Decimal               @default(0) @map("deposit_amount") @db.Decimal(32, 18)
+  id                   BigInt               @id @default(autoincrement())
+  userId               BigInt               @map("user_id")
+  promotionId          BigInt               @map("promotion_id")
+  status               UserPromotionStatus  @default(ACTIVE)
+  depositAmount        Decimal              @default(0) @map("deposit_amount") @db.Decimal(32, 18)
   // 출금 제한 금액 (Locked Amount)
   // 이 프로모션의 롤링 조건을 달성하기 전까지 출금할 수 없는 금액
   // - 입금 보너스: 입금 원금 + (옵션에 따라 보너스 포함 여부 결정)
   // - 비입금 쿠폰: 0 (일반적) 또는 보너스 금액
   // 롤링 완료(COMPLETED)나 자격 상실(FAILED/EXPIRED) 시 0으로 해제됨
-  lockedAmount         Decimal               @default(0) @map("locked_amount") @db.Decimal(32, 18)
-  bonusAmount          Decimal               @map("bonus_amount") @db.Decimal(32, 18)
-  targetRollingAmount  Decimal               @map("target_rolling_amount") @db.Decimal(32, 18)
-  currentRollingAmount Decimal               @default(0) @map("current_rolling_amount") @db.Decimal(32, 18)
+  lockedAmount         Decimal              @default(0) @map("locked_amount") @db.Decimal(32, 18)
+  bonusAmount          Decimal              @map("bonus_amount") @db.Decimal(32, 18)
+  targetRollingAmount  Decimal              @map("target_rolling_amount") @db.Decimal(32, 18)
+  currentRollingAmount Decimal              @default(0) @map("current_rolling_amount") @db.Decimal(32, 18)
   currency             ExchangeCurrencyCode
-  expiresAt            DateTime?             @map("expires_at")
-  createdAt            DateTime              @default(now()) @map("created_at")
-  updatedAt            DateTime              @updatedAt @map("updated_at")
-  wageringRequirements WageringRequirement[]
-  promotion            Promotion             @relation(fields: [promotionId], references: [id])
-  user                 User                  @relation(fields: [userId], references: [id])
+  expiresAt            DateTime?            @map("expires_at")
+  createdAt            DateTime             @default(now()) @map("created_at")
+  updatedAt            DateTime             @updatedAt @map("updated_at")
+  promotion            Promotion            @relation(fields: [promotionId], references: [id])
+  user                 User                 @relation(fields: [userId], references: [id])
 
   @@index([userId, status])
   @@map("user_promotions")

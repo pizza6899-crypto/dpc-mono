@@ -90,7 +90,8 @@ export class ClaimRewardService {
                 await this.createWageringService.execute({
                     userId,
                     currency: targetCurrency,
-                    sourceType: WageringSourceType.PROMOTION_BONUS,
+                    sourceType: 'TIER_BONUS',
+                    sourceId: rewardId,
                     requiredAmount,
                     expiresAt: reward.expiresAt || undefined,
                 });

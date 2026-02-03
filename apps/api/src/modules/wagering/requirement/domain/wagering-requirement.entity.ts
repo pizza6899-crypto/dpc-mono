@@ -12,21 +12,19 @@ export class WageringRequirement {
         public readonly userId: bigint,
         public readonly currency: ExchangeCurrencyCode,
         public readonly sourceType: WageringSourceType,
+        public readonly sourceId: bigint,
         private _requiredAmount: Prisma.Decimal,
         private _fulfilledAmount: Prisma.Decimal,
-        private _autoCancelThreshold: Prisma.Decimal | null,
         private _isAutoCancelable: boolean,
         public readonly principalAmount: Prisma.Decimal,
         public readonly multiplier: Prisma.Decimal,
-        public readonly lockedAmount: Prisma.Decimal,
+        public readonly initialLockedAmount: Prisma.Decimal,
         public readonly appliedConfig: any,
         private _maxCashConversion: Prisma.Decimal | null,
         private _convertedAmount: Prisma.Decimal | null,
         private _isPaused: boolean,
         private _status: WageringStatus,
         public readonly priority: number,
-        public readonly depositDetailId: bigint | null,
-        public readonly userPromotionId: bigint | null,
         public readonly createdAt: Date,
         private _updatedAt: Date,
         public readonly expiresAt: Date | null,
@@ -43,7 +41,6 @@ export class WageringRequirement {
     // Getters
     get requiredAmount(): Prisma.Decimal { return this._requiredAmount; }
     get fulfilledAmount(): Prisma.Decimal { return this._fulfilledAmount; }
-    get autoCancelThreshold(): Prisma.Decimal | null { return this._autoCancelThreshold; }
     get isAutoCancelable(): boolean { return this._isAutoCancelable; }
     get maxCashConversion(): Prisma.Decimal | null { return this._maxCashConversion; }
     get convertedAmount(): Prisma.Decimal | null { return this._convertedAmount; }
@@ -173,17 +170,15 @@ export class WageringRequirement {
         userId: bigint;
         currency: ExchangeCurrencyCode;
         sourceType: WageringSourceType;
+        sourceId: bigint;
         requiredAmount: Prisma.Decimal;
         principalAmount?: Prisma.Decimal;
         multiplier?: Prisma.Decimal;
-        lockedAmount?: Prisma.Decimal;
-        autoCancelThreshold?: Prisma.Decimal | null;
+        initialLockedAmount?: Prisma.Decimal;
         isAutoCancelable?: boolean;
         maxCashConversion?: Prisma.Decimal | null;
         appliedConfig?: any;
         priority?: number;
-        depositDetailId?: bigint | null;
-        userPromotionId?: bigint | null;
         expiresAt?: Date | null;
     }): WageringRequirement {
         return new WageringRequirement(
@@ -191,21 +186,19 @@ export class WageringRequirement {
             params.userId,
             params.currency,
             params.sourceType,
+            params.sourceId,
             params.requiredAmount,
             new Prisma.Decimal(0),
-            params.autoCancelThreshold ?? null,
             params.isAutoCancelable ?? true,
             params.principalAmount ?? new Prisma.Decimal(0),
             params.multiplier ?? new Prisma.Decimal(1),
-            params.lockedAmount ?? new Prisma.Decimal(0),
+            params.initialLockedAmount ?? new Prisma.Decimal(0),
             params.appliedConfig ?? {},
             params.maxCashConversion ?? null,
             null,
             false,
             'ACTIVE',
             params.priority ?? 0,
-            params.depositDetailId ?? null,
-            params.userPromotionId ?? null,
             new Date(),
             new Date(),
             params.expiresAt ?? null,
@@ -225,21 +218,19 @@ export class WageringRequirement {
         userId: bigint;
         currency: ExchangeCurrencyCode;
         sourceType: WageringSourceType;
+        sourceId: bigint;
         requiredAmount: Prisma.Decimal;
         fulfilledAmount: Prisma.Decimal;
-        autoCancelThreshold: Prisma.Decimal | null;
         isAutoCancelable: boolean;
         principalAmount: Prisma.Decimal;
         multiplier: Prisma.Decimal;
-        lockedAmount: Prisma.Decimal;
+        initialLockedAmount: Prisma.Decimal;
         appliedConfig: any;
         maxCashConversion: Prisma.Decimal | null;
         convertedAmount: Prisma.Decimal | null;
         isPaused: boolean;
         status: WageringStatus;
         priority: number;
-        depositDetailId: bigint | null;
-        userPromotionId: bigint | null;
         createdAt: Date;
         updatedAt: Date;
         expiresAt: Date | null;
@@ -257,21 +248,19 @@ export class WageringRequirement {
             data.userId,
             data.currency,
             data.sourceType,
+            data.sourceId,
             data.requiredAmount,
             data.fulfilledAmount,
-            data.autoCancelThreshold,
             data.isAutoCancelable,
             data.principalAmount,
             data.multiplier,
-            data.lockedAmount,
+            data.initialLockedAmount,
             data.appliedConfig,
             data.maxCashConversion,
             data.convertedAmount,
             data.isPaused,
             data.status,
             data.priority,
-            data.depositDetailId,
-            data.userPromotionId,
             data.createdAt,
             data.updatedAt,
             data.expiresAt,

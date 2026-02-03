@@ -110,6 +110,7 @@ export class WageringRequirementRepository implements WageringRequirementReposit
         userId?: bigint;
         statuses?: WageringStatus[];
         sourceType?: WageringSourceType;
+        sourceId?: bigint;
         currency?: ExchangeCurrencyCode;
         fromAt?: Date;
         toAt?: Date;
@@ -118,7 +119,7 @@ export class WageringRequirementRepository implements WageringRequirementReposit
         sortBy?: string;
         sortOrder?: 'asc' | 'desc';
     }): Promise<PaginatedData<WageringRequirement>> {
-        const { userId, statuses, sourceType, currency, fromAt, toAt, page, limit, sortBy = 'createdAt', sortOrder = 'desc' } = params;
+        const { userId, statuses, sourceType, sourceId, currency, fromAt, toAt, page, limit, sortBy = 'createdAt', sortOrder = 'desc' } = params;
         const skip = (page - 1) * limit;
 
         const where: any = {};
@@ -133,6 +134,10 @@ export class WageringRequirementRepository implements WageringRequirementReposit
 
         if (sourceType) {
             where.sourceType = sourceType;
+        }
+
+        if (sourceId) {
+            where.sourceId = sourceId;
         }
 
         if (currency) {
