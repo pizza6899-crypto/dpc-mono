@@ -15,19 +15,21 @@ export interface WageringRequirementRepositoryPort {
     findActiveByUserIdAndCurrency(userId: bigint, currency: ExchangeCurrencyCode): Promise<WageringRequirement[]>;
 
     /**
-     * 롤링 조건을 업데이트하고, 필요시 로그를 생성합니다.
+     * 롤링 조건을 업데이트합니다.
      * @param wageringRequirement 업데이트할 롤링 조건
-     * @param logData (선택) 롤링 기여 로그 데이터
      */
-    save(
-        wageringRequirement: WageringRequirement,
-        logData?: {
-            gameRoundId: bigint;
-            requestAmount: Prisma.Decimal;
-            contributionRate: Prisma.Decimal;
-            contributedAmount: Prisma.Decimal;
-        }
-    ): Promise<WageringRequirement>;
+    save(wageringRequirement: WageringRequirement): Promise<WageringRequirement>;
+
+    /**
+     * 특정 롤링 조건에 대한 기여 로그를 생성합니다.
+     */
+    createContributionLog(data: {
+        wageringRequirementId: bigint;
+        gameRoundId: bigint;
+        requestAmount: Prisma.Decimal;
+        contributionRate: Prisma.Decimal;
+        contributedAmount: Prisma.Decimal;
+    }): Promise<void>;
 
     /**
      * ID로 롤링 조건을 조회합니다.

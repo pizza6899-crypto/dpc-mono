@@ -89,8 +89,12 @@ export class ProcessWageringContributionService {
                 // 남은 기여액 업데이트
                 remainingContribution = remainingContribution.sub(contributedForThis);
 
-                // 변경 사항 저장 및 로그 생성
-                await this.repository.save(requirement, {
+                // 1. 변경된 롤링 조건 엔티티 상태 저장
+                await this.repository.save(requirement);
+
+                // 2. 기여 상세 로그 생성 (별도 메서드로 분리)
+                await this.repository.createContributionLog({
+                    wageringRequirementId: requirement.id,
                     gameRoundId,
                     requestAmount: totalRequestAmount,
                     contributionRate: new Prisma.Decimal(gameContributionRate),

@@ -1,10 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { WageringRequirement } from '../domain';
+import { WageringRequirement, WageringContributionLog } from '../domain';
 import { Prisma } from '@prisma/client';
-import type { WageringRequirement as PrismaWageringRequirement } from '@prisma/client';
+import type {
+    WageringRequirement as PrismaWageringRequirement,
+    WageringContributionLog as PrismaWageringContributionLog
+} from '@prisma/client';
 
 @Injectable()
 export class WageringRequirementMapper {
+    /**
+     * Prisma 모델을 WageringRequirement 도메인 엔티티로 변환
+     */
     toDomain(prismaModel: PrismaWageringRequirement): WageringRequirement {
         return WageringRequirement.fromPersistence({
             id: prismaModel.id,
@@ -38,6 +44,9 @@ export class WageringRequirementMapper {
         });
     }
 
+    /**
+     * WageringRequirement 도메인 엔티티를 Prisma 데이터 타입으로 변환
+     */
     toPrisma(domain: WageringRequirement): Omit<PrismaWageringRequirement, 'createdAt' | 'updatedAt'> {
         return {
             id: domain.id,
@@ -67,5 +76,20 @@ export class WageringRequirementMapper {
             balanceAtCancellation: domain.balanceAtCancellation,
             forfeitedAmount: domain.forfeitedAmount,
         };
+    }
+
+    /**
+     * Prisma 로그 모델을 WageringContributionLog 도메인 모델로 변환
+     */
+    toDomainLog(prismaLog: PrismaWageringContributionLog): WageringContributionLog {
+        return WageringContributionLog.fromPersistence({
+            id: prismaLog.id,
+            wageringRequirementId: prismaLog.wageringRequirementId,
+            gameRoundId: prismaLog.gameRoundId,
+            requestAmount: prismaLog.requestAmount,
+            contributionRate: prismaLog.contributionRate,
+            contributedAmount: prismaLog.contributedAmount,
+            createdAt: prismaLog.createdAt,
+        });
     }
 }

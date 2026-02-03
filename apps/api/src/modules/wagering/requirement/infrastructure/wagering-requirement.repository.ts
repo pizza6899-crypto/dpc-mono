@@ -41,43 +41,35 @@ export class WageringRequirementRepository implements WageringRequirementReposit
         return results.map((r) => this.mapper.toDomain(r));
     }
 
-    async save(
-        wageringRequirement: WageringRequirement,
-        logData?: {
-            gameRoundId: bigint;
-            requestAmount: Prisma.Decimal;
-            contributionRate: Prisma.Decimal;
-            contributedAmount: Prisma.Decimal;
-        },
-    ): Promise<WageringRequirement> {
+    async save(wageringRequirement: WageringRequirement): Promise<WageringRequirement> {
         if (!wageringRequirement.id) {
             throw new WageringRequirementException('Cannot save wagering requirement without ID. Use create() for new requirements.');
         }
 
         const data = this.mapper.toPrisma(wageringRequirement);
 
-        // Update WageringRequirement
         const result = await this.tx.wageringRequirement.update({
             where: { id: wageringRequirement.id },
             data: data as any,
         });
 
-        // Create Log if provided
-        if (logData) {
-            const { id: logId } = this.snowflakeService.generate();
-            await this.tx.wageringContributionLog.create({
-                data: {
-                    id: logId,
-                    wageringRequirementId: wageringRequirement.id,
-                    gameRoundId: logData.gameRoundId,
-                    requestAmount: logData.requestAmount,
-                    contributionRate: logData.contributionRate,
-                    contributedAmount: logData.contributedAmount,
-                },
-            });
-        }
-
         return this.mapper.toDomain(result);
+    }
+
+    async createContributionLog(data: {
+        wageringRequirementId: bigint;
+        gameRoundId: bigint;
+        requestAmount: Prisma.Decimal;
+        contributionRate: Prisma.Decimal;
+        contributedAmount: Prisma.Decimal;
+    }): Promise<void> {
+        const { id: logId } = this.snowflakeService.generate();
+        await this.tx.wageringContributionLog.create({
+            data: {
+                id: logId,
+                ...data,
+            },
+        });
     }
 
     async findById(id: bigint): Promise<WageringRequirement | null> {
@@ -112,15 +104,7 @@ export class WageringRequirementRepository implements WageringRequirementReposit
             orderBy: { createdAt: 'desc' },
         });
 
-        return results.map((r) => WageringContributionLog.fromPersistence({
-            id: r.id,
-            wageringRequirementId: r.wageringRequirementId,
-            gameRoundId: r.gameRoundId,
-            requestAmount: r.requestAmount,
-            contributionRate: r.contributionRate,
-            contributedAmount: r.contributedAmount,
-            createdAt: r.createdAt,
-        }));
+        return results.map((r) => this.mapper.toDomainLog(r));
     }
 
     async findPaginated(params: {
