@@ -4,7 +4,7 @@ export interface WageringConfigRepositoryPort {
     /**
      * 글로벌 웨이저링 설정을 조회합니다. (ID=1)
      */
-    getConfig(): Promise<WageringConfig>;
+    get(): Promise<WageringConfig>;
 
     /**
      * 설정을 저장(업데이트)합니다.

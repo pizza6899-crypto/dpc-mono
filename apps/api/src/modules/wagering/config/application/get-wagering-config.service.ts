@@ -11,6 +11,6 @@ export class GetWageringConfigService {
     ) { }
 
     async execute(): Promise<WageringConfig> {
-        return await this.repository.getConfig();
+        return await this.repository.get();
     }
 }

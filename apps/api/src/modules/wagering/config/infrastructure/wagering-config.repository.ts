@@ -21,7 +21,7 @@ export class WageringConfigRepository implements WageringConfigRepositoryPort {
         private readonly cacheService: CacheService,
     ) { }
 
-    async getConfig(): Promise<WageringConfig> {
+    async get(): Promise<WageringConfig> {
         // 캐시에는 '순수 데이터(Plain Object)'만 저장하여 직렬화 문제를 방지합니다.
         const raw = await this.cacheService.getOrSet(
             CACHE_CONFIG.WAGERING.CONFIG,

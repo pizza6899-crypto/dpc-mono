@@ -48,7 +48,7 @@ export class WageringConfigAdminController {
     ): Promise<WageringConfigAdminResponseDto> {
         const updated = await this.updateService.execute({
             ...body,
-            adminUserId: BigInt(user.id),
+            updatedBy: BigInt(user.id),
         });
 
         return this.mapToResponse(updated);

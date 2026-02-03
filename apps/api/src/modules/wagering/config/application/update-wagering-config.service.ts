@@ -14,7 +14,7 @@ interface UpdateWageringConfigCommand {
     currencySettings?: Record<string, UpdateWageringCurrencySettingDto>;
     isWageringCheckEnabled?: boolean;
     isAutoCancellationEnabled?: boolean;
-    adminUserId: bigint;
+    updatedBy: bigint;
 }
 
 @Injectable()
@@ -26,7 +26,7 @@ export class UpdateWageringConfigService {
 
     @Transactional()
     async execute(command: UpdateWageringConfigCommand): Promise<WageringConfig> {
-        const current = await this.repository.getConfig();
+        const current = await this.repository.get();
 
         // 1. 통화 설정 검증 및 반영
         let updatedCurrencySettings = { ...current.currencySettings };
@@ -62,7 +62,7 @@ export class UpdateWageringConfigService {
             currencySettings: updatedCurrencySettings,
             isWageringCheckEnabled: command.isWageringCheckEnabled ?? current.isWageringCheckEnabled,
             isAutoCancellationEnabled: command.isAutoCancellationEnabled ?? current.isAutoCancellationEnabled,
-            updatedBy: command.adminUserId,
+            updatedBy: command.updatedBy,
             updatedAt: new Date(),
         });
 

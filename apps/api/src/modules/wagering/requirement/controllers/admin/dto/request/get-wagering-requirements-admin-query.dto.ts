@@ -1,5 +1,5 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsArray, IsEnum, IsNotEmpty, IsNumberString, IsOptional } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsArray, IsEnum, IsNumberString, IsOptional } from 'class-validator';
 import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
 import { WageringStatus, WageringSourceType, ExchangeCurrencyCode } from '@prisma/client';
 import { Transform } from 'class-transformer';
