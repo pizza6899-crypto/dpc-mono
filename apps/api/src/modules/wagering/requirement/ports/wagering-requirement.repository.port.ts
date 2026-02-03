@@ -1,4 +1,4 @@
-import type { WageringRequirement } from '../domain/wagering-requirement.entity';
+import type { WageringRequirement, WageringContributionLog } from '../domain';
 import type { ExchangeCurrencyCode, WageringStatus, WageringSourceType, Prisma } from '@prisma/client';
 import type { PaginatedData } from 'src/common/http/types/pagination.types';
 
@@ -43,6 +43,11 @@ export interface WageringRequirementRepositoryPort {
      * 유저의 모든 롤링 조건을 조회합니다. (필터링 가능)
      */
     findByUserId(userId: bigint, status?: WageringStatus): Promise<WageringRequirement[]>;
+
+    /**
+     * 특정 롤링 조건의 기여 로그를 조회합니다.
+     */
+    findLogsByRequirementId(wageringRequirementId: bigint): Promise<WageringContributionLog[]>;
 
     /**
      * 유저의 모든 롤링 조건을 페이지네이션하여 조회합니다.

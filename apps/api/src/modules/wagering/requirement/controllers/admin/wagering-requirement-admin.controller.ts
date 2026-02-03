@@ -1,9 +1,10 @@
 import { Controller, Get, Post, Body, Param, Query, Inject } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { Admin } from '../../../../../common/auth/decorators/roles.decorator';
-import { FindWageringRequirementsService, VoidWageringRequirementService } from '../../application';
+import { FindWageringRequirementsService, VoidWageringRequirementService, FindWageringContributionLogsService } from '../../application';
 import { GetWageringRequirementsAdminQueryDto } from './dto/request/get-wagering-requirements-admin-query.dto';
 import { WageringRequirementAdminResponseDto } from './dto/response/wagering-requirement-admin.response.dto';
+import { WageringContributionLogResponseDto } from './dto/response/wagering-contribution-log.response.dto';
 import { VoidWageringRequirementDto } from './dto/request/void-wagering.dto';
 import { AuditLog } from '../../../../../modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from '../../../../../modules/audit-log/domain';
@@ -21,6 +22,7 @@ export class WageringRequirementAdminController {
     constructor(
         private readonly findService: FindWageringRequirementsService,
         private readonly voidService: VoidWageringRequirementService,
+        private readonly findLogsService: FindWageringContributionLogsService,
     ) { }
 
     @Get()
@@ -51,6 +53,23 @@ export class WageringRequirementAdminController {
             limit: paginatedData.limit,
             total: paginatedData.total,
         };
+    }
+
+    @Get(':id/logs')
+    @ApiOperation({ summary: 'Get contribution logs for a wagering requirement / 특정 롤링 조건의 기여 로그 조회' })
+    @ApiStandardResponse(WageringContributionLogResponseDto, { isArray: true })
+    @ApiStandardErrors()
+    async getLogs(@Param('id') id: string): Promise<WageringContributionLogResponseDto[]> {
+        const logs = await this.findLogsService.execute(BigInt(id));
+        return logs.map(log => ({
+            id: log.id.toString(),
+            wageringRequirementId: log.wageringRequirementId.toString(),
+            gameRoundId: log.gameRoundId.toString(),
+            requestAmount: log.requestAmount.toString(),
+            contributionRate: log.contributionRate.toString(),
+            contributedAmount: log.contributedAmount.toString(),
+            createdAt: log.createdAt,
+        }));
     }
 
     @Post(':id/void')

@@ -8,7 +8,8 @@ import {
     CancelWageringRequirementService,
     FindWageringRequirementsService,
     SettleWageringRequirementService,
-    VoidWageringRequirementService
+    VoidWageringRequirementService,
+    FindWageringContributionLogsService
 } from './application';
 import { WageringPolicy } from './domain';
 import { WAGERING_REQUIREMENT_REPOSITORY } from './ports';
@@ -42,6 +43,7 @@ import { WalletModule } from '../../wallet/wallet.module';
         FindWageringRequirementsService,
         SettleWageringRequirementService,
         VoidWageringRequirementService,
+        FindWageringContributionLogsService,
     ],
     exports: [
         CreateWageringRequirementService,
@@ -50,6 +52,7 @@ import { WalletModule } from '../../wallet/wallet.module';
         FindWageringRequirementsService,
         SettleWageringRequirementService,
         VoidWageringRequirementService,
+        FindWageringContributionLogsService,
         WAGERING_REQUIREMENT_REPOSITORY
     ],
 })

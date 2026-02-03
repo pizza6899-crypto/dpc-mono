@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import type { WageringRequirementRepositoryPort } from '../ports';
-import { WageringRequirement, WageringRequirementException, WageringRequirementNotFoundException } from '../domain';
+import { WageringRequirement, WageringRequirementException, WageringRequirementNotFoundException, WageringContributionLog } from '../domain';
 import { WageringRequirementMapper } from './wagering-requirement.mapper';
 import { Prisma, type ExchangeCurrencyCode, type WageringStatus, type WageringSourceType } from '@prisma/client';
 import type { PaginatedData } from 'src/common/http/types/pagination.types';
@@ -104,6 +104,23 @@ export class WageringRequirementRepository implements WageringRequirementReposit
             orderBy: { createdAt: 'desc' },
         });
         return results.map((r) => this.mapper.toDomain(r));
+    }
+
+    async findLogsByRequirementId(wageringRequirementId: bigint): Promise<WageringContributionLog[]> {
+        const results = await this.tx.wageringContributionLog.findMany({
+            where: { wageringRequirementId },
+            orderBy: { createdAt: 'desc' },
+        });
+
+        return results.map((r) => WageringContributionLog.fromPersistence({
+            id: r.id,
+            wageringRequirementId: r.wageringRequirementId,
+            gameRoundId: r.gameRoundId,
+            requestAmount: r.requestAmount,
+            contributionRate: r.contributionRate,
+            contributedAmount: r.contributedAmount,
+            createdAt: r.createdAt,
+        }));
     }
 
     async findPaginated(params: {
