@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuditLogModule } from '../../../modules/audit-log/audit-log.module';
 import { WageringRequirementRepository } from './infrastructure/wagering-requirement.repository';
+import { WageringContributionLogRepository } from './infrastructure/wagering-contribution-log.repository';
 import { WageringRequirementMapper } from './infrastructure/wagering-requirement.mapper';
 import {
     CreateWageringRequirementService,
@@ -12,7 +13,7 @@ import {
     FindWageringContributionLogsService
 } from './application';
 import { WageringPolicy } from './domain';
-import { WAGERING_REQUIREMENT_REPOSITORY } from './ports';
+import { WAGERING_REQUIREMENT_REPOSITORY, WAGERING_CONTRIBUTION_LOG_REPOSITORY } from './ports';
 import { WageringRequirementAdminController } from './controllers/admin/wagering-requirement-admin.controller';
 import { WageringRequirementUserController } from './controllers/user/wagering-requirement-user.controller';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
@@ -35,6 +36,10 @@ import { WalletModule } from '../../wallet/wallet.module';
             provide: WAGERING_REQUIREMENT_REPOSITORY,
             useClass: WageringRequirementRepository,
         },
+        {
+            provide: WAGERING_CONTRIBUTION_LOG_REPOSITORY,
+            useClass: WageringContributionLogRepository,
+        },
 
         // Application
         CreateWageringRequirementService,
@@ -53,7 +58,8 @@ import { WalletModule } from '../../wallet/wallet.module';
         SettleWageringRequirementService,
         VoidWageringRequirementService,
         FindWageringContributionLogsService,
-        WAGERING_REQUIREMENT_REPOSITORY
+        WAGERING_REQUIREMENT_REPOSITORY,
+        WAGERING_CONTRIBUTION_LOG_REPOSITORY
     ],
 })
 export class RequirementModule { }

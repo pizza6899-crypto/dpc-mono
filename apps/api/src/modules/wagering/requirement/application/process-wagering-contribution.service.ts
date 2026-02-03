@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { WAGERING_REQUIREMENT_REPOSITORY } from '../ports';
-import type { WageringRequirementRepositoryPort } from '../ports';
+import { WAGERING_REQUIREMENT_REPOSITORY, WAGERING_CONTRIBUTION_LOG_REPOSITORY } from '../ports';
+import type { WageringRequirementRepositoryPort, WageringContributionLogRepositoryPort } from '../ports';
 import { WageringPolicy } from '../domain';
 import type { ExchangeCurrencyCode } from '@prisma/client';
 import { Prisma } from '@prisma/client';
@@ -27,6 +27,8 @@ export class ProcessWageringContributionService {
     constructor(
         @Inject(WAGERING_REQUIREMENT_REPOSITORY)
         private readonly repository: WageringRequirementRepositoryPort,
+        @Inject(WAGERING_CONTRIBUTION_LOG_REPOSITORY)
+        private readonly logRepository: WageringContributionLogRepositoryPort,
         private readonly policy: WageringPolicy,
         @InjectTransaction()
         private readonly tx: PrismaTransaction,
@@ -93,7 +95,7 @@ export class ProcessWageringContributionService {
                 await this.repository.save(requirement);
 
                 // 2. 기여 상세 로그 생성 (별도 메서드로 분리)
-                await this.repository.createContributionLog({
+                await this.logRepository.create({
                     wageringRequirementId: requirement.id,
                     gameRoundId,
                     requestAmount: totalRequestAmount,

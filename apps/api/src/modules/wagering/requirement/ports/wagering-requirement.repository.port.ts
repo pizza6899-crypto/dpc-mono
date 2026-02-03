@@ -1,4 +1,4 @@
-import type { WageringRequirement, WageringContributionLog } from '../domain';
+import type { WageringRequirement } from '../domain';
 import type { ExchangeCurrencyCode, WageringStatus, WageringSourceType, Prisma } from '@prisma/client';
 import type { PaginatedData } from 'src/common/http/types/pagination.types';
 
@@ -21,17 +21,6 @@ export interface WageringRequirementRepositoryPort {
     save(wageringRequirement: WageringRequirement): Promise<WageringRequirement>;
 
     /**
-     * 특정 롤링 조건에 대한 기여 로그를 생성합니다.
-     */
-    createContributionLog(data: {
-        wageringRequirementId: bigint;
-        gameRoundId: bigint;
-        requestAmount: Prisma.Decimal;
-        contributionRate: Prisma.Decimal;
-        contributedAmount: Prisma.Decimal;
-    }): Promise<void>;
-
-    /**
      * ID로 롤링 조건을 조회합니다.
      */
     findById(id: bigint): Promise<WageringRequirement | null>;
@@ -45,11 +34,6 @@ export interface WageringRequirementRepositoryPort {
      * 유저의 모든 롤링 조건을 조회합니다. (필터링 가능)
      */
     findByUserId(userId: bigint, status?: WageringStatus): Promise<WageringRequirement[]>;
-
-    /**
-     * 특정 롤링 조건의 기여 로그를 조회합니다.
-     */
-    findLogsByRequirementId(wageringRequirementId: bigint): Promise<WageringContributionLog[]>;
 
     /**
      * 유저의 모든 롤링 조건을 페이지네이션하여 조회합니다.

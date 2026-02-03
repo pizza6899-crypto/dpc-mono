@@ -56,22 +56,6 @@ export class WageringRequirementRepository implements WageringRequirementReposit
         return this.mapper.toDomain(result);
     }
 
-    async createContributionLog(data: {
-        wageringRequirementId: bigint;
-        gameRoundId: bigint;
-        requestAmount: Prisma.Decimal;
-        contributionRate: Prisma.Decimal;
-        contributedAmount: Prisma.Decimal;
-    }): Promise<void> {
-        const { id: logId } = this.snowflakeService.generate();
-        await this.tx.wageringContributionLog.create({
-            data: {
-                id: logId,
-                ...data,
-            },
-        });
-    }
-
     async findById(id: bigint): Promise<WageringRequirement | null> {
         const result = await this.tx.wageringRequirement.findUnique({
             where: { id },
@@ -96,15 +80,6 @@ export class WageringRequirementRepository implements WageringRequirementReposit
             orderBy: { createdAt: 'desc' },
         });
         return results.map((r) => this.mapper.toDomain(r));
-    }
-
-    async findLogsByRequirementId(wageringRequirementId: bigint): Promise<WageringContributionLog[]> {
-        const results = await this.tx.wageringContributionLog.findMany({
-            where: { wageringRequirementId },
-            orderBy: { createdAt: 'desc' },
-        });
-
-        return results.map((r) => this.mapper.toDomainLog(r));
     }
 
     async findPaginated(params: {
