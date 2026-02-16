@@ -281,6 +281,8 @@ describe('ApproveDepositService', () => {
                     sourceType: 'DEPOSIT',
                     principalAmount: new Prisma.Decimal(100),
                     multiplier: new Prisma.Decimal(1),
+                    initialLockedCash: new Prisma.Decimal(100),
+                    grantedBonusAmount: new Prisma.Decimal(0),
                 }),
             );
             expect(mockGrantPromotionService.execute).not.toHaveBeenCalled();

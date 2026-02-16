@@ -163,6 +163,8 @@ export class GrantPromotionBonusService {
         sourceType: 'PROMOTION_BONUS',
         principalAmount: bonusAmount,
         multiplier: new Prisma.Decimal(rollingMultiplier),
+        initialLockedCash: depositAmount,
+        grantedBonusAmount: bonusAmount,
         sourceId: BigInt(userPromotion.id),
         requestInfo,
       });

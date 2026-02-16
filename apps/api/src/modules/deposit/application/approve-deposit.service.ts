@@ -151,11 +151,13 @@ export class ApproveDepositService {
       // 프로모션이 없는 경우: 입금액의 1배 롤링 생성
       await this.createWageringRequirementService.execute({
         userId: deposit.userId,
-        currency: deposit.depositCurrency,
+        currency: depositCurrency,
         sourceType: 'DEPOSIT',
         sourceId: deposit.id!,
         principalAmount: actuallyPaid,
         multiplier: new Prisma.Decimal(1),
+        initialLockedCash: actuallyPaid,
+        grantedBonusAmount: new Prisma.Decimal(0),
         requestInfo: requestInfo,
       });
     }

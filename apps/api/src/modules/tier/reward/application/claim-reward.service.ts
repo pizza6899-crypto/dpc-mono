@@ -93,6 +93,8 @@ export class ClaimRewardService {
                     sourceId: rewardId,
                     principalAmount: finalAmount,
                     multiplier: reward.wageringMultiplier,
+                    initialLockedCash: new Prisma.Decimal(0),
+                    grantedBonusAmount: finalAmount,
                     expiresAt: reward.expiresAt || undefined,
                 });
             }

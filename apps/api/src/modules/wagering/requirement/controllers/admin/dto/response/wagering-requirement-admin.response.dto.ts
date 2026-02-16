@@ -29,8 +29,11 @@ export class WageringRequirementAdminResponseDto {
     @ApiProperty({ description: 'Remaining Amount / 남은 목표액', example: '50000' })
     remainingAmount: string;
 
-    @ApiProperty({ description: 'Initial Locked Amount / 생성 시점에 묶인 총금액', example: '12000' })
-    initialLockedAmount: string;
+    @ApiProperty({ description: 'Initial Locked Cash / 생성 시점에 잠긴 현금 원금', example: '10000' })
+    initialLockedCash: string;
+
+    @ApiProperty({ description: 'Granted Bonus Amount / 지급된 보너스 금액', example: '2000' })
+    grantedBonusAmount: string;
 
     @ApiProperty({ description: 'Max Cash Conversion / 최대 현금 전환 가능액', nullable: true })
     maxCashConversion: string | null;
