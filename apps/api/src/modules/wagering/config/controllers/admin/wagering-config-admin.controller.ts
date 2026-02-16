@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Patch } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiExtraModels } from '@nestjs/swagger';
 import { Admin } from '../../../../../common/auth/decorators/roles.decorator';
 import { GetWageringConfigService } from '../../application/get-wagering-config.service';
 import { UpdateWageringConfigService } from '../../application/update-wagering-config.service';
@@ -8,13 +8,14 @@ import type { AuthenticatedUser } from '../../../../../common/auth/types/auth.ty
 import { AuditLog } from '../../../../audit-log/infrastructure/audit-log.decorator';
 import { LogType } from '../../../../audit-log/domain';
 import { ApiStandardResponse, ApiStandardErrors } from '../../../../../common/http/decorators/api-response.decorator';
-import { UpdateWageringConfigDto } from './dto/request/update-wagering-config.dto';
+import { UpdateWageringConfigDto, UpdateWageringCurrencySettingDto } from './dto/request/update-wagering-config.dto';
 import { WageringConfigAdminResponseDto, WageringCurrencySettingResponseDto } from './dto/response/wagering-config-admin.response.dto';
 import { WageringConfig } from '../../domain';
 
 @ApiTags('Admin Wagering Config')
 @Controller('admin/wagering-configs')
 @Admin()
+@ApiExtraModels(UpdateWageringCurrencySettingDto, WageringCurrencySettingResponseDto)
 export class WageringConfigAdminController {
     constructor(
         private readonly getService: GetWageringConfigService,

@@ -4,6 +4,10 @@ model UserWallet {
     cash     Decimal              @default(0) @db.Decimal(32, 18)
     bonus    Decimal              @default(0) @db.Decimal(32, 18)
 
+    // [Withdrawal Hold Amount]
+    // 출금 신청 시 승인 전까지 일시적으로 묶여있는 금액입니다.
+    // * 주의: 롤링(Wagering)을 위한 '원금 잠금'과는 무관합니다. (롤링 원금은 WageringRequirement.initialLockedCash로 관리)
+    // * 동작: 출금 신청(Cash -> Lock 이동), 승인(Lock 소멸), 반려(Lock -> Cash 환불)
     lock  Decimal @default(0) @db.Decimal(32, 18)
     vault Decimal @default(0) @db.Decimal(32, 18)
 
