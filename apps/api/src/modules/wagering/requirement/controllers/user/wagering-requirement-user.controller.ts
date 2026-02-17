@@ -10,7 +10,6 @@ import {
 import { GetMyWageringRequirementsQueryDto } from './dto/request/get-my-wagering-requirements-query.dto';
 import { WageringRequirementUserResponseDto } from './dto/response/wagering-requirement-user.response.dto';
 import { WageringSummaryUserResponseDto } from './dto/response/wagering-summary-user.response.dto';
-import { Paginated } from '../../../../../common/http/decorators/paginated.decorator';
 import { SqidsService } from '../../../../../common/sqids/sqids.service';
 import { SqidsPrefix } from '../../../../../common/sqids/sqids.constants';
 import { ApiStandardResponse, ApiStandardErrors, ApiPaginatedResponse } from '../../../../../common/http/decorators/api-response.decorator';
@@ -50,25 +49,21 @@ export class WageringRequirementUserController {
             sortOrder: query.sortOrder,
         });
 
-        const mappedData = paginatedData.data.map(item => ({
-            id: this.sqidsService.encode(item.id!, SqidsPrefix.WAGERING_REQUIREMENT),
-            currency: item.currency,
-            principalAmount: item.principalAmount.toString(),
-            multiplier: Number(item.multiplier),
-            requiredAmount: item.requiredAmount.toString(),
-            fulfilledAmount: item.fulfilledAmount.toString(),
-            remainingAmount: item.remainingAmount.toString(),
-            progressRate: item.requiredAmount.isZero() ? 100 : item.fulfilledAmount.div(item.requiredAmount).mul(100).toNumber(),
-            status: item.status,
-            expiresAt: item.expiresAt,
-            createdAt: item.createdAt,
-        }));
-
         return {
-            data: mappedData,
-            page: paginatedData.page,
-            limit: paginatedData.limit,
-            total: paginatedData.total,
+            ...paginatedData,
+            data: paginatedData.data.map(item => ({
+                id: this.sqidsService.encode(item.id, SqidsPrefix.WAGERING_REQUIREMENT),
+                currency: item.currency,
+                principalAmount: item.principalAmount.toString(),
+                multiplier: item.multiplier.toNumber(),
+                requiredAmount: item.requiredAmount.toString(),
+                fulfilledAmount: item.fulfilledAmount.toString(),
+                remainingAmount: item.remainingAmount.toString(),
+                progressRate: item.progressRate,
+                status: item.status,
+                expiresAt: item.expiresAt,
+                createdAt: item.createdAt,
+            })),
         };
     }
 
@@ -79,8 +74,7 @@ export class WageringRequirementUserController {
     async getSummary(
         @CurrentUser() user: AuthenticatedUser,
     ): Promise<WageringSummaryUserResponseDto> {
-        const userId = BigInt(user.id);
-        const summary = await this.checkService.getSummary(userId);
+        const summary = await this.checkService.getSummary(user.id);
 
         return {
             activeCount: summary.activeCount,

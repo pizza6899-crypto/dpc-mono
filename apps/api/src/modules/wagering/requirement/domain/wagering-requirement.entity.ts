@@ -64,6 +64,16 @@ export class WageringRequirement {
         return remaining.isNeg() ? new Prisma.Decimal('0') : remaining;
     }
 
+    /**
+     * 현재 달성률 (0-100)
+     */
+    get progressRate(): number {
+        if (this._requiredAmount.isZero()) {
+            return 100;
+        }
+        return this._fulfilledAmount.div(this._requiredAmount).mul(100).toNumber();
+    }
+
     get isCompleted(): boolean {
         return this._status === 'COMPLETED';
     }
