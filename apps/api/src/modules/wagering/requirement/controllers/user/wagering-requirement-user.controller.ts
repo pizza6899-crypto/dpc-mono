@@ -13,10 +13,11 @@ import { WageringSummaryUserResponseDto } from './dto/response/wagering-summary-
 import { Paginated } from '../../../../../common/http/decorators/paginated.decorator';
 import { SqidsService } from '../../../../../common/sqids/sqids.service';
 import { SqidsPrefix } from '../../../../../common/sqids/sqids.constants';
-import { ApiStandardResponse, ApiStandardErrors } from '../../../../../common/http/decorators/api-response.decorator';
+import { ApiStandardResponse, ApiStandardErrors, ApiPaginatedResponse } from '../../../../../common/http/decorators/api-response.decorator';
 import { Param, Post } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import type { PaginatedData } from 'src/common/http/types/pagination.types';
+import { LogType } from 'src/modules/audit-log/domain';
+import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 
 @ApiTags('User Wagering Requirement')
 @Controller('user/wagering-requirements')
@@ -29,9 +30,8 @@ export class WageringRequirementUserController {
     ) { }
 
     @Get()
-    @Paginated()
     @ApiOperation({ summary: 'Get my wagering requirements / 내 롤링 조건 조회' })
-    @ApiStandardResponse(WageringRequirementUserResponseDto)
+    @ApiPaginatedResponse(WageringRequirementUserResponseDto)
     @ApiStandardErrors()
     async getMyRequirements(
         @CurrentUser() user: AuthenticatedUser,
@@ -91,6 +91,12 @@ export class WageringRequirementUserController {
     }
 
     @Post(':id/forfeit')
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'WAGERING',
+        action: 'FORFEIT',
+        extractMetadata: (req) => ({ id: req.params.id }),
+    })
     @ApiOperation({ summary: 'Forfeit wagering requirement / 롤링 조건 포기' })
     @ApiStandardResponse()
     @ApiStandardErrors()
