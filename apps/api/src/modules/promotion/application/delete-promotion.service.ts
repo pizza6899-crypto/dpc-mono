@@ -18,7 +18,7 @@ export class DeletePromotionService {
     async execute(id: bigint): Promise<void> {
         const promotion = await this.repository.findById(id);
         if (!promotion) {
-            throw new PromotionNotFoundException(id);
+            throw new PromotionNotFoundException();
         }
 
         await this.repository.delete(id);

@@ -44,7 +44,7 @@ export class CancelWithdrawalService {
 
         // 2. 소유권 확인
         if (withdrawal.userId !== userId) {
-            throw new WithdrawalNotFoundException(withdrawalId);
+            throw new WithdrawalNotFoundException();
         }
 
         // 3. 취소 (엔티티에서 상태 검증)
@@ -54,26 +54,18 @@ export class CancelWithdrawalService {
         await this.repository.save(withdrawal);
 
         // 5. 잔액 복원 (mainBalance에 복원)
-        try {
-            await this.updateUserBalanceService.updateBalance({
-                userId,
-                currency: withdrawal.currency,
-                amount: withdrawal.requestedAmount,
-                operation: UpdateOperation.ADD,
-                balanceType: UserWalletBalanceType.CASH,
-                transactionType: UserWalletTransactionType.REFUND, // 환불 타입으로 기록
-                referenceId: withdrawal.id,
-            }, {
-                internalNote: 'Withdrawal cancelled by user - balance restored',
-                actionName: WalletActionName.CANCEL_WITHDRAWAL,
-            });
-        } catch (error) {
-            this.logger.error(
-                `Failed to restore balance for cancelled withdrawal ${withdrawalId}`,
-                error instanceof Error ? error.stack : String(error),
-            );
-            // 잔액 복원 실패는 로깅하고 계속 진행 (수동 처리 필요)
-        }
+        await this.updateUserBalanceService.updateBalance({
+            userId,
+            currency: withdrawal.currency,
+            amount: withdrawal.requestedAmount,
+            operation: UpdateOperation.ADD,
+            balanceType: UserWalletBalanceType.CASH,
+            transactionType: UserWalletTransactionType.REFUND, // 환불 타입으로 기록
+            referenceId: withdrawal.id,
+        }, {
+            internalNote: 'Withdrawal cancelled by user - balance restored',
+            actionName: WalletActionName.CANCEL_WITHDRAWAL,
+        });
 
         return {
             withdrawalId: withdrawal.id,

@@ -5,6 +5,7 @@ import type {
     WageringStatus,
     WageringCancellationReason
 } from '@prisma/client';
+import { WageringAppliedConfig } from './wagering-applied-config';
 
 export class WageringRequirement {
     private constructor(
@@ -21,7 +22,7 @@ export class WageringRequirement {
         public readonly initialLockedCash: Prisma.Decimal,
         public readonly grantedBonusAmount: Prisma.Decimal,
         public readonly parentWageringId: bigint | null,
-        public readonly appliedConfig: any,
+        public readonly appliedConfig: WageringAppliedConfig,
         private _maxCashConversion: Prisma.Decimal | null,
         private _convertedAmount: Prisma.Decimal | null,
         private _isPaused: boolean,
@@ -182,7 +183,7 @@ export class WageringRequirement {
         initialFulfilledAmount?: Prisma.Decimal;
         isAutoCancelable?: boolean;
         maxCashConversion?: Prisma.Decimal | null;
-        appliedConfig?: any;
+        appliedConfig?: WageringAppliedConfig;
         priority?: number;
         expiresAt?: Date | null;
     }): WageringRequirement {
@@ -234,7 +235,7 @@ export class WageringRequirement {
         initialLockedCash: Prisma.Decimal;
         grantedBonusAmount: Prisma.Decimal;
         parentWageringId: bigint | null;
-        appliedConfig: any;
+        appliedConfig: WageringAppliedConfig;
         maxCashConversion: Prisma.Decimal | null;
         convertedAmount: Prisma.Decimal | null;
         isPaused: boolean;

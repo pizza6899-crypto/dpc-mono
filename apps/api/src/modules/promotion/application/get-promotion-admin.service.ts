@@ -20,7 +20,7 @@ export class GetPromotionAdminService {
     }> {
         const promotion = await this.repository.findById(id);
         if (!promotion) {
-            throw new PromotionNotFoundException(id);
+            throw new PromotionNotFoundException();
         }
 
         // 통계 정보 조회

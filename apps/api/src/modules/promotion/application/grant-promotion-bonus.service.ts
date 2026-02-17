@@ -2,8 +2,8 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma, ExchangeCurrencyCode } from '@prisma/client';
-import { PromotionPolicy, PromotionNotFoundException } from '../domain';
-import type { Promotion, UserPromotion } from '../domain';
+import { PromotionPolicy, PromotionNotFoundException, PromotionBonusLimitExceededException, PromotionUsageLimitExceededException } from '../domain';
+import type { UserPromotion } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports/out';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
 import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
@@ -60,7 +60,7 @@ export class GrantPromotionBonusService {
     // 프로모션 조회
     const promotion = await this.repository.findById(promotionId);
     if (!promotion) {
-      throw new PromotionNotFoundException(promotionId);
+      throw new PromotionNotFoundException();
     }
 
     // 통화별 설정 조회
@@ -97,9 +97,7 @@ export class GrantPromotionBonusService {
 
     // 최대 보너스 금액 검증
     if (!currencySettings.validateMaxBonusAmount(bonusAmount)) {
-      throw new Error(
-        `Bonus amount ${bonusAmount.toString()} exceeds maximum ${currencySettings.maxBonusAmount?.toString()}`,
-      );
+      throw new PromotionBonusLimitExceededException();
     }
 
     // 롤링 배수 계산 (보너스 금액에만 롤링 적용)
@@ -115,8 +113,7 @@ export class GrantPromotionBonusService {
       updatedPromotion.currentUsageCount > updatedPromotion.maxUsageCount
     ) {
       // 선착순 마감됨 (트랜잭션 롤백)
-      // TODO: 정확한 에러 타입 정의 필요
-      throw new Error('Promotion usage limit exceeded');
+      throw new PromotionUsageLimitExceededException();
     }
 
     // 만료 시간 계산
@@ -166,6 +163,7 @@ export class GrantPromotionBonusService {
         initialLockedCash: depositAmount,
         grantedBonusAmount: bonusAmount,
         sourceId: BigInt(userPromotion.id),
+        appliedConfig: { depositId: depositDetailId?.toString() },
         requestInfo,
       });
       rollingCreated = true;

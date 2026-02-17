@@ -25,7 +25,7 @@ export class PromotionPolicy {
    */
   isPromotionActive(promotion: Promotion, now: Date = new Date()): void {
     if (!promotion.isCurrentlyActive(now)) {
-      throw new PromotionNotActiveException(promotion.id);
+      throw new PromotionNotActiveException();
     }
   }
 
@@ -53,7 +53,7 @@ export class PromotionPolicy {
   ): void {
     if (promotion.isOneTime && existingUserPromotion) {
       if (existingUserPromotion.bonusGranted) {
-        throw new PromotionAlreadyUsedException(promotion.id);
+        throw new PromotionAlreadyUsedException();
       }
     }
   }

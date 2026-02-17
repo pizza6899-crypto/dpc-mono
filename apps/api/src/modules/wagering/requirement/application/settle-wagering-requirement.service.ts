@@ -37,7 +37,7 @@ export class SettleWageringRequirementService {
         // 1. 요구사항 조회
         const requirement = await this.repository.findById(requirementId);
         if (!requirement) {
-            throw new WageringRequirementNotFoundException(requirementId);
+            throw new WageringRequirementNotFoundException();
         }
 
         // 2. 이미 완료되었거나 취소된 경우 스킵

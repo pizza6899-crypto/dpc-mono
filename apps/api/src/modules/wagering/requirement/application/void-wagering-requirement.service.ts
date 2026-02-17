@@ -30,7 +30,7 @@ export class VoidWageringRequirementService {
 
         const requirement = await this.repository.findById(id);
         if (!requirement) {
-            throw new WageringRequirementNotFoundException(id.toString());
+            throw new WageringRequirementNotFoundException();
         }
 
         // 도메인 로직: 무효화 상태로 변경

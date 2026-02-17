@@ -22,8 +22,7 @@ export class GetWithdrawalService {
 
         // 소유권 확인
         if (withdrawal.userId !== userId) {
-            // 소유권이 없으면 not found로 처리 (보안상 존재 여부 숨김)
-            throw new WithdrawalNotFoundException(withdrawalId);
+            throw new WithdrawalNotFoundException();
         }
 
         return withdrawal;

@@ -79,7 +79,7 @@ export class WageringRequirementRepository implements WageringRequirementReposit
     async getById(id: bigint): Promise<WageringRequirement> {
         const requirement = await this.findById(id);
         if (!requirement) {
-            throw new WageringRequirementNotFoundException(id);
+            throw new WageringRequirementNotFoundException();
         }
         return requirement;
     }

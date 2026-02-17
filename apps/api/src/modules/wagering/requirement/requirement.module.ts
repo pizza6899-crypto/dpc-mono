@@ -4,13 +4,15 @@ import { WageringRequirementRepository } from './infrastructure/wagering-require
 import { WageringContributionLogRepository } from './infrastructure/wagering-contribution-log.repository';
 import { WageringRequirementMapper } from './infrastructure/wagering-requirement.mapper';
 import {
+    CheckWageringRequirementService,
     CreateWageringRequirementService,
     ProcessWageringContributionService,
     CancelWageringRequirementService,
     FindWageringRequirementsService,
     SettleWageringRequirementService,
     VoidWageringRequirementService,
-    FindWageringContributionLogsService
+    FindWageringContributionLogsService,
+    ForfeitWageringRequirementService
 } from './application';
 import { WageringPolicy } from './domain';
 import { WAGERING_REQUIREMENT_REPOSITORY, WAGERING_CONTRIBUTION_LOG_REPOSITORY } from './ports';
@@ -42,6 +44,7 @@ import { WalletModule } from '../../wallet/wallet.module';
         },
 
         // Application
+        CheckWageringRequirementService,
         CreateWageringRequirementService,
         ProcessWageringContributionService,
         CancelWageringRequirementService,
@@ -49,8 +52,10 @@ import { WalletModule } from '../../wallet/wallet.module';
         SettleWageringRequirementService,
         VoidWageringRequirementService,
         FindWageringContributionLogsService,
+        ForfeitWageringRequirementService,
     ],
     exports: [
+        CheckWageringRequirementService,
         CreateWageringRequirementService,
         ProcessWageringContributionService,
         CancelWageringRequirementService,
@@ -58,6 +63,7 @@ import { WalletModule } from '../../wallet/wallet.module';
         SettleWageringRequirementService,
         VoidWageringRequirementService,
         FindWageringContributionLogsService,
+        ForfeitWageringRequirementService,
         WAGERING_REQUIREMENT_REPOSITORY,
         WAGERING_CONTRIBUTION_LOG_REPOSITORY
     ],

@@ -18,7 +18,7 @@ export class AddPromotionNoteService {
     async execute(id: bigint, note: string): Promise<Promotion> {
         const promotion = await this.repository.findById(id);
         if (!promotion) {
-            throw new PromotionNotFoundException(id);
+            throw new PromotionNotFoundException();
         }
 
         promotion.addNote(note);

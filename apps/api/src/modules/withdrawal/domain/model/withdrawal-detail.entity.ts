@@ -55,7 +55,7 @@ export class WithdrawalDetail {
   private constructor(
     public readonly id: bigint,
     public readonly props: WithdrawalDetailProps,
-  ) {}
+  ) { }
 
   // ===== 팩토리 메서드 =====
 
@@ -254,7 +254,7 @@ export class WithdrawalDetail {
    */
   markPendingReview(): void {
     if (this.props.status !== WithdrawalStatus.PENDING) {
-      throw new InvalidWithdrawalStatusException(this.id, this.props.status, [
+      throw new InvalidWithdrawalStatusException(this.props.status, [
         WithdrawalStatus.PENDING,
       ]);
     }
@@ -267,7 +267,7 @@ export class WithdrawalDetail {
    */
   approve(adminId: bigint, note?: string): void {
     if (this.props.status !== WithdrawalStatus.PENDING_REVIEW) {
-      throw new InvalidWithdrawalStatusException(this.id, this.props.status, [
+      throw new InvalidWithdrawalStatusException(this.props.status, [
         WithdrawalStatus.PENDING_REVIEW,
       ]);
     }
@@ -284,7 +284,7 @@ export class WithdrawalDetail {
    */
   reject(adminId: bigint, reason: string): void {
     if (this.props.status !== WithdrawalStatus.PENDING_REVIEW) {
-      throw new InvalidWithdrawalStatusException(this.id, this.props.status, [
+      throw new InvalidWithdrawalStatusException(this.props.status, [
         WithdrawalStatus.PENDING_REVIEW,
       ]);
     }
@@ -301,7 +301,6 @@ export class WithdrawalDetail {
   cancel(): void {
     if (!this.canBeCancelled()) {
       throw new WithdrawalCannotBeCancelledException(
-        this.id,
         this.props.status,
       );
     }
@@ -318,7 +317,7 @@ export class WithdrawalDetail {
       this.props.status === WithdrawalStatus.PENDING ||
       this.props.status === WithdrawalStatus.PENDING_REVIEW;
     if (!isAllowed) {
-      throw new InvalidWithdrawalStatusException(this.id, this.props.status, [
+      throw new InvalidWithdrawalStatusException(this.props.status, [
         WithdrawalStatus.PENDING,
         WithdrawalStatus.PENDING_REVIEW,
       ]);
@@ -332,7 +331,7 @@ export class WithdrawalDetail {
    */
   markSending(providerWithdrawalId: string): void {
     if (this.props.status !== WithdrawalStatus.PROCESSING) {
-      throw new InvalidWithdrawalStatusException(this.id, this.props.status, [
+      throw new InvalidWithdrawalStatusException(this.props.status, [
         WithdrawalStatus.PROCESSING,
       ]);
     }
@@ -349,7 +348,7 @@ export class WithdrawalDetail {
       this.props.status === WithdrawalStatus.PROCESSING ||
       this.props.status === WithdrawalStatus.SENDING;
     if (!isAllowed) {
-      throw new InvalidWithdrawalStatusException(this.id, this.props.status, [
+      throw new InvalidWithdrawalStatusException(this.props.status, [
         WithdrawalStatus.PROCESSING,
         WithdrawalStatus.SENDING,
       ]);

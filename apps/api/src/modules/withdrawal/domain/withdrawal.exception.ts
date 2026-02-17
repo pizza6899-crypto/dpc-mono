@@ -20,9 +20,9 @@ export class WithdrawalException extends DomainException {
  * Withdrawal을 찾을 수 없을 때 발생하는 예외
  */
 export class WithdrawalNotFoundException extends WithdrawalException {
-    constructor(identifier: bigint | string) {
+    constructor() {
         super(
-            `Withdrawal not found: ${identifier}`,
+            'Withdrawal not found',
             MessageCode.WITHDRAWAL_NOT_FOUND,
             HttpStatus.NOT_FOUND,
         );
@@ -35,12 +35,11 @@ export class WithdrawalNotFoundException extends WithdrawalException {
  */
 export class InvalidWithdrawalStatusException extends WithdrawalException {
     constructor(
-        identifier: bigint | string,
         currentStatus: string,
         expectedStatuses: string[],
     ) {
         super(
-            `Invalid withdrawal status: id=${identifier}, currentStatus=${currentStatus}, expectedStatuses=[${expectedStatuses.join(', ')}]`,
+            `Invalid withdrawal status: currentStatus=${currentStatus}, expectedStatuses=[${expectedStatuses.join(', ')}]`,
             MessageCode.WITHDRAWAL_INVALID_STATUS,
             HttpStatus.BAD_REQUEST,
         );
@@ -94,9 +93,9 @@ export class InsufficientBalanceException extends WithdrawalException {
  * 롤링 조건이 완료되지 않았을 때 발생하는 예외
  */
 export class WageringNotCompletedException extends WithdrawalException {
-    constructor(userId: bigint | string) {
+    constructor() {
         super(
-            `Wagering requirement not completed for user: ${userId}`,
+            'Wagering requirement not completed',
             MessageCode.ROLLING_NOT_COMPLETED,
             HttpStatus.BAD_REQUEST,
         );
@@ -108,9 +107,9 @@ export class WageringNotCompletedException extends WithdrawalException {
  * 암호화폐 출금 설정을 찾을 수 없을 때 발생하는 예외
  */
 export class CryptoWithdrawConfigNotFoundException extends WithdrawalException {
-    constructor(identifier: string | bigint) {
+    constructor() {
         super(
-            `Crypto withdraw config not found: ${identifier}`,
+            'Crypto withdraw config not found',
             MessageCode.CRYPTO_CONFIG_NOT_FOUND,
             HttpStatus.NOT_FOUND,
         );
@@ -136,9 +135,9 @@ export class CryptoWithdrawConfigAlreadyExistsException extends WithdrawalExcept
  * 은행 출금 설정을 찾을 수 없을 때 발생하는 예외
  */
 export class BankWithdrawConfigNotFoundException extends WithdrawalException {
-    constructor(identifier: bigint | string) {
+    constructor() {
         super(
-            `Bank withdraw config not found: ${identifier}`,
+            'Bank withdraw config not found',
             MessageCode.BANK_CONFIG_NOT_FOUND,
             HttpStatus.NOT_FOUND,
         );
@@ -164,9 +163,9 @@ export class BankWithdrawConfigAlreadyExistsException extends WithdrawalExceptio
  * 출금을 취소할 수 없는 상태일 때 발생하는 예외
  */
 export class WithdrawalCannotBeCancelledException extends WithdrawalException {
-    constructor(identifier: bigint | string, currentStatus: string) {
+    constructor(currentStatus: string) {
         super(
-            `Withdrawal cannot be cancelled: id=${identifier}, status=${currentStatus}`,
+            `Withdrawal cannot be cancelled: status=${currentStatus}`,
             MessageCode.WITHDRAWAL_INVALID_STATUS,
             HttpStatus.BAD_REQUEST,
         );
@@ -178,9 +177,9 @@ export class WithdrawalCannotBeCancelledException extends WithdrawalException {
  * 진행 중인 출금이 이미 존재할 때 발생하는 예외
  */
 export class PendingWithdrawalExistsException extends WithdrawalException {
-    constructor(userId: bigint | string) {
+    constructor() {
         super(
-            `User ${userId} already has a pending withdrawal request`,
+            'User already has a pending withdrawal request',
             MessageCode.WITHDRAWAL_PENDING_EXISTS,
             HttpStatus.CONFLICT,
         );
@@ -192,9 +191,9 @@ export class PendingWithdrawalExistsException extends WithdrawalException {
  * 외부 결제 처리 중 오류가 발생했을 때 발생하는 예외
  */
 export class WithdrawalProcessingException extends WithdrawalException {
-    constructor(withdrawalId: bigint | string, reason: string) {
+    constructor(reason: string) {
         super(
-            `Failed to process withdrawal ${withdrawalId}: ${reason}`,
+            `Failed to process withdrawal: ${reason}`,
             MessageCode.WITHDRAWAL_PROCESSING_FAILED,
             HttpStatus.BAD_GATEWAY,
         );

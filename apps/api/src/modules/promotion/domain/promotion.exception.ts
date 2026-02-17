@@ -14,9 +14,9 @@ export class PromotionException extends DomainException {
 }
 
 export class PromotionNotFoundException extends PromotionException {
-  constructor(identifier?: bigint | string) {
+  constructor() {
     super(
-      identifier ? `Promotion '${identifier}' not found` : 'Promotion not found',
+      'Promotion not found',
       MessageCode.PROMOTION_NOT_FOUND,
       HttpStatus.NOT_FOUND,
     );
@@ -25,9 +25,9 @@ export class PromotionNotFoundException extends PromotionException {
 }
 
 export class PromotionNotActiveException extends PromotionException {
-  constructor(identifier: bigint | string) {
+  constructor() {
     super(
-      `Promotion '${identifier}' is not active`,
+      'Promotion is not active',
       MessageCode.PROMOTION_NOT_ACTIVE,
       HttpStatus.BAD_REQUEST,
     );
@@ -36,9 +36,9 @@ export class PromotionNotActiveException extends PromotionException {
 }
 
 export class PromotionNotEligibleException extends PromotionException {
-  constructor(reason: string) {
+  constructor(reason?: string) {
     super(
-      `Promotion not eligible: ${reason}`,
+      reason ? `Promotion not eligible: ${reason}` : 'Promotion not eligible',
       MessageCode.PROMOTION_NOT_ELIGIBLE,
       HttpStatus.BAD_REQUEST,
     );
@@ -47,9 +47,9 @@ export class PromotionNotEligibleException extends PromotionException {
 }
 
 export class PromotionAlreadyUsedException extends PromotionException {
-  constructor(identifier: bigint | string) {
+  constructor() {
     super(
-      `Promotion '${identifier}' has already been used`,
+      'Promotion has already been used',
       MessageCode.PROMOTION_ALREADY_USED,
       HttpStatus.BAD_REQUEST,
     );
@@ -57,11 +57,32 @@ export class PromotionAlreadyUsedException extends PromotionException {
   }
 }
 
+export class PromotionUsageLimitExceededException extends PromotionException {
+  constructor() {
+    super(
+      'Promotion usage limit has been exceeded',
+      MessageCode.PROMOTION_ALREADY_USED, // 사용 가능한 적절한 코드가 없으면 근사한 것 사용
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'PromotionUsageLimitExceededException';
+  }
+}
+
+export class PromotionBonusLimitExceededException extends PromotionException {
+  constructor() {
+    super(
+      'Bonus amount exceeds the maximum limit',
+      MessageCode.VALIDATION_ERROR,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'PromotionBonusLimitExceededException';
+  }
+}
 
 export class UserPromotionNotFoundException extends PromotionException {
-  constructor(id?: bigint) {
+  constructor() {
     super(
-      id ? `User promotion '${id}' not found` : 'User promotion not found',
+      'User promotion not found',
       MessageCode.PROMOTION_NOT_FOUND,
       HttpStatus.NOT_FOUND,
     );
@@ -70,9 +91,9 @@ export class UserPromotionNotFoundException extends PromotionException {
 }
 
 export class PromotionCodeAlreadyExistsException extends PromotionException {
-  constructor(code: string) {
+  constructor() {
     super(
-      `Promotion code '${code}' already exists`,
+      'Promotion code already exists',
       MessageCode.VALIDATION_ERROR,
       HttpStatus.CONFLICT,
     );
@@ -81,9 +102,9 @@ export class PromotionCodeAlreadyExistsException extends PromotionException {
 }
 
 export class PromotionInvalidConfigurationException extends PromotionException {
-  constructor(reason: string) {
+  constructor(reason?: string) {
     super(
-      `Invalid promotion configuration: ${reason}`,
+      reason ? `Invalid promotion configuration: ${reason}` : 'Invalid promotion configuration',
       MessageCode.VALIDATION_ERROR,
       HttpStatus.BAD_REQUEST,
     );

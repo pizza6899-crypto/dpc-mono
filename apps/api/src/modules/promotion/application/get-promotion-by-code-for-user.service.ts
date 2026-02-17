@@ -31,7 +31,7 @@ export class GetPromotionByCodeForUserService {
 
     const promotion = await this.repository.findByCode(code);
     if (!promotion) {
-      throw new PromotionNotFoundException(code);
+      throw new PromotionNotFoundException();
     }
 
     const translations = promotion.getTranslations();
@@ -47,7 +47,7 @@ export class GetPromotionByCodeForUserService {
 
     // 번역과 통화 정보가 모두 있어야 노출
     if (!currentTranslation || !currentCurrency) {
-      throw new PromotionNotFoundException(code);
+      throw new PromotionNotFoundException();
     }
 
     return {

@@ -42,7 +42,7 @@ export class UpdatePromotionService {
   async execute(params: UpdatePromotionParams): Promise<Promotion> {
     const promotion = await this.repository.findById(params.id);
     if (!promotion) {
-      throw new PromotionNotFoundException(params.id);
+      throw new PromotionNotFoundException();
     }
 
     // 업데이트할 필드만 변경
@@ -56,7 +56,7 @@ export class UpdatePromotionService {
     ) {
       const existing = await this.repository.findByCode(params.code);
       if (existing && existing.id !== promotion.id) {
-        throw new PromotionCodeAlreadyExistsException(params.code);
+        throw new PromotionCodeAlreadyExistsException();
       }
     }
 

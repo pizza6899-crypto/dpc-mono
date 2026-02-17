@@ -114,7 +114,7 @@ export class WithdrawalPolicy {
      */
     validateNoPendingWithdrawal(userId: bigint, hasPending: boolean): void {
         if (hasPending) {
-            throw new PendingWithdrawalExistsException(userId);
+            throw new PendingWithdrawalExistsException();
         }
     }
 }

@@ -16,6 +16,7 @@ import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';
 import { AccumulateUserDepositService } from 'src/modules/tier/evaluator/application/accumulate-user-deposit.service';
 import { CreateWageringRequirementService } from 'src/modules/wagering/requirement/application';
+import { GetWageringConfigService } from 'src/modules/wagering/config/application/get-wagering-config.service';
 
 interface ApproveDepositParams {
   id: bigint;
@@ -45,6 +46,7 @@ export class ApproveDepositService {
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly exchangeRateService: ExchangeRateService,
     private readonly accumulateUserDepositService: AccumulateUserDepositService,
+    private readonly wageringConfigService: GetWageringConfigService,
   ) { }
 
   @Transactional()
@@ -133,11 +135,12 @@ export class ApproveDepositService {
     // 9. DepositDetail 상태 업데이트 (엔티티의 변경사항 반영)
     await this.depositRepository.update(deposit);
 
-    // 7. 롤링(Wagering Requirement) 처리
     let bonusAmount = new Prisma.Decimal(0);
 
+    // 7. 롤링(Wagering Requirement) 처리
     if (deposit.promotionId) {
-      // 프로모션이 있는 경우: 보너스 지급 및 롤링 생성
+      // 7.1. 프로모션이 있는 경우: 보너스 지급 및 프로모션용 롤링 생성
+      // 정책: 프로모션 롤링이 기본 입금 롤링 의무를 대체함
       const result = await this.grantPromotionBonusService.execute({
         userId: deposit.userId,
         promotionId: deposit.promotionId!,
@@ -148,14 +151,15 @@ export class ApproveDepositService {
       });
       bonusAmount = result.bonusAmount;
     } else {
-      // 프로모션이 없는 경우: 입금액의 1배 롤링 생성
+      // 7.2. 프로모션이 없는 경우: 기본 입금 롤링(AML) 생성
+      const wageringConfig = await this.wageringConfigService.execute();
       await this.createWageringRequirementService.execute({
         userId: deposit.userId,
         currency: depositCurrency,
         sourceType: 'DEPOSIT',
         sourceId: deposit.id!,
         principalAmount: actuallyPaid,
-        multiplier: new Prisma.Decimal(1),
+        multiplier: wageringConfig.defaultDepositMultiplier,
         initialLockedCash: actuallyPaid,
         grantedBonusAmount: new Prisma.Decimal(0),
         requestInfo: requestInfo,

@@ -14,12 +14,23 @@ export class WageringRequirementException extends DomainException {
 }
 
 export class WageringRequirementNotFoundException extends WageringRequirementException {
-    constructor(identifier: string | bigint) {
+    constructor() {
         super(
-            `Wagering requirement not found: ${identifier}`,
+            'Wagering requirement not found',
             MessageCode.WAGERING_NOT_FOUND,
             HttpStatus.NOT_FOUND,
         );
         this.name = 'WageringRequirementNotFoundException';
+    }
+}
+
+export class InvalidWageringStatusException extends WageringRequirementException {
+    constructor(reason: string) {
+        super(
+            `Invalid wagering status: ${reason}`,
+            MessageCode.WAGERING_INVALID_STATUS,
+            HttpStatus.BAD_REQUEST,
+        );
+        this.name = 'InvalidWageringStatusException';
     }
 }

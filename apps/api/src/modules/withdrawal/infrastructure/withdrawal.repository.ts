@@ -70,7 +70,7 @@ export class WithdrawalRepository implements WithdrawalRepositoryPort {
     async getById(id: bigint): Promise<WithdrawalDetail> {
         const withdrawal = await this.findById(id);
         if (!withdrawal) {
-            throw new WithdrawalNotFoundException(id);
+            throw new WithdrawalNotFoundException();
         }
         return withdrawal;
     }
@@ -165,7 +165,7 @@ export class WithdrawalRepository implements WithdrawalRepositoryPort {
     ): Promise<CryptoWithdrawConfig> {
         const config = await this.findCryptoConfigBySymbolAndNetwork(symbol, network);
         if (!config) {
-            throw new CryptoWithdrawConfigNotFoundException(`${symbol}/${network}`);
+            throw new CryptoWithdrawConfigNotFoundException();
         }
         return config;
     }
@@ -194,7 +194,7 @@ export class WithdrawalRepository implements WithdrawalRepositoryPort {
     async getCryptoConfigById(id: bigint): Promise<CryptoWithdrawConfig> {
         const config = await this.findCryptoConfigById(id);
         if (!config) {
-            throw new CryptoWithdrawConfigNotFoundException(id);
+            throw new CryptoWithdrawConfigNotFoundException();
         }
         return config;
     }
@@ -258,7 +258,7 @@ export class WithdrawalRepository implements WithdrawalRepositoryPort {
     async getBankConfigById(id: bigint): Promise<BankWithdrawConfig> {
         const config = await this.findBankConfigById(id);
         if (!config) {
-            throw new BankWithdrawConfigNotFoundException(id);
+            throw new BankWithdrawConfigNotFoundException();
         }
         return config;
     }

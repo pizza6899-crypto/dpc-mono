@@ -428,7 +428,7 @@ export class PromotionAdminController {
   ): Promise<any> {
     const promotion = await this.repository.findById(BigInt(id));
     if (!promotion) {
-      throw new PromotionNotFoundException(BigInt(id));
+      throw new PromotionNotFoundException();
     }
 
     const minDepositAmount = dto.minDepositAmount

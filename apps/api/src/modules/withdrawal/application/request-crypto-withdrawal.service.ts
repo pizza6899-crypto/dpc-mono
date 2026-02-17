@@ -13,8 +13,6 @@ import {
   UserWalletBalanceType,
   UserWalletTransactionType,
 } from '@prisma/client';
-import { WAGERING_REQUIREMENT_REPOSITORY } from 'src/modules/wagering/requirement/ports';
-import type { WageringRequirementRepositoryPort } from 'src/modules/wagering/requirement/ports';
 import {
   WithdrawalDetail,
   WithdrawalPolicy,
@@ -23,6 +21,7 @@ import {
 import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { CheckWageringRequirementService } from 'src/modules/wagering/requirement/application';
 
 export interface RequestCryptoWithdrawalParams {
   userId: bigint;
@@ -50,8 +49,7 @@ export class RequestCryptoWithdrawalService {
   constructor(
     @Inject(WITHDRAWAL_REPOSITORY)
     private readonly repository: WithdrawalRepositoryPort,
-    @Inject(WAGERING_REQUIREMENT_REPOSITORY)
-    private readonly wageringRepository: WageringRequirementRepositoryPort,
+    private readonly checkWageringService: CheckWageringRequirementService,
     private readonly policy: WithdrawalPolicy,
     private readonly snowflakeService: SnowflakeService,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
@@ -100,13 +98,9 @@ export class RequestCryptoWithdrawalService {
     this.policy.validateCryptoAmount(requestedAmount, config);
 
     // 4. 롤링 조건 검증 (활성 WageringRequirement 없어야 함)
-    const activeWageringRequirements =
-      await this.wageringRepository.findActiveByUserIdAndCurrency(
-        userId,
-        currency,
-      );
-    if (activeWageringRequirements.length > 0) {
-      throw new WageringNotCompletedException(userId);
+    const eligibility = await this.checkWageringService.checkWithdrawalEligibility(userId);
+    if (eligibility.isRestricted) {
+      throw new WageringNotCompletedException();
     }
 
     // 5. 잔액 검증

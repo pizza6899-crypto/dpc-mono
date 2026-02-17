@@ -2,7 +2,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma, ExchangeCurrencyCode } from '@prisma/client';
-import { PromotionPolicy, PromotionNotFoundException, PromotionInvalidConfigurationException } from '../domain';
+import { PromotionPolicy, PromotionNotFoundException, PromotionInvalidConfigurationException, PromotionUsageLimitExceededException } from '../domain';
 import type { UserPromotion } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports/out';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
@@ -59,7 +59,7 @@ export class ApplyCouponPromotionService {
         // 1. 프로모션 조회 (코드로 조회)
         const promotion = await this.repository.findByCode(code);
         if (!promotion) {
-            throw new PromotionNotFoundException(code);
+            throw new PromotionNotFoundException();
         }
 
         // 2. 비입금 프로모션인지 확인
@@ -107,7 +107,7 @@ export class ApplyCouponPromotionService {
             updatedPromotion.maxUsageCount !== null &&
             updatedPromotion.currentUsageCount > updatedPromotion.maxUsageCount
         ) {
-            throw new Error('Promotion usage limit exceeded');
+            throw new PromotionUsageLimitExceededException();
         }
 
         // 10. 만료 시간 계산

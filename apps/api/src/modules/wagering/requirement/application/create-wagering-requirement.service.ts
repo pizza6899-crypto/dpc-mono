@@ -13,6 +13,7 @@ import type { RequestClientInfo } from 'src/common/http/types';
 import { GetWageringConfigService } from '../../config/application/get-wagering-config.service';
 import { DateTime } from 'luxon';
 import { Transactional } from '@nestjs-cls/transactional';
+import { WageringAppliedConfig } from '../domain/wagering-applied-config';
 
 interface CreateWageringRequirementCommand {
     userId: bigint;
@@ -27,6 +28,7 @@ interface CreateWageringRequirementCommand {
     initialFulfilledAmount?: Prisma.Decimal; // 시작 시 인정해줄 기여도 (이관용)
     priority?: number;
     expiresAt?: Date;
+    appliedConfig?: WageringAppliedConfig;
     requestInfo?: RequestClientInfo;
 }
 
@@ -59,6 +61,9 @@ export class CreateWageringRequirementService {
             parentWageringId,
             initialFulfilledAmount,
             priority = 0,
+            expiresAt,
+            appliedConfig,
+            requestInfo,
         } = command;
 
         // 1. 중복 생성 방지 (Idempotency)
@@ -81,7 +86,7 @@ export class CreateWageringRequirementService {
 
         // 2. 설정 보정
         const setting = config.getSetting(currency);
-        const expiresAt = command.expiresAt ?? DateTime.now().plus({ days: config.defaultBonusExpiryDays }).toJSDate();
+        const finalExpiresAt = command.expiresAt ?? DateTime.now().plus({ days: config.defaultBonusExpiryDays }).toJSDate();
 
         this.logger.log(
             `Creating wagering requirement for user ${userId}, principal ${principalAmount} (x${multiplier}), lockedCash ${initialLockedCash}, grantedBonus ${grantedBonusAmount}`,
@@ -106,13 +111,17 @@ export class CreateWageringRequirementService {
             initialFulfilledAmount: initialFulfilledAmount ?? new Prisma.Decimal(0),
             priority,
             isAutoCancelable: true,
-            expiresAt,
+            expiresAt: finalExpiresAt,
             appliedConfig: {
+                ...appliedConfig,
                 snapshot: {
                     defaultBonusExpiryDays: config.defaultBonusExpiryDays,
                     defaultDepositMultiplier: config.defaultDepositMultiplier.toString(),
                     isWageringCheckEnabled: config.isWageringCheckEnabled,
                     currencyThreshold: setting.cancellationThreshold.toString(),
+                    minBet: setting.minBetAmount,
+                    maxBet: setting.maxBetAmount,
+                    cancellationThreshold: setting.cancellationThreshold,
                 }
             }
         });

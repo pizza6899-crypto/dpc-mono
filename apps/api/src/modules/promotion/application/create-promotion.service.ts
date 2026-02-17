@@ -42,7 +42,7 @@ export class CreatePromotionService {
   async execute(params: CreatePromotionParams): Promise<Promotion> {
     const existing = await this.repository.findByCode(params.code);
     if (existing) {
-      throw new PromotionCodeAlreadyExistsException(params.code);
+      throw new PromotionCodeAlreadyExistsException();
     }
 
     // 설정 유효성 검사 (통화별 설정은 별도 API로 처리하므로 currencies 제외)

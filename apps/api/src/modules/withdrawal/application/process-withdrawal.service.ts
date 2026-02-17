@@ -85,7 +85,7 @@ export class ProcessWithdrawalService {
             await this.restoreBalance(withdrawal);
 
             // 외부 에러를 도메인 에러로 래핑
-            throw new WithdrawalProcessingException(withdrawalId, errorMessage);
+            throw new WithdrawalProcessingException(errorMessage);
         }
     }
 
