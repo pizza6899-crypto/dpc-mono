@@ -59,7 +59,7 @@ export class CreateWageringRequirementService {
             initialLockedCash,
             grantedBonusAmount,
             parentWageringId,
-            initialFulfilledAmount,
+            initialFulfilledAmount = new Prisma.Decimal(0),
             priority = 0,
             expiresAt,
             appliedConfig,

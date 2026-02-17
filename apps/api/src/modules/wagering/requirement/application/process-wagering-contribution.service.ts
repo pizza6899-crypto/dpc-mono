@@ -104,25 +104,33 @@ export class ProcessWageringContributionService {
                 });
 
                 if (requirement.isFulfilled) {
-                    // 1. 실제 정산 처리 (지갑 잔액 전환 및 상태 업데이트)
-                    await this.settleService.execute({ requirementId: requirement.id });
+                    try {
+                        // 1. 실제 정산 처리 (지갑 잔액 전환 및 상태 업데이트)
+                        await this.settleService.execute({ requirementId: requirement.id });
 
-                    // 2. 감사 로그 디스패치 (정산 후 최신 상태 반영)
-                    await this.dispatchLogService.dispatch({
-                        type: LogType.ACTIVITY,
-                        data: {
-                            userId: userId.toString(),
-                            category: 'WAGERING',
-                            action: 'COMPLETE_WAGERING_REQUIREMENT',
-                            metadata: {
-                                wageringId: requirement.id?.toString(),
-                                currency,
-                                finalAmount: requirement.fulfilledAmount.toString(),
-                                convertedAmount: requirement.convertedAmount?.toString(),
-                                gameRoundId: gameRoundId.toString(),
+                        // 2. 감사 로그 디스패치 (정산 후 최신 상태 반영)
+                        await this.dispatchLogService.dispatch({
+                            type: LogType.ACTIVITY,
+                            data: {
+                                userId: userId.toString(),
+                                category: 'WAGERING',
+                                action: 'COMPLETE_WAGERING_REQUIREMENT',
+                                metadata: {
+                                    wageringId: requirement.id.toString(), // sqid로 변환은 컨트롤러 레벨에서 수행되므로 여기선 toString
+                                    currency,
+                                    finalAmount: requirement.fulfilledAmount.toString(),
+                                    convertedAmount: requirement.convertedAmount?.toString() ?? '0',
+                                    gameRoundId: gameRoundId.toString(),
+                                }
                             }
-                        }
-                    });
+                        });
+                    } catch (error) {
+                        this.logger.error(
+                            `Failed to settle wagering requirement ${requirement.id} after fulfillment. This does not affect contribution processing.`,
+                            error instanceof Error ? error.stack : String(error),
+                        );
+                        // 정산 실패 알림 로직 추가 가능 (예: 슬랙 알림 등)
+                    }
                 }
 
                 this.logger.log(

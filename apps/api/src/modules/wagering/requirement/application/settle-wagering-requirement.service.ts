@@ -61,7 +61,7 @@ export class SettleWageringRequirementService {
             throw new WalletNotFoundException(userId, currency);
         }
 
-        const currentBonus = wallet.bonus;
+        const currentBonus = wallet.bonus ?? new Prisma.Decimal(0);
 
         if (currentBonus.isZero()) {
             this.logger.log(`User ${userId} has zero bonus balance. Completing requirement ${requirementId} without conversion.`);
@@ -72,8 +72,10 @@ export class SettleWageringRequirementService {
 
         // 5. 정산 금액 계산 (Max Cash Conversion 적용)
         let conversionAmount = currentBonus;
-        if (requirement.maxCashConversion && requirement.maxCashConversion.greaterThan(0)) {
-            conversionAmount = Prisma.Decimal.min(currentBonus, requirement.maxCashConversion);
+        const maxCashConversion = requirement.maxCashConversion ?? new Prisma.Decimal(0);
+
+        if (maxCashConversion.gt(0)) {
+            conversionAmount = Prisma.Decimal.min(currentBonus, maxCashConversion);
         }
 
         this.logger.log(`Settling WageringRequirement ${requirementId}: Bonus ${currentBonus} -> Cash ${conversionAmount}`);
