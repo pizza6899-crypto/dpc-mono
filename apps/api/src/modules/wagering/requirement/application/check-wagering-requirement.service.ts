@@ -1,13 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { type ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import { WAGERING_REQUIREMENT_REPOSITORY } from '../ports';
 import type { WageringRequirementRepositoryPort } from '../ports';
 
 export interface WageringWithdrawalEligibility {
-    isRestricted: boolean;
-    activeCount: number;
-    totalRemainingAmount: string;
-    lastContributedAt: Date | null;
+    currency: ExchangeCurrencyCode; // 대상 통화
+    isRestricted: boolean; // 출금 제한 여부
+    activeCount: number; // 활성 롤링 조건 수
+    totalRequiredAmount: string; // 총 요구 금액
+    totalFulfilledAmount: string; // 총 달성 금액
+    totalRemainingAmount: string; // 총 남은 금액
+    lastContributedAt: Date | null; // 마지막 기여 발생일
 }
 
 @Injectable()
@@ -20,27 +23,48 @@ export class CheckWageringRequirementService {
     /**
      * 유저의 출금 가능 여부 및 롤링 요약 정보를 확인합니다.
      */
-    async getSummary(userId: bigint): Promise<WageringWithdrawalEligibility> {
+    async getSummary(userId: bigint, requestedCurrency: ExchangeCurrencyCode): Promise<WageringWithdrawalEligibility> {
         const activeRequirements = await this.repository.findByUserId(userId, 'ACTIVE');
 
         if (activeRequirements.length === 0) {
             return {
+                currency: requestedCurrency, // 기본값은 KRW 또는 요청 통화
                 isRestricted: false,
                 activeCount: 0,
+                totalRequiredAmount: '0',
+                totalFulfilledAmount: '0',
                 totalRemainingAmount: '0',
                 lastContributedAt: null,
             };
         }
 
-        // 여러 통화가 섞여 있을 수 있으므로, 첫 번째 발견된 롤링의 통화를 기준으로 합산하거나
-        // 통화별로 분리하는 것이 맞지만, 현재 DTO 구조상 첫 번째 통화를 우선시함
-        const baseCurrency = activeRequirements[0].currency;
-        const sameCurrencyRequirements = activeRequirements.filter(r => r.currency === baseCurrency);
+        // 통화 필터링: 요청된 통화가 있으면 해당 통화만, 없으면 첫 번째 롤링의 통화 기준
+        const targetCurrency = requestedCurrency ?? activeRequirements[0].currency;
+        const sameCurrencyRequirements = activeRequirements.filter(r => r.currency === targetCurrency);
 
-        const totalRemaining = sameCurrencyRequirements.reduce(
-            (acc, item) => acc.add(item.remainingAmount),
+        if (sameCurrencyRequirements.length === 0) {
+            return {
+                currency: targetCurrency,
+                isRestricted: false,
+                activeCount: 0,
+                totalRequiredAmount: '0',
+                totalFulfilledAmount: '0',
+                totalRemainingAmount: '0',
+                lastContributedAt: null,
+            };
+        }
+
+        const totalRequired = sameCurrencyRequirements.reduce(
+            (acc, item) => acc.add(item.requiredAmount),
             new Prisma.Decimal(0)
         );
+
+        const totalFulfilled = sameCurrencyRequirements.reduce(
+            (acc, item) => acc.add(item.fulfilledAmount),
+            new Prisma.Decimal(0)
+        );
+
+        const totalRemaining = totalRequired.sub(totalFulfilled);
 
         const lastContributedAt = activeRequirements
             .map(item => item.lastContributedAt)
@@ -48,9 +72,12 @@ export class CheckWageringRequirementService {
             .sort((a, b) => b.getTime() - a.getTime())[0] || null;
 
         return {
+            currency: targetCurrency,
             isRestricted: true,
-            activeCount: activeRequirements.length,
-            totalRemainingAmount: totalRemaining.toString(),
+            activeCount: sameCurrencyRequirements.length,
+            totalRequiredAmount: totalRequired.toString(),
+            totalFulfilledAmount: totalFulfilled.toString(),
+            totalRemainingAmount: totalRemaining.isNeg() ? '0' : totalRemaining.toString(),
             lastContributedAt,
         };
     }

@@ -1,4 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { CurrentUser } from '../../../../../common/auth/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../../../../../common/auth/types/auth.types';
@@ -8,6 +9,7 @@ import {
     ForfeitWageringRequirementService
 } from '../../application';
 import { GetMyWageringRequirementsQueryDto } from './dto/request/get-my-wagering-requirements-query.dto';
+import { GetWageringSummaryQueryDto } from './dto/request/get-wagering-summary-query.dto';
 import { WageringRequirementUserResponseDto } from './dto/response/wagering-requirement-user.response.dto';
 import { WageringSummaryUserResponseDto } from './dto/response/wagering-summary-user.response.dto';
 import { SqidsService } from '../../../../../common/sqids/sqids.service';
@@ -38,7 +40,7 @@ export class WageringRequirementUserController {
     ): Promise<PaginatedData<WageringRequirementUserResponseDto>> {
         const paginatedData = await this.findService.findPaginated({
             userId: user.id,
-            statuses: query.statuses,
+            statuses: query.statuses || ['ACTIVE'], // 기본값: 진행 중인 롤링만
             currency: query.currency,
             sourceType: query.sourceType,
             fromAt: query.fromAt,
@@ -73,12 +75,23 @@ export class WageringRequirementUserController {
     @ApiStandardErrors()
     async getSummary(
         @CurrentUser() user: AuthenticatedUser,
+        @Query() query: GetWageringSummaryQueryDto,
     ): Promise<WageringSummaryUserResponseDto> {
-        const summary = await this.checkService.getSummary(user.id);
+        const summary = await this.checkService.getSummary(user.id, query.currency || "USD");
+
+        const totalRequired = new Prisma.Decimal(summary.totalRequiredAmount);
+        const totalFulfilled = new Prisma.Decimal(summary.totalFulfilledAmount);
+
+        const totalProgressRate = totalRequired.isZero()
+            ? 100
+            : totalFulfilled.div(totalRequired).mul(100).toNumber();
 
         return {
+            currency: summary.currency,
             activeCount: summary.activeCount,
             totalRemainingAmount: summary.totalRemainingAmount,
+            totalRequiredAmount: summary.totalRequiredAmount,
+            totalProgressRate: Math.min(100, Math.max(0, totalProgressRate)), // 0-100 사이 보정
             isWithdrawalRestricted: summary.isRestricted,
             lastContributedAt: summary.lastContributedAt,
         };
