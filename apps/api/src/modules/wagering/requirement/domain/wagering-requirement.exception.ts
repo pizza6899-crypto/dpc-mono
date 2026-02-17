@@ -34,3 +34,14 @@ export class InvalidWageringStatusException extends WageringRequirementException
         this.name = 'InvalidWageringStatusException';
     }
 }
+
+export class WageringNotForfeitableException extends WageringRequirementException {
+    constructor() {
+        super(
+            'This wagering requirement cannot be forfeited',
+            MessageCode.WAGERING_NOT_FORFEITABLE,
+            HttpStatus.BAD_REQUEST,
+        );
+        this.name = 'WageringNotForfeitableException';
+    }
+}

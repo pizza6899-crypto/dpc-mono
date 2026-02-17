@@ -172,6 +172,7 @@ export enum MessageCode {
     // --- 롤링/와저링 관련 (Wagering/Rolling) ---
     WAGERING_NOT_FOUND = 'WAGERING_NOT_FOUND', // 롤링 조건을 찾을 수 없을 때
     WAGERING_INVALID_STATUS = 'WAGERING_INVALID_STATUS', // 유효하지 않은 롤링 상태일 때
+    WAGERING_NOT_FORFEITABLE = 'WAGERING_NOT_FORFEITABLE', // 포기할 수 없는 롤링 조건일 때 (예: AML 입금 롤링)
 
     // --- 통계 관련 (Analytics) ---
     ANALYTICS_STATS_NOT_FOUND = 'ANALYTICS_STATS_NOT_FOUND',

@@ -2,7 +2,11 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { WAGERING_REQUIREMENT_REPOSITORY } from '../ports';
 import type { WageringRequirementRepositoryPort } from '../ports';
 import { Transactional } from '@nestjs-cls/transactional';
-import { WageringRequirementNotFoundException, InvalidWageringStatusException } from '../domain';
+import {
+    WageringRequirementNotFoundException,
+    InvalidWageringStatusException,
+    WageringNotForfeitableException
+} from '../domain';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LogType } from 'src/modules/audit-log/domain';
 import { CreateWageringRequirementService } from './create-wagering-requirement.service';
@@ -36,6 +40,11 @@ export class ForfeitWageringRequirementService {
 
         if (requirement.status !== 'ACTIVE') {
             throw new InvalidWageringStatusException('Only active wagering requirements can be forfeited.');
+        }
+
+        // 보안 정책: 기본 입금 롤링(DEPOSIT)은 사용자가 직접 포기할 수 없음 (AML 준수)
+        if (requirement.sourceType === 'DEPOSIT') {
+            throw new WageringNotForfeitableException();
         }
 
         const originalSourceType = requirement.sourceType;
