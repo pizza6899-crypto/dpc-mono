@@ -79,7 +79,6 @@ model WageringRequirement {
   parentWageringId BigInt?               @map("parent_wagering_id")
   parentWagering   WageringRequirement?  @relation("WageringHistory", fields: [parentWageringId], references: [id])
   childWagerings   WageringRequirement[] @relation("WageringHistory")
-  userBonusLedgers UserBonusLedger[]
 
   @@index([userId, status, currency, priority])
   @@index([userId, status])
