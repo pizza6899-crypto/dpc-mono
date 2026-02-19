@@ -19,7 +19,7 @@
     "api:template": "pnpm -F api template:generate",
     "db:generate": "pnpm -F api db:generate",
     "db:migrate": "pnpm -F api db:migrate",
-    "db:format": "pnpm -F api format",
+    "db:format": "pnpm -F api db:format",
     "db:reset": "pnpm -F api db:reset",
     "db:deploy": "pnpm -F api db:deploy",
     "db:push": "pnpm -F api db:push",

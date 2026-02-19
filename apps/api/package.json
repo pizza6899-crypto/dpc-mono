@@ -31,6 +31,7 @@
     "prisma": "dotenv -e .env -- prisma",
     "db:generate": "dotenv -e .env -- prisma generate && touch tsconfig.json",
     "db:migrate": "dotenv -e .env -- prisma migrate dev",
+    "db:format": "dotenv -e .env -- prisma format",
     "db:push": "dotenv -e .env -- prisma db push",
     "db:seed": "dotenv -e .env -- prisma db seed",
     "db:infra": "dotenv -e .env -- prisma db execute --file ./prisma/init_infrastructure.sql",

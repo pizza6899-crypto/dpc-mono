@@ -17,6 +17,7 @@ model UserWallet {
     status    UserWalletStatus @default(ACTIVE) @map("status")
 
     transactions UserWalletTransaction[]
+    bonusLedgers UserBonusLedger[] // [New] 개별 보너스 원장 관리
 
     @@id([userId, currency])
     @@index([userId])
@@ -45,6 +46,10 @@ model UserWalletTransaction {
     balanceBefore Decimal @map("balance_before") @db.Decimal(32, 18) // 변동 전 잔액 (무결성 검증용)
     balanceAfter  Decimal @map("balance_after") @db.Decimal(32, 18) // 변동 후 최종 잔액 스냅샷
 
+    // [Tier-1 Audit] 보너스 정산/환불 시 자금 성격 분리 (Nullable)
+    bonusPrincipalAmount Decimal? @map("bonus_principal_amount") @db.Decimal(32, 18) // 보너스/롤링에 묶였던 원금 반환액
+    bonusRewardAmount    Decimal? @map("bonus_reward_amount") @db.Decimal(32, 18) // 순수 보너스/이익금 지급액
+
     referenceId BigInt? @map("reference_id") // type이 BET이면 GameLog ID, DEPOSIT이면 DepositRequest ID 등을 저장
     groupId     BigInt? @map("group_id") // 복합 결제(Cash+Bonus) 등을 하나로 묶기 위한 그룹 ID (Snowflake)
     metadata    Json?   @map("metadata") // 상세 사유, 관리자 ID, 상태 변경 전후값 등 유연한 데이터 저장
@@ -56,14 +61,18 @@ model UserWalletTransaction {
     userId   BigInt               @map("user_id")
     currency ExchangeCurrencyCode @map("currency") // 지갑과 연결되는 외래키이자 트랜잭션의 통화 정보
 
+    // [Tier-1 Audit] 어떤 보너스 Ledger에서 발생한 거래인지 추적
+    bonusLedgerId BigInt?          @map("bonus_ledger_id")
+    bonusLedger   UserBonusLedger? @relation(fields: [bonusLedgerId], references: [id])
+
     userWallet UserWallet @relation(fields: [userId, currency], references: [userId, currency])
 
     @@id([id, createdAt])
     @@index([userId, currency, createdAt(desc)])
     @@index([type, referenceId])
     @@index([referenceId])
-    @@index([groupId])
     @@index([status])
+    @@index([bonusLedgerId])
     @@map("user_wallet_transactions")
 }
 
@@ -125,7 +134,11 @@ model UserWalletTotalStats {
 
     // Bonus
     totalBonusGiven Decimal @default(0) @map("total_bonus_given") @db.Decimal(32, 18)
-    totalBonusUsed  Decimal @default(0) @map("total_bonus_used") @db.Decimal(32, 18)
+
+    // [Bonus Lifecycle Stats]
+    totalBonusConverted Decimal @default(0) @map("total_bonus_converted") @db.Decimal(32, 18) // 롤링 완료 후 현금/LOCK 전환
+    totalBonusExpired   Decimal @default(0) @map("total_bonus_expired") @db.Decimal(32, 18) // 기간 만료
+    totalBonusForfeited Decimal @default(0) @map("total_bonus_forfeited") @db.Decimal(32, 18) // 포기/취소 (회수 포함)
 
     // Comp
     totalCompEarned Decimal @default(0) @map("total_comp_earned") @db.Decimal(32, 18)
@@ -181,9 +194,12 @@ model UserWalletHourlyStats {
 
     // [Bonus Flow Statistics]
     totalBonusGiven Decimal @default(0) @map("total_bonus_given") @db.Decimal(32, 18) // 보너스 지급
-    totalBonusUsed  Decimal @default(0) @map("total_bonus_used") @db.Decimal(32, 18) // 보너스 회수/만료
-    totalBetBonus   Decimal @default(0) @map("total_bet_bonus") @db.Decimal(32, 18) // 보너스 베팅
-    totalWinBonus   Decimal @default(0) @map("total_win_bonus") @db.Decimal(32, 18) // 보너스 승리
+
+    totalBonusConverted Decimal @default(0) @map("total_bonus_converted") @db.Decimal(32, 18) // 성공적 현금화
+    totalBonusExpired   Decimal @default(0) @map("total_bonus_expired") @db.Decimal(32, 18) // 만료
+    totalBonusForfeited Decimal @default(0) @map("total_bonus_forfeited") @db.Decimal(32, 18) // 포기/회수
+    totalBetBonus       Decimal @default(0) @map("total_bet_bonus") @db.Decimal(32, 18) // 보너스 베팅
+    totalWinBonus       Decimal @default(0) @map("total_win_bonus") @db.Decimal(32, 18) // 보너스 승리
 
     // [Recency Statistics] - 해당 시간대의 마지막 활동 시각 (구간 분석용)
     lastBetAt      DateTime? @map("last_bet_at")
@@ -210,4 +226,76 @@ enum UserWalletBalanceType {
     BONUS
     LOCK
     VAULT
+}
+
+/// 사용자가 소유한 개별 보너스 자산 원장 (Bonus Ledger)
+/// 하나의 UserWallet(통화별 지갑) 아래에 여러 개의 보너스 원장이 존재할 수 있습니다.
+model UserBonusLedger {
+    id BigInt @id @default(autoincrement())
+
+    // --- 기본 정보 ---
+    userId BigInt @map("user_id")
+    user   User   @relation(fields: [userId], references: [id])
+
+    // 부모 지갑 연결 (해당 통화 지갑에 종속됨)
+    currency   ExchangeCurrencyCode // 통화 코드
+    userWallet UserWallet           @relation(fields: [userId, currency], references: [userId, currency])
+
+    // --- 롤링 조건 연결 (Wagering Link) ---
+    // 이 보너스를 현금화하기 위해 달성해야 할 롤링 조건 ID
+    wageringRequirementId BigInt?              @map("wagering_requirement_id")
+    wageringRequirement   WageringRequirement? @relation(fields: [wageringRequirementId], references: [id], onDelete: SetNull)
+
+    // --- 출처 및 원천 정보 (Source Attribution) ---
+    sourceType BonusSourceType @map("source_type")
+    sourceId   BigInt          @map("source_id")
+
+    // --- 재무 상태 (Financial Status) ---
+    initialAmount Decimal @map("initial_amount") @db.Decimal(32, 18)
+    currentAmount Decimal @map("current_amount") @db.Decimal(32, 18)
+
+    // [Sticky Bonus 안전장치] 이 보너스 덩어리에 포함된 순수 입금 원금 (만료/포기 시 보호용)
+    depositAmount Decimal @default(0) @map("deposit_amount") @db.Decimal(32, 18)
+
+    // --- [Tier-1 추가] 통계 및 분석용 (Analytics) ---
+    amountWagered Decimal @default(0) @map("amount_wagered") @db.Decimal(32, 18) // 이 보너스로 '베팅한' 총액
+    amountWon     Decimal @default(0) @map("amount_won") @db.Decimal(32, 18) // 이 보너스로 '딴' 총액 (순수익 아님, 당첨금 합계)
+
+    // --- 상태 ---
+    status BonusLedgerStatus @default(ACTIVE)
+
+    // --- [Tier-1 추가] 종료 사유 상세 ---
+    reason String?
+
+    // --- 시간 정보 ---
+    grantedAt   DateTime  @default(now()) @map("granted_at")
+    activatedAt DateTime? @map("activated_at")
+    expiresAt   DateTime? @map("expires_at")
+    settledAt   DateTime? @map("settled_at")
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    transactions UserWalletTransaction[] // 역참조
+
+    @@index([userId, currency, status]) // 활성 보너스 빠른 조회
+    @@index([expiresAt, status]) // 만료 처리 배치Job용
+    @@index([wageringRequirementId]) // 롤링 완료 시 Ledger 조회용
+    @@map("user_bonus_ledgers")
+}
+
+enum BonusSourceType {
+    PROMOTION // 일반 프로모션 (입금 보너스 등)
+    MANUAL // 관리자 수동 지급
+    REFERRAL // 추천인 보상
+    CASHBACK // 손실금 캐시백
+    VIP_REBATE // 베팅 금액 리베이트
+}
+
+enum BonusLedgerStatus {
+    ACTIVE // 현재 보유/사용 중
+    SETTLED // 롤링 완료되어 현금화됨
+    EXHAUSTED // 베팅으로 모두 잃음 (잔액 0)
+    EXPIRED // 유효기간 만료로 소멸됨
+    CANCELLED // 관리자에 의한 취소
 }

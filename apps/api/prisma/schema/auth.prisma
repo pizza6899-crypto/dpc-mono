@@ -7,134 +7,134 @@
  * 세션 타입
  */
 enum SessionType {
-    /// HTTP 세션 (Express Session)
-    HTTP
-    /// WebSocket 세션 (Socket.io)
-    WEBSOCKET
+  /// HTTP 세션 (Express Session)
+  HTTP
+  /// WebSocket 세션 (Socket.io)
+  WEBSOCKET
 }
 
 /**
  * 세션 상태
  */
 enum SessionStatus {
-    /// 활성 상태 - 정상적으로 사용 중인 세션
-    ACTIVE
-    /// 명시적으로 종료된 세션 - 사용자 또는 관리자가 로그아웃하거나 세션을 종료한 경우
-    REVOKED
-    /// 만료된 세션 - expiresAt 시간이 지나 자동으로 만료된 세션
-    EXPIRED
+  /// 활성 상태 - 정상적으로 사용 중인 세션
+  ACTIVE
+  /// 명시적으로 종료된 세션 - 사용자 또는 관리자가 로그아웃하거나 세션을 종료한 경우
+  REVOKED
+  /// 만료된 세션 - expiresAt 시간이 지나 자동으로 만료된 세션
+  EXPIRED
 }
 
 /**
  * 사용자 세션 모델
  */
 model UserSession {
-    id                BigInt        @id @default(autoincrement())
-    uid               String        @unique @default(cuid())
-    userId            BigInt        @map("user_id")
-    sessionId         String        @unique @map("session_id")
-    type              SessionType
-    status            SessionStatus @default(ACTIVE)
-    isAdmin           Boolean       @default(false) @map("is_admin")
-    ipAddress         String?       @map("ip_address") @db.Inet
-    userAgent         String?       @map("user_agent")
-    deviceFingerprint String?       @map("device_fingerprint")
-    isMobile          Boolean?      @map("is_mobile")
-    deviceName        String?       @map("device_name")
-    os                String?
-    browser           String?
-    createdAt         DateTime      @default(now()) @map("created_at")
-    updatedAt         DateTime      @updatedAt @map("updated_at")
-    lastActiveAt      DateTime      @default(now()) @map("last_active_at")
-    expiresAt         DateTime      @map("expires_at")
-    revokedAt         DateTime?     @map("revoked_at")
-    revokedBy         BigInt?       @map("revoked_by")
-    metadata          Json?         @default("{}")
+  id                BigInt        @id @default(autoincrement())
+  uid               String        @unique @default(cuid())
+  userId            BigInt        @map("user_id")
+  sessionId         String        @unique @map("session_id")
+  type              SessionType
+  status            SessionStatus @default(ACTIVE)
+  isAdmin           Boolean       @default(false) @map("is_admin")
+  ipAddress         String?       @map("ip_address") @db.Inet
+  userAgent         String?       @map("user_agent")
+  deviceFingerprint String?       @map("device_fingerprint")
+  isMobile          Boolean?      @map("is_mobile")
+  deviceName        String?       @map("device_name")
+  os                String?
+  browser           String?
+  createdAt         DateTime      @default(now()) @map("created_at")
+  updatedAt         DateTime      @updatedAt @map("updated_at")
+  lastActiveAt      DateTime      @default(now()) @map("last_active_at")
+  expiresAt         DateTime      @map("expires_at")
+  revokedAt         DateTime?     @map("revoked_at")
+  revokedBy         BigInt?       @map("revoked_by")
+  metadata          Json?         @default("{}")
 
-    user          User  @relation("UserSessions", fields: [userId], references: [id], onDelete: Cascade)
-    revokedByUser User? @relation("RevokedSessions", fields: [revokedBy], references: [id], onDelete: SetNull)
+  user          User  @relation("UserSessions", fields: [userId], references: [id], onDelete: Cascade)
+  revokedByUser User? @relation("RevokedSessions", fields: [revokedBy], references: [id], onDelete: SetNull)
 
-    @@index([userId, status])
-    @@index([userId, createdAt])
-    @@index([sessionId])
-    @@index([type])
-    @@index([status])
-    @@index([expiresAt])
-    @@index([status, expiresAt])
-    @@index([userId, type, status])
-    @@index([deviceFingerprint])
-    @@index([ipAddress])
-    @@index([lastActiveAt])
-    @@index([userId, status, lastActiveAt])
-    @@index([status, expiresAt, createdAt])
-    @@index([isAdmin, status])
-    @@map("user_sessions")
+  @@index([userId, status])
+  @@index([userId, createdAt])
+  @@index([sessionId])
+  @@index([type])
+  @@index([status])
+  @@index([expiresAt])
+  @@index([status, expiresAt])
+  @@index([userId, type, status])
+  @@index([deviceFingerprint])
+  @@index([ipAddress])
+  @@index([lastActiveAt])
+  @@index([userId, status, lastActiveAt])
+  @@index([status, expiresAt, createdAt])
+  @@index([isAdmin, status])
+  @@map("user_sessions")
 }
 
 /**
  * 보안 검증 토큰 (비밀번호 재설정, 이메일 인증 등 일회성 인증)
  */
 model VerificationToken {
-    id        Int       @id @default(autoincrement())
-    userId    BigInt    @map("user_id")
-    type      TokenType
-    token     String    @unique
-    expiresAt DateTime  @map("expires_at")
-    usedAt    DateTime? @map("used_at")
-    metadata  Json?     @default("{}")
-    createdAt DateTime  @default(now()) @map("created_at")
-    updatedAt DateTime  @updatedAt @map("updated_at")
-    user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        Int       @id @default(autoincrement())
+  userId    BigInt    @map("user_id")
+  type      TokenType
+  token     String    @unique
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  metadata  Json?     @default("{}")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@index([userId, type])
-    @@index([type, expiresAt])
-    @@index([userId, type, usedAt])
-    @@index([expiresAt])
-    @@map("verification_tokens")
+  @@index([userId, type])
+  @@index([type, expiresAt])
+  @@index([userId, type, usedAt])
+  @@index([expiresAt])
+  @@map("verification_tokens")
 }
 
 /**
  * 로그인 시도 기록
  */
 model LoginAttempt {
-    id                BigInt              @id @default(autoincrement())
-    uid               String              @unique @default(cuid())
-    userId            BigInt?             @map("user_id")
-    result            LoginAttemptResult
-    failureReason     LoginFailureReason? @map("failure_reason")
-    ipAddress         String?             @map("ip_address") @db.Inet
-    userAgent         String?             @map("user_agent")
-    deviceFingerprint String?             @map("device_fingerprint")
-    isMobile          Boolean?            @map("is_mobile")
-    attemptedAt       DateTime            @default(now()) @map("attempted_at")
-    email             String?
-    isAdmin           Boolean             @default(false) @map("is_admin")
-    user              User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  id                BigInt              @id @default(autoincrement())
+  uid               String              @unique @default(cuid())
+  userId            BigInt?             @map("user_id")
+  result            LoginAttemptResult
+  failureReason     LoginFailureReason? @map("failure_reason")
+  ipAddress         String?             @map("ip_address") @db.Inet
+  userAgent         String?             @map("user_agent")
+  deviceFingerprint String?             @map("device_fingerprint")
+  isMobile          Boolean?            @map("is_mobile")
+  attemptedAt       DateTime            @default(now()) @map("attempted_at")
+  email             String?
+  isAdmin           Boolean             @default(false) @map("is_admin")
+  user              User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
 
-    @@index([userId])
-    @@index([email])
-    @@index([ipAddress])
-    @@index([attemptedAt])
-    @@index([result])
-    @@index([email, attemptedAt])
-    @@index([ipAddress, attemptedAt])
-    @@map("login_attempts")
+  @@index([userId])
+  @@index([email])
+  @@index([ipAddress])
+  @@index([attemptedAt])
+  @@index([result])
+  @@index([email, attemptedAt])
+  @@index([ipAddress, attemptedAt])
+  @@map("login_attempts")
 }
 
 enum TokenType {
-    PASSWORD_RESET
+  PASSWORD_RESET
 }
 
 enum LoginAttemptResult {
-    SUCCESS
-    FAILED
+  SUCCESS
+  FAILED
 }
 
 enum LoginFailureReason {
-    INVALID_CREDENTIALS
-    USER_NOT_FOUND
-    ACCOUNT_SUSPENDED
-    ACCOUNT_CLOSED
-    THROTTLE_LIMIT_EXCEEDED
-    UNKNOWN
+  INVALID_CREDENTIALS
+  USER_NOT_FOUND
+  ACCOUNT_SUSPENDED
+  ACCOUNT_CLOSED
+  THROTTLE_LIMIT_EXCEEDED
+  UNKNOWN
 }

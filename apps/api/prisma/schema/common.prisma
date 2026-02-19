@@ -72,6 +72,7 @@ model User {
   tierConfigsUpdated     TierConfig[]            @relation("TierConfigUpdatedBy")
   tiersUpdated           Tier[]                  @relation("TierUpdatedBy")
   tierUpgradeRewards     TierUpgradeReward[]
+  userBonusLedgers       UserBonusLedger[]
 
   @@map("users")
 }
