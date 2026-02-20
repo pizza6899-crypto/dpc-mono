@@ -48,7 +48,7 @@ export class GrantPromotionBonusService {
     private readonly createWageringRequirementService: CreateWageringRequirementService,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute({
@@ -174,14 +174,18 @@ export class GrantPromotionBonusService {
     // 롤링 생성 (보너스 금액에만 롤링 적용)
     let rollingCreated = false;
     if (targetRollingAmount.gt(0)) {
+      const initialFundAmount = depositAmount.add(bonusAmount);
       await this.createWageringRequirementService.execute({
         userId,
         currency,
         sourceType: 'PROMOTION_BONUS',
+        targetType: 'AMOUNT',
         principalAmount: bonusAmount,
         multiplier: new Prisma.Decimal(rollingMultiplier),
-        initialLockedCash: depositAmount,
-        grantedBonusAmount: bonusAmount,
+        bonusAmount: bonusAmount,
+        initialFundAmount: initialFundAmount,
+        realMoneyRatio: initialFundAmount.isZero() ? new Prisma.Decimal(0) : depositAmount.div(initialFundAmount),
+        isForfeitable: true,
         sourceId: BigInt(userPromotion.id),
         appliedConfig: { depositId: depositDetailId?.toString() },
         requestInfo,

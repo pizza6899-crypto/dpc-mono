@@ -47,7 +47,7 @@ export class ApplyCouponPromotionService {
     private readonly updateUserBalanceService: UpdateUserBalanceService,
     private readonly sendAlertService: SendAlertService,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute({
@@ -181,10 +181,13 @@ export class ApplyCouponPromotionService {
         userId,
         currency,
         sourceType: 'PROMOTION_BONUS',
+        targetType: 'AMOUNT',
         principalAmount: bonusAmount,
         multiplier: new Prisma.Decimal(rollingMultiplier),
-        initialLockedCash: new Prisma.Decimal(0),
-        grantedBonusAmount: bonusAmount,
+        bonusAmount: bonusAmount,
+        initialFundAmount: bonusAmount,
+        realMoneyRatio: new Prisma.Decimal(0),
+        isForfeitable: true,
         sourceId: BigInt(userPromotion.id),
         requestInfo,
       });

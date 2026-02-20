@@ -30,7 +30,7 @@ export class ClaimRewardService {
     private readonly updateBalanceService: UpdateUserBalanceService,
     private readonly createWageringService: CreateWageringRequirementService,
     private readonly exchangeRateService: ExchangeRateService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(
@@ -108,10 +108,13 @@ export class ClaimRewardService {
           currency: targetCurrency,
           sourceType: 'TIER_BONUS',
           sourceId: rewardId,
+          targetType: 'AMOUNT',
           principalAmount: finalAmount,
           multiplier: reward.wageringMultiplier,
-          initialLockedCash: new Prisma.Decimal(0),
-          grantedBonusAmount: finalAmount,
+          bonusAmount: finalAmount,
+          initialFundAmount: finalAmount,
+          realMoneyRatio: new Prisma.Decimal(0),
+          isForfeitable: true,
           expiresAt: reward.expiresAt || undefined,
         });
       }
