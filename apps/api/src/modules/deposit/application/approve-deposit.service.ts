@@ -158,10 +158,13 @@ export class ApproveDepositService {
         currency: depositCurrency,
         sourceType: 'DEPOSIT',
         sourceId: deposit.id!,
+        targetType: 'AMOUNT',
         principalAmount: actuallyPaid,
-        multiplier: wageringConfig.defaultDepositMultiplier,
-        initialLockedCash: actuallyPaid,
-        grantedBonusAmount: new Prisma.Decimal(0),
+        multiplier: new Prisma.Decimal(wageringConfig.defaultDepositMultiplier),
+        bonusAmount: new Prisma.Decimal(0),
+        initialFundAmount: actuallyPaid,
+        realMoneyRatio: new Prisma.Decimal(1),
+        isForfeitable: false,
         requestInfo: requestInfo,
       });
     }
