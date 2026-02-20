@@ -10,7 +10,7 @@ export interface WageringContributionLogRepositoryPort {
         gameRoundId: bigint;
         requestAmount: Prisma.Decimal;
         contributionRate: Prisma.Decimal;
-        contributedAmount: Prisma.Decimal;
+        wageredAmount: Prisma.Decimal;
     }): Promise<void>;
 
     /**

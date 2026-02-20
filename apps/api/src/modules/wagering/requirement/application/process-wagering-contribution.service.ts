@@ -81,16 +81,21 @@ export class ProcessWageringContributionService {
 
         // 3. 순차적으로 차감
         for (const requirement of activeRequirements) {
-            if (remainingContribution.lte(0)) break;
+            if (requirement.targetType === 'AMOUNT' && remainingContribution.lte(0)) continue;
 
-            // 해당 조건에 반영할 수 있는 최대 금액 확인 및 차감
-            // contribute 메서드는 실제 반영된 금액을 리턴하고, 내부 상태를 업데이트함
-            const contributedForThis = requirement.contribute(remainingContribution);
+            let contributedForThis = new Prisma.Decimal(0);
+            let incrementedCount = 0;
 
-            if (contributedForThis.gt(0)) {
-                // 남은 기여액 업데이트
-                remainingContribution = remainingContribution.sub(contributedForThis);
+            if (requirement.targetType === 'AMOUNT') {
+                contributedForThis = requirement.contributeAmount(remainingContribution, betAmount);
+                if (contributedForThis.gt(0)) {
+                    remainingContribution = remainingContribution.sub(contributedForThis);
+                }
+            } else if (requirement.targetType === 'ROUND_COUNT') {
+                incrementedCount = requirement.contributeRound(betAmount);
+            }
 
+            if (contributedForThis.gt(0) || incrementedCount > 0) {
                 // 1. 변경된 롤링 조건 엔티티 상태 저장
                 await this.repository.save(requirement);
 
@@ -100,7 +105,7 @@ export class ProcessWageringContributionService {
                     gameRoundId,
                     requestAmount: totalRequestAmount,
                     contributionRate: new Prisma.Decimal(gameContributionRate),
-                    contributedAmount: contributedForThis,
+                    wageredAmount: contributedForThis, // COUNT 방식일 경우 0이 기록됨
                 });
 
                 if (requirement.isFulfilled) {
@@ -118,7 +123,7 @@ export class ProcessWageringContributionService {
                                 metadata: {
                                     wageringId: requirement.id.toString(), // sqid로 변환은 컨트롤러 레벨에서 수행되므로 여기선 toString
                                     currency,
-                                    finalAmount: requirement.fulfilledAmount.toString(),
+                                    finalAmount: requirement.targetType === 'AMOUNT' ? requirement.wageredAmount.toString() : requirement.wageredCount.toString(),
                                     convertedAmount: requirement.convertedAmount?.toString() ?? '0',
                                     gameRoundId: gameRoundId.toString(),
                                 }
@@ -134,7 +139,7 @@ export class ProcessWageringContributionService {
                 }
 
                 this.logger.log(
-                    `Wagering requirement ${requirement.id} contributed: ${contributedForThis} (Remaining to contribute: ${remainingContribution})`
+                    `Wagering requirement ${requirement.id} contributed: ${requirement.targetType === 'AMOUNT' ? contributedForThis : incrementedCount + ' rounds'} (Remaining to contribute: ${remainingContribution})`
                 );
             }
         }

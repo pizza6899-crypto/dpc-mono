@@ -21,7 +21,7 @@ export class WageringContributionLogRepository implements WageringContributionLo
         gameRoundId: bigint;
         requestAmount: Prisma.Decimal;
         contributionRate: Prisma.Decimal;
-        contributedAmount: Prisma.Decimal;
+        wageredAmount: Prisma.Decimal;
     }): Promise<void> {
         const { id: logId } = this.snowflakeService.generate();
         await this.tx.wageringContributionLog.create({

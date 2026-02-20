@@ -18,13 +18,27 @@ export class WageringRequirementMapper {
             currency: prismaModel.currency,
             sourceType: prismaModel.sourceType,
             sourceId: prismaModel.sourceId,
+            targetType: prismaModel.targetType,
+
             requiredAmount: prismaModel.requiredAmount,
-            fulfilledAmount: prismaModel.fulfilledAmount,
+            wageredAmount: prismaModel.wageredAmount,
+            requiredCount: prismaModel.requiredCount,
+            wageredCount: prismaModel.wageredCount,
+
             isAutoCancelable: prismaModel.isAutoCancelable,
+
             principalAmount: prismaModel.principalAmount,
             multiplier: prismaModel.multiplier,
-            initialLockedCash: prismaModel.initialLockedCash,
-            grantedBonusAmount: prismaModel.grantedBonusAmount,
+            bonusAmount: prismaModel.bonusAmount,
+            initialFundAmount: prismaModel.initialFundAmount,
+
+            currentBalance: prismaModel.currentBalance,
+            totalBetAmount: prismaModel.totalBetAmount,
+            totalWinAmount: prismaModel.totalWinAmount,
+
+            realMoneyRatio: prismaModel.realMoneyRatio,
+            isForfeitable: prismaModel.isForfeitable,
+
             parentWageringId: prismaModel.parentWageringId,
             appliedConfig: (prismaModel.appliedConfig as any) ?? {},
             maxCashConversion: prismaModel.maxCashConversion,
@@ -56,13 +70,27 @@ export class WageringRequirementMapper {
             currency: domain.currency,
             sourceType: domain.sourceType,
             sourceId: domain.sourceId,
+            targetType: domain.targetType,
+
             requiredAmount: domain.requiredAmount,
-            fulfilledAmount: domain.fulfilledAmount,
+            wageredAmount: domain.wageredAmount,
+            requiredCount: domain.requiredCount,
+            wageredCount: domain.wageredCount,
+
             isAutoCancelable: domain.isAutoCancelable,
+
             principalAmount: domain.principalAmount,
             multiplier: domain.multiplier,
-            initialLockedCash: domain.initialLockedCash,
-            grantedBonusAmount: domain.grantedBonusAmount,
+            bonusAmount: domain.bonusAmount,
+            initialFundAmount: domain.initialFundAmount,
+
+            currentBalance: domain.currentBalance,
+            totalBetAmount: domain.totalBetAmount,
+            totalWinAmount: domain.totalWinAmount,
+
+            realMoneyRatio: domain.realMoneyRatio,
+            isForfeitable: domain.isForfeitable,
+
             parentWageringId: domain.parentWageringId,
             appliedConfig: (domain.appliedConfig as any) ?? Prisma.JsonNull,
             maxCashConversion: domain.maxCashConversion,
@@ -92,7 +120,7 @@ export class WageringRequirementMapper {
             gameRoundId: prismaLog.gameRoundId,
             requestAmount: prismaLog.requestAmount,
             contributionRate: prismaLog.contributionRate,
-            contributedAmount: prismaLog.contributedAmount,
+            wageredAmount: prismaLog.wageredAmount,
             createdAt: prismaLog.createdAt,
         });
     }

@@ -3,7 +3,8 @@ import type {
     ExchangeCurrencyCode,
     WageringSourceType,
     WageringStatus,
-    WageringCancellationReason
+    WageringCancellationReason,
+    WageringTargetType
 } from '@prisma/client';
 import { WageringAppliedConfig } from './wagering-applied-config';
 
@@ -14,13 +15,27 @@ export class WageringRequirement {
         public readonly currency: ExchangeCurrencyCode,
         public readonly sourceType: WageringSourceType,
         public readonly sourceId: bigint,
+
+        public readonly targetType: WageringTargetType,
         private _requiredAmount: Prisma.Decimal,
-        private _fulfilledAmount: Prisma.Decimal,
+        private _wageredAmount: Prisma.Decimal,
+        private _requiredCount: number,
+        private _wageredCount: number,
+
         private _isAutoCancelable: boolean,
+
         public readonly principalAmount: Prisma.Decimal,
         public readonly multiplier: Prisma.Decimal,
-        public readonly initialLockedCash: Prisma.Decimal,
-        public readonly grantedBonusAmount: Prisma.Decimal,
+        public readonly bonusAmount: Prisma.Decimal,
+        public readonly initialFundAmount: Prisma.Decimal,
+
+        private _currentBalance: Prisma.Decimal,
+        private _totalBetAmount: Prisma.Decimal,
+        private _totalWinAmount: Prisma.Decimal,
+
+        public readonly realMoneyRatio: Prisma.Decimal,
+        public readonly isForfeitable: boolean,
+
         public readonly parentWageringId: bigint | null,
         public readonly appliedConfig: WageringAppliedConfig,
         private _maxCashConversion: Prisma.Decimal | null,
@@ -43,7 +58,14 @@ export class WageringRequirement {
 
     // Getters
     get requiredAmount(): Prisma.Decimal { return this._requiredAmount; }
-    get fulfilledAmount(): Prisma.Decimal { return this._fulfilledAmount; }
+    get wageredAmount(): Prisma.Decimal { return this._wageredAmount; }
+    get requiredCount(): number { return this._requiredCount; }
+    get wageredCount(): number { return this._wageredCount; }
+
+    get currentBalance(): Prisma.Decimal { return this._currentBalance; }
+    get totalBetAmount(): Prisma.Decimal { return this._totalBetAmount; }
+    get totalWinAmount(): Prisma.Decimal { return this._totalWinAmount; }
+
     get isAutoCancelable(): boolean { return this._isAutoCancelable; }
     get maxCashConversion(): Prisma.Decimal | null { return this._maxCashConversion; }
     get convertedAmount(): Prisma.Decimal | null { return this._convertedAmount; }
@@ -60,18 +82,28 @@ export class WageringRequirement {
     get forfeitedAmount(): Prisma.Decimal | null { return this._forfeitedAmount; }
 
     get remainingAmount(): Prisma.Decimal {
-        const remaining = this._requiredAmount.sub(this._fulfilledAmount);
+        if (this.targetType !== 'AMOUNT') return new Prisma.Decimal('0');
+        const remaining = this._requiredAmount.sub(this._wageredAmount);
         return remaining.isNeg() ? new Prisma.Decimal('0') : remaining;
+    }
+
+    get remainingCount(): number {
+        if (this.targetType !== 'ROUND_COUNT') return 0;
+        const remaining = this._requiredCount - this._wageredCount;
+        return remaining < 0 ? 0 : remaining;
     }
 
     /**
      * 현재 달성률 (0-100)
      */
     get progressRate(): number {
-        if (this._requiredAmount.isZero()) {
-            return 100;
+        if (this.targetType === 'AMOUNT') {
+            if (this._requiredAmount.isZero()) return 100;
+            return this._wageredAmount.div(this._requiredAmount).mul(100).toNumber();
+        } else {
+            if (this._requiredCount <= 0) return 100;
+            return (this._wageredCount / this._requiredCount) * 100;
         }
-        return this._fulfilledAmount.div(this._requiredAmount).mul(100).toNumber();
     }
 
     get isCompleted(): boolean {
@@ -83,10 +115,14 @@ export class WageringRequirement {
     }
 
     /**
-     * 롤링 조건(요구 금액)을 모두 충족했는지 여부
+     * 롤링 조건(요구 금액 혹 요구 횟수)을 모두 충족했는지 여부
      */
     get isFulfilled(): boolean {
-        return this._fulfilledAmount.greaterThanOrEqualTo(this._requiredAmount);
+        if (this.targetType === 'AMOUNT') {
+            return this._wageredAmount.greaterThanOrEqualTo(this._requiredAmount);
+        } else {
+            return this._wageredCount >= this._requiredCount;
+        }
     }
 
     get isActive(): boolean {
@@ -94,23 +130,59 @@ export class WageringRequirement {
     }
 
     /**
-     * 베팅 금액을 기여하고 실제 기여된 금액을 반환합니다.
+     * 웨이저링 금액 롤링을 기여합니다. (targetType = AMOUNT 전용)
      */
-    contribute(contributionAmount: Prisma.Decimal): Prisma.Decimal {
-        if (!this.isActive) {
-            return new Prisma.Decimal(0);
+    contributeAmount(wagered: Prisma.Decimal, betAmount: Prisma.Decimal): Prisma.Decimal {
+        if (!this.isActive) return new Prisma.Decimal(0);
+
+        this._totalBetAmount = this._totalBetAmount.add(betAmount);
+        this._currentBalance = this._currentBalance.sub(betAmount);
+
+        if (this.targetType === 'AMOUNT') {
+            const remaining = this.remainingAmount;
+            const actualWagered = wagered.greaterThan(remaining) ? remaining : wagered;
+            this._wageredAmount = this._wageredAmount.add(actualWagered);
+
+            this._lastContributedAt = new Date();
+            this._updatedAt = new Date();
+            return actualWagered;
         }
 
-        const remaining = this.remainingAmount;
-        const actualContribution = contributionAmount.greaterThan(remaining)
-            ? remaining
-            : contributionAmount;
-
-        this._fulfilledAmount = this._fulfilledAmount.add(actualContribution);
-        this._lastContributedAt = new Date();
         this._updatedAt = new Date();
+        return new Prisma.Decimal(0);
+    }
 
-        return actualContribution;
+    /**
+     * 라운드 판수 롤링을 기여합니다. (targetType = ROUND_COUNT 전용)
+     */
+    contributeRound(betAmount: Prisma.Decimal): number {
+        if (!this.isActive) return 0;
+
+        this._totalBetAmount = this._totalBetAmount.add(betAmount);
+        this._currentBalance = this._currentBalance.sub(betAmount);
+
+        if (this.targetType === 'ROUND_COUNT') {
+            const remaining = this.remainingCount;
+            const actualCount = remaining > 0 ? 1 : 0;
+            this._wageredCount += actualCount;
+
+            this._lastContributedAt = new Date();
+            this._updatedAt = new Date();
+            return actualCount;
+        }
+
+        this._updatedAt = new Date();
+        return 0;
+    }
+
+    /**
+     * 당첨(Win) 시 자금 내역을 업데이트합니다.
+     */
+    recordWin(winAmount: Prisma.Decimal): void {
+        if (!this.isActive) return;
+        this._totalWinAmount = this._totalWinAmount.add(winAmount);
+        this._currentBalance = this._currentBalance.add(winAmount);
+        this._updatedAt = new Date();
     }
 
     pause(): void {
@@ -130,13 +202,15 @@ export class WageringRequirement {
         this._completedAt = new Date();
         this._updatedAt = new Date();
 
-        // 현금 전환 로직
-        if (finalBalance && this._maxCashConversion) {
-            this._convertedAmount = finalBalance.greaterThan(this._maxCashConversion)
+        const balanceToConvert = finalBalance ?? this._currentBalance;
+
+        // 현금 전환 상한선(maxConversion) 적용 로직
+        if (this._maxCashConversion) {
+            this._convertedAmount = balanceToConvert.greaterThan(this._maxCashConversion)
                 ? this._maxCashConversion
-                : finalBalance;
-        } else if (finalBalance) {
-            this._convertedAmount = finalBalance;
+                : balanceToConvert;
+        } else {
+            this._convertedAmount = balanceToConvert;
         }
     }
 
@@ -155,7 +229,7 @@ export class WageringRequirement {
         this._cancellationReasonType = params.reason;
         this._cancellationNote = params.note || null;
         this._cancelledBy = params.cancelledBy || 'SYSTEM';
-        this._balanceAtCancellation = params.balanceAtCancellation || null;
+        this._balanceAtCancellation = params.balanceAtCancellation || this._currentBalance;
         this._forfeitedAmount = params.forfeitedAmount || null;
     }
 
@@ -184,16 +258,23 @@ export class WageringRequirement {
         currency: ExchangeCurrencyCode;
         sourceType: WageringSourceType;
         sourceId: bigint;
-        requiredAmount: Prisma.Decimal;
+        targetType: WageringTargetType;
+
+        requiredAmount?: Prisma.Decimal;
+        requiredCount?: number;
+
         principalAmount: Prisma.Decimal;
+        bonusAmount: Prisma.Decimal;
         multiplier: Prisma.Decimal;
-        initialLockedCash: Prisma.Decimal;
-        grantedBonusAmount: Prisma.Decimal;
-        parentWageringId?: bigint | null;
-        initialFulfilledAmount?: Prisma.Decimal;
+        initialFundAmount: Prisma.Decimal;
+        realMoneyRatio: Prisma.Decimal;
+
+        isForfeitable?: boolean;
         isAutoCancelable?: boolean;
         maxCashConversion?: Prisma.Decimal | null;
         appliedConfig?: WageringAppliedConfig;
+
+        parentWageringId?: bigint | null;
         priority?: number;
         expiresAt?: Date | null;
     }): WageringRequirement {
@@ -203,13 +284,26 @@ export class WageringRequirement {
             params.currency,
             params.sourceType,
             params.sourceId,
-            params.requiredAmount,
-            params.initialFulfilledAmount ?? new Prisma.Decimal(0),
+            params.targetType,
+            params.requiredAmount ?? new Prisma.Decimal(0),
+            new Prisma.Decimal(0), // initial wageredAmount
+            params.requiredCount ?? 0,
+            0, // initial wageredCount
+
             params.isAutoCancelable ?? true,
+
             params.principalAmount,
             params.multiplier,
-            params.initialLockedCash,
-            params.grantedBonusAmount,
+            params.bonusAmount,
+            params.initialFundAmount,
+
+            params.initialFundAmount, // currentBalance starts with initial fund
+            new Prisma.Decimal(0),    // totalBetAmount
+            new Prisma.Decimal(0),    // totalWinAmount
+
+            params.realMoneyRatio,
+            params.isForfeitable ?? false,
+
             params.parentWageringId ?? null,
             params.appliedConfig ?? {},
             params.maxCashConversion ?? null,
@@ -237,13 +331,27 @@ export class WageringRequirement {
         currency: ExchangeCurrencyCode;
         sourceType: WageringSourceType;
         sourceId: bigint;
+        targetType: WageringTargetType;
+
         requiredAmount: Prisma.Decimal;
-        fulfilledAmount: Prisma.Decimal;
+        wageredAmount: Prisma.Decimal;
+        requiredCount: number;
+        wageredCount: number;
+
         isAutoCancelable: boolean;
+
         principalAmount: Prisma.Decimal;
         multiplier: Prisma.Decimal;
-        initialLockedCash: Prisma.Decimal;
-        grantedBonusAmount: Prisma.Decimal;
+        bonusAmount: Prisma.Decimal;
+        initialFundAmount: Prisma.Decimal;
+
+        currentBalance: Prisma.Decimal;
+        totalBetAmount: Prisma.Decimal;
+        totalWinAmount: Prisma.Decimal;
+
+        realMoneyRatio: Prisma.Decimal;
+        isForfeitable: boolean;
+
         parentWageringId: bigint | null;
         appliedConfig: WageringAppliedConfig;
         maxCashConversion: Prisma.Decimal | null;
@@ -269,13 +377,26 @@ export class WageringRequirement {
             data.currency,
             data.sourceType,
             data.sourceId,
+            data.targetType,
             data.requiredAmount,
-            data.fulfilledAmount,
+            data.wageredAmount,
+            data.requiredCount,
+            data.wageredCount,
+
             data.isAutoCancelable,
+
             data.principalAmount,
             data.multiplier,
-            data.initialLockedCash,
-            data.grantedBonusAmount,
+            data.bonusAmount,
+            data.initialFundAmount,
+
+            data.currentBalance,
+            data.totalBetAmount,
+            data.totalWinAmount,
+
+            data.realMoneyRatio,
+            data.isForfeitable,
+
             data.parentWageringId,
             data.appliedConfig,
             data.maxCashConversion,

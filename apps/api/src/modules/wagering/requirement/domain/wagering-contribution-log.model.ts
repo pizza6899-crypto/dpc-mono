@@ -7,7 +7,7 @@ export class WageringContributionLog {
         public readonly gameRoundId: bigint,
         public readonly requestAmount: Prisma.Decimal,
         public readonly contributionRate: Prisma.Decimal,
-        public readonly contributedAmount: Prisma.Decimal,
+        public readonly wageredAmount: Prisma.Decimal,
         public readonly createdAt: Date,
     ) { }
 
@@ -17,7 +17,7 @@ export class WageringContributionLog {
         gameRoundId: bigint;
         requestAmount: Prisma.Decimal;
         contributionRate: Prisma.Decimal;
-        contributedAmount: Prisma.Decimal;
+        wageredAmount: Prisma.Decimal;
         createdAt: Date;
     }): WageringContributionLog {
         return new WageringContributionLog(
@@ -26,7 +26,7 @@ export class WageringContributionLog {
             data.gameRoundId,
             data.requestAmount,
             data.contributionRate,
-            data.contributedAmount,
+            data.wageredAmount,
             data.createdAt,
         );
     }

@@ -26,20 +26,37 @@ model WageringRequirement {
   currency   ExchangeCurrencyCode
   sourceType WageringSourceType   @default(DEPOSIT) @map("source_type")
 
-  // 금액 관련
-  requiredAmount   Decimal @map("required_amount") @db.Decimal(32, 18) // 목표 롤링 금액
-  fulfilledAmount  Decimal @default(0) @map("fulfilled_amount") @db.Decimal(32, 18) // 현재까지 달성한 금액
+  // [목표 타입 설정]
+  targetType WageringTargetType @default(AMOUNT) @map("target_type") // 롤링을 평가할 기준 (금액 vs 횟수)
+
+  // 1. 금액 기반 (targetType = AMOUNT 일 때 사용)
+  requiredAmount Decimal @map("required_amount") @db.Decimal(32, 18) // 목표 롤링 금액
+  wageredAmount  Decimal @default(0) @map("wagered_amount") @db.Decimal(32, 18) // 현재까지 달성한 롤링 누적 금액 (기여도 반영)
+
+  // 2. 횟수 기반 (targetType = ROUND_COUNT 일 때 사용)
+  requiredCount Int @default(0) @map("required_count") // 목표 라운드 판수 (예: 10판)
+  wageredCount  Int @default(0) @map("wagered_count") // 현재까지 플레이한 라운드 판수
+
   isAutoCancelable Boolean @default(true) @map("is_auto_cancelable") // 자동 취소(오링 처리) 허용 여부
 
   // [메타 데이터] - 원본 추적 및 운영 편의성
-  principalAmount    Decimal @default(0) @map("principal_amount") @db.Decimal(32, 18) // 롤링 배수(multiplier)의 기준이 되는 총 금액 (Cash + Bonus 등)
-  multiplier         Decimal @default(1) @map("multiplier") @db.Decimal(8, 4) // 적용된 롤링 배수 (예: 3.0)
-  initialLockedCash  Decimal @default(0) @map("initial_locked_cash") @db.Decimal(32, 18) // 생성 시점에 실제로 잠긴 현금 원금 (Locked Cash)
-  grantedBonusAmount Decimal @default(0) @map("granted_bonus_amount") @db.Decimal(32, 18) // 지급된 보너스 금액 (Grant Amount)
+  principalAmount   Decimal @default(0) @map("principal_amount") @db.Decimal(32, 18) // 롤링 배수(multiplier)의 기준이 되는 총 금액 (Cash + Bonus 등)
+  multiplier        Decimal @default(1) @map("multiplier") @db.Decimal(8, 4) // 적용된 롤링 배수 (예: 3.0)
+  bonusAmount       Decimal @default(0) @map("bonus_amount") @db.Decimal(32, 18) // 지급된 보너스 금액
+  initialFundAmount Decimal @default(0) @map("initial_fund_amount") @db.Decimal(32, 18) // 초기 지급 총액 (principalAmount + bonusAmount 등)
 
   // 생성 당시 적용된 Config/Rule의 사본 (정책 변경 추적용 스냅샷)
   // 예: { "minBet": 0.1, "excludedGames": ["A", "B"] }
   appliedConfig Json? @default("{}") @map("applied_config")
+
+  // [펀드(자금) 흐름 추적]
+  currentBalance Decimal @default(0) @map("current_balance") @db.Decimal(32, 18) // 이 웨이저링(보너스/입금)에서 기원된 현재 가용 잔액 (베팅-당첨에 따라 실시간 변동)
+  totalBetAmount Decimal @default(0) @map("total_bet_amount") @db.Decimal(32, 18) // 이 웨이저링 펀드로 베팅한 총액
+  totalWinAmount Decimal @default(0) @map("total_win_amount") @db.Decimal(32, 18) // 이 웨이저링 펀드에서 발생한 총 당첨(수익) 금액
+
+  // [혼합비율 및 출금전략 (Real Money + Bonus)]
+  realMoneyRatio Decimal @default(0) @map("real_money_ratio") @db.Decimal(8, 4) // 총 초기 펀드 중에서, 실제 캐시(Real Money)가 차지하는 비율 (손실 통계 및 환불 시 기준)
+  isForfeitable  Boolean @default(false) @map("is_forfeitable") // 보너스 중도 포기(Forfeit) 시 현금 환불 가능 여부
 
   // [정산 규칙 및 결과]
   maxCashConversion Decimal? @map("max_cash_conversion") @db.Decimal(32, 18) // 롤링 완료 시 Cash 전환 상한액 (NULL=무제한)
@@ -92,9 +109,9 @@ model WageringContributionLog {
   wageringRequirementId BigInt @map("wagering_requirement_id")
   gameRoundId           BigInt @map("game_round_id")
 
-  requestAmount     Decimal @map("request_amount") @db.Decimal(32, 18) // 원래 베팅액
-  contributionRate  Decimal @map("contribution_rate") @db.Decimal(8, 4) // 당시 기여도
-  contributedAmount Decimal @map("contributed_amount") @db.Decimal(32, 18) // 실제 차감된 금액
+  requestAmount    Decimal @map("request_amount") @db.Decimal(32, 18) // 원래 베팅액
+  contributionRate Decimal @map("contribution_rate") @db.Decimal(8, 4) // 당시 기여도
+  wageredAmount    Decimal @map("wagered_amount") @db.Decimal(32, 18) // 실제 차감(기여)된 롤링 금액
 
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -112,6 +129,11 @@ enum WageringSourceType {
   DEPOSIT
   PROMOTION_BONUS
   TIER_BONUS
+}
+
+enum WageringTargetType {
+  AMOUNT // 베팅 금액(wageredAmount) 누적 기준
+  ROUND_COUNT // 플레이 횟수(wageredCount) 누적 기준
 }
 
 enum WageringStatus {

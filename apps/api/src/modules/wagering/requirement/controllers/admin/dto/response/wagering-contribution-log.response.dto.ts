@@ -16,8 +16,8 @@ export class WageringContributionLogResponseDto {
     @ApiProperty({ description: 'Contribution Rate / 기여율', example: '1.0' })
     contributionRate: string;
 
-    @ApiProperty({ description: 'Contributed Amount / 실제 기여액', example: '1000' })
-    contributedAmount: string;
+    @ApiProperty({ description: 'Wagered Amount / 실제 기여액', example: '1000' })
+    wageredAmount: string;
 
     @ApiProperty({ description: 'Created At / 생성일' })
     createdAt: Date;

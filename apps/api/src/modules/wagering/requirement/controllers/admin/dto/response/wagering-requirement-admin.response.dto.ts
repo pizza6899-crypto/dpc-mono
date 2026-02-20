@@ -14,6 +14,9 @@ export class WageringRequirementAdminResponseDto {
     @ApiProperty({ description: 'Source Type / 생성 소스 (DEPOSIT, PROMOTION_BONUS, TIER_BONUS)' })
     sourceType: WageringSourceType;
 
+    @ApiProperty({ description: 'Target Type / 목표 기준 타입 (AMOUNT/ROUND_COUNT)' })
+    targetType: string;
+
     @ApiProperty({ description: 'Principal Amount / 원금 (배수 계산의 기준액)', example: '10000' })
     principalAmount: string;
 
@@ -23,17 +26,41 @@ export class WageringRequirementAdminResponseDto {
     @ApiProperty({ description: 'Required Amount / 총 목표 롤링 금액', example: '100000' })
     requiredAmount: string;
 
-    @ApiProperty({ description: 'Fulfilled Amount / 현재까지 달성액', example: '50000' })
-    fulfilledAmount: string;
+    @ApiProperty({ description: 'Wagered Amount / 현재까지 배팅(기여)된 금액', example: '50000' })
+    wageredAmount: string;
 
-    @ApiProperty({ description: 'Remaining Amount / 남은 목표액', example: '50000' })
+    @ApiProperty({ description: 'Required Count / 총 목표 롤링 횟수(판수)', example: 10 })
+    requiredCount: number;
+
+    @ApiProperty({ description: 'Wagered Count / 베팅 횟수', example: 5 })
+    wageredCount: number;
+
+    @ApiProperty({ description: 'Remaining Amount / 남은 목표 금액', example: '50000' })
     remainingAmount: string;
 
-    @ApiProperty({ description: 'Initial Locked Cash / 생성 시점에 잠긴 현금 원금', example: '10000' })
-    initialLockedCash: string;
+    @ApiProperty({ description: 'Remaining Count / 남은 목표 횟수', example: 5 })
+    remainingCount: number;
 
-    @ApiProperty({ description: 'Granted Bonus Amount / 지급된 보너스 금액', example: '2000' })
-    grantedBonusAmount: string;
+    @ApiProperty({ description: 'Bonus Amount / 지급된 보너스 금액', example: '2000' })
+    bonusAmount: string;
+
+    @ApiProperty({ description: 'Initial Fund Amount / 시작 총 자금 잔액', example: '12000' })
+    initialFundAmount: string;
+
+    @ApiProperty({ description: 'Current Balance / 현재 남은 펀드 잔액', example: '11000' })
+    currentBalance: string;
+
+    @ApiProperty({ description: 'Total Bet Amount / 펀드 내 발생한 총 누적 베팅액', example: '5000' })
+    totalBetAmount: string;
+
+    @ApiProperty({ description: 'Total Win Amount / 펀드 내 발생한 총 누적 당첨액', example: '4000' })
+    totalWinAmount: string;
+
+    @ApiProperty({ description: 'Real Money Ratio / 초기 레알머니 기여 비율', example: '0.8333' })
+    realMoneyRatio: string;
+
+    @ApiProperty({ description: 'Is Forfeitable / 사용자 포기 가능 여부', example: true })
+    isForfeitable: boolean;
 
     @ApiProperty({ description: 'Max Cash Conversion / 최대 현금 전환 가능액', nullable: true })
     maxCashConversion: string | null;

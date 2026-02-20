@@ -60,7 +60,7 @@ export class CheckWageringRequirementService {
         );
 
         const totalFulfilled = sameCurrencyRequirements.reduce(
-            (acc, item) => acc.add(item.fulfilledAmount),
+            (acc, item) => acc.add(item.wageredAmount),
             new Prisma.Decimal(0)
         );
 

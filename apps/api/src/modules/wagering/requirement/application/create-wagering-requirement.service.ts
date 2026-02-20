@@ -3,7 +3,7 @@ import { WageringRequirement, WageringPolicy } from '../domain';
 import { WAGERING_REQUIREMENT_REPOSITORY } from '../ports';
 import type { WageringRequirementRepositoryPort } from '../ports';
 import { Prisma } from '@prisma/client';
-import type { ExchangeCurrencyCode, WageringSourceType } from '@prisma/client';
+import type { ExchangeCurrencyCode, WageringSourceType, WageringTargetType } from '@prisma/client';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
@@ -20,12 +20,15 @@ interface CreateWageringRequirementCommand {
     currency: ExchangeCurrencyCode;
     sourceType: WageringSourceType;
     sourceId: bigint;
-    principalAmount: Prisma.Decimal;    // 배수 계산의 기준이 되는 총액 (Cash + Bonus 등)
-    multiplier: Prisma.Decimal;         // 적용 배수
-    initialLockedCash: Prisma.Decimal;  // 실제로 잠글 현금 원금
-    grantedBonusAmount: Prisma.Decimal; // 지급된 보너스 금액
-    parentWageringId?: bigint;          // 이전 롤링 연결 이력
-    initialFulfilledAmount?: Prisma.Decimal; // 시작 시 인정해줄 기여도 (이관용)
+    targetType: WageringTargetType;
+    principalAmount: Prisma.Decimal;
+    multiplier: Prisma.Decimal;
+    bonusAmount: Prisma.Decimal;
+    initialFundAmount: Prisma.Decimal;
+    realMoneyRatio: Prisma.Decimal;
+    requiredCount?: number;
+    isForfeitable?: boolean;
+    parentWageringId?: bigint;
     priority?: number;
     expiresAt?: Date;
     appliedConfig?: WageringAppliedConfig;
@@ -54,12 +57,15 @@ export class CreateWageringRequirementService {
             currency,
             sourceType,
             sourceId,
+            targetType,
             principalAmount,
             multiplier,
-            initialLockedCash,
-            grantedBonusAmount,
+            bonusAmount,
+            initialFundAmount,
+            realMoneyRatio,
+            requiredCount = 0,
+            isForfeitable = false,
             parentWageringId,
-            initialFulfilledAmount = new Prisma.Decimal(0),
             priority = 0,
             expiresAt,
             appliedConfig,
@@ -89,7 +95,7 @@ export class CreateWageringRequirementService {
         const finalExpiresAt = command.expiresAt ?? DateTime.now().plus({ days: config.defaultBonusExpiryDays }).toJSDate();
 
         this.logger.log(
-            `Creating wagering requirement for user ${userId}, principal ${principalAmount} (x${multiplier}), lockedCash ${initialLockedCash}, grantedBonus ${grantedBonusAmount}`,
+            `Creating wagering requirement for user ${userId}, targetType ${targetType}, principal ${principalAmount} (x${multiplier}), bonus ${bonusAmount}`,
         );
 
         // Snowflake ID 생성
@@ -102,13 +108,16 @@ export class CreateWageringRequirementService {
             currency,
             sourceType,
             sourceId,
+            targetType,
+            requiredAmount,
+            requiredCount,
             principalAmount,
             multiplier,
-            requiredAmount,
-            initialLockedCash,
-            grantedBonusAmount,
+            bonusAmount,
+            initialFundAmount,
+            realMoneyRatio,
+            isForfeitable,
             parentWageringId: parentWageringId ?? null,
-            initialFulfilledAmount: initialFulfilledAmount ?? new Prisma.Decimal(0),
             priority,
             isAutoCancelable: true,
             expiresAt: finalExpiresAt,
@@ -139,11 +148,12 @@ export class CreateWageringRequirementService {
                     wageringId: created.id.toString(),
                     sourceType,
                     sourceId: sourceId.toString(),
+                    targetType,
                     principalAmount: principalAmount.toString(),
                     multiplier: multiplier.toString(),
                     requiredAmount: requiredAmount.toString(),
-                    initialLockedCash: initialLockedCash.toString(),
-                    grantedBonusAmount: grantedBonusAmount.toString(),
+                    bonusAmount: bonusAmount.toString(),
+                    initialFundAmount: initialFundAmount.toString(),
                     currency,
                 }
             }

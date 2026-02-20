@@ -1,4 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { WAGERING_REQUIREMENT_REPOSITORY } from '../ports';
 import type { WageringRequirementRepositoryPort } from '../ports';
 import { Transactional } from '@nestjs-cls/transactional';
@@ -49,7 +50,7 @@ export class ForfeitWageringRequirementService {
 
         const originalSourceType = requirement.sourceType;
         const depositId = requirement.appliedConfig?.depositId;
-        const initialLockedCash = requirement.initialLockedCash;
+        const principalAmount = requirement.principalAmount;
 
         // 도메인 로직: 유저 요청에 의한 포기 처리
         requirement.cancel({
@@ -61,17 +62,20 @@ export class ForfeitWageringRequirementService {
         await this.repository.save(requirement);
 
         // 정책: 프로모션 롤링을 포기할 때, 입금 원금에 대한 기본 롤링 조건이 없으면 새로 생성함
-        if (originalSourceType === 'PROMOTION_BONUS' && initialLockedCash.gt(0) && depositId) {
+        if (originalSourceType === 'PROMOTION_BONUS' && principalAmount.gt(0) && depositId) {
             const config = await this.wageringConfigService.execute();
             await this.createWageringService.execute({
                 userId,
                 currency: requirement.currency,
                 sourceType: 'DEPOSIT',
                 sourceId: BigInt(depositId),
-                principalAmount: initialLockedCash,
-                multiplier: config.defaultDepositMultiplier,
-                initialLockedCash: initialLockedCash,
-                grantedBonusAmount: requirement.grantedBonusAmount.mul(0), // 0
+                targetType: 'AMOUNT',
+                principalAmount: principalAmount,
+                multiplier: new Prisma.Decimal(config.defaultDepositMultiplier),
+                bonusAmount: new Prisma.Decimal(0),
+                initialFundAmount: principalAmount,
+                realMoneyRatio: new Prisma.Decimal(1),
+                isForfeitable: false,
                 priority: 0,
             });
             this.logger.log(`Created replacement AML rolling for forfeited promotion: user ${userId}, deposit ${depositId}`);
