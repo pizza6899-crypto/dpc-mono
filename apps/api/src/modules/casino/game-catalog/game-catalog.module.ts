@@ -11,7 +11,10 @@ import { GetCategoryByCodeService } from './application/get-category-by-code.ser
 import { CreateCategoryService } from './application/create-category.service';
 import { UpdateCategoryService } from './application/update-category.service';
 import { DeleteCategoryService } from './application/delete-category.service';
-import { AddGamesToCategoryService, RemoveGamesFromCategoryService } from './application/manage-category-games.service';
+import {
+  AddGamesToCategoryService,
+  RemoveGamesFromCategoryService,
+} from './application/manage-category-games.service';
 
 // Application Services - Game
 import { FindGamesService } from './application/find-games.service';
@@ -33,48 +36,53 @@ import { SyncGamesService } from './application/sync-games.service';
 import { CasinoModule } from '../casino.module';
 
 @Module({
-    imports: [FileModule, EnvModule, AggregatorModule, forwardRef(() => CasinoModule)],
-    controllers: [
-        CategoryAdminController,
-        GameAdminController,
-        CategoryUserController,
-        GameUserController,
-        SyncAdminController,
-    ],
-    providers: [
-        CategoryMapper,
-        GameMapper,
-        {
-            provide: CATEGORY_REPOSITORY,
-            useClass: CategoryRepository,
-        },
-        {
-            provide: GAME_REPOSITORY,
-            useClass: GameRepository,
-        },
-        // Category Services
-        FindCategoriesService,
-        GetCategoryByCodeService,
-        CreateCategoryService,
-        UpdateCategoryService,
-        DeleteCategoryService,
-        AddGamesToCategoryService,
-        RemoveGamesFromCategoryService,
-        // Game Services
-        FindGamesService,
-        CreateGameService,
-        UpdateGameService,
-        FindGameByIdService,
-        SyncGamesService,
-    ],
-    exports: [
-        FindCategoriesService,
-        GetCategoryByCodeService,
-        FindGamesService,
-        CreateGameService,
-        UpdateGameService,
-        FindGameByIdService,
-        SyncGamesService,
-    ],
+  imports: [
+    FileModule,
+    EnvModule,
+    AggregatorModule,
+    forwardRef(() => CasinoModule),
+  ],
+  controllers: [
+    CategoryAdminController,
+    GameAdminController,
+    CategoryUserController,
+    GameUserController,
+    SyncAdminController,
+  ],
+  providers: [
+    CategoryMapper,
+    GameMapper,
+    {
+      provide: CATEGORY_REPOSITORY,
+      useClass: CategoryRepository,
+    },
+    {
+      provide: GAME_REPOSITORY,
+      useClass: GameRepository,
+    },
+    // Category Services
+    FindCategoriesService,
+    GetCategoryByCodeService,
+    CreateCategoryService,
+    UpdateCategoryService,
+    DeleteCategoryService,
+    AddGamesToCategoryService,
+    RemoveGamesFromCategoryService,
+    // Game Services
+    FindGamesService,
+    CreateGameService,
+    UpdateGameService,
+    FindGameByIdService,
+    SyncGamesService,
+  ],
+  exports: [
+    FindCategoriesService,
+    GetCategoryByCodeService,
+    FindGamesService,
+    CreateGameService,
+    UpdateGameService,
+    FindGameByIdService,
+    SyncGamesService,
+  ],
 })
-export class GameCatalogModule { }
+export class GameCatalogModule {}

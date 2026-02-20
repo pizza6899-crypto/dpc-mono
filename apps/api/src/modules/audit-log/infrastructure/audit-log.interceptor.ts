@@ -30,7 +30,7 @@ export class AuditLogInterceptor implements NestInterceptor {
   constructor(
     private readonly reflector: Reflector,
     private readonly dispatchLogService: DispatchLogService,
-  ) { }
+  ) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const options = this.reflector.getAllAndOverride<AuditLogOptions>(
@@ -56,14 +56,30 @@ export class AuditLogInterceptor implements NestInterceptor {
         const duration = Date.now() - startTime;
         // 성공 시 로그 기록
         if (options.logOnSuccess !== false) {
-          this.logSuccess(options, request, args, result, duration, clientInfo, user);
+          this.logSuccess(
+            options,
+            request,
+            args,
+            result,
+            duration,
+            clientInfo,
+            user,
+          );
         }
       }),
       catchError((error) => {
         const duration = Date.now() - startTime;
         // 실패 시 로그 기록
         if (options.logOnError !== false) {
-          this.logError(options, request, args, error, duration, clientInfo, user);
+          this.logError(
+            options,
+            request,
+            args,
+            error,
+            duration,
+            clientInfo,
+            user,
+          );
         }
         return throwError(() => error);
       }),
@@ -79,7 +95,14 @@ export class AuditLogInterceptor implements NestInterceptor {
     clientInfo?: RequestClientInfo,
     user?: AuthenticatedUser,
   ): Promise<void> {
-    const userId = this.extractUserId(options, request, args, result, undefined, user);
+    const userId = this.extractUserId(
+      options,
+      request,
+      args,
+      result,
+      undefined,
+      user,
+    );
     const metadata = options.extractMetadata?.(request, args, result);
 
     const payload = this.buildLogPayload(
@@ -104,7 +127,14 @@ export class AuditLogInterceptor implements NestInterceptor {
     clientInfo?: RequestClientInfo,
     user?: AuthenticatedUser,
   ): Promise<void> {
-    const userId = this.extractUserId(options, request, args, undefined, error, user);
+    const userId = this.extractUserId(
+      options,
+      request,
+      args,
+      undefined,
+      error,
+      user,
+    );
     const metadata = options.extractMetadata?.(request, args, undefined, error);
 
     const payload = this.buildLogPayload(
@@ -132,7 +162,7 @@ export class AuditLogInterceptor implements NestInterceptor {
 
     // 1. request.clientInfo가 있으면 우선 사용
     if (request.clientInfo) {
-      clientInfo = request.clientInfo as RequestClientInfo;
+      clientInfo = request.clientInfo;
     } else {
       // 2. args에서 clientInfo 또는 requestInfo 찾기
       for (const arg of args) {
@@ -183,7 +213,10 @@ export class AuditLogInterceptor implements NestInterceptor {
     if (result && typeof result === 'object') {
       if (result.userId !== undefined) return String(result.userId);
       // User 엔티티나 DTO에서 id가 있고 role이 있다면 유저로 간주
-      if (result.id !== undefined && (result.role !== undefined || result.email !== undefined)) {
+      if (
+        result.id !== undefined &&
+        (result.role !== undefined || result.email !== undefined)
+      ) {
         return String(result.id);
       }
     }
@@ -218,11 +251,15 @@ export class AuditLogInterceptor implements NestInterceptor {
     user?: AuthenticatedUser,
   ): LogJobData {
     // 어드민 체크: role이 ADMIN 또는 SUPER_ADMIN이면 isAdmin 추가
-    const isAdminFromUser = user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN';
+    const isAdminFromUser =
+      user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN';
 
     // 실제 수행자와 로그 대상자가 다른 경우 (예: 어드민이 유저 액션 수행), actorId 기록
     const performerId = user?.id ? String(user.id) : undefined;
-    const isActorDifferent = performerId !== undefined && userId !== undefined && performerId !== userId;
+    const isActorDifferent =
+      performerId !== undefined &&
+      userId !== undefined &&
+      performerId !== userId;
 
     const enrichedMetadata = {
       ...metadata,
@@ -327,4 +364,3 @@ export class AuditLogInterceptor implements NestInterceptor {
     throw new Error(`Unsupported log type: ${options.type}`);
   }
 }
-

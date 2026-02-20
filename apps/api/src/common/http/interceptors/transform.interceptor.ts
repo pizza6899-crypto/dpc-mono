@@ -55,7 +55,6 @@ export class TransformInterceptor<T> implements NestInterceptor<
         };
 
         if (isPaginated && this.isPaginatedData(data)) {
-
           return {
             ...baseResponse,
             data: data.data,

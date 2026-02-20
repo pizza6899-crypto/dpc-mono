@@ -2,18 +2,16 @@
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import { Logger } from '@nestjs/common';
-import { ListSessionsService, type ListSessionsServiceParams } from './list-sessions.service';
+import {
+  ListSessionsService,
+  type ListSessionsServiceParams,
+} from './list-sessions.service';
 import {
   USER_SESSION_REPOSITORY,
   type UserSessionRepositoryPort,
   type FindSessionsParams,
 } from '../ports/out';
-import {
-  UserSession,
-  SessionType,
-  SessionStatus,
-  DeviceInfo,
-} from '../domain';
+import { UserSession, SessionType, SessionStatus, DeviceInfo } from '../domain';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('ListSessionsService', () => {
@@ -36,7 +34,9 @@ describe('ListSessionsService', () => {
     browser: 'Chrome 120',
   });
 
-  const createMockSession = (overrides?: Partial<Parameters<typeof UserSession.create>[0]>): UserSession => {
+  const createMockSession = (
+    overrides?: Partial<Parameters<typeof UserSession.create>[0]>,
+  ): UserSession => {
     return UserSession.create({
       uid: `uid-${Date.now()}-${Math.random()}`,
       userId: mockUserId,
@@ -85,9 +85,7 @@ describe('ListSessionsService', () => {
 
     service = module.get<ListSessionsService>(ListSessionsService);
     repository = module.get(USER_SESSION_REPOSITORY);
-    mockDispatchLogService = module.get(
-      DispatchLogService,
-    ) as jest.Mocked<DispatchLogService>;
+    mockDispatchLogService = module.get(DispatchLogService);
 
     jest.clearAllMocks();
   });
@@ -225,9 +223,7 @@ describe('ListSessionsService', () => {
         type: SessionType.WEBSOCKET,
       };
 
-      const mockSessions = [
-        createMockSession({ type: SessionType.WEBSOCKET }),
-      ];
+      const mockSessions = [createMockSession({ type: SessionType.WEBSOCKET })];
 
       repository.findMany.mockResolvedValue({
         sessions: mockSessions,
@@ -469,12 +465,9 @@ describe('ListSessionsService', () => {
 
     it('다양한 정렬 필드를 지원해야 함', async () => {
       // Arrange
-      const sortFields: Array<'createdAt' | 'updatedAt' | 'lastActiveAt' | 'expiresAt'> = [
-        'createdAt',
-        'updatedAt',
-        'lastActiveAt',
-        'expiresAt',
-      ];
+      const sortFields: Array<
+        'createdAt' | 'updatedAt' | 'lastActiveAt' | 'expiresAt'
+      > = ['createdAt', 'updatedAt', 'lastActiveAt', 'expiresAt'];
 
       for (const sortBy of sortFields) {
         jest.clearAllMocks();
@@ -505,4 +498,3 @@ describe('ListSessionsService', () => {
     });
   });
 });
-

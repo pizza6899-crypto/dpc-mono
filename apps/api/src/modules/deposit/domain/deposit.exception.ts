@@ -106,11 +106,7 @@ export class InvalidDepositAmountException extends DepositException {
     const message = reason
       ? `Invalid deposit amount: ${amount}. ${reason}`
       : `Invalid deposit amount: ${amount}`;
-    super(
-      message,
-      MessageCode.DEPOSIT_INVALID_AMOUNT,
-      HttpStatus.BAD_REQUEST,
-    );
+    super(message, MessageCode.DEPOSIT_INVALID_AMOUNT, HttpStatus.BAD_REQUEST);
     this.name = 'InvalidDepositAmountException';
   }
 }
@@ -257,7 +253,7 @@ export class UnavailableCryptoConfigException extends DepositException {
 
 /**
  * 선택한 프로모션이 유효하지 않을 때 발생하는 예외
- * 
+ *
  * @errorCode MessageCode.PROMOTION_NOT_FOUND
  * @httpStatus 400
  */

@@ -1,6 +1,6 @@
 // src/modules/user/domain/model/user.entity.ts
 import type { UserRoleType, SocialType } from '@prisma/client';
-import { UserStatus as PrismaUserStatus } from '@prisma/client';
+import type { UserStatus as PrismaUserStatus } from '@prisma/client';
 import { UserAuth } from './value-objects/user-auth.vo';
 import { UserLocation } from './value-objects/user-location.vo';
 
@@ -11,7 +11,7 @@ import { UserLocation } from './value-objects/user-location.vo';
  * 현재는 계정 생성만 관리하며, Value Object 패턴을 사용하여 관련 필드를 논리적으로 그룹화했습니다.
  * - UserAuth: 인증 관련 정보 (이메일, 비밀번호, 소셜 로그인)
  * - UserLocation: 위치 정보 (국가, 타임존)
- * 
+ *
  * 추후 확장 예정:
  * - UserProfile: 프로필 정보 (닉네임, 아바타, 자기소개 등)
  * - UserStatus: 계정 상태 관리 (활성, 정지, 탈퇴 등)
@@ -25,7 +25,7 @@ export class User {
     public readonly role: UserRoleType,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
-  ) { }
+  ) {}
 
   /**
    * DB에서 조회한 데이터로부터 엔티티 생성
@@ -188,4 +188,3 @@ export class User {
   }
   */
 }
-

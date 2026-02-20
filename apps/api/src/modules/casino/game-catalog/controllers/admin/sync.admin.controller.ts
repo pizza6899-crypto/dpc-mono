@@ -11,17 +11,21 @@ import { LogType } from 'src/modules/audit-log/domain';
 @Controller('admin/casino/sync')
 @Admin()
 export class SyncAdminController {
-    constructor(private readonly syncGamesService: SyncGamesService) { }
+  constructor(private readonly syncGamesService: SyncGamesService) {}
 
-    @Post('games')
-    @AuditLog({
-        type: LogType.ACTIVITY,
-        action: 'SYNC_GAMES',
-        category: 'GAME_MANAGEMENT',
-    })
-    @ApiOperation({ summary: 'Sync games from all aggregators (전체 게임 동기화)' })
-    @ApiResponse({ type: SyncResultResponseDto })
-    async syncGames(@Body() body: SyncGamesRequestDto): Promise<SyncResultResponseDto> {
-        return this.syncGamesService.execute(body.useMock);
-    }
+  @Post('games')
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    action: 'SYNC_GAMES',
+    category: 'GAME_MANAGEMENT',
+  })
+  @ApiOperation({
+    summary: 'Sync games from all aggregators (전체 게임 동기화)',
+  })
+  @ApiResponse({ type: SyncResultResponseDto })
+  async syncGames(
+    @Body() body: SyncGamesRequestDto,
+  ): Promise<SyncResultResponseDto> {
+    return this.syncGamesService.execute(body.useMock);
+  }
 }

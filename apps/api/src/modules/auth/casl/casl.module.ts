@@ -40,4 +40,3 @@ import { CaslAbilityGuard } from './guards/casl-ability.guard';
   ],
 })
 export class CaslModule {}
-

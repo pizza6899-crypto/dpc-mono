@@ -7,71 +7,72 @@ import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 
 @Injectable()
 export class FindUserWalletService {
-    constructor(
-        @Inject(USER_WALLET_REPOSITORY)
-        private readonly repository: UserWalletRepositoryPort,
-    ) { }
+  constructor(
+    @Inject(USER_WALLET_REPOSITORY)
+    private readonly repository: UserWalletRepositoryPort,
+  ) {}
 
-    /**
-     * 단일 통화 지갑 조회
-     * @param autoCreate 존재하지 않을 경우 생성 여부
-     */
-    async findWallet(
-        userId: bigint,
-        currency: ExchangeCurrencyCode,
-        autoCreate: boolean = true,
-    ): Promise<UserWallet | null> {
-        let wallet = await this.repository.findByUserIdAndCurrency(userId, currency);
+  /**
+   * 단일 통화 지갑 조회
+   * @param autoCreate 존재하지 않을 경우 생성 여부
+   */
+  async findWallet(
+    userId: bigint,
+    currency: ExchangeCurrencyCode,
+    autoCreate: boolean = true,
+  ): Promise<UserWallet | null> {
+    let wallet = await this.repository.findByUserIdAndCurrency(
+      userId,
+      currency,
+    );
 
-        if (!wallet && autoCreate) {
-            const newWallet = UserWallet.create({
-                userId,
-                currency,
-            });
-            wallet = await this.repository.create(newWallet);
-        }
-
-        return wallet;
+    if (!wallet && autoCreate) {
+      const newWallet = UserWallet.create({
+        userId,
+        currency,
+      });
+      wallet = await this.repository.create(newWallet);
     }
 
-    /**
-     * 전체 통화 지갑 조회
-     * @param autoCreate 존재하지 않는 통화의 지갑 자동 생성 여부
-     */
-    async findWallets(
-        userId: bigint,
-        autoCreate: boolean = true,
-    ): Promise<UserWallet[]> {
-        const existingWallets = await this.repository.findByUserId(userId);
+    return wallet;
+  }
 
-        if (!autoCreate) {
-            return existingWallets;
-        }
+  /**
+   * 전체 통화 지갑 조회
+   * @param autoCreate 존재하지 않는 통화의 지갑 자동 생성 여부
+   */
+  async findWallets(
+    userId: bigint,
+    autoCreate: boolean = true,
+  ): Promise<UserWallet[]> {
+    const existingWallets = await this.repository.findByUserId(userId);
 
-        // 존재하는 통화 목록 확인
-        const existingCurrencies = new Set(
-            existingWallets.map((w) => w.currency),
-        );
-
-        // 누락된 통화 확인 (WALLET_CURRENCIES 기준)
-        const missingCurrencies = WALLET_CURRENCIES.filter(
-            (c) => !existingCurrencies.has(c),
-        );
-
-        if (missingCurrencies.length > 0) {
-            const newWallets = await Promise.all(
-                missingCurrencies.map((c) => {
-                    const newWallet = UserWallet.create({
-                        userId,
-                        currency: c,
-                    });
-                    return this.repository.create(newWallet);
-                }),
-            );
-
-            return [...existingWallets, ...newWallets];
-        }
-
-        return existingWallets;
+    if (!autoCreate) {
+      return existingWallets;
     }
+
+    // 존재하는 통화 목록 확인
+    const existingCurrencies = new Set(existingWallets.map((w) => w.currency));
+
+    // 누락된 통화 확인 (WALLET_CURRENCIES 기준)
+    const missingCurrencies = WALLET_CURRENCIES.filter(
+      (c) => !existingCurrencies.has(c),
+    );
+
+    if (missingCurrencies.length > 0) {
+      const newWallets = await Promise.all(
+        missingCurrencies.map((c) => {
+          const newWallet = UserWallet.create({
+            userId,
+            currency: c,
+          });
+          return this.repository.create(newWallet);
+        }),
+      );
+
+      return [...existingWallets, ...newWallets];
+    }
+
+    return existingWallets;
+  }
 }

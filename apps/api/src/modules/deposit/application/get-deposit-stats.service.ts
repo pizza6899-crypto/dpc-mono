@@ -1,7 +1,10 @@
 // src/modules/deposit/application/get-deposit-stats.service.ts
 import { Injectable, Inject } from '@nestjs/common';
 import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
-import type { DepositDetailRepositoryPort, DepositStats } from '../ports/out/deposit-detail.repository.port';
+import type {
+  DepositDetailRepositoryPort,
+  DepositStats,
+} from '../ports/out/deposit-detail.repository.port';
 
 interface GetDepositStatsResult {
   todayTotalAmount: string;
@@ -17,7 +20,7 @@ export class GetDepositStatsService {
   constructor(
     @Inject(DEPOSIT_DETAIL_REPOSITORY)
     private readonly depositRepository: DepositDetailRepositoryPort,
-  ) { }
+  ) {}
 
   async execute(): Promise<GetDepositStatsResult> {
     const stats = await this.depositRepository.getStats();

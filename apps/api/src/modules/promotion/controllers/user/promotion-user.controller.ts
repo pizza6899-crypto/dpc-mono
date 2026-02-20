@@ -9,7 +9,12 @@ import {
   Post,
   Body,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiQuery,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import {
   ApiStandardResponse,
   ApiStandardErrors,
@@ -23,12 +28,8 @@ import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 import { GetActivePromotionsForUserService } from '../../application/get-active-promotions-for-user.service';
 import { GetPromotionByCodeForUserService } from '../../application/get-promotion-by-code-for-user.service';
-import {
-  PromotionResponseDto,
-} from './dto/response/promotion.response.dto';
-import {
-  UserPromotionResponseDto,
-} from './dto/response/user-promotion.response.dto';
+import { PromotionResponseDto } from './dto/response/promotion.response.dto';
+import { UserPromotionResponseDto } from './dto/response/user-promotion.response.dto';
 import { ListActivePromotionsQueryDto } from './dto/request/list-active-promotions-query.dto';
 import { ListMyPromotionsQueryDto } from './dto/request/list-my-promotions-query.dto';
 import { Language, ExchangeCurrencyCode } from '@prisma/client';
@@ -51,7 +52,7 @@ export class PromotionUserController {
     private readonly getMyPromotionsForUserService: GetMyPromotionsForUserService,
     private readonly applyCouponPromotionService: ApplyCouponPromotionService,
     private readonly sqidsService: SqidsService,
-  ) { }
+  ) {}
 
   /**
    * 활성 프로모션 목록 조회
@@ -61,11 +62,13 @@ export class PromotionUserController {
   @Paginated()
   @ApiOperation({
     summary: 'Get active promotions / 활성 프로모션 목록 조회',
-    description: '현재 활성화된 프로모션 목록을 조회합니다. 페이지네이션 및 언어 파라미터 지원.',
+    description:
+      '현재 활성화된 프로모션 목록을 조회합니다. 페이지네이션 및 언어 파라미터 지원.',
   })
   @ApiPaginatedResponse(PromotionResponseDto, {
     status: HttpStatus.OK,
-    description: 'Successfully retrieved active promotions / 활성 프로모션 목록 조회 성공',
+    description:
+      'Successfully retrieved active promotions / 활성 프로모션 목록 조회 성공',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -94,7 +97,13 @@ export class PromotionUserController {
     });
 
     return {
-      data: result.data.map((info) => this.mapPromotionToDto(info.promotion, info.translation, info.currencySetting)),
+      data: result.data.map((info) =>
+        this.mapPromotionToDto(
+          info.promotion,
+          info.translation,
+          info.currencySetting,
+        ),
+      ),
       page: result.page,
       limit: result.limit,
       total: result.total,
@@ -109,11 +118,13 @@ export class PromotionUserController {
   @Paginated()
   @ApiOperation({
     summary: 'Get my promotions / 내 프로모션 목록 조회',
-    description: '사용자가 참여한 프로모션 목록을 조회합니다. 페이지네이션 지원.',
+    description:
+      '사용자가 참여한 프로모션 목록을 조회합니다. 페이지네이션 지원.',
   })
   @ApiPaginatedResponse(UserPromotionResponseDto, {
     status: HttpStatus.OK,
-    description: 'Successfully retrieved user promotions / 사용자 프로모션 목록 조회 성공',
+    description:
+      'Successfully retrieved user promotions / 사용자 프로모션 목록 조회 성공',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -160,7 +171,8 @@ export class PromotionUserController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Get promotion by Code / 프로모션 상세 조회 (코드 기반)',
-    description: '특정 프로모션 코드를 사용하여 상세 정보를 조회합니다. 언어 파라미터로 번역 정보를 받을 수 있습니다.',
+    description:
+      '특정 프로모션 코드를 사용하여 상세 정보를 조회합니다. 언어 파라미터로 번역 정보를 받을 수 있습니다.',
   })
   @ApiQuery({
     name: 'language',
@@ -202,10 +214,12 @@ export class PromotionUserController {
       currency,
     });
 
-    return this.mapPromotionToDto(result.promotion, result.translation, result.currencySetting);
+    return this.mapPromotionToDto(
+      result.promotion,
+      result.translation,
+      result.currencySetting,
+    );
   }
-
-
 
   /**
    * 비입금 프로모션(쿠폰) 적용
@@ -213,7 +227,8 @@ export class PromotionUserController {
   @Post('apply-coupon')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Apply coupon (Non-deposit promotion) / 비입금 프로모션(쿠폰) 적용',
+    summary:
+      'Apply coupon (Non-deposit promotion) / 비입금 프로모션(쿠폰) 적용',
     description: '입금 없이 즉시 보너스가 지급되는 쿠폰 프로모션을 적용합니다.',
   })
   @ApiStandardResponse(UserPromotionResponseDto, {

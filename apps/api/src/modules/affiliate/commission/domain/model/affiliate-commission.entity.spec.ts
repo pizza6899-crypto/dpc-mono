@@ -1,9 +1,5 @@
 // src/modules/affiliate/commission/domain/model/affiliate-commission.entity.spec.ts
-import {
-  CommissionStatus,
-  ExchangeCurrencyCode,
-  Prisma,
-} from '@prisma/client';
+import { CommissionStatus, ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import { AffiliateCommission } from './affiliate-commission.entity';
 import {
   CommissionNotAvailableException,
@@ -22,7 +18,7 @@ describe('AffiliateCommission Entity', () => {
   const mockCommission = new Prisma.Decimal('100');
   const mockRateApplied = new Prisma.Decimal('0.01'); // 1%
   const mockCurrency = ExchangeCurrencyCode.USD;
-  const mockGameCategory = "SLOTS";
+  const mockGameCategory = 'SLOTS';
   const mockCreatedAt = new Date('2024-01-01T00:00:00Z');
   const mockUpdatedAt = new Date('2024-01-02T00:00:00Z');
 

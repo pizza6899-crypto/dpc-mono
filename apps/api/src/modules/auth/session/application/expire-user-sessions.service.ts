@@ -31,7 +31,7 @@ export interface ExpireUserSessionsParams {
  * - 각 세션을 REVOKED 상태로 변경 (revokedBy 기록)
  * - Redis 세션 스토어에서 세션 삭제 (HTTP 세션인 경우)
  * - WebSocket 연결 해제 (WebSocket 세션인 경우)
- * 
+ *
  * 사용 케이스:
  * - 관리자가 특정 유저의 전체 로그아웃
  * - 유저의 계정 상태 변경 (밴, 정지 등)
@@ -98,7 +98,10 @@ export class ExpireUserSessionsService {
       // 실제 세션 연결 종료 (트랜잭션 외부)
       // DB 업데이트는 이미 완료되었으므로 연결 종료 실패해도 세션 종료는 성공 처리
       // 각 세션의 isAdmin 필드 사용 (HTTP 세션인 경우 Redis 키 prefix 결정)
-      await this.terminateSessionConnection(revokedSession, revokedSession.isAdmin);
+      await this.terminateSessionConnection(
+        revokedSession,
+        revokedSession.isAdmin,
+      );
     }
 
     this.logger.log(
@@ -143,9 +146,9 @@ export class ExpireUserSessionsService {
 
   /**
    * 실제 세션 연결 종료
-   * 
+   *
    * 트랜잭션 외부에서 실행되며, 실패해도 DB 업데이트는 유지됩니다.
-   * 
+   *
    * @private
    */
   private async terminateSessionConnection(
@@ -169,4 +172,3 @@ export class ExpireUserSessionsService {
     }
   }
 }
-

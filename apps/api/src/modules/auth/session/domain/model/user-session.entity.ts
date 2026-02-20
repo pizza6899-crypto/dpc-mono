@@ -328,4 +328,3 @@ export class UserSession {
     };
   }
 }
-

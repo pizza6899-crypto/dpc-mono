@@ -14,7 +14,7 @@ export class AffiliateCode {
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
     private _lastUsedAt: Date | null,
-  ) { }
+  ) {}
 
   /**
    * DB에서 조회한 데이터로부터 엔티티 생성

@@ -12,15 +12,15 @@ export class FindDefaultCodeService {
   constructor(
     @Inject(AFFILIATE_CODE_REPOSITORY)
     private readonly repository: AffiliateCodeRepositoryPort,
-  ) { }
+  ) {}
 
-  async execute({
-    userId,
-  }: FindDefaultCodeParams): Promise<AffiliateCode> {
+  async execute({ userId }: FindDefaultCodeParams): Promise<AffiliateCode> {
     const defaultCode = await this.repository.findDefaultByUserId(userId);
 
     if (!defaultCode) {
-      throw new AffiliateCodeNotFoundException(`Default code for user ${userId}`);
+      throw new AffiliateCodeNotFoundException(
+        `Default code for user ${userId}`,
+      );
     }
 
     return defaultCode;

@@ -40,7 +40,7 @@ export class SessionAdminController {
     private readonly listSessionsService: ListSessionsService,
     private readonly revokeSessionService: RevokeSessionService,
     private readonly expireUserSessionsService: ExpireUserSessionsService,
-  ) { }
+  ) {}
 
   /**
    * 세션 목록 조회 (관리자용)
@@ -129,7 +129,8 @@ export class SessionAdminController {
   })
   @ApiStandardResponse(RevokeUserSessionsResponseDto, {
     status: 200,
-    description: 'Successfully revoked all user sessions / 유저의 모든 세션 종료 성공',
+    description:
+      'Successfully revoked all user sessions / 유저의 모든 세션 종료 성공',
   })
   async revokeUserSessions(
     @Param('userId') userId: string,
@@ -150,7 +151,7 @@ export class SessionAdminController {
 
   /**
    * UserSession 엔티티를 DTO로 변환
-   * 
+   *
    * @private
    */
   private toSessionListItemDto(session: any): SessionListItemDto {
@@ -178,4 +179,3 @@ export class SessionAdminController {
     };
   }
 }
-

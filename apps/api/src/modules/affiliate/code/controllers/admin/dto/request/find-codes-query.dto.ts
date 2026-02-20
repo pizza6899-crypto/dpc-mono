@@ -72,4 +72,3 @@ export class FindCodesQueryDto extends createPaginationQueryDto<CodeSortFields>(
   @IsDateString()
   endDate?: string;
 }
-

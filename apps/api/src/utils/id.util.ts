@@ -68,7 +68,7 @@ export class IdUtil {
       | PrismaTransaction,
   ): Promise<bigint> {
     // 가장 큰 whitecliffId 값 조회
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const maxIdResult = await (prisma as any).user.findFirst({
       where: {
         whitecliffId: { not: null },
@@ -97,7 +97,7 @@ export class IdUtil {
       | PrismaTransaction,
   ): Promise<string> {
     // 가장 큰 dcsId 값 조회
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const maxIdResult = await (prisma as any).user.findFirst({
       where: {
         dcsId: { not: null },

@@ -1,5 +1,5 @@
 // src/modules/deposit/domain/model/crypto-config.entity.ts
-import { Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 
 /**
  * CryptoConfig 도메인 엔티티
@@ -22,7 +22,7 @@ export class CryptoConfig {
     public readonly contractAddress: string | null,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
-  ) { }
+  ) {}
 
   /**
    * 새로운 엔티티 생성 (팩토리 메서드)
@@ -135,7 +135,9 @@ export class CryptoConfig {
       params.minDepositAmount ?? this.minDepositAmount,
       params.depositFeeRate ?? this.depositFeeRate,
       params.confirmations ?? this.confirmations,
-      params.contractAddress !== undefined ? params.contractAddress : this.contractAddress,
+      params.contractAddress !== undefined
+        ? params.contractAddress
+        : this.contractAddress,
       this.createdAt,
       new Date(),
     );
@@ -211,4 +213,3 @@ export class CryptoConfig {
     return `${this.symbol}_${this.network}`;
   }
 }
-

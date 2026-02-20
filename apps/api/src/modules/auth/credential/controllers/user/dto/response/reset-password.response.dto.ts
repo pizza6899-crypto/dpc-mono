@@ -1,2 +1,1 @@
-export class ResetPasswordResponseDto { }
-
+export class ResetPasswordResponseDto {}

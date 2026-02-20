@@ -48,7 +48,11 @@ export class RevokeSessionService {
     const { sessionId, revokedBy, requestInfo } = params;
 
     // 1. 입력 검증
-    if (!sessionId || typeof sessionId !== 'string' || sessionId.trim().length === 0) {
+    if (
+      !sessionId ||
+      typeof sessionId !== 'string' ||
+      sessionId.trim().length === 0
+    ) {
       throw new SessionNotFoundException(sessionId);
     }
 
@@ -84,7 +88,10 @@ export class RevokeSessionService {
     // 5. 실제 세션 연결 종료 (트랜잭션 외부)
     // DB 업데이트는 이미 완료되었으므로 연결 종료 실패해도 세션 종료는 성공 처리
     // 세션의 isAdmin 필드 사용 (HTTP 세션인 경우 Redis 키 prefix 결정)
-    await this.terminateSessionConnection(revokedSession, revokedSession.isAdmin);
+    await this.terminateSessionConnection(
+      revokedSession,
+      revokedSession.isAdmin,
+    );
 
     this.logger.log(
       `세션 종료 처리 완료: sessionId=${sessionId}, userId=${session.userId}, type=${session.type}, revokedBy=${revokedBy}`,
@@ -125,9 +132,9 @@ export class RevokeSessionService {
 
   /**
    * 실제 세션 연결 종료
-   * 
+   *
    * 트랜잭션 외부에서 실행되며, 실패해도 DB 업데이트는 유지됩니다.
-   * 
+   *
    * @private
    */
   private async terminateSessionConnection(
@@ -151,4 +158,3 @@ export class RevokeSessionService {
     }
   }
 }
-

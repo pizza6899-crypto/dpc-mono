@@ -33,9 +33,7 @@ import { CASINO_QUEUES } from '../../infrastructure/casino.bullmq';
       name: CASINO_QUEUES.WHITECLIFF_HISTORY.name,
     }),
   ],
-  controllers: [
-    WhitecliffCallbackController,
-  ],
+  controllers: [WhitecliffCallbackController],
   providers: [
     WhitecliffCallbackService,
     WhitecliffApiService,
@@ -53,4 +51,4 @@ import { CASINO_QUEUES } from '../../infrastructure/casino.bullmq';
     WhitecliffFetchGameResultService,
   ],
 })
-export class WhitecliffModule { }
+export class WhitecliffModule {}

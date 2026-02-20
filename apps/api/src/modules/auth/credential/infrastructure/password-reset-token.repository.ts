@@ -9,12 +9,11 @@ import type {
 import { TokenType } from '@prisma/client';
 
 @Injectable()
-export class PasswordResetTokenRepository
-  implements PasswordResetTokenRepositoryPort {
+export class PasswordResetTokenRepository implements PasswordResetTokenRepositoryPort {
   constructor(
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
-  ) { }
+  ) {}
 
   async create(params: {
     userId: bigint;
@@ -85,4 +84,3 @@ export class PasswordResetTokenRepository
     });
   }
 }
-

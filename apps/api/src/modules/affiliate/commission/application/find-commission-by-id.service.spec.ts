@@ -1,11 +1,7 @@
 // src/modules/affiliate/commission/application/find-commission-by-id.service.spec.ts
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
-import {
-  CommissionStatus,
-  ExchangeCurrencyCode,
-  Prisma,
-} from '@prisma/client';
+import { CommissionStatus, ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import { FindCommissionByIdService } from './find-commission-by-id.service';
 import { AFFILIATE_COMMISSION_REPOSITORY } from '../ports/out/affiliate-commission.repository.token';
 import type { AffiliateCommissionRepositoryPort } from '../ports/out/affiliate-commission.repository.port';
@@ -43,7 +39,7 @@ describe('FindCommissionByIdService', () => {
       rateApplied: new Prisma.Decimal('0.01'),
       currency: mockCurrency,
       status: overrides?.status ?? CommissionStatus.PENDING,
-      gameCategory: "SLOTS",
+      gameCategory: 'SLOTS',
       settlementDate: null,
       claimedAt: null,
       withdrawnAt: null,

@@ -1,9 +1,4 @@
-import {
-  Controller,
-  Post,
-  HttpCode,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ExchangeRateService } from '../application/exchange-rate.service';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
@@ -15,7 +10,7 @@ import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
 @Controller('admin/exchange')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class AdminExchangeController {
-  constructor(private readonly exchangeRateService: ExchangeRateService) { }
+  constructor(private readonly exchangeRateService: ExchangeRateService) {}
 
   @Post('cache/clear')
   @HttpCode(HttpStatus.OK)

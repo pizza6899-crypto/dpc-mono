@@ -137,7 +137,6 @@ describe('LoginService', () => {
         email: mockUser.email,
         isAdmin: false,
       });
-
     });
 
     it('관리자 로그인 시 isAdmin=true로 기록하고 ADMIN_LOGIN 액티비티 타입을 사용해야 함', async () => {
@@ -174,7 +173,6 @@ describe('LoginService', () => {
         email: mockAdminUser.email,
         isAdmin: true,
       });
-
     });
 
     it('clientInfo 필드가 null이면 null로 변환하여 전달해야 함', async () => {
@@ -261,7 +259,6 @@ describe('LoginService', () => {
 
       expect(mockRecordService.execute).toHaveBeenCalledTimes(1);
     });
-
 
     it('모바일 기기에서 로그인 시 isMobile=true로 기록해야 함', async () => {
       // Arrange

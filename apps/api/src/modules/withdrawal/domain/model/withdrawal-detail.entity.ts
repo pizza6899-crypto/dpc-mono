@@ -55,7 +55,7 @@ export class WithdrawalDetail {
   private constructor(
     public readonly id: bigint,
     public readonly props: WithdrawalDetailProps,
-  ) { }
+  ) {}
 
   // ===== 팩토리 메서드 =====
 
@@ -300,9 +300,7 @@ export class WithdrawalDetail {
    */
   cancel(): void {
     if (!this.canBeCancelled()) {
-      throw new WithdrawalCannotBeCancelledException(
-        this.props.status,
-      );
+      throw new WithdrawalCannotBeCancelledException(this.props.status);
     }
     this.props.status = WithdrawalStatus.CANCELLED;
     this.props.cancelledAt = new Date();

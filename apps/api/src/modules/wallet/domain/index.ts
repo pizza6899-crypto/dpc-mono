@@ -7,4 +7,3 @@ export * from './model/user-wallet-hourly-stats.entity';
 export * from './user-wallet.policy';
 export * from './wallet.exception';
 export * from './wallet.constant';
-

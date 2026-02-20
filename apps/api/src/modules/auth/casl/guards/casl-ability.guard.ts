@@ -39,10 +39,11 @@ export class CaslAbilityGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     // 1. 메타데이터에서 권한 요구사항 추출
-    const requiredAbility = this.reflector.getAllAndOverride<CheckAbilityMetadata>(
-      CHECK_ABILITY_KEY,
-      [context.getHandler(), context.getClass()],
-    );
+    const requiredAbility =
+      this.reflector.getAllAndOverride<CheckAbilityMetadata>(
+        CHECK_ABILITY_KEY,
+        [context.getHandler(), context.getClass()],
+      );
 
     // 권한 검증이 필요하지 않은 경우 (데코레이터 없음)
     // @CheckAbility() 데코레이터가 없는 엔드포인트는 open으로 간주하여 통과
@@ -80,4 +81,3 @@ export class CaslAbilityGuard implements CanActivate {
     return true;
   }
 }
-

@@ -7,15 +7,12 @@ import { NotificationInfrastructureModule } from './infrastructure/notification-
 import { TemplateModule } from './template/template.module';
 
 @Module({
-    imports: [
-        AlertModule,
-        InboxModule,
-        NotificationInfrastructureModule,
-        TemplateModule,
-    ],
-    exports: [
-        AlertModule,
-        InboxModule,
-    ],
+  imports: [
+    AlertModule,
+    InboxModule,
+    NotificationInfrastructureModule,
+    TemplateModule,
+  ],
+  exports: [AlertModule, InboxModule],
 })
-export class NotificationModule { }
+export class NotificationModule {}

@@ -16,12 +16,11 @@ export interface OpenExchangeRatesResponse {
 
 @Injectable()
 export class OpenExchangeRatesApiService {
-
   constructor(
     private readonly httpService: HttpService,
     private readonly envService: EnvService,
     private readonly dispatchLogService: DispatchLogService,
-  ) { }
+  ) {}
 
   /**
    * 최신 환율 조회 (USD 기준)
@@ -43,15 +42,12 @@ export class OpenExchangeRatesApiService {
 
     try {
       const response = await firstValueFrom(
-        this.httpService.get<OpenExchangeRatesResponse>(
-          endpoint,
-          {
-            params: {
-              app_id: config.appKey,
-            },
-            timeout: 30000,
+        this.httpService.get<OpenExchangeRatesResponse>(endpoint, {
+          params: {
+            app_id: config.appKey,
           },
-        ),
+          timeout: 30000,
+        }),
       );
 
       const duration = Date.now() - startTime;

@@ -40,13 +40,15 @@ import { ListParticipantsQueryDto } from './dto/request/list-participants-query.
 import { UpsertCurrencySettingsRequestDto } from './dto/request/upsert-currency-settings.request.dto';
 import { UpsertTranslationRequestDto } from './dto/request/upsert-translation.request.dto';
 import { AddPromotionNoteRequestDto } from './dto/request/add-promotion-note.request.dto';
-import {
-  PromotionParticipantResponseDto,
-} from './dto/response/promotion-participant.response.dto';
+import { PromotionParticipantResponseDto } from './dto/response/promotion-participant.response.dto';
 import { PromotionStatisticsResponseDto } from './dto/response/promotion-statistics.response.dto';
 import { PROMOTION_REPOSITORY } from '../../ports/out';
 import type { PromotionRepositoryPort } from '../../ports/out/promotion.repository.port';
-import { Promotion, PromotionNotFoundException, PromotionPolicy } from '../../domain';
+import {
+  Promotion,
+  PromotionNotFoundException,
+  PromotionPolicy,
+} from '../../domain';
 import { Inject } from '@nestjs/common';
 import { ExchangeCurrencyCode, Language, Prisma } from '@prisma/client';
 
@@ -66,7 +68,7 @@ export class PromotionAdminController {
     private readonly policy: PromotionPolicy,
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) { }
+  ) {}
 
   /**
    * 관리자용 프로모션 목록 조회
@@ -182,7 +184,8 @@ export class PromotionAdminController {
       rollingMultiplier: dto.rollingMultiplier
         ? new Prisma.Decimal(dto.rollingMultiplier)
         : null,
-      qualificationMaintainCondition: dto.qualificationMaintainCondition as string,
+      qualificationMaintainCondition:
+        dto.qualificationMaintainCondition as string,
       isOneTime: dto.isOneTime,
       code: dto.code,
       targetUserIds: dto.targetUserIds,
@@ -286,11 +289,13 @@ export class PromotionAdminController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Get promotion detail (Admin) / 프로모션 상세 조회 (관리자)',
-    description: '특정 프로모션의 상세 정보(통화별 설정, 번역, 통계 등)를 조회합니다.',
+    description:
+      '특정 프로모션의 상세 정보(통화별 설정, 번역, 통계 등)를 조회합니다.',
   })
   @ApiStandardResponse(PromotionAdminResponseDto, {
     status: HttpStatus.OK,
-    description: 'Successfully retrieved promotion detail / 프로모션 상세 조회 성공',
+    description:
+      'Successfully retrieved promotion detail / 프로모션 상세 조회 성공',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -304,9 +309,8 @@ export class PromotionAdminController {
   async getPromotion(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<PromotionAdminResponseDto> {
-    const { promotion, statistics } = await this.getPromotionAdminService.execute(
-      BigInt(id),
-    );
+    const { promotion, statistics } =
+      await this.getPromotionAdminService.execute(BigInt(id));
     return this.mapToAdminResponseDto(promotion, statistics);
   }
 
@@ -332,9 +336,7 @@ export class PromotionAdminController {
       return { promotionId: id };
     },
   })
-  async deletePromotion(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<any> {
+  async deletePromotion(@Param('id', ParseIntPipe) id: number): Promise<any> {
     await this.deletePromotionService.execute(BigInt(id));
     return {};
   }
@@ -373,17 +375,14 @@ export class PromotionAdminController {
     return this.mapToAdminResponseDto(promotion);
   }
 
-
-
-
-
   /**
    * 프로모션의 통화별 설정 생성/수정
    */
   @Post(':id/currencies')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Upsert promotion currency settings / 프로모션 통화별 설정 생성/수정',
+    summary:
+      'Upsert promotion currency settings / 프로모션 통화별 설정 생성/수정',
     description: `
 프로모션의 통화별 정책(금액 설정)을 생성하거나 수정합니다.
 
@@ -400,14 +399,11 @@ export class PromotionAdminController {
 **참고**: 특정 통화에 대한 설정이 이미 존재하면 수정하고, 없으면 새로 생성합니다.
     `,
   })
-  @ApiStandardResponse(
-    Object,
-    {
-      status: HttpStatus.OK,
-      description:
-        'Currency settings upserted successfully / 통화별 설정 생성/수정 성공',
-    },
-  )
+  @ApiStandardResponse(Object, {
+    status: HttpStatus.OK,
+    description:
+      'Currency settings upserted successfully / 통화별 설정 생성/수정 성공',
+  })
   @AuditLog({
     type: LogType.ACTIVITY,
     action: 'UPSERT_PROMOTION_CURRENCY',
@@ -476,14 +472,11 @@ export class PromotionAdminController {
     summary: 'Delete promotion currency settings / 프로모션 통화별 설정 삭제',
     description: '프로모션의 특정 통화별 설정을 삭제합니다.',
   })
-  @ApiStandardResponse(
-    Object,
-    {
-      status: HttpStatus.OK,
-      description:
-        'Currency settings deleted successfully / 통화별 설정 삭제 성공',
-    },
-  )
+  @ApiStandardResponse(Object, {
+    status: HttpStatus.OK,
+    description:
+      'Currency settings deleted successfully / 통화별 설정 삭제 성공',
+  })
   @AuditLog({
     type: LogType.ACTIVITY,
     action: 'DELETE_PROMOTION_CURRENCY',
@@ -504,8 +497,6 @@ export class PromotionAdminController {
     return {};
   }
 
-
-
   /**
    * 프로모션의 번역 정보 생성/수정
    */
@@ -515,14 +506,10 @@ export class PromotionAdminController {
     summary: 'Upsert promotion translation / 프로모션 번역 정보 생성/수정',
     description: '프로모션의 번역 정보를 생성하거나 수정합니다.',
   })
-  @ApiStandardResponse(
-    Object,
-    {
-      status: HttpStatus.OK,
-      description:
-        'Translation upserted successfully / 번역 정보 생성/수정 성공',
-    },
-  )
+  @ApiStandardResponse(Object, {
+    status: HttpStatus.OK,
+    description: 'Translation upserted successfully / 번역 정보 생성/수정 성공',
+  })
   @AuditLog({
     type: LogType.ACTIVITY,
     action: 'UPSERT_PROMOTION_TRANSLATION',
@@ -559,14 +546,10 @@ export class PromotionAdminController {
     summary: 'Delete promotion translation / 프로모션 번역 정보 삭제',
     description: '프로모션의 특정 언어 번역 정보를 삭제합니다.',
   })
-  @ApiStandardResponse(
-    Object,
-    {
-      status: HttpStatus.OK,
-      description:
-        'Translation deleted successfully / 번역 정보 삭제 성공',
-    },
-  )
+  @ApiStandardResponse(Object, {
+    status: HttpStatus.OK,
+    description: 'Translation deleted successfully / 번역 정보 삭제 성공',
+  })
   @AuditLog({
     type: LogType.ACTIVITY,
     action: 'DELETE_PROMOTION_TRANSLATION',
@@ -595,12 +578,12 @@ export class PromotionAdminController {
   @Paginated()
   @ApiOperation({
     summary: 'Get promotion participants / 프로모션 참가자 목록 조회',
-    description: '프로모션에 참가한 사용자 목록을 조회합니다. 페이징 및 필터링 지원.',
+    description:
+      '프로모션에 참가한 사용자 목록을 조회합니다. 페이징 및 필터링 지원.',
   })
   @ApiPaginatedResponse(PromotionParticipantResponseDto, {
     status: HttpStatus.OK,
-    description:
-      'Successfully retrieved participants / 참가자 목록 조회 성공',
+    description: 'Successfully retrieved participants / 참가자 목록 조회 성공',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -674,7 +657,8 @@ export class PromotionAdminController {
       currentUsageCount: promotion.currentUsageCount,
       bonusExpiryMinutes: promotion.bonusExpiryMinutes,
       note: promotion.note,
-      qualificationMaintainCondition: promotion.qualificationMaintainCondition as string,
+      qualificationMaintainCondition:
+        promotion.qualificationMaintainCondition as string,
       startDate: promotion.startDate,
       endDate: promotion.endDate,
       createdAt: promotion.createdAt,
@@ -704,4 +688,3 @@ export class PromotionAdminController {
     };
   }
 }
-

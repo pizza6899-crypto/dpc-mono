@@ -28,14 +28,15 @@ interface ErrorDetails {
 export class HttpExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(HttpExceptionFilter.name);
 
-  constructor(private readonly dispatchLogService?: DispatchLogService) { }
+  constructor(private readonly dispatchLogService?: DispatchLogService) {}
 
   catch(exception: unknown, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
 
-    const { status, messageCode, message } = this.resolveErrorDetails(exception);
+    const { status, messageCode, message } =
+      this.resolveErrorDetails(exception);
 
     // 로그에는 상세 정보 기록 (서버 내부용)
     this.logger.error(
@@ -63,7 +64,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
     response.status(status).json(errorResponse);
 
     // 🛑 심각한 에러(500대 혹은 DB 에러)는 별도 Audit Log 기록
-    if (status >= HttpStatus.INTERNAL_SERVER_ERROR || messageCode === MessageCode.DB_QUERY_ERROR) {
+    if (
+      status >= HttpStatus.INTERNAL_SERVER_ERROR ||
+      messageCode === MessageCode.DB_QUERY_ERROR
+    ) {
       this.dispatchCriticalError(request, exception, messageCode, finalMessage);
     }
   }
@@ -119,7 +123,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
     }
 
     const isProduction = process.env.NODE_ENV === 'production';
-    let message = exception instanceof Error ? exception.message : 'Unknown error';
+    let message =
+      exception instanceof Error ? exception.message : 'Unknown error';
 
     if (isProduction) {
       message = 'Internal Server Error';
@@ -132,7 +137,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
     };
   }
 
-  private handlePrismaError(error: Prisma.PrismaClientKnownRequestError): ErrorDetails {
+  private handlePrismaError(
+    error: Prisma.PrismaClientKnownRequestError,
+  ): ErrorDetails {
     let messageCode = MessageCode.DB_QUERY_ERROR;
     let userMessage = 'Database request failed';
     let status = HttpStatus.INTERNAL_SERVER_ERROR; // 기본값은 서버 에러 (500)
@@ -170,16 +177,35 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
   private handleAffiliateCodeError(error: Error): ErrorDetails {
     const errorMap: Record<string, { status: number; code: MessageCode }> = {
-      AffiliateCodeLimitExceededException: { status: HttpStatus.BAD_REQUEST, code: MessageCode.AFFILIATE_CODE_LIMIT_EXCEEDED },
-      AffiliateCodeAlreadyExistsException: { status: HttpStatus.CONFLICT, code: MessageCode.AFFILIATE_CODE_ALREADY_EXISTS },
-      AffiliateCodeNotFoundException: { status: HttpStatus.NOT_FOUND, code: MessageCode.AFFILIATE_CODE_NOT_FOUND },
-      AffiliateCodeCannotDeleteException: { status: HttpStatus.BAD_REQUEST, code: MessageCode.AFFILIATE_CODE_CANNOT_DELETE },
-      AffiliateCodeException: { status: HttpStatus.BAD_REQUEST, code: MessageCode.AFFILIATE_CODE_INVALID_FORMAT },
+      AffiliateCodeLimitExceededException: {
+        status: HttpStatus.BAD_REQUEST,
+        code: MessageCode.AFFILIATE_CODE_LIMIT_EXCEEDED,
+      },
+      AffiliateCodeAlreadyExistsException: {
+        status: HttpStatus.CONFLICT,
+        code: MessageCode.AFFILIATE_CODE_ALREADY_EXISTS,
+      },
+      AffiliateCodeNotFoundException: {
+        status: HttpStatus.NOT_FOUND,
+        code: MessageCode.AFFILIATE_CODE_NOT_FOUND,
+      },
+      AffiliateCodeCannotDeleteException: {
+        status: HttpStatus.BAD_REQUEST,
+        code: MessageCode.AFFILIATE_CODE_CANNOT_DELETE,
+      },
+      AffiliateCodeException: {
+        status: HttpStatus.BAD_REQUEST,
+        code: MessageCode.AFFILIATE_CODE_INVALID_FORMAT,
+      },
     };
 
     const match = errorMap[error.constructor.name];
     if (match) {
-      return { status: match.status, messageCode: match.code, message: error.message };
+      return {
+        status: match.status,
+        messageCode: match.code,
+        message: error.message,
+      };
     }
 
     return {
@@ -191,17 +217,39 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
   private handleReferralError(error: Error): ErrorDetails {
     const errorMap: Record<string, { status: number; code: MessageCode }> = {
-      ReferralCodeNotFoundException: { status: HttpStatus.NOT_FOUND, code: MessageCode.REFERRAL_CODE_NOT_FOUND },
-      ReferralCodeInactiveException: { status: HttpStatus.BAD_REQUEST, code: MessageCode.REFERRAL_CODE_INVALID_FORMAT },
-      ReferralCodeExpiredException: { status: HttpStatus.BAD_REQUEST, code: MessageCode.REFERRAL_CODE_INVALID_FORMAT },
-      SelfReferralException: { status: HttpStatus.BAD_REQUEST, code: MessageCode.REFERRAL_CODE_INVALID_FORMAT },
-      DuplicateReferralException: { status: HttpStatus.CONFLICT, code: MessageCode.REFERRAL_CODE_ALREADY_EXISTS },
-      ReferralException: { status: HttpStatus.BAD_REQUEST, code: MessageCode.REFERRAL_CODE_INVALID_FORMAT },
+      ReferralCodeNotFoundException: {
+        status: HttpStatus.NOT_FOUND,
+        code: MessageCode.REFERRAL_CODE_NOT_FOUND,
+      },
+      ReferralCodeInactiveException: {
+        status: HttpStatus.BAD_REQUEST,
+        code: MessageCode.REFERRAL_CODE_INVALID_FORMAT,
+      },
+      ReferralCodeExpiredException: {
+        status: HttpStatus.BAD_REQUEST,
+        code: MessageCode.REFERRAL_CODE_INVALID_FORMAT,
+      },
+      SelfReferralException: {
+        status: HttpStatus.BAD_REQUEST,
+        code: MessageCode.REFERRAL_CODE_INVALID_FORMAT,
+      },
+      DuplicateReferralException: {
+        status: HttpStatus.CONFLICT,
+        code: MessageCode.REFERRAL_CODE_ALREADY_EXISTS,
+      },
+      ReferralException: {
+        status: HttpStatus.BAD_REQUEST,
+        code: MessageCode.REFERRAL_CODE_INVALID_FORMAT,
+      },
     };
 
     const match = errorMap[error.constructor.name];
     if (match) {
-      return { status: match.status, messageCode: match.code, message: error.message };
+      return {
+        status: match.status,
+        messageCode: match.code,
+        message: error.message,
+      };
     }
 
     return {
@@ -218,17 +266,29 @@ export class HttpExceptionFilter implements ExceptionFilter {
     let message = '';
 
     // 밸리데이션 에러 처리 (class-validator)
-    if (status === HttpStatus.BAD_REQUEST && typeof response === 'object' && response !== null) {
+    if (
+      status === HttpStatus.BAD_REQUEST &&
+      typeof response === 'object' &&
+      response !== null
+    ) {
       const respAny = response as any;
-      if ('details' in respAny && Array.isArray(respAny.details) && respAny.details.length > 0) {
+      if (
+        'details' in respAny &&
+        Array.isArray(respAny.details) &&
+        respAny.details.length > 0
+      ) {
         messageCode = MessageCode.VALIDATION_ERROR;
         const constraint = respAny.details[0].constraints;
-        message = constraint ? constraint[Object.keys(constraint)[0]] : 'Validation error';
+        message = constraint
+          ? constraint[Object.keys(constraint)[0]]
+          : 'Validation error';
         return { status, messageCode, message };
       } else if ('message' in respAny) {
         // 기본 NestJS 밸리데이션 에러 구조 처리
         messageCode = MessageCode.VALIDATION_ERROR;
-        message = Array.isArray(respAny.message) ? respAny.message[0] : respAny.message;
+        message = Array.isArray(respAny.message)
+          ? respAny.message[0]
+          : respAny.message;
         return { status, messageCode, message };
       }
     }
@@ -251,12 +311,19 @@ export class HttpExceptionFilter implements ExceptionFilter {
     // response가 string일 수도 있음
     if (typeof response === 'string') {
       message = response;
-    } else if (typeof response === 'object' && response !== null && 'message' in response) {
+    } else if (
+      typeof response === 'object' &&
+      response !== null &&
+      'message' in response
+    ) {
       message = (response as any).message;
     }
 
     // [Security] Production 환경에서 500 에러 메시지 마스킹
-    if (status === HttpStatus.INTERNAL_SERVER_ERROR && process.env.NODE_ENV === 'production') {
+    if (
+      status === HttpStatus.INTERNAL_SERVER_ERROR &&
+      process.env.NODE_ENV === 'production'
+    ) {
       message = 'Internal Server Error';
     }
 
@@ -281,8 +348,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     const requestInfo = extractClientInfo(request);
     const userId =
-      (request as any).user?.id ||
-      (request as any).session?.userId;
+      (request as any).user?.id || (request as any).session?.userId;
 
     await this.dispatchLogService.dispatch(
       {
@@ -333,16 +399,19 @@ export class HttpExceptionFilter implements ExceptionFilter {
     try {
       const requestInfo = extractClientInfo(request);
       const userId =
-        (request as any).user?.id ||
-        (request as any).session?.userId;
+        (request as any).user?.id || (request as any).session?.userId;
 
-      const errorStack = exception instanceof Error ? exception.stack?.slice(0, 2000) : '';
+      const errorStack =
+        exception instanceof Error ? exception.stack?.slice(0, 2000) : '';
 
       const sanitizedBody = request.body;
       const sanitizedQuery = request.query;
 
       // Prisma 메타데이터 (어떤 컬럼이 문제인지 등)
-      const prismaMeta = exception instanceof Prisma.PrismaClientKnownRequestError ? exception.meta : undefined;
+      const prismaMeta =
+        exception instanceof Prisma.PrismaClientKnownRequestError
+          ? exception.meta
+          : undefined;
 
       await this.dispatchLogService.dispatch(
         {
@@ -366,7 +435,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
               query: JSON.stringify(sanitizedQuery), // Query String
               body: JSON.stringify(sanitizedBody)?.slice(0, 4000), // Body (너무 길면 자름)
               prismaMeta, // Prisma 상세 에러 정보
-              originalError: exception instanceof Error ? exception.message : String(exception),
+              originalError:
+                exception instanceof Error
+                  ? exception.message
+                  : String(exception),
             },
           },
         },

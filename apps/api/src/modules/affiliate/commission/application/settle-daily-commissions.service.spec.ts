@@ -1,11 +1,7 @@
 // src/modules/affiliate/commission/application/settle-daily-commissions.service.spec.ts
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
-import {
-  CommissionStatus,
-  ExchangeCurrencyCode,
-  Prisma,
-} from '@prisma/client';
+import { CommissionStatus, ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import { SettleDailyCommissionsService } from './settle-daily-commissions.service';
 import { AFFILIATE_COMMISSION_REPOSITORY } from '../ports/out/affiliate-commission.repository.token';
 import type { AffiliateCommissionRepositoryPort } from '../ports/out/affiliate-commission.repository.port';
@@ -58,7 +54,9 @@ describe('SettleDailyCommissionsService', () => {
     return AffiliateCommission.fromPersistence({
       id: overrides?.id ?? BigInt(1),
       uid: overrides?.uid ?? 'cmt-1234567890',
-      affiliateId: overrides?.affiliateId ? BigInt(overrides.affiliateId) : BigInt(mockAffiliateId1),
+      affiliateId: overrides?.affiliateId
+        ? BigInt(overrides.affiliateId)
+        : BigInt(mockAffiliateId1),
       subUserId: BigInt(mockSubUserId),
       gameRoundId: mockGameRoundId1,
       wagerAmount: new Prisma.Decimal('10000'),
@@ -67,7 +65,7 @@ describe('SettleDailyCommissionsService', () => {
       rateApplied: new Prisma.Decimal('0.01'),
       currency: overrides?.currency ?? ExchangeCurrencyCode.USD,
       status: overrides?.status ?? CommissionStatus.PENDING,
-      gameCategory: "SLOTS",
+      gameCategory: 'SLOTS',
       settlementDate: null,
       claimedAt: null,
       withdrawnAt: null,
@@ -566,10 +564,7 @@ describe('SettleDailyCommissionsService', () => {
 
     it('배치 크기 제한을 적용한다', async () => {
       // Given
-      const affiliateIds = Array.from(
-        { length: 150 },
-        (_, i) => BigInt(i + 1),
-      );
+      const affiliateIds = Array.from({ length: 150 }, (_, i) => BigInt(i + 1));
 
       // 첫 번째 배치 (100개)
       mockCommissionRepository.findAffiliateIdsWithPendingCommissions

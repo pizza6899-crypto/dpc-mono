@@ -44,7 +44,7 @@ export class AuthenticateCredentialService {
     private readonly policy: CredentialPolicy,
     @Inject(CREDENTIAL_USER_REPOSITORY)
     private readonly userRepository: CredentialUserRepositoryPort,
-  ) { }
+  ) {}
 
   async execute({
     email,
@@ -108,4 +108,3 @@ export class AuthenticateCredentialService {
     return user;
   }
 }
-

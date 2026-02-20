@@ -4,4 +4,3 @@
  * UserWallet Repository DI Token
  */
 export const USER_WALLET_REPOSITORY = Symbol('USER_WALLET_REPOSITORY');
-

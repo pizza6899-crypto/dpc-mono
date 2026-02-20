@@ -399,9 +399,7 @@ describe('FindCodesAdminService', () => {
       mockRepository.findManyForAdmin.mockRejectedValue(repositoryError);
 
       // When & Then
-      await expect(service.execute({})).rejects.toThrow(
-        'Database query error',
-      );
+      await expect(service.execute({})).rejects.toThrow('Database query error');
     });
 
     it('에러 발생 시 로깅해야 함', async () => {
@@ -434,4 +432,3 @@ describe('FindCodesAdminService', () => {
     });
   });
 });
-

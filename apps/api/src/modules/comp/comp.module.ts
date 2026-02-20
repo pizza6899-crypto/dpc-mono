@@ -1,5 +1,9 @@
 import { Module } from '@nestjs/common';
-import { COMP_REPOSITORY, COMP_CONFIG_REPOSITORY, COMP_CLAIM_HISTORY_REPOSITORY } from './ports';
+import {
+  COMP_REPOSITORY,
+  COMP_CONFIG_REPOSITORY,
+  COMP_CLAIM_HISTORY_REPOSITORY,
+} from './ports';
 import { CompWalletRepository } from './infrastructure/comp-wallet.repository';
 import { CompConfigRepository } from './infrastructure/comp-config.repository';
 import { CompClaimHistoryRepository } from './infrastructure/comp-claim-history.repository';
@@ -23,54 +27,46 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 
 @Module({
-    imports: [
-        WalletModule,
-        ConcurrencyModule,
-        SnowflakeModule,
-    ],
-    controllers: [
-        CompUserController,
-        CompAdminController,
-        CompStatsController,
-    ],
-    providers: [
-        CompMapper,
-        CompPolicy,
-        {
-            provide: COMP_REPOSITORY,
-            useClass: CompWalletRepository,
-        },
-        {
-            provide: COMP_CONFIG_REPOSITORY,
-            useClass: CompConfigRepository,
-        },
-        {
-            provide: COMP_CLAIM_HISTORY_REPOSITORY,
-            useClass: CompClaimHistoryRepository,
-        },
-        EarnCompService,
-        ClaimCompService,
-        FindCompBalanceService,
-        FindCompTransactionsService,
-        DeductCompService,
-        FindCompOverviewService,
-        FindCompDailyStatsService,
-        FindCompTopEarnersService,
-        FindCompConfigService,
-        UpdateCompConfigService,
-    ],
-    exports: [
-        EarnCompService,
-        ClaimCompService,
-        FindCompBalanceService,
-        FindCompTransactionsService,
-        DeductCompService,
-        FindCompOverviewService,
-        FindCompDailyStatsService,
-        FindCompTopEarnersService,
-        FindCompConfigService,
-        UpdateCompConfigService,
-        CompPolicy,
-    ],
+  imports: [WalletModule, ConcurrencyModule, SnowflakeModule],
+  controllers: [CompUserController, CompAdminController, CompStatsController],
+  providers: [
+    CompMapper,
+    CompPolicy,
+    {
+      provide: COMP_REPOSITORY,
+      useClass: CompWalletRepository,
+    },
+    {
+      provide: COMP_CONFIG_REPOSITORY,
+      useClass: CompConfigRepository,
+    },
+    {
+      provide: COMP_CLAIM_HISTORY_REPOSITORY,
+      useClass: CompClaimHistoryRepository,
+    },
+    EarnCompService,
+    ClaimCompService,
+    FindCompBalanceService,
+    FindCompTransactionsService,
+    DeductCompService,
+    FindCompOverviewService,
+    FindCompDailyStatsService,
+    FindCompTopEarnersService,
+    FindCompConfigService,
+    UpdateCompConfigService,
+  ],
+  exports: [
+    EarnCompService,
+    ClaimCompService,
+    FindCompBalanceService,
+    FindCompTransactionsService,
+    DeductCompService,
+    FindCompOverviewService,
+    FindCompDailyStatsService,
+    FindCompTopEarnersService,
+    FindCompConfigService,
+    UpdateCompConfigService,
+    CompPolicy,
+  ],
 })
-export class CompModule { }
+export class CompModule {}

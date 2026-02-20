@@ -9,7 +9,10 @@ import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.reposit
 import { User } from 'src/modules/user/domain';
 import { UserStatus, UserRoleType, SocialType } from '@prisma/client';
 import { hashPassword } from 'src/utils/password.util';
-import { PasswordMismatchException, LoginFailedException } from '../domain/exception';
+import {
+  PasswordMismatchException,
+  LoginFailedException,
+} from '../domain/exception';
 import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
@@ -422,10 +425,10 @@ describe('ChangePasswordService', () => {
       );
 
       // 해시된 비밀번호는 원본과 다르고, bcrypt 형식이어야 함
-      const calledPasswordHash = mockUserRepository.updatePassword.mock.calls[0][1];
+      const calledPasswordHash =
+        mockUserRepository.updatePassword.mock.calls[0][1];
       expect(calledPasswordHash).not.toBe(mockNewPassword);
       expect(calledPasswordHash).toMatch(/^\$2[aby]\$/); // bcrypt 해시 형식
     });
   });
 });
-

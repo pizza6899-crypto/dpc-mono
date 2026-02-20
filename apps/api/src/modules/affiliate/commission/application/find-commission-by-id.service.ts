@@ -10,11 +10,10 @@ interface FindCommissionByIdParams {
 
 @Injectable()
 export class FindCommissionByIdService {
-
   constructor(
     @Inject(AFFILIATE_COMMISSION_REPOSITORY)
     private readonly repository: AffiliateCommissionRepositoryPort,
-  ) { }
+  ) {}
 
   async execute({
     id,

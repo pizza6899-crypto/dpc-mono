@@ -22,30 +22,30 @@ import { AlertProcessor } from './processors/alert.processor';
 import { EnvModule } from 'src/common/env/env.module';
 
 @Module({
-    imports: [
-        EnvModule,
-        forwardRef(() => InboxModule),
-        AlertModule,
-        TemplateModule,
-        BullMqModule,
-        NotificationQueueModule,
-    ],
-    providers: [
-        // Providers
-        NodemailerAdapter,
-        NCloudAdapter,
+  imports: [
+    EnvModule,
+    forwardRef(() => InboxModule),
+    AlertModule,
+    TemplateModule,
+    BullMqModule,
+    NotificationQueueModule,
+  ],
+  providers: [
+    // Providers
+    NodemailerAdapter,
+    NCloudAdapter,
 
-        // Channel Senders
-        SocketSender,
-        EmailSender,
-        SMSSender,
+    // Channel Senders
+    SocketSender,
+    EmailSender,
+    SMSSender,
 
-        // Processors
-        SocketProcessor,
-        EmailProcessor,
-        SMSProcessor,
-        AlertProcessor,
-    ],
-    exports: [SocketSender, EmailSender, SMSSender],
+    // Processors
+    SocketProcessor,
+    EmailProcessor,
+    SMSProcessor,
+    AlertProcessor,
+  ],
+  exports: [SocketSender, EmailSender, SMSSender],
 })
-export class NotificationInfrastructureModule { }
+export class NotificationInfrastructureModule {}

@@ -76,6 +76,11 @@ import { SessionSerializer } from 'src/common/auth/strategies/session.serializer
 
     SessionSerializer,
   ],
-  exports: [PassportModule, LoginService, LogoutService, VerifyCredentialService],
+  exports: [
+    PassportModule,
+    LoginService,
+    LogoutService,
+    VerifyCredentialService,
+  ],
 })
-export class CredentialModule { }
+export class CredentialModule {}

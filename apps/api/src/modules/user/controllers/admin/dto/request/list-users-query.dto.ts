@@ -57,4 +57,3 @@ export class ListUsersQueryDto extends createPaginationQueryDto<UserSortFields>(
   @IsDateString()
   endDate?: string;
 }
-

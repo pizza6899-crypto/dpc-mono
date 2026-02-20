@@ -33,4 +33,3 @@ export class ListActivePromotionsQueryDto extends createPaginationQueryDto<Promo
   @IsEnum(ExchangeCurrencyCode)
   currency?: ExchangeCurrencyCode;
 }
-

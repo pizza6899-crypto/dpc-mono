@@ -30,4 +30,3 @@ export class UpsertTranslationRequestDto {
   @IsString()
   description?: string | null;
 }
-

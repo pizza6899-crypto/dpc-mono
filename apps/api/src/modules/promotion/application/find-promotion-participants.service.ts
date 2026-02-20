@@ -24,4 +24,3 @@ export class FindPromotionParticipantsService {
     return await this.repository.findUserPromotionsByPromotionId(params);
   }
 }
-

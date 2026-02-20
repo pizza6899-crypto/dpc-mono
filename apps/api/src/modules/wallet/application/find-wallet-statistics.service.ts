@@ -4,12 +4,12 @@ import type { UserWalletRepositoryPort } from '../ports/out/user-wallet.reposito
 
 @Injectable()
 export class FindWalletStatisticsService {
-    constructor(
-        @Inject(USER_WALLET_REPOSITORY)
-        private readonly repository: UserWalletRepositoryPort,
-    ) { }
+  constructor(
+    @Inject(USER_WALLET_REPOSITORY)
+    private readonly repository: UserWalletRepositoryPort,
+  ) {}
 
-    async execute(): Promise<any> {
-        return await this.repository.getStatistics();
-    }
+  async execute(): Promise<any> {
+    return await this.repository.getStatistics();
+  }
 }

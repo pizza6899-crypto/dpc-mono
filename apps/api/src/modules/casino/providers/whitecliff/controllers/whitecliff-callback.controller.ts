@@ -14,7 +14,15 @@ import { GuestOnly } from 'src/common/auth/decorators/roles.decorator';
 import { AuditLog } from '../../../../audit-log/infrastructure/audit-log.decorator';
 import { getWhitecliffAuditOptions } from '../infrastructure/whitecliff-audit.util';
 import { WhitecliffCallbackService } from '../application/whitecliff-callback.service';
-import { CreditRequestDto, DebitRequestDto, BonusRequestDto, BonusResponseDto, GetWhitecliffBalanceRequestDto, GetWhitecliffBalanceResponseDto, TransactionResponseDto } from '../dtos';
+import {
+  CreditRequestDto,
+  DebitRequestDto,
+  BonusRequestDto,
+  BonusResponseDto,
+  GetWhitecliffBalanceRequestDto,
+  GetWhitecliffBalanceResponseDto,
+  TransactionResponseDto,
+} from '../dtos';
 import { WhitecliffExceptionFilter } from '../infrastructure/whitecliff-exception.filter';
 import { WhitecliffValidationPipe } from '../infrastructure/whitecliff-validation.pipe';
 
@@ -26,7 +34,7 @@ import { WhitecliffValidationPipe } from '../infrastructure/whitecliff-validatio
 export class WhitecliffCallbackController {
   constructor(
     private readonly whitecliffCallbackService: WhitecliffCallbackService,
-  ) { }
+  ) {}
 
   @Post('/balance')
   @HttpCode(HttpStatus.OK)

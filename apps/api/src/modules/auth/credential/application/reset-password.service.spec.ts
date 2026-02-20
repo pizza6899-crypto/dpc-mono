@@ -256,9 +256,8 @@ describe('ResetPasswordService', () => {
       );
 
       // 해시된 비밀번호가 원본과 다르고, bcrypt 형식인지 확인
-      const actualHash = (
-        mockUserRepository.updatePassword as jest.Mock
-      ).mock.calls[0][1];
+      const actualHash = (mockUserRepository.updatePassword as jest.Mock).mock
+        .calls[0][1];
       expect(actualHash).not.toBe(mockNewPassword);
       expect(actualHash).toMatch(/^\$2[aby]\$\d+\$/); // bcrypt 해시 형식
     });
@@ -291,9 +290,8 @@ describe('ResetPasswordService', () => {
       const updatePasswordCallOrder = (
         mockUserRepository.updatePassword as jest.Mock
       ).mock.invocationCallOrder[0];
-      const markAsUsedCallOrder = (
-        mockTokenRepository.markAsUsed as jest.Mock
-      ).mock.invocationCallOrder[0];
+      const markAsUsedCallOrder = (mockTokenRepository.markAsUsed as jest.Mock)
+        .mock.invocationCallOrder[0];
       expect(updatePasswordCallOrder).toBeLessThan(markAsUsedCallOrder);
     });
 
@@ -368,18 +366,15 @@ describe('ResetPasswordService', () => {
       });
 
       // Assert - 호출 순서 확인
-      const findByTokenOrder = (
-        mockTokenRepository.findByToken as jest.Mock
-      ).mock.invocationCallOrder[0];
-      const findByIdOrder = (
-        mockUserRepository.findById as jest.Mock
-      ).mock.invocationCallOrder[0];
+      const findByTokenOrder = (mockTokenRepository.findByToken as jest.Mock)
+        .mock.invocationCallOrder[0];
+      const findByIdOrder = (mockUserRepository.findById as jest.Mock).mock
+        .invocationCallOrder[0];
       const updatePasswordOrder = (
         mockUserRepository.updatePassword as jest.Mock
       ).mock.invocationCallOrder[0];
-      const markAsUsedOrder = (
-        mockTokenRepository.markAsUsed as jest.Mock
-      ).mock.invocationCallOrder[0];
+      const markAsUsedOrder = (mockTokenRepository.markAsUsed as jest.Mock).mock
+        .invocationCallOrder[0];
 
       expect(findByTokenOrder).toBeLessThan(findByIdOrder);
       expect(findByIdOrder).toBeLessThan(updatePasswordOrder);
@@ -387,4 +382,3 @@ describe('ResetPasswordService', () => {
     });
   });
 });
-

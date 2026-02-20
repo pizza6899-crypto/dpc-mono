@@ -22,7 +22,7 @@ import { ObjectUtil } from '../../../utils/object.util';
 export class NowPaymentCallbackController {
   constructor(
     private readonly nowPaymentCallbackService: NowPaymentCallbackService,
-  ) { }
+  ) {}
 
   @Post('/callback')
   @HttpCode(HttpStatus.OK)

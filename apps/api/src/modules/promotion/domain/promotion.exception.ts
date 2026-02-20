@@ -104,7 +104,9 @@ export class PromotionCodeAlreadyExistsException extends PromotionException {
 export class PromotionInvalidConfigurationException extends PromotionException {
   constructor(reason?: string) {
     super(
-      reason ? `Invalid promotion configuration: ${reason}` : 'Invalid promotion configuration',
+      reason
+        ? `Invalid promotion configuration: ${reason}`
+        : 'Invalid promotion configuration',
       MessageCode.VALIDATION_ERROR,
       HttpStatus.BAD_REQUEST,
     );

@@ -13,7 +13,7 @@ export class AffiliateWalletRepository implements AffiliateWalletRepositoryPort 
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: AffiliateWalletMapper,
-  ) { }
+  ) {}
 
   async findByAffiliateIdAndCurrency(
     affiliateId: bigint,

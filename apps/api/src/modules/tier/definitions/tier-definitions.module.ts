@@ -14,15 +14,24 @@ import { EnvModule } from 'src/common/env/env.module';
 
 @Global()
 @Module({
-    imports: [FileModule, EnvModule],
-    controllers: [TierConfigAdminController, TierAdminController, TierPublicController],
-    providers: [
-        TierConfigService,
-        TierService,
-        TierDefinitionsPolicy,
-        { provide: TierRepositoryPort, useClass: TierRepository },
-        { provide: TierConfigRepositoryPort, useClass: TierConfigRepository },
-    ],
-    exports: [TierRepositoryPort, TierConfigRepositoryPort, TierConfigService, TierService],
+  imports: [FileModule, EnvModule],
+  controllers: [
+    TierConfigAdminController,
+    TierAdminController,
+    TierPublicController,
+  ],
+  providers: [
+    TierConfigService,
+    TierService,
+    TierDefinitionsPolicy,
+    { provide: TierRepositoryPort, useClass: TierRepository },
+    { provide: TierConfigRepositoryPort, useClass: TierConfigRepository },
+  ],
+  exports: [
+    TierRepositoryPort,
+    TierConfigRepositoryPort,
+    TierConfigService,
+    TierService,
+  ],
 })
-export class TierDefinitionsModule { }
+export class TierDefinitionsModule {}

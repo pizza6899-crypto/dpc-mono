@@ -235,9 +235,8 @@ describe('RequestPasswordResetService', () => {
       const deleteCallOrder = (
         mockTokenRepository.deleteUnusedByUserId as jest.Mock
       ).mock.invocationCallOrder[0];
-      const createCallOrder = (
-        mockTokenRepository.create as jest.Mock
-      ).mock.invocationCallOrder[0];
+      const createCallOrder = (mockTokenRepository.create as jest.Mock).mock
+        .invocationCallOrder[0];
       expect(deleteCallOrder).toBeLessThan(createCallOrder);
     });
 
@@ -275,9 +274,8 @@ describe('RequestPasswordResetService', () => {
       });
 
       // 만료 시간 검증 (약 1시간 후, 1분 오차 허용)
-      const actualExpiresAt = (
-        mockTokenRepository.create as jest.Mock
-      ).mock.calls[0][0].expiresAt;
+      const actualExpiresAt = (mockTokenRepository.create as jest.Mock).mock
+        .calls[0][0].expiresAt;
       const timeDiff = actualExpiresAt.getTime() - now.getTime();
       const oneHourInMs = 60 * 60 * 1000;
       expect(timeDiff).toBeGreaterThanOrEqual(oneHourInMs - 60000); // 1분 오차 허용
@@ -319,4 +317,3 @@ describe('RequestPasswordResetService', () => {
     });
   });
 });
-

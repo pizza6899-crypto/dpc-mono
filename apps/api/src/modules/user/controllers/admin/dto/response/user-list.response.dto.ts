@@ -83,4 +83,3 @@ export class UserListResponseDto {
   })
   total: number;
 }
-

@@ -6,4 +6,3 @@ export type {
   LogJobData,
 } from './log-payload.type';
 export { LogType } from './log-payload.type';
-

@@ -56,4 +56,4 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
     FindCodesAdminService,
   ],
 })
-export class AffiliateCodeModule { }
+export class AffiliateCodeModule {}

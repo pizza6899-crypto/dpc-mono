@@ -327,7 +327,11 @@ describe('CreateUserService', () => {
     });
 
     it('다양한 소셜 타입으로 사용자를 생성할 수 있어야 함', async () => {
-      const socialTypes = [SocialType.GOOGLE, SocialType.APPLE, SocialType.TELEGRAM];
+      const socialTypes = [
+        SocialType.GOOGLE,
+        SocialType.APPLE,
+        SocialType.TELEGRAM,
+      ];
 
       for (const socialType of socialTypes) {
         // Arrange
@@ -437,4 +441,3 @@ describe('CreateUserService', () => {
     });
   });
 });
-

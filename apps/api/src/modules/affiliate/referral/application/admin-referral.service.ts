@@ -16,7 +16,7 @@ export class AdminReferralService {
   constructor(
     @Inject(REFERRAL_REPOSITORY)
     private readonly repository: ReferralRepositoryPort,
-  ) { }
+  ) {}
 
   /**
    * 레퍼럴 목록 조회 (관리자용)

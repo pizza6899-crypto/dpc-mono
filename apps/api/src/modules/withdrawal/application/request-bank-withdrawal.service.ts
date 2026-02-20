@@ -51,7 +51,7 @@ export class RequestBankWithdrawalService {
     private readonly findUserWalletService: FindUserWalletService,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly checkWageringService: CheckWageringRequirementService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(
@@ -81,7 +81,8 @@ export class RequestBankWithdrawalService {
     );
 
     // 0.1 롤링 조건 확인
-    const wageringEligibility = await this.checkWageringService.checkWithdrawalEligibility(userId);
+    const wageringEligibility =
+      await this.checkWageringService.checkWithdrawalEligibility(userId);
     if (wageringEligibility.isRestricted) {
       throw new WageringNotCompletedException();
     }

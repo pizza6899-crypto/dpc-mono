@@ -13,8 +13,7 @@ import { SessionModule } from './session/session.module';
     CaslModule, // CASL 권한 관리 모듈 추가
     SessionModule, // 세션 모듈 추가
   ],
-  providers: [
-  ],
+  providers: [],
   exports: [],
 })
-export class AuthModule { }
+export class AuthModule {}

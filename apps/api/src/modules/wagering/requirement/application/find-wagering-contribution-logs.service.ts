@@ -5,12 +5,14 @@ import { WageringContributionLog } from '../domain';
 
 @Injectable()
 export class FindWageringContributionLogsService {
-    constructor(
-        @Inject(WAGERING_CONTRIBUTION_LOG_REPOSITORY)
-        private readonly repository: WageringContributionLogRepositoryPort,
-    ) { }
+  constructor(
+    @Inject(WAGERING_CONTRIBUTION_LOG_REPOSITORY)
+    private readonly repository: WageringContributionLogRepositoryPort,
+  ) {}
 
-    async execute(wageringRequirementId: bigint): Promise<WageringContributionLog[]> {
-        return await this.repository.findByRequirementId(wageringRequirementId);
-    }
+  async execute(
+    wageringRequirementId: bigint,
+  ): Promise<WageringContributionLog[]> {
+    return await this.repository.findByRequirementId(wageringRequirementId);
+  }
 }

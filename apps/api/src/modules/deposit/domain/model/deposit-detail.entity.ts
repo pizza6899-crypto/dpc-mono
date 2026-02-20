@@ -1,13 +1,13 @@
 // src/modules/deposit/domain/model/deposit-detail.entity.ts
-import { Prisma } from '@prisma/client';
-import {
-  DepositDetailStatus,
-  ExchangeCurrencyCode,
-  FeePaidByType,
-} from '@prisma/client';
+import type { Prisma } from '@prisma/client';
+import type { ExchangeCurrencyCode, FeePaidByType } from '@prisma/client';
+import { DepositDetailStatus } from '@prisma/client';
 import { DepositMethod } from './value-objects/deposit-method.vo';
 import { DepositAmount } from './value-objects/deposit-amount.vo';
-import { DepositAlreadyProcessedException, DepositException } from '../deposit.exception';
+import {
+  DepositAlreadyProcessedException,
+  DepositException,
+} from '../deposit.exception';
 
 /**
  * DepositDetail 도메인 엔티티
@@ -50,7 +50,7 @@ export class DepositDetail {
     private _confirmedAt: Date | null,
     private _failedAt: Date | null,
     private _bankName: string | null = null,
-  ) { }
+  ) {}
 
   /**
    * 새로운 입금 요청 엔티티 생성
@@ -338,8 +338,7 @@ export class DepositDetail {
    */
   requiresExtraId(): boolean {
     return (
-      this.walletAddressExtraId !== null &&
-      this.walletAddressExtraId.length > 0
+      this.walletAddressExtraId !== null && this.walletAddressExtraId.length > 0
     );
   }
 
@@ -412,7 +411,8 @@ export class DepositDetail {
     adminNote?: string | null,
     transactionId?: bigint | null,
   ): void {
-    if (!this.id) throw new DepositException('Entity must be persisted before approval');
+    if (!this.id)
+      throw new DepositException('Entity must be persisted before approval');
     if (!this.canBeProcessed()) {
       throw new DepositAlreadyProcessedException(this.id, this._status);
     }
@@ -446,7 +446,8 @@ export class DepositDetail {
    * @throws {DepositAlreadyProcessedException} 이미 처리된 입금인 경우
    */
   reject(failureReason: string, adminId: bigint): void {
-    if (!this.id) throw new DepositException('Entity must be persisted before rejection');
+    if (!this.id)
+      throw new DepositException('Entity must be persisted before rejection');
     if (!this.canBeProcessed()) {
       throw new DepositAlreadyProcessedException(this.id, this._status);
     }
@@ -466,7 +467,10 @@ export class DepositDetail {
    * @throws {DepositAlreadyProcessedException} 이미 처리된 입금인 경우
    */
   cancel(): void {
-    if (!this.id) throw new DepositException('Entity must be persisted before cancellation');
+    if (!this.id)
+      throw new DepositException(
+        'Entity must be persisted before cancellation',
+      );
     if (!this.canBeProcessed()) {
       throw new DepositAlreadyProcessedException(this.id, this._status);
     }

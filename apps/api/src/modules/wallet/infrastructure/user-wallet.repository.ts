@@ -19,7 +19,7 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: UserWalletMapper,
-  ) { }
+  ) {}
 
   async findByUserIdAndCurrency(
     userId: bigint,
@@ -72,7 +72,6 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
     return wallet;
   }
 
-
   async findByUserId(userId: bigint): Promise<UserWallet[]> {
     const balances = await this.tx.userWallet.findMany({
       where: {
@@ -91,7 +90,9 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
     return this.mapper.toDomain(result);
   }
 
-  async list(options: UserWalletSearchOptions): Promise<[UserWallet[], number]> {
+  async list(
+    options: UserWalletSearchOptions,
+  ): Promise<[UserWallet[], number]> {
     const { userId, currency, status, page, limit } = options;
 
     const where = {
@@ -127,4 +128,3 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
     return this.mapper.toDomain(result);
   }
 }
-

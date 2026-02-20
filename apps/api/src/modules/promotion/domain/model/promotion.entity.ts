@@ -1,12 +1,12 @@
 // src/modules/promotion/domain/model/promotion.entity.ts
 import { Prisma } from '@prisma/client';
-import {
+import type {
   PromotionTargetType,
-  PromotionBonusType,
   PromotionQualification,
   Language,
 } from '@prisma/client';
-import { PromotionCurrency } from './promotion-currency.entity';
+import { PromotionBonusType } from '@prisma/client';
+import type { PromotionCurrency } from './promotion-currency.entity';
 
 export interface PromotionTranslation {
   id: bigint;
@@ -42,7 +42,7 @@ export class Promotion {
     private _deletedAt: Date | null = null, // 소프트 삭제
     private _currencies?: PromotionCurrency[], // 통화별 설정 (optional, 필요시 로드)
     private _translations?: PromotionTranslation[], // 번역 정보 (optional, 필요시 로드)
-  ) { }
+  ) {}
 
   static fromPersistence(data: {
     id: bigint;
@@ -243,4 +243,3 @@ export class Promotion {
     };
   }
 }
-

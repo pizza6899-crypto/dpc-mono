@@ -22,7 +22,7 @@ export class RegistrationController {
   constructor(
     private readonly registerCredentialService: RegisterCredentialService,
     private readonly sqidsService: SqidsService,
-  ) { }
+  ) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)

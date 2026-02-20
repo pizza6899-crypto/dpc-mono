@@ -34,7 +34,7 @@ export class WhitecliffGameService {
     private readonly whitecliffMapperService: WhitecliffMapperService,
     private readonly createCasinoGameSessionService: CreateCasinoGameSessionService,
     private readonly exchangeRateService: ExchangeRateService,
-  ) { }
+  ) {}
 
   /**
    * 게임 실행 (회원가입 겸용)
@@ -51,7 +51,8 @@ export class WhitecliffGameService {
     },
     requestInfo: RequestClientInfo,
   ): Promise<{ gameUrl: string }> {
-    const { game, provider, isMobile, walletCurrency, gameCurrency, language } = data;
+    const { game, provider, isMobile, walletCurrency, gameCurrency, language } =
+      data;
 
     // 1. 사용자 및 잔액 정보 조회 (데이터 무결성 확인)
     const [user, userBalance, exchangeRate] = await Promise.all([
@@ -66,7 +67,9 @@ export class WhitecliffGameService {
         },
       }),
       this.tx.userWallet.findUnique({
-        where: { userId_currency: { userId: authUser.id, currency: walletCurrency } },
+        where: {
+          userId_currency: { userId: authUser.id, currency: walletCurrency },
+        },
         select: { cash: true, bonus: true },
       }),
       this.exchangeRateService.getRate({
@@ -76,7 +79,8 @@ export class WhitecliffGameService {
     ]);
 
     if (!user) throw new UserNotFoundException(authUser.id);
-    if (!userBalance) throw new WalletNotFoundException(authUser.id, walletCurrency);
+    if (!userBalance)
+      throw new WalletNotFoundException(authUser.id, walletCurrency);
 
     const balance = exchangeRate
       .mul(userBalance.cash.add(userBalance.bonus))
@@ -84,11 +88,13 @@ export class WhitecliffGameService {
       .toNumber();
 
     // 2. Provider 매핑
-    const providerEnum = GameProvider[provider.code as keyof typeof GameProvider];
-    const wcProviderId = this.whitecliffMapperService.toWhitecliffProviderWithCurrency(
-      providerEnum,
-      gameCurrency,
-    );
+    const providerEnum =
+      GameProvider[provider.code as keyof typeof GameProvider];
+    const wcProviderId =
+      this.whitecliffMapperService.toWhitecliffProviderWithCurrency(
+        providerEnum,
+        gameCurrency,
+      );
 
     if (!wcProviderId) {
       throw new CasinoGameProviderNotFoundException(provider.code);
@@ -118,7 +124,9 @@ export class WhitecliffGameService {
 
     // INVALID_USER 에러 시 ID 재생성 후 1회 재시도
     if (apiResponse.status === 0 && apiResponse.error === 'INVALID_USER') {
-      this.logger.warn(`Whitecliff INVALID_USER (wcid: ${identity.id}). Regenerating identity for ${user.id}...`);
+      this.logger.warn(
+        `Whitecliff INVALID_USER (wcid: ${identity.id}). Regenerating identity for ${user.id}...`,
+      );
       identity = await this.regenerateWhitecliffIdentity(user.id);
 
       apiResponse = await this.whitecliffApiService.launchGame({
@@ -141,14 +149,20 @@ export class WhitecliffGameService {
 
     // 최종 결과 확인
     if (apiResponse.status === 0) {
-      this.logger.error(`Whitecliff Game Launch Failed: ${apiResponse.error}`, { userId: user.id, gameId: game.id });
+      this.logger.error(`Whitecliff Game Launch Failed: ${apiResponse.error}`, {
+        userId: user.id,
+        gameId: game.id,
+      });
       throw new GameNotFoundException(game.id!);
     }
 
     const result = apiResponse as WhitecliffGameLaunchResponse;
 
     // 5. Whitecliff 연동 정보 동기화 (필요한 경우에만 1회 업데이트)
-    if (!user.whitecliffSystemId || Number(user.whitecliffSystemId) !== result.user_id) {
+    if (
+      !user.whitecliffSystemId ||
+      Number(user.whitecliffSystemId) !== result.user_id
+    ) {
       await this.tx.user.update({
         where: { id: user.id },
         data: { whitecliffSystemId: result.user_id },
@@ -188,7 +202,9 @@ export class WhitecliffGameService {
    * 사용자의 Whitecliff 식별 정보를 새로 생성하고 DB에 반영합니다.
    * 기존 연동 정보(System ID)가 있다면 초기화합니다.
    */
-  private async regenerateWhitecliffIdentity(userId: bigint): Promise<{ id: bigint; username: string }> {
+  private async regenerateWhitecliffIdentity(
+    userId: bigint,
+  ): Promise<{ id: bigint; username: string }> {
     const nextId = await IdUtil.generateNextWhitecliffId(this.tx);
     const username = `wcf${nextId}`;
 

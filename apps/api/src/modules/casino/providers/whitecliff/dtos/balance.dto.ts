@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { WhitecliffBaseRequestDto } from './base.dto';
 
-export class GetWhitecliffBalanceRequestDto extends WhitecliffBaseRequestDto { }
+export class GetWhitecliffBalanceRequestDto extends WhitecliffBaseRequestDto {}
 
 export class GetWhitecliffBalanceResponseDto {
   @ApiProperty({

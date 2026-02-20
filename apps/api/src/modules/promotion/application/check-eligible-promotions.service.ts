@@ -17,7 +17,7 @@ export class CheckEligiblePromotionsService {
   constructor(
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) { }
+  ) {}
 
   async execute({
     userId,
@@ -99,4 +99,3 @@ export class CheckEligiblePromotionsService {
     return eligiblePromotions;
   }
 }
-

@@ -11,11 +11,7 @@ export class FindUserPromotionsService {
     private readonly repository: PromotionRepositoryPort,
   ) {}
 
-  async execute(
-    userId: bigint,
-    status?: string,
-  ): Promise<UserPromotion[]> {
+  async execute(userId: bigint, status?: string): Promise<UserPromotion[]> {
     return await this.repository.findUserPromotions(userId, status);
   }
 }
-

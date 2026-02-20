@@ -1,5 +1,6 @@
 // src/modules/promotion/domain/model/user-promotion.entity.ts
-import { Prisma, ExchangeCurrencyCode } from '@prisma/client';
+import type { ExchangeCurrencyCode } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { UserPromotionStatus } from '@prisma/client';
 
 export class UserPromotion {
@@ -18,7 +19,7 @@ export class UserPromotion {
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
     public readonly promotionCode?: string | null,
-  ) { }
+  ) {}
 
   static fromPersistence(data: {
     id: bigint;

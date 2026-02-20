@@ -60,7 +60,7 @@ export class DepositController {
     private readonly getMyDepositDetailService: GetMyDepositDetailService,
     private readonly cancelDepositService: CancelDepositService,
     private readonly sqidsService: SqidsService,
-  ) { }
+  ) {}
 
   // ============================================
   // 입금 수단 조회
@@ -130,7 +130,7 @@ export class DepositController {
       userId: user.id,
     });
     return {
-      data: result.data.map(deposit => this.toResponseDto(deposit)),
+      data: result.data.map((deposit) => this.toResponseDto(deposit)),
       page: result.page,
       limit: result.limit,
       total: result.total,
@@ -183,7 +183,8 @@ export class DepositController {
   })
   @ApiStandardResponse(CreateDepositResponseDto, {
     status: 201,
-    description: 'Crypto deposit request created successfully / 암호화폐 입금 요청 생성 성공',
+    description:
+      'Crypto deposit request created successfully / 암호화폐 입금 요청 생성 성공',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -225,7 +226,8 @@ export class DepositController {
   })
   @ApiStandardResponse(CreateDepositResponseDto, {
     status: 201,
-    description: 'Bank deposit request created successfully / 무통장 입금 요청 생성 성공',
+    description:
+      'Bank deposit request created successfully / 무통장 입금 요청 생성 성공',
   })
   @AuditLog({
     type: LogType.ACTIVITY,

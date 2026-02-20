@@ -8,12 +8,7 @@ import {
   type UserSessionRepositoryPort,
 } from '../ports/out';
 import { SessionTrackerService } from '../infrastructure/session-tracker.service';
-import {
-  UserSession,
-  SessionType,
-  SessionStatus,
-  DeviceInfo,
-} from '../domain';
+import { UserSession, SessionType, SessionStatus, DeviceInfo } from '../domain';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
@@ -192,9 +187,7 @@ describe('ExpireSessionsBatchService', () => {
         expiresAt: futureExpiresAt,
       }).revoke(null); // 이미 종료된 세션
 
-      repository.findExpiredSessions.mockResolvedValue([
-        alreadyRevokedSession,
-      ]);
+      repository.findExpiredSessions.mockResolvedValue([alreadyRevokedSession]);
 
       // Act
       const result = await service.execute();
@@ -220,9 +213,7 @@ describe('ExpireSessionsBatchService', () => {
         expiresAt: futureExpiresAt,
       }).expire(); // 이미 만료된 세션
 
-      repository.findExpiredSessions.mockResolvedValue([
-        alreadyExpiredSession,
-      ]);
+      repository.findExpiredSessions.mockResolvedValue([alreadyExpiredSession]);
 
       // Act
       const result = await service.execute();
@@ -499,7 +490,9 @@ describe('ExpireSessionsBatchService', () => {
         }),
       );
 
-      repository.findExpiredSessions.mockResolvedValue(sessions.slice(0, batchSize));
+      repository.findExpiredSessions.mockResolvedValue(
+        sessions.slice(0, batchSize),
+      );
 
       sessions.slice(0, batchSize).forEach((session) => {
         const expiredSession = session.expire();
@@ -518,4 +511,3 @@ describe('ExpireSessionsBatchService', () => {
     });
   });
 });
-

@@ -22,4 +22,3 @@ export enum SessionStatus {
    */
   EXPIRED = 'EXPIRED',
 }
-

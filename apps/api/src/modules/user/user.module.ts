@@ -28,4 +28,4 @@ import { UserAdminController } from './controllers/admin/user-admin.controller';
     USER_REPOSITORY,
   ],
 })
-export class UserModule { }
+export class UserModule {}

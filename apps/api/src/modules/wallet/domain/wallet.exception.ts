@@ -77,4 +77,3 @@ export class InvalidWalletBalanceTypeException extends WalletException {
     this.name = 'InvalidWalletBalanceTypeException';
   }
 }
-

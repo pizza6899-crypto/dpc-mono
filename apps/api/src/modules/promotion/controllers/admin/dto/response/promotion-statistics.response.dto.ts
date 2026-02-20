@@ -21,4 +21,3 @@ export class PromotionStatisticsResponseDto {
   })
   statusCounts: Record<string, number>;
 }
-

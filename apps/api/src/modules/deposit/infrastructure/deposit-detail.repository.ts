@@ -3,9 +3,19 @@ import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { DepositDetail, DepositNotFoundException } from '../domain';
-import type { DepositDetailRepositoryPort, DepositListQuery, DepositStats, DepositWithUser } from '../ports/out/deposit-detail.repository.port';
+import type {
+  DepositDetailRepositoryPort,
+  DepositListQuery,
+  DepositStats,
+  DepositWithUser,
+} from '../ports/out/deposit-detail.repository.port';
 import { DepositDetailMapper } from './deposit-detail.mapper';
-import { ExchangeCurrencyCode, Prisma, DepositDetailStatus, DepositMethodType } from '@prisma/client';
+import {
+  ExchangeCurrencyCode,
+  Prisma,
+  DepositDetailStatus,
+  DepositMethodType,
+} from '@prisma/client';
 import { generateUid } from 'src/utils/id.util';
 
 /**
@@ -19,7 +29,7 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: DepositDetailMapper,
-  ) { }
+  ) {}
 
   async findById(
     id: bigint,
@@ -58,7 +68,7 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
 
     const result = await this.tx.depositDetail.update({
       where: { id: deposit.id! },
-      data: updateData as any,
+      data: updateData,
     });
 
     return this.mapper.toDomain(result);
@@ -144,7 +154,9 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
   }
 
   // Admin queries
-  async list(query: DepositListQuery): Promise<{ items: DepositWithUser[]; total: number }> {
+  async list(
+    query: DepositListQuery,
+  ): Promise<{ items: DepositWithUser[]; total: number }> {
     const {
       skip = 0,
       take = 20,
@@ -163,12 +175,13 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
       ...(methodType && { methodType }),
       ...(userId && { userId }),
       ...(currency && { depositCurrency: currency }),
-      ...(startDate && endDate && {
-        createdAt: {
-          gte: new Date(startDate),
-          lte: new Date(endDate),
-        },
-      }),
+      ...(startDate &&
+        endDate && {
+          createdAt: {
+            gte: new Date(startDate),
+            lte: new Date(endDate),
+          },
+        }),
     };
 
     const orderBy: Prisma.DepositDetailOrderByWithRelationInput = {
@@ -258,11 +271,18 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     ]);
 
     return {
-      todayTotalAmount: todayDeposits._sum.actuallyPaid || new Prisma.Decimal(0),
+      todayTotalAmount:
+        todayDeposits._sum.actuallyPaid || new Prisma.Decimal(0),
       pendingCount: pendingDeposits,
       methodDistribution: {
-        crypto: methodStats.find((s) => s.methodType === DepositMethodType.CRYPTO_WALLET)?._count.id || 0,
-        bank: methodStats.find((s) => s.methodType === DepositMethodType.BANK_TRANSFER)?._count.id || 0,
+        crypto:
+          methodStats.find(
+            (s) => s.methodType === DepositMethodType.CRYPTO_WALLET,
+          )?._count.id || 0,
+        bank:
+          methodStats.find(
+            (s) => s.methodType === DepositMethodType.BANK_TRANSFER,
+          )?._count.id || 0,
       },
     };
   }
@@ -314,7 +334,4 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     });
     return count > 0;
   }
-
 }
-
-

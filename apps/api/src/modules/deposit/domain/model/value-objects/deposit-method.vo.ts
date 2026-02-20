@@ -9,9 +9,12 @@ export class DepositMethod {
   private constructor(
     public readonly methodType: DepositMethodType,
     public readonly provider: PaymentProvider,
-  ) { }
+  ) {}
 
-  static create(methodType: DepositMethodType, provider: PaymentProvider): DepositMethod {
+  static create(
+    methodType: DepositMethodType,
+    provider: PaymentProvider,
+  ): DepositMethod {
     return new DepositMethod(methodType, provider);
   }
 
@@ -48,4 +51,3 @@ export class DepositMethod {
     return this.provider === PaymentProvider.NOWPAYMENT;
   }
 }
-

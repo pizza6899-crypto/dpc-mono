@@ -9,35 +9,37 @@ import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
 @Injectable()
 export class WageringContributionLogRepository implements WageringContributionLogRepositoryPort {
-    constructor(
-        @InjectTransaction()
-        private readonly tx: PrismaTransaction,
-        private readonly mapper: WageringRequirementMapper,
-        private readonly snowflakeService: SnowflakeService,
-    ) { }
+  constructor(
+    @InjectTransaction()
+    private readonly tx: PrismaTransaction,
+    private readonly mapper: WageringRequirementMapper,
+    private readonly snowflakeService: SnowflakeService,
+  ) {}
 
-    async create(data: {
-        wageringRequirementId: bigint;
-        gameRoundId: bigint;
-        requestAmount: Prisma.Decimal;
-        contributionRate: Prisma.Decimal;
-        wageredAmount: Prisma.Decimal;
-    }): Promise<void> {
-        const { id: logId } = this.snowflakeService.generate();
-        await this.tx.wageringContributionLog.create({
-            data: {
-                id: logId,
-                ...data,
-            },
-        });
-    }
+  async create(data: {
+    wageringRequirementId: bigint;
+    gameRoundId: bigint;
+    requestAmount: Prisma.Decimal;
+    contributionRate: Prisma.Decimal;
+    wageredAmount: Prisma.Decimal;
+  }): Promise<void> {
+    const { id: logId } = this.snowflakeService.generate();
+    await this.tx.wageringContributionLog.create({
+      data: {
+        id: logId,
+        ...data,
+      },
+    });
+  }
 
-    async findByRequirementId(wageringRequirementId: bigint): Promise<WageringContributionLog[]> {
-        const results = await this.tx.wageringContributionLog.findMany({
-            where: { wageringRequirementId },
-            orderBy: { createdAt: 'desc' },
-        });
+  async findByRequirementId(
+    wageringRequirementId: bigint,
+  ): Promise<WageringContributionLog[]> {
+    const results = await this.tx.wageringContributionLog.findMany({
+      where: { wageringRequirementId },
+      orderBy: { createdAt: 'desc' },
+    });
 
-        return results.map((r) => this.mapper.toDomainLog(r));
-    }
+    return results.map((r) => this.mapper.toDomainLog(r));
+  }
 }

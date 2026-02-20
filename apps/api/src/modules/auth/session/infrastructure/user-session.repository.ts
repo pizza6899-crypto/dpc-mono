@@ -16,7 +16,7 @@ export class UserSessionRepository implements UserSessionRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: UserSessionMapper,
-  ) { }
+  ) {}
 
   async create(session: UserSession): Promise<UserSession> {
     const data = this.mapper.toPrisma(session);
@@ -80,11 +80,11 @@ export class UserSessionRepository implements UserSessionRepositoryPort {
       ...(activeOnly && { status: SessionStatus.ACTIVE }),
       ...(startDate &&
         endDate && {
-        createdAt: {
-          gte: startDate,
-          lte: endDate,
-        },
-      }),
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        }),
     };
 
     // 정렬 조건 구성
@@ -159,4 +159,3 @@ export class UserSessionRepository implements UserSessionRepositoryPort {
     return result.count;
   }
 }
-

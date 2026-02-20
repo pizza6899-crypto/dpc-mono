@@ -8,4 +8,3 @@ export class ValidateCodeFormatResponseDto {
   })
   isValid: boolean;
 }
-

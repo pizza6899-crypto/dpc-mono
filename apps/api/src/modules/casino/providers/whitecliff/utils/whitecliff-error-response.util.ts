@@ -1,4 +1,4 @@
-import { CasinoErrorCode } from "src/modules/casino/constants/casino-error-codes";
+import { CasinoErrorCode } from 'src/modules/casino/constants/casino-error-codes';
 
 /**
  * 예외를 분석하여 적절한 CasinoErrorCode 반환

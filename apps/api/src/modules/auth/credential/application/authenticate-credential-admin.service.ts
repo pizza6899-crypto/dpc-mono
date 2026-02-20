@@ -42,7 +42,7 @@ export class AuthenticateCredentialAdminService {
     private readonly policy: CredentialPolicy,
     @Inject(CREDENTIAL_USER_REPOSITORY)
     private readonly userRepository: CredentialUserRepositoryPort,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute({
@@ -104,4 +104,3 @@ export class AuthenticateCredentialAdminService {
     return user;
   }
 }
-

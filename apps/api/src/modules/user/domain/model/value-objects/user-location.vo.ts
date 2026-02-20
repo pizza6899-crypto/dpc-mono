@@ -19,10 +19,7 @@ export class UserLocation {
     country?: string | null;
     timezone?: string | null;
   }): UserLocation {
-    return new UserLocation(
-      params.country || null,
-      params.timezone || null,
-    );
+    return new UserLocation(params.country || null, params.timezone || null);
   }
 
   /**
@@ -51,14 +48,15 @@ export class UserLocation {
   /**
    * 위치 정보 업데이트
    */
-  update(updates: Partial<{
-    country: string | null;
-    timezone: string | null;
-  }>): UserLocation {
+  update(
+    updates: Partial<{
+      country: string | null;
+      timezone: string | null;
+    }>,
+  ): UserLocation {
     return new UserLocation(
       updates.country !== undefined ? updates.country : this.country,
       updates.timezone !== undefined ? updates.timezone : this.timezone,
     );
   }
 }
-

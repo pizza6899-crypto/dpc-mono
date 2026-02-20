@@ -36,7 +36,7 @@ export class CreatePromotionService {
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
     private readonly policy: PromotionPolicy,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(params: CreatePromotionParams): Promise<Promotion> {
@@ -61,7 +61,8 @@ export class CreatePromotionService {
       bonusType: params.bonusType as any,
       bonusRate: params.bonusRate ?? null,
       rollingMultiplier: params.rollingMultiplier ?? null,
-      qualificationMaintainCondition: params.qualificationMaintainCondition as any,
+      qualificationMaintainCondition:
+        params.qualificationMaintainCondition as any,
       isOneTime: params.isOneTime ?? false,
       isDepositRequired: params.isDepositRequired ?? true,
       maxUsageCount: params.maxUsageCount ?? null,
@@ -71,9 +72,10 @@ export class CreatePromotionService {
       targetUserIds: params.targetUserIds,
     });
 
-    this.logger.log(`Promotion created: id=${promotion.id}, name=${params.managementName}`);
+    this.logger.log(
+      `Promotion created: id=${promotion.id}, name=${params.managementName}`,
+    );
 
     return promotion;
   }
 }
-

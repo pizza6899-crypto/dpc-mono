@@ -13,7 +13,7 @@ export class ReferralRepository implements ReferralRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: ReferralMapper,
-  ) { }
+  ) {}
 
   async create(params: {
     affiliateId: bigint;
@@ -120,12 +120,14 @@ export class ReferralRepository implements ReferralRepositoryPort {
     startDate?: Date;
     endDate?: Date;
   }): Promise<{
-    referrals: Array<Referral & {
-      affiliateEmail: string;
-      subUserEmail: string;
-      codeValue: string;
-      campaignName?: string | null;
-    }>;
+    referrals: Array<
+      Referral & {
+        affiliateEmail: string;
+        subUserEmail: string;
+        codeValue: string;
+        campaignName?: string | null;
+      }
+    >;
     total: number;
   }> {
     const {
@@ -187,12 +189,15 @@ export class ReferralRepository implements ReferralRepositoryPort {
     });
   }
 
-  async findByIdForAdmin(id: bigint): Promise<(Referral & {
-    affiliateEmail: string;
-    subUserEmail: string;
-    codeValue: string;
-    campaignName?: string | null;
-  }) | null> {
+  async findByIdForAdmin(id: bigint): Promise<
+    | (Referral & {
+        affiliateEmail: string;
+        subUserEmail: string;
+        codeValue: string;
+        campaignName?: string | null;
+      })
+    | null
+  > {
     const result = await this.tx.referral.findUnique({
       where: { id },
       include: {

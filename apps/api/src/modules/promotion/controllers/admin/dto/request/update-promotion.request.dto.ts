@@ -1,5 +1,11 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsOptional, IsBoolean, IsDateString, IsEnum } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsBoolean,
+  IsDateString,
+  IsEnum,
+} from 'class-validator';
 import { PromotionBonusType, PromotionTargetType } from '@prisma/client';
 
 export class UpdatePromotionRequestDto {
@@ -114,6 +120,4 @@ export class UpdatePromotionRequestDto {
   })
   @IsOptional()
   bonusExpiryMinutes?: number | null;
-
 }
-

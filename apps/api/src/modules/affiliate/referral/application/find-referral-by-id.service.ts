@@ -20,7 +20,7 @@ export class FindReferralByIdService {
     @Inject(REFERRAL_REPOSITORY)
     private readonly repository: ReferralRepositoryPort,
     private readonly dispatchLogService: DispatchLogService,
-  ) { }
+  ) {}
 
   async execute({
     id,

@@ -41,7 +41,7 @@ import { DcsExceptionFilter } from '../infrastructure/dcs-exception.filter';
 @UseFilters(DcsExceptionFilter)
 @UsePipes(new DcsValidationPipe())
 export class DcsCallbackController {
-  constructor(private readonly dcsCallbackService: DcsCallbackService) { }
+  constructor(private readonly dcsCallbackService: DcsCallbackService) {}
 
   @Post('/login')
   @HttpCode(HttpStatus.OK)

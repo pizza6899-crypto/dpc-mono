@@ -1,4 +1,5 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { getQueueToken } from '@nestjs/bullmq';
 import { DispatchLogService } from './dispatch-log.service';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
@@ -43,7 +44,9 @@ describe('DispatchLogService', () => {
     }).compile();
 
     service = module.get<DispatchLogService>(DispatchLogService);
-    criticalQueue = module.get(getQueueToken(BULLMQ_QUEUES.AUDIT.CRITICAL.name));
+    criticalQueue = module.get(
+      getQueueToken(BULLMQ_QUEUES.AUDIT.CRITICAL.name),
+    );
     heavyQueue = module.get(getQueueToken(BULLMQ_QUEUES.AUDIT.HEAVY.name));
     snowflakeService = module.get<SnowflakeService>(SnowflakeService);
 

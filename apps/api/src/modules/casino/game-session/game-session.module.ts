@@ -9,23 +9,20 @@ import { ExchangeModule } from '../../exchange/exchange.module';
 import { TierProfileModule } from '../../tier/profile/tier-profile.module';
 
 @Module({
-    imports: [
-        ExchangeModule,
-        TierProfileModule,
-    ],
-    providers: [
-        CasinoGameSessionMapper,
-        {
-            provide: CASINO_GAME_SESSION_REPOSITORY,
-            useClass: CasinoGameSessionRepository,
-        },
-        CreateCasinoGameSessionService,
-        FindCasinoGameSessionService,
-    ],
-    exports: [
-        CreateCasinoGameSessionService,
-        FindCasinoGameSessionService,
-        CASINO_GAME_SESSION_REPOSITORY,
-    ],
+  imports: [ExchangeModule, TierProfileModule],
+  providers: [
+    CasinoGameSessionMapper,
+    {
+      provide: CASINO_GAME_SESSION_REPOSITORY,
+      useClass: CasinoGameSessionRepository,
+    },
+    CreateCasinoGameSessionService,
+    FindCasinoGameSessionService,
+  ],
+  exports: [
+    CreateCasinoGameSessionService,
+    FindCasinoGameSessionService,
+    CASINO_GAME_SESSION_REPOSITORY,
+  ],
 })
-export class GameSessionModule { }
+export class GameSessionModule {}

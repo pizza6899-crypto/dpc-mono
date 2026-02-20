@@ -13,4 +13,3 @@ export class ListUserSessionsQueryDto {
   @Type(() => Boolean)
   activeOnly?: boolean;
 }
-

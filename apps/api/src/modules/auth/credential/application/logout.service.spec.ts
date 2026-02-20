@@ -53,10 +53,7 @@ describe('LogoutService', () => {
     };
 
     module = await Test.createTestingModule({
-      providers: [
-        LogoutService,
-        mockRevokeSessionServiceProvider,
-      ],
+      providers: [LogoutService, mockRevokeSessionServiceProvider],
     })
       .setLogger(new Logger())
       .compile();

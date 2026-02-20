@@ -12,31 +12,31 @@ import { InboxUserController } from './controllers/user/inbox-user.controller';
 import { NOTIFICATION_LOG_REPOSITORY } from './ports';
 
 @Module({
-    controllers: [InboxUserController],
-    providers: [
-        // Mapper
-        NotificationLogMapper,
+  controllers: [InboxUserController],
+  providers: [
+    // Mapper
+    NotificationLogMapper,
 
-        // Repository
-        {
-            provide: NOTIFICATION_LOG_REPOSITORY,
-            useClass: NotificationLogRepository,
-        },
+    // Repository
+    {
+      provide: NOTIFICATION_LOG_REPOSITORY,
+      useClass: NotificationLogRepository,
+    },
 
-        // Services
-        FindNotificationsService,
-        GetUnreadCountService,
-        MarkAsReadService,
-        MarkAllAsReadService,
-        DeleteNotificationService,
-    ],
-    exports: [
-        FindNotificationsService,
-        GetUnreadCountService,
-        MarkAsReadService,
-        MarkAllAsReadService,
-        DeleteNotificationService,
-        NOTIFICATION_LOG_REPOSITORY,
-    ],
+    // Services
+    FindNotificationsService,
+    GetUnreadCountService,
+    MarkAsReadService,
+    MarkAllAsReadService,
+    DeleteNotificationService,
+  ],
+  exports: [
+    FindNotificationsService,
+    GetUnreadCountService,
+    MarkAsReadService,
+    MarkAllAsReadService,
+    DeleteNotificationService,
+    NOTIFICATION_LOG_REPOSITORY,
+  ],
 })
-export class InboxModule { }
+export class InboxModule {}

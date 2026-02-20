@@ -21,4 +21,3 @@ export class GetCodesResponseDto {
   })
   limit: number;
 }
-

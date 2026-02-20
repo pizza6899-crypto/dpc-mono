@@ -35,6 +35,11 @@ import { DcsExceptionFilter } from './infrastructure/dcs-exception.filter';
     DcsFetchGameResultService,
     DcsExceptionFilter,
   ],
-  exports: [DcsGameService, DcsMapperService, DcsFetchGameResultService, DcsApiService],
+  exports: [
+    DcsGameService,
+    DcsMapperService,
+    DcsFetchGameResultService,
+    DcsApiService,
+  ],
 })
-export class DcsModule { }
+export class DcsModule {}

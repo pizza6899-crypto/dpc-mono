@@ -4,8 +4,8 @@ import { RedisModule } from 'src/infrastructure/redis/redis.module';
 
 @Global()
 @Module({
-    imports: [RedisModule],
-    providers: [NodeIdentityService],
-    exports: [NodeIdentityService],
+  imports: [RedisModule],
+  providers: [NodeIdentityService],
+  exports: [NodeIdentityService],
 })
-export class NodeIdentityModule { }
+export class NodeIdentityModule {}

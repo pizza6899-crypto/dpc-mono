@@ -14,24 +14,24 @@ import { ExchangeModule } from '../../exchange/exchange.module';
 import { TierRewardAdminController } from './controllers/admin/tier-reward-admin.controller';
 
 @Module({
-    imports: [
-        TierDefinitionsModule,
-        TierProfileModule,
-        ConcurrencyModule,
-        WalletModule,
-        WageringModule,
-        ExchangeModule,
-    ],
-    controllers: [TierRewardController, TierRewardAdminController],
-    providers: [
-        { provide: TierRewardRepositoryPort, useClass: TierRewardRepository },
-        GetAvailableRewardsService,
-        ClaimRewardService,
-        IssueRewardService,
-    ],
-    exports: [
-        IssueRewardService, // 타 모듈(Evaluator)에서 보상 발행 시 호출
-        ClaimRewardService, // 자동 지급 시 호출 가능
-    ],
+  imports: [
+    TierDefinitionsModule,
+    TierProfileModule,
+    ConcurrencyModule,
+    WalletModule,
+    WageringModule,
+    ExchangeModule,
+  ],
+  controllers: [TierRewardController, TierRewardAdminController],
+  providers: [
+    { provide: TierRewardRepositoryPort, useClass: TierRewardRepository },
+    GetAvailableRewardsService,
+    ClaimRewardService,
+    IssueRewardService,
+  ],
+  exports: [
+    IssueRewardService, // 타 모듈(Evaluator)에서 보상 발행 시 호출
+    ClaimRewardService, // 자동 지급 시 호출 가능
+  ],
 })
-export class TierRewardModule { }
+export class TierRewardModule {}

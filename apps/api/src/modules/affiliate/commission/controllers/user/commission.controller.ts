@@ -31,7 +31,11 @@ import { CommissionResponseDto } from './dto/response/commission.response.dto';
 import { WalletBalanceResponseDto } from './dto/response/wallet-balance.response.dto';
 import { CommissionRateResponseDto } from './dto/response/commission-rate.response.dto';
 import { WithdrawCommissionResponseDto } from './dto/response/withdraw-commission.response.dto';
-import { AffiliateCommission, CommissionNotFoundException, CommissionAccessDeniedException } from '../../domain';
+import {
+  AffiliateCommission,
+  CommissionNotFoundException,
+  CommissionAccessDeniedException,
+} from '../../domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 import { SqidsService } from 'src/common/sqids/sqids.service';
@@ -47,7 +51,7 @@ export class AffiliateCommissionController {
     private readonly getWalletBalanceService: GetWalletBalanceService,
     private readonly withdrawCommissionService: WithdrawCommissionService,
     private readonly sqidsService: SqidsService,
-  ) { }
+  ) {}
 
   /**
    * 커미션 목록 조회
@@ -248,8 +252,14 @@ export class AffiliateCommissionController {
   ): CommissionResponseDto {
     return {
       id: this.sqidsService.encode(commission.id!, SqidsPrefix.COMMISSION),
-      affiliateId: this.sqidsService.encode(commission.affiliateId, SqidsPrefix.USER),
-      subUserId: this.sqidsService.encode(commission.subUserId, SqidsPrefix.USER),
+      affiliateId: this.sqidsService.encode(
+        commission.affiliateId,
+        SqidsPrefix.USER,
+      ),
+      subUserId: this.sqidsService.encode(
+        commission.subUserId,
+        SqidsPrefix.USER,
+      ),
       gameRoundId: commission.gameRoundId
         ? commission.gameRoundId.toString()
         : '',

@@ -16,9 +16,7 @@ export interface LogoutParams {
 export class LogoutService {
   private readonly logger = new Logger(LogoutService.name);
 
-  constructor(
-    private readonly revokeSessionService: RevokeSessionService,
-  ) {}
+  constructor(private readonly revokeSessionService: RevokeSessionService) {}
 
   async execute({
     userId,

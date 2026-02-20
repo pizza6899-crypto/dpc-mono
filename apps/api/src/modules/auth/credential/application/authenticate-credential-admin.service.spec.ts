@@ -13,7 +13,10 @@ import {
 } from '../ports/out';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { AccountLockedException, LoginFailedException } from '../domain/exception';
+import {
+  AccountLockedException,
+  LoginFailedException,
+} from '../domain/exception';
 import {
   LoginAttempt,
   LoginAttemptResult,
@@ -241,7 +244,6 @@ describe('AuthenticateCredentialAdminService', () => {
       ).rejects.toThrow(AccountLockedException);
     });
 
-
     it('사용자가 없으면 LoginFailedException 예외를 발생시켜야 함', async () => {
       // Arrange
       mockFindAttemptsService.execute.mockResolvedValue([]);
@@ -307,7 +309,6 @@ describe('AuthenticateCredentialAdminService', () => {
       });
     });
 
-
     it('관리자 로그인 시 isAdmin=true로 verifyService를 호출해야 함', async () => {
       // Arrange
       mockFindAttemptsService.execute.mockResolvedValue([]);
@@ -347,4 +348,3 @@ describe('AuthenticateCredentialAdminService', () => {
     });
   });
 });
-

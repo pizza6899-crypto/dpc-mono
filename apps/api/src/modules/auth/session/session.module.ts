@@ -11,9 +11,7 @@ import { SessionPolicy } from './domain/policy';
 import { SessionTrackerService } from './infrastructure/session-tracker.service';
 import { UserSessionRepository } from './infrastructure/user-session.repository';
 import { UserSessionMapper } from './infrastructure/user-session.mapper';
-import {
-  USER_SESSION_REPOSITORY,
-} from './ports/out';
+import { USER_SESSION_REPOSITORY } from './ports/out';
 import { ExpireSessionsProcessor } from '../infrastructure/processors/expire-sessions.processor';
 import { BullModule } from '@nestjs/bullmq';
 import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
@@ -32,9 +30,7 @@ import { AUTH_QUEUES } from './infrastructure/session.bullmq';
       name: AUTH_QUEUES.SESSION_CLEANUP.name,
     }),
   ],
-  controllers: [
-    SessionAdminController,
-  ],
+  controllers: [SessionAdminController],
   providers: [
     // Application Services
     CreateSessionService,
@@ -67,5 +63,4 @@ import { AUTH_QUEUES } from './infrastructure/session.bullmq';
     USER_SESSION_REPOSITORY, // SessionSerializer에서 사용
   ],
 })
-export class SessionModule { }
-
+export class SessionModule {}

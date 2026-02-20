@@ -91,4 +91,3 @@ export class DeviceInfo {
     return null;
   }
 }
-

@@ -1,11 +1,7 @@
 // src/modules/affiliate/commission/application/find-commissions.service.spec.ts
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
-import {
-  CommissionStatus,
-  ExchangeCurrencyCode,
-  Prisma,
-} from '@prisma/client';
+import { CommissionStatus, ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import { FindCommissionsService } from './find-commissions.service';
 import { AFFILIATE_COMMISSION_REPOSITORY } from '../ports/out/affiliate-commission.repository.token';
 import type { AffiliateCommissionRepositoryPort } from '../ports/out/affiliate-commission.repository.port';
@@ -48,7 +44,7 @@ describe('FindCommissionsService', () => {
       rateApplied: new Prisma.Decimal('0.01'),
       currency: overrides?.currency ?? mockCurrency,
       status: overrides?.status ?? CommissionStatus.PENDING,
-      gameCategory: "SLOTS",
+      gameCategory: 'SLOTS',
       settlementDate: null,
       claimedAt: null,
       withdrawnAt: null,
@@ -93,9 +89,7 @@ describe('FindCommissionsService', () => {
 
     service = module.get<FindCommissionsService>(FindCommissionsService);
     mockRepository = module.get(AFFILIATE_COMMISSION_REPOSITORY);
-    mockDispatchLogService = module.get(
-      DispatchLogService,
-    ) as jest.Mocked<DispatchLogService>;
+    mockDispatchLogService = module.get(DispatchLogService);
 
     jest.clearAllMocks();
   });

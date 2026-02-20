@@ -1,10 +1,6 @@
 // src/modules/affiliate/commission/infrastructure/affiliate-commission.mapper.ts
 import { Injectable } from '@nestjs/common';
-import {
-  CommissionStatus,
-  ExchangeCurrencyCode,
-  Prisma,
-} from '@prisma/client';
+import { CommissionStatus, ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import { AffiliateCommission } from '../domain';
 
 /**

@@ -48,7 +48,7 @@ export class WalletAdminController {
     private readonly adjustUserBalanceService: AdjustUserBalanceService,
     private readonly updateWalletStatusService: UpdateWalletStatusService,
     private readonly findWalletTransactionHistoryService: FindWalletTransactionHistoryService,
-  ) { }
+  ) {}
 
   /**
    * 1. 사용자 지갑 목록 조회
@@ -57,7 +57,8 @@ export class WalletAdminController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'List user wallets / 사용자 지갑 목록 조회',
-    description: '시스템의 모든 사용자 지갑 목록을 조회합니다. 필터링과 페이지네이션을 지원합니다.',
+    description:
+      '시스템의 모든 사용자 지갑 목록을 조회합니다. 필터링과 페이지네이션을 지원합니다.',
   })
   @ApiPaginatedResponse(AdminWalletResponseDto, {
     status: HttpStatus.OK,
@@ -128,7 +129,8 @@ export class WalletAdminController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Manually adjust balance / 관리자 수동 잔액 조정',
-    description: '관리자가 특정 사용자의 잔액을 수동으로 추가하거나 차감합니다.',
+    description:
+      '관리자가 특정 사용자의 잔액을 수동으로 추가하거나 차감합니다.',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -172,7 +174,8 @@ export class WalletAdminController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'List all transactions / 시스템 전체 트랜잭션 이력 조회',
-    description: '시스템 전체의 트랜잭션 이력을 조회합니다. 필터링을 지원합니다.',
+    description:
+      '시스템 전체의 트랜잭션 이력을 조회합니다. 필터링을 지원합니다.',
   })
   @ApiPaginatedResponse(WalletTransactionResponseDto, {
     status: HttpStatus.OK,
@@ -183,15 +186,16 @@ export class WalletAdminController {
     const page = query.page || 1;
     const limit = query.limit || 20;
 
-    const { items, total } = await this.findWalletTransactionHistoryService.execute({
-      userId: query.userId ? BigInt(query.userId) : undefined,
-      currency: query.currency,
-      type: query.type,
-      startDate: query.startDate ? new Date(query.startDate) : undefined,
-      endDate: query.endDate ? new Date(query.endDate) : undefined,
-      page,
-      limit,
-    });
+    const { items, total } =
+      await this.findWalletTransactionHistoryService.execute({
+        userId: query.userId ? BigInt(query.userId) : undefined,
+        currency: query.currency,
+        type: query.type,
+        startDate: query.startDate ? new Date(query.startDate) : undefined,
+        endDate: query.endDate ? new Date(query.endDate) : undefined,
+        page,
+        limit,
+      });
 
     return {
       data: items.map((tx) => {
@@ -210,24 +214,34 @@ export class WalletAdminController {
           afterAmount: tx.balanceAfter.toString(),
           balanceDetail: metadata.balanceDetail || {
             // 구형 데이터 호환성 처리: 메타데이터가 없는 경우 현재 트랜잭션 정보를 바탕으로 역산
-            mainBalanceChange: tx.balanceType === 'CASH' ? tx.amount.toString() : '0',
-            mainBeforeAmount: tx.balanceType === 'CASH' ? tx.balanceBefore.toString() : '0',
-            mainAfterAmount: tx.balanceType === 'CASH' ? tx.balanceAfter.toString() : '0',
-            bonusBalanceChange: tx.balanceType === 'BONUS' ? tx.amount.toString() : '0',
-            bonusBeforeAmount: tx.balanceType === 'BONUS' ? tx.balanceBefore.toString() : '0',
-            bonusAfterAmount: tx.balanceType === 'BONUS' ? tx.balanceAfter.toString() : '0',
+            mainBalanceChange:
+              tx.balanceType === 'CASH' ? tx.amount.toString() : '0',
+            mainBeforeAmount:
+              tx.balanceType === 'CASH' ? tx.balanceBefore.toString() : '0',
+            mainAfterAmount:
+              tx.balanceType === 'CASH' ? tx.balanceAfter.toString() : '0',
+            bonusBalanceChange:
+              tx.balanceType === 'BONUS' ? tx.amount.toString() : '0',
+            bonusBeforeAmount:
+              tx.balanceType === 'BONUS' ? tx.balanceBefore.toString() : '0',
+            bonusAfterAmount:
+              tx.balanceType === 'BONUS' ? tx.balanceAfter.toString() : '0',
           },
-          adminDetail: metadata.adminId ? {
-            adminUserId: metadata.adminId,
-            reasonCode: metadata.reasonCode,
-            internalNote: metadata.internalNote || metadata.remark,
-          } : undefined,
-          systemDetail: metadata.serviceName ? {
-            serviceName: metadata.serviceName,
-            triggerId: metadata.triggerId,
-            actionName: metadata.actionName,
-            metadata: metadata.metadata
-          } : undefined,
+          adminDetail: metadata.adminId
+            ? {
+                adminUserId: metadata.adminId,
+                reasonCode: metadata.reasonCode,
+                internalNote: metadata.internalNote || metadata.remark,
+              }
+            : undefined,
+          systemDetail: metadata.serviceName
+            ? {
+                serviceName: metadata.serviceName,
+                triggerId: metadata.triggerId,
+                actionName: metadata.actionName,
+                metadata: metadata.metadata,
+              }
+            : undefined,
           createdAt: tx.createdAt,
         };
       }),

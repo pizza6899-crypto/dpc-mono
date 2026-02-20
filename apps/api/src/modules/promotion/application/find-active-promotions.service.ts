@@ -26,4 +26,3 @@ export class FindActivePromotionsService {
     return await this.repository.findActivePromotions(now);
   }
 }
-

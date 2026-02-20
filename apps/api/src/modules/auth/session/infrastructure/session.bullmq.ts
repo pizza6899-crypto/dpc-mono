@@ -1,20 +1,20 @@
-import { QueueConfig } from 'src/infrastructure/bullmq/bullmq.types';
+import type { QueueConfig } from 'src/infrastructure/bullmq/bullmq.types';
 
 export const AUTH_QUEUES = {
-    SESSION_CLEANUP: {
-        name: 'auth-session-cleanup',
-        defaultJobOptions: {
-            attempts: 3,
-            backoff: { type: 'exponential', delay: 5000 },
-            removeOnComplete: 100,
-            removeOnFail: 500,
-        },
-        workerOptions: { concurrency: 1 },
-        repeatableJobs: [
-            {
-                name: 'auth-session-cleanup',
-                repeat: { pattern: '0 */5 * * * *' },
-            },
-        ],
+  SESSION_CLEANUP: {
+    name: 'auth-session-cleanup',
+    defaultJobOptions: {
+      attempts: 3,
+      backoff: { type: 'exponential', delay: 5000 },
+      removeOnComplete: 100,
+      removeOnFail: 500,
     },
+    workerOptions: { concurrency: 1 },
+    repeatableJobs: [
+      {
+        name: 'auth-session-cleanup',
+        repeat: { pattern: '0 */5 * * * *' },
+      },
+    ],
+  },
 } as const satisfies Record<string, QueueConfig>;

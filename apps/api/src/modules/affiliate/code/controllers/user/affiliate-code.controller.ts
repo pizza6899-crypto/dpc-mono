@@ -48,7 +48,7 @@ export class AffiliateCodeController {
     private readonly updateCodeService: UpdateCodeService,
     private readonly validateCodeFormatService: ValidateCodeFormatService,
     private readonly sqidsService: SqidsService,
-  ) { }
+  ) {}
 
   /**
    * 어플리에이트 코드 생성
@@ -69,7 +69,8 @@ export class AffiliateCodeController {
   @ApiOperation({ summary: 'Create affiliate code / 어플리에이트 코드 생성' })
   @ApiStandardResponse(AffiliateCodeResponseDto, {
     status: HttpStatus.CREATED,
-    description: 'Successfully created affiliate code / 어플리에이트 코드 생성 성공',
+    description:
+      'Successfully created affiliate code / 어플리에이트 코드 생성 성공',
   })
   async create(
     @CurrentUser() user: CurrentUserWithSession,
@@ -178,7 +179,8 @@ export class AffiliateCodeController {
   @ApiParam({ name: 'id', description: 'Code ID / 코드 ID' })
   @ApiStandardResponse(AffiliateCodeResponseDto, {
     status: HttpStatus.OK,
-    description: 'Successfully updated affiliate code / 어플리에이트 코드 수정 성공',
+    description:
+      'Successfully updated affiliate code / 어플리에이트 코드 수정 성공',
   })
   async update(
     @CurrentUser() user: CurrentUserWithSession,
@@ -195,7 +197,6 @@ export class AffiliateCodeController {
     });
     return this.toResponse(code);
   }
-
 
   /**
    * 코드 형식 검증
@@ -242,4 +243,3 @@ export class AffiliateCodeController {
     };
   }
 }
-

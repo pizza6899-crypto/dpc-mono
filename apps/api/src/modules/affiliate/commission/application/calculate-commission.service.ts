@@ -1,7 +1,11 @@
 // src/modules/affiliate/commission/application/calculate-commission.service.ts
 import { Inject, Injectable } from '@nestjs/common';
 import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
-import { AffiliateCommission, AffiliateWallet, CommissionPolicy } from '../domain';
+import {
+  AffiliateCommission,
+  AffiliateWallet,
+  CommissionPolicy,
+} from '../domain';
 import { AFFILIATE_COMMISSION_REPOSITORY } from '../ports/out/affiliate-commission.repository.token';
 import type { AffiliateCommissionRepositoryPort } from '../ports/out/affiliate-commission.repository.port';
 import { AFFILIATE_WALLET_REPOSITORY } from '../ports/out/affiliate-wallet.repository.token';
@@ -27,7 +31,7 @@ export class CalculateCommissionService {
     private readonly walletRepository: AffiliateWalletRepositoryPort,
     private readonly findReferralService: FindReferralBySubUserIdService,
     private readonly policy: CommissionPolicy,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute({

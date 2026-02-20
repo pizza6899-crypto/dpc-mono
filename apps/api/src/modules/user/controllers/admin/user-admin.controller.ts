@@ -31,7 +31,7 @@ export class UserAdminController {
   constructor(
     private readonly listUsersService: ListUsersService,
     private readonly getUserService: GetUserService,
-  ) { }
+  ) {}
 
   /**
    * 사용자 상세 조회 (관리자용)

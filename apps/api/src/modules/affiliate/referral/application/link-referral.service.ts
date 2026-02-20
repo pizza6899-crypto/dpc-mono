@@ -30,7 +30,7 @@ export class LinkReferralService {
     private readonly findCodeByCodeService: FindCodeByCodeService,
     private readonly policy: ReferralPolicy,
     private readonly dispatchLogService: DispatchLogService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute({
@@ -66,7 +66,7 @@ export class LinkReferralService {
     // 4. 레퍼럴 관계 생성
     const referral = await this.repository.create({
       affiliateId: code.userId,
-      codeId: code.id as bigint,
+      codeId: code.id,
       subUserId,
       ipAddress,
       deviceFingerprint,

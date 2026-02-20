@@ -6,7 +6,8 @@ import type { Transaction } from '@nestjs-cls/transactional';
 import { PrismaService, type ExtendedClient } from './prisma.service';
 
 // Transaction 어댑터 타입 정의
-export type PrismaTransactionalAdapter = TransactionalAdapterPrisma<ExtendedClient>;
+export type PrismaTransactionalAdapter =
+  TransactionalAdapterPrisma<ExtendedClient>;
 
 // Transaction 타입 정의 (Repository에서 사용)
 export type PrismaTransaction = Transaction<PrismaTransactionalAdapter>;
@@ -36,7 +37,7 @@ export const EXTENDED_PRISMA_CLIENT = Symbol('EXTENDED_PRISMA_CLIENT');
       provide: EXTENDED_PRISMA_CLIENT,
       useFactory: (prismaService: PrismaService) => {
         // 앱 초기화 시점에 extended 클라이언트가 준비되어 있어야 함
-        // PrismaService의 onModuleInit가 호출된 후여야 하므로, 
+        // PrismaService의 onModuleInit가 호출된 후여야 하므로,
         // 안전하게 getter를 사용하거나, PrismaService 생성자에서 초기화하도록 변경 고려 필요
         // 현재는 getter 사용
         return prismaService.extended;
@@ -46,4 +47,4 @@ export const EXTENDED_PRISMA_CLIENT = Symbol('EXTENDED_PRISMA_CLIENT');
   ],
   exports: [PrismaService, ClsModule, EXTENDED_PRISMA_CLIENT],
 })
-export class PrismaModule { }
+export class PrismaModule {}

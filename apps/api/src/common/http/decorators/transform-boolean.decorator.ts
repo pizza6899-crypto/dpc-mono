@@ -33,4 +33,3 @@ export const TransformToBoolean = () =>
     // 그 외의 경우는 원래 값 반환 (validation에서 처리)
     return value;
   });
-

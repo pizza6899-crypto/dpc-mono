@@ -55,7 +55,7 @@ export class RequestCryptoWithdrawalService {
     private readonly updateUserBalanceService: UpdateUserBalanceService,
     private readonly findUserWalletService: FindUserWalletService,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(
@@ -98,7 +98,8 @@ export class RequestCryptoWithdrawalService {
     this.policy.validateCryptoAmount(requestedAmount, config);
 
     // 4. 롤링 조건 검증 (활성 WageringRequirement 없어야 함)
-    const eligibility = await this.checkWageringService.checkWithdrawalEligibility(userId);
+    const eligibility =
+      await this.checkWageringService.checkWithdrawalEligibility(userId);
     if (eligibility.isRestricted) {
       throw new WageringNotCompletedException();
     }

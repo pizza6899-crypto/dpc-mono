@@ -20,10 +20,13 @@ export class SessionException extends DomainException {
  * 다중 로그인 제한 예외
  */
 export class MultipleLoginNotAllowedException extends SessionException {
-  constructor(public readonly existingSessionCount: number, message?: string) {
+  constructor(
+    public readonly existingSessionCount: number,
+    message?: string,
+  ) {
     super(
       message ??
-      `Multiple login is not allowed. You have ${existingSessionCount} active session(s).`,
+        `Multiple login is not allowed. You have ${existingSessionCount} active session(s).`,
       MessageCode.AUTH_MULTIPLE_LOGIN_NOT_ALLOWED,
       HttpStatus.FORBIDDEN,
     );
@@ -49,7 +52,10 @@ export class SessionNotFoundException extends SessionException {
  * 세션 소유자가 아닐 때 발생하는 예외
  */
 export class SessionOwnershipException extends SessionException {
-  constructor(public readonly sessionId: string, public readonly userId: bigint) {
+  constructor(
+    public readonly sessionId: string,
+    public readonly userId: bigint,
+  ) {
     super(
       `User ${userId} does not own session ${sessionId}`,
       MessageCode.AUTH_SESSION_NOT_OWNER,
@@ -58,4 +64,3 @@ export class SessionOwnershipException extends SessionException {
     this.name = 'SessionOwnershipException';
   }
 }
-

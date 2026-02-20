@@ -49,7 +49,7 @@ export class RegisterSocialService {
     private readonly initializeUserTierService: InitializeUserTierService,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(params: RegisterSocialParams): Promise<RegisterSocialResult> {
@@ -94,14 +94,12 @@ export class RegisterSocialService {
           userId: user.id,
           campaignName: 'Default',
         });
-
       } catch (error) {
         if (error instanceof UserAlreadyExistsException) {
           throw error;
         }
         throw error;
       }
-
 
       // 5. 신규 사용자 등록 Audit 로그 (부가 기능이므로 실패해도 회원가입은 성공 처리)
       try {

@@ -1,9 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
-import type {
-  LogJobData,
-} from '../domain';
+import type { LogJobData } from '../domain';
 import { LogType } from '../domain';
 import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
@@ -31,7 +29,7 @@ export class DispatchLogService {
     @InjectQueue(BULLMQ_QUEUES.AUDIT.HEAVY.name)
     private readonly heavyLogQueue: Queue<LogQueueJobData>,
     private readonly snowflakeService: SnowflakeService,
-  ) { }
+  ) {}
 
   /**
    * Cloudflare 정보를 로그 타입에 맞게 매핑
@@ -138,7 +136,7 @@ export class DispatchLogService {
         data: {
           ...payload.data,
           stackTrace: sanitizeAndTruncate(payload.data.stackTrace, 2048), // 스택 트레이스도 너무 길면 자름
-        }
+        },
       } as T;
     }
 
@@ -147,10 +145,10 @@ export class DispatchLogService {
 
   /**
    * 로그를 큐에 디스패치
-   * 
+   *
    * @param payload 로그 데이터 (타입에 따라 분기 처리)
    * @param clientInfo RequestClientInfo (옵셔널, 제공 시 Cloudflare 정보 자동 매핑)
-   * 
+   *
    * @example
    * ```typescript
    * // Cloudflare 정보 없이 사용
@@ -158,7 +156,7 @@ export class DispatchLogService {
    *   type: LogType.AUTH,
    *   data: { userId: '123', action: 'LOGIN', status: 'SUCCESS' },
    * });
-   * 
+   *
    * // Cloudflare 정보와 함께 사용 (자동 매핑)
    * await dispatchLogService.dispatch(
    *   {
@@ -191,7 +189,7 @@ export class DispatchLogService {
       const jobData: LogQueueJobData = {
         id: id.toString(),
         createdAt: createdAt.toISOString(),
-        payload: sanitizedPayload
+        payload: sanitizedPayload,
       };
 
       // 로그 타입에 따라 적절한 큐에 추가
@@ -207,20 +205,16 @@ export class DispatchLogService {
             removeOnComplete: true,
             attempts: 10,
             backoff: { type: 'exponential', delay: 1000 },
-          }
+          },
         );
       } else {
         // ACTIVITY, ERROR
-        await this.heavyLogQueue.add(
-          BULLMQ_QUEUES.AUDIT.HEAVY.name,
-          jobData,
-          {
-            jobId: `log_${id.toString()}`,
-            removeOnComplete: true,
-            attempts: 3,
-            backoff: { type: 'exponential', delay: 1000 },
-          }
-        );
+        await this.heavyLogQueue.add(BULLMQ_QUEUES.AUDIT.HEAVY.name, jobData, {
+          jobId: `log_${id.toString()}`,
+          removeOnComplete: true,
+          attempts: 3,
+          backoff: { type: 'exponential', delay: 1000 },
+        });
       }
     } catch (error) {
       this.logger.error(
@@ -253,4 +247,3 @@ export class DispatchLogService {
     return detect(obj);
   }
 }
-

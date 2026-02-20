@@ -1,45 +1,52 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { ExchangeCurrencyCode } from '@prisma/client';
-import { IsBoolean, IsEnum, IsNotEmpty, IsNumberString, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsNotEmpty,
+  IsNumberString,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateBankConfigDto {
-    @ApiProperty({ enum: ExchangeCurrencyCode })
-    @IsEnum(ExchangeCurrencyCode)
-    currency: ExchangeCurrencyCode;
+  @ApiProperty({ enum: ExchangeCurrencyCode })
+  @IsEnum(ExchangeCurrencyCode)
+  currency: ExchangeCurrencyCode;
 
-    @ApiProperty({ example: 'Shinhan Bank' })
-    @IsString()
-    @IsNotEmpty()
-    bankName: string;
+  @ApiProperty({ example: 'Shinhan Bank' })
+  @IsString()
+  @IsNotEmpty()
+  bankName: string;
 
-    @ApiProperty()
-    @IsBoolean()
-    isActive: boolean;
+  @ApiProperty()
+  @IsBoolean()
+  isActive: boolean;
 
-    @ApiProperty({ example: '10000' })
-    @IsNumberString()
-    minWithdrawAmount: string;
+  @ApiProperty({ example: '10000' })
+  @IsNumberString()
+  minWithdrawAmount: string;
 
-    @ApiPropertyOptional({ example: '10000000' })
-    @IsOptional()
-    @IsNumberString()
-    maxWithdrawAmount?: string;
+  @ApiPropertyOptional({ example: '10000000' })
+  @IsOptional()
+  @IsNumberString()
+  maxWithdrawAmount?: string;
 
-    @ApiProperty({ example: '500' })
-    @IsNumberString()
-    withdrawFeeFixed: string;
+  @ApiProperty({ example: '500' })
+  @IsNumberString()
+  withdrawFeeFixed: string;
 
-    @ApiProperty({ example: '0.00' })
-    @IsNumberString()
-    withdrawFeeRate: string;
+  @ApiProperty({ example: '0.00' })
+  @IsNumberString()
+  withdrawFeeRate: string;
 
-    @ApiPropertyOptional()
-    @IsOptional()
-    @IsString()
-    description?: string;
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  description?: string;
 
-    @ApiPropertyOptional()
-    @IsOptional()
-    @IsString()
-    notes?: string;
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  notes?: string;
 }

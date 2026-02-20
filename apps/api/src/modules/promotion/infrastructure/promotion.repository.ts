@@ -14,7 +14,7 @@ export class PromotionRepository implements PromotionRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: PromotionMapper,
-  ) { }
+  ) {}
 
   async findActivePromotions(now: Date = new Date()): Promise<Promotion[]> {
     const results = await this.tx.promotion.findMany({
@@ -23,16 +23,10 @@ export class PromotionRepository implements PromotionRepositoryPort {
         deletedAt: null, // 소프트 삭제되지 않은 것만
         AND: [
           {
-            OR: [
-              { startDate: null },
-              { startDate: { lte: now } },
-            ],
+            OR: [{ startDate: null }, { startDate: { lte: now } }],
           },
           {
-            OR: [
-              { endDate: null },
-              { endDate: { gte: now } },
-            ],
+            OR: [{ endDate: null }, { endDate: { gte: now } }],
           },
         ],
       },
@@ -71,16 +65,10 @@ export class PromotionRepository implements PromotionRepositoryPort {
       deletedAt: null,
       AND: [
         {
-          OR: [
-            { startDate: null },
-            { startDate: { lte: now } },
-          ],
+          OR: [{ startDate: null }, { startDate: { lte: now } }],
         },
         {
-          OR: [
-            { endDate: null },
-            { endDate: { gte: now } },
-          ],
+          OR: [{ endDate: null }, { endDate: { gte: now } }],
         },
       ],
     };
@@ -160,16 +148,10 @@ export class PromotionRepository implements PromotionRepositoryPort {
         targetType: targetType as any,
         AND: [
           {
-            OR: [
-              { startDate: null },
-              { startDate: { lte: now } },
-            ],
+            OR: [{ startDate: null }, { startDate: { lte: now } }],
           },
           {
-            OR: [
-              { endDate: null },
-              { endDate: { gte: now } },
-            ],
+            OR: [{ endDate: null }, { endDate: { gte: now } }],
           },
         ],
       },
@@ -397,11 +379,11 @@ export class PromotionRepository implements PromotionRepositoryPort {
       ...(targetType && { targetType: targetType as any }),
       ...(startDate &&
         endDate && {
-        createdAt: {
-          gte: startDate,
-          lte: endDate,
-        },
-      }),
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        }),
     };
 
     const orderBy: Prisma.PromotionOrderByWithRelationInput = {
@@ -459,7 +441,8 @@ export class PromotionRepository implements PromotionRepositoryPort {
         bonusType: params.bonusType as any,
         bonusRate: params.bonusRate ?? null,
         rollingMultiplier: params.rollingMultiplier ?? null,
-        qualificationMaintainCondition: params.qualificationMaintainCondition as any,
+        qualificationMaintainCondition:
+          params.qualificationMaintainCondition as any,
         isOneTime: params.isOneTime ?? false,
         isDepositRequired: params.isDepositRequired ?? true,
         maxUsageCount: params.maxUsageCount ?? null,
@@ -550,7 +533,6 @@ export class PromotionRepository implements PromotionRepositoryPort {
     });
   }
 
-
   async incrementUsageCount(id: bigint): Promise<Promotion> {
     const result = await this.tx.promotion.update({
       where: { id },
@@ -587,8 +569,6 @@ export class PromotionRepository implements PromotionRepositoryPort {
 
     return this.mapper.currencyToDomain(currencySettings);
   }
-
-
 
   async upsertCurrencySettings(params: {
     promotionId: bigint;
@@ -815,4 +795,3 @@ export class PromotionRepository implements PromotionRepositoryPort {
     });
   }
 }
-

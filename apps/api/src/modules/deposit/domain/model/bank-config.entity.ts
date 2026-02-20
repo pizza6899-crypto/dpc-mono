@@ -1,6 +1,6 @@
 // src/modules/deposit/domain/model/bank-config.entity.ts
 import { Prisma } from '@prisma/client';
-import { ExchangeCurrencyCode } from '@prisma/client';
+import type { ExchangeCurrencyCode } from '@prisma/client';
 
 /**
  * BankConfig 도메인 엔티티
@@ -30,7 +30,7 @@ export class BankConfig {
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
     private _deletedAt: Date | null,
-  ) { }
+  ) {}
 
   /**
    * 새로운 엔티티 생성 (팩토리 메서드)
@@ -229,8 +229,7 @@ export class BankConfig {
    */
   isAmountValid(amount: Prisma.Decimal): boolean {
     return (
-      this.isAmountAboveMinimum(amount) &&
-      this.isAmountBelowMaximum(amount)
+      this.isAmountAboveMinimum(amount) && this.isAmountBelowMaximum(amount)
     );
   }
 
@@ -277,4 +276,3 @@ export class BankConfig {
     );
   }
 }
-

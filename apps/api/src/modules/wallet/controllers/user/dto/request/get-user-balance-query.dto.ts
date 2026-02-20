@@ -10,8 +10,8 @@ export class GetUserBalanceQueryDto {
   })
   @IsOptional()
   @IsIn(WALLET_CURRENCIES, {
-    message: 'Invalid currency code. Allowed values: ' + WALLET_CURRENCIES.join(', '),
+    message:
+      'Invalid currency code. Allowed values: ' + WALLET_CURRENCIES.join(', '),
   })
   currency?: WalletCurrencyCode;
 }
-

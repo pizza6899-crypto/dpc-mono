@@ -75,9 +75,7 @@ describe('GetWalletBalanceService', () => {
 
     service = module.get<GetWalletBalanceService>(GetWalletBalanceService);
     mockRepository = module.get(AFFILIATE_WALLET_REPOSITORY);
-    mockDispatchLogService = module.get(
-      DispatchLogService,
-    ) as jest.Mocked<DispatchLogService>;
+    mockDispatchLogService = module.get(DispatchLogService);
 
     jest.clearAllMocks();
   });

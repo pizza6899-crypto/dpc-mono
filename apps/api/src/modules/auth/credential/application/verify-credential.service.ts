@@ -33,7 +33,7 @@ export class VerifyCredentialService {
   constructor(
     @Inject(CREDENTIAL_USER_REPOSITORY)
     private readonly userRepository: CredentialUserRepositoryPort,
-  ) { }
+  ) {}
 
   async execute({
     email,

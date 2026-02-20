@@ -46,7 +46,7 @@ export class RegisterCredentialService {
     private readonly createUserService: CreateUserService,
     private readonly initializeUserWalletsService: InitializeUserWalletsService,
     private readonly initializeUserTierService: InitializeUserTierService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(
@@ -112,7 +112,6 @@ export class RegisterCredentialService {
         userId: user.id,
         campaignName: 'Default',
       });
-
     } catch (error) {
       if (error instanceof UserAlreadyExistsException) {
         throw error;

@@ -18,29 +18,34 @@ import { TierDefinitionsModule } from '../definitions/tier-definitions.module';
 import { TierRewardModule } from '../reward/tier-reward.module';
 
 @Module({
-    imports: [
-        forwardRef(() => TierProfileModule),
-        TierDefinitionsModule,
-        TierRewardModule,
-        TierAuditModule,
-        ConcurrencyModule,
-        BullMqModule,
-        BullModule.registerQueue(
-            { name: TIER_EVALUATOR_QUEUES.EVALUATION_TRIGGER.name },
-            { name: TIER_EVALUATOR_QUEUES.USER_EVALUATION.name },
-        ),
-    ],
-    providers: [
-        PromotionPolicy,
-        DemotionPolicy,
-        PromoteUserTierService,
-        DemoteUserTierService,
-        AccumulateUserRollingService,
-        AccumulateUserDepositService,
-        EvaluateUserTierService,
-        TierEvaluationTriggerProcessor,
-        TierUserEvaluationProcessor,
-    ],
-    exports: [AccumulateUserRollingService, AccumulateUserDepositService, EvaluateUserTierService, DemoteUserTierService],
+  imports: [
+    forwardRef(() => TierProfileModule),
+    TierDefinitionsModule,
+    TierRewardModule,
+    TierAuditModule,
+    ConcurrencyModule,
+    BullMqModule,
+    BullModule.registerQueue(
+      { name: TIER_EVALUATOR_QUEUES.EVALUATION_TRIGGER.name },
+      { name: TIER_EVALUATOR_QUEUES.USER_EVALUATION.name },
+    ),
+  ],
+  providers: [
+    PromotionPolicy,
+    DemotionPolicy,
+    PromoteUserTierService,
+    DemoteUserTierService,
+    AccumulateUserRollingService,
+    AccumulateUserDepositService,
+    EvaluateUserTierService,
+    TierEvaluationTriggerProcessor,
+    TierUserEvaluationProcessor,
+  ],
+  exports: [
+    AccumulateUserRollingService,
+    AccumulateUserDepositService,
+    EvaluateUserTierService,
+    DemoteUserTierService,
+  ],
 })
-export class TierEvaluatorModule { }
+export class TierEvaluatorModule {}

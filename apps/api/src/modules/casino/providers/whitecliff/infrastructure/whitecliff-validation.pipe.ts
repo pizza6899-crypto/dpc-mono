@@ -1,8 +1,4 @@
-import {
-    PipeTransform,
-    Injectable,
-    ArgumentMetadata,
-} from '@nestjs/common';
+import { PipeTransform, Injectable, ArgumentMetadata } from '@nestjs/common';
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { WhitecliffValidationException } from './whitecliff-exception.filter';
@@ -14,26 +10,26 @@ import { WhitecliffValidationException } from './whitecliff-exception.filter';
  */
 @Injectable()
 export class WhitecliffValidationPipe implements PipeTransform<any> {
-    async transform(value: any, { metatype }: ArgumentMetadata) {
-        if (!metatype || !this.toValidate(metatype)) {
-            return value;
-        }
-
-        const object = plainToInstance(metatype, value);
-        const errors = await validate(object, {
-            whitelist: true, // DTO에 없는 필드 제거 (보안)
-            forbidNonWhitelisted: false,
-        });
-
-        if (errors.length > 0) {
-            throw new WhitecliffValidationException(errors);
-        }
-
-        return object;
+  async transform(value: any, { metatype }: ArgumentMetadata) {
+    if (!metatype || !this.toValidate(metatype)) {
+      return value;
     }
 
-    private toValidate(metatype: Function): boolean {
-        const types: Function[] = [String, Boolean, Number, Array, Object];
-        return !types.includes(metatype);
+    const object = plainToInstance(metatype, value);
+    const errors = await validate(object, {
+      whitelist: true, // DTO에 없는 필드 제거 (보안)
+      forbidNonWhitelisted: false,
+    });
+
+    if (errors.length > 0) {
+      throw new WhitecliffValidationException(errors);
     }
+
+    return object;
+  }
+
+  private toValidate(metatype: Function): boolean {
+    const types: Function[] = [String, Boolean, Number, Array, Object];
+    return !types.includes(metatype);
+  }
 }

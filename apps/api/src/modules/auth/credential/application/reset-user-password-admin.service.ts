@@ -5,7 +5,10 @@ import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.reposit
 import { hashPassword } from 'src/utils/password.util';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
-import { LoginFailedException, InsufficientPermissionException } from '../domain/exception';
+import {
+  LoginFailedException,
+  InsufficientPermissionException,
+} from '../domain/exception';
 import { nanoid } from 'nanoid';
 import { UserRoleType } from '@prisma/client';
 import { User } from 'src/modules/user/domain';
@@ -35,7 +38,7 @@ export class ResetUserPasswordAdminService {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(
@@ -90,7 +93,7 @@ export class ResetUserPasswordAdminService {
     const allChars = uppercase + lowercase + numbers;
 
     // nanoid로 기본 문자열 생성 (10자)
-    let password = nanoid(10);
+    const password = nanoid(10);
 
     // 최소 1개의 대문자, 소문자, 숫자 포함 보장
     const randomUpper = uppercase[Math.floor(Math.random() * uppercase.length)];
@@ -145,4 +148,3 @@ export class ResetUserPasswordAdminService {
     throw new InsufficientPermissionException();
   }
 }
-

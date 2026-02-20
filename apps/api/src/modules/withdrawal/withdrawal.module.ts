@@ -9,6 +9,58 @@ import { WITHDRAWAL_REPOSITORY } from './ports';
 import { WithdrawalRepository } from './infrastructure/withdrawal.repository';
 import { WithdrawalMapper } from './infrastructure/withdrawal.mapper';
 import {
+  RequestCryptoWithdrawalService,
+  RequestBankWithdrawalService,
+  CancelWithdrawalService,
+  FindWithdrawalsService,
+  GetWithdrawalService,
+  GetWithdrawalOptionsService,
+  ApproveWithdrawalService,
+  RejectWithdrawalService,
+  FindPendingWithdrawalsService,
+  ProcessWithdrawalService,
+
+  // Config Services
+  CreateCryptoConfigService,
+  UpdateCryptoConfigService,
+  FindCryptoConfigsAdminService,
+  ToggleCryptoConfigActiveService,
+  DeleteCryptoConfigService,
+  CreateBankConfigService,
+  UpdateBankConfigService,
+  FindBankConfigsAdminService,
+  ToggleBankConfigActiveService,
+  DeleteBankConfigService,
+} from './application';
+import { WithdrawalUserController } from './controllers/user/withdrawal-user.controller';
+import { WithdrawalAdminController } from './controllers/admin/withdrawal-admin.controller';
+import { WithdrawalConfigAdminController } from './controllers/admin/withdrawal-config-admin.controller';
+
+@Module({
+  imports: [
+    SnowflakeModule,
+    PaymentModule,
+    WalletModule,
+    WageringModule,
+    ConcurrencyModule,
+  ],
+  controllers: [
+    WithdrawalUserController,
+    WithdrawalAdminController,
+    WithdrawalConfigAdminController,
+  ],
+  providers: [
+    // Domain
+    WithdrawalPolicy,
+
+    // Infrastructure
+    WithdrawalMapper,
+    {
+      provide: WITHDRAWAL_REPOSITORY,
+      useClass: WithdrawalRepository,
+    },
+
+    // Application Services
     RequestCryptoWithdrawalService,
     RequestBankWithdrawalService,
     CancelWithdrawalService,
@@ -31,69 +83,16 @@ import {
     FindBankConfigsAdminService,
     ToggleBankConfigActiveService,
     DeleteBankConfigService,
-} from './application';
-import { WithdrawalUserController } from './controllers/user/withdrawal-user.controller';
-import { WithdrawalAdminController } from './controllers/admin/withdrawal-admin.controller';
-import { WithdrawalConfigAdminController } from './controllers/admin/withdrawal-config-admin.controller';
-
-@Module({
-    imports: [
-        SnowflakeModule,
-        PaymentModule,
-        WalletModule,
-        WageringModule,
-        ConcurrencyModule,
-    ],
-    controllers: [
-        WithdrawalUserController,
-        WithdrawalAdminController,
-        WithdrawalConfigAdminController,
-    ],
-    providers: [
-        // Domain
-        WithdrawalPolicy,
-
-        // Infrastructure
-        WithdrawalMapper,
-        {
-            provide: WITHDRAWAL_REPOSITORY,
-            useClass: WithdrawalRepository,
-        },
-
-        // Application Services
-        RequestCryptoWithdrawalService,
-        RequestBankWithdrawalService,
-        CancelWithdrawalService,
-        FindWithdrawalsService,
-        GetWithdrawalService,
-        GetWithdrawalOptionsService,
-        ApproveWithdrawalService,
-        RejectWithdrawalService,
-        FindPendingWithdrawalsService,
-        ProcessWithdrawalService,
-
-        // Config Services
-        CreateCryptoConfigService,
-        UpdateCryptoConfigService,
-        FindCryptoConfigsAdminService,
-        ToggleCryptoConfigActiveService,
-        DeleteCryptoConfigService,
-        CreateBankConfigService,
-        UpdateBankConfigService,
-        FindBankConfigsAdminService,
-        ToggleBankConfigActiveService,
-        DeleteBankConfigService,
-    ],
-    exports: [
-        WITHDRAWAL_REPOSITORY,
-        RequestCryptoWithdrawalService,
-        RequestBankWithdrawalService,
-        CancelWithdrawalService,
-        FindWithdrawalsService,
-        GetWithdrawalService,
-        GetWithdrawalOptionsService,
-        ProcessWithdrawalService,
-    ],
+  ],
+  exports: [
+    WITHDRAWAL_REPOSITORY,
+    RequestCryptoWithdrawalService,
+    RequestBankWithdrawalService,
+    CancelWithdrawalService,
+    FindWithdrawalsService,
+    GetWithdrawalService,
+    GetWithdrawalOptionsService,
+    ProcessWithdrawalService,
+  ],
 })
-export class WithdrawalModule { }
-
+export class WithdrawalModule {}

@@ -1,5 +1,5 @@
 // src/modules/deposit/domain/model/value-objects/deposit-amount.vo.ts
-import { Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import { FeePaidByType } from '@prisma/client';
 
 /**
@@ -13,7 +13,7 @@ export class DepositAmount {
     public readonly feeAmount: Prisma.Decimal | null,
     public readonly feeCurrency: string | null,
     public readonly feePaidBy: FeePaidByType | null,
-  ) { }
+  ) {}
 
   static create(params: {
     requestedAmount: Prisma.Decimal;
@@ -105,4 +105,3 @@ export class DepositAmount {
     );
   }
 }
-

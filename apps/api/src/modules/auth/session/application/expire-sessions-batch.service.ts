@@ -36,7 +36,7 @@ export class ExpireSessionsBatchService {
     private readonly repository: UserSessionRepositoryPort,
     private readonly sessionTracker: SessionTrackerService,
     private readonly dispatchLogService: DispatchLogService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(
@@ -45,7 +45,8 @@ export class ExpireSessionsBatchService {
     const batchSize = params.batchSize ?? 100;
 
     // 1. 만료된 세션 조회
-    const expiredSessions = await this.repository.findExpiredSessions(batchSize);
+    const expiredSessions =
+      await this.repository.findExpiredSessions(batchSize);
 
     if (expiredSessions.length === 0) {
       return { expiredCount: 0 };
@@ -111,4 +112,3 @@ export class ExpireSessionsBatchService {
     return { expiredCount };
   }
 }
-

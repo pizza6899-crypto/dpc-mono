@@ -2,18 +2,16 @@
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import { Logger } from '@nestjs/common';
-import { RevokeSessionService, type RevokeSessionParams } from './revoke-session.service';
+import {
+  RevokeSessionService,
+  type RevokeSessionParams,
+} from './revoke-session.service';
 import {
   USER_SESSION_REPOSITORY,
   type UserSessionRepositoryPort,
 } from '../ports/out';
 import { SessionTrackerService } from '../infrastructure/session-tracker.service';
-import {
-  UserSession,
-  SessionType,
-  SessionStatus,
-  DeviceInfo,
-} from '../domain';
+import { UserSession, SessionType, SessionStatus, DeviceInfo } from '../domain';
 import { SessionNotFoundException } from '../domain/exception';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
@@ -312,7 +310,9 @@ describe('RevokeSessionService', () => {
       };
 
       // Act & Assert
-      await expect(service.execute(params)).rejects.toThrow('Invalid revokedBy');
+      await expect(service.execute(params)).rejects.toThrow(
+        'Invalid revokedBy',
+      );
       expect(repository.findBySessionId).not.toHaveBeenCalled();
     });
 
@@ -324,7 +324,9 @@ describe('RevokeSessionService', () => {
       };
 
       // Act & Assert
-      await expect(service.execute(params)).rejects.toThrow('Invalid revokedBy');
+      await expect(service.execute(params)).rejects.toThrow(
+        'Invalid revokedBy',
+      );
       expect(repository.findBySessionId).not.toHaveBeenCalled();
     });
 
@@ -439,4 +441,3 @@ describe('RevokeSessionService', () => {
     });
   });
 });
-

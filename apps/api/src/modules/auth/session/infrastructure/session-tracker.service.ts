@@ -7,7 +7,7 @@ import { SessionType } from '../domain';
  * 세션 트래커 서비스
  *
  * Redis 세션 스토어와 WebSocket 연결을 관리합니다.
- * 
+ *
  * 사용 케이스:
  * 1. 특정 세션 종료: 관리자가 특정 유저의 특정 세션 종료 또는 유저가 로그인 처리
  *    - 해당 세션 종료 처리 및 해당 세션으로 기인한 소켓 종료 처리
@@ -19,9 +19,7 @@ export class SessionTrackerService {
   private readonly logger = new Logger(SessionTrackerService.name);
   private websocketServer: Server | null = null;
 
-  constructor(
-    private readonly redisService: RedisService,
-  ) { }
+  constructor(private readonly redisService: RedisService) {}
 
   /**
    * WebSocket 서버 등록
@@ -33,13 +31,13 @@ export class SessionTrackerService {
 
   /**
    * 특정 세션 종료
-   * 
+   *
    * 케이스 1: 관리자가 특정 유저의 특정 세션 명시적 종료 또는 유저가 로그인 처리
    * - 해당 세션 종료 처리 및 해당 세션으로 기인한 소켓 종료 처리
-   * 
+   *
    * HTTP 세션: Redis에서 세션 삭제
    * WebSocket 세션: sessionId Room의 모든 소켓 연결 해제
-   * 
+   *
    * Redis 어댑터를 사용하는 다중 인스턴스 환경에서도 모든 서버 인스턴스의
    * 해당 세션 소켓이 함께 끊깁니다.
    *
@@ -54,7 +52,11 @@ export class SessionTrackerService {
     isAdmin: boolean = false,
   ): Promise<void> {
     // 입력 검증
-    if (!sessionId || typeof sessionId !== 'string' || sessionId.trim().length === 0) {
+    if (
+      !sessionId ||
+      typeof sessionId !== 'string' ||
+      sessionId.trim().length === 0
+    ) {
       this.logger.warn(`유효하지 않은 sessionId: ${sessionId}`);
       return;
     }
@@ -76,10 +78,13 @@ export class SessionTrackerService {
 
   /**
    * HTTP 세션 삭제 (Redis)
-   * 
+   *
    * @private
    */
-  private async deleteHttpSession(sessionId: string, isAdmin: boolean = false): Promise<void> {
+  private async deleteHttpSession(
+    sessionId: string,
+    isAdmin: boolean = false,
+  ): Promise<void> {
     const prefix = isAdmin ? 'admin-sess:' : 'sess:';
     const redisKey = `${prefix}${sessionId}`;
 
@@ -109,9 +114,9 @@ export class SessionTrackerService {
 
   /**
    * 특정 세션의 모든 WebSocket 연결 해제
-   * 
+   *
    * WebSocket 연결 시 sessionId Room에 조인되어 있다고 가정합니다.
-   * 
+   *
    * @private
    */
   private async disconnectSessionSockets(sessionId: string): Promise<void> {
@@ -127,9 +132,7 @@ export class SessionTrackerService {
     try {
       // sessionId를 Room 이름으로 사용하여 해당 세션의 모든 소켓 연결 해제
       // Redis 어댑터를 통해 모든 서버 인스턴스의 해당 세션 소켓이 함께 끊김
-      await this.websocketServer
-        .in(sessionId)
-        .disconnectSockets(true);
+      await this.websocketServer.in(sessionId).disconnectSockets(true);
 
       this.logger.log(
         `세션의 모든 WebSocket 연결 해제 완료: sessionId=${sessionId}`,
@@ -145,4 +148,3 @@ export class SessionTrackerService {
     }
   }
 }
-

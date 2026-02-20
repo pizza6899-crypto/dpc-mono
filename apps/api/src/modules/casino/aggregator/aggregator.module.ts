@@ -27,36 +27,39 @@ import { DcsAdapter } from './infrastructure/adapters/dcs/dcs.adapter';
 import { DcsModule } from '../providers/dcs/dcs.module';
 
 @Module({
-    imports: [EnvModule, FileModule, WhitecliffModule, DcsModule],
-    controllers: [AggregatorAdminController, GameProviderAdminController],
-    providers: [
-        // Infrastructure - Aggregator
-        CasinoAggregatorMapper,
-        {
-            provide: CASINO_AGGREGATOR_REPOSITORY,
-            useClass: CasinoAggregatorRepository,
-        },
-        // Infrastructure - Provider
-        CasinoGameProviderMapper,
-        {
-            provide: CASINO_GAME_PROVIDER_REPOSITORY,
-            useClass: CasinoGameProviderRepository,
-        },
-        // Infrastructure - Client Adapters
-        AggregatorClientFactory,
-        WhitecliffAdapter,
-        DcsAdapter,
-        // Application - Aggregator
-        FindAggregatorsService,
-        UpdateAggregatorService,
-        AggregatorRegistryService,
-        // Application - Provider
-        CreateGameProviderService,
-        FindGameProvidersService,
-        FindGameProviderByIdService,
-        UpdateGameProviderService,
-    ],
-    exports: [AggregatorRegistryService, AggregatorClientFactory, FindGameProviderByIdService],
+  imports: [EnvModule, FileModule, WhitecliffModule, DcsModule],
+  controllers: [AggregatorAdminController, GameProviderAdminController],
+  providers: [
+    // Infrastructure - Aggregator
+    CasinoAggregatorMapper,
+    {
+      provide: CASINO_AGGREGATOR_REPOSITORY,
+      useClass: CasinoAggregatorRepository,
+    },
+    // Infrastructure - Provider
+    CasinoGameProviderMapper,
+    {
+      provide: CASINO_GAME_PROVIDER_REPOSITORY,
+      useClass: CasinoGameProviderRepository,
+    },
+    // Infrastructure - Client Adapters
+    AggregatorClientFactory,
+    WhitecliffAdapter,
+    DcsAdapter,
+    // Application - Aggregator
+    FindAggregatorsService,
+    UpdateAggregatorService,
+    AggregatorRegistryService,
+    // Application - Provider
+    CreateGameProviderService,
+    FindGameProvidersService,
+    FindGameProviderByIdService,
+    UpdateGameProviderService,
+  ],
+  exports: [
+    AggregatorRegistryService,
+    AggregatorClientFactory,
+    FindGameProviderByIdService,
+  ],
 })
-export class AggregatorModule { }
-
+export class AggregatorModule {}

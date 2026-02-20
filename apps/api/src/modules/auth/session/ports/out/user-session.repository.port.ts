@@ -1,5 +1,5 @@
 import type { UserSession } from '../../domain';
-import { SessionType, SessionStatus } from '../../domain';
+import type { SessionType, SessionStatus } from '../../domain';
 
 export interface FindSessionsParams {
   page?: number;
@@ -68,4 +68,3 @@ export interface UserSessionRepositoryPort {
    */
   deleteExpiredSessions(beforeDate: Date): Promise<number>;
 }
-

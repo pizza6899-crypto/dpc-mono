@@ -8,7 +8,7 @@ const CODE_MAX_LENGTH = 12;
 const CODE_PATTERN = /^[A-Z0-9]+$/;
 
 export class AffiliateCodeValue {
-  private constructor(public readonly value: string) { }
+  private constructor(public readonly value: string) {}
 
   static create(code: string): AffiliateCodeValue {
     if (!code) {

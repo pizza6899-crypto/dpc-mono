@@ -6,7 +6,7 @@ import { LogType } from 'src/modules/audit-log/domain';
 export class NowPaymentCallbackLogService {
   private readonly logger = new Logger(NowPaymentCallbackLogService.name);
 
-  constructor(private readonly dispatchLogService: DispatchLogService) { }
+  constructor(private readonly dispatchLogService: DispatchLogService) {}
 
   async logCallback(
     requestHeaders: Record<string, any>,

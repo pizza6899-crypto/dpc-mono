@@ -3,8 +3,8 @@ import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import { RegistrationController } from './registration.controller';
 import { RegisterCredentialService } from '../../application/register-credential.service';
-import { RegisterRequestDto } from './dto/request/register.request.dto';
-import { RegisterResponseDto } from './dto/response/register.response.dto';
+import type { RegisterRequestDto } from './dto/request/register.request.dto';
+import type { RegisterResponseDto } from './dto/response/register.response.dto';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from 'src/common/http/types/message-codes';
@@ -83,7 +83,10 @@ describe('RegistrationController', () => {
       );
 
       // Act
-      const result = await controller.register(mockRequestInfo, mockRegisterDto);
+      const result = await controller.register(
+        mockRequestInfo,
+        mockRegisterDto,
+      );
 
       // Assert
       expect(result).toEqual(mockRegisterResult);
@@ -121,10 +124,7 @@ describe('RegistrationController', () => {
 
     it('RegisterCredentialService가 ApiException을 던지면 예외를 전파해야 함', async () => {
       // Arrange
-      const error = new ApiException(
-        MessageCode.USER_ALREADY_EXISTS,
-        400,
-      );
+      const error = new ApiException(MessageCode.USER_ALREADY_EXISTS, 400);
       mockRegisterCredentialService.execute.mockRejectedValue(error);
 
       // Act & Assert
@@ -149,4 +149,3 @@ describe('RegistrationController', () => {
     });
   });
 });
-

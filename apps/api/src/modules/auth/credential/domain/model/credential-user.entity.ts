@@ -9,7 +9,7 @@ export class CredentialUser {
     public readonly status: UserStatus,
     public readonly role: UserRoleType,
     public readonly language: Language,
-  ) { }
+  ) {}
 
   /**
    * 새로운 CredentialUser 생성

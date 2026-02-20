@@ -52,7 +52,7 @@ export class RegisterCredentialAdminService {
     private readonly createUserService: CreateUserService,
     private readonly initializeUserWalletsService: InitializeUserWalletsService,
     private readonly initializeUserTierService: InitializeUserTierService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(
@@ -185,4 +185,3 @@ export class RegisterCredentialAdminService {
     };
   }
 }
-

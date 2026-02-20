@@ -7,51 +7,51 @@ import { BankConfig } from '../domain';
 import type { PaginatedData } from 'src/common/http/types';
 
 interface FindBankConfigsAdminParams {
-    page?: number;
-    limit?: number;
-    currency?: ExchangeCurrencyCode;
-    isActive?: boolean;
-    sortBy?: string;
-    sortOrder?: 'asc' | 'desc';
+  page?: number;
+  limit?: number;
+  currency?: ExchangeCurrencyCode;
+  isActive?: boolean;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
 }
 
 @Injectable()
 export class FindBankConfigsAdminService {
-    constructor(
-        @Inject(BANK_CONFIG_REPOSITORY)
-        private readonly repository: BankConfigRepositoryPort,
-    ) { }
+  constructor(
+    @Inject(BANK_CONFIG_REPOSITORY)
+    private readonly repository: BankConfigRepositoryPort,
+  ) {}
 
-    async execute({
-        page = 1,
-        limit = 20,
+  async execute({
+    page = 1,
+    limit = 20,
+    currency,
+    isActive,
+    sortBy = 'createdAt',
+    sortOrder = 'desc',
+  }: FindBankConfigsAdminParams): Promise<PaginatedData<BankConfig>> {
+    const skip = (page - 1) * limit;
+
+    const [configs, total] = await Promise.all([
+      this.repository.list({
+        skip,
+        take: limit,
         currency,
         isActive,
-        sortBy = 'createdAt',
-        sortOrder = 'desc',
-    }: FindBankConfigsAdminParams): Promise<PaginatedData<BankConfig>> {
-        const skip = (page - 1) * limit;
+        sortBy,
+        sortOrder,
+      }),
+      this.repository.count({
+        currency,
+        isActive,
+      }),
+    ]);
 
-        const [configs, total] = await Promise.all([
-            this.repository.list({
-                skip,
-                take: limit,
-                currency,
-                isActive,
-                sortBy,
-                sortOrder,
-            }),
-            this.repository.count({
-                currency,
-                isActive,
-            }),
-        ]);
-
-        return {
-            data: configs,
-            page,
-            limit,
-            total,
-        };
-    }
+    return {
+      data: configs,
+      page,
+      limit,
+      total,
+    };
+  }
 }

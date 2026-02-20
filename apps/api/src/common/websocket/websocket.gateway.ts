@@ -17,7 +17,10 @@ import { EnvService } from 'src/common/env/env.service';
 import session from 'express-session';
 import passport from 'passport';
 import { ApiProperty } from '@nestjs/swagger';
-import { AsyncApiPub, AsyncApiSub } from 'src/common/decorators/async-api.decorator';
+import {
+  AsyncApiPub,
+  AsyncApiSub,
+} from 'src/common/decorators/async-api.decorator';
 import { IsNotEmpty, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CustomValidationPipe } from '../http/pipes/validation.pipe'; // 추가
@@ -74,7 +77,8 @@ export class MessageResponseDto {
 @UsePipes(CustomValidationPipe)
 @UseFilters(WebsocketExceptionFilter)
 export class WebsocketGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
   @WebSocketServer()
   server: Server;
 
@@ -85,7 +89,7 @@ export class WebsocketGateway
     private readonly envService: EnvService,
     private readonly createSessionService: CreateSessionService,
     private readonly sessionTracker: SessionTrackerService,
-  ) { }
+  ) {}
 
   // Gateway 초기화 시 Redis Adapter 설정
   afterInit(server: Server) {
@@ -145,9 +149,10 @@ export class WebsocketGateway
       });
 
       // WebSocket 세션 생성
-      const sessionConfig = user.role === 'ADMIN' || user.role === 'SUPER_ADMIN'
-        ? this.envService.adminSession
-        : this.envService.session;
+      const sessionConfig =
+        user.role === 'ADMIN' || user.role === 'SUPER_ADMIN'
+          ? this.envService.adminSession
+          : this.envService.session;
 
       const expiresAt = new Date(Date.now() + sessionConfig.maxAgeMs);
 

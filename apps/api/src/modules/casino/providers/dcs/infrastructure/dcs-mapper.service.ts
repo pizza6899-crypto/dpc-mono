@@ -38,64 +38,64 @@ export class DcsMapperService {
   private static readonly PROVIDER_REVERSE_MAP: Partial<
     Record<GameProvider, string>
   > = {
-      // Active Mappings
-      [GameProvider.RELAX_GAMING]: 'relax',
-      [GameProvider.PLAYNGO]: 'png',
-      [GameProvider.EVOLUTION]: 'evl', // Evolution
-      [GameProvider.EVOLUTION_ASIA]: 'evl', // Map to generic Evolution
-      [GameProvider.EVOLUTION_INDIA]: 'evl', // Map to generic Evolution
-      [GameProvider.EVOLUTION_KOREA]: 'evl', // Map to generic Evolution
-      [GameProvider.PG_SOFT]: 'pg', // Assuming PG Soft is 'pg' or similar? Need to verify. Wait, list doesn't show 'pg' explicitly but typical code. Let's check list again.
-      // List has: dcace, yg, relax, nlc, png, hs, aux, evo, gam, psh, ezugi, swf, funta, stm, mj, fm, ps, sb, plb, evl, btg, ne, rt, tg, tgo, wz, tk, lm, yt, sa, ss, bg, nm, op, bp, hso, hsl, tq, raw, bm, ag, pts, ptc
-      // PG_SOFT is likely missing from my manual check or labeled differently? 
-      // Actually 'png' is Play'n Go.
-      // Let's stick to what is known from GameProvider enum and provided list.
-      // 'evl': Evolution
-      // 'relax': Relax gaming
-      // 'png': Play'n Go
+    // Active Mappings
+    [GameProvider.RELAX_GAMING]: 'relax',
+    [GameProvider.PLAYNGO]: 'png',
+    [GameProvider.EVOLUTION]: 'evl', // Evolution
+    [GameProvider.EVOLUTION_ASIA]: 'evl', // Map to generic Evolution
+    [GameProvider.EVOLUTION_INDIA]: 'evl', // Map to generic Evolution
+    [GameProvider.EVOLUTION_KOREA]: 'evl', // Map to generic Evolution
+    [GameProvider.PG_SOFT]: 'pg', // Assuming PG Soft is 'pg' or similar? Need to verify. Wait, list doesn't show 'pg' explicitly but typical code. Let's check list again.
+    // List has: dcace, yg, relax, nlc, png, hs, aux, evo, gam, psh, ezugi, swf, funta, stm, mj, fm, ps, sb, plb, evl, btg, ne, rt, tg, tgo, wz, tk, lm, yt, sa, ss, bg, nm, op, bp, hso, hsl, tq, raw, bm, ag, pts, ptc
+    // PG_SOFT is likely missing from my manual check or labeled differently?
+    // Actually 'png' is Play'n Go.
+    // Let's stick to what is known from GameProvider enum and provided list.
+    // 'evl': Evolution
+    // 'relax': Relax gaming
+    // 'png': Play'n Go
 
-      // Future/Potential Mappings based on DCS list:
-      // 'dcace': DCACE
-      // 'yg': Yggdrasil
-      // 'nlc': Nolimit City
-      // 'hs': Hacksaw Gaming
-      // 'aux': Avatar UX
-      // 'evo': Evoplay (Note: 'evl' is Evolution, 'evo' is Evoplay)
-      // 'gam': Gamomat
-      // 'psh': Push Gaming
-      // 'ezugi': Ezugi
-      // 'swf': Win Fast
-      // 'funta': FunTa Gaming
-      // 'stm': Slotmill
-      // 'mj': 7Mojos
-      // 'fm': Fantasma
-      // 'ps': Peter & Sons
-      // 'sb': Spribe
-      // 'plb': Parlay bay
-      // 'btg': Big Time Gaming
-      // 'ne': NetEnt
-      // 'rt': Red Tiger
-      // 'tg': Turbo Games
-      // 'tgo': Turbo Games (non-Asian market)
-      // 'wz': Voltent (Wazdan)
-      // 'tk': Thunderkick
-      // 'lm': Lucky Monaco
-      // 'yt': Yolted
-      // 'sa': SA Gaming
-      // 'ss': Smartsoft
-      // 'bg': Bgaming
-      // 'nm': Novomatic
-      // 'op': Octoplay
-      // 'bp': BluePrint
-      // 'hso': Hacksaw Gaming ROW
-      // 'hsl': Hacksaw Gaming Latam
-      // 'tq': Originals (Tequity)
-      // 'raw': RAW
-      // 'bm': Booming Games
-      // 'ag': PlayACE
-      // 'pts': Play Tech Slot
-      // 'ptc': PlayTech Casino
-    };
+    // Future/Potential Mappings based on DCS list:
+    // 'dcace': DCACE
+    // 'yg': Yggdrasil
+    // 'nlc': Nolimit City
+    // 'hs': Hacksaw Gaming
+    // 'aux': Avatar UX
+    // 'evo': Evoplay (Note: 'evl' is Evolution, 'evo' is Evoplay)
+    // 'gam': Gamomat
+    // 'psh': Push Gaming
+    // 'ezugi': Ezugi
+    // 'swf': Win Fast
+    // 'funta': FunTa Gaming
+    // 'stm': Slotmill
+    // 'mj': 7Mojos
+    // 'fm': Fantasma
+    // 'ps': Peter & Sons
+    // 'sb': Spribe
+    // 'plb': Parlay bay
+    // 'btg': Big Time Gaming
+    // 'ne': NetEnt
+    // 'rt': Red Tiger
+    // 'tg': Turbo Games
+    // 'tgo': Turbo Games (non-Asian market)
+    // 'wz': Voltent (Wazdan)
+    // 'tk': Thunderkick
+    // 'lm': Lucky Monaco
+    // 'yt': Yolted
+    // 'sa': SA Gaming
+    // 'ss': Smartsoft
+    // 'bg': Bgaming
+    // 'nm': Novomatic
+    // 'op': Octoplay
+    // 'bp': BluePrint
+    // 'hso': Hacksaw Gaming ROW
+    // 'hsl': Hacksaw Gaming Latam
+    // 'tq': Originals (Tequity)
+    // 'raw': RAW
+    // 'bm': Booming Games
+    // 'ag': PlayACE
+    // 'pts': Play Tech Slot
+    // 'ptc': PlayTech Casino
+  };
 
   fromDcsProvider(providerId: string): GameProvider | null {
     return DcsMapperService.PROVIDER_MAP[providerId] || null;
@@ -106,15 +106,17 @@ export class DcsMapperService {
   }
 
   // 통화 맵핑
-  private static readonly DCS_CURRENCY_MAP: Partial<Record<GamingCurrencyCode, string>> = {
+  private static readonly DCS_CURRENCY_MAP: Partial<
+    Record<GamingCurrencyCode, string>
+  > = {
     // Active Gaming Currencies
-    'USDT': 'USDT',
-    'USD': 'USD',
-    'KRW': 'KRW',
-    'JPY': 'JPY',
-    'PHP': 'PHP',
-    'IDR': 'IDR',
-    'VND': 'VND',
+    USDT: 'USDT',
+    USD: 'USD',
+    KRW: 'KRW',
+    JPY: 'JPY',
+    PHP: 'PHP',
+    IDR: 'IDR',
+    VND: 'VND',
 
     // Future mappings based on DCS supported currencies:
     // 'AED': 'AED', // United Arab Emirates Dirham
@@ -251,7 +253,7 @@ export class DcsMapperService {
 
     // Reverse lookup attempt
     const entry = Object.entries(DcsMapperService.DCS_CURRENCY_MAP).find(
-      ([_, value]) => value === normalizedDcsCurrency
+      ([_, value]) => value === normalizedDcsCurrency,
     );
 
     if (entry) {
@@ -313,18 +315,18 @@ export class DcsMapperService {
   private static readonly DCS_COUNTRY_MAP: Record<string, string> = {
     // Standard ISO-3166-1 alpha-2 mappings (if they match DCS)
     // Manually verified mappings based on request:
-    'CN': 'CN', // China
-    'HK': 'HK', // Hong Kong
-    'TW': 'TW', // Taiwan
-    'KR': 'KR', // South Korea
-    'JP': 'JP', // Japan
-    'TH': 'TH', // Thailand
-    'PH': 'PH', // Philippines
-    'ID': 'ID', // Indonesia
-    'IN': 'IN', // India
-    'VN': 'VN', // Vietnam
-    'MY': 'MY', // Malaysia
-    'SG': 'SG', // Singapore
+    CN: 'CN', // China
+    HK: 'HK', // Hong Kong
+    TW: 'TW', // Taiwan
+    KR: 'KR', // South Korea
+    JP: 'JP', // Japan
+    TH: 'TH', // Thailand
+    PH: 'PH', // Philippines
+    ID: 'ID', // Indonesia
+    IN: 'IN', // India
+    VN: 'VN', // Vietnam
+    MY: 'MY', // Malaysia
+    SG: 'SG', // Singapore
   };
 
   convertCountryCodeToDcs(countryCode?: string): string {

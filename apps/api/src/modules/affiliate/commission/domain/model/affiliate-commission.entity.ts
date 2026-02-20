@@ -1,8 +1,5 @@
 // src/modules/affiliate/commission/domain/model/affiliate-commission.entity.ts
-import type {
-  ExchangeCurrencyCode,
-  Prisma,
-} from '@prisma/client';
+import type { ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import { CommissionStatus } from '@prisma/client';
 import {
   CommissionNotAvailableException,
@@ -32,7 +29,7 @@ export class AffiliateCommission {
     private _withdrawnAt: Date | null,
     public readonly createdAt: Date,
     private _updatedAt: Date,
-  ) { }
+  ) {}
 
   /**
    * 새로운 커미션 생성

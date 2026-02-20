@@ -5,17 +5,17 @@ import type { BankConfigRepositoryPort } from '../ports/out';
 import { BankConfig } from '../domain';
 
 interface GetBankConfigAdminParams {
-    id: bigint;
+  id: bigint;
 }
 
 @Injectable()
 export class GetBankConfigAdminService {
-    constructor(
-        @Inject(BANK_CONFIG_REPOSITORY)
-        private readonly repository: BankConfigRepositoryPort,
-    ) { }
+  constructor(
+    @Inject(BANK_CONFIG_REPOSITORY)
+    private readonly repository: BankConfigRepositoryPort,
+  ) {}
 
-    async execute({ id }: GetBankConfigAdminParams): Promise<BankConfig> {
-        return await this.repository.getById(id);
-    }
+  async execute({ id }: GetBankConfigAdminParams): Promise<BankConfig> {
+    return await this.repository.getById(id);
+  }
 }

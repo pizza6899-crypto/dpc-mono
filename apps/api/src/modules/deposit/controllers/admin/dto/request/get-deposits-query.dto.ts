@@ -5,7 +5,13 @@ import {
   ExchangeCurrencyCode,
 } from '@prisma/client';
 import { Transform } from 'class-transformer';
-import { IsDateString, IsEnum, IsNumberString, IsOptional, IsString } from 'class-validator';
+import {
+  IsDateString,
+  IsEnum,
+  IsNumberString,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
 
 type DepositSortFields =
@@ -69,4 +75,3 @@ export class GetDepositsQueryDto extends createPaginationQueryDto<DepositSortFie
   @IsDateString()
   endDate?: string;
 }
-

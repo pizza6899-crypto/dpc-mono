@@ -103,10 +103,7 @@ import {
     GetMyDepositsService,
     GetMyDepositDetailService,
   ],
-  controllers: [
-    DepositController,
-    AdminDepositController,
-  ],
+  controllers: [DepositController, AdminDepositController],
   exports: [
     GetDepositStatsService,
     GetDepositsService,
@@ -133,5 +130,4 @@ import {
     GetMyDepositDetailService,
   ],
 })
-export class DepositModule { }
-
+export class DepositModule {}

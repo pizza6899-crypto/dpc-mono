@@ -11,4 +11,3 @@ export class RejectDepositDto {
   @IsString()
   failureReason: string; // 거부 사유
 }
-

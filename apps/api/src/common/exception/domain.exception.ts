@@ -1,5 +1,5 @@
-import { HttpStatus } from '@nestjs/common';
-import { MessageCode } from '@repo/shared';
+import type { HttpStatus } from '@nestjs/common';
+import type { MessageCode } from '@repo/shared';
 
 /**
  * 도메인 레이어의 기본 예외 클래스
@@ -11,7 +11,7 @@ export class DomainException extends Error {
   constructor(
     message: string,
     public readonly errorCode: MessageCode,
-    public readonly httpStatus: HttpStatus
+    public readonly httpStatus: HttpStatus,
   ) {
     super(message);
     this.name = this.constructor.name;

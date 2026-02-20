@@ -24,7 +24,7 @@ import {
 
 @Injectable()
 export class EnvService {
-  constructor(private configService: ConfigService) { }
+  constructor(private configService: ConfigService) {}
 
   get nodeEnv(): string {
     return this.configService.get<string>('NODE_ENV', 'development');

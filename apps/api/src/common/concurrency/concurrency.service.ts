@@ -15,7 +15,7 @@ export class ConcurrencyService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly nodeIdentityService: NodeIdentityService,
-  ) { }
+  ) {}
 
   /**
    * 인스턴스 식별자 (NodeIdentityService의 고유 ID 기반)
@@ -31,11 +31,14 @@ export class ConcurrencyService {
 
   /**
    * [GlobalLock] 락 획득 시도 (테이블 기반)
-   * 
+   *
    * @param key 락 식별자
    * @param options.timeoutSeconds 좀비 락 자동 회수 시간 (기본값: 1800초)
    */
-  async tryAcquire(key: GlobalLockKey, options: LockOptions = {}): Promise<boolean> {
+  async tryAcquire(
+    key: GlobalLockKey,
+    options: LockOptions = {},
+  ): Promise<boolean> {
     const timeoutSeconds = options.timeoutSeconds ?? 1800;
 
     try {
@@ -76,7 +79,11 @@ export class ConcurrencyService {
   /**
    * [GlobalLock] 락 해제 및 결과 기록
    */
-  async release(key: GlobalLockKey, success: boolean, errorMessage?: string): Promise<void> {
+  async release(
+    key: GlobalLockKey,
+    success: boolean,
+    errorMessage?: string,
+  ): Promise<void> {
     try {
       // Prisma Proxy API를 사용하여 타입 안전하게 업데이트
       // 소유권 확인: 자기가 잡은 락만 해제할 수 있도록 instanceId 필터링 추가
@@ -89,15 +96,21 @@ export class ConcurrencyService {
         data: {
           isAcquired: false,
           lastResult: success ? 'SUCCESS' : 'FAILED',
-          errorMessage: errorMessage ? String(errorMessage).slice(0, 1000) : null,
+          errorMessage: errorMessage
+            ? String(errorMessage).slice(0, 1000)
+            : null,
           lastFinishedAt: new Date(),
         },
       });
 
       if (result.count === 0) {
-        this.logger.warn(`락 해제 실패: 소유권이 없거나 이미 해제됨 (key: ${key}, instance: ${this.instanceId})`);
+        this.logger.warn(
+          `락 해제 실패: 소유권이 없거나 이미 해제됨 (key: ${key}, instance: ${this.instanceId})`,
+        );
       } else {
-        this.logger.debug(`락 해제 완료: ${key} (${success ? 'SUCCESS' : 'FAILED'})`);
+        this.logger.debug(
+          `락 해제 완료: ${key} (${success ? 'SUCCESS' : 'FAILED'})`,
+        );
       }
     } catch (error) {
       this.logger.error(`락 해제 중 오류 발생: ${key}`, error);
@@ -110,7 +123,7 @@ export class ConcurrencyService {
   async runExclusive(
     key: GlobalLockKey,
     task: () => Promise<void>,
-    options: LockOptions = {}
+    options: LockOptions = {},
   ): Promise<void> {
     const acquired = await this.tryAcquire(key, options);
     if (!acquired) return;
@@ -120,7 +133,11 @@ export class ConcurrencyService {
       await this.release(key, true);
     } catch (error) {
       this.logger.error(`작업 실행 중 에러: ${key}`, error);
-      await this.release(key, false, error instanceof Error ? error.message : String(error));
+      await this.release(
+        key,
+        false,
+        error instanceof Error ? error.message : String(error),
+      );
       throw error;
     }
   }

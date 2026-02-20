@@ -122,9 +122,7 @@ describe('AdminReferralService', () => {
 
     service = module.get<AdminReferralService>(AdminReferralService);
     mockMapper = module.get(ReferralMapper);
-    mockDispatchLogService = module.get(
-      DispatchLogService,
-    ) as jest.Mocked<DispatchLogService>;
+    mockDispatchLogService = module.get(DispatchLogService);
 
     jest.clearAllMocks();
   });

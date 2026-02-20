@@ -39,7 +39,8 @@ export class DebitRequestDto extends WhitecliffTransactionBaseDto {
   table_id?: string;
 
   @ApiPropertyOptional({
-    description: 'Credit Amount (Payout amount generated during a Debit request)',
+    description:
+      'Credit Amount (Payout amount generated during a Debit request)',
   })
   @IsOptional()
   @IsNumber()

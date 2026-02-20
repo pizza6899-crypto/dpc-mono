@@ -1,4 +1,4 @@
-import { AffiliateCode } from './model/affiliate-code.entity';
+import type { AffiliateCode } from './model/affiliate-code.entity';
 import {
   AffiliateCodeLimitExceededException,
   AffiliateCodeCannotDeleteException,

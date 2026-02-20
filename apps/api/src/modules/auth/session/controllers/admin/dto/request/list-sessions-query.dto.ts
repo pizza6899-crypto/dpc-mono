@@ -10,7 +10,11 @@ import { Transform } from 'class-transformer';
 import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
 import { SessionType, SessionStatus } from '../../../../domain';
 
-type SessionSortFields = 'createdAt' | 'updatedAt' | 'lastActiveAt' | 'expiresAt';
+type SessionSortFields =
+  | 'createdAt'
+  | 'updatedAt'
+  | 'lastActiveAt'
+  | 'expiresAt';
 
 export class ListSessionsQueryDto extends createPaginationQueryDto<SessionSortFields>(
   {
@@ -73,4 +77,3 @@ export class ListSessionsQueryDto extends createPaginationQueryDto<SessionSortFi
   @IsDateString()
   endDate?: string;
 }
-

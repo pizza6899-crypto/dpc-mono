@@ -61,10 +61,7 @@ describe('ResetUserPasswordAdminService', () => {
 
     module = await Test.createTestingModule({
       imports: [PrismaModule, EnvModule], // @Transactional() 데코레이터를 위해 필요
-      providers: [
-        ResetUserPasswordAdminService,
-        mockUserRepositoryProvider,
-      ],
+      providers: [ResetUserPasswordAdminService, mockUserRepositoryProvider],
     })
       .setLogger(new Logger())
       .compile();
@@ -250,60 +247,57 @@ describe('ResetUserPasswordAdminService', () => {
       );
 
       // 해시된 비밀번호가 원본과 다르고, bcrypt 형식인지 확인
-      const actualHash = (
-        mockUserRepository.updatePassword as jest.Mock
-      ).mock.calls[0][1];
+      const actualHash = (mockUserRepository.updatePassword as jest.Mock).mock
+        .calls[0][1];
       expect(actualHash).not.toBe(mockNewPassword);
       expect(actualHash).toMatch(/^\$2[aby]\$\d+\$/); // bcrypt 해시 형식
     });
 
-    it(
-      '자동 생성된 비밀번호가 올바른 형식이어야 함',
-      async () => {
-        // Arrange
-        const mockUser = createMockCredentialUser();
-        mockUserRepository.findById.mockResolvedValue(mockUser);
-        // 매번 다른 해시를 반환하도록 설정 (실제로는 매번 다른 비밀번호가 생성되므로)
-        mockUserRepository.updatePassword.mockImplementation(async (userId, hash) => {
+    it('자동 생성된 비밀번호가 올바른 형식이어야 함', async () => {
+      // Arrange
+      const mockUser = createMockCredentialUser();
+      mockUserRepository.findById.mockResolvedValue(mockUser);
+      // 매번 다른 해시를 반환하도록 설정 (실제로는 매번 다른 비밀번호가 생성되므로)
+      mockUserRepository.updatePassword.mockImplementation(
+        async (userId, hash) => {
           return User.fromPersistence({
             ...mockUser.toPersistence(),
             passwordHash: hash, // 실제 생성된 해시 사용
           });
+        },
+      );
+      // Audit log는 컨트롤러에서 처리되므로 서비스 테스트에서는 제거
+      // mockDispatchLogService.dispatch.mockResolvedValue(undefined);
+
+      // Act - 여러 번 실행하여 다양한 비밀번호 생성 확인
+      const passwords: string[] = [];
+      for (let i = 0; i < 10; i++) {
+        const result = await service.execute({
+          targetUserId: mockTargetUserId,
+          adminUserId: mockAdminUserId,
+          requestInfo: mockClientInfo,
         });
-        // Audit log는 컨트롤러에서 처리되므로 서비스 테스트에서는 제거
-        // mockDispatchLogService.dispatch.mockResolvedValue(undefined);
+        passwords.push(result.newPassword);
+      }
 
-        // Act - 여러 번 실행하여 다양한 비밀번호 생성 확인
-        const passwords: string[] = [];
-        for (let i = 0; i < 10; i++) {
-          const result = await service.execute({
-            targetUserId: mockTargetUserId,
-            adminUserId: mockAdminUserId,
-            requestInfo: mockClientInfo,
-          });
-          passwords.push(result.newPassword);
-        }
+      // Assert - 각 비밀번호의 형식 검증
+      passwords.forEach((password, index) => {
+        expect(password.length).toBe(10);
+        expect(password).toMatch(/[A-Z]/); // 대문자 포함
+        expect(password).toMatch(/[a-z]/); // 소문자 포함
+        expect(password).toMatch(/[0-9]/); // 숫자 포함
+        expect(password).toMatch(/^[A-Za-z0-9]+$/); // 알파벳과 숫자만 포함
+      });
 
-        // Assert - 각 비밀번호의 형식 검증
-        passwords.forEach((password, index) => {
-          expect(password.length).toBe(10);
-          expect(password).toMatch(/[A-Z]/); // 대문자 포함
-          expect(password).toMatch(/[a-z]/); // 소문자 포함
-          expect(password).toMatch(/[0-9]/); // 숫자 포함
-          expect(password).toMatch(/^[A-Za-z0-9]+$/); // 알파벳과 숫자만 포함
-        });
+      // 랜덤성 검증 - 모든 비밀번호가 서로 다른지 확인
+      const uniquePasswords = new Set(passwords);
+      // 10개 중 최소 9개 이상이 서로 달라야 함 (90% 이상의 고유성 보장)
+      // 통계적으로 거의 모든 경우에 10개가 모두 달라야 하므로 9개 이상으로 설정
+      expect(uniquePasswords.size).toBeGreaterThanOrEqual(9);
 
-        // 랜덤성 검증 - 모든 비밀번호가 서로 다른지 확인
-        const uniquePasswords = new Set(passwords);
-        // 10개 중 최소 9개 이상이 서로 달라야 함 (90% 이상의 고유성 보장)
-        // 통계적으로 거의 모든 경우에 10개가 모두 달라야 하므로 9개 이상으로 설정
-        expect(uniquePasswords.size).toBeGreaterThanOrEqual(9);
-
-        // 추가 검증: 비밀번호 배열의 길이 확인
-        expect(passwords.length).toBe(10);
-      },
-      10000, // 타임아웃 10초 (10번 반복 실행으로 인한 지연 고려)
-    );
+      // 추가 검증: 비밀번호 배열의 길이 확인
+      expect(passwords.length).toBe(10);
+    }, 10000); // 타임아웃 10초 (10번 반복 실행으로 인한 지연 고려)
 
     it('모든 단계가 올바른 순서로 실행되어야 함', async () => {
       // Arrange
@@ -325,9 +319,8 @@ describe('ResetUserPasswordAdminService', () => {
       });
 
       // Assert - 호출 순서 확인
-      const findByIdOrder = (
-        mockUserRepository.findById as jest.Mock
-      ).mock.invocationCallOrder[0];
+      const findByIdOrder = (mockUserRepository.findById as jest.Mock).mock
+        .invocationCallOrder[0];
       const updatePasswordOrder = (
         mockUserRepository.updatePassword as jest.Mock
       ).mock.invocationCallOrder[0];
@@ -336,4 +329,3 @@ describe('ResetUserPasswordAdminService', () => {
     });
   });
 });
-

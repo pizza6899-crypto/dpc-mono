@@ -6,37 +6,41 @@ import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.re
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 interface CancelDepositParams {
-    id: bigint;
-    userId: bigint;
+  id: bigint;
+  userId: bigint;
 }
 
 @Injectable()
 export class CancelDepositService {
-    constructor(
-        @Inject(DEPOSIT_DETAIL_REPOSITORY)
-        private readonly depositRepository: DepositDetailRepositoryPort,
-        private readonly advisoryLockService: AdvisoryLockService,
-    ) { }
+  constructor(
+    @Inject(DEPOSIT_DETAIL_REPOSITORY)
+    private readonly depositRepository: DepositDetailRepositoryPort,
+    private readonly advisoryLockService: AdvisoryLockService,
+  ) {}
 
-    @Transactional()
-    async execute(params: CancelDepositParams): Promise<void> {
-        const { id, userId } = params;
+  @Transactional()
+  async execute(params: CancelDepositParams): Promise<void> {
+    const { id, userId } = params;
 
-        // 1. 락 획득 (DB Advisory Lock)
-        await this.advisoryLockService.acquireLock(LockNamespace.DEPOSIT, id.toString(), {
-            throwThrottleError: true,
-        });
+    // 1. 락 획득 (DB Advisory Lock)
+    await this.advisoryLockService.acquireLock(
+      LockNamespace.DEPOSIT,
+      id.toString(),
+      {
+        throwThrottleError: true,
+      },
+    );
 
-        // 2. DepositDetail 조회 (본인 것만)
-        const deposit = await this.depositRepository.findByIdAndUserId(id, userId);
-        if (!deposit) {
-            throw new NotFoundException('Deposit request not found');
-        }
-
-        // 3. 엔티티 비즈니스 로직 실행 (취소 처리)
-        deposit.cancel();
-
-        // 4. 상태 업데이트
-        await this.depositRepository.update(deposit);
+    // 2. DepositDetail 조회 (본인 것만)
+    const deposit = await this.depositRepository.findByIdAndUserId(id, userId);
+    if (!deposit) {
+      throw new NotFoundException('Deposit request not found');
     }
+
+    // 3. 엔티티 비즈니스 로직 실행 (취소 처리)
+    deposit.cancel();
+
+    // 4. 상태 업데이트
+    await this.depositRepository.update(deposit);
+  }
 }

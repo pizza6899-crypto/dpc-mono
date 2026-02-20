@@ -1,5 +1,11 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsDateString, IsEnum, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsDateString,
+  IsEnum,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
 import { PromotionTargetType } from '@prisma/client';
 import { TransformToBoolean } from 'src/common/http/decorators/transform-boolean.decorator';
@@ -49,4 +55,3 @@ export class ListPromotionsQueryDto extends createPaginationQueryDto<PromotionSo
   @IsDateString()
   endDate?: string;
 }
-

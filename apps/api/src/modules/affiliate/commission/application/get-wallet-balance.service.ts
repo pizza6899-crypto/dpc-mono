@@ -19,7 +19,7 @@ export class GetWalletBalanceService {
   constructor(
     @Inject(AFFILIATE_WALLET_REPOSITORY)
     private readonly repository: AffiliateWalletRepositoryPort,
-  ) { }
+  ) {}
 
   async execute({
     affiliateId,
@@ -51,7 +51,6 @@ export class GetWalletBalanceService {
       }
 
       // Audit Log 기록 (사용자가 월렛 잔액 조회)
-
 
       return wallets;
     } catch (error) {

@@ -23,16 +23,20 @@ export class RejectDepositService {
     @Inject(DEPOSIT_DETAIL_REPOSITORY)
     private readonly depositRepository: DepositDetailRepositoryPort,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(params: RejectDepositParams): Promise<RejectDepositResult> {
     const { id, failureReason, adminId } = params;
 
     // 락 획득 (DB Advisory Lock)
-    await this.advisoryLockService.acquireLock(LockNamespace.DEPOSIT, id.toString(), {
-      throwThrottleError: true,
-    });
+    await this.advisoryLockService.acquireLock(
+      LockNamespace.DEPOSIT,
+      id.toString(),
+      {
+        throwThrottleError: true,
+      },
+    );
 
     // 1. DepositDetail 조회
     const deposit = await this.depositRepository.getById(id, {

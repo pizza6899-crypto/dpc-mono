@@ -1,36 +1,36 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class WithdrawalCryptoConfigResponseDto {
-    @ApiProperty()
-    id: string;
+  @ApiProperty()
+  id: string;
 
-    @ApiProperty()
-    symbol: string;
+  @ApiProperty()
+  symbol: string;
 
-    @ApiProperty()
-    network: string;
+  @ApiProperty()
+  network: string;
 
-    @ApiProperty()
-    isActive: boolean;
+  @ApiProperty()
+  isActive: boolean;
 
-    @ApiProperty()
-    minWithdrawAmount: string;
+  @ApiProperty()
+  minWithdrawAmount: string;
 
-    @ApiProperty({ nullable: true })
-    maxWithdrawAmount: string | null;
+  @ApiProperty({ nullable: true })
+  maxWithdrawAmount: string | null;
 
-    @ApiProperty({ nullable: true })
-    autoProcessLimit: string | null;
+  @ApiProperty({ nullable: true })
+  autoProcessLimit: string | null;
 
-    @ApiProperty()
-    withdrawFeeFixed: string;
+  @ApiProperty()
+  withdrawFeeFixed: string;
 
-    @ApiProperty()
-    withdrawFeeRate: string;
+  @ApiProperty()
+  withdrawFeeRate: string;
 
-    @ApiProperty()
-    createdAt: Date;
+  @ApiProperty()
+  createdAt: Date;
 
-    @ApiProperty()
-    updatedAt: Date;
+  @ApiProperty()
+  updatedAt: Date;
 }

@@ -33,4 +33,4 @@ import { TierModule } from '../../tier/tier.module';
   ],
   exports: [RegisterCredentialService, RegisterSocialService],
 })
-export class RegistrationModule { }
+export class RegistrationModule {}

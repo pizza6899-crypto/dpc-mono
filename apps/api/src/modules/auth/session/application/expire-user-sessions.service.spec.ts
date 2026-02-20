@@ -11,12 +11,7 @@ import {
   type UserSessionRepositoryPort,
 } from '../ports/out';
 import { SessionTrackerService } from '../infrastructure/session-tracker.service';
-import {
-  UserSession,
-  SessionType,
-  SessionStatus,
-  DeviceInfo,
-} from '../domain';
+import { UserSession, SessionType, SessionStatus, DeviceInfo } from '../domain';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
@@ -606,4 +601,3 @@ describe('ExpireUserSessionsService', () => {
     });
   });
 });
-

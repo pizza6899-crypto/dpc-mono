@@ -132,7 +132,7 @@ function parseUserAgent(userAgent: string) {
 
 /**
  * 브라우저 핑거프린트 생성
- * 
+ *
  * 1. x-device-id 헤더가 있으면 그것을 핑거프린트로 사용
  * 2. 없으면 IP를 제외하고 기기 고유성이 높은 헤더들로 핑거프린트 생성
  */

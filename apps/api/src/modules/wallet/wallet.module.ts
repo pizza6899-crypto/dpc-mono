@@ -49,7 +49,13 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
  * - UserBalanceStats (통계는 UserStatsModule에서 관리)
  */
 @Module({
-  imports: [UserModule, SqidsModule, ConcurrencyModule, ExchangeModule, SnowflakeModule],
+  imports: [
+    UserModule,
+    SqidsModule,
+    ConcurrencyModule,
+    ExchangeModule,
+    SnowflakeModule,
+  ],
   providers: [
     {
       provide: USER_WALLET_REPOSITORY,
@@ -92,4 +98,4 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
     USER_WALLET_STATS_REPOSITORY,
   ],
 })
-export class WalletModule { }
+export class WalletModule {}

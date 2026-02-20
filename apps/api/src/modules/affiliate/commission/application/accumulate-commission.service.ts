@@ -28,10 +28,9 @@ export interface AccumulateCommissionResult {
 
 @Injectable()
 export class AccumulateCommissionService {
-
   constructor(
     private readonly calculateCommissionService: CalculateCommissionService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute({

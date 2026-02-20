@@ -16,31 +16,31 @@ import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
 import { TIER_QUEUES } from './infrastructure/tier-audit.bullmq';
 
 @Module({
-    imports: [
-        SnowflakeModule,
-        BullMqModule,
-        BullModule.registerQueue(
-            { name: TIER_QUEUES.STATS_AGGREGATION.name },
-            { name: TIER_QUEUES.STATS_RECORD.name },
-        ),
-        forwardRef(() => TierProfileModule),
-        TierDefinitionsModule,
-    ],
-    controllers: [TierAuditAdminController],
-    providers: [
-        { provide: TierAuditRepositoryPort, useClass: TierAuditRepository },
-        RecordTierHistoryService,
-        TierStatsService,
-        HandleTierStatsService,
-        TierStatsAggregationProcessor,
-        TierStatsRecordProcessor,
-        GetTierDistributionService,
-    ],
-    exports: [
-        TierAuditRepositoryPort,
-        RecordTierHistoryService,
-        TierStatsService,
-        HandleTierStatsService,
-    ],
+  imports: [
+    SnowflakeModule,
+    BullMqModule,
+    BullModule.registerQueue(
+      { name: TIER_QUEUES.STATS_AGGREGATION.name },
+      { name: TIER_QUEUES.STATS_RECORD.name },
+    ),
+    forwardRef(() => TierProfileModule),
+    TierDefinitionsModule,
+  ],
+  controllers: [TierAuditAdminController],
+  providers: [
+    { provide: TierAuditRepositoryPort, useClass: TierAuditRepository },
+    RecordTierHistoryService,
+    TierStatsService,
+    HandleTierStatsService,
+    TierStatsAggregationProcessor,
+    TierStatsRecordProcessor,
+    GetTierDistributionService,
+  ],
+  exports: [
+    TierAuditRepositoryPort,
+    RecordTierHistoryService,
+    TierStatsService,
+    HandleTierStatsService,
+  ],
 })
-export class TierAuditModule { }
+export class TierAuditModule {}

@@ -40,4 +40,3 @@ export class UpsertCurrencySettingsRequestDto {
   @IsString()
   maxWithdrawAmount?: string;
 }
-

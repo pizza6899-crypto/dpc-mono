@@ -9,14 +9,13 @@ import { AffiliateCode } from '../domain';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
 import { AffiliateCodeMapper } from './affiliate-code.mapper';
 
-
 @Injectable()
 export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
   constructor(
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: AffiliateCodeMapper,
-  ) { }
+  ) {}
 
   async create(params: {
     uid: string;
@@ -163,7 +162,7 @@ export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
       where: {
         uid,
         userId,
-      }
+      },
     });
   }
 
@@ -174,7 +173,7 @@ export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
     const results = await Promise.all(
       updates.map(async ({ code }) => {
         const data = this.mapper.toPrisma(code);
-        if (!data.id) throw new Error("Missing ID for update");
+        if (!data.id) throw new Error('Missing ID for update');
         return await this.tx.affiliateCode.update({
           where: { id: data.id },
           data: {
@@ -235,11 +234,11 @@ export class AffiliateCodeRepository implements AffiliateCodeRepositoryPort {
       ...(isDefault !== undefined && { isDefault }),
       ...(startDate &&
         endDate && {
-        createdAt: {
-          gte: startDate,
-          lte: endDate,
-        },
-      }),
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        }),
     };
 
     // 정렬 조건 구성

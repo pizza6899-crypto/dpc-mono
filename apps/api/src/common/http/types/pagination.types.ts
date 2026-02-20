@@ -89,7 +89,7 @@ export function createPaginationQueryDto<T extends string = string>(
 }
 
 // 기본 페이지네이션 DTO (기존 호환성 유지)
-export class PaginationQueryDto extends createPaginationQueryDto() { }
+export class PaginationQueryDto extends createPaginationQueryDto() {}
 
 export class PaginationDto {
   @ApiProperty({ example: 1, description: 'Current page (현재 페이지)' })

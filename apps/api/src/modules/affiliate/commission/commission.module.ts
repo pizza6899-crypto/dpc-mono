@@ -80,4 +80,4 @@ import { AFFILIATE_QUEUES } from './infrastructure/commission.bullmq';
     GetWalletBalanceService,
   ],
 })
-export class AffiliateCommissionModule { }
+export class AffiliateCommissionModule {}

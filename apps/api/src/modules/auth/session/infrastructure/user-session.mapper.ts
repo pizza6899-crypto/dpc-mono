@@ -41,7 +41,7 @@ export class UserSessionMapper {
 
   /**
    * Domain 엔티티 → Prisma 데이터 변환
-   * 
+   *
    * create 시에는 id를 제외하고, update 시에는 id를 포함합니다.
    */
   toPrisma(domain: UserSession): {
@@ -92,4 +92,3 @@ export class UserSessionMapper {
     };
   }
 }
-

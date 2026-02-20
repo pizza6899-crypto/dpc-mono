@@ -10,10 +10,7 @@ import {
   GamingCurrencyCode,
   WalletCurrencyCode,
 } from 'src/utils/currency.util';
-import {
-  GameAggregatorType,
-  Language,
-} from '@prisma/client';
+import { GameAggregatorType, Language } from '@prisma/client';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { CreateCasinoGameSessionService } from 'src/modules/casino/game-session/application/create-casino-game-session.service';
@@ -28,7 +25,7 @@ export class DcsGameService {
     private readonly tx: PrismaTransaction,
     private readonly dcsApiService: DcsApiService,
     private readonly createCasinoGameSessionService: CreateCasinoGameSessionService,
-  ) { }
+  ) {}
 
   async launchGame({
     user: authUser,

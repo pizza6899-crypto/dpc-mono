@@ -1,6 +1,11 @@
 // apps/api/src/modules/deposit/ports/out/deposit-detail.repository.port.ts
-import { Prisma, ExchangeCurrencyCode, DepositDetailStatus, DepositMethodType } from '@prisma/client';
-import { DepositDetail } from '../../domain';
+import type {
+  Prisma,
+  ExchangeCurrencyCode,
+  DepositDetailStatus,
+  DepositMethodType,
+} from '@prisma/client';
+import type { DepositDetail } from '../../domain';
 
 export interface DepositListQuery {
   skip?: number;
@@ -30,8 +35,14 @@ export interface DepositWithUser {
 }
 
 export interface DepositDetailRepositoryPort {
-  findById(id: bigint, include?: { bankDepositConfig?: boolean; cryptoDepositConfig?: boolean }): Promise<DepositDetail | null>;
-  getById(id: bigint, include?: { bankDepositConfig?: boolean; cryptoDepositConfig?: boolean }): Promise<DepositDetail>;
+  findById(
+    id: bigint,
+    include?: { bankDepositConfig?: boolean; cryptoDepositConfig?: boolean },
+  ): Promise<DepositDetail | null>;
+  getById(
+    id: bigint,
+    include?: { bankDepositConfig?: boolean; cryptoDepositConfig?: boolean },
+  ): Promise<DepositDetail>;
   update(deposit: DepositDetail): Promise<DepositDetail>;
   create(deposit: DepositDetail): Promise<DepositDetail>;
   createTransaction(data: {
@@ -46,14 +57,21 @@ export interface DepositDetailRepositoryPort {
   getTransactionUserId(transactionId: bigint): Promise<bigint | null>;
 
   // User queries
-  listByUserId(userId: bigint, query: DepositListQuery): Promise<{ items: DepositDetail[]; total: number }>;
-  findByUidAndUserId(uid: string, userId: bigint): Promise<DepositDetail | null>;
+  listByUserId(
+    userId: bigint,
+    query: DepositListQuery,
+  ): Promise<{ items: DepositDetail[]; total: number }>;
+  findByUidAndUserId(
+    uid: string,
+    userId: bigint,
+  ): Promise<DepositDetail | null>;
   findByIdAndUserId(id: bigint, userId: bigint): Promise<DepositDetail | null>;
   existsPendingByUserId(userId: bigint): Promise<boolean>;
 
   // Admin queries
-  list(query: DepositListQuery): Promise<{ items: DepositWithUser[]; total: number }>;
+  list(
+    query: DepositListQuery,
+  ): Promise<{ items: DepositWithUser[]; total: number }>;
   getByIdWithUser(id: bigint): Promise<DepositWithUser>;
   getStats(): Promise<DepositStats>;
 }
-

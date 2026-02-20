@@ -54,4 +54,3 @@ export interface Permission {
   subject: Subjects;
   conditions?: Record<string, any>; // 조건부 권한 (예: 자신의 리소스만 수정 가능)
 }
-

@@ -134,8 +134,7 @@ export class SessionPolicy {
     if (sameDeviceTypeSessions.length >= maxSessionsForDeviceType) {
       // 오래된 세션부터 정렬 (lastActiveAt 기준)
       const sortedSessions = [...sameDeviceTypeSessions].sort(
-        (a, b) =>
-          a.lastActiveAt.getTime() - b.lastActiveAt.getTime(),
+        (a, b) => a.lastActiveAt.getTime() - b.lastActiveAt.getTime(),
       );
 
       // 초과하는 세션 수만큼 종료
@@ -150,8 +149,7 @@ export class SessionPolicy {
     if (activeSessions.length >= maxTotalSessions) {
       // 오래된 세션부터 정렬 (lastActiveAt 기준)
       const sortedSessions = [...activeSessions].sort(
-        (a, b) =>
-          a.lastActiveAt.getTime() - b.lastActiveAt.getTime(),
+        (a, b) => a.lastActiveAt.getTime() - b.lastActiveAt.getTime(),
       );
 
       // 초과하는 세션 수만큼 종료
@@ -173,4 +171,3 @@ export class SessionPolicy {
     return isMobile ? this.MAX_MOBILE_SESSIONS : this.MAX_PC_SESSIONS;
   }
 }
-

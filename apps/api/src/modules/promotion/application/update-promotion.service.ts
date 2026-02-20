@@ -1,7 +1,11 @@
 // src/modules/promotion/application/update-promotion.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { Prisma, PromotionBonusType, PromotionTargetType } from '@prisma/client';
+import {
+  Prisma,
+  PromotionBonusType,
+  PromotionTargetType,
+} from '@prisma/client';
 import {
   Promotion,
   PromotionPolicy,
@@ -36,7 +40,7 @@ export class UpdatePromotionService {
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
     private readonly policy: PromotionPolicy,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(params: UpdatePromotionParams): Promise<Promotion> {
@@ -50,10 +54,7 @@ export class UpdatePromotionService {
       promotion.setActive(params.isActive);
     }
 
-    if (
-      params.code !== undefined &&
-      params.code !== promotion.code
-    ) {
+    if (params.code !== undefined && params.code !== promotion.code) {
       const existing = await this.repository.findByCode(params.code);
       if (existing && existing.id !== promotion.id) {
         throw new PromotionCodeAlreadyExistsException();
@@ -62,7 +63,8 @@ export class UpdatePromotionService {
 
     // 설정 유효성 검사 (기존 값과 파라미터 병합)
     this.policy.validateConfiguration({
-      isDepositRequired: params.isDepositRequired ?? promotion.isDepositRequired,
+      isDepositRequired:
+        params.isDepositRequired ?? promotion.isDepositRequired,
       bonusType: (params.bonusType ?? promotion.bonusType) as any,
       bonusRate:
         params.bonusRate !== undefined ? params.bonusRate : promotion.bonusRate,
@@ -100,4 +102,3 @@ export class UpdatePromotionService {
     return updated;
   }
 }
-

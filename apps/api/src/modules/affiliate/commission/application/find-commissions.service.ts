@@ -31,7 +31,7 @@ export class FindCommissionsService {
   constructor(
     @Inject(AFFILIATE_COMMISSION_REPOSITORY)
     private readonly repository: AffiliateCommissionRepositoryPort,
-  ) { }
+  ) {}
 
   async execute({
     affiliateId,

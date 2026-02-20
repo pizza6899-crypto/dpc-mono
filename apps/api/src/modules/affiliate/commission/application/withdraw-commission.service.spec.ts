@@ -92,9 +92,7 @@ describe('WithdrawCommissionService', () => {
 
     service = module.get<WithdrawCommissionService>(WithdrawCommissionService);
     mockWalletRepository = module.get(AFFILIATE_WALLET_REPOSITORY);
-    mockDispatchLogService = module.get(
-      DispatchLogService,
-    ) as jest.Mocked<DispatchLogService>;
+    mockDispatchLogService = module.get(DispatchLogService);
 
     jest.clearAllMocks();
   });

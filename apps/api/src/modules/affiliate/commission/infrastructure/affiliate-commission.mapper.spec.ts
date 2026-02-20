@@ -1,9 +1,5 @@
 // src/modules/affiliate/commission/infrastructure/affiliate-commission.mapper.spec.ts
-import {
-  CommissionStatus,
-  ExchangeCurrencyCode,
-  Prisma,
-} from '@prisma/client';
+import { CommissionStatus, ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import { AffiliateCommission } from '../domain';
 import { AffiliateCommissionMapper } from './affiliate-commission.mapper';
 
@@ -21,7 +17,7 @@ describe('AffiliateCommissionMapper', () => {
   const mockRateApplied = new Prisma.Decimal('0.01');
   const mockCurrency = ExchangeCurrencyCode.USD;
   const mockStatus = CommissionStatus.PENDING;
-  const mockGameCategory = "SLOTS";
+  const mockGameCategory = 'SLOTS';
   const mockSettlementDate = new Date('2024-01-15T00:00:00Z');
   const mockClaimedAt = new Date('2024-01-20T00:00:00Z');
   const mockWithdrawnAt = new Date('2024-01-25T00:00:00Z');

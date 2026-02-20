@@ -21,7 +21,7 @@ export class NowPaymentApiService {
     private redisService: RedisService,
     private advisoryLockService: AdvisoryLockService,
     private readonly httpService: HttpService,
-  ) { }
+  ) {}
 
   private async getJwtToken(): Promise<string> {
     // Redis에서 토큰 조회
@@ -36,9 +36,13 @@ export class NowPaymentApiService {
     }
 
     // 토큰이 없거나 만료된 경우, 락을 사용해서 중복 요청 방지
-    await this.advisoryLockService.acquireLock(LockNamespace.PAYMENT_TOKEN, 'nowpayment', {
-      throwThrottleError: true,
-    });
+    await this.advisoryLockService.acquireLock(
+      LockNamespace.PAYMENT_TOKEN,
+      'nowpayment',
+      {
+        throwThrottleError: true,
+      },
+    );
 
     // 락 획득 후 다시 한번 토큰 확인 (Double-checked locking)
     const existingTokenData = await this.redisService.get<JwtTokenData>(

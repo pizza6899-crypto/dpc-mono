@@ -92,7 +92,9 @@ export class ReferralCodeNotFoundException extends ReferralException {
 export class ReferralCodeInactiveException extends ReferralException {
   constructor(code?: string) {
     super(
-      code ? `Referral code '${code}' is inactive` : 'Referral code is inactive',
+      code
+        ? `Referral code '${code}' is inactive`
+        : 'Referral code is inactive',
       MessageCode.REFERRAL_CODE_INACTIVE,
       HttpStatus.BAD_REQUEST,
     );
@@ -106,7 +108,9 @@ export class ReferralCodeInactiveException extends ReferralException {
 export class ReferralCodeExpiredException extends ReferralException {
   constructor(code?: string) {
     super(
-      code ? `Referral code '${code}' has expired` : 'Referral code has expired',
+      code
+        ? `Referral code '${code}' has expired`
+        : 'Referral code has expired',
       MessageCode.REFERRAL_CODE_EXPIRED,
       HttpStatus.BAD_REQUEST,
     );
@@ -120,7 +124,9 @@ export class ReferralCodeExpiredException extends ReferralException {
 export class ReferralCommissionNotFoundException extends ReferralException {
   constructor(id?: string | bigint) {
     super(
-      id ? `Referral commission '${id}' not found` : 'Referral commission not found',
+      id
+        ? `Referral commission '${id}' not found`
+        : 'Referral commission not found',
       MessageCode.REFERRAL_COMMISSION_NOT_FOUND,
       HttpStatus.NOT_FOUND,
     );
@@ -148,7 +154,9 @@ export class ReferralCommissionInvalidStatusException extends ReferralException 
 export class ReferralMilestoneNotFoundException extends ReferralException {
   constructor(id?: string | bigint) {
     super(
-      id ? `Referral milestone '${id}' not found` : 'Referral milestone not found',
+      id
+        ? `Referral milestone '${id}' not found`
+        : 'Referral milestone not found',
       MessageCode.REFERRAL_MILESTONE_NOT_FOUND,
       HttpStatus.NOT_FOUND,
     );
@@ -162,7 +170,9 @@ export class ReferralMilestoneNotFoundException extends ReferralException {
 export class ReferralMilestoneAlreadyClaimedException extends ReferralException {
   constructor(id?: string | bigint) {
     super(
-      id ? `Referral milestone '${id}' is already claimed` : 'Referral milestone is already claimed',
+      id
+        ? `Referral milestone '${id}' is already claimed`
+        : 'Referral milestone is already claimed',
       MessageCode.REFERRAL_MILESTONE_ALREADY_CLAIMED,
       HttpStatus.CONFLICT,
     );
@@ -176,7 +186,9 @@ export class ReferralMilestoneAlreadyClaimedException extends ReferralException 
 export class UserReferralStatsNotFoundException extends ReferralException {
   constructor(userId?: string | bigint) {
     super(
-      userId ? `User referral stats for '${userId}' not found` : 'User referral stats not found',
+      userId
+        ? `User referral stats for '${userId}' not found`
+        : 'User referral stats not found',
       MessageCode.REFERRAL_STATS_NOT_FOUND,
       HttpStatus.NOT_FOUND,
     );

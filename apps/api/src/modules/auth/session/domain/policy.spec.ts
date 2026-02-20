@@ -243,9 +243,21 @@ describe('SessionPolicy', () => {
       it('전체 세션 수 제한을 초과하면 오래된 세션부터 종료한다', () => {
         const baseTime = new Date('2024-01-01T00:00:00Z');
         const sessions = [
-          createActiveSession('sess_1', false, new Date(baseTime.getTime() + 1000)),
-          createActiveSession('sess_2', false, new Date(baseTime.getTime() + 2000)),
-          createActiveSession('sess_3', true, new Date(baseTime.getTime() + 3000)),
+          createActiveSession(
+            'sess_1',
+            false,
+            new Date(baseTime.getTime() + 1000),
+          ),
+          createActiveSession(
+            'sess_2',
+            false,
+            new Date(baseTime.getTime() + 2000),
+          ),
+          createActiveSession(
+            'sess_3',
+            true,
+            new Date(baseTime.getTime() + 3000),
+          ),
         ];
 
         const result = policy.getSessionsToRevokeForNewLogin(sessions, false);
@@ -394,4 +406,3 @@ describe('SessionPolicy', () => {
     });
   });
 });
-

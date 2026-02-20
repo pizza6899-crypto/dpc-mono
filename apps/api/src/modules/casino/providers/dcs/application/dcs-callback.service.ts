@@ -25,11 +25,7 @@ import {
 } from '../constants/dcs-response-codes';
 
 import { DcsMapperService } from '../infrastructure/dcs-mapper.service';
-import {
-  GameAggregatorType,
-  Prisma,
-  GameProvider,
-} from '@prisma/client';
+import { GameAggregatorType, Prisma, GameProvider } from '@prisma/client';
 import { CheckCasinoBalanceService } from '../../../application/check-casino-balance.service';
 import { FindCasinoGameSessionService } from '../../../game-session/application/find-casino-game-session.service';
 import { CasinoErrorCode } from '../../../constants/casino-error-codes';
@@ -63,7 +59,9 @@ export class DcsCallbackService {
   private async getSession(body: any): Promise<any> {
     // 1. Token 우선 조회 (Wager 등 토큰이 포함된 요청)
     if (body.token) {
-      const session = await this.findCasinoGameSessionService.findByToken(body.token);
+      const session = await this.findCasinoGameSessionService.findByToken(
+        body.token,
+      );
       if (session) return session;
     }
 
@@ -75,7 +73,9 @@ export class DcsCallbackService {
         GameAggregatorType.DC,
       );
       if (round && round.gameSessionId) {
-        const session = await this.findCasinoGameSessionService.findByid(round.gameSessionId);
+        const session = await this.findCasinoGameSessionService.findByid(
+          round.gameSessionId,
+        );
         if (session) return session;
       }
     }
@@ -226,11 +226,15 @@ export class DcsCallbackService {
 
       // [SECURITY FIX] 세션 소유 및 통화 검증
       if (session.playerName !== body.brand_uid) {
-        this.logger.error(`[DCS] UserID Mismatch: Request=${body.brand_uid}, Session=${session.playerName}`);
+        this.logger.error(
+          `[DCS] UserID Mismatch: Request=${body.brand_uid}, Session=${session.playerName}`,
+        );
         return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
       }
       if (session.gameCurrency !== body.currency) {
-        this.logger.error(`[DCS] Currency Mismatch: Request=${body.currency}, Session=${session.gameCurrency}`);
+        this.logger.error(
+          `[DCS] Currency Mismatch: Request=${body.currency}, Session=${session.gameCurrency}`,
+        );
         return getDcsResponse(DcsResponseCode.REQUEST_PARAM_ERROR);
       }
 
@@ -288,8 +292,10 @@ export class DcsCallbackService {
       if (!session) return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
 
       // [SECURITY FIX] 세션 소유 및 통화 검증
-      if (session.playerName !== body.brand_uid) return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
-      if (session.gameCurrency !== body.currency) return getDcsResponse(DcsResponseCode.REQUEST_PARAM_ERROR);
+      if (session.playerName !== body.brand_uid)
+        return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
+      if (session.gameCurrency !== body.currency)
+        return getDcsResponse(DcsResponseCode.REQUEST_PARAM_ERROR);
 
       if (body.wager_type === 1 || body.wager_type === 2) {
         // [Refactored] DCS Cancel Wager (Refund)
@@ -300,11 +306,16 @@ export class DcsCallbackService {
           transactionId: body.wager_id,
           roundId: body.round_id,
           gameId: session.gameId || BigInt(0),
-          winTime: body.transaction_time ? new Date(body.transaction_time) : new Date(),
-          provider: this.dcsMapperService.fromDcsProvider(body.provider) || GameProvider.PRAGMATIC_PLAY_SLOTS,
+          winTime: body.transaction_time
+            ? new Date(body.transaction_time)
+            : new Date(),
+          provider:
+            this.dcsMapperService.fromDcsProvider(body.provider) ||
+            GameProvider.PRAGMATIC_PLAY_SLOTS,
           isCancel: true,
           isEndRound: body.is_endround, // DCS TransactionBase에서 상속받은 필드 사용
-          description: body.wager_type === 2 ? 'DCS Cancel End Wager' : 'DCS Cancel Wager',
+          description:
+            body.wager_type === 2 ? 'DCS Cancel End Wager' : 'DCS Cancel Wager',
         });
 
         return getDcsResponse(DcsResponseCode.SUCCESS, {
@@ -314,7 +325,9 @@ export class DcsCallbackService {
           wager_id: body.wager_id,
         });
       } else {
-        this.logger.warn(`Unsupported wager_type for cancelWager: ${body.wager_type}`);
+        this.logger.warn(
+          `Unsupported wager_type for cancelWager: ${body.wager_type}`,
+        );
         return getDcsResponse(DcsResponseCode.REQUEST_PARAM_ERROR);
       }
     } catch (error) {
@@ -340,8 +353,10 @@ export class DcsCallbackService {
       if (!session) return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
 
       // [SECURITY FIX] 세션 소유 및 통화 검증
-      if (session.playerName !== body.brand_uid) return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
-      if (session.gameCurrency !== body.currency) return getDcsResponse(DcsResponseCode.REQUEST_PARAM_ERROR);
+      if (session.playerName !== body.brand_uid)
+        return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
+      if (session.gameCurrency !== body.currency)
+        return getDcsResponse(DcsResponseCode.REQUEST_PARAM_ERROR);
 
       // 추가 베팅 처리
       const result = await this.processCasinoBetService.execute({
@@ -385,8 +400,10 @@ export class DcsCallbackService {
       if (!session) return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
 
       // [SECURITY FIX] 세션 소유 및 통화 검증
-      if (session.playerName !== body.brand_uid) return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
-      if (session.gameCurrency !== body.currency) return getDcsResponse(DcsResponseCode.REQUEST_PARAM_ERROR);
+      if (session.playerName !== body.brand_uid)
+        return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
+      if (session.gameCurrency !== body.currency)
+        return getDcsResponse(DcsResponseCode.REQUEST_PARAM_ERROR);
 
       const result = await this.processCasinoCreditService.execute({
         session,
@@ -431,8 +448,10 @@ export class DcsCallbackService {
       if (!session) return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
 
       // [SECURITY FIX] 세션 소유 및 통화 검증
-      if (session.playerName !== body.brand_uid) return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
-      if (session.gameCurrency !== body.currency) return getDcsResponse(DcsResponseCode.REQUEST_PARAM_ERROR);
+      if (session.playerName !== body.brand_uid)
+        return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
+      if (session.gameCurrency !== body.currency)
+        return getDcsResponse(DcsResponseCode.REQUEST_PARAM_ERROR);
 
       const result = await this.processCasinoCreditService.execute({
         session,
@@ -476,8 +495,9 @@ export class DcsCallbackService {
       if (error) return error;
 
       // 2. 세션 조회 (토큰 우선, 없으면 플레이어네임 기준 최근 세션)
-      let session =
-        await this.findCasinoGameSessionService.findByToken(body.token);
+      let session = await this.findCasinoGameSessionService.findByToken(
+        body.token,
+      );
 
       if (!session && /^\d+$/.test(body.brand_uid)) {
         session = await this.findCasinoGameSessionService.findRecent(
@@ -494,8 +514,10 @@ export class DcsCallbackService {
       }
 
       // [SECURITY FIX] 세션 소유 및 통화 검증
-      if (session.playerName !== body.brand_uid) return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
-      if (session.gameCurrency !== body.currency) return getDcsResponse(DcsResponseCode.REQUEST_PARAM_ERROR);
+      if (session.playerName !== body.brand_uid)
+        return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
+      if (session.gameCurrency !== body.currency)
+        return getDcsResponse(DcsResponseCode.REQUEST_PARAM_ERROR);
 
       // 3. 잔액 서비스 호출
       const result = await this.checkCasinoBalanceService.execute(session);
@@ -528,8 +550,10 @@ export class DcsCallbackService {
       if (!session) return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
 
       // [SECURITY FIX] 세션 소유 및 통화 검증
-      if (session.playerName !== body.brand_uid) return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
-      if (session.gameCurrency !== body.currency) return getDcsResponse(DcsResponseCode.REQUEST_PARAM_ERROR);
+      if (session.playerName !== body.brand_uid)
+        return getDcsResponse(DcsResponseCode.PLAYER_NOT_EXIST);
+      if (session.gameCurrency !== body.currency)
+        return getDcsResponse(DcsResponseCode.REQUEST_PARAM_ERROR);
 
       const result = await this.processCasinoCreditService.execute({
         session,
@@ -599,11 +623,12 @@ export class DcsCallbackService {
     const dcsError = this.getDcsErrorFromMessage(error.message);
 
     // 시스템 로그 기록 (예상된 비즈니스 에러 외의 심각한 오류나 시스템 오류 위주)
-    const isCritical = dcsError.code === DcsResponseCode.SYSTEM_ERROR ||
-      !Object.values(CasinoErrorCode).includes(error.message as any);
+    const isCritical =
+      dcsError.code === DcsResponseCode.SYSTEM_ERROR ||
+      !Object.values(CasinoErrorCode).includes(error.message);
 
-    this.dispatchLogService.dispatch(
-      {
+    this.dispatchLogService
+      .dispatch({
         type: LogType.ERROR,
         data: {
           errorCode: `CASINO_DCS_${dcsError.code}`,
@@ -615,10 +640,12 @@ export class DcsCallbackService {
             brand_uid,
             currency,
             originalError: error.message,
-          }
+          },
         },
-      },
-    ).catch((err) => this.logger.warn(`Failed to dispatch system log: ${err.message}`));
+      })
+      .catch((err) =>
+        this.logger.warn(`Failed to dispatch system log: ${err.message}`),
+      );
 
     return getDcsResponse(dcsError.code, {
       brand_uid,

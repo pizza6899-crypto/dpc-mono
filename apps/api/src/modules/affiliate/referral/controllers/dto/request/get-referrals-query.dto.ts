@@ -1,7 +1,12 @@
 // src/modules/affiliate/referral/controllers/dto/request/get-referrals-query.dto.ts
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsDateString, IsNumberString, IsOptional, IsString } from 'class-validator';
+import {
+  IsDateString,
+  IsNumberString,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
 
 type ReferralSortFields = 'createdAt' | 'updatedAt';

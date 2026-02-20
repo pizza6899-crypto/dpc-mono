@@ -22,4 +22,3 @@ export class ListMyPromotionsQueryDto extends createPaginationQueryDto<UserPromo
   @IsString()
   status?: string;
 }
-

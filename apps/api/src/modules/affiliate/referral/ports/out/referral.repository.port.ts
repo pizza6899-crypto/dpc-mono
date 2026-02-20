@@ -50,11 +50,11 @@ export interface ReferralRepositoryPort {
   /**
    * 관리자용 레퍼럴 목록 조회 (페이징, 필터링 지원)
    * Repository에서 Join된 데이터를 반환하지 않고, Domain Entity로 변환하여 반환
-   * (단, AdminList DTO 구성을 위해 필요한 연관 데이터는 Service에서 해결하거나, 
+   * (단, AdminList DTO 구성을 위해 필요한 연관 데이터는 Service에서 해결하거나,
    *  Domain Entity가 연관 ID를 가지고 있으므로 Service에서 추가 조회/매핑하는 것이 정석이나,
    *  성능상 Join이 필요한 경우 Repository에서 DTO에 맞는 구조체나 확장된 도메인 모델을 반환해야 함.
    *  여기서는 일단 Domain Entity 기본 반환 + 필요한 경우 확장)
-   * 
+   *
    *  Design Decision: Admin List needs email/code info which are in relations.
    *  Strictly speaking, Repository should return Aggregates.
    *  But for Admin Read Model, we often need "Views".
@@ -77,12 +77,14 @@ export interface ReferralRepositoryPort {
     startDate?: Date;
     endDate?: Date;
   }): Promise<{
-    referrals: Array<Referral & {
-      affiliateEmail: string;
-      subUserEmail: string;
-      codeValue: string;
-      campaignName?: string | null;
-    }>;
+    referrals: Array<
+      Referral & {
+        affiliateEmail: string;
+        subUserEmail: string;
+        codeValue: string;
+        campaignName?: string | null;
+      }
+    >;
     total: number;
   }>;
   /**
@@ -93,10 +95,13 @@ export interface ReferralRepositoryPort {
   /**
    * 관리자용 레퍼럴 상세 조회
    */
-  findByIdForAdmin(id: bigint): Promise<(Referral & {
-    affiliateEmail: string;
-    subUserEmail: string;
-    codeValue: string;
-    campaignName?: string | null;
-  }) | null>;
+  findByIdForAdmin(id: bigint): Promise<
+    | (Referral & {
+        affiliateEmail: string;
+        subUserEmail: string;
+        codeValue: string;
+        campaignName?: string | null;
+      })
+    | null
+  >;
 }

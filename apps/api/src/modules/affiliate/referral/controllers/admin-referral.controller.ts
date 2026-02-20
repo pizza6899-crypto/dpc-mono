@@ -32,7 +32,7 @@ import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorat
 @ApiStandardErrors()
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class AdminReferralController {
-  constructor(private readonly adminReferralService: AdminReferralService) { }
+  constructor(private readonly adminReferralService: AdminReferralService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)

@@ -8,50 +8,50 @@ import { FileMapper } from './file.mapper';
 
 @Injectable()
 export class FileRepository implements FileRepositoryPort {
-    constructor(
-        @InjectTransaction()
-        private readonly tx: Transaction<TransactionalAdapterPrisma>,
-        private readonly mapper: FileMapper,
-    ) { }
+  constructor(
+    @InjectTransaction()
+    private readonly tx: Transaction<TransactionalAdapterPrisma>,
+    private readonly mapper: FileMapper,
+  ) {}
 
-    async create(file: FileEntity): Promise<FileEntity> {
-        const data = this.mapper.toPrisma(file);
-        const result = await this.tx.file.create({ data });
-        return this.mapper.toDomain(result);
-    }
+  async create(file: FileEntity): Promise<FileEntity> {
+    const data = this.mapper.toPrisma(file);
+    const result = await this.tx.file.create({ data });
+    return this.mapper.toDomain(result);
+  }
 
-    async update(file: FileEntity): Promise<FileEntity> {
-        if (!file.id) {
-            throw new FileValidationException('Cannot update file without ID');
-        }
-        const data = this.mapper.toPrisma(file);
-        const result = await this.tx.file.update({
-            where: { id: file.id },
-            data,
-        });
-        return this.mapper.toDomain(result);
+  async update(file: FileEntity): Promise<FileEntity> {
+    if (!file.id) {
+      throw new FileValidationException('Cannot update file without ID');
     }
+    const data = this.mapper.toPrisma(file);
+    const result = await this.tx.file.update({
+      where: { id: file.id },
+      data,
+    });
+    return this.mapper.toDomain(result);
+  }
 
-    async findById(id: bigint): Promise<FileEntity | null> {
-        const result = await this.tx.file.findUnique({ where: { id } });
-        return result ? this.mapper.toDomain(result) : null;
-    }
+  async findById(id: bigint): Promise<FileEntity | null> {
+    const result = await this.tx.file.findUnique({ where: { id } });
+    return result ? this.mapper.toDomain(result) : null;
+  }
 
-    async findByIds(ids: bigint[]): Promise<FileEntity[]> {
-        const results = await this.tx.file.findMany({
-            where: {
-                id: { in: ids },
-            },
-        });
-        return results.map(r => this.mapper.toDomain(r));
-    }
+  async findByIds(ids: bigint[]): Promise<FileEntity[]> {
+    const results = await this.tx.file.findMany({
+      where: {
+        id: { in: ids },
+      },
+    });
+    return results.map((r) => this.mapper.toDomain(r));
+  }
 
-    async findByKey(key: string): Promise<FileEntity | null> {
-        const result = await this.tx.file.findUnique({ where: { key } });
-        return result ? this.mapper.toDomain(result) : null;
-    }
+  async findByKey(key: string): Promise<FileEntity | null> {
+    const result = await this.tx.file.findUnique({ where: { key } });
+    return result ? this.mapper.toDomain(result) : null;
+  }
 
-    async delete(id: bigint): Promise<void> {
-        await this.tx.file.delete({ where: { id } });
-    }
+  async delete(id: bigint): Promise<void> {
+    await this.tx.file.delete({ where: { id } });
+  }
 }

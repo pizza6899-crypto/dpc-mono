@@ -25,7 +25,7 @@ export class UpdateCodeService {
     private readonly repository: AffiliateCodeRepositoryPort,
     private readonly policy: AffiliateCodePolicy,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute({
@@ -37,9 +37,13 @@ export class UpdateCodeService {
   }: UpdateCodeParams): Promise<AffiliateCode> {
     // 사용자 기반 락 획득 (동시 요청 처리 방지)
     // 트랜잭션 내에서 실행되므로 트랜잭션 종료 시 자동으로 해제됩니다.
-    await this.advisoryLockService.acquireLock(LockNamespace.AFFILIATE_CODE, userId.toString(), {
-      throwThrottleError: true
-    });
+    await this.advisoryLockService.acquireLock(
+      LockNamespace.AFFILIATE_CODE,
+      userId.toString(),
+      {
+        throwThrottleError: true,
+      },
+    );
 
     const code = await this.repository.findById(id);
     if (!code || code.userId !== userId) {

@@ -15,10 +15,18 @@ export class PromotionCurrencyResponseDto {
   @ApiProperty({ description: '최소 입금 금액', example: '10.00' })
   minDepositAmount: string;
 
-  @ApiPropertyOptional({ description: '최대 보너스 금액', example: '100.00', nullable: true })
+  @ApiPropertyOptional({
+    description: '최대 보너스 금액',
+    example: '100.00',
+    nullable: true,
+  })
   maxBonusAmount: string | null;
 
-  @ApiPropertyOptional({ description: '최대 출금 금액', example: '500.00', nullable: true })
+  @ApiPropertyOptional({
+    description: '최대 출금 금액',
+    example: '500.00',
+    nullable: true,
+  })
   maxWithdrawAmount: string | null;
 
   @ApiProperty({ description: '생성일시' })
@@ -41,7 +49,11 @@ export class PromotionTranslationResponseDto {
   @ApiProperty({ description: '프로모션 이름', example: 'Welcome Bonus' })
   name: string;
 
-  @ApiPropertyOptional({ description: '프로모션 설명', example: 'Get 100% bonus', nullable: true })
+  @ApiPropertyOptional({
+    description: '프로모션 설명',
+    example: 'Get 100% bonus',
+    nullable: true,
+  })
   description: string | null;
 
   @ApiProperty({ description: '생성일시' })
@@ -195,4 +207,3 @@ export class PromotionAdminResponseDto {
   })
   translations: PromotionTranslationResponseDto[];
 }
-

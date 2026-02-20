@@ -21,9 +21,7 @@ import { AuditLogModule } from '../audit-log/audit-log.module';
     HttpModule,
     AuditLogModule,
   ],
-  controllers: [
-    NowPaymentCallbackController,
-  ],
+  controllers: [NowPaymentCallbackController],
   providers: [
     NowPaymentApiService,
     NowPaymentCallbackService,
@@ -31,4 +29,4 @@ import { AuditLogModule } from '../audit-log/audit-log.module';
   ],
   exports: [NowPaymentApiService, NowPaymentCallbackService],
 })
-export class PaymentModule { }
+export class PaymentModule {}

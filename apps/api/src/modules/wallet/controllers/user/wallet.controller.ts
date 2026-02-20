@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Get,
-  Query,
-  HttpCode,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Get, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
@@ -37,7 +31,7 @@ export class WalletController {
     private readonly findUserWalletService: FindUserWalletService,
     private readonly findWalletTransactionHistoryService: FindWalletTransactionHistoryService,
     private readonly sqidsService: SqidsService,
-  ) { }
+  ) {}
 
   /**
    * 지원하는 통화 목록 조회
@@ -50,7 +44,8 @@ export class WalletController {
   })
   @ApiStandardResponse(CurrencyListResponseDto, {
     status: HttpStatus.OK,
-    description: 'Successfully retrieved supported currencies / 지원하는 통화 목록 조회 성공',
+    description:
+      'Successfully retrieved supported currencies / 지원하는 통화 목록 조회 성공',
   })
   getCurrencies(): CurrencyListResponseDto {
     return {
@@ -65,7 +60,8 @@ export class WalletController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Get user balance / 사용자 잔액 조회',
-    description: '사용자가 본인의 잔액을 조회합니다. 통화를 지정하지 않으면 모든 통화의 잔액을 반환합니다.',
+    description:
+      '사용자가 본인의 잔액을 조회합니다. 통화를 지정하지 않으면 모든 통화의 잔액을 반환합니다.',
   })
   @ApiStandardResponse(UserWalletListResponseDto, {
     status: HttpStatus.OK,
@@ -87,7 +83,10 @@ export class WalletController {
     let wallets: UserWallet[] = [];
 
     if (query.currency) {
-      const wallet = await this.findUserWalletService.findWallet(userId, query.currency);
+      const wallet = await this.findUserWalletService.findWallet(
+        userId,
+        query.currency,
+      );
       if (!wallet) {
         throw new WalletNotFoundException(userId, query.currency);
       }
@@ -121,7 +120,8 @@ export class WalletController {
   })
   @ApiPaginatedResponse(UserWalletTransactionResponseDto, {
     status: HttpStatus.OK,
-    description: 'Successfully retrieved transaction history / 트랜잭션 이력 조회 성공',
+    description:
+      'Successfully retrieved transaction history / 트랜잭션 이력 조회 성공',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -138,20 +138,23 @@ export class WalletController {
     const page = query.page ?? 1;
     const limit = query.limit ?? 20;
 
-    const { items, total } = await this.findWalletTransactionHistoryService.execute({
-      userId: BigInt(user.id),
-      currency: query.currency,
-      type: query.type,
-      startDate: query.startDate ? new Date(query.startDate) : undefined,
-      endDate: query.endDate ? new Date(query.endDate) : undefined,
-      page,
-      limit,
-    });
+    const { items, total } =
+      await this.findWalletTransactionHistoryService.execute({
+        userId: BigInt(user.id),
+        currency: query.currency,
+        type: query.type,
+        startDate: query.startDate ? new Date(query.startDate) : undefined,
+        endDate: query.endDate ? new Date(query.endDate) : undefined,
+        page,
+        limit,
+      });
 
     return {
       data: items.map((tx) => {
         return {
-          id: tx.id ? this.sqidsService.encode(tx.id, SqidsPrefix.WALLET_TRANSACTION) : '',
+          id: tx.id
+            ? this.sqidsService.encode(tx.id, SqidsPrefix.WALLET_TRANSACTION)
+            : '',
           type: tx.type,
           balanceType: tx.balanceType,
           currency: tx.currency,
@@ -167,4 +170,3 @@ export class WalletController {
     };
   }
 }
-

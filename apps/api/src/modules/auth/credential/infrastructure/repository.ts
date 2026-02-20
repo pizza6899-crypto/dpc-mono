@@ -11,7 +11,7 @@ export class LoginAttemptRepository implements LoginAttemptRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: LoginAttemptMapper,
-  ) { }
+  ) {}
 
   async create(attempt: LoginAttempt): Promise<LoginAttempt> {
     const data = this.mapper.toPrisma(attempt);

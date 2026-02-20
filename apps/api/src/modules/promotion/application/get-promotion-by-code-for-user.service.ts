@@ -1,6 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Language, ExchangeCurrencyCode } from '@prisma/client';
-import { PromotionNotFoundException, Promotion, PromotionTranslation } from '../domain';
+import {
+  PromotionNotFoundException,
+  Promotion,
+  PromotionTranslation,
+} from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports/out';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
 import { PromotionCurrency } from '../domain/model/promotion-currency.entity';
@@ -22,7 +26,7 @@ export class GetPromotionByCodeForUserService {
   constructor(
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) { }
+  ) {}
 
   async execute(
     params: GetPromotionByCodeForUserParams,

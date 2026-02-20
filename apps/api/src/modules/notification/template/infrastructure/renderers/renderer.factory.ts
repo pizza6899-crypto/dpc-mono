@@ -8,16 +8,16 @@ import { EmailHandlebarsRenderer } from './email-handlebars.renderer';
 
 @Injectable()
 export class RendererFactory {
-    constructor(
-        private readonly handlebarsRenderer: HandlebarsRenderer,
-        private readonly emailRenderer: EmailHandlebarsRenderer,
-    ) { }
+  constructor(
+    private readonly handlebarsRenderer: HandlebarsRenderer,
+    private readonly emailRenderer: EmailHandlebarsRenderer,
+  ) {}
 
-    getRenderer(channel: ChannelType): TemplateRenderer {
-        if (channel === ChannelType.EMAIL) {
-            return this.emailRenderer;
-        }
-        // Default to basic handlebars for others
-        return this.handlebarsRenderer;
+  getRenderer(channel: ChannelType): TemplateRenderer {
+    if (channel === ChannelType.EMAIL) {
+      return this.emailRenderer;
     }
+    // Default to basic handlebars for others
+    return this.handlebarsRenderer;
+  }
 }

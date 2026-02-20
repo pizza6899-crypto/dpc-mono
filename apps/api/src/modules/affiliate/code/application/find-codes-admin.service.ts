@@ -18,7 +18,7 @@ interface FindCodesAdminParams {
   endDate?: string;
 }
 
-interface FindCodesAdminResult extends PaginatedData<AffiliateCode> { }
+interface FindCodesAdminResult extends PaginatedData<AffiliateCode> {}
 
 /**
  * 관리자용 어플리에이트 코드 목록 조회 Use Case
@@ -33,11 +33,9 @@ export class FindCodesAdminService {
   constructor(
     @Inject(AFFILIATE_CODE_REPOSITORY)
     private readonly repository: AffiliateCodeRepositoryPort,
-  ) { }
+  ) {}
 
-  async execute(
-    params: FindCodesAdminParams,
-  ): Promise<FindCodesAdminResult> {
+  async execute(params: FindCodesAdminParams): Promise<FindCodesAdminResult> {
     const {
       page = 1,
       limit = 20,

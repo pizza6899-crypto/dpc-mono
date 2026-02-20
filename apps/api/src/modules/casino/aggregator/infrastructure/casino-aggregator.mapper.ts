@@ -1,27 +1,30 @@
 import { Injectable } from '@nestjs/common';
-import { CasinoAggregator as PrismaCasinoAggregator, Prisma } from '@prisma/client';
+import {
+  CasinoAggregator as PrismaCasinoAggregator,
+  Prisma,
+} from '@prisma/client';
 import { CasinoAggregator } from '../domain';
 
 @Injectable()
 export class CasinoAggregatorMapper {
-    toDomain(prisma: PrismaCasinoAggregator): CasinoAggregator {
-        return CasinoAggregator.create({
-            id: prisma.id,
-            name: prisma.name,
-            code: prisma.code,
-            status: prisma.status,
-            apiEnabled: prisma.apiEnabled,
-            createdAt: prisma.createdAt,
-            updatedAt: prisma.updatedAt,
-        });
-    }
+  toDomain(prisma: PrismaCasinoAggregator): CasinoAggregator {
+    return CasinoAggregator.create({
+      id: prisma.id,
+      name: prisma.name,
+      code: prisma.code,
+      status: prisma.status,
+      apiEnabled: prisma.apiEnabled,
+      createdAt: prisma.createdAt,
+      updatedAt: prisma.updatedAt,
+    });
+  }
 
-    toPrisma(domain: CasinoAggregator): Prisma.CasinoAggregatorCreateInput {
-        return {
-            name: domain.name,
-            code: domain.code,
-            status: domain.status,
-            apiEnabled: domain.apiEnabled,
-        };
-    }
+  toPrisma(domain: CasinoAggregator): Prisma.CasinoAggregatorCreateInput {
+    return {
+      name: domain.name,
+      code: domain.code,
+      status: domain.status,
+      apiEnabled: domain.apiEnabled,
+    };
+  }
 }

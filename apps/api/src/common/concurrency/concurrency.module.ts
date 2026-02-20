@@ -6,4 +6,4 @@ import { AdvisoryLockService } from './advisory-lock.service';
   providers: [ConcurrencyService, AdvisoryLockService],
   exports: [ConcurrencyService, AdvisoryLockService],
 })
-export class ConcurrencyModule { }
+export class ConcurrencyModule {}

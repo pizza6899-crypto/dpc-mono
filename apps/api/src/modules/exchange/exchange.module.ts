@@ -36,4 +36,4 @@ import { EXCHANGE_QUEUES } from './infrastructure/exchange.bullmq';
   controllers: [ExchangeController, AdminExchangeController],
   exports: [ExchangeRateService],
 })
-export class ExchangeModule { }
+export class ExchangeModule {}

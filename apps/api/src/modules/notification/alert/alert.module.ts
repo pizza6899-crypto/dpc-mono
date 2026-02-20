@@ -9,25 +9,28 @@ import { AlertAdminController } from './controllers/admin/alert-admin.controller
 import { ALERT_REPOSITORY } from './ports';
 
 @Module({
-    imports: [
-        NotificationQueueModule,
-    ],
-    controllers: [AlertAdminController],
-    providers: [
-        // Mapper
-        AlertMapper,
+  imports: [NotificationQueueModule],
+  controllers: [AlertAdminController],
+  providers: [
+    // Mapper
+    AlertMapper,
 
-        // Repository
-        {
-            provide: ALERT_REPOSITORY,
-            useClass: AlertRepository,
-        },
+    // Repository
+    {
+      provide: ALERT_REPOSITORY,
+      useClass: AlertRepository,
+    },
 
-        // Services
-        SendAlertService,
-        SendRealtimeService,
-        FindAlertsService,
-    ],
-    exports: [SendAlertService, SendRealtimeService, FindAlertsService, ALERT_REPOSITORY],
+    // Services
+    SendAlertService,
+    SendRealtimeService,
+    FindAlertsService,
+  ],
+  exports: [
+    SendAlertService,
+    SendRealtimeService,
+    FindAlertsService,
+    ALERT_REPOSITORY,
+  ],
 })
-export class AlertModule { }
+export class AlertModule {}

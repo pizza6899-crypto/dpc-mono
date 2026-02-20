@@ -7,7 +7,11 @@ import { DomainException } from 'src/common/exception/domain.exception';
  */
 export class LoginFailedException extends DomainException {
   constructor(reason: string) {
-    super(`Login failed: ${reason}`, MessageCode.AUTH_LOGIN_FAILED, HttpStatus.UNAUTHORIZED);
+    super(
+      `Login failed: ${reason}`,
+      MessageCode.AUTH_LOGIN_FAILED,
+      HttpStatus.UNAUTHORIZED,
+    );
     this.name = 'LoginFailedException';
   }
 }
@@ -17,7 +21,11 @@ export class LoginFailedException extends DomainException {
  */
 export class PasswordMismatchException extends DomainException {
   constructor() {
-    super('Password does not match', MessageCode.AUTH_PASSWORD_MISMATCH, HttpStatus.UNAUTHORIZED);
+    super(
+      'Password does not match',
+      MessageCode.AUTH_PASSWORD_MISMATCH,
+      HttpStatus.UNAUTHORIZED,
+    );
     this.name = 'PasswordMismatchException';
   }
 }

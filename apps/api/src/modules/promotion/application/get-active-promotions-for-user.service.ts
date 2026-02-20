@@ -1,7 +1,10 @@
 // src/modules/promotion/application/get-active-promotions-for-user.service.ts
 import { Inject, Injectable } from '@nestjs/common';
 import { Language, ExchangeCurrencyCode } from '@prisma/client';
-import { Promotion, PromotionTranslation } from '../domain/model/promotion.entity';
+import {
+  Promotion,
+  PromotionTranslation,
+} from '../domain/model/promotion.entity';
 import { PromotionCurrency } from '../domain/model/promotion-currency.entity';
 import { PROMOTION_REPOSITORY } from '../ports/out';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
@@ -27,7 +30,7 @@ export class GetActivePromotionsForUserService {
   constructor(
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) { }
+  ) {}
 
   async execute(
     params: GetActivePromotionsForUserParams & { userId?: bigint },
@@ -49,7 +52,7 @@ export class GetActivePromotionsForUserService {
       sortOrder,
     });
 
-    let userParticipatedPromotionIds = new Set<string>(); // BigInt to String
+    const userParticipatedPromotionIds = new Set<string>(); // BigInt to String
 
     if (userId) {
       const userPromotions = await this.repository.findUserPromotions(userId);

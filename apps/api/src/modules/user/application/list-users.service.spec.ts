@@ -274,10 +274,7 @@ describe('ListUsersService', () => {
       mockUserRepository.findMany.mockRejectedValue(repositoryError);
 
       // When & Then
-      await expect(service.execute({})).rejects.toThrow(
-        'Database query error',
-      );
+      await expect(service.execute({})).rejects.toThrow('Database query error');
     });
   });
 });
-

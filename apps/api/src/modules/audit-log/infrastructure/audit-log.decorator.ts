@@ -1,5 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
-import { LogType } from '../domain';
+import type { LogType } from '../domain';
 
 export const AUDIT_LOG_METADATA = 'auditLog';
 
@@ -22,14 +22,14 @@ export interface AuditLogOptions {
    * 함수 형태 전달 시 request, args, result, error를 기반으로 동적 추출이 가능합니다.
    */
   userId?:
-  | string
-  | bigint
-  | ((
-    request: any,
-    args: any[],
-    result?: any,
-    error?: Error,
-  ) => string | bigint | undefined);
+    | string
+    | bigint
+    | ((
+        request: any,
+        args: any[],
+        result?: any,
+        error?: Error,
+      ) => string | bigint | undefined);
   /** 성공 시 로그 기록 여부 (기본값: true) */
   logOnSuccess?: boolean;
   /** 실패 시 로그 기록 여부 (기본값: true) */
@@ -40,7 +40,7 @@ export interface AuditLogOptions {
  * Audit Log 데코레이터
  *
  * 메서드에 이 데코레이터를 붙이면 자동으로 audit log가 기록됩니다.
- * 
+ *
  * @important 컨트롤러 메서드에만 적용 가능합니다.
  * NestJS 인터셉터는 HTTP 핸들러(컨트롤러 메서드)에만 적용되므로,
  * 서비스 메서드에는 적용되지 않습니다.

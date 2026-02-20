@@ -96,8 +96,7 @@ export class UserAuth {
   hasValidUserType(): boolean {
     const isValidCredential =
       this.passwordHash !== null && this.socialId === null;
-    const isValidSocial =
-      this.passwordHash === null && this.socialId !== null;
+    const isValidSocial = this.passwordHash === null && this.socialId !== null;
 
     return isValidCredential || isValidSocial;
   }
@@ -122,4 +121,3 @@ export class UserAuth {
     return emailRegex.test(email);
   }
 }
-

@@ -5,19 +5,20 @@ import type { CryptoWithdrawConfig, BankWithdrawConfig } from '../domain';
 
 @Injectable()
 export class GetWithdrawalOptionsService {
-    constructor(
-        @Inject(WITHDRAWAL_REPOSITORY)
-        private readonly repository: WithdrawalRepositoryPort,
-    ) { }
+  constructor(
+    @Inject(WITHDRAWAL_REPOSITORY)
+    private readonly repository: WithdrawalRepositoryPort,
+  ) {}
 
-    async execute(): Promise<{ crypto: CryptoWithdrawConfig[]; bank: BankWithdrawConfig[] }> {
-        const [crypto, bank] = await Promise.all([
-            this.repository.findActiveCryptoConfigs(),
-            this.repository.findActiveBankConfigs(),
-        ]);
+  async execute(): Promise<{
+    crypto: CryptoWithdrawConfig[];
+    bank: BankWithdrawConfig[];
+  }> {
+    const [crypto, bank] = await Promise.all([
+      this.repository.findActiveCryptoConfigs(),
+      this.repository.findActiveBankConfigs(),
+    ]);
 
-        return { crypto, bank };
-    }
+    return { crypto, bank };
+  }
 }
-
-

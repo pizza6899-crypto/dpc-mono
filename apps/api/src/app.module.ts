@@ -3,7 +3,12 @@ import { AuthModule } from './modules/auth/auth.module';
 import { BullModule } from '@nestjs/bullmq';
 import { EnvModule } from './common/env/env.module';
 import { EnvService } from './common/env/env.service';
-import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, Reflector } from '@nestjs/core';
+import {
+  APP_FILTER,
+  APP_GUARD,
+  APP_INTERCEPTOR,
+  Reflector,
+} from '@nestjs/core';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { CasinoModule } from './modules/casino/casino.module';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -91,4 +96,4 @@ import { BullMqModule } from './infrastructure/bullmq/bullmq.module';
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

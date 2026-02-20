@@ -86,7 +86,6 @@ export interface AffiliateCodeRepositoryPort {
     total: number;
   }>;
 
-
   /**
    * ID로 코드 조회 (관리자용 - userId 없이 조회)
    */

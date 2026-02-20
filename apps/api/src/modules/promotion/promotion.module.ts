@@ -27,7 +27,12 @@ import { WalletModule } from '../wallet/wallet.module';
 import { NotificationModule } from '../notification/notification.module';
 
 @Module({
-  imports: [WageringModule, WalletModule, NotificationModule, ConcurrencyModule],
+  imports: [
+    WageringModule,
+    WalletModule,
+    NotificationModule,
+    ConcurrencyModule,
+  ],
   providers: [
     PromotionPolicy,
     CheckEligiblePromotionsService,
@@ -59,4 +64,4 @@ import { NotificationModule } from '../notification/notification.module';
     PROMOTION_REPOSITORY,
   ],
 })
-export class PromotionModule { }
+export class PromotionModule {}

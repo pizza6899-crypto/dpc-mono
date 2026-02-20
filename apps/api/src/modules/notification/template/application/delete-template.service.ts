@@ -5,16 +5,16 @@ import { TemplateNotFoundException } from '../domain/template.exception';
 
 @Injectable()
 export class DeleteTemplateService {
-    constructor(
-        @Inject(NOTIFICATION_TEMPLATE_REPOSITORY)
-        private readonly repository: NotificationTemplateRepositoryPort,
-    ) { }
+  constructor(
+    @Inject(NOTIFICATION_TEMPLATE_REPOSITORY)
+    private readonly repository: NotificationTemplateRepositoryPort,
+  ) {}
 
-    async execute(id: bigint): Promise<void> {
-        const template = await this.repository.findById(id);
-        if (!template) {
-            throw new TemplateNotFoundException(id);
-        }
-        await this.repository.delete(id);
+  async execute(id: bigint): Promise<void> {
+    const template = await this.repository.findById(id);
+    if (!template) {
+      throw new TemplateNotFoundException(id);
     }
+    await this.repository.delete(id);
+  }
 }

@@ -12,8 +12,7 @@ export class FindCodesService {
   constructor(
     @Inject(AFFILIATE_CODE_REPOSITORY)
     private readonly repository: AffiliateCodeRepositoryPort,
-  ) { }
-
+  ) {}
 
   async execute({
     userId,

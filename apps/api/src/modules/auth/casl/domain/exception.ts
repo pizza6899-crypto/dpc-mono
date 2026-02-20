@@ -15,4 +15,3 @@ export class InsufficientPermissionException extends DomainException {
     this.name = 'InsufficientPermissionException';
   }
 }
-

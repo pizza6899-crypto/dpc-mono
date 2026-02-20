@@ -9,11 +9,7 @@ import { CreateAdminCommand } from './commands/create-admin.command';
 
 @Module({
   imports: [EnvModule, RedisModule, PrismaModule, PaymentModule],
-  providers: [
-    BaseCommand,
-    NowPaymentCommand,
-    CreateAdminCommand,
-  ],
+  providers: [BaseCommand, NowPaymentCommand, CreateAdminCommand],
   exports: [BaseCommand],
 })
 export class CliModule {}

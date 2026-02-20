@@ -13,9 +13,9 @@ import { ClsService } from 'nestjs-cls';
 const criticalConfig = getQueueConfig(AUDIT_QUEUES.CRITICAL);
 
 interface LogQueueJobData {
-    id: string;
-    createdAt: string; // Snowflake ID에서 추출한 타임스탬프 (ISO 8601)
-    payload: LogJobData;
+  id: string;
+  createdAt: string; // Snowflake ID에서 추출한 타임스탬프 (ISO 8601)
+  payload: LogJobData;
 }
 
 /**
@@ -24,37 +24,45 @@ interface LogQueueJobData {
  */
 @Processor(criticalConfig.processorOptions, criticalConfig.workerOptions)
 export class CriticalLogProcessor extends BaseProcessor<LogQueueJobData, void> {
-    protected readonly logger = new Logger(CriticalLogProcessor.name);
+  protected readonly logger = new Logger(CriticalLogProcessor.name);
 
-    constructor(
-        @Inject(AUDIT_LOG_REPOSITORY)
-        private readonly auditLogRepository: AuditLogRepositoryPort,
-        protected readonly cls: ClsService,
-    ) {
-        super();
+  constructor(
+    @Inject(AUDIT_LOG_REPOSITORY)
+    private readonly auditLogRepository: AuditLogRepositoryPort,
+    protected readonly cls: ClsService,
+  ) {
+    super();
+  }
+
+  protected async processJob(job: Job<LogQueueJobData>): Promise<void> {
+    const { id, createdAt, payload } = job.data;
+    const snowflakeId = BigInt(id);
+    const timestamp = new Date(createdAt);
+
+    try {
+      if (payload.type === LogType.AUTH) {
+        await this.auditLogRepository.saveAuthLog(
+          snowflakeId,
+          timestamp,
+          payload.data,
+        );
+      } else if (payload.type === LogType.INTEGRATION) {
+        await this.auditLogRepository.saveIntegrationLog(
+          snowflakeId,
+          timestamp,
+          payload.data,
+        );
+      } else {
+        this.logger.warn(
+          `Unexpected log type in critical queue: ${payload.type}`,
+        );
+      }
+    } catch (error) {
+      this.logger.error(
+        `Critical log 저장 실패 - jobId: ${job.id}, type: ${payload.type}`,
+        error instanceof Error ? error.stack : String(error),
+      );
+      throw error; // BullMQ가 재시도하도록 에러 throw
     }
-
-    protected async processJob(job: Job<LogQueueJobData>): Promise<void> {
-        const { id, createdAt, payload } = job.data;
-        const snowflakeId = BigInt(id);
-        const timestamp = new Date(createdAt);
-
-        try {
-            if (payload.type === LogType.AUTH) {
-                await this.auditLogRepository.saveAuthLog(snowflakeId, timestamp, payload.data);
-            } else if (payload.type === LogType.INTEGRATION) {
-                await this.auditLogRepository.saveIntegrationLog(snowflakeId, timestamp, payload.data);
-            } else {
-                this.logger.warn(
-                    `Unexpected log type in critical queue: ${payload.type}`,
-                );
-            }
-        } catch (error) {
-            this.logger.error(
-                `Critical log 저장 실패 - jobId: ${job.id}, type: ${payload.type}`,
-                error instanceof Error ? error.stack : String(error),
-            );
-            throw error; // BullMQ가 재시도하도록 에러 throw
-        }
-    }
+  }
 }

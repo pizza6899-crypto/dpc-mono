@@ -13,7 +13,7 @@ export class AffiliateCommissionRepository implements AffiliateCommissionReposit
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: AffiliateCommissionMapper,
-  ) { }
+  ) {}
 
   async findById(id: bigint): Promise<AffiliateCommission | null> {
     const result = await this.tx.affiliateCommission.findFirst({

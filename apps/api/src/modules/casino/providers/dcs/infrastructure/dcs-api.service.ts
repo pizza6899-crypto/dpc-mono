@@ -111,7 +111,8 @@ export class DcsApiService {
           duration,
           success,
           request: body,
-          response: responseData || (errorObj ? { message: errorObj.message } : null),
+          response:
+            responseData || (errorObj ? { message: errorObj.message } : null),
           metadata: { description },
         },
       });

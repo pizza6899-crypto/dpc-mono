@@ -4,26 +4,26 @@ import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.re
 import { DepositNotFoundException, DepositDetail } from '../domain';
 
 interface GetMyDepositDetailParams {
-    id: bigint;
-    userId: bigint;
+  id: bigint;
+  userId: bigint;
 }
 
 @Injectable()
 export class GetMyDepositDetailService {
-    constructor(
-        @Inject(DEPOSIT_DETAIL_REPOSITORY)
-        private readonly depositRepository: DepositDetailRepositoryPort,
-    ) { }
+  constructor(
+    @Inject(DEPOSIT_DETAIL_REPOSITORY)
+    private readonly depositRepository: DepositDetailRepositoryPort,
+  ) {}
 
-    async execute(params: GetMyDepositDetailParams): Promise<DepositDetail> {
-        const { id, userId } = params;
+  async execute(params: GetMyDepositDetailParams): Promise<DepositDetail> {
+    const { id, userId } = params;
 
-        const deposit = await this.depositRepository.findByIdAndUserId(id, userId);
+    const deposit = await this.depositRepository.findByIdAndUserId(id, userId);
 
-        if (!deposit) {
-            throw new DepositNotFoundException(id.toString());
-        }
-
-        return deposit;
+    if (!deposit) {
+      throw new DepositNotFoundException(id.toString());
     }
+
+    return deposit;
+  }
 }

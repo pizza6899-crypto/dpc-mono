@@ -4,27 +4,27 @@ import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';
 
 export interface GetWithdrawalParams {
-    userId: bigint;
-    withdrawalId: bigint;
+  userId: bigint;
+  withdrawalId: bigint;
 }
 
 @Injectable()
 export class GetWithdrawalService {
-    constructor(
-        @Inject(WITHDRAWAL_REPOSITORY)
-        private readonly repository: WithdrawalRepositoryPort,
-    ) { }
+  constructor(
+    @Inject(WITHDRAWAL_REPOSITORY)
+    private readonly repository: WithdrawalRepositoryPort,
+  ) {}
 
-    async execute(params: GetWithdrawalParams): Promise<WithdrawalDetail> {
-        const { userId, withdrawalId } = params;
+  async execute(params: GetWithdrawalParams): Promise<WithdrawalDetail> {
+    const { userId, withdrawalId } = params;
 
-        const withdrawal = await this.repository.getById(withdrawalId);
+    const withdrawal = await this.repository.getById(withdrawalId);
 
-        // 소유권 확인
-        if (withdrawal.userId !== userId) {
-            throw new WithdrawalNotFoundException();
-        }
-
-        return withdrawal;
+    // 소유권 확인
+    if (withdrawal.userId !== userId) {
+      throw new WithdrawalNotFoundException();
     }
+
+    return withdrawal;
+  }
 }

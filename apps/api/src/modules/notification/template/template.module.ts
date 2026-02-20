@@ -10,44 +10,44 @@ import { RendererFactory } from './infrastructure/renderers/renderer.factory';
 import { RenderTemplateService } from './application/render-template.service';
 import { CreateTemplateService } from './application/create-template.service';
 import { UpdateTemplateService } from './application/update-template.service';
-import { FindTemplatesService, FindTemplateByIdService } from './application/find-templates.service';
+import {
+  FindTemplatesService,
+  FindTemplateByIdService,
+} from './application/find-templates.service';
 import { DeleteTemplateService } from './application/delete-template.service';
 import { TemplateAdminController } from './controllers/admin/template-admin.controller';
 import { TemplateTranslationAdminController } from './controllers/admin/template-translation-admin.controller';
 import { UpdateTemplateTranslationService } from './application/update-template-translation.service';
 
 @Module({
-    controllers: [
-        TemplateAdminController,
-        TemplateTranslationAdminController, // New controller
-    ],
-    providers: [
-        // Mapper
-        NotificationTemplateMapper,
+  controllers: [
+    TemplateAdminController,
+    TemplateTranslationAdminController, // New controller
+  ],
+  providers: [
+    // Mapper
+    NotificationTemplateMapper,
 
-        // Repository
-        {
-            provide: NOTIFICATION_TEMPLATE_REPOSITORY,
-            useClass: NotificationTemplateRepository,
-        },
+    // Repository
+    {
+      provide: NOTIFICATION_TEMPLATE_REPOSITORY,
+      useClass: NotificationTemplateRepository,
+    },
 
-        // Renderers
-        HandlebarsRenderer,
-        EmailHandlebarsRenderer,
-        RendererFactory,
+    // Renderers
+    HandlebarsRenderer,
+    EmailHandlebarsRenderer,
+    RendererFactory,
 
-        // Application Service
-        RenderTemplateService,
-        CreateTemplateService,
-        UpdateTemplateService,
-        FindTemplatesService,
-        FindTemplateByIdService,
-        DeleteTemplateService,
-        UpdateTemplateTranslationService, // New service
-    ],
-    exports: [
-        RenderTemplateService,
-        NOTIFICATION_TEMPLATE_REPOSITORY,
-    ],
+    // Application Service
+    RenderTemplateService,
+    CreateTemplateService,
+    UpdateTemplateService,
+    FindTemplatesService,
+    FindTemplateByIdService,
+    DeleteTemplateService,
+    UpdateTemplateTranslationService, // New service
+  ],
+  exports: [RenderTemplateService, NOTIFICATION_TEMPLATE_REPOSITORY],
 })
-export class TemplateModule { }
+export class TemplateModule {}

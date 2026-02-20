@@ -9,9 +9,7 @@ import kyselyExtension, {
   PrismaKyselyExtensionArgs,
 } from 'prisma-extension-kysely';
 
-export type ExtendedClient = ReturnType<
-  PrismaService['createExtendedClient']
->;
+export type ExtendedClient = ReturnType<PrismaService['createExtendedClient']>;
 import {
   CamelCasePlugin,
   Kysely,
@@ -53,7 +51,8 @@ import { Prisma, PrismaClient } from '@prisma/client';
 @Injectable()
 export class PrismaService
   extends PrismaClient<Prisma.PrismaClientOptions>
-  implements OnModuleInit, OnModuleDestroy {
+  implements OnModuleInit, OnModuleDestroy
+{
   private readonly logger = new Logger(PrismaService.name);
   private _extendedClient: ReturnType<typeof this.createExtendedClient> | null =
     null;
@@ -149,7 +148,6 @@ export class PrismaService
           const kyselyDuration = Date.now() - kyselyStart;
           this.logger.log(
             `✅ Kysely query test successful (${kyselyDuration}ms) via Prisma Engine. Result: ${JSON.stringify(
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               (result as any).rows,
             )}`,
           );
@@ -157,9 +155,7 @@ export class PrismaService
           this.logger.error('❌ Kysely test query failed', e);
         }
       } else {
-        this.logger.warn(
-          '⚠️ Cannot run Kysely test: _extendedClient is null',
-        );
+        this.logger.warn('⚠️ Cannot run Kysely test: _extendedClient is null');
       }
     } catch (error) {
       this.logger.error(

@@ -2,19 +2,17 @@
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import { Logger } from '@nestjs/common';
-import { CreateSessionService, type CreateSessionParams } from './create-session.service';
+import {
+  CreateSessionService,
+  type CreateSessionParams,
+} from './create-session.service';
 import {
   USER_SESSION_REPOSITORY,
   type UserSessionRepositoryPort,
 } from '../ports/out';
 import { SessionPolicy } from '../domain/policy';
 import { SessionTrackerService } from '../infrastructure/session-tracker.service';
-import {
-  UserSession,
-  SessionType,
-  SessionStatus,
-  DeviceInfo,
-} from '../domain';
+import { UserSession, SessionType, SessionStatus, DeviceInfo } from '../domain';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 
@@ -258,9 +256,7 @@ describe('CreateSessionService', () => {
         existingSession2,
       ]);
       // 정책에 따라 첫 번째 세션만 종료
-      policy.getSessionsToRevokeForNewLogin.mockReturnValue([
-        existingSession1,
-      ]);
+      policy.getSessionsToRevokeForNewLogin.mockReturnValue([existingSession1]);
 
       const revokedSession1 = existingSession1.revoke(null);
       repository.update.mockResolvedValue(revokedSession1);
@@ -696,4 +692,3 @@ describe('CreateSessionService', () => {
     });
   });
 });
-

@@ -12,4 +12,3 @@ export class CreateAffiliateCodeDto {
   @IsString()
   campaignName?: string;
 }
-

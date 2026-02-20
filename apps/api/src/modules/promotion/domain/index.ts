@@ -4,4 +4,3 @@ export * from './model/user-promotion.entity';
 export * from './model/promotion-currency.entity';
 export * from './promotion-policy';
 export * from './promotion.exception';
-

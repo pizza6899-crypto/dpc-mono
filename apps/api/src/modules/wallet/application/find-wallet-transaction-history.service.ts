@@ -5,22 +5,23 @@ import type { UserWalletTransactionSearchOptions } from '../ports/out/user-walle
 import { UserWalletTransaction } from '../domain';
 
 export interface FindWalletTransactionHistoryResult {
-    items: UserWalletTransaction[];
-    total: number;
+  items: UserWalletTransaction[];
+  total: number;
 }
 
 @Injectable()
 export class FindWalletTransactionHistoryService {
-    constructor(
-        @Inject(USER_WALLET_TRANSACTION_REPOSITORY)
-        private readonly transactionRepository: UserWalletTransactionRepositoryPort,
-    ) { }
+  constructor(
+    @Inject(USER_WALLET_TRANSACTION_REPOSITORY)
+    private readonly transactionRepository: UserWalletTransactionRepositoryPort,
+  ) {}
 
-    async execute(
-        options: UserWalletTransactionSearchOptions,
-    ): Promise<FindWalletTransactionHistoryResult> {
-        const [items, total] = await this.transactionRepository.listByUserId(options);
+  async execute(
+    options: UserWalletTransactionSearchOptions,
+  ): Promise<FindWalletTransactionHistoryResult> {
+    const [items, total] =
+      await this.transactionRepository.listByUserId(options);
 
-        return { items, total };
-    }
+    return { items, total };
+  }
 }

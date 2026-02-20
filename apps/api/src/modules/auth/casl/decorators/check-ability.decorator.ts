@@ -1,5 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
-import { Action, Subjects } from '../domain';
+import type { Action, Subjects } from '../domain';
 
 /**
  * 권한 검증 메타데이터 키
@@ -29,4 +29,3 @@ export interface CheckAbilityMetadata {
  */
 export const CheckAbility = (action: Action, subject: Subjects) =>
   SetMetadata(CHECK_ABILITY_KEY, { action, subject });
-

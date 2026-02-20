@@ -57,7 +57,7 @@ export class CredentialUserController {
     private readonly resetPasswordService: ResetPasswordService,
     private readonly checkUserStatusService: CheckUserStatusService,
     private readonly sqidsService: SqidsService,
-  ) { }
+  ) {}
 
   @Post('login')
   @Public()
@@ -135,7 +135,8 @@ export class CredentialUserController {
   })
   @ApiOperation({
     summary: 'Logout (로그아웃)',
-    description: '현재 세션 종료. 인증 상태와 관계없이 항상 성공 응답을 반환합니다.',
+    description:
+      '현재 세션 종료. 인증 상태와 관계없이 항상 성공 응답을 반환합니다.',
   })
   @ApiStandardResponse(CredentialUserLogoutResponseDto, {
     status: HttpStatus.OK,
@@ -213,7 +214,7 @@ export class CredentialUserController {
         isAuthenticated = false;
         // 유효하지 않은 유저라면 로그아웃 처리 (세션 정리)
         req.logout(() => {
-          req.session?.destroy(() => { });
+          req.session?.destroy(() => {});
         });
       }
     }
@@ -223,9 +224,9 @@ export class CredentialUserController {
       user:
         isAuthenticated && user
           ? {
-            id: this.sqidsService.encode(user.id, SqidsPrefix.USER),
-            email: user.email,
-          }
+              id: this.sqidsService.encode(user.id, SqidsPrefix.USER),
+              email: user.email,
+            }
           : null,
     };
   }
@@ -234,7 +235,8 @@ export class CredentialUserController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Change Password / 비밀번호 변경',
-    description: '로그인한 사용자가 현재 비밀번호를 알고 있는 상태에서 비밀번호를 변경합니다.',
+    description:
+      '로그인한 사용자가 현재 비밀번호를 알고 있는 상태에서 비밀번호를 변경합니다.',
   })
   @ApiStandardResponse(ChangePasswordResponseDto, {
     status: HttpStatus.OK,

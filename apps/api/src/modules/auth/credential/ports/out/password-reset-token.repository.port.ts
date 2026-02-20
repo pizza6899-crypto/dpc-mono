@@ -35,5 +35,3 @@ export interface PasswordResetTokenRepositoryPort {
    */
   deleteUnusedByUserId(userId: bigint): Promise<void>;
 }
-
-

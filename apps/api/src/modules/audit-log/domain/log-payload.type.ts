@@ -7,7 +7,7 @@ export enum LogType {
 
 /**
  * Auth Log Payload
- * 
+ *
  * @note action, status는 string으로 유지하여 결합성을 낮춤
  * 각 모듈에서 자체 enum을 정의하고 사용 (예: AuthAction, AuthStatus)
  * audit-log 모듈은 비즈니스 로직에 의존하지 않는 범용 인프라로 유지
@@ -36,7 +36,7 @@ export interface AuthLogPayload {
 
 /**
  * Activity Log Payload
- * 
+ *
  * @note category, action은 string으로 유지하여 결합성을 낮춤
  * 각 모듈에서 자체 enum을 정의하고 사용 (예: ActivityType, ActivityCategory)
  * audit-log 모듈은 비즈니스 로직에 의존하지 않는 범용 인프라로 유지
@@ -60,7 +60,7 @@ export interface ActivityLogPayload {
 
 /**
  * System Error Log Payload
- * 
+ *
  * @note severity는 로그 레벨이므로 제한된 값으로 정의
  * errorCode는 string으로 유지하여 각 모듈에서 자유롭게 정의 가능
  */

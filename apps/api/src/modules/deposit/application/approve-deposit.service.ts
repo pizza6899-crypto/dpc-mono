@@ -10,7 +10,11 @@ import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
-import { UserWalletBalanceType, UserWalletTransactionType, ExchangeCurrencyCode } from '@prisma/client';
+import {
+  UserWalletBalanceType,
+  UserWalletTransactionType,
+  ExchangeCurrencyCode,
+} from '@prisma/client';
 import { GrantPromotionBonusService } from '../../promotion/application/grant-promotion-bonus.service';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';
@@ -55,9 +59,13 @@ export class ApproveDepositService {
       params;
 
     // 락 획득 (DB Advisory Lock)
-    await this.advisoryLockService.acquireLock(LockNamespace.DEPOSIT, id.toString(), {
-      throwThrottleError: true,
-    });
+    await this.advisoryLockService.acquireLock(
+      LockNamespace.DEPOSIT,
+      id.toString(),
+      {
+        throwThrottleError: true,
+      },
+    );
 
     // 1. DepositDetail 조회 (transaction 포함)
     const deposit = await this.depositRepository.getById(id, {
@@ -73,7 +81,7 @@ export class ApproveDepositService {
     const walletBefore = await this.findUserWalletService.findWallet(
       deposit.userId,
       deposit.depositCurrency as unknown as ExchangeCurrencyCode,
-      true
+      true,
     );
 
     if (!walletBefore) {
@@ -83,7 +91,8 @@ export class ApproveDepositService {
     const beforeTotalAmount = walletBefore.cash.add(walletBefore.bonus);
 
     // 4. USD 환산 산정 (티어 실적 반영용)
-    const depositCurrency = deposit.depositCurrency as unknown as ExchangeCurrencyCode;
+    const depositCurrency =
+      deposit.depositCurrency as unknown as ExchangeCurrencyCode;
     let amountUsd = actuallyPaid;
     if (depositCurrency !== ExchangeCurrencyCode.USD) {
       const rate = await this.exchangeRateService.getRate({
@@ -94,26 +103,32 @@ export class ApproveDepositService {
     }
 
     // 5. 잔액 업데이트
-    const updatedWallet = await this.updateUserBalanceService.updateBalance({
-      userId: deposit.userId,
-      currency: depositCurrency,
-      amount: actuallyPaid,
-      operation: UpdateOperation.ADD,
-      balanceType: UserWalletBalanceType.CASH,
-      transactionType: UserWalletTransactionType.DEPOSIT,
-      referenceId: deposit.id!,
-      amountUsd, // 산정된 USD 금액 전달
-    }, {
-      adminUserId: adminId,
-      reasonCode: AdjustmentReasonCode.MANUAL_DEPOSIT,
-      internalNote: memo,
-      actionName: WalletActionName.APPROVE_DEPOSIT,
-    });
+    const updatedWallet = await this.updateUserBalanceService.updateBalance(
+      {
+        userId: deposit.userId,
+        currency: depositCurrency,
+        amount: actuallyPaid,
+        operation: UpdateOperation.ADD,
+        balanceType: UserWalletBalanceType.CASH,
+        transactionType: UserWalletTransactionType.DEPOSIT,
+        referenceId: deposit.id!,
+        amountUsd, // 산정된 USD 금액 전달
+      },
+      {
+        adminUserId: adminId,
+        reasonCode: AdjustmentReasonCode.MANUAL_DEPOSIT,
+        internalNote: memo,
+        actionName: WalletActionName.APPROVE_DEPOSIT,
+      },
+    );
 
     const afterTotalAmount = updatedWallet.cash.add(updatedWallet.bonus);
 
     // 6. 티어 입금 실적 누적
-    await this.accumulateUserDepositService.execute(deposit.userId, amountUsd.toNumber());
+    await this.accumulateUserDepositService.execute(
+      deposit.userId,
+      amountUsd.toNumber(),
+    );
 
     // 7. Transaction 생성 (지연 생성)
     let transactionId = deposit.transactionId;
@@ -130,7 +145,13 @@ export class ApproveDepositService {
     }
 
     // 8. 엔티티 승인 처리 (상태 변경 및 트랜잭션 링크)
-    deposit.approve(actuallyPaid, adminId, transactionHash, memo, transactionId);
+    deposit.approve(
+      actuallyPaid,
+      adminId,
+      transactionHash,
+      memo,
+      transactionId,
+    );
 
     // 9. DepositDetail 상태 업데이트 (엔티티의 변경사항 반영)
     await this.depositRepository.update(deposit);
@@ -143,7 +164,7 @@ export class ApproveDepositService {
       // 정책: 프로모션 롤링이 기본 입금 롤링 의무를 대체함
       const result = await this.grantPromotionBonusService.execute({
         userId: deposit.userId,
-        promotionId: deposit.promotionId!,
+        promotionId: deposit.promotionId,
         depositAmount: actuallyPaid,
         currency: deposit.depositCurrency,
         depositDetailId: deposit.id!,

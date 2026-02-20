@@ -11,7 +11,7 @@ export class NowPaymentCallbackService {
   constructor(
     private readonly envService: EnvService,
     private readonly callbackLogService: NowPaymentCallbackLogService,
-  ) { }
+  ) {}
 
   /**
    * NowPayment 콜백 서명 검증

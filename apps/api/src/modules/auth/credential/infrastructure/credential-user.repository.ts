@@ -11,7 +11,7 @@ export class CredentialUserRepository implements CredentialUserRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: CredentialUserMapper,
-  ) { }
+  ) {}
 
   async findByEmail(email: string): Promise<CredentialUser | null> {
     const result = await this.tx.user.findFirst({

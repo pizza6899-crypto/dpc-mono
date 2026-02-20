@@ -1,5 +1,5 @@
 // src/modules/promotion/domain/model/promotion-currency.entity.ts
-import { Prisma, ExchangeCurrencyCode } from '@prisma/client';
+import type { Prisma, ExchangeCurrencyCode } from '@prisma/client';
 
 export class PromotionCurrency {
   private constructor(
@@ -11,7 +11,7 @@ export class PromotionCurrency {
     public readonly maxWithdrawAmount: Prisma.Decimal | null,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
-  ) { }
+  ) {}
 
   static fromPersistence(data: {
     id: bigint;

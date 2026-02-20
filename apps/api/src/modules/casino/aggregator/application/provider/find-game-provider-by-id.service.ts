@@ -4,17 +4,19 @@ import { CASINO_GAME_PROVIDER_REPOSITORY } from '../../ports/casino-game-provide
 import { type CasinoGameProviderRepositoryPort } from '../../ports/casino-game-provider.repository.port';
 
 interface FindGameProviderByIdParams {
-    id: bigint;
+  id: bigint;
 }
 
 @Injectable()
 export class FindGameProviderByIdService {
-    constructor(
-        @Inject(CASINO_GAME_PROVIDER_REPOSITORY)
-        private readonly repository: CasinoGameProviderRepositoryPort,
-    ) { }
+  constructor(
+    @Inject(CASINO_GAME_PROVIDER_REPOSITORY)
+    private readonly repository: CasinoGameProviderRepositoryPort,
+  ) {}
 
-    async execute({ id }: FindGameProviderByIdParams): Promise<CasinoGameProvider> {
-        return await this.repository.getById(id);
-    }
+  async execute({
+    id,
+  }: FindGameProviderByIdParams): Promise<CasinoGameProvider> {
+    return await this.repository.getById(id);
+  }
 }

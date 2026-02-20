@@ -148,7 +148,9 @@ export class CreatePromotionRequestDto {
   })
   @IsOptional()
   @IsArray()
-  @Transform(({ value }) => (Array.isArray(value) ? value.map((v) => BigInt(v)) : value))
+  @Transform(({ value }) =>
+    Array.isArray(value) ? value.map((v) => BigInt(v)) : value,
+  )
   targetUserIds?: bigint[];
 
   @ApiProperty({
@@ -227,4 +229,3 @@ export class CreatePromotionRequestDto {
   @Min(1)
   bonusExpiryMinutes?: number;
 }
-

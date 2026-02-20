@@ -2,13 +2,21 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma, ExchangeCurrencyCode } from '@prisma/client';
-import { PromotionPolicy, PromotionNotFoundException, PromotionBonusLimitExceededException, PromotionUsageLimitExceededException } from '../domain';
+import {
+  PromotionPolicy,
+  PromotionNotFoundException,
+  PromotionBonusLimitExceededException,
+  PromotionUsageLimitExceededException,
+} from '../domain';
 import type { UserPromotion } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports/out';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
 import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
 import { UpdateOperation, WalletActionName } from '../../wallet/domain';
-import { UserWalletBalanceType, UserWalletTransactionType } from '@prisma/client';
+import {
+  UserWalletBalanceType,
+  UserWalletTransactionType,
+} from '@prisma/client';
 import type { RequestClientInfo } from 'src/common/http/types';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { CreateWageringRequirementService } from 'src/modules/wagering/requirement/application';
@@ -40,7 +48,7 @@ export class GrantPromotionBonusService {
     private readonly createWageringRequirementService: CreateWageringRequirementService,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute({
@@ -53,9 +61,13 @@ export class GrantPromotionBonusService {
     requestInfo,
   }: GrantPromotionBonusParams): Promise<GrantPromotionBonusResult> {
     // 0. 락 획득 (동시성 제어)
-    await this.advisoryLockService.acquireLock(LockNamespace.PROMOTION, userId.toString(), {
-      throwThrottleError: true,
-    });
+    await this.advisoryLockService.acquireLock(
+      LockNamespace.PROMOTION,
+      userId.toString(),
+      {
+        throwThrottleError: true,
+      },
+    );
 
     // 프로모션 조회
     const promotion = await this.repository.findById(promotionId);
@@ -75,8 +87,10 @@ export class GrantPromotionBonusService {
     const hasWithdrawn = await this.repository.hasWithdrawn(userId);
 
     // 기존 UserPromotion 조회
-    let userPromotion =
-      await this.repository.findUserPromotion(userId, promotionId);
+    let userPromotion = await this.repository.findUserPromotion(
+      userId,
+      promotionId,
+    );
 
     // 자격 검증 (통화별 설정 사용)
     this.policy.validateEligibility(
@@ -106,7 +120,8 @@ export class GrantPromotionBonusService {
 
     // 사용 횟수 증가 (Atomic)
     // 동시성 제어를 위해 DB에서 원자적으로 증가시키고 결과를 확인
-    const updatedPromotion = await this.repository.incrementUsageCount(promotionId);
+    const updatedPromotion =
+      await this.repository.incrementUsageCount(promotionId);
 
     if (
       updatedPromotion.maxUsageCount !== null &&
@@ -119,7 +134,9 @@ export class GrantPromotionBonusService {
     // 만료 시간 계산
     let expiresAt: Date | null = null;
     if (promotion.bonusExpiryMinutes) {
-      expiresAt = new Date(now.getTime() + promotion.bonusExpiryMinutes * 60 * 1000);
+      expiresAt = new Date(
+        now.getTime() + promotion.bonusExpiryMinutes * 60 * 1000,
+      );
     }
 
     // UserPromotion 생성 (Policy에서 이미 중복 참여 검증 완료)
@@ -137,18 +154,21 @@ export class GrantPromotionBonusService {
 
     // 2. 지갑에 보너스 지급 (Wallet Update)
     if (bonusAmount.gt(0)) {
-      await this.updateUserBalanceService.updateBalance({
-        userId,
-        currency,
-        amount: bonusAmount,
-        operation: UpdateOperation.ADD,
-        balanceType: UserWalletBalanceType.BONUS,
-        transactionType: UserWalletTransactionType.BONUS_IN,
-        referenceId: userPromotion.id,
-      }, {
-        internalNote: `Promotion bonus granted: ${promotion.managementName}`,
-        actionName: WalletActionName.GRANT_PROMOTION_BONUS,
-      });
+      await this.updateUserBalanceService.updateBalance(
+        {
+          userId,
+          currency,
+          amount: bonusAmount,
+          operation: UpdateOperation.ADD,
+          balanceType: UserWalletBalanceType.BONUS,
+          transactionType: UserWalletTransactionType.BONUS_IN,
+          referenceId: userPromotion.id,
+        },
+        {
+          internalNote: `Promotion bonus granted: ${promotion.managementName}`,
+          actionName: WalletActionName.GRANT_PROMOTION_BONUS,
+        },
+      );
     }
 
     // 롤링 생성 (보너스 금액에만 롤링 적용)
@@ -180,4 +200,3 @@ export class GrantPromotionBonusService {
     };
   }
 }
-

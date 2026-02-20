@@ -1,4 +1,12 @@
-import { Controller, Get, Query, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { Public, AuthAll } from 'src/common/auth/decorators/roles.decorator';
 import { SqidsService } from 'src/common/sqids/sqids.service';
@@ -7,7 +15,10 @@ import { FindGamesService } from '../../application/find-games.service';
 import { CatalogGameResponseDto } from './dto/response/game.response.dto';
 import { GameListRequestDto } from './dto/request/game-list.request.dto';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
-import { ApiPaginatedResponse, ApiStandardResponse } from 'src/common/http/decorators/api-response.decorator';
+import {
+  ApiPaginatedResponse,
+  ApiStandardResponse,
+} from 'src/common/http/decorators/api-response.decorator';
 import { PaginatedData } from 'src/common/http/types';
 import type { RequestClientInfo } from 'src/common/http/types';
 
@@ -27,113 +38,122 @@ import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.
 @ApiTags('User Casino Game')
 @Controller('casino/games')
 export class GameUserController {
-    constructor(
-        private readonly findGamesService: FindGamesService,
-        private readonly getCategoryByCodeService: GetCategoryByCodeService,
-        private readonly launchGameService: LaunchGameService,
-        private readonly sqidsService: SqidsService,
-    ) { }
+  constructor(
+    private readonly findGamesService: FindGamesService,
+    private readonly getCategoryByCodeService: GetCategoryByCodeService,
+    private readonly launchGameService: LaunchGameService,
+    private readonly sqidsService: SqidsService,
+  ) {}
 
-    @Get()
-    @Public()
-    @Paginated()
-    @ApiOperation({ summary: 'List active and visible games / 게임 목록 조회' })
-    @ApiPaginatedResponse(CatalogGameResponseDto)
-    async list(@Query() query: GameListRequestDto): Promise<PaginatedData<CatalogGameResponseDto>> {
-        const lang = query.language || Language.EN;
+  @Get()
+  @Public()
+  @Paginated()
+  @ApiOperation({ summary: 'List active and visible games / 게임 목록 조회' })
+  @ApiPaginatedResponse(CatalogGameResponseDto)
+  async list(
+    @Query() query: GameListRequestDto,
+  ): Promise<PaginatedData<CatalogGameResponseDto>> {
+    const lang = query.language || Language.EN;
 
-        // Handle categoryCode
-        let categoryId: bigint | undefined;
-        if (query.categoryCode) {
-            try {
-                const category = await this.getCategoryByCodeService.execute({ code: query.categoryCode });
-                categoryId = category.id ?? undefined;
-            } catch (e) {
-                // Return empty result if category doesn't exist but was requested
-                return {
-                    data: [],
-                    page: query.page ?? 1,
-                    limit: query.limit ?? 30,
-                    total: 0,
-                };
-            }
-        }
-
-        const result = await this.findGamesService.execute({
-            providerCode: query.providerCode,
-            categoryId,
-            keyword: query.keyword,
-            isEnabled: true,
-            isVisible: true,
-            page: query.page,
-            limit: query.limit,
+    // Handle categoryCode
+    let categoryId: bigint | undefined;
+    if (query.categoryCode) {
+      try {
+        const category = await this.getCategoryByCodeService.execute({
+          code: query.categoryCode,
         });
-
+        categoryId = category.id ?? undefined;
+      } catch (e) {
+        // Return empty result if category doesn't exist but was requested
         return {
-            data: result.data.map(game => {
-                const translation =
-                    game.translations.find(t => t.language === lang) ||
-                    game.translations.find(t => t.language === Language.EN) ||
-                    game.translations[0];
-                return {
-                    id: game.id ? this.sqidsService.encode(game.id, SqidsPrefix.CASINO_GAME) : '',
-                    name: translation?.name || game.code,
-                    thumbnailUrl: game.thumbnailUrl ?? undefined,
-                    bannerUrl: game.bannerUrl ?? undefined,
-                    rtp: game.rtp?.toString(),
-                    volatility: game.volatility ?? undefined,
-                    gameType: game.gameType ?? undefined,
-                };
-            }),
-            page: result.page,
-            limit: result.limit,
-            total: result.total,
+          data: [],
+          page: query.page ?? 1,
+          limit: query.limit ?? 30,
+          total: 0,
         };
+      }
     }
 
-    @Post('launch')
-    @AuthAll()
-    @HttpCode(HttpStatus.OK)
-    @Throttle({
-        limit: 30,
-        ttl: 60, // 1 minute
-        scope: ThrottleScope.USER,
-    })
-    @AuditLog({
-        type: LogType.ACTIVITY,
-        category: 'CASINO',
-        action: 'LAUNCH_GAME',
-        extractMetadata: (_, args) => ({
-            id: args[1]?.gameId,
-            walletCurrency: args[1]?.walletCurrency,
-            gameCurrency: args[1]?.gameCurrency,
-            isMobile: args[1]?.isMobile,
-        }),
-    })
-    @ApiOperation({ summary: 'Launch Game (게임 실행)' })
-    @ApiStandardResponse(LaunchGameResponseDto, {
-        status: 200,
-        description: 'Game launch success',
-    })
-    async launchGame(
-        @CurrentUser() user: CurrentUserWithSession,
-        @Body() dto: LaunchGameRequestDto,
-        @RequestClientInfoParam() request: RequestClientInfo,
-    ): Promise<LaunchGameResponseDto> {
-        const decodedId = this.sqidsService.decode(dto.gameId, SqidsPrefix.CASINO_GAME);
+    const result = await this.findGamesService.execute({
+      providerCode: query.providerCode,
+      categoryId,
+      keyword: query.keyword,
+      isEnabled: true,
+      isVisible: true,
+      page: query.page,
+      limit: query.limit,
+    });
 
-        const result = await this.launchGameService.execute(
-            user,
-            {
-                gameId: BigInt(decodedId),
-                isMobile: dto.isMobile,
-                walletCurrency: dto.walletCurrency,
-                gameCurrency: dto.gameCurrency,
-                language: dto.language,
-            },
-            request,
-        );
+    return {
+      data: result.data.map((game) => {
+        const translation =
+          game.translations.find((t) => t.language === lang) ||
+          game.translations.find((t) => t.language === Language.EN) ||
+          game.translations[0];
+        return {
+          id: game.id
+            ? this.sqidsService.encode(game.id, SqidsPrefix.CASINO_GAME)
+            : '',
+          name: translation?.name || game.code,
+          thumbnailUrl: game.thumbnailUrl ?? undefined,
+          bannerUrl: game.bannerUrl ?? undefined,
+          rtp: game.rtp?.toString(),
+          volatility: game.volatility ?? undefined,
+          gameType: game.gameType ?? undefined,
+        };
+      }),
+      page: result.page,
+      limit: result.limit,
+      total: result.total,
+    };
+  }
 
-        return result;
-    }
+  @Post('launch')
+  @AuthAll()
+  @HttpCode(HttpStatus.OK)
+  @Throttle({
+    limit: 30,
+    ttl: 60, // 1 minute
+    scope: ThrottleScope.USER,
+  })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'CASINO',
+    action: 'LAUNCH_GAME',
+    extractMetadata: (_, args) => ({
+      id: args[1]?.gameId,
+      walletCurrency: args[1]?.walletCurrency,
+      gameCurrency: args[1]?.gameCurrency,
+      isMobile: args[1]?.isMobile,
+    }),
+  })
+  @ApiOperation({ summary: 'Launch Game (게임 실행)' })
+  @ApiStandardResponse(LaunchGameResponseDto, {
+    status: 200,
+    description: 'Game launch success',
+  })
+  async launchGame(
+    @CurrentUser() user: CurrentUserWithSession,
+    @Body() dto: LaunchGameRequestDto,
+    @RequestClientInfoParam() request: RequestClientInfo,
+  ): Promise<LaunchGameResponseDto> {
+    const decodedId = this.sqidsService.decode(
+      dto.gameId,
+      SqidsPrefix.CASINO_GAME,
+    );
+
+    const result = await this.launchGameService.execute(
+      user,
+      {
+        gameId: BigInt(decodedId),
+        isMobile: dto.isMobile,
+        walletCurrency: dto.walletCurrency,
+        gameCurrency: dto.gameCurrency,
+        language: dto.language,
+      },
+      request,
+    );
+
+    return result;
+  }
 }

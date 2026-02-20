@@ -11,25 +11,22 @@ import { FILE_REPOSITORY } from './ports/file.repository.token';
 import { FILE_USAGE_REPOSITORY } from './ports/file-usage.repository.token';
 
 @Module({
-    imports: [EnvModule],
-    controllers: [FileController],
-    providers: [
-        CreateFileService,
-        AttachFileService,
-        FileMapper,
-        FileUsageMapper,
-        {
-            provide: FILE_REPOSITORY,
-            useClass: FileRepository,
-        },
-        {
-            provide: FILE_USAGE_REPOSITORY,
-            useClass: FileUsageRepository,
-        },
-    ],
-    exports: [
-        CreateFileService,
-        AttachFileService,
-    ],
+  imports: [EnvModule],
+  controllers: [FileController],
+  providers: [
+    CreateFileService,
+    AttachFileService,
+    FileMapper,
+    FileUsageMapper,
+    {
+      provide: FILE_REPOSITORY,
+      useClass: FileRepository,
+    },
+    {
+      provide: FILE_USAGE_REPOSITORY,
+      useClass: FileUsageRepository,
+    },
+  ],
+  exports: [CreateFileService, AttachFileService],
 })
-export class FileModule { }
+export class FileModule {}

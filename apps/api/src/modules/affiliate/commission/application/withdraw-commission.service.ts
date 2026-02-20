@@ -18,7 +18,7 @@ export class WithdrawCommissionService {
   constructor(
     @Inject(AFFILIATE_WALLET_REPOSITORY)
     private readonly walletRepository: AffiliateWalletRepositoryPort,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute({

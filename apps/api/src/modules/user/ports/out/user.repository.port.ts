@@ -76,4 +76,3 @@ export interface UserRepositoryPort {
    */
   updatePassword(userId: bigint, passwordHash: string): Promise<User>;
 }
-

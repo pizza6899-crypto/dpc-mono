@@ -84,7 +84,7 @@ export class AdminDepositController {
     private readonly updateCryptoConfigAdminService: UpdateCryptoConfigAdminService,
     private readonly deleteCryptoConfigAdminService: DeleteCryptoConfigAdminService,
     private readonly createBankConfigService: CreateBankConfigService,
-  ) { }
+  ) {}
   // ============================================
   // 입금 관리 (Deposit Management)
   // ============================================
@@ -98,7 +98,8 @@ export class AdminDepositController {
   })
   @ApiStandardResponse(DepositStatsResponseDto, {
     status: 200,
-    description: 'Deposit statistics retrieved successfully / 입금 현황 요약 조회 성공',
+    description:
+      'Deposit statistics retrieved successfully / 입금 현황 요약 조회 성공',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -306,7 +307,8 @@ export class AdminDepositController {
   })
   @ApiPaginatedResponse(BankConfigResponseDto, {
     status: 200,
-    description: 'Bank config list retrieved successfully / 은행 계좌 목록 조회 성공',
+    description:
+      'Bank config list retrieved successfully / 은행 계좌 목록 조회 성공',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -321,7 +323,7 @@ export class AdminDepositController {
     const result = await this.findBankConfigsAdminService.execute(query);
     return {
       ...result,
-      data: result.data.map(config => this.toBankConfigResponseDto(config)),
+      data: result.data.map((config) => this.toBankConfigResponseDto(config)),
     };
   }
 
@@ -354,7 +356,7 @@ export class AdminDepositController {
 
     return {
       id: config.id!.toString(),
-      uid: config.uid!,
+      uid: config.uid,
       currency: config.currency,
       bankName: config.bankName,
       accountNumber: config.accountNumber,
@@ -367,8 +369,8 @@ export class AdminDepositController {
       maxAmount: config.maxAmount?.toString() ?? null,
       totalDeposits: config.totalDeposits,
       totalDepositAmount: config.totalDepositAmount.toString(),
-      createdAt: config.createdAt!,
-      updatedAt: config.updatedAt!,
+      createdAt: config.createdAt,
+      updatedAt: config.updatedAt,
     };
   }
 
@@ -386,7 +388,8 @@ export class AdminDepositController {
   })
   @ApiStandardResponse(BankConfigResponseDto, {
     status: 200,
-    description: 'Bank config detail retrieved successfully / 은행 계좌 상세 조회 성공',
+    description:
+      'Bank config detail retrieved successfully / 은행 계좌 상세 조회 성공',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -401,7 +404,9 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<BankConfigResponseDto> {
-    const config = await this.getBankConfigAdminService.execute({ id: BigInt(id) });
+    const config = await this.getBankConfigAdminService.execute({
+      id: BigInt(id),
+    });
     return this.toBankConfigResponseDto(config);
   }
 
@@ -438,7 +443,7 @@ export class AdminDepositController {
   ): Promise<BankConfigResponseDto> {
     const config = await this.updateBankConfigAdminService.execute({
       id: BigInt(id),
-      ...dto
+      ...dto,
     });
     return this.toBankConfigResponseDto(config);
   }
@@ -490,7 +495,8 @@ export class AdminDepositController {
   })
   @ApiPaginatedResponse(CryptoConfigResponseDto, {
     status: 200,
-    description: 'Crypto config list retrieved successfully / 암호화폐 설정 목록 조회 성공',
+    description:
+      'Crypto config list retrieved successfully / 암호화폐 설정 목록 조회 성공',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -505,7 +511,9 @@ export class AdminDepositController {
     const paginated = await this.findCryptoConfigsAdminService.execute(query);
     return {
       ...paginated,
-      data: paginated.data.map(config => this.toCryptoConfigResponseDto(config)),
+      data: paginated.data.map((config) =>
+        this.toCryptoConfigResponseDto(config),
+      ),
     };
   }
 
@@ -523,7 +531,8 @@ export class AdminDepositController {
   })
   @ApiStandardResponse(CryptoConfigResponseDto, {
     status: 200,
-    description: 'Crypto config detail retrieved successfully / 암호화폐 설정 상세 조회 성공',
+    description:
+      'Crypto config detail retrieved successfully / 암호화폐 설정 상세 조회 성공',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -538,7 +547,9 @@ export class AdminDepositController {
     @CurrentUser() admin: CurrentUserWithSession,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<CryptoConfigResponseDto> {
-    const config = await this.getCryptoConfigAdminService.execute({ id: BigInt(id) });
+    const config = await this.getCryptoConfigAdminService.execute({
+      id: BigInt(id),
+    });
     return this.toCryptoConfigResponseDto(config);
   }
 
@@ -575,7 +586,7 @@ export class AdminDepositController {
   ): Promise<CryptoConfigResponseDto> {
     const config = await this.updateCryptoConfigAdminService.execute({
       id: BigInt(id),
-      ...dto
+      ...dto,
     });
     return this.toCryptoConfigResponseDto(config);
   }
@@ -679,4 +690,3 @@ export class AdminDepositController {
     };
   }
 }
-

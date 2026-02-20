@@ -24,7 +24,7 @@ export class CreateCodeService {
     private readonly repository: AffiliateCodeRepositoryPort,
     private readonly policy: AffiliateCodePolicy,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute({
@@ -34,9 +34,13 @@ export class CreateCodeService {
     // 1. 사용자 기반 락 획득 (동시 요청 처리 방지)
     // 트랜잭션 내에서 실행되므로 트랜잭션 종료 시 자동으로 해제됩니다.
     // 동시성 제어: 동일 유저의 중복 생성 방지
-    await this.advisoryLockService.acquireLock(LockNamespace.AFFILIATE_CODE, userId.toString(), {
-      throwThrottleError: true
-    });
+    await this.advisoryLockService.acquireLock(
+      LockNamespace.AFFILIATE_CODE,
+      userId.toString(),
+      {
+        throwThrottleError: true,
+      },
+    );
 
     // 2. 사용자별 기존 코드 조회 (개수 제한 및 첫 번째 코드 확인용)
     const existingCodes = await this.repository.findByUserId(userId);

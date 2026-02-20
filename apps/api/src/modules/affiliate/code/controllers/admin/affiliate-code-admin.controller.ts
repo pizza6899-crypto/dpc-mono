@@ -48,7 +48,7 @@ export class AffiliateCodeAdminController {
     private readonly updateCodeService: UpdateCodeService,
     private readonly findCodeByIdAdminService: FindCodeByIdAdminService,
     private readonly deleteCodeAdminService: DeleteCodeAdminService,
-  ) { }
+  ) {}
 
   /**
    * 어플리에이트 코드 목록 조회 (관리자용)
@@ -67,7 +67,8 @@ export class AffiliateCodeAdminController {
     }),
   })
   @ApiOperation({
-    summary: 'Get affiliate codes list / 어플리에이트 코드 목록 조회 (관리자용)',
+    summary:
+      'Get affiliate codes list / 어플리에이트 코드 목록 조회 (관리자용)',
     description:
       '관리자가 모든 어플리에이트 코드를 조회합니다. 페이징, 필터링, 정렬 기능을 지원합니다.',
   })
@@ -118,16 +119,16 @@ export class AffiliateCodeAdminController {
     }),
   })
   @ApiOperation({
-    summary: 'Get affiliate code detail / 어플리에이트 코드 상세 조회 (관리자용)',
+    summary:
+      'Get affiliate code detail / 어플리에이트 코드 상세 조회 (관리자용)',
     description: '관리자가 특정 어플리에이트 코드의 상세 정보를 조회합니다.',
   })
   @ApiStandardResponse(AdminCodeResponseDto, {
     status: 200,
-    description: 'Successfully retrieved affiliate code detail / 상세 정보 조회 성공',
+    description:
+      'Successfully retrieved affiliate code detail / 상세 정보 조회 성공',
   })
-  async getCode(
-    @Param('id') id: string,
-  ): Promise<AdminCodeResponseDto> {
+  async getCode(@Param('id') id: string): Promise<AdminCodeResponseDto> {
     const code = await this.findCodeByIdAdminService.execute(BigInt(id));
     return this.toResponseDto(code);
   }
@@ -194,7 +195,9 @@ export class AffiliateCodeAdminController {
     @Body() dto: UpdateCodeAdminRequestDto,
   ): Promise<AdminCodeResponseDto> {
     // 1. 코드를 먼저 조회하여 Owner ID 획득
-    const existingCode = await this.findCodeByIdAdminService.execute(BigInt(id));
+    const existingCode = await this.findCodeByIdAdminService.execute(
+      BigInt(id),
+    );
 
     // 2. UpdateService 호출 (Owner ID 전달)
     const updatedCode = await this.updateCodeService.execute({

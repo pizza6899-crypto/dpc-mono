@@ -6,4 +6,3 @@ export * from './crypto-config.repository.port';
 export const DEPOSIT_DETAIL_REPOSITORY = Symbol('DEPOSIT_DETAIL_REPOSITORY');
 export const BANK_CONFIG_REPOSITORY = Symbol('BANK_CONFIG_REPOSITORY');
 export const CRYPTO_CONFIG_REPOSITORY = Symbol('CRYPTO_CONFIG_REPOSITORY');
-

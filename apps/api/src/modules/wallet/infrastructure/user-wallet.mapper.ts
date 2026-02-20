@@ -1,7 +1,11 @@
 // src/modules/wallet/infrastructure/user-wallet.mapper.ts
 import { Injectable } from '@nestjs/common';
 import { UserWallet } from '../domain';
-import type { UserWallet as PrismaUserWallet, ExchangeCurrencyCode, UserWalletStatus } from '@prisma/client';
+import type {
+  UserWallet as PrismaUserWallet,
+  ExchangeCurrencyCode,
+  UserWalletStatus,
+} from '@prisma/client';
 import { Prisma } from '@prisma/client';
 
 /**
@@ -55,4 +59,3 @@ export class UserWalletMapper {
     };
   }
 }
-

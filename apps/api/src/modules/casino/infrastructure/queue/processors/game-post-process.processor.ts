@@ -5,12 +5,18 @@ import { Logger } from '@nestjs/common';
 import { GamePostProcessData } from '../casino-queue.types';
 import { CasinoGamePostProcessService } from 'src/modules/casino/application/casino-game-post-process.service';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
-import { BULLMQ_QUEUES, getQueueConfig } from 'src/infrastructure/bullmq/bullmq.constants';
+import {
+  BULLMQ_QUEUES,
+  getQueueConfig,
+} from 'src/infrastructure/bullmq/bullmq.constants';
 
 const queueConfig = getQueueConfig(BULLMQ_QUEUES.CASINO.GAME_POST_PROCESS);
 
 @Processor(queueConfig.processorOptions, queueConfig.workerOptions)
-export class GamePostProcessProcessor extends BaseProcessor<GamePostProcessData, { success: boolean; message: string }> {
+export class GamePostProcessProcessor extends BaseProcessor<
+  GamePostProcessData,
+  { success: boolean; message: string }
+> {
   protected readonly logger = new Logger(GamePostProcessProcessor.name);
 
   constructor(
@@ -20,7 +26,9 @@ export class GamePostProcessProcessor extends BaseProcessor<GamePostProcessData,
     super();
   }
 
-  protected async processJob(job: Job<GamePostProcessData>): Promise<{ success: boolean; message: string }> {
+  protected async processJob(
+    job: Job<GamePostProcessData>,
+  ): Promise<{ success: boolean; message: string }> {
     const { gameRoundId } = job.data;
 
     await this.gamePostProcessService.execute(BigInt(gameRoundId));

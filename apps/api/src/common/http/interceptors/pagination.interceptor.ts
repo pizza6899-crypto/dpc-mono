@@ -31,7 +31,6 @@ export class PaginationInterceptor<T> implements NestInterceptor<
 
     return next.handle().pipe(
       map((result: PaginatedData<T>) => {
-
         return {
           success: true,
           data: result.data,

@@ -1,11 +1,5 @@
 // src/modules/affiliate/commission/controllers/admin/commission.controller.ts
-import {
-  Controller,
-  Get,
-  Param,
-  HttpCode,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Get, Param, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
@@ -27,7 +21,7 @@ import { LogType } from 'src/modules/audit-log/domain';
 export class AdminCommissionController {
   constructor(
     private readonly findCommissionByIdService: FindCommissionByIdService,
-  ) { }
+  ) {}
 
   /**
    * 커미션 상세 조회 (ID - 관리자용)

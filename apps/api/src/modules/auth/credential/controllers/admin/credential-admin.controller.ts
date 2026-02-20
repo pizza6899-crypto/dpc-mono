@@ -15,7 +15,10 @@ import {
   ApiStandardResponse,
   ApiStandardErrors,
 } from '../../../../../common/http/decorators/api-response.decorator';
-import { Public, RequireRoles } from 'src/common/auth/decorators/roles.decorator';
+import {
+  Public,
+  RequireRoles,
+} from 'src/common/auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
@@ -56,7 +59,7 @@ export class CredentialAdminController {
     private readonly changePasswordService: ChangePasswordService,
     private readonly resetUserPasswordAdminService: ResetUserPasswordAdminService,
     private readonly checkUserStatusService: CheckUserStatusService,
-  ) { }
+  ) {}
 
   @Post('login')
   @Public()
@@ -147,7 +150,8 @@ export class CredentialAdminController {
   })
   @ApiOperation({
     summary: 'Admin Logout (관리자 로그아웃)',
-    description: '현재 세션 종료. 인증 상태와 관계없이 항상 성공 응답을 반환합니다.',
+    description:
+      '현재 세션 종료. 인증 상태와 관계없이 항상 성공 응답을 반환합니다.',
   })
   @ApiStandardResponse(CredentialAdminLogoutResponseDto, {
     status: HttpStatus.OK,
@@ -267,7 +271,7 @@ export class CredentialAdminController {
         isAuthenticated = false;
         // 유효하지 않은 유저라면 로그아웃 처리
         req.logout(() => {
-          req.session?.destroy(() => { });
+          req.session?.destroy(() => {});
         });
       }
     }
@@ -277,9 +281,9 @@ export class CredentialAdminController {
       user:
         isAuthenticated && user
           ? {
-            id: user.id.toString(),
-            email: user.email,
-          }
+              id: user.id.toString(),
+              email: user.email,
+            }
           : null,
     };
   }
@@ -320,7 +324,8 @@ export class CredentialAdminController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Change Admin Password / 관리자 비밀번호 변경',
-    description: '로그인한 관리자가 현재 비밀번호를 알고 있는 상태에서 비밀번호를 변경합니다.',
+    description:
+      '로그인한 관리자가 현재 비밀번호를 알고 있는 상태에서 비밀번호를 변경합니다.',
   })
   @ApiStandardResponse(AdminChangePasswordResponseDto, {
     status: HttpStatus.OK,
@@ -363,7 +368,8 @@ export class CredentialAdminController {
   })
   @ApiStandardResponse(ResetUserPasswordResponseDto, {
     status: HttpStatus.OK,
-    description: 'User password reset successfully / 사용자 비밀번호 초기화 성공',
+    description:
+      'User password reset successfully / 사용자 비밀번호 초기화 성공',
   })
   @AuditLog({
     type: LogType.AUTH,

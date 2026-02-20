@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { CaslPolicy } from '../domain';
-import { CaslAbilityFactory, type AppAbility } from '../infrastructure/casl-ability.factory';
+import {
+  CaslAbilityFactory,
+  type AppAbility,
+} from '../infrastructure/casl-ability.factory';
 
 /**
  * 사용자별 권한 정의 Use Case
@@ -29,4 +32,3 @@ export class DefineAbilitiesService {
     return this.abilityFactory.create(user, permissions);
   }
 }
-

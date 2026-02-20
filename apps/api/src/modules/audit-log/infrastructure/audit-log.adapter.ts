@@ -14,9 +14,13 @@ import type {
  */
 @Injectable()
 export class AuditLogAdapter implements AuditLogRepositoryPort {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-  async saveAuthLog(id: bigint, createdAt: Date, payload: AuthLogPayload): Promise<void> {
+  async saveAuthLog(
+    id: bigint,
+    createdAt: Date,
+    payload: AuthLogPayload,
+  ): Promise<void> {
     await this.prisma.authAuditLog.create({
       data: {
         id: id,
@@ -143,4 +147,3 @@ export class AuditLogAdapter implements AuditLogRepositoryPort {
     });
   }
 }
-

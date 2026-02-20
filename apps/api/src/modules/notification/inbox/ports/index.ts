@@ -2,6 +2,6 @@
 
 export { NOTIFICATION_LOG_REPOSITORY } from './notification-log.repository.token';
 export type {
-    NotificationLogRepositoryPort,
-    NotificationLogListQuery,
+  NotificationLogRepositoryPort,
+  NotificationLogListQuery,
 } from './notification-log.repository.port';

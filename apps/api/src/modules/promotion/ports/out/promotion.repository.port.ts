@@ -1,7 +1,7 @@
 // src/modules/promotion/ports/out/promotion.repository.port.ts
 import type { Promotion, UserPromotion, PromotionCurrency } from '../../domain';
 import type { PromotionTranslation } from '../../domain/model/promotion.entity';
-import { Prisma, ExchangeCurrencyCode, Language } from '@prisma/client';
+import type { Prisma, ExchangeCurrencyCode, Language } from '@prisma/client';
 
 export interface PromotionRepositoryPort {
   /**
@@ -36,10 +36,7 @@ export interface PromotionRepositoryPort {
   /**
    * 타입별 활성 프로모션 조회
    */
-  findByTargetType(
-    targetType: string,
-    now?: Date,
-  ): Promise<Promotion[]>;
+  findByTargetType(targetType: string, now?: Date): Promise<Promotion[]>;
 
   /**
    * 사용자의 프로모션 조회
@@ -52,10 +49,7 @@ export interface PromotionRepositoryPort {
   /**
    * 사용자의 모든 프로모션 조회
    */
-  findUserPromotions(
-    userId: bigint,
-    status?: string,
-  ): Promise<UserPromotion[]>;
+  findUserPromotions(userId: bigint, status?: string): Promise<UserPromotion[]>;
 
   /**
    * 사용자의 프로모션 조회 (페이지네이션 지원)
@@ -75,10 +69,7 @@ export interface PromotionRepositoryPort {
   /**
    * 사용자가 특정 프로모션을 사용했는지 확인
    */
-  hasUserUsedPromotion(
-    userId: bigint,
-    promotionId: bigint,
-  ): Promise<boolean>;
+  hasUserUsedPromotion(userId: bigint, promotionId: bigint): Promise<boolean>;
 
   /**
    * UserPromotion 생성
@@ -97,9 +88,7 @@ export interface PromotionRepositoryPort {
   /**
    * UserPromotion 업데이트
    */
-  updateUserPromotion(
-    userPromotion: UserPromotion,
-  ): Promise<UserPromotion>;
+  updateUserPromotion(userPromotion: UserPromotion): Promise<UserPromotion>;
 
   /**
    * 사용자가 이전 입금이 있는지 확인
@@ -165,7 +154,6 @@ export interface PromotionRepositoryPort {
    */
   delete(id: bigint): Promise<void>;
 
-
   /**
    * 프로모션 사용 횟수 증가 (Atomic)
    * 증가 후의 최신 프로모션 상태를 반환
@@ -230,8 +218,6 @@ export interface PromotionRepositoryPort {
     statusCounts: Record<string, number>;
   }>;
 
-
-
   /**
    * 프로모션 번역 일괄 생성
    */
@@ -243,8 +229,6 @@ export interface PromotionRepositoryPort {
       description?: string | null;
     }>,
   ): Promise<PromotionTranslation[]>;
-
-
 
   /**
    * 프로모션 번역 생성 또는 업데이트
@@ -259,9 +243,5 @@ export interface PromotionRepositoryPort {
   /**
    * 프로모션 번역 삭제
    */
-  deleteTranslation(
-    promotionId: bigint,
-    language: Language,
-  ): Promise<void>;
+  deleteTranslation(promotionId: bigint, language: Language): Promise<void>;
 }
-

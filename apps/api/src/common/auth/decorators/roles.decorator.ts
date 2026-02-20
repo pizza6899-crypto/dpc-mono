@@ -28,7 +28,10 @@ export const AuthAll = (...p: string[]) =>
   );
 
 export const Admin = (...p: string[]) =>
-  applyDecorators(RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN), Perms(...p));
+  applyDecorators(
+    RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN),
+    Perms(...p),
+  );
 
 export const SuperAdmin = (...p: string[]) =>
   applyDecorators(RequireRoles(UserRoleType.SUPER_ADMIN), Perms(...p));

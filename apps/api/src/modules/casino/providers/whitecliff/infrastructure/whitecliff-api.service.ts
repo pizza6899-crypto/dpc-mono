@@ -171,7 +171,8 @@ export class WhitecliffApiService {
           duration,
           success,
           request: data,
-          response: responseData || (errorObj ? { message: errorObj.message } : null),
+          response:
+            responseData || (errorObj ? { message: errorObj.message } : null),
           metadata: { description },
         },
       });
@@ -220,7 +221,9 @@ export class WhitecliffApiService {
         id: user.id,
         name: user.name,
         balance: user.balance,
-        language: this.whitecliffMapperService.convertLanguageToWhitecliff(user.language),
+        language: this.whitecliffMapperService.convertLanguageToWhitecliff(
+          user.language,
+        ),
         sid: user.token || '',
         currency: whitecliffConfig.currency,
         home_url: whitecliffConfig.redirectHomeUrl,
@@ -282,10 +285,11 @@ export class WhitecliffApiService {
     txn_id: string;
   }): Promise<TransactionResultsResponse | WhitecliffErrorResponse> {
     // Mapper를 통해 provider ID 획득 (Evolution 통화별 처리 포함)
-    const prd_id = this.whitecliffMapperService.toWhitecliffProviderWithCurrency(
-      provider,
-      gameCurrency,
-    );
+    const prd_id =
+      this.whitecliffMapperService.toWhitecliffProviderWithCurrency(
+        provider,
+        gameCurrency,
+      );
 
     if (!prd_id) {
       return {
@@ -331,7 +335,8 @@ export class WhitecliffApiService {
       'POST',
       '/gamelist',
       {
-        language: this.whitecliffMapperService.convertLanguageToWhitecliff(language),
+        language:
+          this.whitecliffMapperService.convertLanguageToWhitecliff(language),
         prd_id,
       },
       'Product(s) Game List API',
@@ -350,8 +355,6 @@ export class WhitecliffApiService {
 
     return result;
   }
-
-
 
   /**
    * 푸시 베팅 내역 조회 (Pushed Bet History)

@@ -5,12 +5,12 @@ import { WageringConfig } from '../domain/wagering-config.entity';
 
 @Injectable()
 export class GetWageringConfigService {
-    constructor(
-        @Inject(WAGERING_CONFIG_REPOSITORY)
-        private readonly repository: WageringConfigRepositoryPort,
-    ) { }
+  constructor(
+    @Inject(WAGERING_CONFIG_REPOSITORY)
+    private readonly repository: WageringConfigRepositoryPort,
+  ) {}
 
-    async execute(): Promise<WageringConfig> {
-        return await this.repository.get();
-    }
+  async execute(): Promise<WageringConfig> {
+    return await this.repository.get();
+  }
 }

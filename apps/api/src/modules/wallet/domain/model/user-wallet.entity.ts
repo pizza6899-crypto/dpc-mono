@@ -1,5 +1,6 @@
 // src/modules/wallet/domain/model/user-wallet.entity.ts
-import { ExchangeCurrencyCode, Prisma, UserWalletStatus } from '@prisma/client';
+import type { ExchangeCurrencyCode } from '@prisma/client';
+import { Prisma, UserWalletStatus } from '@prisma/client';
 import {
   InvalidWalletBalanceException,
   InsufficientBalanceException,
@@ -26,10 +27,22 @@ export class UserWallet {
   }
 
   private validateBalances(): void {
-    if (this._cash.lt(0)) throw new InvalidWalletBalanceException(`Cash balance cannot be negative: ${this._cash}`);
-    if (this._bonus.lt(0)) throw new InvalidWalletBalanceException(`Bonus balance cannot be negative: ${this._bonus}`);
-    if (this._lock.lt(0)) throw new InvalidWalletBalanceException(`Lock balance cannot be negative: ${this._lock}`);
-    if (this._vault.lt(0)) throw new InvalidWalletBalanceException(`Vault balance cannot be negative: ${this._vault}`);
+    if (this._cash.lt(0))
+      throw new InvalidWalletBalanceException(
+        `Cash balance cannot be negative: ${this._cash}`,
+      );
+    if (this._bonus.lt(0))
+      throw new InvalidWalletBalanceException(
+        `Bonus balance cannot be negative: ${this._bonus}`,
+      );
+    if (this._lock.lt(0))
+      throw new InvalidWalletBalanceException(
+        `Lock balance cannot be negative: ${this._lock}`,
+      );
+    if (this._vault.lt(0))
+      throw new InvalidWalletBalanceException(
+        `Vault balance cannot be negative: ${this._vault}`,
+      );
   }
 
   static create(params: {
@@ -76,11 +89,21 @@ export class UserWallet {
   }
 
   // Getters
-  get cash(): Prisma.Decimal { return this._cash; }
-  get bonus(): Prisma.Decimal { return this._bonus; }
-  get lock(): Prisma.Decimal { return this._lock; }
-  get vault(): Prisma.Decimal { return this._vault; }
-  get status(): UserWalletStatus { return this._status; }
+  get cash(): Prisma.Decimal {
+    return this._cash;
+  }
+  get bonus(): Prisma.Decimal {
+    return this._bonus;
+  }
+  get lock(): Prisma.Decimal {
+    return this._lock;
+  }
+  get vault(): Prisma.Decimal {
+    return this._vault;
+  }
+  get status(): UserWalletStatus {
+    return this._status;
+  }
 
   // Business Logic
 
@@ -98,53 +121,89 @@ export class UserWallet {
   // Modifiers
 
   increaseCash(amount: Prisma.Decimal): void {
-    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount to increase must be positive');
+    if (amount.isNegative())
+      throw new InvalidWalletBalanceException(
+        'Amount to increase must be positive',
+      );
     this._cash = this._cash.add(amount);
   }
 
   decreaseCash(amount: Prisma.Decimal): void {
-    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount to decrease must be positive');
+    if (amount.isNegative())
+      throw new InvalidWalletBalanceException(
+        'Amount to decrease must be positive',
+      );
     if (!this.hasSufficientCash(amount)) {
-      throw new InsufficientBalanceException(this._cash.toString(), amount.toString());
+      throw new InsufficientBalanceException(
+        this._cash.toString(),
+        amount.toString(),
+      );
     }
     this._cash = this._cash.sub(amount);
   }
 
   increaseBonus(amount: Prisma.Decimal): void {
-    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount to increase must be positive');
+    if (amount.isNegative())
+      throw new InvalidWalletBalanceException(
+        'Amount to increase must be positive',
+      );
     this._bonus = this._bonus.add(amount);
   }
 
   decreaseBonus(amount: Prisma.Decimal): void {
-    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount to decrease must be positive');
+    if (amount.isNegative())
+      throw new InvalidWalletBalanceException(
+        'Amount to decrease must be positive',
+      );
     if (this._bonus.lt(amount)) {
-      throw new InsufficientBalanceException(this._bonus.toString(), amount.toString());
+      throw new InsufficientBalanceException(
+        this._bonus.toString(),
+        amount.toString(),
+      );
     }
     this._bonus = this._bonus.sub(amount);
   }
 
   increaseLock(amount: Prisma.Decimal): void {
-    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount to increase must be positive');
+    if (amount.isNegative())
+      throw new InvalidWalletBalanceException(
+        'Amount to increase must be positive',
+      );
     this._lock = this._lock.add(amount);
   }
 
   decreaseLock(amount: Prisma.Decimal): void {
-    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount to decrease must be positive');
+    if (amount.isNegative())
+      throw new InvalidWalletBalanceException(
+        'Amount to decrease must be positive',
+      );
     if (this._lock.lt(amount)) {
-      throw new InsufficientBalanceException(this._lock.toString(), amount.toString());
+      throw new InsufficientBalanceException(
+        this._lock.toString(),
+        amount.toString(),
+      );
     }
     this._lock = this._lock.sub(amount);
   }
 
   increaseVault(amount: Prisma.Decimal): void {
-    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount to increase must be positive');
+    if (amount.isNegative())
+      throw new InvalidWalletBalanceException(
+        'Amount to increase must be positive',
+      );
     this._vault = this._vault.add(amount);
   }
 
   decreaseVault(amount: Prisma.Decimal): void {
-    if (amount.isNegative()) throw new InvalidWalletBalanceException('Amount to decrease must be positive');
+    if (amount.isNegative())
+      throw new InvalidWalletBalanceException(
+        'Amount to decrease must be positive',
+      );
     if (this._vault.lt(amount)) {
-      throw new InsufficientBalanceException(this._vault.toString(), amount.toString());
+      throw new InsufficientBalanceException(
+        this._vault.toString(),
+        amount.toString(),
+      );
     }
     this._vault = this._vault.sub(amount);
   }
@@ -185,4 +244,3 @@ export class UserWallet {
     this._status = UserWalletStatus.TERMINATED;
   }
 }
-

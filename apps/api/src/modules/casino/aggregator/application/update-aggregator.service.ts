@@ -5,33 +5,33 @@ import type { CasinoAggregatorRepositoryPort } from '../ports';
 import { AggregatorStatus } from '@prisma/client';
 
 interface UpdateAggregatorCommand {
-    id: bigint;
-    name?: string;
-    status?: AggregatorStatus;
-    apiEnabled?: boolean;
+  id: bigint;
+  name?: string;
+  status?: AggregatorStatus;
+  apiEnabled?: boolean;
 }
 
 @Injectable()
 export class UpdateAggregatorService {
-    constructor(
-        @Inject(CASINO_AGGREGATOR_REPOSITORY)
-        private readonly repository: CasinoAggregatorRepositoryPort,
-    ) { }
+  constructor(
+    @Inject(CASINO_AGGREGATOR_REPOSITORY)
+    private readonly repository: CasinoAggregatorRepositoryPort,
+  ) {}
 
-    async execute(command: UpdateAggregatorCommand): Promise<CasinoAggregator> {
-        const aggregator = await this.repository.getById(command.id);
+  async execute(command: UpdateAggregatorCommand): Promise<CasinoAggregator> {
+    const aggregator = await this.repository.getById(command.id);
 
-        // 변경된 내용 적용 (불변성 유지하며 새 객체 생성)
-        const updatedAggregator = CasinoAggregator.create({
-            id: aggregator.id!,
-            name: command.name ?? aggregator.name,
-            code: aggregator.code,
-            status: command.status ?? aggregator.status,
-            apiEnabled: command.apiEnabled ?? aggregator.apiEnabled,
-            createdAt: aggregator.createdAt,
-            updatedAt: new Date(),
-        });
+    // 변경된 내용 적용 (불변성 유지하며 새 객체 생성)
+    const updatedAggregator = CasinoAggregator.create({
+      id: aggregator.id!,
+      name: command.name ?? aggregator.name,
+      code: aggregator.code,
+      status: command.status ?? aggregator.status,
+      apiEnabled: command.apiEnabled ?? aggregator.apiEnabled,
+      createdAt: aggregator.createdAt,
+      updatedAt: new Date(),
+    });
 
-        return this.repository.update(updatedAggregator);
-    }
+    return this.repository.update(updatedAggregator);
+  }
 }

@@ -34,7 +34,11 @@ export class RegisterRequestDto {
   })
   @IsOptional()
   @IsString()
-  @MinLength(6, { message: 'Referral code must be at least 6 characters long.' })
-  @MaxLength(20, { message: 'Referral code must be at most 20 characters long.' })
+  @MinLength(6, {
+    message: 'Referral code must be at least 6 characters long.',
+  })
+  @MaxLength(20, {
+    message: 'Referral code must be at most 20 characters long.',
+  })
   referralCode?: string;
 }

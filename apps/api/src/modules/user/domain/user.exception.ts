@@ -21,8 +21,13 @@ export class UserException extends DomainException {
  */
 export class UserNotFoundException extends UserException {
   constructor(identifier: string | bigint) {
-    const id = typeof identifier === 'bigint' ? identifier.toString() : identifier;
-    super(`User not found: ${id}`, MessageCode.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
+    const id =
+      typeof identifier === 'bigint' ? identifier.toString() : identifier;
+    super(
+      `User not found: ${id}`,
+      MessageCode.USER_NOT_FOUND,
+      HttpStatus.NOT_FOUND,
+    );
     this.name = 'UserNotFoundException';
   }
 }
@@ -32,8 +37,11 @@ export class UserNotFoundException extends UserException {
  */
 export class UserAlreadyExistsException extends UserException {
   constructor(email: string) {
-    super(`User already exists: ${email}`, MessageCode.USER_ALREADY_EXISTS, HttpStatus.BAD_REQUEST);
+    super(
+      `User already exists: ${email}`,
+      MessageCode.USER_ALREADY_EXISTS,
+      HttpStatus.BAD_REQUEST,
+    );
     this.name = 'UserAlreadyExistsException';
   }
 }
-

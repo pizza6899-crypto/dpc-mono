@@ -5,12 +5,12 @@ import { CasinoGame } from '../domain';
 
 @Injectable()
 export class FindGameByIdService {
-    constructor(
-        @Inject(GAME_REPOSITORY)
-        private readonly repository: GameRepositoryPort,
-    ) { }
+  constructor(
+    @Inject(GAME_REPOSITORY)
+    private readonly repository: GameRepositoryPort,
+  ) {}
 
-    async execute(id: bigint): Promise<CasinoGame> {
-        return await this.repository.getById(id);
-    }
+  async execute(id: bigint): Promise<CasinoGame> {
+    return await this.repository.getById(id);
+  }
 }

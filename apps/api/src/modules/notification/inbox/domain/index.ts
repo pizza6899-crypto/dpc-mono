@@ -2,9 +2,9 @@
 
 export { NotificationLog } from './model/notification-log.entity';
 export {
-    InboxException,
-    NotificationLogNotFoundException,
-    NotificationAlreadyReadException,
-    NotificationAlreadyDeletedException,
-    UnauthorizedNotificationAccessException,
+  InboxException,
+  NotificationLogNotFoundException,
+  NotificationAlreadyReadException,
+  NotificationAlreadyDeletedException,
+  UnauthorizedNotificationAccessException,
 } from './inbox.exception';

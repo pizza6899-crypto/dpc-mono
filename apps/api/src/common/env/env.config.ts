@@ -70,11 +70,14 @@ export const dcsConfig = registerAs('dcs', () => ({
 export const schedulerConfig = registerAs('scheduler', () => ({
   enabled: process.env.SCHEDULER_ENABLED?.toLowerCase().trim() === 'true',
   whitecliffPushedBetHistoryEnabled:
-    process.env.WHITECLIFF_PUSHED_BET_HISTORY_SCHEDULER_ENABLED?.toLowerCase().trim() === 'true',
+    process.env.WHITECLIFF_PUSHED_BET_HISTORY_SCHEDULER_ENABLED?.toLowerCase().trim() ===
+    'true',
   exchangeRateUpdateEnabled:
-    process.env.EXCHANGE_RATE_UPDATE_SCHEDULER_ENABLED?.toLowerCase().trim() === 'true',
+    process.env.EXCHANGE_RATE_UPDATE_SCHEDULER_ENABLED?.toLowerCase().trim() ===
+    'true',
   settleDailyCommissionsEnabled:
-    process.env.SETTLE_DAILY_COMMISSIONS_SCHEDULER_ENABLED?.toLowerCase().trim() === 'true',
+    process.env.SETTLE_DAILY_COMMISSIONS_SCHEDULER_ENABLED?.toLowerCase().trim() ===
+    'true',
 }));
 
 export const nowPaymentConfig = registerAs('nowPayment', () => ({
@@ -103,7 +106,8 @@ export const adminSessionConfig = registerAs('adminSession', () => ({
   secret: process.env.ADMIN_SESSION_SECRET,
   maxAgeMs: parseInt(process.env.ADMIN_SESSION_MAX_AGE ?? '3600000', 10), // 1시간 (밀리초)
   secure: process.env.ADMIN_SESSION_SECURE === 'true',
-  httpOnly: process.env.ADMIN_SESSION_HTTP_ONLY?.toLowerCase().trim() !== 'false',
+  httpOnly:
+    process.env.ADMIN_SESSION_HTTP_ONLY?.toLowerCase().trim() !== 'false',
   sameSite:
     (process.env.ADMIN_SESSION_SAME_SITE as 'lax' | 'strict' | 'none') ||
     'strict',
@@ -150,23 +154,23 @@ export const depositConfig = registerAs('deposit', () => ({
   cryptoDepositEnabled: process.env.CRYPTO_DEPOSIT_ENABLED === 'true',
   cryptoDepositAllowedCurrencies: process.env.CRYPTO_DEPOSIT_ALLOWED_CURRENCIES
     ? process.env.CRYPTO_DEPOSIT_ALLOWED_CURRENCIES.split(',').map((c) =>
-      c.trim().toUpperCase(),
-    )
+        c.trim().toUpperCase(),
+      )
     : [], // 기본값: 빈 배열 (모든 통화 허용) 또는 기본 암호화폐 목록
 
   bankTransferEnabled: process.env.BANK_TRANSFER_DEPOSIT_ENABLED === 'true',
   bankTransferAllowedCurrencies: process.env.BANK_TRANSFER_ALLOWED_CURRENCIES
     ? process.env.BANK_TRANSFER_ALLOWED_CURRENCIES.split(',').map((c) =>
-      c.trim().toUpperCase(),
-    )
+        c.trim().toUpperCase(),
+      )
     : [],
 }));
 
 export const walletConfig = registerAs('wallet', () => ({
   allowedCurrencies: process.env.WALLET_ALLOWED_CURRENCIES
     ? process.env.WALLET_ALLOWED_CURRENCIES.split(',').map((c) =>
-      c.trim().toUpperCase(),
-    )
+        c.trim().toUpperCase(),
+      )
     : [], // 기본값
 }));
 

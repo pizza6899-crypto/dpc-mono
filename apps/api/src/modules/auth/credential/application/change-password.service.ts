@@ -6,7 +6,10 @@ import type { RequestClientInfo } from 'src/common/http/types/client-info.types'
 import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
 import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
 import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
-import { PasswordMismatchException, LoginFailedException } from '../domain/exception';
+import {
+  PasswordMismatchException,
+  LoginFailedException,
+} from '../domain/exception';
 
 export interface ChangePasswordParams {
   userId: bigint;
@@ -29,11 +32,17 @@ export class ChangePasswordService {
     private readonly verifyService: VerifyCredentialService,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(params: ChangePasswordParams): Promise<void> {
-    const { userId, currentPassword, newPassword, requestInfo, isAdmin = false } = params;
+    const {
+      userId,
+      currentPassword,
+      newPassword,
+      requestInfo,
+      isAdmin = false,
+    } = params;
 
     // 1. 사용자 조회
     const user = await this.userRepository.findById(userId);
@@ -69,4 +78,3 @@ export class ChangePasswordService {
     await this.userRepository.updatePassword(userId, newPasswordHash);
   }
 }
-

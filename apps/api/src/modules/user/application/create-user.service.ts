@@ -3,7 +3,10 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { User } from '../domain';
 import { USER_REPOSITORY } from '../ports/out/user.repository.token';
-import type { UserRepositoryPort, CreateUserParams } from '../ports/out/user.repository.port';
+import type {
+  UserRepositoryPort,
+  CreateUserParams,
+} from '../ports/out/user.repository.port';
 import { UserAlreadyExistsException } from '../domain/user.exception';
 
 interface CreateUserServiceParams {
@@ -33,13 +36,21 @@ export class CreateUserService {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(
     params: CreateUserServiceParams,
   ): Promise<CreateUserServiceResult> {
-    const { email, passwordHash, socialId, socialType, role, country, timezone } = params;
+    const {
+      email,
+      passwordHash,
+      socialId,
+      socialType,
+      role,
+      country,
+      timezone,
+    } = params;
 
     // 1. 이메일 중복 확인
     const existingUser = await this.userRepository.findByEmail(email);
@@ -50,7 +61,8 @@ export class CreateUserService {
 
     // 2. 소셜 ID 중복 확인 (소셜 회원가입인 경우)
     if (socialId) {
-      const existingSocialUser = await this.userRepository.findBySocialId(socialId);
+      const existingSocialUser =
+        await this.userRepository.findBySocialId(socialId);
       if (existingSocialUser) {
         throw new UserAlreadyExistsException(email);
       }
@@ -67,11 +79,8 @@ export class CreateUserService {
       timezone,
     });
 
-
-
     return {
       user,
     };
   }
 }
-

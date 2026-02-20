@@ -56,4 +56,3 @@ export class RejectDepositResponseDto {
   @ApiProperty({ description: 'Target User ID' })
   userId: string;
 }
-

@@ -1,6 +1,6 @@
 import type { UserWallet } from '../../domain';
 import type { ExchangeCurrencyCode } from '@prisma/client';
-import { UserWalletSearchOptions } from './user-wallet.search-options';
+import type { UserWalletSearchOptions } from './user-wallet.search-options';
 
 /**
  * UserWallet Repository Port
@@ -29,7 +29,6 @@ export interface UserWalletRepositoryPort {
     currency: ExchangeCurrencyCode,
   ): Promise<UserWallet>;
 
-
   /**
    * 사용자 ID로 보유한 모든 지갑 목록 조회
    */
@@ -52,4 +51,3 @@ export interface UserWalletRepositoryPort {
    */
   update(wallet: UserWallet): Promise<UserWallet>;
 }
-

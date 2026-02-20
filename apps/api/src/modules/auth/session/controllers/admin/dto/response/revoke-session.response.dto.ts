@@ -19,7 +19,6 @@ export class RevokeSessionResponseDto {
     type: String,
   })
   userId: string;
-
 }
 
 export class RevokeUserSessionsResponseDto {
@@ -36,4 +35,3 @@ export class RevokeUserSessionsResponseDto {
   })
   userId: string;
 }
-

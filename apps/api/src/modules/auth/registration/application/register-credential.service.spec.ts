@@ -316,7 +316,9 @@ describe('RegisterCredentialService', () => {
         expect((error as ApiException).messageCode).toBe(
           MessageCode.USER_ALREADY_EXISTS,
         );
-        expect((error as ApiException).getStatus()).toBe(HttpStatus.BAD_REQUEST);
+        expect((error as ApiException).getStatus()).toBe(
+          HttpStatus.BAD_REQUEST,
+        );
       }
 
       expect(mockCreateUserService.execute).toHaveBeenCalled();
@@ -580,7 +582,5 @@ describe('RegisterCredentialService', () => {
       // 사용자 생성은 호출되지 않아야 함
       expect(mockCreateUserService.execute).not.toHaveBeenCalled();
     });
-
   });
 });
-

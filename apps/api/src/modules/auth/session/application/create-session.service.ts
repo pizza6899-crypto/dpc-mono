@@ -1,11 +1,7 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { generateUid } from 'src/utils/id.util';
-import {
-  UserSession,
-  SessionType,
-  DeviceInfo,
-} from '../domain';
+import { UserSession, SessionType, DeviceInfo } from '../domain';
 import { SessionPolicy } from '../domain/policy';
 import {
   USER_SESSION_REPOSITORY,
@@ -44,7 +40,15 @@ export class CreateSessionService {
 
   @Transactional()
   async execute(params: CreateSessionParams): Promise<UserSession> {
-    const { userId, sessionId, type, isAdmin = false, deviceInfo, expiresAt, metadata } = params;
+    const {
+      userId,
+      sessionId,
+      type,
+      isAdmin = false,
+      deviceInfo,
+      expiresAt,
+      metadata,
+    } = params;
 
     // 1. 기존 활성 세션 조회 (같은 디바이스 타입)
     const existingActiveSessions =
@@ -98,4 +102,3 @@ export class CreateSessionService {
     return savedSession;
   }
 }
-

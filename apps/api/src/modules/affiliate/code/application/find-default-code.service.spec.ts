@@ -92,9 +92,10 @@ describe('FindDefaultCodeService', () => {
       const error = new Error('Database error');
       mockRepository.findDefaultByUserId.mockRejectedValue(error);
 
-      await expect(service.execute({ userId })).rejects.toThrow('Database error');
+      await expect(service.execute({ userId })).rejects.toThrow(
+        'Database error',
+      );
       expect(mockRepository.findDefaultByUserId).toHaveBeenCalledWith(userId);
     });
   });
 });
-

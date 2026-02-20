@@ -22,7 +22,7 @@ import { PaginatedData, PaginatedResponseDto } from 'src/common/http/types';
 @ApiBearerAuth()
 @Controller('exchange')
 export class ExchangeController {
-  constructor(private readonly exchangeRateService: ExchangeRateService) { }
+  constructor(private readonly exchangeRateService: ExchangeRateService) {}
 
   @Get('rates')
   @Public()
@@ -64,7 +64,7 @@ export class ExchangeController {
           to: target,
           rate: rate.toFixed(SCALE).toString(),
         });
-      } catch { }
+      } catch {}
     }
 
     return { data: items, page: 1, limit: 10, total: items.length };

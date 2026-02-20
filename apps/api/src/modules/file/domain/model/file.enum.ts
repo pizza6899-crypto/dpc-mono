@@ -1,10 +1,10 @@
 export enum FileStatus {
-    PENDING = 'PENDING',
-    ACTIVE = 'ACTIVE',
-    DELETED = 'DELETED',
+  PENDING = 'PENDING',
+  ACTIVE = 'ACTIVE',
+  DELETED = 'DELETED',
 }
 
 export enum FileAccessType {
-    PUBLIC = 'PUBLIC',
-    PRIVATE = 'PRIVATE',
+  PUBLIC = 'PUBLIC',
+  PRIVATE = 'PRIVATE',
 }

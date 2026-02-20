@@ -59,4 +59,3 @@ export class AffiliateCodeResponseDto {
   })
   lastUsedAt: Date | null;
 }
-

@@ -4,13 +4,13 @@ import type { CategoryRepositoryPort } from '../ports';
 
 @Injectable()
 export class DeleteCategoryService {
-    constructor(
-        @Inject(CATEGORY_REPOSITORY)
-        private readonly repository: CategoryRepositoryPort,
-    ) { }
+  constructor(
+    @Inject(CATEGORY_REPOSITORY)
+    private readonly repository: CategoryRepositoryPort,
+  ) {}
 
-    async execute(id: bigint): Promise<void> {
-        await this.repository.getById(id); // Check existence
-        await this.repository.delete(id);
-    }
+  async execute(id: bigint): Promise<void> {
+    await this.repository.getById(id); // Check existence
+    await this.repository.delete(id);
+  }
 }

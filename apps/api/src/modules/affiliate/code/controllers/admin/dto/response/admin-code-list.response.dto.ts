@@ -66,4 +66,3 @@ export class AdminCodeListItemDto {
   })
   lastUsedAt: Date | null;
 }
-

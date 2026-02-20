@@ -23,4 +23,3 @@ export enum SessionType {
    * - SSE: Server-Sent Events 세션
    */
 }
-

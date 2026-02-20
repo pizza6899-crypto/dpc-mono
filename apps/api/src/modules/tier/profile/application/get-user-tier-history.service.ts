@@ -6,17 +6,18 @@ import { PaginatedData } from 'src/common/http/types/pagination.types';
 
 @Injectable()
 export class GetUserTierHistoryService {
-    constructor(
-        private readonly tierAuditRepository: TierAuditRepositoryPort,
-    ) { }
+  constructor(private readonly tierAuditRepository: TierAuditRepositoryPort) {}
 
-    async execute(userId: bigint, query: GetUserTierHistoryQueryDto): Promise<PaginatedData<TierHistory>> {
-        return this.tierAuditRepository.findHistoryByUserId(userId, {
-            startDate: query.startDate,
-            endDate: query.endDate,
-            page: query.page,
-            limit: query.limit,
-            changeType: query.changeType,
-        });
-    }
+  async execute(
+    userId: bigint,
+    query: GetUserTierHistoryQueryDto,
+  ): Promise<PaginatedData<TierHistory>> {
+    return this.tierAuditRepository.findHistoryByUserId(userId, {
+      startDate: query.startDate,
+      endDate: query.endDate,
+      page: query.page,
+      limit: query.limit,
+      changeType: query.changeType,
+    });
+  }
 }

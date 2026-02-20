@@ -1,6 +1,6 @@
 // src/modules/promotion/domain/promotion-policy.ts
+import type { Prisma } from '@prisma/client';
 import {
-  Prisma,
   PromotionTargetType,
   PromotionQualification,
   PromotionBonusType,
@@ -37,7 +37,10 @@ export class PromotionPolicy {
     currencySettings: PromotionCurrency,
     isDepositRequired: boolean = true,
   ): void {
-    if (isDepositRequired && !currencySettings.validateMinDepositAmount(depositAmount)) {
+    if (
+      isDepositRequired &&
+      !currencySettings.validateMinDepositAmount(depositAmount)
+    ) {
       throw new PromotionNotEligibleException(
         `Minimum deposit amount is ${currencySettings.minDepositAmount.toString()}`,
       );
@@ -102,8 +105,6 @@ export class PromotionPolicy {
       );
     }
   }
-
-
 
   /**
    * 프로모션 자격 종합 검증
@@ -206,4 +207,3 @@ export class PromotionPolicy {
     }
   }
 }
-

@@ -10,4 +10,3 @@ export class ValidateCodeFormatDto {
   @IsString()
   code: string;
 }
-

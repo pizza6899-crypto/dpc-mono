@@ -128,9 +128,7 @@ async function bootstrap() {
       }
     });
 
-    app.useGlobalInterceptors(
-      new TransformInterceptor(app.get(Reflector)),
-    );
+    app.useGlobalInterceptors(new TransformInterceptor(app.get(Reflector)));
     app.useGlobalPipes(new CustomValidationPipe());
 
     // 정적 파일 서빙 설정 추가
@@ -157,8 +155,11 @@ async function bootstrap() {
       });
 
       // AsyncAPI 설정 (운영 환경 제외)
-      if ((envService.app.nodeEnv as string) !== 'production') {
-        const { AsyncApiModule: DynamicAsyncApiModule, AsyncApiDocumentBuilder: DynamicAsyncApiDocumentBuilder } = require('nestjs-asyncapi');
+      if (envService.app.nodeEnv !== 'production') {
+        const {
+          AsyncApiModule: DynamicAsyncApiModule,
+          AsyncApiDocumentBuilder: DynamicAsyncApiDocumentBuilder,
+        } = require('nestjs-asyncapi');
 
         const asyncApiOptions = new DynamicAsyncApiDocumentBuilder()
           .setTitle('DPC Backend WebSocket API')

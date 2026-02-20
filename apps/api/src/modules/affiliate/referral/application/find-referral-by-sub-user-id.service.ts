@@ -18,7 +18,7 @@ export class FindReferralBySubUserIdService {
     @Inject(REFERRAL_REPOSITORY)
     private readonly repository: ReferralRepositoryPort,
     private readonly dispatchLogService: DispatchLogService,
-  ) { }
+  ) {}
 
   async execute({
     subUserId,
