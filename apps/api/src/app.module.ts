@@ -40,6 +40,7 @@ import { FileModule } from './modules/file/file.module';
 import { TierModule } from './modules/tier/tier.module';
 import { CacheModule } from './common/cache/cache.module';
 import { BullMqModule } from './infrastructure/bullmq/bullmq.module';
+import { RewardModule } from './modules/reward/reward.module';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { BullMqModule } from './infrastructure/bullmq/bullmq.module';
     StorageModule,
     FileModule,
     TierModule,
+    RewardModule,
   ],
   providers: [
     Reflector,
@@ -96,4 +98,4 @@ import { BullMqModule } from './infrastructure/bullmq/bullmq.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

@@ -61,6 +61,11 @@ export enum MessageCode {
 
     // --- 콤프 관련 (Comp) ---
     COMP_NOT_AVAILABLE_YET = 'COMP_NOT_AVAILABLE_YET', // 콤프가 아직 수령 가능하지 않을 때
+    COMP_TRANSACTION_REVERSED = 'COMP_TRANSACTION_REVERSED', // 이미 취소된 트랜잭션일 때
+
+    // Reward Errors
+    REWARD_NOT_FOUND = 'REWARD_NOT_FOUND', // 보상을 찾을 수 없을 때
+    REWARD_NOT_CLAIMABLE = 'REWARD_NOT_CLAIMABLE', // 해당 보상의 상태나 조건상 수령/변경을 할 수 없을 때
     COMP_ALREADY_CLAIMED = 'COMP_ALREADY_CLAIMED', // 이미 수령된 콤프일 때
     COMP_NOT_FOUND = 'COMP_NOT_FOUND', // 해당 날짜에 적립된 콤프가 없을 때
     COMP_NO_AMOUNT = 'COMP_NO_AMOUNT', // 수령할 콤프가 없을 때
