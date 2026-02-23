@@ -139,6 +139,53 @@ export class WithdrawalUserController {
     };
   }
 
+  @Get('options')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Get withdrawal options / 출금 옵션 조회',
+    description:
+      '사용 가능한 출금 수단(암호화폐, 은행) 및 관련 설정을 조회합니다.',
+  })
+  @ApiStandardResponse(WithdrawalOptionsResponseDto, {
+    status: 200,
+    description: 'Withdrawal options retrieved successfully',
+  })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    action: 'VIEW_WITHDRAWAL_OPTIONS',
+    category: 'WITHDRAWAL',
+  })
+  async getWithdrawalOptions(): Promise<WithdrawalOptionsResponseDto> {
+    const { crypto, bank } = await this.getWithdrawalOptionsService.execute();
+
+    return {
+      crypto: crypto.map((config) => ({
+        id: this.sqidsService.encode(
+          config.id,
+          SqidsPrefix.WITHDRAW_CRYPTO_CONFIG,
+        ),
+        symbol: config.symbol,
+        network: config.network,
+        minAmount: config.minWithdrawAmount.toString(),
+        maxAmount: config.maxWithdrawAmount?.toString() ?? null,
+        feeFixed: config.props.withdrawFeeFixed.toString(),
+        feeRate: config.props.withdrawFeeRate.toString(),
+      })),
+      bank: bank.map((config) => ({
+        id: this.sqidsService.encode(
+          config.id,
+          SqidsPrefix.WITHDRAW_BANK_CONFIG,
+        ),
+        currency: config.currency,
+        bankName: config.bankName,
+        minAmount: config.minWithdrawAmount.toString(),
+        maxAmount: config.maxWithdrawAmount?.toString() ?? null,
+        feeFixed: config.props.withdrawFeeFixed.toString(),
+        feeRate: config.props.withdrawFeeRate.toString(),
+      })),
+    };
+  }
+
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
@@ -319,53 +366,6 @@ export class WithdrawalUserController {
       requestedAmount: result.requestedAmount,
       feeAmount: result.feeAmount ?? undefined,
       netAmount: result.netAmount,
-    };
-  }
-
-  @Get('options')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Get withdrawal options / 출금 옵션 조회',
-    description:
-      '사용 가능한 출금 수단(암호화폐, 은행) 및 관련 설정을 조회합니다.',
-  })
-  @ApiStandardResponse(WithdrawalOptionsResponseDto, {
-    status: 200,
-    description: 'Withdrawal options retrieved successfully',
-  })
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    action: 'VIEW_WITHDRAWAL_OPTIONS',
-    category: 'WITHDRAWAL',
-  })
-  async getWithdrawalOptions(): Promise<WithdrawalOptionsResponseDto> {
-    const { crypto, bank } = await this.getWithdrawalOptionsService.execute();
-
-    return {
-      crypto: crypto.map((config) => ({
-        id: this.sqidsService.encode(
-          config.id,
-          SqidsPrefix.WITHDRAW_CRYPTO_CONFIG,
-        ),
-        symbol: config.symbol,
-        network: config.network,
-        minAmount: config.minWithdrawAmount.toString(),
-        maxAmount: config.maxWithdrawAmount?.toString() ?? null,
-        feeFixed: config.props.withdrawFeeFixed.toString(),
-        feeRate: config.props.withdrawFeeRate.toString(),
-      })),
-      bank: bank.map((config) => ({
-        id: this.sqidsService.encode(
-          config.id,
-          SqidsPrefix.WITHDRAW_BANK_CONFIG,
-        ),
-        currency: config.currency,
-        bankName: config.bankName,
-        minAmount: config.minWithdrawAmount.toString(),
-        maxAmount: config.maxWithdrawAmount?.toString() ?? null,
-        feeFixed: config.props.withdrawFeeFixed.toString(),
-        feeRate: config.props.withdrawFeeRate.toString(),
-      })),
     };
   }
 
