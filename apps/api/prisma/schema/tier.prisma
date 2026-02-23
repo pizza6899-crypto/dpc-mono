@@ -70,8 +70,7 @@ model Tier {
 
   stats TierStats[]
 
-  downgradeTargetUserTiers UserTier[]          @relation("DowngradeTarget")
-  upgradeRewards           TierUpgradeReward[]
+  downgradeTargetUserTiers UserTier[] @relation("DowngradeTarget")
 
   @@index([level])
   @@map("tier")
@@ -251,51 +250,4 @@ enum UserTierStatus {
   ACTIVE // 정상 유지
   GRACE // 강등 유예 (Grace Period)
   LOCKED // 등급 고정 (Retention Lock / 관리자 수동 고정)
-}
-
-model TierUpgradeReward {
-  id     BigInt @id @default(autoincrement())
-  userId BigInt @map("user_id")
-  tierId BigInt @map("tier_id") // 최종 도달한 티어 ID
-
-  // 승급 범위 기록
-  fromLevel Int @map("from_level") // 시작 레벨
-  toLevel   Int @map("to_level") // 목표 레벨
-
-  // 승급 시점의 보너스 설정 스냅샷
-  bonusAmountUsd     Decimal @map("bonus_amount_usd") @db.Decimal(32, 18)
-  wageringMultiplier Decimal @map("wagering_multiplier") @db.Decimal(8, 4)
-
-  status TierUpgradeRewardStatus @default(PENDING) @map("status")
-
-  createdAt DateTime  @default(now()) @map("created_at")
-  claimedAt DateTime? @map("claimed_at") // 실제 수령 시각
-  expiresAt DateTime? @map("expires_at") // 수령 만료 시각
-
-  cancelledAt  DateTime? @map("cancelled_at") // 취소 시각
-  cancelReason String?   @map("cancel_reason") // 취소 사유
-
-  // [Snapshot] 수령 시점 정보 (통화 변출 시 기록)
-  claimedCurrency ExchangeCurrencyCode? @map("claimed_currency")
-  exchangeRate    Decimal?              @map("exchange_rate") @db.Decimal(32, 18) // USD -> 수령 통화 환율
-  claimedAmount   Decimal?              @map("claimed_amount") @db.Decimal(32, 18) // 실제 지급된 통화 금액
-
-  // 사후 추적을 위한 참조 ID
-  walletTxId    BigInt? @map("wallet_tx_id") // 지갑 트랜잭션 ID
-  referenceId   BigInt? @map("reference_id") // 생성 원인이 된 외부 참조 ID (롤링 프로모션 등)
-  tierHistoryId BigInt? @map("tier_history_id") // 생성 원인이 된 승급 히스토리 ID (Snowflake)
-
-  user User @relation(fields: [userId], references: [id])
-  tier Tier @relation(fields: [tierId], references: [id])
-
-  @@index([userId, status])
-  @@index([tierId])
-  @@map("tier_upgrade_reward")
-}
-
-enum TierUpgradeRewardStatus {
-  PENDING // 수령 대기
-  CLAIMED // 수령 완료
-  EXPIRED // 기간 만료
-  CANCELLED // 관리자 취소
 }
