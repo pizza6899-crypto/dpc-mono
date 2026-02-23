@@ -17,6 +17,8 @@ import { createClient } from 'redis';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { Prisma } from '@prisma/client';
+import { Decimal } from '@prisma/client/runtime/client';
+
 
 // BigInt JSON 직렬화 설정
 (BigInt.prototype as any).toJSON = function () {
@@ -25,6 +27,13 @@ import { Prisma } from '@prisma/client';
 
 async function bootstrap() {
   try {
+    Decimal.set({
+      precision: 32,
+      rounding: Prisma.Decimal.ROUND_HALF_UP,
+      toExpNeg: -19,
+      toExpPos: 15,
+    });
+
     Prisma.Decimal.set({
       precision: 32,
       rounding: Prisma.Decimal.ROUND_HALF_UP,

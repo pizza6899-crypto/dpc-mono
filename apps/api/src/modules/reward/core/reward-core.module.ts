@@ -11,12 +11,14 @@ import { RewardController } from './controllers/user/reward.controller';
 import { RewardAdminController } from './controllers/admin/reward-admin.controller';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { SqidsModule } from 'src/common/sqids/sqids.module';
+import { ConcurrencyModule } from 'src/common/concurrency';
 
 @Module({
     imports: [
         PrismaModule,
         SnowflakeModule,
         SqidsModule,
+        ConcurrencyModule,
     ],
     controllers: [
         RewardController,
