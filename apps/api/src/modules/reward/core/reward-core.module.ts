@@ -1,22 +1,45 @@
-// src/modules/reward/core/reward-core.module.ts
 import { Module } from '@nestjs/common';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { REWARD_REPOSITORY } from './ports/reward.repository.port';
 import { RewardRepository } from './infrastructure/reward.repository';
+import { ClaimRewardService } from './application/claim-reward.service';
+import { GrantRewardService } from './application/grant-reward.service';
+import { GetUserRewardsService } from './application/get-user-rewards.service';
+import { GetAdminRewardsService } from './application/get-admin-rewards.service';
+import { VoidRewardService } from './application/void-reward.service';
+import { RewardController } from './controllers/user/reward.controller';
+import { RewardAdminController } from './controllers/admin/reward-admin.controller';
+import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { SqidsModule } from 'src/common/sqids/sqids.module';
 
 @Module({
-    imports: [PrismaModule],
+    imports: [
+        PrismaModule,
+        SnowflakeModule,
+        SqidsModule,
+    ],
+    controllers: [
+        RewardController,
+        RewardAdminController,
+    ],
     providers: [
         {
             provide: REWARD_REPOSITORY,
             useClass: RewardRepository,
         },
-        // 향후 Application Service 들이 이곳에 추가됩니다.
-        // 예: GrantRewardService, ClaimRewardService 등
+        ClaimRewardService,
+        GrantRewardService,
+        GetUserRewardsService,
+        GetAdminRewardsService,
+        VoidRewardService,
     ],
     exports: [
         REWARD_REPOSITORY,
-        // 다른 모듈(예: Tier/Comp)에서 사용할 수 있도록 외부 공개
+        ClaimRewardService,
+        GrantRewardService,
+        GetUserRewardsService,
+        GetAdminRewardsService,
+        VoidRewardService,
     ],
 })
 export class RewardCoreModule { }

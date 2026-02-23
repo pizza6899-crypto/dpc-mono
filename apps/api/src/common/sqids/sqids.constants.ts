@@ -45,6 +45,7 @@ export const SqidsPrefix = {
   FILE: 'f',
   USER_TIER_HISTORY: 'uth',
   TIER_REWARD: 'tr',
+  REWARD: 'r',
   // 필요에 따라 추가 (기존 값 수정 금지)
 } as const;
 
