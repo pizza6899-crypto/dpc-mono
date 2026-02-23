@@ -36,6 +36,7 @@ import {
   FindWithdrawalsService,
   GetWithdrawalService,
   GetWithdrawalOptionsService,
+  GetWithdrawalEligibilityService,
 } from '../../application';
 import { WithdrawalDetail } from '../../domain';
 import {
@@ -46,6 +47,8 @@ import {
   CreateWithdrawalResponseDto,
   CancelWithdrawalResponseDto,
   WithdrawalOptionsResponseDto,
+  GetWithdrawalEligibilityQueryDto,
+  WithdrawalEligibilityResponseDto,
 } from './dto';
 
 @ApiTags('User Withdrawal')
@@ -60,8 +63,34 @@ export class WithdrawalUserController {
     private readonly findWithdrawalsService: FindWithdrawalsService,
     private readonly getWithdrawalService: GetWithdrawalService,
     private readonly getWithdrawalOptionsService: GetWithdrawalOptionsService,
+    private readonly getWithdrawalEligibilityService: GetWithdrawalEligibilityService,
     private readonly sqidsService: SqidsService,
-  ) {}
+  ) { }
+
+  @Get('eligibility')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Get withdrawal eligibility and available balance / 출금 가능 금액 및 자격 정보 조회',
+    description: '현재 보유중인 캐시 잔액과 롤링 달성 여부를 검사하여 최종 출금 가능 한도(Withdrawable Amount)를 반환합니다.',
+  })
+  @ApiStandardResponse(WithdrawalEligibilityResponseDto, {
+    status: 200,
+    description: 'Successfully retrieved eligibility and available balance',
+  })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    action: 'CHECK_WITHDRAWAL_ELIGIBILITY',
+    category: 'WITHDRAWAL',
+  })
+  async getWithdrawalEligibility(
+    @CurrentUser() user: CurrentUserWithSession,
+    @Query() query: GetWithdrawalEligibilityQueryDto,
+  ): Promise<WithdrawalEligibilityResponseDto> {
+    return this.getWithdrawalEligibilityService.execute({
+      userId: BigInt(user.id),
+      currency: query.currency ?? ExchangeCurrencyCode.USD, // 기본값 처리 (필요시 도메인 기본 통화 설정 반영)
+    });
+  }
 
   @Get()
   @HttpCode(HttpStatus.OK)

@@ -24,6 +24,8 @@ export type {
 } from './find-withdrawals.service';
 
 export { GetWithdrawalService } from './get-withdrawal.service';
+export { GetWithdrawalEligibilityService } from './get-withdrawal-eligibility.service';
+export type { GetWithdrawalEligibilityParams } from './get-withdrawal-eligibility.service';
 // User
 export * from './request-crypto-withdrawal.service';
 export * from './request-bank-withdrawal.service';
@@ -31,6 +33,7 @@ export * from './cancel-withdrawal.service';
 export * from './find-withdrawals.service';
 export * from './get-withdrawal.service';
 export * from './get-withdrawal-options.service';
+export * from './get-withdrawal-eligibility.service';
 
 // Admin
 export * from './approve-withdrawal.service';

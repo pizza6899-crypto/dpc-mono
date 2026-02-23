@@ -15,6 +15,7 @@ import {
   FindWithdrawalsService,
   GetWithdrawalService,
   GetWithdrawalOptionsService,
+  GetWithdrawalEligibilityService,
   ApproveWithdrawalService,
   RejectWithdrawalService,
   FindPendingWithdrawalsService,
@@ -67,6 +68,7 @@ import { WithdrawalConfigAdminController } from './controllers/admin/withdrawal-
     FindWithdrawalsService,
     GetWithdrawalService,
     GetWithdrawalOptionsService,
+    GetWithdrawalEligibilityService,
     ApproveWithdrawalService,
     RejectWithdrawalService,
     FindPendingWithdrawalsService,
@@ -92,7 +94,8 @@ import { WithdrawalConfigAdminController } from './controllers/admin/withdrawal-
     FindWithdrawalsService,
     GetWithdrawalService,
     GetWithdrawalOptionsService,
+    GetWithdrawalEligibilityService,
     ProcessWithdrawalService,
   ],
 })
-export class WithdrawalModule {}
+export class WithdrawalModule { }
