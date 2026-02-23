@@ -1,8 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
-import { PaginatedData } from 'src/common/http/types/pagination.types';
-import { GetAdminRewardsRequestDto } from '../controllers/admin/dto/request/get-admin-rewards.request.dto';
-import { AdminRewardResponseDto } from '../controllers/admin/dto/response/reward.response.dto';
+import { UserReward as PrismaUserReward } from '@prisma/client';
+import { PaginatedResult } from './get-user-rewards.service';
+
+export interface GetAdminRewardsQuery {
+    page?: number;
+    limit?: number;
+    sortBy?: string;
+    sortOrder?: 'asc' | 'desc';
+    status?: any;
+    userId?: string;
+    sourceType?: any;
+    rewardType?: any;
+    currency?: any;
+}
 
 @Injectable()
 export class GetAdminRewardsService {
@@ -10,8 +21,8 @@ export class GetAdminRewardsService {
         private readonly prisma: PrismaService,
     ) { }
 
-    async execute(query: GetAdminRewardsRequestDto): Promise<PaginatedData<AdminRewardResponseDto>> {
-        const { page = 1, limit = 20, sortBy = 'createdAt', sortOrder = 'desc', status, userId, sourceType, rewardType } = query;
+    async execute(query: GetAdminRewardsQuery): Promise<PaginatedResult<PrismaUserReward>> {
+        const { page = 1, limit = 20, sortBy = 'createdAt', sortOrder = 'desc', status, userId, sourceType, rewardType, currency } = query;
         const skip = (page - 1) * limit;
 
         const where = {
@@ -19,6 +30,7 @@ export class GetAdminRewardsService {
             ...(userId ? { userId: BigInt(userId) } : {}),
             ...(sourceType ? { sourceType } : {}),
             ...(rewardType ? { rewardType } : {}),
+            ...(currency ? { currency } : {}),
         };
 
         const [items, total] = await Promise.all([
@@ -33,30 +45,8 @@ export class GetAdminRewardsService {
             this.prisma.userReward.count({ where }),
         ]);
 
-        const mappedData: AdminRewardResponseDto[] = items.map((item) => ({
-            id: item.id.toString(),
-            userId: item.userId.toString(),
-            sourceType: item.sourceType,
-            sourceId: item.sourceId?.toString() ?? null,
-            rewardType: item.rewardType,
-            currency: item.currency,
-            amount: item.amount.toString(),
-            wageringTargetType: item.wageringTargetType,
-            wageringMultiplier: item.wageringMultiplier?.toString() ?? null,
-            wageringExpiryDays: item.wageringExpiryDays,
-            maxCashConversion: item.maxCashConversion?.toString() ?? null,
-            isForfeitable: item.isForfeitable,
-            status: item.status,
-            expiresAt: item.expiresAt,
-            claimedAt: item.claimedAt,
-            metadata: item.metadata,
-            reason: item.reason,
-            createdAt: item.createdAt,
-            updatedAt: item.updatedAt,
-        }));
-
         return {
-            data: mappedData,
+            data: items,
             page,
             limit,
             total,

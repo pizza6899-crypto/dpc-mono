@@ -36,7 +36,34 @@ export class RewardController {
         @Query() query: GetUserRewardsRequestDto,
         @CurrentUser() user: User,
     ): Promise<PaginatedData<UserRewardResponseDto>> {
-        return this.userRewardsService.execute(user.id, query);
+        const result = await this.userRewardsService.execute({
+            page: query.page,
+            limit: query.limit,
+            sortBy: query.sortBy,
+            sortOrder: query.sortOrder,
+            status: query.status,
+            userId: user.id
+        });
+
+        const mappedData: UserRewardResponseDto[] = result.data.map((item) => ({
+            id: this.sqidsService.encode(item.id, SqidsPrefix.REWARD),
+            sourceType: item.sourceType,
+            rewardType: item.rewardType,
+            currency: item.currency,
+            amount: item.amount.toString(),
+            wageringTargetType: item.wageringTargetType,
+            status: item.status,
+            expiresAt: item.expiresAt,
+            claimedAt: item.claimedAt,
+            createdAt: item.createdAt,
+        }));
+
+        return {
+            data: mappedData,
+            page: result.page,
+            limit: result.limit,
+            total: result.total,
+        };
     }
 
     @Post(':id/claim')
@@ -50,8 +77,8 @@ export class RewardController {
         type: LogType.ACTIVITY,
         category: 'USER',
         action: 'CLAIM_REWARD',
-        extractMetadata: (req, args) => ({
-            userId: args[1].id.toString(), // user.id
+        extractMetadata: (req: any, args) => ({
+            userId: req.user?.id?.toString(), // req.user 객체에서 직접 추출하여 TypeError 방지
             rewardId: args[0], // sqid
         }),
     })

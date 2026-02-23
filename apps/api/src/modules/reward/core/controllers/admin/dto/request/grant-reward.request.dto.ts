@@ -7,6 +7,7 @@ import {
     IsOptional,
     IsDate,
     IsObject,
+    IsNumberString,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import {
@@ -48,7 +49,7 @@ export class GrantRewardRequestDto {
     currency: ExchangeCurrencyCode;
 
     @ApiProperty({ description: 'Amount / 보상 금액 (String)' })
-    @IsString()
+    @IsNumberString({}, { message: 'amount must be a valid numeric string' })
     amount: string;
 
     @ApiPropertyOptional({
@@ -61,7 +62,7 @@ export class GrantRewardRequestDto {
 
     @ApiPropertyOptional({ description: 'Wagering Multiplier / 롤링 배수 (String)' })
     @IsOptional()
-    @IsString()
+    @IsNumberString({}, { message: 'wageringMultiplier must be a valid numeric string' })
     wageringMultiplier?: string;
 
     @ApiPropertyOptional({ description: 'Wagering Expiry Days / 롤링 만료 일수' })
@@ -72,7 +73,7 @@ export class GrantRewardRequestDto {
 
     @ApiPropertyOptional({ description: 'Max Cash Conversion / 최대 현금 전환액 (String)' })
     @IsOptional()
-    @IsString()
+    @IsNumberString({}, { message: 'maxCashConversion must be a valid numeric string' })
     maxCashConversion?: string;
 
     @ApiPropertyOptional({ description: 'Is Forfeitable / 포기 가능 여부' })

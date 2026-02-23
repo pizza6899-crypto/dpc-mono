@@ -2,7 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
-import { RewardStatus, RewardSourceType, RewardItemType } from '@prisma/client';
+import { RewardStatus, RewardSourceType, RewardItemType, ExchangeCurrencyCode } from '@prisma/client';
 
 export class GetAdminRewardsRequestDto extends createPaginationQueryDto<'createdAt'>({
     defaultSortBy: 'createdAt',
@@ -39,4 +39,12 @@ export class GetAdminRewardsRequestDto extends createPaginationQueryDto<'created
     @IsOptional()
     @IsEnum(RewardItemType)
     rewardType?: RewardItemType;
+
+    @ApiPropertyOptional({
+        description: 'Currency Filter / 통화 필터',
+        enum: ExchangeCurrencyCode,
+    })
+    @IsOptional()
+    @IsEnum(ExchangeCurrencyCode)
+    currency?: ExchangeCurrencyCode;
 }

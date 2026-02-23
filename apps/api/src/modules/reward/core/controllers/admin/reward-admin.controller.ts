@@ -32,7 +32,36 @@ export class RewardAdminController {
     })
     @ApiPaginatedResponse(AdminRewardResponseDto)
     async getRewards(@Query() query: GetAdminRewardsRequestDto): Promise<PaginatedData<AdminRewardResponseDto>> {
-        return this.getAdminRewardsService.execute(query);
+        const result = await this.getAdminRewardsService.execute(query);
+
+        const mappedData: AdminRewardResponseDto[] = result.data.map((item) => ({
+            id: item.id.toString(),
+            userId: item.userId.toString(),
+            sourceType: item.sourceType,
+            sourceId: item.sourceId?.toString() ?? null,
+            rewardType: item.rewardType,
+            currency: item.currency,
+            amount: item.amount.toString(),
+            wageringTargetType: item.wageringTargetType,
+            wageringMultiplier: item.wageringMultiplier?.toString() ?? null,
+            wageringExpiryDays: item.wageringExpiryDays,
+            maxCashConversion: item.maxCashConversion?.toString() ?? null,
+            isForfeitable: item.isForfeitable,
+            status: item.status,
+            expiresAt: item.expiresAt,
+            claimedAt: item.claimedAt,
+            metadata: item.metadata as any,
+            reason: item.reason,
+            createdAt: item.createdAt,
+            updatedAt: item.updatedAt,
+        }));
+
+        return {
+            data: mappedData,
+            page: result.page,
+            limit: result.limit,
+            total: result.total,
+        };
     }
 
     @Post('grant')

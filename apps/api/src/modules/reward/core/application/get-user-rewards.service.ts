@@ -1,20 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
-import { PaginatedData } from 'src/common/http/types/pagination.types';
-import { UserRewardResponseDto } from '../controllers/user/dto/response/user-reward.response.dto';
-import { GetUserRewardsRequestDto } from '../controllers/user/dto/request/get-user-rewards.request.dto';
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { UserReward as PrismaUserReward } from '@prisma/client';
+
+export interface GetUserRewardsQuery {
+    page?: number;
+    limit?: number;
+    sortBy?: string;
+    sortOrder?: 'asc' | 'desc';
+    status?: any;
+    userId: bigint;
+}
+
+export interface PaginatedResult<T> {
+    data: T[];
+    page: number;
+    limit: number;
+    total: number;
+}
 
 @Injectable()
 export class GetUserRewardsService {
     constructor(
         private readonly prisma: PrismaService,
-        private readonly sqidsService: SqidsService
     ) { }
 
-    async execute(userId: bigint, query: GetUserRewardsRequestDto): Promise<PaginatedData<UserRewardResponseDto>> {
-        const { page = 1, limit = 20, sortBy = 'createdAt', sortOrder = 'desc', status } = query;
+    async execute(query: GetUserRewardsQuery): Promise<PaginatedResult<PrismaUserReward>> {
+        const { page = 1, limit = 20, sortBy = 'createdAt', sortOrder = 'desc', status, userId } = query;
         const skip = (page - 1) * limit;
 
         const where = {
@@ -34,21 +45,8 @@ export class GetUserRewardsService {
             this.prisma.userReward.count({ where }),
         ]);
 
-        const mappedData: UserRewardResponseDto[] = items.map((item) => ({
-            id: this.sqidsService.encode(item.id, SqidsPrefix.REWARD),
-            sourceType: item.sourceType,
-            rewardType: item.rewardType,
-            currency: item.currency,
-            amount: item.amount.toString(),
-            wageringTargetType: item.wageringTargetType,
-            status: item.status,
-            expiresAt: item.expiresAt,
-            claimedAt: item.claimedAt,
-            createdAt: item.createdAt,
-        }));
-
         return {
-            data: mappedData,
+            data: items,
             page,
             limit,
             total,
