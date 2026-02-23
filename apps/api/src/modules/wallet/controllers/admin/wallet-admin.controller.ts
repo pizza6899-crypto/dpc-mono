@@ -48,7 +48,7 @@ export class WalletAdminController {
     private readonly adjustUserBalanceService: AdjustUserBalanceService,
     private readonly updateWalletStatusService: UpdateWalletStatusService,
     private readonly findWalletTransactionHistoryService: FindWalletTransactionHistoryService,
-  ) {}
+  ) { }
 
   /**
    * 1. 사용자 지갑 목록 조회
@@ -125,6 +125,10 @@ export class WalletAdminController {
   /**
    * 3. 관리자 수동 잔액 조정
    */
+  /*
+  // [보안 주의] 
+  // 관리자가 다이렉트로 지갑 잔고를 만지면(Adjust) 롤링(Wagering) 및 보상 정산 로직의 정합성이 훼손될 수 있어 잠정 차단(주석 처리)함.
+  // 추후 검토를 거쳐 필요한 기능만 남기거나 복구할 예정입니다.
   @Post('adjust')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
@@ -166,6 +170,7 @@ export class WalletAdminController {
       updatedAt: wallet.updatedAt,
     };
   }
+  */
 
   /**
    * 4. 시스템 전체 트랜잭션 이력 조회
@@ -229,18 +234,18 @@ export class WalletAdminController {
           },
           adminDetail: metadata.adminId
             ? {
-                adminUserId: metadata.adminId,
-                reasonCode: metadata.reasonCode,
-                internalNote: metadata.internalNote || metadata.remark,
-              }
+              adminUserId: metadata.adminId,
+              reasonCode: metadata.reasonCode,
+              internalNote: metadata.internalNote || metadata.remark,
+            }
             : undefined,
           systemDetail: metadata.serviceName
             ? {
-                serviceName: metadata.serviceName,
-                triggerId: metadata.triggerId,
-                actionName: metadata.actionName,
-                metadata: metadata.metadata,
-              }
+              serviceName: metadata.serviceName,
+              triggerId: metadata.triggerId,
+              actionName: metadata.actionName,
+              metadata: metadata.metadata,
+            }
             : undefined,
           createdAt: tx.createdAt,
         };
