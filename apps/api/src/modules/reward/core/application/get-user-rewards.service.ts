@@ -8,6 +8,7 @@ export interface GetUserRewardsQuery {
     sortBy?: string;
     sortOrder?: 'asc' | 'desc';
     status?: any;
+    currency?: any;
     userId: bigint;
 }
 
@@ -25,12 +26,13 @@ export class GetUserRewardsService {
     ) { }
 
     async execute(query: GetUserRewardsQuery): Promise<PaginatedResult<PrismaUserReward>> {
-        const { page = 1, limit = 20, sortBy = 'createdAt', sortOrder = 'desc', status, userId } = query;
+        const { page = 1, limit = 20, sortBy = 'createdAt', sortOrder = 'desc', status, currency, userId } = query;
         const skip = (page - 1) * limit;
 
         const where = {
             userId,
             ...(status ? { status } : {}),
+            ...(currency && currency.length > 0 ? { currency: { in: currency } } : {}),
         };
 
         const [items, total] = await Promise.all([

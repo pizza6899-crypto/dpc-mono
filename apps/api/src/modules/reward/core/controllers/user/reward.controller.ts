@@ -42,6 +42,7 @@ export class RewardController {
             sortBy: query.sortBy,
             sortOrder: query.sortOrder,
             status: query.status,
+            currency: query.currency,
             userId: user.id
         });
 

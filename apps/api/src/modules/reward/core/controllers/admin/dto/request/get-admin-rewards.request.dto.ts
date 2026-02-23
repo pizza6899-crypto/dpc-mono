@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Type, Transform } from 'class-transformer';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
 import { RewardStatus, RewardSourceType, RewardItemType, ExchangeCurrencyCode } from '@prisma/client';
@@ -41,10 +41,12 @@ export class GetAdminRewardsRequestDto extends createPaginationQueryDto<'created
     rewardType?: RewardItemType;
 
     @ApiPropertyOptional({
-        description: 'Currency Filter / 통화 필터',
+        description: 'Currency Filter / 통화 다중 필터 (콤마로 구분하여 여러 개 입력 가능)',
         enum: ExchangeCurrencyCode,
+        isArray: true,
     })
     @IsOptional()
-    @IsEnum(ExchangeCurrencyCode)
-    currency?: ExchangeCurrencyCode;
+    @Transform(({ value }) => (Array.isArray(value) ? value : value.split(',').map((v: string) => v.trim())))
+    @IsEnum(ExchangeCurrencyCode, { each: true })
+    currency?: ExchangeCurrencyCode[];
 }

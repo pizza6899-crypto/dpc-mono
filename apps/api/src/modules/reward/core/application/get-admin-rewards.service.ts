@@ -30,7 +30,7 @@ export class GetAdminRewardsService {
             ...(userId ? { userId: BigInt(userId) } : {}),
             ...(sourceType ? { sourceType } : {}),
             ...(rewardType ? { rewardType } : {}),
-            ...(currency ? { currency } : {}),
+            ...(currency && currency.length > 0 ? { currency: { in: currency } } : {}),
         };
 
         const [items, total] = await Promise.all([
