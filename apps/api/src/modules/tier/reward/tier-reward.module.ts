@@ -12,6 +12,7 @@ import { WalletModule } from '../../wallet/wallet.module';
 import { WageringModule } from '../../wagering/wagering.module';
 import { ExchangeModule } from '../../exchange/exchange.module';
 import { TierRewardAdminController } from './controllers/admin/tier-reward-admin.controller';
+import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { TierRewardAdminController } from './controllers/admin/tier-reward-admin
     WalletModule,
     WageringModule,
     ExchangeModule,
+    SnowflakeModule,
   ],
   controllers: [TierRewardController, TierRewardAdminController],
   providers: [
@@ -34,4 +36,4 @@ import { TierRewardAdminController } from './controllers/admin/tier-reward-admin
     ClaimRewardService, // 자동 지급 시 호출 가능
   ],
 })
-export class TierRewardModule {}
+export class TierRewardModule { }
