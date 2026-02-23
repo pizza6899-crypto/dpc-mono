@@ -5,8 +5,10 @@ import { LockNamespace } from 'src/common/concurrency/concurrency.constants';
 import { type IRewardRepository, REWARD_REPOSITORY } from '../ports/reward.repository.port';
 import { RewardNotFoundException } from '../domain/reward.exception';
 import { Transactional } from '@nestjs-cls/transactional';
-// import { WalletService } from 'src/modules/wallet/core/application/wallet.service';
-// import { WageringService } from 'src/modules/wagering/requirement/application/wagering.service';
+import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
+import { CreateWageringRequirementService } from 'src/modules/wagering/requirement/application/create-wagering-requirement.service';
+import { Prisma, UserWalletBalanceType, UserWalletTransactionType, WageringSourceType, RewardSourceType } from '@prisma/client';
+import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain/wallet.constant';
 
 export interface ClaimRewardCommand {
     userId: bigint;
@@ -20,9 +22,8 @@ export class ClaimRewardService {
         private readonly rewardRepository: IRewardRepository,
         private readonly advisoryLockService: AdvisoryLockService,
 
-        // 타 모듈 연동 포트들 대기열 (TODO)
-        // private readonly walletOperationPort: IWalletOperationPort,
-        // private readonly createWageringPort: ICreateWageringRequirementPort,
+        private readonly updateUserBalanceService: UpdateUserBalanceService,
+        private readonly createWageringRequirementService: CreateWageringRequirementService,
     ) { }
 
     /**
@@ -47,30 +48,72 @@ export class ClaimRewardService {
         // 3. 도메인 엔티티 내부에서 수령 가능(CLAIMABLE) 상태 체크 및 상태 전이 (CLAIMED)
         reward.markAsClaimed();
 
-        // 4. 거대한 DB ACID 트랜잭션 실행 (Wallet 증가 + Wagering 생성 + Reward 상태 업데이트)
-        // A. 지갑(Wallet) 모듈에 '보너스 머니' 충전 요청
-        // await this.walletOperationPort.depositReward({
-        //     tx,
-        //     userId: command.userId,
-        //     amount: reward.amount,
-        //     currency: reward.currency,
-        //     referenceType: 'REWARD_CLAIM',
-        //     referenceId: reward.id,
-        // });
+        // Wagering 여부 판단: Multiplier가 존재하는가?
+        const hasWagering = reward.wageringMultiplier && reward.wageringMultiplier.gt(0);
+        const balanceType = hasWagering ? UserWalletBalanceType.BONUS : UserWalletBalanceType.CASH;
+
+        let actionName: WalletActionName;
+        let wageringSourceType: WageringSourceType = WageringSourceType.PROMOTION_BONUS; // Default
+
+        switch (reward.sourceType) {
+            case RewardSourceType.TIER_REWARD:
+                actionName = WalletActionName.CLAIM_TIER_REWARD;
+                wageringSourceType = WageringSourceType.TIER_BONUS;
+                break;
+            case RewardSourceType.COMP_REWARD:
+                actionName = WalletActionName.CLAIM_COMP;
+                wageringSourceType = WageringSourceType.PROMOTION_BONUS;
+                break;
+            default:
+                actionName = WalletActionName.GRANT_PROMOTION_BONUS;
+                wageringSourceType = WageringSourceType.PROMOTION_BONUS;
+                break;
+        }
+
+        // A. 지갑(Wallet) 모듈에 '보너스 머니' 또는 '캐시' 충전 요청
+        await this.updateUserBalanceService.updateBalance(
+            {
+                userId: reward.userId,
+                currency: reward.currency,
+                amount: new Prisma.Decimal(reward.amount.toString()),
+                operation: UpdateOperation.ADD,
+                balanceType: balanceType,
+                transactionType: UserWalletTransactionType.BONUS_IN, // 명목상 보너스 입금으로 기록
+                referenceId: reward.id,
+            },
+            {
+                actionName,
+                serviceName: 'RewardModule',
+                metadata: {
+                    description: `Reward Claim: ${reward.sourceType}`,
+                    traceId: reward.id.toString(),
+                },
+            }
+        );
 
         // B. (롤링 배수가 0이 아닐 경우) 롤링(Wagering) 모듈에 스펙 생성 요청
-        // if (reward.wageringMultiplier && reward.wageringMultiplier.greaterThan(0)) {
-        //     await this.createWageringPort.create({
-        //         tx,
-        //         userId: command.userId,
-        //         bonusAmount: reward.amount,
-        //         multiplier: reward.wageringMultiplier,
-        //         targetType: reward.wageringTargetType,
-        //         expiresDays: reward.wageringExpiryDays,
-        //         maxCashConversion: reward.maxCashConversion,
-        //         // ...
-        //     });
-        // }
+        if (hasWagering) {
+            let expiresAt: Date | undefined = undefined;
+            if (reward.wageringExpiryDays) {
+                const now = new Date();
+                expiresAt = new Date(now.getTime() + reward.wageringExpiryDays * 24 * 60 * 60 * 1000);
+            }
+
+            await this.createWageringRequirementService.execute({
+                userId: reward.userId,
+                currency: reward.currency,
+                sourceType: wageringSourceType,
+                sourceId: reward.id,
+                targetType: reward.wageringTargetType,
+                principalAmount: new Prisma.Decimal(reward.amount.toString()),
+                multiplier: new Prisma.Decimal(reward.wageringMultiplier!.toString()),
+                bonusAmount: new Prisma.Decimal(reward.amount.toString()),
+                initialFundAmount: new Prisma.Decimal(reward.amount.toString()),
+                realMoneyRatio: new Prisma.Decimal(0), // 전액 보너스 기원이므로 0
+                isForfeitable: reward.isForfeitable,
+                expiresAt,
+            });
+        }
 
         // C. 이 보상의 상태를 CLAIMED 로 DB에 확정 업데이트
         await this.rewardRepository.save(reward);

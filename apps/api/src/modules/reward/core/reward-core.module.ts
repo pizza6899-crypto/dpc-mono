@@ -12,6 +12,8 @@ import { RewardAdminController } from './controllers/admin/reward-admin.controll
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { SqidsModule } from 'src/common/sqids/sqids.module';
 import { ConcurrencyModule } from 'src/common/concurrency';
+import { WalletModule } from 'src/modules/wallet/wallet.module';
+import { RequirementModule } from 'src/modules/wagering/requirement/requirement.module';
 
 @Module({
     imports: [
@@ -19,6 +21,8 @@ import { ConcurrencyModule } from 'src/common/concurrency';
         SnowflakeModule,
         SqidsModule,
         ConcurrencyModule,
+        WalletModule,
+        RequirementModule,
     ],
     controllers: [
         RewardController,
