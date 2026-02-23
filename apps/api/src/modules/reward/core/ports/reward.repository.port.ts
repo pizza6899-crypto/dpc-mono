@@ -17,6 +17,4 @@ export interface IRewardRepository {
     // 영속성 관리
     save(reward: UserReward): Promise<UserReward>;
 
-    // 배치 저장 (여러 개의 보상을 한 번에 유저에게 줄 때)
-    saveMany(rewards: UserReward[]): Promise<UserReward[]>;
 }

@@ -65,13 +65,4 @@ export class RewardRepository implements IRewardRepository {
         return RewardMapper.toDomain(model);
     }
 
-    async saveMany(rewards: UserReward[]): Promise<UserReward[]> {
-        // 일괄 생성 (복잡한 에러 처리는 편의상 생략)
-        const dataArray = rewards.map(r => RewardMapper.toPersistence(r));
-        await this.tx.userReward.createMany({
-            data: dataArray,
-        });
-
-        return rewards; // 생성의 경우 원본 배열 그대로 리턴
-    }
 }
