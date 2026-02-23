@@ -21,6 +21,12 @@ export class UserRewardResponseDto {
     @ApiProperty({ description: 'Wagering Target Type / 롤링 조건 대상', enum: WageringTargetType })
     wageringTargetType: WageringTargetType;
 
+    @ApiProperty({ description: 'Wagering Multiplier / 롤링 배수 (수령 시 적용됨)', example: '3.00', required: false })
+    wageringMultiplier?: string | null;
+
+    @ApiProperty({ description: 'Wagering Expiry Days / 롤링 만료 조건 기한(일)', example: 7, required: false })
+    wageringExpiryDays?: number | null;
+
     @ApiProperty({ description: 'Status / 보상 상태', enum: RewardStatus })
     status: RewardStatus;
 

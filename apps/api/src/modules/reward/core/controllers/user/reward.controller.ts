@@ -53,6 +53,8 @@ export class RewardController {
             currency: item.currency,
             amount: item.amount.toString(),
             wageringTargetType: item.wageringTargetType,
+            wageringMultiplier: item.wageringMultiplier?.toString() ?? null,
+            wageringExpiryDays: item.wageringExpiryDays,
             status: item.status,
             expiresAt: item.expiresAt,
             claimedAt: item.claimedAt,
