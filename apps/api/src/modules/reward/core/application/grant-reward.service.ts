@@ -37,8 +37,8 @@ export class GrantRewardService {
      * (예: 어드민이 CS로 지급, 콤프 스케줄러가 지급 등)
      */
     async execute(command: GrantRewardCommand): Promise<UserReward> {
-        // 1. 고유 Snowflake ID 발급
-        const { id } = this.snowflakeService.generate();
+        // 1. 고유 Snowflake ID 및 해당 ID에 묶인 시간 발급
+        const { id, timestamp } = this.snowflakeService.generate();
 
         // 2. 파라미터를 기반으로 PENDING 상태의 신규 보상 모델(Entity) 조립
         const reward = UserReward.create({
@@ -57,6 +57,7 @@ export class GrantRewardService {
             expiresAt: command.expiresAt,
             metadata: command.metadata,
             reason: command.reason,
+            createdAt: timestamp,
         });
 
         // 3. 데이터베이스 영속성 보장

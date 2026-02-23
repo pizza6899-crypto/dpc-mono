@@ -58,8 +58,9 @@ export class UserReward {
         expiresAt?: Date;
         metadata?: RewardMetadata;
         reason?: string;
+        createdAt?: Date;
     }): UserReward {
-        const now = new Date();
+        const now = params.createdAt ?? new Date();
         return new UserReward({
             id: params.id,
             userId: params.userId,
