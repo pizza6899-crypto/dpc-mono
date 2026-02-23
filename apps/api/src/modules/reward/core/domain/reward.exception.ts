@@ -19,6 +19,17 @@ export class RewardException extends DomainException {
 /**
  * 2. 구체적인 도메인 예외들
  */
+export class RewardNotFoundException extends RewardException {
+    constructor() {
+        super(
+            'The requested reward does not exist or access is denied.',
+            MessageCode.REWARD_NOT_FOUND,
+            HttpStatus.NOT_FOUND,
+        );
+        this.name = 'RewardNotFoundException';
+    }
+}
+
 export class RewardCannotBeClaimedException extends RewardException {
     constructor() {
         super(

@@ -10,7 +10,7 @@ import { VoidRewardService } from '../../application/void-reward.service';
 import { GetAdminRewardsRequestDto } from './dto/request/get-admin-rewards.request.dto';
 import { GrantRewardRequestDto } from './dto/request/grant-reward.request.dto';
 import { VoidRewardRequestDto } from './dto/request/void-reward.request.dto';
-import { AdminRewardResponseDto, PaginatedAdminRewardResponseDto } from './dto/response/reward.response.dto';
+import { AdminRewardResponseDto } from './dto/response/reward.response.dto';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
 import Decimal from 'decimal.js';
 

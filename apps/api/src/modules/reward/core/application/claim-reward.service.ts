@@ -1,10 +1,10 @@
 // src/modules/reward/core/application/claim-reward.service.ts
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { AdvisoryLockService } from 'src/common/concurrency/advisory-lock.service';
 import { LockNamespace } from 'src/common/concurrency/concurrency.constants';
 import { type IRewardRepository, REWARD_REPOSITORY } from '../ports/reward.repository.port';
-import { MessageCode } from '@repo/shared';
+import { RewardNotFoundException } from '../domain/reward.exception';
 // import { WalletService } from 'src/modules/wallet/core/application/wallet.service';
 // import { WageringService } from 'src/modules/wagering/requirement/application/wagering.service';
 
@@ -46,8 +46,7 @@ export class ClaimRewardService {
             const reward = rewardModel ? await this.rewardRepository.findById(command.rewardId) : null;
 
             if (!reward || reward.userId !== command.userId) {
-                // 외부 MessageCode를 활용한 예외를 던짐 (보안상 실제 ID 노출 X)
-                throw new NotFoundException(MessageCode.REWARD_NOT_FOUND);
+                throw new RewardNotFoundException();
             }
 
             // 3. 도메인 엔티티 내부에서 수령 가능(CLAIMABLE) 상태 체크 및 상태 전이 (CLAIMED)
