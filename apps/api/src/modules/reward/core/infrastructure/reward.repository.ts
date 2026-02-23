@@ -46,21 +46,12 @@ export class RewardRepository implements IRewardRepository {
     async save(reward: UserReward): Promise<UserReward> {
         const data = RewardMapper.toPersistence(reward);
 
-        // 업데이트 또는 생성을 위한 upsert 패턴 적용 혹은 명시적 생성/업데이트
-        // 일반적으로 Snowflake ID를 할당하여 생성하므로, 존재 여부 체크 후 create/update 분기
-        const existing = await this.tx.userReward.count({ where: { id: data.id } });
-
-        let model;
-        if (existing > 0) {
-            model = await this.tx.userReward.update({
-                where: { id: data.id },
-                data,
-            });
-        } else {
-            model = await this.tx.userReward.create({
-                data,
-            });
-        }
+        // Prisma Native Upsert 사용 (ID가 명시적으로 존재하므로 원자성 보장됨)
+        const model = await this.tx.userReward.upsert({
+            where: { id: data.id },
+            update: data,
+            create: data,
+        });
 
         return RewardMapper.toDomain(model);
     }

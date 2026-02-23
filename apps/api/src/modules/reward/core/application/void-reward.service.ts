@@ -39,7 +39,7 @@ export class VoidRewardService {
         }
 
         // 3. 도메인 엔티티 내부에서 상태 전이 (VOIDED)
-        // 이미 CLAIMED 상태라면 RewardAlreadyClaimedCannotVoidException을 던짐
+        // PENDING 상태가 아니라면 RewardOnlyPendingCanVoidException을 던짐
         reward.markAsVoided(command.reason);
 
         // 4. 변경된 상태를 영속화

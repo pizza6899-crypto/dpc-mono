@@ -52,13 +52,13 @@ export class RewardOnlyPendingCanExpireException extends RewardException {
     }
 }
 
-export class RewardAlreadyClaimedCannotVoidException extends RewardException {
+export class RewardOnlyPendingCanVoidException extends RewardException {
     constructor() {
         super(
-            'Cannot void a reward that has already been claimed.',
-            MessageCode.REWARD_NOT_CLAIMABLE, // 취소 관련 적절히 매핑
+            'Only PENDING rewards can be voided.',
+            MessageCode.REWARD_NOT_CLAIMABLE,
             HttpStatus.BAD_REQUEST,
         );
-        this.name = 'RewardAlreadyClaimedCannotVoidException';
+        this.name = 'RewardOnlyPendingCanVoidException';
     }
 }

@@ -5,7 +5,7 @@ import { RewardMetadata } from './reward.types';
 import {
     RewardCannotBeClaimedException,
     RewardOnlyPendingCanExpireException,
-    RewardAlreadyClaimedCannotVoidException
+    RewardOnlyPendingCanVoidException
 } from './reward.exception';
 
 export interface UserRewardProps {
@@ -109,20 +109,20 @@ export class UserReward {
     get createdAt(): Date { return this.props.createdAt; }
     get updatedAt(): Date { return this.props.updatedAt; }
 
-    // 비즈니스 로직: 유저가 수령(Claim) 가능한 상태인지 검증
-    public canClaim(): boolean {
+    // 비즈니스 로직: 유저가 수령(Claim) 가능한 상태인지 검증 (Testability를 위해 now 주입 가능)
+    public canClaim(now: Date = new Date()): boolean {
         if (this.props.status !== RewardStatus.PENDING) return false;
-        if (this.props.expiresAt && new Date() > this.props.expiresAt) return false;
+        if (this.props.expiresAt && now > this.props.expiresAt) return false;
         return true;
     }
 
     // 상태 전이 메커니즘
-    public markAsClaimed(): void {
-        if (!this.canClaim()) {
+    public markAsClaimed(claimedAt: Date = new Date()): void {
+        if (!this.canClaim(claimedAt)) {
             throw new RewardCannotBeClaimedException();
         }
         this.props.status = RewardStatus.CLAIMED;
-        this.props.claimedAt = new Date();
+        this.props.claimedAt = claimedAt;
     }
 
     public markAsExpired(): void {
@@ -133,8 +133,9 @@ export class UserReward {
     }
 
     public markAsVoided(reason?: string): void {
-        if (this.props.status === RewardStatus.CLAIMED) {
-            throw new RewardAlreadyClaimedCannotVoidException();
+        // PENDING 상태의 보상만 취소 가능 (EXPIRED, CLAIMED는 불가)
+        if (this.props.status !== RewardStatus.PENDING) {
+            throw new RewardOnlyPendingCanVoidException();
         }
         this.props.status = RewardStatus.VOIDED;
         if (reason) {

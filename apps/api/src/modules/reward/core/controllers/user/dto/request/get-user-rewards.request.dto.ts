@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Type, Transform } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import { IsEnum, IsOptional } from 'class-validator';
 import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
 import { RewardStatus, ExchangeCurrencyCode } from '@prisma/client';
