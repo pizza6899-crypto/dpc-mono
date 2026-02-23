@@ -15,13 +15,13 @@ import { TIER_EVALUATOR_QUEUES } from './infrastructure/tier-evaluator.bullmq';
 import { TierEvaluationTriggerProcessor } from './infrastructure/tier-evaluation-trigger.processor';
 import { TierUserEvaluationProcessor } from './infrastructure/tier-user-evaluation.processor';
 import { TierDefinitionsModule } from '../definitions/tier-definitions.module';
-import { TierRewardModule } from '../reward/tier-reward.module';
+import { RewardCoreModule } from 'src/modules/reward/core/reward-core.module';
 
 @Module({
   imports: [
     forwardRef(() => TierProfileModule),
     TierDefinitionsModule,
-    TierRewardModule,
+    RewardCoreModule,
     TierAuditModule,
     ConcurrencyModule,
     BullMqModule,
@@ -48,4 +48,4 @@ import { TierRewardModule } from '../reward/tier-reward.module';
     DemoteUserTierService,
   ],
 })
-export class TierEvaluatorModule {}
+export class TierEvaluatorModule { }

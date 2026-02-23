@@ -8,8 +8,9 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { TierConfigRepositoryPort } from '../../definitions/infrastructure/tier-config.repository.port';
 import { TierRepositoryPort } from '../../definitions/infrastructure/tier.repository.port';
 import { UserTierNotFoundException } from '../../profile/domain/tier-profile.exception';
-import { IssueRewardService } from '../../reward/application/issue-reward.service';
-import { ClaimRewardService } from '../../reward/application/claim-reward.service';
+import { GrantRewardService } from 'src/modules/reward/core/application/grant-reward.service';
+import { ClaimRewardService as CoreClaimRewardService } from 'src/modules/reward/core/application/claim-reward.service';
+import { RewardSourceType, RewardItemType, WageringTargetType } from '@prisma/client';
 
 @Injectable()
 export class PromoteUserTierService {
@@ -21,9 +22,9 @@ export class PromoteUserTierService {
     private readonly recordTierHistoryService: RecordTierHistoryService,
     private readonly tierStatsService: TierStatsService,
     private readonly tierConfigRepository: TierConfigRepositoryPort,
-    private readonly issueRewardService: IssueRewardService,
-    private readonly claimRewardService: ClaimRewardService,
-  ) {}
+    private readonly grantRewardService: GrantRewardService,
+    private readonly claimRewardService: CoreClaimRewardService,
+  ) { }
 
   @Transactional()
   async execute(
@@ -83,26 +84,28 @@ export class PromoteUserTierService {
             expiresAt.setDate(expiresAt.getDate() + expiryDays);
           }
 
-          // 1. 보상 레코드 생성 (PENDING 상태로 시작)
-          const reward = await this.issueRewardService.execute({
+          // 1. 코어 리워드 모듈을 이용한 보상 발급 (PENDING 상태로 시작)
+          const reward = await this.grantRewardService.execute({
             userId,
-            tierId: targetTier.id,
-            fromLevel: currentTier.level,
-            toLevel: targetTier.level,
-            bonusAmountUsd: earnedBonusAmount,
+            sourceType: RewardSourceType.TIER_REWARD,
+            sourceId: targetTier.id,
+            rewardType: RewardItemType.BONUS_MONEY, // 즉시 출금 가능한 캐시나 보너스로 사용 가능하도록 기본 부여
+            currency: userTier.preferredRewardCurrency || 'USD', // 티어에서는 보상 발급 시점에 기준 통화를 USD등으로 시작하나, 향후 환산 될 수 있음
+            amount: earnedBonusAmount,
+            wageringTargetType: WageringTargetType.AMOUNT,
             wageringMultiplier: targetTier.upgradeBonusWageringMultiplier,
-            expiresAt, // expiryDays가 없으면 undefined(DB에는 null)로 저장됨
+            expiresAt,
+            metadata: undefined, // 별도의 번역키나 프리스핀 없이 지급되므로 명시적 undefined 처리
           });
 
           if (targetTier.isImmediateBonusEnabled) {
             // [Action] 즉시 지급 대상 티어인 경우
             if (userTier.preferredRewardCurrency) {
-              // 유저가 선호 통화를 등록한 경우에만 자동 지급 처리 (유저 요청 반영)
-              await this.claimRewardService.execute(
+              // 유저가 선호 통화를 등록한 경우에만 자동 지급 처리 (코어 모듈 클레임 호출)
+              await this.claimRewardService.execute({
                 userId,
-                reward.id,
-                userTier.preferredRewardCurrency,
-              );
+                rewardId: reward.id,
+              });
               this.logger.log(
                 `[Promotion:Auto-Payout] User ${userId} received ${earnedBonusAmount} USD bonus in ${userTier.preferredRewardCurrency}.`,
               );
