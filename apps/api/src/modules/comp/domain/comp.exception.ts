@@ -9,37 +9,42 @@ export class CompDomainException extends DomainException {
     httpStatus: HttpStatus = HttpStatus.BAD_REQUEST,
   ) {
     super(message, errorCode, httpStatus);
+    this.name = 'CompDomainException';
   }
 }
 
 export class InsufficientCompBalanceException extends CompDomainException {
-  constructor(userId: bigint, required: string, current: string) {
+  constructor(required: string, current: string) {
     super(
-      `Insufficient comp balance for user ${userId}. Required: ${required}, Current: ${current}`,
+      `Insufficient comp balance. Required: ${required}, Current: ${current}`,
       MessageCode.COMP_INSUFFICIENT_BALANCE,
       HttpStatus.BAD_REQUEST,
     );
+    this.name = 'InsufficientCompBalanceException';
   }
 }
 
 export class CompNotFoundException extends CompDomainException {
-  constructor(userId: bigint, currency: string) {
+  constructor() {
     super(
-      `Comp wallet not found for user ${userId} and currency ${currency}`,
+      `Comp wallet not found for the requested criteria.`,
       MessageCode.COMP_NOT_FOUND,
       HttpStatus.NOT_FOUND,
     );
+    this.name = 'CompNotFoundException';
   }
 }
 
 export class CompInvalidParameterException extends CompDomainException {
   constructor(message: string) {
     super(message, MessageCode.COMP_INVALID_PARAMETER, HttpStatus.BAD_REQUEST);
+    this.name = 'CompInvalidParameterException';
   }
 }
 
 export class CompPolicyViolationException extends CompDomainException {
   constructor(message: string) {
-    super(message, MessageCode.VALIDATION_ERROR, HttpStatus.FORBIDDEN);
+    super(message, MessageCode.COMP_POLICY_VIOLATION, HttpStatus.FORBIDDEN);
+    this.name = 'CompPolicyViolationException';
   }
 }

@@ -17,8 +17,8 @@ import {
   ExchangeCurrencyCode,
 } from '@prisma/client';
 import { FindCompTransactionsService } from '../../application/find-comp-transactions.service';
-import { FindCompTransactionsQueryDto } from '../dto/request/find-comp-transactions-query.dto';
-import { CompTransactionResponseDto } from '../dto/response/comp-transaction.response.dto';
+import { AdminFindCompTransactionsQueryDto } from './dto/request/admin-find-comp-transactions-query.dto';
+import { AdminCompTransactionResponseDto } from './dto/response/admin-comp-transaction.response.dto';
 import { FindCompBalanceService } from '../../application/find-comp-balance.service';
 import { CompConfig } from '../../domain';
 import { EarnCompService } from '../../application/earn-comp.service';
@@ -59,7 +59,7 @@ export class CompAdminController {
     private readonly findCompTransactionsService: FindCompTransactionsService,
     private readonly findCompConfigService: FindCompConfigService,
     private readonly updateCompConfigService: UpdateCompConfigService,
-  ) {}
+  ) { }
 
   @Get('users/:userId/balance')
   @HttpCode(HttpStatus.OK)
@@ -169,7 +169,7 @@ export class CompAdminController {
   })
   @ApiParam({ name: 'userId', example: '1', description: 'User ID' })
   @Paginated()
-  @ApiPaginatedResponse(CompTransactionResponseDto, {
+  @ApiPaginatedResponse(AdminCompTransactionResponseDto, {
     description:
       'Successfully retrieved user comp transactions / 사용자 콤프 거래 내역 조회 성공',
   })
@@ -184,8 +184,8 @@ export class CompAdminController {
   })
   async getUserTransactions(
     @Param('userId') userId: string,
-    @Query() query: FindCompTransactionsQueryDto,
-  ): Promise<PaginatedData<CompTransactionResponseDto>> {
+    @Query() query: AdminFindCompTransactionsQueryDto,
+  ): Promise<PaginatedData<AdminCompTransactionResponseDto>> {
     const result = await this.findCompTransactionsService.execute({
       userId: BigInt(userId),
       ...query,

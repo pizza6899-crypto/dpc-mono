@@ -79,7 +79,6 @@ export class ClaimCompService {
     );
     if (!wallet) {
       throw new InsufficientCompBalanceException(
-        userId,
         amount.toString(),
         '0',
       );

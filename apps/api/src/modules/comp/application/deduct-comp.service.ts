@@ -42,7 +42,7 @@ export class DeductCompService {
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly compPolicy: CompPolicy,
     private readonly snowflakeService: SnowflakeService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(params: DeductCompParams): Promise<CompWallet> {
@@ -63,7 +63,7 @@ export class DeductCompService {
       currency,
     );
     if (!wallet) {
-      throw new CompNotFoundException(userId, currency);
+      throw new CompNotFoundException();
     }
 
     const config = await this.compConfigRepository.getConfig(currency);

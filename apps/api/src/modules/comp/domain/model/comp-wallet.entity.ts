@@ -1,6 +1,9 @@
 import type { ExchangeCurrencyCode } from '@prisma/client';
 import { Prisma } from '@prisma/client';
-import { InsufficientCompBalanceException } from '../comp.exception';
+import {
+  InsufficientCompBalanceException,
+  CompPolicyViolationException,
+} from '../comp.exception';
 
 export class CompWallet {
   private constructor(
@@ -15,7 +18,7 @@ export class CompWallet {
     public readonly lastActiveAt: Date,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
-  ) {}
+  ) { }
 
   static create(params: {
     id?: bigint;
@@ -74,7 +77,7 @@ export class CompWallet {
 
   private checkStatus() {
     if (this.isFrozen) {
-      throw new Error(`Comp wallet is frozen for user: ${this.userId}`);
+      throw new CompPolicyViolationException('Comp wallet is frozen.');
     }
   }
 
@@ -99,7 +102,6 @@ export class CompWallet {
     this.checkStatus();
     if (this.balance.lessThan(amount)) {
       throw new InsufficientCompBalanceException(
-        this.userId,
         amount.toString(),
         this.balance.toString(),
       );
@@ -128,7 +130,6 @@ export class CompWallet {
     const allowNegative = options?.allowNegative ?? false;
     if (!allowNegative && this.balance.lessThan(amount)) {
       throw new InsufficientCompBalanceException(
-        this.userId,
         amount.toString(),
         this.balance.toString(),
       );

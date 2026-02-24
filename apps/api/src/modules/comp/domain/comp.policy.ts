@@ -21,7 +21,7 @@ export class CompPolicy {
     // 2. 시스템 전체 적립 비활성화 체크
     if (!config.canEarn()) {
       throw new CompPolicyViolationException(
-        `Comp earn is currently disabled by system policy. User: ${userId}`,
+        `Comp earn is currently disabled by system policy.`,
       );
     }
 
@@ -44,7 +44,7 @@ export class CompPolicy {
     // 1. 지갑 동결 여부 선제적 체크
     if (wallet.isFrozen) {
       throw new CompPolicyViolationException(
-        `Comp wallet is frozen. Claim denied. User: ${userId}`,
+        `Comp wallet is frozen. Claim denied.`,
       );
     }
 
@@ -53,7 +53,7 @@ export class CompPolicy {
       // 2-1. 시스템 전체 전환 비활성화 체크
       if (!config.isClaimEnabled) {
         throw new CompPolicyViolationException(
-          `Comp claim is currently disabled by system policy. User: ${userId}`,
+          `Comp claim is currently disabled by system policy.`,
         );
       }
 
@@ -68,7 +68,6 @@ export class CompPolicy {
     // 3. 잔액 검증
     if (wallet.balance.lessThan(amount)) {
       throw new InsufficientCompBalanceException(
-        userId,
         amount.toString(),
         wallet.balance.toString(),
       );
@@ -91,7 +90,7 @@ export class CompPolicy {
     // 1. 지갑 동결 여부 체크
     if (wallet.isFrozen) {
       throw new CompPolicyViolationException(
-        `Comp wallet is frozen. Adjustment denied. User: ${userId}`,
+        `Comp wallet is frozen. Adjustment denied.`,
       );
     }
 
@@ -99,7 +98,6 @@ export class CompPolicy {
     const allowNegative = config?.allowNegativeBalance ?? true;
     if (!allowNegative && wallet.balance.lessThan(amount)) {
       throw new InsufficientCompBalanceException(
-        userId,
         amount.toString(),
         wallet.balance.toString(),
       );

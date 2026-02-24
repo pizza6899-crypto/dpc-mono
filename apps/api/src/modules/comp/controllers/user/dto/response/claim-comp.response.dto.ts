@@ -14,8 +14,8 @@ export class ClaimCompResponseDto {
   newCompBalance: string;
 
   @ApiProperty({
-    description: 'New cash balance after claim / 전환 후 새로운 현금 잔액',
-    example: '10000.00',
+    description: 'Granted Reward ID (Sqid) / 발급된 리워드(쿠폰) 식별자',
+    example: 'r_abc123',
   })
-  newCashBalance: string;
+  rewardId: string;
 }
