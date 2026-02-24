@@ -5,7 +5,6 @@ import {
   Param,
   Post,
   Query,
-  UseGuards,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
@@ -14,7 +13,6 @@ import {
   Prisma,
   UserRoleType,
   CompTransactionType,
-  ExchangeCurrencyCode,
 } from '@prisma/client';
 import { FindCompTransactionsService } from '../../application/find-comp-transactions.service';
 import { AdminFindCompTransactionsQueryDto } from './dto/request/admin-find-comp-transactions-query.dto';

@@ -39,8 +39,6 @@ export class CompPolicy {
     wallet: CompWallet,
     amount: Prisma.Decimal,
   ): void {
-    const userId = wallet.userId;
-
     // 1. 지갑 동결 여부 선제적 체크
     if (wallet.isFrozen) {
       throw new CompPolicyViolationException(
@@ -85,8 +83,6 @@ export class CompPolicy {
     wallet: CompWallet,
     amount: Prisma.Decimal,
   ): void {
-    const userId = wallet.userId;
-
     // 1. 지갑 동결 여부 체크
     if (wallet.isFrozen) {
       throw new CompPolicyViolationException(
