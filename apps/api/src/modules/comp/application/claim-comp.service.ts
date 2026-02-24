@@ -26,8 +26,6 @@ import {
   CompPolicy,
 } from '../domain';
 import { GrantRewardService } from '../../reward/core/application/grant-reward.service';
-import { ClaimRewardService } from '../../reward/core/application/claim-reward.service';
-import { FindUserWalletService } from '../../wallet/application/find-user-wallet.service';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
@@ -40,7 +38,7 @@ interface ClaimCompParams {
 interface ClaimCompResult {
   claimedAmount: Prisma.Decimal;
   newCompBalance: Prisma.Decimal;
-  newCashBalance: Prisma.Decimal;
+  rewardId: bigint;
 }
 
 @Injectable()
@@ -54,9 +52,7 @@ export class ClaimCompService {
     private readonly compConfigRepository: CompConfigRepositoryPort,
     @Inject(COMP_CLAIM_HISTORY_REPOSITORY)
     private readonly compClaimHistoryRepository: CompClaimHistoryRepositoryPort,
-    private readonly findUserWalletService: FindUserWalletService,
     private readonly grantRewardService: GrantRewardService,
-    private readonly claimRewardService: ClaimRewardService,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly compPolicy: CompPolicy,
     private readonly snowflakeService: SnowflakeService,
@@ -142,27 +138,18 @@ export class ClaimCompService {
         reason: 'Comp points conversion via Reward Module',
       });
 
-      // 8. 콤프 즉시 전환 옵션이므로 원스텝 수령 처리 (Reward Claim)
-      await this.claimRewardService.execute({
-        userId,
-        rewardId: grantedReward.id,
-      });
-
-      // 9. 콤프 히스토리 완료 처리
-      claimHistory = claimHistory.complete(grantedReward.id); // 리워드 ID 매핑
+      // 8. 콤프 히스토리 완료 처리 (성공적으로 리워드 박스로 전송됨)
+      claimHistory = claimHistory.complete(grantedReward.id); // 리워드 ID 연동
       await this.compClaimHistoryRepository.save(claimHistory);
 
-      // 최신 유저 캐시 잔고 확인 (반환용)
-      const walletAfter = await this.findUserWalletService.findWallet(userId, currency);
-
       this.logger.log(
-        `Comp successfully delegated to Reward: user=${userId}, compDeducted=${amount}`,
+        `[2-Step Reward] Comp points successfully transformed to Reward (Inbox): user=${userId}, compDeducted=${amount}, rewardId=${grantedReward.id}`,
       );
 
       return {
         claimedAmount: amount,
         newCompBalance: savedCompWallet.balance,
-        newCashBalance: walletAfter?.cash ?? new Prisma.Decimal(0),
+        rewardId: grantedReward.id,
       };
     } catch (error) {
       // Mark history as FAILED
