@@ -64,14 +64,14 @@ model User {
   tierHistory            TierHistory[]
   adminAdjustmentDetails AdminAdjustmentDetail[] @relation("AdminAdjustments")
   wageringRequirements   WageringRequirement[]
-  compWallets            UserCompWallet[]
-  compClaimHistories     CompClaimHistory[]
+  compAccounts           UserCompAccount[]
   alerts                 Alert[]
   notificationLogs       NotificationLog[]
   casinoGameRounds       CasinoGameRound[]
   tierConfigsUpdated     TierConfig[]            @relation("TierConfigUpdatedBy")
   tiersUpdated           Tier[]                  @relation("TierUpdatedBy")
   userRewards            UserReward[]
+  compDailySettlements   CompDailySettlement[]
 
   @@map("users")
 }
