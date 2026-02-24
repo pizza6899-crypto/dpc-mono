@@ -23,7 +23,7 @@ export class VoidWageringRequirementService {
     @Inject(WAGERING_REQUIREMENT_REPOSITORY)
     private readonly repository: WageringRequirementRepositoryPort,
     private readonly dispatchLogService: DispatchLogService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(
