@@ -25,9 +25,10 @@ import { CompStatsController } from './controllers/admin/comp-stats.controller';
 import { WalletModule } from '../wallet/wallet.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { RewardCoreModule } from '../reward/core/reward-core.module';
 
 @Module({
-  imports: [WalletModule, ConcurrencyModule, SnowflakeModule],
+  imports: [WalletModule, ConcurrencyModule, SnowflakeModule, RewardCoreModule],
   controllers: [CompUserController, CompAdminController, CompStatsController],
   providers: [
     CompMapper,
@@ -69,4 +70,4 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
     CompPolicy,
   ],
 })
-export class CompModule {}
+export class CompModule { }

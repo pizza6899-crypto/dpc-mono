@@ -5,6 +5,9 @@ import {
   Prisma,
   CompTransactionType,
   CompClaimStatus,
+  RewardSourceType,
+  RewardItemType,
+  WageringTargetType,
 } from '@prisma/client';
 import {
   COMP_REPOSITORY,
@@ -22,13 +25,9 @@ import {
   CompClaimHistory,
   CompPolicy,
 } from '../domain';
-import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
+import { GrantRewardService } from '../../reward/core/application/grant-reward.service';
+import { ClaimRewardService } from '../../reward/core/application/claim-reward.service';
 import { FindUserWalletService } from '../../wallet/application/find-user-wallet.service';
-import { UpdateOperation, WalletActionName } from '../../wallet/domain';
-import {
-  UserWalletBalanceType,
-  UserWalletTransactionType,
-} from '@prisma/client';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
@@ -56,11 +55,12 @@ export class ClaimCompService {
     @Inject(COMP_CLAIM_HISTORY_REPOSITORY)
     private readonly compClaimHistoryRepository: CompClaimHistoryRepositoryPort,
     private readonly findUserWalletService: FindUserWalletService,
-    private readonly updateUserBalanceService: UpdateUserBalanceService,
+    private readonly grantRewardService: GrantRewardService,
+    private readonly claimRewardService: ClaimRewardService,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly compPolicy: CompPolicy,
     private readonly snowflakeService: SnowflakeService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(params: ClaimCompParams): Promise<ClaimCompResult> {
@@ -128,51 +128,41 @@ export class ClaimCompService {
     claimHistory = await this.compClaimHistoryRepository.save(claimHistory);
 
     try {
-      // 7. Get Initial Wallet State for Recording
-      const walletBefore = await this.findUserWalletService.findWallet(
+      // 7. 리워드 모듈에 캐시/보너스 전환 스펙 전송 (Reward Grant)
+      const grantedReward = await this.grantRewardService.execute({
         userId,
+        sourceType: RewardSourceType.COMP_REWARD,
+        sourceId: createdCompTx.id,
+        rewardType: RewardItemType.BONUS_MONEY,
         currency,
-        true,
-      );
-      if (!walletBefore) {
-        throw new Error('User wallet not found');
-      }
+        amount,
+        wageringTargetType: WageringTargetType.AMOUNT,
+        wageringMultiplier: new Prisma.Decimal(0), // 기본적으로 콤프는 롤링 없는 현금. 비율이 필요하면 정책값 파싱 연동 가능
+        isForfeitable: false,
+        reason: 'Comp points conversion via Reward Module',
+      });
 
-      const beforeMainBalance = walletBefore.cash;
-      const beforeBonusBalance = walletBefore.bonus;
+      // 8. 콤프 즉시 전환 옵션이므로 원스텝 수령 처리 (Reward Claim)
+      await this.claimRewardService.execute({
+        userId,
+        rewardId: grantedReward.id,
+      });
 
-      // 8. Update Main User Balance (Cash)
-      const savedUserWallet = await this.updateUserBalanceService.updateBalance(
-        {
-          userId,
-          currency,
-          amount: amount,
-          operation: UpdateOperation.ADD,
-          balanceType: UserWalletBalanceType.CASH,
-          transactionType: UserWalletTransactionType.COMP_CLAIM,
-          referenceId: createdCompTx.id,
-        },
-        {
-          actionName: WalletActionName.CLAIM_COMP,
-        },
-      );
-
-      // 9. Complete History
-      // Since WalletTransaction ID is handled inside UpdateUserBalanceService and returned via some indirect way or new flow,
-      // we might not get the exact ID here easily unless UpdateUserBalanceService returns it.
-      // For now, we update status to COMPLETED. Ideally we link the Wallet Tx ID.
-      // Assuming we refactor UpdateUserBalanceService to return transaction ID later or we use referenceId to link.
-      claimHistory = claimHistory.complete(BigInt(0)); // TODO: Pass real wallet tx ID
+      // 9. 콤프 히스토리 완료 처리
+      claimHistory = claimHistory.complete(grantedReward.id); // 리워드 ID 매핑
       await this.compClaimHistoryRepository.save(claimHistory);
 
+      // 최신 유저 캐시 잔고 확인 (반환용)
+      const walletAfter = await this.findUserWalletService.findWallet(userId, currency);
+
       this.logger.log(
-        `Comp Claimed: user=${userId}, compDeducted=${amount}, cashAdded=${amount}`,
+        `Comp successfully delegated to Reward: user=${userId}, compDeducted=${amount}`,
       );
 
       return {
         claimedAmount: amount,
         newCompBalance: savedCompWallet.balance,
-        newCashBalance: savedUserWallet.cash,
+        newCashBalance: walletAfter?.cash ?? new Prisma.Decimal(0),
       };
     } catch (error) {
       // Mark history as FAILED
