@@ -1,6 +1,6 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { ExchangeCurrencyCode, Prisma, RewardItemType, RewardSourceType } from '@prisma/client';
+import { ExchangeCurrencyCode, Prisma, RewardItemType, RewardSourceType, CompTransactionType } from '@prisma/client';
 import {
     COMP_DAILY_SETTLEMENT_REPOSITORY,
     COMP_CONFIG_REPOSITORY,
@@ -11,9 +11,10 @@ import type {
     CompConfigRepositoryPort,
     CompRepositoryPort,
 } from '../ports';
-import { CompPolicy, CompPolicyViolationException } from '../domain';
+import { CompPolicy, CompPolicyViolationException, CompAccountTransaction } from '../domain';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { GrantRewardService } from 'src/modules/reward/core/application/grant-reward.service';
+import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
 @Injectable()
 export class SettleDailyCompService {
@@ -29,6 +30,7 @@ export class SettleDailyCompService {
         private readonly grantRewardService: GrantRewardService,
         private readonly compPolicy: CompPolicy,
         private readonly advisoryLockService: AdvisoryLockService,
+        private readonly snowflakeService: SnowflakeService,
     ) { }
 
     async getPendingSettlements() {
@@ -95,6 +97,17 @@ export class SettleDailyCompService {
         // Record the usage in the comp account tracking
         const settledAccount = account.settle(totalEarned);
         await this.compRepository.save(settledAccount);
+
+        // Record the transaction log (Negative amount for usage/settlement)
+        const transaction = CompAccountTransaction.create({
+            id: this.snowflakeService.generate().id,
+            compAccountId: settledAccount.id,
+            amount: totalEarned.negated(),
+            type: CompTransactionType.SETTLEMENT,
+            referenceId: reward.id, // Reference the granted reward
+            description: 'Daily Comp Settlement',
+        });
+        await this.compRepository.createTransaction(transaction);
 
         this.logger.log(`Comp Settlement Processed: user=${userId}, amount=${totalEarned}, rewardId=${reward.id}`);
     }
