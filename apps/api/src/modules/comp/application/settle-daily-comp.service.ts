@@ -34,7 +34,17 @@ export class SettleDailyCompService {
     ) { }
 
     async getPendingSettlements(untilDate: Date) {
-        return this.compDailySettlementRepository.findPendingSettlements(untilDate);
+        const pendings = await this.compDailySettlementRepository.findPendingSettlements(untilDate);
+        if (pendings.length === 0) return [];
+
+        const configs = await this.compConfigRepository.getAllConfigs();
+        const configMap = new Map(configs.map((c) => [c.currency, c]));
+
+        return pendings.filter((p) => {
+            const config = configMap.get(p.currency);
+            if (!config || !config.isSettlementEnabled) return false;
+            return p.totalEarned.gte(config.minSettlementAmount);
+        });
     }
 
     @Transactional()

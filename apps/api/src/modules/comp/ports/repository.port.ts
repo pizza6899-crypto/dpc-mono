@@ -71,6 +71,7 @@ export interface CompDailySettlementRepositoryPort {
     Array<{
       userId: bigint;
       currency: ExchangeCurrencyCode;
+      totalEarned: Prisma.Decimal;
     }>
   >;
   updateStatuses(userId: bigint, currency: ExchangeCurrencyCode, status: CompSettlementStatus, untilDate: Date, rewardId?: bigint): Promise<void>;
