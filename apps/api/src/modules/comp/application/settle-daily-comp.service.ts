@@ -99,13 +99,15 @@ export class SettleDailyCompService {
         await this.compRepository.save(settledAccount);
 
         // Record the transaction log (Negative amount for usage/settlement)
+        const sf = this.snowflakeService.generate();
         const transaction = CompAccountTransaction.create({
-            id: this.snowflakeService.generate().id,
+            id: sf.id,
             compAccountId: settledAccount.id,
             amount: totalEarned.negated(),
             type: CompTransactionType.SETTLEMENT,
             referenceId: reward.id, // Reference the granted reward
             description: 'Daily Comp Settlement',
+            createdAt: sf.timestamp,
         });
         await this.compRepository.createTransaction(transaction);
 

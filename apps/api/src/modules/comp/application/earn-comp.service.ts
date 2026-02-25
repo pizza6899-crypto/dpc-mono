@@ -151,8 +151,9 @@ export class EarnCompService {
     await this.compDailySettlementRepository.save(dailySettlement);
 
     // 8. Record Transaction
+    const sf = this.snowflakeService.generate();
     const transaction = CompAccountTransaction.create({
-      id: this.snowflakeService.generate().id,
+      id: sf.id,
       compAccountId: savedAccount.id,
       amount: actualAmount,
       appliedRate: appliedRate,
@@ -160,6 +161,7 @@ export class EarnCompService {
       referenceId: referenceId,
       processedBy: processedBy,
       description,
+      createdAt: sf.timestamp,
     });
     await this.compRepository.createTransaction(transaction);
 

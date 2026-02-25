@@ -26,6 +26,7 @@ export class CompAccountTransaction {
     parentTransactionId?: bigint;
     metadata?: any;
     description?: string;
+    createdAt?: Date;
   }): CompAccountTransaction {
     return new CompAccountTransaction(
       params.id,
@@ -38,7 +39,7 @@ export class CompAccountTransaction {
       params.parentTransactionId ?? null,
       params.metadata ?? null,
       params.description ?? null,
-      new Date(),
+      params.createdAt ?? new Date(),
     );
   }
 
