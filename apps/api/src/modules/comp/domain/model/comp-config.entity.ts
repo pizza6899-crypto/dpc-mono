@@ -6,34 +6,28 @@ export class CompConfig {
     public readonly id: bigint,
     public readonly currency: ExchangeCurrencyCode,
     public readonly isEarnEnabled: boolean,
-    public readonly isClaimEnabled: boolean,
-    public readonly allowNegativeBalance: boolean,
-    public readonly minClaimAmount: Prisma.Decimal,
+    public readonly isSettlementEnabled: boolean,
     public readonly maxDailyEarnPerUser: Prisma.Decimal,
-    public readonly expirationDays: number,
+    public readonly minSettlementAmount: Prisma.Decimal,
     public readonly description: string | null,
     public readonly updatedAt: Date,
-  ) {}
+  ) { }
 
   static create(params: {
     currency: ExchangeCurrencyCode;
     isEarnEnabled?: boolean;
-    isClaimEnabled?: boolean;
-    allowNegativeBalance?: boolean;
-    minClaimAmount?: Prisma.Decimal;
+    isSettlementEnabled?: boolean;
     maxDailyEarnPerUser?: Prisma.Decimal;
-    expirationDays?: number;
+    minSettlementAmount?: Prisma.Decimal;
     description?: string;
   }): CompConfig {
     return new CompConfig(
       BigInt(0), // ID is assigned by DB
       params.currency,
       params.isEarnEnabled ?? true,
-      params.isClaimEnabled ?? true,
-      params.allowNegativeBalance ?? true,
-      params.minClaimAmount ?? new Prisma.Decimal(0.01),
+      params.isSettlementEnabled ?? true,
       params.maxDailyEarnPerUser ?? new Prisma.Decimal(0),
-      params.expirationDays ?? 365,
+      params.minSettlementAmount ?? new Prisma.Decimal(0),
       params.description ?? null,
       new Date(),
     );
@@ -43,11 +37,9 @@ export class CompConfig {
     id: bigint;
     currency: ExchangeCurrencyCode;
     isEarnEnabled: boolean;
-    isClaimEnabled: boolean;
-    allowNegativeBalance: boolean;
-    minClaimAmount: Prisma.Decimal;
+    isSettlementEnabled: boolean;
     maxDailyEarnPerUser: Prisma.Decimal;
-    expirationDays: number;
+    minSettlementAmount: Prisma.Decimal;
     description: string | null;
     updatedAt: Date;
   }): CompConfig {
@@ -55,11 +47,9 @@ export class CompConfig {
       params.id,
       params.currency,
       params.isEarnEnabled,
-      params.isClaimEnabled,
-      params.allowNegativeBalance,
-      params.minClaimAmount,
+      params.isSettlementEnabled,
       params.maxDailyEarnPerUser,
-      params.expirationDays,
+      params.minSettlementAmount,
       params.description,
       params.updatedAt,
     );
@@ -69,9 +59,9 @@ export class CompConfig {
     return this.isEarnEnabled;
   }
 
-  canClaim(amount: Prisma.Decimal): boolean {
-    if (!this.isClaimEnabled) return false;
-    if (amount.lessThan(this.minClaimAmount)) return false;
+  canSettle(amount: Prisma.Decimal): boolean {
+    if (!this.isSettlementEnabled) return false;
+    if (amount.lessThan(this.minSettlementAmount)) return false;
     return true;
   }
 }

@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { CompTransactionType } from '@prisma/client';
+import { CompTransactionType, Prisma } from '@prisma/client';
 
 export class AdminCompTransactionResponseDto {
     @ApiProperty({
@@ -9,19 +9,16 @@ export class AdminCompTransactionResponseDto {
     id: string;
 
     @ApiProperty({
-        description: 'Comp Wallet ID / 콤프 지갑 ID',
+        description: 'Comp Account ID / 콤프 계정 ID',
         example: '123',
     })
-    compWalletId: string;
+    compAccountId: string;
 
     @ApiProperty({ description: 'Amount / 금액' })
     amount: string;
 
-    @ApiProperty({ description: 'Balance Before / 변경 전 잔액' })
-    balanceBefore: string;
-
-    @ApiProperty({ description: 'Balance After / 변경 후 잔액' })
-    balanceAfter: string;
+    @ApiPropertyOptional({ description: 'Applied Rate / 적용 비율' })
+    appliedRate?: string;
 
     @ApiProperty({
         enum: CompTransactionType,
@@ -33,6 +30,19 @@ export class AdminCompTransactionResponseDto {
         description: 'Reference ID (e.g. Game Round ID) / 참조 ID',
     })
     referenceId?: string;
+
+    @ApiPropertyOptional({
+        description: 'Parent Transaction ID / 상위 거래 ID',
+    })
+    parentTransactionId?: string;
+
+    @ApiPropertyOptional({
+        description: 'Processed By Admin User ID / 관리자 ID',
+    })
+    processedBy?: string;
+
+    @ApiPropertyOptional({ description: 'Metadata / 메타데이터', type: Object })
+    metadata?: any;
 
     @ApiPropertyOptional({ description: 'Description / 설명' })
     description?: string;

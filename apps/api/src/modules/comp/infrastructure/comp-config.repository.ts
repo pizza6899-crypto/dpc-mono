@@ -18,7 +18,7 @@ export class CompConfigRepository implements CompConfigRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: CompMapper,
-  ) {}
+  ) { }
 
   async getConfig(currency: ExchangeCurrencyCode): Promise<CompConfig | null> {
     const cached = this.configCache.get(currency);
@@ -56,25 +56,21 @@ export class CompConfigRepository implements CompConfigRepositoryPort {
       create: {
         currency: data.currency!,
         isEarnEnabled: data.isEarnEnabled ?? true,
-        isClaimEnabled: data.isClaimEnabled ?? true,
-        allowNegativeBalance: data.allowNegativeBalance ?? true,
-        minClaimAmount: data.minClaimAmount ?? new Prisma.Decimal(0.01),
+        isSettlementEnabled: data.isSettlementEnabled ?? true,
         maxDailyEarnPerUser: data.maxDailyEarnPerUser ?? new Prisma.Decimal(0),
-        expirationDays: data.expirationDays ?? 365,
+        minSettlementAmount: data.minSettlementAmount ?? new Prisma.Decimal(0),
         description: data.description,
       },
       update: {
         isEarnEnabled: data.isEarnEnabled,
-        isClaimEnabled: data.isClaimEnabled,
-        allowNegativeBalance: data.allowNegativeBalance,
-        minClaimAmount: data.minClaimAmount,
+        isSettlementEnabled: data.isSettlementEnabled,
         maxDailyEarnPerUser: data.maxDailyEarnPerUser,
-        expirationDays: data.expirationDays,
+        minSettlementAmount: data.minSettlementAmount,
         description: data.description,
       },
     });
 
-    // 캐시 무효화 (다음 조회 시 최신 정보를 읽도록)
+    // 캐시 무효화
     this.configCache.delete(config.currency);
 
     return this.mapper.toConfigDomain(result);

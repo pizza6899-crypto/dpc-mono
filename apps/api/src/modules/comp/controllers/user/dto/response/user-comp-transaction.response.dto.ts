@@ -9,25 +9,22 @@ export class UserCompTransactionResponseDto {
     id: string;
 
     @ApiProperty({
-        description: 'Comp Wallet ID (Encoded) / 콤프 지갑 ID (인코딩됨)',
-        example: 'cw_abc123',
+        description: 'Comp Account ID (Encoded) / 콤프 계정 ID (인코딩됨)',
+        example: 'ca_abc123',
     })
-    compWalletId: string;
+    compAccountId: string;
 
     @ApiProperty({ description: 'Amount / 금액' })
     amount: string;
-
-    @ApiProperty({ description: 'Balance Before / 변경 전 잔액' })
-    balanceBefore: string;
-
-    @ApiProperty({ description: 'Balance After / 변경 후 잔액' })
-    balanceAfter: string;
 
     @ApiProperty({
         enum: CompTransactionType,
         description: 'Transaction Type / 거래 유형',
     })
     type: CompTransactionType;
+
+    @ApiProperty({ description: 'Description / 설명', nullable: true })
+    description: string | null;
 
     @ApiProperty({ description: 'Created At / 생성일' })
     createdAt: Date;

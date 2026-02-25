@@ -1,21 +1,15 @@
 import type { ExchangeCurrencyCode } from '@prisma/client';
 import { Prisma } from '@prisma/client';
-import {
-  InsufficientCompBalanceException,
-  CompPolicyViolationException,
-} from '../comp.exception';
+import { CompPolicyViolationException } from '../comp.exception';
 
-export class CompWallet {
+export class CompAccount {
   private constructor(
     public readonly id: bigint,
     public readonly userId: bigint,
     public readonly currency: ExchangeCurrencyCode,
-    public readonly balance: Prisma.Decimal,
     public readonly totalEarned: Prisma.Decimal,
     public readonly totalUsed: Prisma.Decimal,
     public readonly isFrozen: boolean,
-    public readonly lastClaimedAt: Date | null,
-    public readonly lastActiveAt: Date,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
   ) { }
@@ -24,52 +18,43 @@ export class CompWallet {
     id?: bigint;
     userId: bigint;
     currency: ExchangeCurrencyCode;
-    balance?: Prisma.Decimal;
     totalEarned?: Prisma.Decimal;
     totalUsed?: Prisma.Decimal;
-  }): CompWallet {
-    return new CompWallet(
+    isFrozen?: boolean;
+  }): CompAccount {
+    return new CompAccount(
       params.id ?? 0n,
       params.userId,
       params.currency,
-      params.balance ?? new Prisma.Decimal(0),
       params.totalEarned ?? new Prisma.Decimal(0),
       params.totalUsed ?? new Prisma.Decimal(0),
-      false,
-      null,
-      new Date(),
+      params.isFrozen ?? false,
       new Date(),
       new Date(),
     );
   }
 
   /**
-   * Rehydrate a CompWallet from persistence layer.
+   * Rehydrate a CompAccount from persistence layer.
    * Used by repository/mapper only.
    */
   static rehydrate(params: {
     id: bigint;
     userId: bigint;
     currency: ExchangeCurrencyCode;
-    balance: Prisma.Decimal;
     totalEarned: Prisma.Decimal;
     totalUsed: Prisma.Decimal;
     isFrozen: boolean;
-    lastClaimedAt: Date | null;
-    lastActiveAt: Date;
     createdAt: Date;
     updatedAt: Date;
-  }): CompWallet {
-    return new CompWallet(
+  }): CompAccount {
+    return new CompAccount(
       params.id,
       params.userId,
       params.currency,
-      params.balance,
       params.totalEarned,
       params.totalUsed,
       params.isFrozen,
-      params.lastClaimedAt,
-      params.lastActiveAt,
       params.createdAt,
       params.updatedAt,
     );
@@ -77,74 +62,73 @@ export class CompWallet {
 
   private checkStatus() {
     if (this.isFrozen) {
-      throw new CompPolicyViolationException('Comp wallet is frozen.');
+      throw new CompPolicyViolationException('Comp account is frozen.');
     }
   }
 
-  earn(amount: Prisma.Decimal): CompWallet {
+  /**
+   * Adds to the total earned amount.
+   */
+  earn(amount: Prisma.Decimal): CompAccount {
     this.checkStatus();
-    return new CompWallet(
+    return new CompAccount(
       this.id,
       this.userId,
       this.currency,
-      this.balance.add(amount),
       this.totalEarned.add(amount),
       this.totalUsed,
       this.isFrozen,
-      this.lastClaimedAt,
-      new Date(), // Update lastActiveAt
       this.createdAt,
       new Date(),
     );
   }
 
-  claim(amount: Prisma.Decimal): CompWallet {
+  /**
+   * Adds to the total used amount (e.g., when settlement is successfully executed).
+   */
+  settle(amount: Prisma.Decimal): CompAccount {
     this.checkStatus();
-    if (this.balance.lessThan(amount)) {
-      throw new InsufficientCompBalanceException(
-        amount.toString(),
-        this.balance.toString(),
-      );
-    }
-
-    return new CompWallet(
+    return new CompAccount(
       this.id,
       this.userId,
       this.currency,
-      this.balance.sub(amount),
       this.totalEarned,
       this.totalUsed.add(amount),
       this.isFrozen,
-      new Date(), // Update lastClaimedAt
-      new Date(), // Update lastActiveAt
       this.createdAt,
       new Date(),
     );
   }
 
-  deduct(
-    amount: Prisma.Decimal,
-    options?: { allowNegative?: boolean },
-  ): CompWallet {
+  /**
+   * Reverts previously earned amount (e.g., when a game round is voided).
+   */
+  rollbackEarn(amount: Prisma.Decimal): CompAccount {
     this.checkStatus();
-    const allowNegative = options?.allowNegative ?? false;
-    if (!allowNegative && this.balance.lessThan(amount)) {
-      throw new InsufficientCompBalanceException(
-        amount.toString(),
-        this.balance.toString(),
-      );
-    }
-
-    return new CompWallet(
+    return new CompAccount(
       this.id,
       this.userId,
       this.currency,
-      this.balance.sub(amount),
-      this.totalEarned,
-      this.totalUsed.add(amount), // Also count as used/deducted
+      this.totalEarned.sub(amount),
+      this.totalUsed,
       this.isFrozen,
-      this.lastClaimedAt,
-      new Date(), // Update lastActiveAt
+      this.createdAt,
+      new Date(),
+    );
+  }
+
+  /**
+   * Admin adjustments. 
+   * Bypass checkStatus to allow admin to fix things.
+   */
+  adminAdjust(amount: Prisma.Decimal): CompAccount {
+    return new CompAccount(
+      this.id,
+      this.userId,
+      this.currency,
+      this.totalEarned.add(amount),
+      this.totalUsed,
+      this.isFrozen,
       this.createdAt,
       new Date(),
     );

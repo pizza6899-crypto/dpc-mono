@@ -1,18 +1,16 @@
 import type { ExchangeCurrencyCode, Prisma } from '@prisma/client';
-import type { CompWallet } from '../domain/model/comp-wallet.entity';
-import type { CompTransaction } from '../domain/model/comp-transaction.entity';
+import type { CompAccount } from '../domain/model/comp-account.entity';
+import type { CompAccountTransaction } from '../domain/model/comp-account-transaction.entity';
 import type { CompConfig } from '../domain/model/comp-config.entity';
-import type { CompClaimHistory } from '../domain/model/comp-claim-history.entity';
+import type { CompDailySettlement } from '../domain/model/comp-daily-settlement.entity';
 
 export interface CompRepositoryPort {
   findByUserIdAndCurrency(
     userId: bigint,
     currency: ExchangeCurrencyCode,
-  ): Promise<CompWallet | null>;
-  save(wallet: CompWallet): Promise<CompWallet>;
-  createTransaction(transaction: CompTransaction): Promise<CompTransaction>;
-  // Deprecated?
-  createMainTransaction(data: any): Promise<bigint>;
+  ): Promise<CompAccount | null>;
+  save(account: CompAccount): Promise<CompAccount>;
+  createTransaction(transaction: CompAccountTransaction): Promise<CompAccountTransaction>;
 
   findTransactions(params: {
     userId: bigint;
@@ -21,7 +19,7 @@ export interface CompRepositoryPort {
     endDate?: Date;
     page: number;
     limit: number;
-  }): Promise<{ data: CompTransaction[]; total: number }>;
+  }): Promise<{ data: CompAccountTransaction[]; total: number }>;
 
   getStatsOverview(params: {
     currency?: ExchangeCurrencyCode;
@@ -61,10 +59,21 @@ export interface CompConfigRepositoryPort {
   save(config: CompConfig): Promise<CompConfig>;
 }
 
-export interface CompClaimHistoryRepositoryPort {
-  save(history: CompClaimHistory): Promise<CompClaimHistory>;
-  findById(id: bigint): Promise<CompClaimHistory | null>;
-  findByWalletTransactionId(
-    walletTransactionId: bigint,
-  ): Promise<CompClaimHistory | null>;
+export interface CompDailySettlementRepositoryPort {
+  save(settlement: CompDailySettlement): Promise<CompDailySettlement>;
+  findByUserIdAndCurrencyAndDate(
+    userId: bigint,
+    currency: ExchangeCurrencyCode,
+    date: Date,
+  ): Promise<CompDailySettlement | null>;
+  // 배치 처리용 (미정산 항목 조회)
+  findPendingSettlements(): Promise<
+    Array<{
+      userId: bigint;
+      currency: ExchangeCurrencyCode;
+      totalEarned: Prisma.Decimal;
+    }>
+  >;
+  updateStatuses(userId: bigint, currency: ExchangeCurrencyCode, status: string, rewardId?: bigint): Promise<void>;
+  create(settlement: CompDailySettlement): Promise<CompDailySettlement>;
 }

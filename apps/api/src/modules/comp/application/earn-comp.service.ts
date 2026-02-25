@@ -8,11 +8,17 @@ import {
 import {
   COMP_CONFIG_REPOSITORY,
   COMP_REPOSITORY,
+  COMP_DAILY_SETTLEMENT_REPOSITORY,
 } from '../ports/repository.token';
-import type { CompConfigRepositoryPort, CompRepositoryPort } from '../ports';
+import type {
+  CompConfigRepositoryPort,
+  CompRepositoryPort,
+  CompDailySettlementRepositoryPort
+} from '../ports';
 import {
-  CompWallet,
-  CompTransaction,
+  CompAccount,
+  CompAccountTransaction,
+  CompDailySettlement,
   CompPolicy,
   CompPolicyViolationException,
 } from '../domain';
@@ -41,16 +47,18 @@ export class EarnCompService {
     private readonly compRepository: CompRepositoryPort,
     @Inject(COMP_CONFIG_REPOSITORY)
     private readonly compConfigRepository: CompConfigRepositoryPort,
+    @Inject(COMP_DAILY_SETTLEMENT_REPOSITORY)
+    private readonly compDailySettlementRepository: CompDailySettlementRepositoryPort,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly compPolicy: CompPolicy,
     private readonly snowflakeService: SnowflakeService,
-  ) {}
+  ) { }
 
   @Transactional()
-  async execute(params: EarnCompParams): Promise<CompWallet> {
+  async execute(params: EarnCompParams): Promise<CompAccount> {
     const { userId, currency, amount, referenceId, description } = params;
 
-    // 0. Acquire Lock
+    // 0. Acquire Lock for the user's comp account
     await this.advisoryLockService.acquireLock(
       LockNamespace.COMP_WALLET,
       userId.toString(),
@@ -68,42 +76,66 @@ export class EarnCompService {
       } catch (error) {
         if (error instanceof CompPolicyViolationException) {
           this.logger.warn(`Comp earn skipped: ${error.message}`);
-          // Return current wallet without changes
-          const wallet = await this.compRepository.findByUserIdAndCurrency(
+          // Return current account without changes
+          const account = await this.compRepository.findByUserIdAndCurrency(
             userId,
             currency,
           );
-          if (!wallet) return CompWallet.create({ userId, currency });
-          return wallet;
+          if (!account) return CompAccount.create({ userId, currency });
+          return account;
         }
         throw error;
       }
     }
 
-    // 2. Get or Create Wallet
-    let wallet = await this.compRepository.findByUserIdAndCurrency(
+    // 2. Get or Create Account
+    let account = await this.compRepository.findByUserIdAndCurrency(
       userId,
       currency,
     );
-    if (!wallet) {
-      wallet = CompWallet.create({ userId, currency });
+    if (!account) {
+      account = CompAccount.create({ userId, currency });
     }
 
-    const balanceBefore = wallet.balance;
-
     // 3. Apply Earn Logic (Domain)
-    wallet = wallet.earn(amount);
+    account = account.earn(amount);
 
-    // 4. Persist Wallet
-    const savedWallet = await this.compRepository.save(wallet);
+    // 4. Persist Account
+    const savedAccount = await this.compRepository.save(account);
 
-    // 5. Record Transaction
-    const transaction = CompTransaction.create({
+    // 5. Update Daily Settlement
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0); // Normalize to UTC midnight
+
+    let dailySettlement = await this.compDailySettlementRepository.findByUserIdAndCurrencyAndDate(
+      userId,
+      currency,
+      today,
+    );
+
+    if (!dailySettlement) {
+      dailySettlement = CompDailySettlement.create({
+        userId,
+        currency,
+        date: today,
+        totalEarned: amount,
+      });
+    } else {
+      // Create a modified one by hand because it's a simple entity right now
+      // Or we can add an `addEarn` method to CompDailySettlement entity
+      dailySettlement = CompDailySettlement.rehydrate({
+        ...dailySettlement,
+        totalEarned: dailySettlement.totalEarned.add(amount),
+      });
+    }
+
+    await this.compDailySettlementRepository.save(dailySettlement);
+
+    // 6. Record Transaction
+    const transaction = CompAccountTransaction.create({
       id: this.snowflakeService.generate().id,
-      compWalletId: savedWallet.id,
+      compAccountId: savedAccount.id,
       amount: amount,
-      balanceBefore: balanceBefore,
-      balanceAfter: savedWallet.balance,
       appliedRate: new Prisma.Decimal(1), // Default rate
       type: params.options?.transactionType ?? CompTransactionType.EARN,
       referenceId: referenceId,
@@ -113,9 +145,9 @@ export class EarnCompService {
     await this.compRepository.createTransaction(transaction);
 
     this.logger.log(
-      `Comp Earned: user=${userId}, amount=${amount}, curr=${currency}, newBal=${savedWallet.balance}`,
+      `Comp Earned: user=${userId}, amount=${amount}, curr=${currency}, newTotalEarned=${savedAccount.totalEarned}`,
     );
 
-    return savedWallet;
+    return savedAccount;
   }
 }

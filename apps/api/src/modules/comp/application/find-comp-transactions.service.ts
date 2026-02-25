@@ -3,7 +3,7 @@ import { COMP_REPOSITORY } from '../ports';
 import type { CompRepositoryPort } from '../ports';
 import { ExchangeCurrencyCode } from '@prisma/client';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
-import { CompTransaction } from '../domain';
+import { CompAccountTransaction } from '../domain';
 
 interface FindCompTransactionsParams {
   userId: bigint;
@@ -19,11 +19,11 @@ export class FindCompTransactionsService {
   constructor(
     @Inject(COMP_REPOSITORY)
     private readonly compRepository: CompRepositoryPort,
-  ) {}
+  ) { }
 
   async execute(
     params: FindCompTransactionsParams,
-  ): Promise<PaginatedData<CompTransaction>> {
+  ): Promise<PaginatedData<CompAccountTransaction>> {
     const { userId, currency, startDate, endDate, page, limit } = params;
     const { data, total } = await this.compRepository.findTransactions({
       userId,

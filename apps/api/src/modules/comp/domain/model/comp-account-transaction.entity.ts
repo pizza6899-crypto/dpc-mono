@@ -1,74 +1,74 @@
 import type { CompTransactionType, Prisma } from '@prisma/client';
 
-export class CompTransaction {
+export class CompAccountTransaction {
   private constructor(
     public readonly id: bigint,
-    public readonly compWalletId: bigint,
+    public readonly compAccountId: bigint,
     public readonly amount: Prisma.Decimal,
-    public readonly balanceBefore: Prisma.Decimal, // [추가]
-    public readonly balanceAfter: Prisma.Decimal,
-    public readonly appliedRate: Prisma.Decimal | null, // [추가]
+    public readonly appliedRate: Prisma.Decimal | null,
     public readonly type: CompTransactionType,
     public readonly referenceId: bigint | null,
-    public readonly processedBy: bigint | null, // [추가] 관리자 ID 등
+    public readonly processedBy: bigint | null,
+    public readonly parentTransactionId: bigint | null,
+    public readonly metadata: any | null,
     public readonly description: string | null,
     public readonly createdAt: Date,
-  ) {}
+  ) { }
 
   static create(params: {
     id: bigint; // Snowflake ID inject
-    compWalletId: bigint;
+    compAccountId: bigint;
     amount: Prisma.Decimal;
-    balanceBefore: Prisma.Decimal;
-    balanceAfter: Prisma.Decimal;
     appliedRate?: Prisma.Decimal | null;
     type: CompTransactionType;
     referenceId?: bigint;
     processedBy?: bigint;
+    parentTransactionId?: bigint;
+    metadata?: any;
     description?: string;
-  }): CompTransaction {
-    return new CompTransaction(
+  }): CompAccountTransaction {
+    return new CompAccountTransaction(
       params.id,
-      params.compWalletId,
+      params.compAccountId,
       params.amount,
-      params.balanceBefore,
-      params.balanceAfter,
       params.appliedRate ?? null,
       params.type,
       params.referenceId ?? null,
       params.processedBy ?? null,
+      params.parentTransactionId ?? null,
+      params.metadata ?? null,
       params.description ?? null,
       new Date(),
     );
   }
 
   /**
-   * Rehydrate a CompTransaction from persistence layer.
+   * Rehydrate from persistence layer.
    * Used by repository/mapper only.
    */
   static rehydrate(params: {
     id: bigint;
-    compWalletId: bigint;
+    compAccountId: bigint;
     amount: Prisma.Decimal;
-    balanceBefore: Prisma.Decimal;
-    balanceAfter: Prisma.Decimal;
     appliedRate: Prisma.Decimal | null;
     type: CompTransactionType;
     referenceId: bigint | null;
     processedBy: bigint | null;
+    parentTransactionId: bigint | null;
+    metadata: any | null;
     description: string | null;
     createdAt: Date;
-  }): CompTransaction {
-    return new CompTransaction(
+  }): CompAccountTransaction {
+    return new CompAccountTransaction(
       params.id,
-      params.compWalletId,
+      params.compAccountId,
       params.amount,
-      params.balanceBefore,
-      params.balanceAfter,
       params.appliedRate,
       params.type,
       params.referenceId,
       params.processedBy,
+      params.parentTransactionId,
+      params.metadata,
       params.description,
       params.createdAt,
     );

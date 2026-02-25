@@ -1,80 +1,75 @@
 import { Injectable } from '@nestjs/common';
 import {
-  CompWallet,
-  CompTransaction,
+  CompAccount,
+  CompAccountTransaction,
   CompConfig as DomainCompConfig,
-  CompClaimHistory as DomainCompClaimHistory,
+  CompDailySettlement as DomainCompDailySettlement,
 } from '../domain';
 import {
-  UserCompWallet,
-  CompWalletTransaction,
+  UserCompAccount,
+  CompAccountTransaction as PrismaCompAccountTransaction,
   CompConfig,
-  CompClaimHistory,
+  CompDailySettlement,
+  Prisma,
 } from '@prisma/client';
 
 @Injectable()
 export class CompMapper {
-  toDomain(model: UserCompWallet): CompWallet {
-    return CompWallet.rehydrate({
+  toDomain(model: UserCompAccount): CompAccount {
+    return CompAccount.rehydrate({
       id: model.id,
       userId: model.userId,
       currency: model.currency,
-      balance: model.balance,
       totalEarned: model.totalEarned,
       totalUsed: model.totalUsed,
       isFrozen: model.isFrozen,
-      lastClaimedAt: model.lastClaimedAt,
-      lastActiveAt: model.lastActiveAt,
       createdAt: model.createdAt,
       updatedAt: model.updatedAt,
     });
   }
 
-  toPersistence(entity: CompWallet): Partial<UserCompWallet> {
+  toPersistence(entity: CompAccount): Partial<UserCompAccount> {
     return {
-      id: entity.id === BigInt(0) ? undefined : entity.id,
+      id: entity.id === 0n ? undefined : entity.id,
       userId: entity.userId,
       currency: entity.currency,
-      balance: entity.balance,
       totalEarned: entity.totalEarned,
       totalUsed: entity.totalUsed,
       isFrozen: entity.isFrozen,
-      lastClaimedAt: entity.lastClaimedAt,
-      lastActiveAt: entity.lastActiveAt,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };
   }
 
-  toTransactionDomain(model: CompWalletTransaction): CompTransaction {
-    return CompTransaction.rehydrate({
+  toTransactionDomain(model: PrismaCompAccountTransaction): CompAccountTransaction {
+    return CompAccountTransaction.rehydrate({
       id: model.id,
-      compWalletId: model.compWalletId,
+      compAccountId: model.compAccountId,
       amount: model.amount,
-      balanceBefore: model.balanceBefore,
-      balanceAfter: model.balanceAfter,
       appliedRate: model.appliedRate,
       type: model.type,
       referenceId: model.referenceId,
       processedBy: model.processedBy,
+      parentTransactionId: model.parentTransactionId,
+      metadata: model.metadata,
       description: model.description,
       createdAt: model.createdAt,
     });
   }
 
   toTransactionPersistence(
-    entity: CompTransaction,
-  ): Partial<CompWalletTransaction> {
+    entity: CompAccountTransaction,
+  ): Partial<PrismaCompAccountTransaction> {
     return {
       id: entity.id === BigInt(0) ? undefined : entity.id,
-      compWalletId: entity.compWalletId,
+      compAccountId: entity.compAccountId,
       amount: entity.amount,
-      balanceBefore: entity.balanceBefore,
-      balanceAfter: entity.balanceAfter,
       appliedRate: entity.appliedRate,
       type: entity.type,
       referenceId: entity.referenceId,
       processedBy: entity.processedBy,
+      parentTransactionId: entity.parentTransactionId,
+      metadata: entity.metadata ?? Prisma.JsonNull,
       description: entity.description,
       createdAt: entity.createdAt,
     };
@@ -85,11 +80,9 @@ export class CompMapper {
       id: model.id,
       currency: model.currency,
       isEarnEnabled: model.isEarnEnabled,
-      isClaimEnabled: model.isClaimEnabled,
-      allowNegativeBalance: model.allowNegativeBalance,
-      minClaimAmount: model.minClaimAmount,
+      isSettlementEnabled: model.isSettlementEnabled,
       maxDailyEarnPerUser: model.maxDailyEarnPerUser,
-      expirationDays: model.expirationDays,
+      minSettlementAmount: model.minSettlementAmount,
       description: model.description,
       updatedAt: model.updatedAt,
     });
@@ -100,49 +93,43 @@ export class CompMapper {
       id: entity.id === BigInt(0) ? undefined : entity.id,
       currency: entity.currency,
       isEarnEnabled: entity.isEarnEnabled,
-      isClaimEnabled: entity.isClaimEnabled,
-      allowNegativeBalance: entity.allowNegativeBalance,
-      minClaimAmount: entity.minClaimAmount,
+      isSettlementEnabled: entity.isSettlementEnabled,
       maxDailyEarnPerUser: entity.maxDailyEarnPerUser,
-      expirationDays: entity.expirationDays,
+      minSettlementAmount: entity.minSettlementAmount,
       description: entity.description,
       updatedAt: new Date(), // Always update timestamp
     };
   }
 
-  toClaimHistoryDomain(model: CompClaimHistory): DomainCompClaimHistory {
-    return DomainCompClaimHistory.rehydrate({
+  toDailySettlementDomain(model: CompDailySettlement): DomainCompDailySettlement {
+    return DomainCompDailySettlement.rehydrate({
       id: model.id,
       userId: model.userId,
+      currency: model.currency,
+      date: model.date,
+      totalEarned: model.totalEarned,
       status: model.status,
+      rewardId: model.rewardId,
       failureReason: model.failureReason,
-      compWalletTransactionId: model.compWalletTransactionId,
-      compAmount: model.compAmount,
-      compCurrency: model.compCurrency,
-      walletTransactionId: model.walletTransactionId,
-      targetAmount: model.targetAmount,
-      targetCurrency: model.targetCurrency,
-      exchangeRate: model.exchangeRate,
-      claimedAt: model.claimedAt,
+      processedAt: model.processedAt,
+      createdAt: model.createdAt,
+      updatedAt: model.updatedAt,
     });
   }
 
-  toClaimHistoryPersistence(
-    entity: DomainCompClaimHistory,
-  ): Partial<CompClaimHistory> {
+  toDailySettlementPersistence(entity: DomainCompDailySettlement): Partial<CompDailySettlement> {
     return {
       id: entity.id === BigInt(0) ? undefined : entity.id,
       userId: entity.userId,
+      currency: entity.currency,
+      date: entity.date,
+      totalEarned: entity.totalEarned,
       status: entity.status,
+      rewardId: entity.rewardId,
       failureReason: entity.failureReason,
-      compWalletTransactionId: entity.compWalletTransactionId,
-      compAmount: entity.compAmount,
-      compCurrency: entity.compCurrency,
-      walletTransactionId: entity.walletTransactionId,
-      targetAmount: entity.targetAmount,
-      targetCurrency: entity.targetCurrency,
-      exchangeRate: entity.exchangeRate,
-      claimedAt: entity.claimedAt,
+      processedAt: entity.processedAt,
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
     };
   }
 }

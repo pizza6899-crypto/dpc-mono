@@ -19,4 +19,10 @@ export class CompBalanceResponseDto {
     example: '5000.00',
   })
   totalEarned: string;
+
+  @ApiProperty({
+    description: 'Total used comp points / 총 사용 콤프',
+    example: '4000.00',
+  })
+  totalUsed: string;
 }

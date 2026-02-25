@@ -3,22 +3,22 @@ import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import { CompRepositoryPort } from '../ports';
-import { CompWallet, CompTransaction } from '../domain';
+import { CompAccount, CompAccountTransaction } from '../domain';
 import { CompMapper } from './comp.mapper';
 
 @Injectable()
-export class CompWalletRepository implements CompRepositoryPort {
+export class CompAccountRepository implements CompRepositoryPort {
   constructor(
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: CompMapper,
-  ) {}
+  ) { }
 
   async findByUserIdAndCurrency(
     userId: bigint,
     currency: ExchangeCurrencyCode,
-  ): Promise<CompWallet | null> {
-    const result = await this.tx.userCompWallet.findUnique({
+  ): Promise<CompAccount | null> {
+    const result = await this.tx.userCompAccount.findUnique({
       where: {
         userId_currency: {
           userId,
@@ -29,37 +29,30 @@ export class CompWalletRepository implements CompRepositoryPort {
     return result ? this.mapper.toDomain(result) : null;
   }
 
-  async save(wallet: CompWallet): Promise<CompWallet> {
-    const data = this.mapper.toPersistence(wallet);
+  async save(account: CompAccount): Promise<CompAccount> {
+    const data = this.mapper.toPersistence(account);
 
-    // Upsert to handle both create and update
-    const result = await this.tx.userCompWallet.upsert({
+    const result = await this.tx.userCompAccount.upsert({
       where: {
         userId_currency: {
-          userId: wallet.userId,
-          currency: wallet.currency,
+          userId: account.userId,
+          currency: account.currency,
         },
       },
       create: {
-        userId: wallet.userId,
-        currency: wallet.currency,
-        balance: wallet.balance,
-        totalEarned: wallet.totalEarned,
-        totalUsed: wallet.totalUsed,
-        isFrozen: wallet.isFrozen,
-        lastClaimedAt: wallet.lastClaimedAt,
-        lastActiveAt: wallet.lastActiveAt,
-        createdAt: wallet.createdAt,
-        updatedAt: wallet.updatedAt,
+        userId: account.userId,
+        currency: account.currency,
+        totalEarned: account.totalEarned,
+        totalUsed: account.totalUsed,
+        isFrozen: account.isFrozen,
+        createdAt: account.createdAt,
+        updatedAt: account.updatedAt,
       },
       update: {
-        balance: wallet.balance,
-        totalEarned: wallet.totalEarned,
-        totalUsed: wallet.totalUsed,
-        isFrozen: wallet.isFrozen,
-        lastClaimedAt: wallet.lastClaimedAt,
-        lastActiveAt: wallet.lastActiveAt,
-        updatedAt: wallet.updatedAt,
+        totalEarned: account.totalEarned,
+        totalUsed: account.totalUsed,
+        isFrozen: account.isFrozen,
+        updatedAt: account.updatedAt,
       },
     });
 
@@ -67,34 +60,13 @@ export class CompWalletRepository implements CompRepositoryPort {
   }
 
   async createTransaction(
-    transaction: CompTransaction,
-  ): Promise<CompTransaction> {
+    transaction: CompAccountTransaction,
+  ): Promise<CompAccountTransaction> {
     const data = this.mapper.toTransactionPersistence(transaction);
-    const result = await this.tx.compWalletTransaction.create({
+    const result = await this.tx.compAccountTransaction.create({
       data: data as any,
     });
     return this.mapper.toTransactionDomain(result);
-  }
-
-  async createMainTransaction(data: {
-    userId: bigint;
-    type: any;
-    status: any;
-    currency: ExchangeCurrencyCode;
-    amount: Prisma.Decimal;
-    beforeAmount: Prisma.Decimal;
-    afterAmount: Prisma.Decimal;
-    balanceDetails: {
-      mainBalanceChange: Prisma.Decimal;
-      mainBeforeAmount: Prisma.Decimal;
-      mainAfterAmount: Prisma.Decimal;
-      bonusBalanceChange: Prisma.Decimal;
-      bonusBeforeAmount: Prisma.Decimal;
-      bonusAfterAmount: Prisma.Decimal;
-    };
-    compWalletTransactionId?: bigint;
-  }): Promise<bigint> {
-    return BigInt(Date.now());
   }
 
   async findTransactions(params: {
@@ -104,12 +76,12 @@ export class CompWalletRepository implements CompRepositoryPort {
     endDate?: Date;
     page: number;
     limit: number;
-  }): Promise<{ data: CompTransaction[]; total: number }> {
+  }): Promise<{ data: CompAccountTransaction[]; total: number }> {
     const { userId, currency, startDate, endDate, page, limit } = params;
     const skip = (page - 1) * limit;
 
-    const where: Prisma.CompWalletTransactionWhereInput = {
-      wallet: {
+    const where: Prisma.CompAccountTransactionWhereInput = {
+      account: {
         userId: userId,
         ...(currency && { currency }),
       },
@@ -122,13 +94,13 @@ export class CompWalletRepository implements CompRepositoryPort {
     };
 
     const [data, total] = await Promise.all([
-      this.tx.compWalletTransaction.findMany({
+      this.tx.compAccountTransaction.findMany({
         where,
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
       }),
-      this.tx.compWalletTransaction.count({ where }),
+      this.tx.compAccountTransaction.count({ where }),
     ]);
 
     return {
@@ -143,8 +115,8 @@ export class CompWalletRepository implements CompRepositoryPort {
     endDate?: Date;
   }): Promise<{ totalEarned: Prisma.Decimal; totalUsed: Prisma.Decimal }> {
     const { currency, startDate, endDate } = params;
-    const where: Prisma.CompWalletTransactionWhereInput = {
-      ...(currency && { wallet: { currency } }),
+    const where: Prisma.CompAccountTransactionWhereInput = {
+      ...(currency && { account: { currency } }),
       ...((startDate || endDate) && {
         createdAt: {
           ...(startDate && { gte: startDate }),
@@ -153,12 +125,12 @@ export class CompWalletRepository implements CompRepositoryPort {
       }),
     };
 
-    const earns = await this.tx.compWalletTransaction.aggregate({
+    const earns = await this.tx.compAccountTransaction.aggregate({
       _sum: { amount: true },
       where: { ...where, amount: { gt: 0 } },
     });
 
-    const claims = await this.tx.compWalletTransaction.aggregate({
+    const claims = await this.tx.compAccountTransaction.aggregate({
       _sum: { amount: true },
       where: { ...where, amount: { lt: 0 } },
     });
@@ -177,8 +149,8 @@ export class CompWalletRepository implements CompRepositoryPort {
     Array<{ date: string; earned: Prisma.Decimal; used: Prisma.Decimal }>
   > {
     const { currency, startDate, endDate } = params;
-    const where: Prisma.CompWalletTransactionWhereInput = {
-      ...(currency && { wallet: { currency } }),
+    const where: Prisma.CompAccountTransactionWhereInput = {
+      ...(currency && { account: { currency } }),
       ...((startDate || endDate) && {
         createdAt: {
           ...(startDate && { gte: startDate }),
@@ -187,7 +159,7 @@ export class CompWalletRepository implements CompRepositoryPort {
       }),
     };
 
-    const txs = await this.tx.compWalletTransaction.findMany({
+    const txs = await this.tx.compAccountTransaction.findMany({
       where,
       select: {
         amount: true,
@@ -223,13 +195,13 @@ export class CompWalletRepository implements CompRepositoryPort {
     limit: number;
   }): Promise<Array<{ userId: bigint; totalEarned: Prisma.Decimal }>> {
     const { currency, limit } = params;
-    const where: Prisma.CompWalletTransactionWhereInput = {
+    const where: Prisma.CompAccountTransactionWhereInput = {
       amount: { gt: 0 },
-      ...(currency && { wallet: { currency } }),
+      ...(currency && { account: { currency } }),
     };
 
-    const groups = await this.tx.compWalletTransaction.groupBy({
-      by: ['compWalletId'],
+    const groups = await this.tx.compAccountTransaction.groupBy({
+      by: ['compAccountId'],
       _sum: { amount: true },
       where,
       orderBy: {
@@ -240,12 +212,12 @@ export class CompWalletRepository implements CompRepositoryPort {
 
     const results = await Promise.all(
       groups.map(async (g) => {
-        const wallet = await this.tx.userCompWallet.findUnique({
-          where: { id: g.compWalletId },
+        const account = await this.tx.userCompAccount.findUnique({
+          where: { id: g.compAccountId },
           select: { userId: true },
         });
         return {
-          userId: wallet?.userId || BigInt(0),
+          userId: account?.userId || BigInt(0),
           totalEarned: g._sum.amount || new Prisma.Decimal(0),
         };
       }),

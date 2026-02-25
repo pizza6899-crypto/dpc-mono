@@ -17,7 +17,7 @@ import {
 import { FindCompTransactionsService } from '../../application/find-comp-transactions.service';
 import { AdminFindCompTransactionsQueryDto } from './dto/request/admin-find-comp-transactions-query.dto';
 import { AdminCompTransactionResponseDto } from './dto/response/admin-comp-transaction.response.dto';
-import { FindCompBalanceService } from '../../application/find-comp-balance.service';
+import { FindCompAccountService } from '../../application/find-comp-account.service';
 import { CompConfig } from '../../domain';
 import { EarnCompService } from '../../application/earn-comp.service';
 import { DeductCompService } from '../../application/deduct-comp.service';
@@ -51,7 +51,7 @@ import { AdminUpdateCompConfigDto } from './dto/request/admin-update-comp-config
 @ApiStandardErrors()
 export class CompAdminController {
   constructor(
-    private readonly findCompBalanceService: FindCompBalanceService,
+    private readonly findCompAccountService: FindCompAccountService,
     private readonly earnCompService: EarnCompService,
     private readonly deductCompService: DeductCompService,
     private readonly findCompTransactionsService: FindCompTransactionsService,
@@ -84,15 +84,15 @@ export class CompAdminController {
     @Param('userId') userId: string,
     @Query() query: AdminCompBalanceQueryDto,
   ): Promise<AdminCompBalanceResponseDto> {
-    const wallet = await this.findCompBalanceService.execute(
+    const account = await this.findCompAccountService.execute(
       BigInt(userId),
       query.currency,
     );
     return {
-      currency: wallet.currency,
-      balance: wallet.balance.toString(),
-      totalEarned: wallet.totalEarned.toString(),
-      totalUsed: wallet.totalUsed.toString(),
+      currency: account.currency,
+      balance: account.totalEarned.sub(account.totalUsed).toString(), // Derived balance
+      totalEarned: account.totalEarned.toString(),
+      totalUsed: account.totalUsed.toString(),
     };
   }
 
@@ -130,7 +130,7 @@ export class CompAdminController {
     const amount = new Prisma.Decimal(dto.amount);
 
     if (dto.type === AdminCompAdjustType.GIVE) {
-      const wallet = await this.earnCompService.execute({
+      const account = await this.earnCompService.execute({
         userId: uid,
         currency: dto.currency,
         amount: amount,
@@ -141,9 +141,9 @@ export class CompAdminController {
           processedBy: admin.id,
         },
       });
-      return { newBalance: wallet.balance.toString() };
+      return { newBalance: account.totalEarned.sub(account.totalUsed).toString() };
     } else {
-      const wallet = await this.deductCompService.execute({
+      const account = await this.deductCompService.execute({
         userId: uid,
         currency: dto.currency,
         amount: amount,
@@ -153,7 +153,7 @@ export class CompAdminController {
           processedBy: admin.id,
         },
       });
-      return { newBalance: wallet.balance.toString() };
+      return { newBalance: account.totalEarned.sub(account.totalUsed).toString() };
     }
   }
 
@@ -196,12 +196,14 @@ export class CompAdminController {
     return {
       data: result.data.map((item) => ({
         id: item.id.toString(),
-        compWalletId: item.compWalletId.toString(),
+        compAccountId: item.compAccountId.toString(),
         amount: item.amount.toString(),
-        balanceBefore: item.balanceBefore.toString(),
-        balanceAfter: item.balanceAfter.toString(),
+        appliedRate: item.appliedRate ? item.appliedRate.toString() : undefined,
         type: item.type,
         referenceId: item.referenceId ? item.referenceId.toString() : undefined,
+        parentTransactionId: item.parentTransactionId ? item.parentTransactionId.toString() : undefined,
+        processedBy: item.processedBy ? item.processedBy.toString() : undefined,
+        metadata: item.metadata,
         description: item.description ?? undefined,
         createdAt: item.createdAt,
       })),
@@ -253,8 +255,8 @@ export class CompAdminController {
   ): Promise<AdminCompConfigResponseDto> {
     const result = await this.updateCompConfigService.execute({
       ...dto,
-      minClaimAmount: dto.minClaimAmount
-        ? new Prisma.Decimal(dto.minClaimAmount)
+      minSettlementAmount: dto.minSettlementAmount
+        ? new Prisma.Decimal(dto.minSettlementAmount)
         : undefined,
       maxDailyEarnPerUser: dto.maxDailyEarnPerUser
         ? new Prisma.Decimal(dto.maxDailyEarnPerUser)
@@ -269,12 +271,10 @@ export class CompAdminController {
       id: c.id.toString(),
       currency: c.currency,
       isEarnEnabled: c.isEarnEnabled,
-      isClaimEnabled: c.isClaimEnabled,
-      allowNegativeBalance: c.allowNegativeBalance,
-      minClaimAmount: c.minClaimAmount.toString(),
+      isSettlementEnabled: c.isSettlementEnabled,
+      minSettlementAmount: c.minSettlementAmount.toString(),
       maxDailyEarnPerUser: c.maxDailyEarnPerUser.toString(),
-      expirationDays: c.expirationDays,
-      description: c.description,
+      description: c.description ?? undefined,
       updatedAt: c.updatedAt,
     };
   }

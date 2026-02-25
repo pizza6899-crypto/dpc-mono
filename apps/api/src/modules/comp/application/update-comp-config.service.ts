@@ -7,11 +7,9 @@ import { CompConfig } from '../domain';
 export interface UpdateCompConfigParams {
   currency: ExchangeCurrencyCode;
   isEarnEnabled?: boolean;
-  isClaimEnabled?: boolean;
-  allowNegativeBalance?: boolean;
-  minClaimAmount?: Prisma.Decimal;
+  isSettlementEnabled?: boolean;
+  minSettlementAmount?: Prisma.Decimal;
   maxDailyEarnPerUser?: Prisma.Decimal;
-  expirationDays?: number;
   description?: string;
 }
 
@@ -20,7 +18,7 @@ export class UpdateCompConfigService {
   constructor(
     @Inject(COMP_CONFIG_REPOSITORY)
     private readonly compConfigRepository: CompConfigRepositoryPort,
-  ) {}
+  ) { }
 
   async execute(params: UpdateCompConfigParams): Promise<CompConfig> {
     const { currency, ...updateData } = params;
@@ -33,29 +31,20 @@ export class UpdateCompConfigService {
       config = CompConfig.create({
         currency,
         isEarnEnabled: updateData.isEarnEnabled ?? true,
-        isClaimEnabled: updateData.isClaimEnabled ?? true,
-        allowNegativeBalance: updateData.allowNegativeBalance ?? true,
-        minClaimAmount: updateData.minClaimAmount ?? new Prisma.Decimal(0),
-        maxDailyEarnPerUser:
-          updateData.maxDailyEarnPerUser ?? new Prisma.Decimal(0),
-        expirationDays: updateData.expirationDays ?? 99999,
+        isSettlementEnabled: updateData.isSettlementEnabled ?? true,
+        minSettlementAmount: updateData.minSettlementAmount ?? new Prisma.Decimal(0),
+        maxDailyEarnPerUser: updateData.maxDailyEarnPerUser ?? new Prisma.Decimal(0),
         description: updateData.description,
       });
     } else {
       // 3. Update existing config
-      // In a more complex domain, we might have a method like config.update(params)
-      // For now, rehydrate with new values
       config = CompConfig.rehydrate({
         id: config.id,
         currency: config.currency,
         isEarnEnabled: updateData.isEarnEnabled ?? config.isEarnEnabled,
-        isClaimEnabled: updateData.isClaimEnabled ?? config.isClaimEnabled,
-        allowNegativeBalance:
-          updateData.allowNegativeBalance ?? config.allowNegativeBalance,
-        minClaimAmount: updateData.minClaimAmount ?? config.minClaimAmount,
-        maxDailyEarnPerUser:
-          updateData.maxDailyEarnPerUser ?? config.maxDailyEarnPerUser,
-        expirationDays: updateData.expirationDays ?? config.expirationDays,
+        isSettlementEnabled: updateData.isSettlementEnabled ?? config.isSettlementEnabled,
+        minSettlementAmount: updateData.minSettlementAmount ?? config.minSettlementAmount,
+        maxDailyEarnPerUser: updateData.maxDailyEarnPerUser ?? config.maxDailyEarnPerUser,
         description: updateData.description ?? config.description,
         updatedAt: new Date(),
       });

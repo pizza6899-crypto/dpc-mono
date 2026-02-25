@@ -20,11 +20,9 @@ export async function seedCompConfig(prisma: PrismaClient) {
             data: {
                 currency,
                 isEarnEnabled: true,
-                isClaimEnabled: true,
-                allowNegativeBalance: true,
-                minClaimAmount: 0, // 최소 전환 금액 제한 없음
+                isSettlementEnabled: true,
+                minSettlementAmount: 0, // 최소 정산 금액 제한 없음
                 maxDailyEarnPerUser: 0, // 일일 적립 한도 무제한
-                expirationDays: 99999, // 소멸 기간 사실상 무제한
                 description: `Unlimited Comp Policy for ${currency}`,
             },
         });

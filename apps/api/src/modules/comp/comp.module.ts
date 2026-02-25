@@ -2,16 +2,15 @@ import { Module } from '@nestjs/common';
 import {
   COMP_REPOSITORY,
   COMP_CONFIG_REPOSITORY,
-  COMP_CLAIM_HISTORY_REPOSITORY,
+  COMP_DAILY_SETTLEMENT_REPOSITORY,
 } from './ports';
-import { CompWalletRepository } from './infrastructure/comp-wallet.repository';
+import { CompAccountRepository } from './infrastructure/comp-account.repository';
 import { CompConfigRepository } from './infrastructure/comp-config.repository';
-import { CompClaimHistoryRepository } from './infrastructure/comp-claim-history.repository';
+import { CompDailySettlementRepository } from './infrastructure/comp-daily-settlement.repository';
 import { CompMapper } from './infrastructure/comp.mapper';
 import { CompPolicy } from './domain/comp.policy';
 import { EarnCompService } from './application/earn-comp.service';
-import { ClaimCompService } from './application/claim-comp.service';
-import { FindCompBalanceService } from './application/find-comp-balance.service';
+import { FindCompAccountService } from './application/find-comp-account.service';
 import { FindCompTransactionsService } from './application/find-comp-transactions.service';
 import { DeductCompService } from './application/deduct-comp.service';
 import { FindCompOverviewService } from './application/find-comp-overview.service';
@@ -35,19 +34,18 @@ import { RewardCoreModule } from '../reward/core/reward-core.module';
     CompPolicy,
     {
       provide: COMP_REPOSITORY,
-      useClass: CompWalletRepository,
+      useClass: CompAccountRepository,
     },
     {
       provide: COMP_CONFIG_REPOSITORY,
       useClass: CompConfigRepository,
     },
     {
-      provide: COMP_CLAIM_HISTORY_REPOSITORY,
-      useClass: CompClaimHistoryRepository,
+      provide: COMP_DAILY_SETTLEMENT_REPOSITORY,
+      useClass: CompDailySettlementRepository,
     },
     EarnCompService,
-    ClaimCompService,
-    FindCompBalanceService,
+    FindCompAccountService,
     FindCompTransactionsService,
     DeductCompService,
     FindCompOverviewService,
@@ -58,8 +56,7 @@ import { RewardCoreModule } from '../reward/core/reward-core.module';
   ],
   exports: [
     EarnCompService,
-    ClaimCompService,
-    FindCompBalanceService,
+    FindCompAccountService,
     FindCompTransactionsService,
     DeductCompService,
     FindCompOverviewService,

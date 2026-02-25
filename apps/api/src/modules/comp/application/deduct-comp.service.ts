@@ -11,8 +11,8 @@ import {
 } from '../ports/repository.token';
 import type { CompRepositoryPort, CompConfigRepositoryPort } from '../ports';
 import {
-  CompWallet,
-  CompTransaction,
+  CompAccount,
+  CompAccountTransaction,
   CompNotFoundException,
   CompPolicy,
 } from '../domain';
@@ -45,7 +45,7 @@ export class DeductCompService {
   ) { }
 
   @Transactional()
-  async execute(params: DeductCompParams): Promise<CompWallet> {
+  async execute(params: DeductCompParams): Promise<CompAccount> {
     const { userId, currency, amount, description } = params;
 
     // 0. Acquire Lock
@@ -57,38 +57,32 @@ export class DeductCompService {
       },
     );
 
-    // 1. Get Wallet
-    let wallet = await this.compRepository.findByUserIdAndCurrency(
+    // 1. Get Account
+    let account = await this.compRepository.findByUserIdAndCurrency(
       userId,
       currency,
     );
-    if (!wallet) {
+    if (!account) {
       throw new CompNotFoundException();
     }
 
-    const config = await this.compConfigRepository.getConfig(currency);
-
     if (!params.options?.bypassPolicy) {
       // 2. Verify Policy
-      this.compPolicy.verifyDeduct(config, wallet, amount);
+      this.compPolicy.verifyAdminAdjust(account);
     }
 
     // 3. Apply Deduct Logic (Domain)
-    const balanceBefore = wallet.balance;
-    const allowNegative = config?.allowNegativeBalance ?? true;
-    wallet = wallet.deduct(amount, { allowNegative });
+    // Here we deduce it backwards, or using admin adjust logic
+    account = account.adminAdjust(amount.negated());
 
-    // 3. Persist Wallet
-    const savedWallet = await this.compRepository.save(wallet);
+    // 4. Persist
+    const savedAccount = await this.compRepository.save(account);
 
-    // 4. Record Transaction
-    const transaction = CompTransaction.create({
+    // 5. Record Transaction
+    const transaction = CompAccountTransaction.create({
       id: this.snowflakeService.generate().id,
-      compWalletId: savedWallet.id,
+      compAccountId: savedAccount.id,
       amount: amount.negated(),
-      balanceBefore: balanceBefore,
-      balanceAfter: savedWallet.balance,
-      appliedRate: new Prisma.Decimal(1),
       type: CompTransactionType.ADMIN,
       processedBy: params.options?.processedBy,
       description: description || 'Admin Deduction',
@@ -96,9 +90,10 @@ export class DeductCompService {
     await this.compRepository.createTransaction(transaction);
 
     this.logger.log(
-      `Comp Deducted by Admin: user=${userId}, amount=${amount}, curr=${currency}, newBal=${savedWallet.balance}`,
+      `Comp Deducted by Admin: user=${userId}, amount=${amount}, curr=${currency}, totalEarnedAfter=${savedAccount.totalEarned}`,
     );
 
-    return savedWallet;
+    return savedAccount;
   }
 }
+
