@@ -15,7 +15,6 @@ const queueConfig = getQueueConfig(BULLMQ_QUEUES.COMP.DAILY_SETTLEMENT);
 export interface UserSettlementData {
     userId: string;
     currency: ExchangeCurrencyCode;
-    totalEarned: string;
     untilDate: string;
 }
 
@@ -62,7 +61,6 @@ export class CompDailySettlementProcessor extends BaseProcessor<UserSettlementDa
             const data: UserSettlementData = {
                 userId: pending.userId.toString(),
                 currency: pending.currency,
-                totalEarned: pending.totalEarned.toString(),
                 untilDate: untilDate.toISOString(),
             };
 
@@ -82,12 +80,11 @@ export class CompDailySettlementProcessor extends BaseProcessor<UserSettlementDa
     }
 
     private async handleUserSettlementJob(job: Job<UserSettlementData>): Promise<void> {
-        const { userId, currency, totalEarned, untilDate } = job.data;
+        const { userId, currency, untilDate } = job.data;
 
         await this.settleDailyCompService.processSingleSettlement({
             userId: BigInt(userId),
             currency,
-            totalEarned: new Prisma.Decimal(totalEarned),
         }, new Date(untilDate));
     }
 }

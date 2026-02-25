@@ -41,7 +41,6 @@ export class SettleDailyCompService {
     async processSingleSettlement(pending: {
         userId: bigint;
         currency: ExchangeCurrencyCode;
-        totalEarned?: Prisma.Decimal;
     }, untilDate: Date): Promise<void> {
         const { userId, currency } = pending;
 
