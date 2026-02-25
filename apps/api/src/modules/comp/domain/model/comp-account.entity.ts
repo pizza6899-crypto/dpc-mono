@@ -129,21 +129,4 @@ export class CompAccount {
       new Date(),
     );
   }
-
-  /**
-   * Admin adjustments. 
-   * Bypass checkStatus to allow admin to fix things.
-   */
-  adminAdjust(amount: Prisma.Decimal): CompAccount {
-    return new CompAccount(
-      this.id,
-      this.userId,
-      this.currency,
-      this.totalEarned.add(amount),
-      this.totalUsed,
-      this.isFrozen,
-      this.createdAt,
-      new Date(),
-    );
-  }
 }
