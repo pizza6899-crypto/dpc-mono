@@ -88,12 +88,18 @@ export class MyJobProcessor extends BaseProcessor<MyJobData, void> {
 - **Producer (인큐)**: 기본 Redis 커넥션을 사용하여 작업을 생성합니다.
 - **Consumer (워커)**: `getQueueConfig()`를 통해 자동으로 `'WORKER'` 전용 커넥션 풀을 사용하도록 설정됩니다.
 
-#### 4.2. 스케줄러 동기화
-- `BullMqSchedulerService`가 서버 기동 시 `BULLMQ_REGISTRY`의 설정과 Redis 상의 실제 반복 작업을 대조합니다.
 - 패턴(Cron)이나 타임존이 변경된 경우에만 삭제 후 재등록하여 멱등성을 유지합니다.
+
+#### 4.3. Job ID 작명 규칙 및 중복 방지 (Deduplication)
+분산 환경에서 동일한 작업이 중복 생성되는 것을 막기 위해 `jobId`를 명시적으로 부여할 수 있습니다.
+- **콜론(:) 사용 금지 (중요)**: BullMQ v5+ 부터 **사용자 정의 `jobId`에 콜론(`:`)을 포함할 수 없습니다.** 콜론은 BullMQ 내부 구분자로 사용되므로, 대신 하이픈(`-`)을 사용하십시오.
+- **조합 패턴**: `[동작]-[대상ID]-[날짜/시간키]` 형식을 권장합니다.
+  - ✅ Good: `eval-user-123-20240225`
+  - ❌ Bad: `eval:user:123:20240225` (런타임 에러 발생)
 
 ### 5. 주의사항 (Critical)
 1. **하드코딩 금지**: 큐 이름은 항상 도메인 상수(`*.bullmq.ts`)를 참조하십시오.
-2. **순환 참조 주의**: `bullmq.registry.ts`는 도메인을 참조하지만, 도메인 파일은 `bullmq.registry.ts`를 참조해서는 안 됩니다. (타입은 `bullmq.types.ts` 사용)
-3. **`BaseProcessor` 필수 사용**: 에러 핸들링, 로깅, 트랜잭션 전파(`tx` 객체)를 위해 필수입니다.
-4. **가벼운 Job Data**: `job.data`에는 최소한의 ID만 담고 자세한 정보는 프로세서 내부에서 DB를 조회하십시오.
+2. **`jobId` 내 콜론 사용 금지**: `Custom Id cannot contain :` 에러 방지를 위해 반드시 하이픈(`-`)을 사용하십시오.
+3. **순환 참조 주의**: `bullmq.registry.ts`는 도메인을 참조하지만, 도메인 파일은 `bullmq.registry.ts`를 참조해서는 안 됩니다.
+4. **`BaseProcessor` 필수 사용**: 에러 핸들링, 로깅, 트랜잭션 전파를 위해 필수입니다.
+5. **가벼운 Job Data**: `job.data`에는 최소한의 ID만 담고 자세한 정보는 프로세서 내부에서 DB를 조회하십시오.
