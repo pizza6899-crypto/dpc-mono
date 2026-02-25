@@ -35,11 +35,6 @@ export class UpdateCompAccountStatusService {
             params.currency,
         );
 
-        if (account.id === BigInt(0)) {
-            // If it doesn't exist, we save it first
-            account = await this.compRepository.save(account);
-        }
-
         const updatedAccount = account.updateStatus(params.isFrozen);
         return await this.compRepository.save(updatedAccount);
     }

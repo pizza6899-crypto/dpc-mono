@@ -19,6 +19,7 @@ import { FindCompDailyStatsService } from './application/find-comp-daily-stats.s
 import { FindCompTopEarnersService } from './application/find-comp-top-earners.service';
 import { FindCompConfigService } from './application/find-comp-config.service';
 import { UpdateCompConfigService } from './application/update-comp-config.service';
+import { UpdateCompAccountStatusService } from './application/update-comp-account-status.service';
 import { CompAdminController } from './controllers/admin/comp-admin.controller';
 import { CompStatsController } from './controllers/admin/comp-stats.controller';
 import { WalletModule } from '../wallet/wallet.module';
@@ -60,6 +61,7 @@ import { CompDailySettlementProcessor } from './infrastructure/processors/comp-d
     FindCompTopEarnersService,
     FindCompConfigService,
     UpdateCompConfigService,
+    UpdateCompAccountStatusService,
     SettleDailyCompService,
     CompDailySettlementProcessor,
   ],
@@ -72,6 +74,7 @@ import { CompDailySettlementProcessor } from './infrastructure/processors/comp-d
     FindCompTopEarnersService,
     FindCompConfigService,
     UpdateCompConfigService,
+    UpdateCompAccountStatusService,
     CompPolicy,
   ],
 })
