@@ -6,6 +6,7 @@ export class AdminCompBalanceQueryDto {
   @ApiProperty({
     enum: ExchangeCurrencyCode,
     example: ExchangeCurrencyCode.KRW,
+    description: 'Currency code / 통화 코드',
   })
   @IsEnum(ExchangeCurrencyCode)
   @IsNotEmpty()
