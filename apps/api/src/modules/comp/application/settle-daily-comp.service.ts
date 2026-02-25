@@ -31,27 +31,12 @@ export class SettleDailyCompService {
         private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
-    async execute(): Promise<void> {
-        const pendingList = await this.compDailySettlementRepository.findPendingSettlements();
-
-        if (!pendingList.length) {
-            this.logger.log('No pending comp settlements found.');
-            return;
-        }
-
-        this.logger.log(`Found ${pendingList.length} pending comp settlements to process.`);
-
-        for (const pending of pendingList) {
-            try {
-                await this.processSettlement(pending);
-            } catch (error) {
-                this.logger.error(`Failed to process settlement for user ${pending.userId} currency ${pending.currency}: ${error.message}`, error.stack);
-            }
-        }
+    async getPendingSettlements() {
+        return this.compDailySettlementRepository.findPendingSettlements();
     }
 
     @Transactional()
-    private async processSettlement(pending: {
+    async processSingleSettlement(pending: {
         userId: bigint;
         currency: ExchangeCurrencyCode;
         totalEarned: Prisma.Decimal;

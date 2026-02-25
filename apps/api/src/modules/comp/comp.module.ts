@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { BullModule } from '@nestjs/bullmq';
+import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
 import {
   COMP_REPOSITORY,
   COMP_CONFIG_REPOSITORY,
@@ -28,7 +30,13 @@ import { SettleDailyCompService } from './application/settle-daily-comp.service'
 import { CompDailySettlementProcessor } from './infrastructure/processors/comp-daily-settlement.processor';
 
 @Module({
-  imports: [WalletModule, ConcurrencyModule, SnowflakeModule, RewardCoreModule],
+  imports: [
+    WalletModule,
+    ConcurrencyModule,
+    SnowflakeModule,
+    RewardCoreModule,
+    BullModule.registerQueue(BULLMQ_QUEUES.COMP.DAILY_SETTLEMENT),
+  ],
   controllers: [CompUserController, CompAdminController, CompStatsController],
   providers: [
     CompMapper,
