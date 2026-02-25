@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
+import { ExchangeCurrencyCode, Prisma, CompSettlementStatus } from '@prisma/client';
 import { CompDailySettlementRepositoryPort } from '../ports';
 import { CompDailySettlement } from '../domain';
 import { CompMapper } from './comp.mapper';
@@ -100,7 +100,7 @@ export class CompDailySettlementRepository implements CompDailySettlementReposit
     async updateStatuses(
         userId: bigint,
         currency: ExchangeCurrencyCode,
-        status: any,
+        status: CompSettlementStatus,
         rewardId?: bigint,
     ): Promise<void> {
         await this.tx.compDailySettlement.updateMany({

@@ -1,6 +1,6 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { ExchangeCurrencyCode, Prisma, RewardItemType, RewardSourceType, CompTransactionType } from '@prisma/client';
+import { ExchangeCurrencyCode, Prisma, RewardItemType, RewardSourceType, CompTransactionType, CompSettlementStatus } from '@prisma/client';
 import {
     COMP_DAILY_SETTLEMENT_REPOSITORY,
     COMP_CONFIG_REPOSITORY,
@@ -61,7 +61,7 @@ export class SettleDailyCompService {
 
         if (!account) {
             this.logger.warn(`Comp settlement skipped for user ${userId}: Account not found.`);
-            await this.compDailySettlementRepository.updateStatuses(userId, currency, 'SKIPPED');
+            await this.compDailySettlementRepository.updateStatuses(userId, currency, CompSettlementStatus.SKIPPED);
             return;
         }
 
@@ -92,7 +92,7 @@ export class SettleDailyCompService {
         });
 
         // Update daily settlement statuses
-        await this.compDailySettlementRepository.updateStatuses(userId, currency, 'PROCESSED', reward.id);
+        await this.compDailySettlementRepository.updateStatuses(userId, currency, CompSettlementStatus.SETTLED, reward.id);
 
         // Record the usage in the comp account tracking
         const settledAccount = account.settle(totalEarned);

@@ -1,4 +1,4 @@
-import type { ExchangeCurrencyCode, Prisma } from '@prisma/client';
+import type { ExchangeCurrencyCode, Prisma, CompSettlementStatus } from '@prisma/client';
 import type { CompAccount } from '../domain/model/comp-account.entity';
 import type { CompAccountTransaction } from '../domain/model/comp-account-transaction.entity';
 import type { CompConfig } from '../domain/model/comp-config.entity';
@@ -74,6 +74,6 @@ export interface CompDailySettlementRepositoryPort {
       totalEarned: Prisma.Decimal;
     }>
   >;
-  updateStatuses(userId: bigint, currency: ExchangeCurrencyCode, status: string, rewardId?: bigint): Promise<void>;
+  updateStatuses(userId: bigint, currency: ExchangeCurrencyCode, status: CompSettlementStatus, rewardId?: bigint): Promise<void>;
   create(settlement: CompDailySettlement): Promise<CompDailySettlement>;
 }
