@@ -12,8 +12,8 @@ import {
 } from '../ports/repository.token';
 import type {
   CompConfigRepositoryPort,
+  CompDailySettlementRepositoryPort,
   CompRepositoryPort,
-  CompDailySettlementRepositoryPort
 } from '../ports';
 import {
   CompAccount,
@@ -60,7 +60,7 @@ export class EarnCompService {
 
     // 0. Acquire Lock for the user's comp account
     await this.advisoryLockService.acquireLock(
-      LockNamespace.COMP_WALLET,
+      LockNamespace.COMP_ACCOUNT,
       userId.toString(),
       {
         throwThrottleError: true,
@@ -72,7 +72,7 @@ export class EarnCompService {
       const config = await this.compConfigRepository.getConfig(currency);
 
       try {
-        this.compPolicy.verifyEarn(config, userId);
+        this.compPolicy.verifyEarn(config);
       } catch (error) {
         if (error instanceof CompPolicyViolationException) {
           this.logger.warn(`Comp earn skipped: ${error.message}`);
@@ -121,12 +121,7 @@ export class EarnCompService {
         totalEarned: amount,
       });
     } else {
-      // Create a modified one by hand because it's a simple entity right now
-      // Or we can add an `addEarn` method to CompDailySettlement entity
-      dailySettlement = CompDailySettlement.rehydrate({
-        ...dailySettlement,
-        totalEarned: dailySettlement.totalEarned.add(amount),
-      });
+      dailySettlement = dailySettlement.addEarn(amount);
     }
 
     await this.compDailySettlementRepository.save(dailySettlement);

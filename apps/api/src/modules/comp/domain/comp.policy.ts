@@ -9,7 +9,7 @@ export class CompPolicy {
   /**
    * 적립 가능 여부를 검증합니다.
    */
-  verifyEarn(config: CompConfig | null, userId: bigint): void {
+  verifyEarn(config: CompConfig | null): void {
     if (!config) return;
 
     if (!config.canEarn()) {

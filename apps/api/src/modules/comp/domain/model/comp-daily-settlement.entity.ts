@@ -65,4 +65,20 @@ export class CompDailySettlement {
             params.updatedAt,
         );
     }
+
+    addEarn(amount: Prisma.Decimal): CompDailySettlement {
+        return new CompDailySettlement(
+            this.id,
+            this.userId,
+            this.currency,
+            this.date,
+            this.totalEarned.add(amount),
+            this.status,
+            this.rewardId,
+            this.failureReason,
+            this.processedAt,
+            this.createdAt,
+            new Date(),
+        );
+    }
 }

@@ -50,7 +50,7 @@ export class DeductCompService {
 
     // 0. Acquire Lock
     await this.advisoryLockService.acquireLock(
-      LockNamespace.COMP_WALLET,
+      LockNamespace.COMP_ACCOUNT,
       userId.toString(),
       {
         throwThrottleError: true,
