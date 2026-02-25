@@ -8,6 +8,7 @@ import { TIER_EVALUATOR_QUEUES } from 'src/modules/tier/evaluator/infrastructure
 import { AFFILIATE_QUEUES } from 'src/modules/affiliate/commission/infrastructure/commission.bullmq';
 import { EXCHANGE_QUEUES } from 'src/modules/exchange/infrastructure/exchange.bullmq';
 import { AUTH_QUEUES } from 'src/modules/auth/session/infrastructure/session.bullmq';
+import { COMP_QUEUES } from 'src/modules/comp/infrastructure/comp.bullmq';
 
 /**
  * 전역 BullMQ 큐 설정 레지스트리 (Aggregation)
@@ -22,6 +23,7 @@ export const BULLMQ_REGISTRY = {
   AFFILIATE: AFFILIATE_QUEUES,
   EXCHANGE: EXCHANGE_QUEUES,
   AUTH: AUTH_QUEUES,
+  COMP: COMP_QUEUES,
 } as const;
 
 /**

@@ -24,6 +24,8 @@ import { WalletModule } from '../wallet/wallet.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { RewardCoreModule } from '../reward/core/reward-core.module';
+import { SettleDailyCompService } from './application/settle-daily-comp.service';
+import { CompDailySettlementProcessor } from './infrastructure/processors/comp-daily-settlement.processor';
 
 @Module({
   imports: [WalletModule, ConcurrencyModule, SnowflakeModule, RewardCoreModule],
@@ -51,6 +53,8 @@ import { RewardCoreModule } from '../reward/core/reward-core.module';
     FindCompTopEarnersService,
     FindCompConfigService,
     UpdateCompConfigService,
+    SettleDailyCompService,
+    CompDailySettlementProcessor,
   ],
   exports: [
     EarnCompService,
