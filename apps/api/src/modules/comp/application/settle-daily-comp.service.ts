@@ -33,8 +33,8 @@ export class SettleDailyCompService {
         private readonly snowflakeService: SnowflakeService,
     ) { }
 
-    async getPendingSettlements() {
-        return this.compDailySettlementRepository.findPendingSettlements();
+    async getPendingSettlements(untilDate: Date) {
+        return this.compDailySettlementRepository.findPendingSettlements(untilDate);
     }
 
     @Transactional()
@@ -42,7 +42,7 @@ export class SettleDailyCompService {
         userId: bigint;
         currency: ExchangeCurrencyCode;
         totalEarned: Prisma.Decimal;
-    }): Promise<void> {
+    }, untilDate: Date): Promise<void> {
         const { userId, currency, totalEarned } = pending;
 
         await this.advisoryLockService.acquireLock(
@@ -61,7 +61,7 @@ export class SettleDailyCompService {
 
         if (!account) {
             this.logger.warn(`Comp settlement skipped for user ${userId}: Account not found.`);
-            await this.compDailySettlementRepository.updateStatuses(userId, currency, CompSettlementStatus.SKIPPED);
+            await this.compDailySettlementRepository.updateStatuses(userId, currency, CompSettlementStatus.SKIPPED, untilDate);
             return;
         }
 
@@ -71,10 +71,10 @@ export class SettleDailyCompService {
         } catch (error) {
             if (error instanceof CompPolicyViolationException) {
                 this.logger.warn(`Comp settlement skipped for user ${userId}: ${error.message}`);
-                // Optionally update the status to SKIPPED if it doesn't meet minimum limit today to retry next day?
-                // Wait, if it's less than minimum, we just leave it as UNSETTLED so it gets added up later?
-                // Actually, daily settlement rows are created each day. If it's left UNSETTLED, next day's run will aggregate it natively (groupBy sums totalEarned of all UNSETTLED).
-                // Let's leave it as UNSETTLED, it will simply be ignored or accumulated tomorrow.
+                // 최소 한도 미달 시 다음 날 재시도를 위해 상태를 SKIPPED로 업데이트해야 할까요?
+                // 아니면 최소 금액 미만일 경우 나중에 합산되도록 UNSETTLED 상태로 두는 것이 나을까요?
+                // 매일 정산 데이터가 생성되므로, UNSETTLED 상태로 두면 다음 날 실행 시 자동으로 합산됩니다 (모든 UNSETTLED의 totalEarned를 합산).
+                // 따라서 UNSETTLED 상태로 유지하여 내일 합산되도록 합니다.
                 return;
             }
             throw error;
@@ -91,8 +91,8 @@ export class SettleDailyCompService {
             wageringMultiplier: new Prisma.Decimal(0), // No wagering required, it effectively becomes withdrawable cash immediately.
         });
 
-        // Update daily settlement statuses
-        await this.compDailySettlementRepository.updateStatuses(userId, currency, CompSettlementStatus.SETTLED, reward.id);
+        // Update daily settlement statuses up to untilDate
+        await this.compDailySettlementRepository.updateStatuses(userId, currency, CompSettlementStatus.SETTLED, untilDate, reward.id);
 
         // Record the usage in the comp account tracking
         const settledAccount = account.settle(totalEarned);

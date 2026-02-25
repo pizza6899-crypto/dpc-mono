@@ -75,7 +75,7 @@ export class CompDailySettlementRepository implements CompDailySettlementReposit
         return result ? this.mapper.toDailySettlementDomain(result) : null;
     }
 
-    async findPendingSettlements(): Promise<
+    async findPendingSettlements(untilDate: Date): Promise<
         Array<{
             userId: bigint;
             currency: ExchangeCurrencyCode;
@@ -87,6 +87,7 @@ export class CompDailySettlementRepository implements CompDailySettlementReposit
             _sum: { totalEarned: true },
             where: {
                 status: { in: ['UNSETTLED', 'SKIPPED'] },
+                date: { lt: untilDate },
             },
         });
 
@@ -101,6 +102,7 @@ export class CompDailySettlementRepository implements CompDailySettlementReposit
         userId: bigint,
         currency: ExchangeCurrencyCode,
         status: CompSettlementStatus,
+        untilDate: Date,
         rewardId?: bigint,
     ): Promise<void> {
         await this.tx.compDailySettlement.updateMany({
@@ -108,6 +110,7 @@ export class CompDailySettlementRepository implements CompDailySettlementReposit
                 userId,
                 currency,
                 status: { in: ['UNSETTLED', 'SKIPPED'] },
+                date: { lt: untilDate },
             },
             data: {
                 status,

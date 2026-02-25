@@ -67,13 +67,13 @@ export interface CompDailySettlementRepositoryPort {
     date: Date,
   ): Promise<CompDailySettlement | null>;
   // 배치 처리용 (미정산 항목 조회)
-  findPendingSettlements(): Promise<
+  findPendingSettlements(untilDate: Date): Promise<
     Array<{
       userId: bigint;
       currency: ExchangeCurrencyCode;
       totalEarned: Prisma.Decimal;
     }>
   >;
-  updateStatuses(userId: bigint, currency: ExchangeCurrencyCode, status: CompSettlementStatus, rewardId?: bigint): Promise<void>;
+  updateStatuses(userId: bigint, currency: ExchangeCurrencyCode, status: CompSettlementStatus, untilDate: Date, rewardId?: bigint): Promise<void>;
   create(settlement: CompDailySettlement): Promise<CompDailySettlement>;
 }

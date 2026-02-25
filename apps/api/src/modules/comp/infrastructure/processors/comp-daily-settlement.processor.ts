@@ -16,6 +16,7 @@ export interface UserSettlementData {
     userId: string;
     currency: ExchangeCurrencyCode;
     totalEarned: string;
+    untilDate: string;
 }
 
 @Processor(queueConfig.processorOptions, queueConfig.workerOptions)
@@ -43,7 +44,10 @@ export class CompDailySettlementProcessor extends BaseProcessor<UserSettlementDa
     private async handleDispatcherJob(): Promise<void> {
         this.logger.log('Starting daily comp settlement dispatcher job...');
 
-        const pendingList = await this.settleDailyCompService.getPendingSettlements();
+        const untilDate = new Date();
+        untilDate.setUTCHours(0, 0, 0, 0); // Exclude today, only resolve past un-settled days
+
+        const pendingList = await this.settleDailyCompService.getPendingSettlements(untilDate);
 
         if (!pendingList.length) {
             this.logger.log('No pending comp settlements found.');
@@ -59,6 +63,7 @@ export class CompDailySettlementProcessor extends BaseProcessor<UserSettlementDa
                 userId: pending.userId.toString(),
                 currency: pending.currency,
                 totalEarned: pending.totalEarned.toString(),
+                untilDate: untilDate.toISOString(),
             };
 
             await this.compQueue.add(
@@ -77,12 +82,12 @@ export class CompDailySettlementProcessor extends BaseProcessor<UserSettlementDa
     }
 
     private async handleUserSettlementJob(job: Job<UserSettlementData>): Promise<void> {
-        const { userId, currency, totalEarned } = job.data;
+        const { userId, currency, totalEarned, untilDate } = job.data;
 
         await this.settleDailyCompService.processSingleSettlement({
             userId: BigInt(userId),
             currency,
             totalEarned: new Prisma.Decimal(totalEarned),
-        });
+        }, new Date(untilDate));
     }
 }
