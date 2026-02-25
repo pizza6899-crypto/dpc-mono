@@ -39,6 +39,7 @@ import { PaginatedData } from 'src/common/http/types/pagination.types';
 import { AdminCompConfigResponseDto } from './dto/response/admin-comp-config.response.dto';
 import { AdminUpdateCompConfigDto } from './dto/request/admin-update-comp-config.dto';
 import { AdminUpdateCompAccountStatusDto } from './dto/request/admin-update-comp-account-status.dto';
+import { AdminTestCompEarnDto } from './dto/request/admin-test-comp-earn.dto';
 
 @ApiTags('Admin Comp')
 @Controller('admin/comp')
@@ -154,13 +155,16 @@ export class CompAdminController {
     summary: 'Test Comp Earning / 테스트용 콤프 적립',
     description: 'Manually inject comp points for testing / 테스트를 위해 수동으로 콤프 포인트를 적립합니다.',
   })
+  @ApiStandardResponse(AdminCompBalanceResponseDto, {
+    description: 'Successfully injected comp points / 콤프 적립 성공',
+  })
   async testEarn(
-    @Body() body: { userId: string; amount: string; currency: ExchangeCurrencyCode },
+    @Body() dto: AdminTestCompEarnDto,
   ): Promise<AdminCompBalanceResponseDto> {
     const account = await this.earnCompService.execute({
-      userId: BigInt(body.userId),
-      currency: body.currency,
-      amount: new Prisma.Decimal(body.amount),
+      userId: BigInt(dto.userId),
+      currency: dto.currency,
+      amount: new Prisma.Decimal(dto.amount),
       appliedRate: new Prisma.Decimal(0.01),
       referenceId: BigInt(Date.now()),
     });
