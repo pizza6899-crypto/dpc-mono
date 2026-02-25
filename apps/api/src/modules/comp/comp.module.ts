@@ -14,14 +14,11 @@ import { CompPolicy } from './domain/comp.policy';
 import { EarnCompService } from './application/earn-comp.service';
 import { FindCompAccountService } from './application/find-comp-account.service';
 import { FindCompTransactionsService } from './application/find-comp-transactions.service';
-import { FindCompOverviewService } from './application/find-comp-overview.service';
-import { FindCompDailyStatsService } from './application/find-comp-daily-stats.service';
-import { FindCompTopEarnersService } from './application/find-comp-top-earners.service';
+import { FindAdminCompStatsService } from './application/find-admin-comp-stats.service';
 import { FindCompConfigService } from './application/find-comp-config.service';
 import { UpdateCompConfigService } from './application/update-comp-config.service';
 import { UpdateCompAccountStatusService } from './application/update-comp-account-status.service';
 import { CompAdminController } from './controllers/admin/comp-admin.controller';
-import { CompStatsController } from './controllers/admin/comp-stats.controller';
 import { WalletModule } from '../wallet/wallet.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
@@ -39,7 +36,7 @@ import { CompDailySettlementProcessor } from './infrastructure/processors/comp-d
     EnvModule,
     BullModule.registerQueue(BULLMQ_QUEUES.COMP.DAILY_SETTLEMENT),
   ],
-  controllers: [CompAdminController, CompStatsController],
+  controllers: [CompAdminController],
   providers: [
     CompMapper,
     CompPolicy,
@@ -58,9 +55,7 @@ import { CompDailySettlementProcessor } from './infrastructure/processors/comp-d
     EarnCompService,
     FindCompAccountService,
     FindCompTransactionsService,
-    FindCompOverviewService,
-    FindCompDailyStatsService,
-    FindCompTopEarnersService,
+    FindAdminCompStatsService,
     FindCompConfigService,
     UpdateCompConfigService,
     UpdateCompAccountStatusService,
@@ -71,9 +66,7 @@ import { CompDailySettlementProcessor } from './infrastructure/processors/comp-d
     EarnCompService,
     FindCompAccountService,
     FindCompTransactionsService,
-    FindCompOverviewService,
-    FindCompDailyStatsService,
-    FindCompTopEarnersService,
+    FindAdminCompStatsService,
     FindCompConfigService,
     UpdateCompConfigService,
     UpdateCompAccountStatusService,

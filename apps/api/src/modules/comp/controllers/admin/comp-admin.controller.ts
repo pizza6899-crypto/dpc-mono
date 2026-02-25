@@ -25,7 +25,10 @@ import type { CompConfig } from '../../domain';
 import { FindCompConfigService } from '../../application/find-comp-config.service';
 import { UpdateCompConfigService } from '../../application/update-comp-config.service';
 import { UpdateCompAccountStatusService } from '../../application/update-comp-account-status.service';
+import { FindAdminCompStatsService } from '../../application/find-admin-comp-stats.service';
 import { AdminCompBalanceResponseDto } from './dto/response/admin-comp-balance.response.dto';
+import { AdminCompStatsResponseDto } from './dto/response/admin-comp-stats.response.dto';
+import { CompStatsQueryDto } from './dto/request/comp-stats-query.dto';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
@@ -56,6 +59,7 @@ export class CompAdminController {
     private readonly updateCompAccountStatusService: UpdateCompAccountStatusService,
     private readonly earnCompService: EarnCompService,
     private readonly envService: EnvService,
+    private readonly findAdminCompStatsService: FindAdminCompStatsService,
   ) { }
 
   @Get('users/:userId/balance')
@@ -153,6 +157,33 @@ export class CompAdminController {
   }
 
   @ApiExcludeEndpoint(process.env.NODE_ENV === 'production')
+  @Get('stats')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Get platform comp stats (Admin) / 플랫폼 콤프 통계 조회 (관리자)',
+    description: 'Retrieve summary and daily trends of comp points / 콤프 적립 및 사용 요약과 일별 트렌드를 조회합니다.',
+  })
+  @ApiStandardResponse(AdminCompStatsResponseDto, {
+    description: 'Successfully retrieved platform comp stats / 콤프 통계 조회 성공',
+  })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'COMP',
+    action: 'STATS_VIEW',
+    extractMetadata: (_, args) => ({
+      currency: args[0]?.currency,
+    }),
+  })
+  async getStats(
+    @Query() query: CompStatsQueryDto,
+  ): Promise<AdminCompStatsResponseDto> {
+    return this.findAdminCompStatsService.execute({
+      currency: query.currency,
+      startDate: query.startDate ? new Date(query.startDate) : undefined,
+      endDate: query.endDate ? new Date(query.endDate) : undefined,
+    });
+  }
+
   @Post('test-earn')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
