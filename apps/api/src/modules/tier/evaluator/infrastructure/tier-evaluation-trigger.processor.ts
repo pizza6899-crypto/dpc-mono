@@ -64,7 +64,7 @@ export class TierEvaluationTriggerProcessor extends BaseProcessor<any, void> {
           } as TierEvaluationJobPayload,
           opts: {
             // 중복 방지 핵심: 같은 시각에 같은 유저에 대한 잡은 하나만 허용
-            jobId: `eval:${userId}:${hourKey}`,
+            jobId: `eval-${userId}-${hourKey}`,
           },
         }));
 

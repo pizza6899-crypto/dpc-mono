@@ -64,7 +64,7 @@ export class CompDailySettlementProcessor extends BaseProcessor<UserSettlementDa
                         untilDate: untilDate.toISOString(),
                     },
                     opts: {
-                        jobId: `comp-user-settlement:${pending.userId}:${pending.currency}:${dateStr}`,
+                        jobId: `comp-user-settlement-${pending.userId}-${pending.currency}-${dateStr}`,
                         removeOnComplete: true,
                         removeOnFail: false,
                         attempts: 3,

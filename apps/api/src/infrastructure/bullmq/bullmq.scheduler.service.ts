@@ -8,7 +8,7 @@ import { EnvService } from 'src/common/env/env.service';
 export class BullMqSchedulerService implements OnModuleInit {
   private readonly logger = new Logger(BullMqSchedulerService.name);
 
-  constructor(private readonly envService: EnvService) {}
+  constructor(private readonly envService: EnvService) { }
 
   async onModuleInit() {
     this.logger.log('🔄 Initializing BullMQ Schedulers (Repeatable Jobs)...');
@@ -75,7 +75,7 @@ export class BullMqSchedulerService implements OnModuleInit {
                 tz: BULLMQ_DEFAULT_TIMEZONE, // 기본 타임존 적용
                 ...jobConfig.repeat, // 개별 설정이 있으면 덮어씀
               },
-              jobId: `repeat:${jobConfig.name}`,
+              jobId: `repeat-${jobConfig.name}`,
             });
 
             this.logger.debug(
