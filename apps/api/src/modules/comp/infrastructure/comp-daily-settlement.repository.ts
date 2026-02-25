@@ -98,6 +98,23 @@ export class CompDailySettlementRepository implements CompDailySettlementReposit
         }));
     }
 
+    async getPendingTotalForUser(
+        userId: bigint,
+        currency: ExchangeCurrencyCode,
+        untilDate: Date,
+    ): Promise<Prisma.Decimal> {
+        const result = await this.tx.compDailySettlement.aggregate({
+            _sum: { totalEarned: true },
+            where: {
+                userId,
+                currency,
+                status: { in: ['UNSETTLED', 'SKIPPED'] },
+                date: { lt: untilDate },
+            },
+        });
+        return result._sum.totalEarned || new Prisma.Decimal(0);
+    }
+
     async updateStatuses(
         userId: bigint,
         currency: ExchangeCurrencyCode,

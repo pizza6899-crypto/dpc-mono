@@ -75,5 +75,6 @@ export interface CompDailySettlementRepositoryPort {
     }>
   >;
   updateStatuses(userId: bigint, currency: ExchangeCurrencyCode, status: CompSettlementStatus, untilDate: Date, rewardId?: bigint): Promise<void>;
+  getPendingTotalForUser(userId: bigint, currency: ExchangeCurrencyCode, untilDate: Date): Promise<Prisma.Decimal>;
   create(settlement: CompDailySettlement): Promise<CompDailySettlement>;
 }

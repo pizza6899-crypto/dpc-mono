@@ -41,9 +41,9 @@ export class SettleDailyCompService {
     async processSingleSettlement(pending: {
         userId: bigint;
         currency: ExchangeCurrencyCode;
-        totalEarned: Prisma.Decimal;
+        totalEarned?: Prisma.Decimal;
     }, untilDate: Date): Promise<void> {
-        const { userId, currency, totalEarned } = pending;
+        const { userId, currency } = pending;
 
         await this.advisoryLockService.acquireLock(
             LockNamespace.COMP_ACCOUNT,
@@ -52,6 +52,19 @@ export class SettleDailyCompService {
                 throwThrottleError: true,
             },
         );
+
+        // 정산큐를 통과하는 사이(delay)에 발생할 수 있는 'Lost Update' 방지
+        // Lock 획득 후 최신 상태에서 실 DB 기준으로 대상 잔액 재산출
+        const secureTotalEarned = await this.compDailySettlementRepository.getPendingTotalForUser(
+            userId,
+            currency,
+            untilDate,
+        );
+
+        if (secureTotalEarned.lte(0)) {
+            this.logger.log(`Comp settlement skipped for user ${userId}: Re-calculated pending total is 0.`);
+            return;
+        }
 
         const config = await this.compConfigRepository.getConfig(currency);
         const account = await this.compRepository.findByUserIdAndCurrency(
@@ -67,7 +80,7 @@ export class SettleDailyCompService {
 
         // Checking settlement policy (Minimum amount, frozen status, etc)
         try {
-            this.compPolicy.verifySettlement(config, account, totalEarned);
+            this.compPolicy.verifySettlement(config, account, secureTotalEarned);
         } catch (error) {
             if (error instanceof CompPolicyViolationException) {
                 this.logger.warn(`Comp settlement skipped for user ${userId}: ${error.message}`);
@@ -86,7 +99,7 @@ export class SettleDailyCompService {
             sourceType: RewardSourceType.COMP_REWARD,
             rewardType: RewardItemType.BONUS_MONEY, // Convert Comp to CASH / BONUS_MONEY
             currency,
-            amount: totalEarned,
+            amount: secureTotalEarned,
             reason: 'Daily Comp Settlement',
             wageringMultiplier: new Prisma.Decimal(0), // No wagering required, it effectively becomes withdrawable cash immediately.
         });
@@ -95,7 +108,7 @@ export class SettleDailyCompService {
         await this.compDailySettlementRepository.updateStatuses(userId, currency, CompSettlementStatus.SETTLED, untilDate, reward.id);
 
         // Record the usage in the comp account tracking
-        const settledAccount = account.settle(totalEarned);
+        const settledAccount = account.settle(secureTotalEarned);
         await this.compRepository.save(settledAccount);
 
         // Record the transaction log (Negative amount for usage/settlement)
@@ -103,7 +116,7 @@ export class SettleDailyCompService {
         const transaction = CompAccountTransaction.create({
             id: sf.id,
             compAccountId: settledAccount.id,
-            amount: totalEarned.negated(),
+            amount: secureTotalEarned.negated(),
             type: CompTransactionType.SETTLEMENT,
             referenceId: reward.id, // Reference the granted reward
             description: 'Daily Comp Settlement',
@@ -111,6 +124,6 @@ export class SettleDailyCompService {
         });
         await this.compRepository.createTransaction(transaction);
 
-        this.logger.log(`Comp Settlement Processed: user=${userId}, amount=${totalEarned}, rewardId=${reward.id}`);
+        this.logger.log(`Comp Settlement Processed: user=${userId}, amount=${secureTotalEarned}, rewardId=${reward.id}`);
     }
 }
