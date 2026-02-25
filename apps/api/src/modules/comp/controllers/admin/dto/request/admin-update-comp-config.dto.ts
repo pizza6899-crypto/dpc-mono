@@ -1,4 +1,4 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { ExchangeCurrencyCode } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
@@ -11,7 +11,7 @@ import {
 } from 'class-validator';
 
 export class AdminUpdateCompConfigDto {
-  @ApiPropertyOptional({ enum: ExchangeCurrencyCode })
+  @ApiProperty({ enum: ExchangeCurrencyCode })
   @IsEnum(ExchangeCurrencyCode)
   currency: ExchangeCurrencyCode;
 
