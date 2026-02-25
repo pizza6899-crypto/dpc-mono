@@ -31,10 +31,6 @@ interface EarnCompParams {
   amount: Prisma.Decimal;
   appliedRate: Prisma.Decimal; // Required for better tracking (e.g. 0.001 for 0.1%)
   referenceId?: bigint; // e.g. gameRoundId or transactionId
-  description?: string;
-  transactionType?: CompTransactionType;
-  bypassPolicy?: boolean;
-  processedBy?: bigint; // Admin User ID
 }
 
 @Injectable()
@@ -61,10 +57,6 @@ export class EarnCompService {
       amount,
       appliedRate,
       referenceId,
-      description,
-      transactionType = CompTransactionType.EARN,
-      bypassPolicy = false,
-      processedBy,
     } = params;
 
     // 0. Early Exit for zero or negative amounts
@@ -105,34 +97,32 @@ export class EarnCompService {
     let actualAmount = amount;
 
     // 3. Check Configuration via Policy
-    if (!bypassPolicy) {
-      const config = await this.compConfigRepository.getConfig(currency);
+    const config = await this.compConfigRepository.getConfig(currency);
 
-      try {
-        this.compPolicy.verifyEarn(config);
-      } catch (error) {
-        if (error instanceof CompPolicyViolationException) {
-          this.logger.warn(`Comp earn skipped: ${error.message}`);
-          const account = await this.compRepository.findByUserIdAndCurrency(userId, currency);
-          return account ?? CompAccount.create({ userId, currency });
-        }
-        throw error;
+    try {
+      this.compPolicy.verifyEarn(config);
+    } catch (error) {
+      if (error instanceof CompPolicyViolationException) {
+        this.logger.warn(`Comp earn skipped: ${error.message}`);
+        const account = await this.compRepository.findByUserIdAndCurrency(userId, currency);
+        return account ?? CompAccount.create({ userId, currency });
+      }
+      throw error;
+    }
+
+    // 4. Enforce maxDailyEarnPerUser limit
+    if (config && config.maxDailyEarnPerUser.gt(0)) {
+      const remainingDailyLimit = config.maxDailyEarnPerUser.sub(dailySettlement.totalEarned);
+
+      if (remainingDailyLimit.lte(0)) {
+        this.logger.warn(`Comp earn skipped: User reached the max daily limit (${config.maxDailyEarnPerUser})`);
+        const account = await this.compRepository.findByUserIdAndCurrency(userId, currency);
+        return account ?? CompAccount.create({ userId, currency });
       }
 
-      // 4. Enforce maxDailyEarnPerUser limit
-      if (config && config.maxDailyEarnPerUser.gt(0)) {
-        const remainingDailyLimit = config.maxDailyEarnPerUser.sub(dailySettlement.totalEarned);
-
-        if (remainingDailyLimit.lte(0)) {
-          this.logger.warn(`Comp earn skipped: User reached the max daily limit (${config.maxDailyEarnPerUser})`);
-          const account = await this.compRepository.findByUserIdAndCurrency(userId, currency);
-          return account ?? CompAccount.create({ userId, currency });
-        }
-
-        if (actualAmount.gt(remainingDailyLimit)) {
-          this.logger.log(`Comp earn amount capped: original=${actualAmount}, capped=${remainingDailyLimit}`);
-          actualAmount = remainingDailyLimit;
-        }
+      if (actualAmount.gt(remainingDailyLimit)) {
+        this.logger.log(`Comp earn amount capped: original=${actualAmount}, capped=${remainingDailyLimit}`);
+        actualAmount = remainingDailyLimit;
       }
     }
 
@@ -143,7 +133,15 @@ export class EarnCompService {
     }
 
     // 6. Apply Earn Logic (Domain)
-    account = account.earn(actualAmount);
+    try {
+      account = account.earn(actualAmount);
+    } catch (error) {
+      if (error instanceof CompPolicyViolationException) {
+        this.logger.warn(`Comp earn failed for user ${userId}: ${error.message}`);
+        return account; // Return current state (skip earn)
+      }
+      throw error;
+    }
     const savedAccount = await this.compRepository.save(account);
 
     // 7. Update Daily Settlement
@@ -157,10 +155,8 @@ export class EarnCompService {
       compAccountId: savedAccount.id,
       amount: actualAmount,
       appliedRate: appliedRate,
-      type: transactionType,
+      type: CompTransactionType.EARN,
       referenceId: referenceId,
-      processedBy: processedBy,
-      description,
       createdAt: sf.timestamp,
     });
     await this.compRepository.createTransaction(transaction);

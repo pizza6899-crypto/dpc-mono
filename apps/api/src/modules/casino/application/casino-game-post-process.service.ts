@@ -126,7 +126,6 @@ export class CasinoGamePostProcessService {
             amount: compAmount,
             appliedRate: context.compRate,
             referenceId: gameRound.id,
-            description: `Game Comp: ${gameRound.id}`,
           });
           this.logger.log(
             `콤프 적립: userId=${gameRound.userId}, amount=${compAmount}`,
