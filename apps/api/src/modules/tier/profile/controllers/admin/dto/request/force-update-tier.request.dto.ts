@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsString, IsBoolean, IsOptional } from 'class-validator';
 
 export class ForceUpdateTierRequestDto {
   @ApiProperty({
@@ -13,4 +13,12 @@ export class ForceUpdateTierRequestDto {
   })
   @IsString()
   reason: string;
+
+  @ApiPropertyOptional({
+    description: 'Whether to grant upgrade bonus / 승급 보너스 지급 여부',
+    default: false,
+  })
+  @IsBoolean()
+  @IsOptional()
+  isGrantBonus?: boolean;
 }

@@ -53,7 +53,7 @@ export class UserTierAdminController {
     private readonly forceUpdateUserTierService: ForceUpdateUserTierService,
     private readonly resetUserTierPerformanceService: ResetUserTierPerformanceService,
     private readonly updateUserTierStatusService: UpdateUserTierStatusService,
-  ) {}
+  ) { }
 
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -173,6 +173,7 @@ export class UserTierAdminController {
       BigInt(userId),
       BigInt(dto.targetTierId),
       dto.reason,
+      dto.isGrantBonus ?? false,
     );
   }
 

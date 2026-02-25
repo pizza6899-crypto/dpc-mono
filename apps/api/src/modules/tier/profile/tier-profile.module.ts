@@ -20,6 +20,8 @@ import { TierConfigModule } from '../config/tier-config.module';
 import { TierEvaluatorModule } from '../evaluator/tier-evaluator.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { TierTestAdminController } from './controllers/admin/tier-test-admin.controller';
+import { RewardCoreModule } from 'src/modules/reward/core/reward-core.module';
+import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { TierTestAdminController } from './controllers/admin/tier-test-admin.con
     forwardRef(() => TierEvaluatorModule),
     TierConfigModule,
     EnvModule,
+    RewardCoreModule,
+    ConcurrencyModule,
   ],
   controllers: [
     UserTierController,
