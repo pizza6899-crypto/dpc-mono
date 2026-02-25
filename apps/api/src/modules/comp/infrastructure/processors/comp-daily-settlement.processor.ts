@@ -3,7 +3,7 @@ import { Job, Queue } from 'bullmq';
 import { Logger } from '@nestjs/common';
 import { ClsService } from 'nestjs-cls';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
-import { Prisma } from '@prisma/client';
+import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import {
     BULLMQ_QUEUES,
     getQueueConfig,
@@ -12,8 +12,14 @@ import { SettleDailyCompService } from '../../application/settle-daily-comp.serv
 
 const queueConfig = getQueueConfig(BULLMQ_QUEUES.COMP.DAILY_SETTLEMENT);
 
+export interface UserSettlementData {
+    userId: string;
+    currency: ExchangeCurrencyCode;
+    totalEarned: string;
+}
+
 @Processor(queueConfig.processorOptions, queueConfig.workerOptions)
-export class CompDailySettlementProcessor extends BaseProcessor<any, void> {
+export class CompDailySettlementProcessor extends BaseProcessor<UserSettlementData | any, void> {
     protected readonly logger = new Logger(CompDailySettlementProcessor.name);
 
     constructor(
@@ -24,13 +30,13 @@ export class CompDailySettlementProcessor extends BaseProcessor<any, void> {
         super();
     }
 
-    protected async processJob(job: Job<any>): Promise<void> {
+    protected async processJob(job: Job<UserSettlementData | any>): Promise<void> {
         const { name } = job;
 
         if (name === queueConfig.repeatableJobs?.[0]?.name) {
             await this.handleDispatcherJob();
         } else if (name === 'comp-user-settlement') {
-            await this.handleUserSettlementJob(job);
+            await this.handleUserSettlementJob(job as Job<UserSettlementData>);
         }
     }
 
@@ -49,13 +55,15 @@ export class CompDailySettlementProcessor extends BaseProcessor<any, void> {
         const dateStr = new Date().toISOString().split('T')[0];
 
         for (const pending of pendingList) {
+            const data: UserSettlementData = {
+                userId: pending.userId.toString(),
+                currency: pending.currency,
+                totalEarned: pending.totalEarned.toString(),
+            };
+
             await this.compQueue.add(
                 'comp-user-settlement',
-                {
-                    userId: pending.userId.toString(),
-                    currency: pending.currency,
-                    totalEarned: pending.totalEarned.toString(),
-                },
+                data,
                 {
                     jobId: `comp-user-settlement:${pending.userId}:${pending.currency}:${dateStr}`,
                     removeOnComplete: true,
@@ -68,7 +76,7 @@ export class CompDailySettlementProcessor extends BaseProcessor<any, void> {
         this.logger.log(`Dispatched ${pendingList.length} user settlement jobs.`);
     }
 
-    private async handleUserSettlementJob(job: Job<any>): Promise<void> {
+    private async handleUserSettlementJob(job: Job<UserSettlementData>): Promise<void> {
         const { userId, currency, totalEarned } = job.data;
 
         await this.settleDailyCompService.processSingleSettlement({
