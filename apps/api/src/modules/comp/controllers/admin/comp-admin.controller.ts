@@ -8,8 +8,9 @@ import {
   Query,
   HttpCode,
   HttpStatus,
+  NotFoundException,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiParam, ApiExcludeEndpoint } from '@nestjs/swagger';
 import {
   Prisma,
   UserRoleType,
@@ -40,6 +41,7 @@ import { AdminCompConfigResponseDto } from './dto/response/admin-comp-config.res
 import { AdminUpdateCompConfigDto } from './dto/request/admin-update-comp-config.dto';
 import { AdminUpdateCompAccountStatusDto } from './dto/request/admin-update-comp-account-status.dto';
 import { AdminTestCompEarnDto } from './dto/request/admin-test-comp-earn.dto';
+import { EnvService } from 'src/common/env/env.service';
 
 @ApiTags('Admin Comp')
 @Controller('admin/comp')
@@ -53,6 +55,7 @@ export class CompAdminController {
     private readonly updateCompConfigService: UpdateCompConfigService,
     private readonly updateCompAccountStatusService: UpdateCompAccountStatusService,
     private readonly earnCompService: EarnCompService,
+    private readonly envService: EnvService,
   ) { }
 
   @Get('users/:userId/balance')
@@ -149,6 +152,7 @@ export class CompAdminController {
     };
   }
 
+  @ApiExcludeEndpoint(process.env.NODE_ENV === 'production')
   @Post('test-earn')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
@@ -161,6 +165,10 @@ export class CompAdminController {
   async testEarn(
     @Body() dto: AdminTestCompEarnDto,
   ): Promise<AdminCompBalanceResponseDto> {
+    if (this.envService.nodeEnv === 'production') {
+      throw new NotFoundException();
+    }
+
     const account = await this.earnCompService.execute({
       userId: BigInt(dto.userId),
       currency: dto.currency,

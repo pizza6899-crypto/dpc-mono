@@ -26,6 +26,7 @@ import { WalletModule } from '../wallet/wallet.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { RewardCoreModule } from '../reward/core/reward-core.module';
+import { EnvModule } from 'src/common/env/env.module';
 import { SettleDailyCompService } from './application/settle-daily-comp.service';
 import { CompDailySettlementProcessor } from './infrastructure/processors/comp-daily-settlement.processor';
 
@@ -35,6 +36,7 @@ import { CompDailySettlementProcessor } from './infrastructure/processors/comp-d
     ConcurrencyModule,
     SnowflakeModule,
     RewardCoreModule,
+    EnvModule,
     BullModule.registerQueue(BULLMQ_QUEUES.COMP.DAILY_SETTLEMENT),
   ],
   controllers: [CompAdminController, CompStatsController],
