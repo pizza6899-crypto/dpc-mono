@@ -10,7 +10,6 @@
 - **`config/`**: 티어 레벨, 설정, 환경 등 메타데이터 및 불변 정책 (Config)
 - **`profile/`**: 유저별 티어 현황(`UserTier`) 및 상태 관리 (State)
 - **`evaluator/`**: 승급/강등 심사 로직 및 정책 구현 (Brain)
-- **`reward/`**: 승급 보너스 지급 및 회수 관련 로직 (Reward)
 - **`audit/`**: 이력(`TierHistory`) 및 통계(`TierStats`) 기록 (Log)
 
 ---

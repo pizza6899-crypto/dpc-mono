@@ -17,10 +17,22 @@ import { UserTierController } from './controllers/user/user-tier.controller';
 import { UserTierAdminController } from './controllers/admin/user-tier-admin.controller';
 import { TierAuditModule } from '../audit/tier-audit.module';
 import { TierConfigModule } from '../config/tier-config.module';
+import { TierEvaluatorModule } from '../evaluator/tier-evaluator.module';
+import { EnvModule } from 'src/common/env/env.module';
+import { TierTestAdminController } from './controllers/admin/tier-test-admin.controller';
 
 @Module({
-  imports: [forwardRef(() => TierAuditModule), TierConfigModule],
-  controllers: [UserTierController, UserTierAdminController],
+  imports: [
+    forwardRef(() => TierAuditModule),
+    forwardRef(() => TierEvaluatorModule),
+    TierConfigModule,
+    EnvModule,
+  ],
+  controllers: [
+    UserTierController,
+    UserTierAdminController,
+    TierTestAdminController,
+  ],
   providers: [
     { provide: UserTierRepositoryPort, useClass: UserTierRepository },
     InitializeUserTierService,
@@ -50,4 +62,4 @@ import { TierConfigModule } from '../config/tier-config.module';
     GetTierBenefitsService,
   ],
 })
-export class TierProfileModule {}
+export class TierProfileModule { }

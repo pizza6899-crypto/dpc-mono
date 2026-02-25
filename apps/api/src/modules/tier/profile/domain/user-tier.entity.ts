@@ -56,7 +56,7 @@ export class UserTier {
     // Joined Data
     public readonly tier?: Tier,
     public readonly downgradeWarningTargetTier?: Tier,
-  ) {}
+  ) { }
 
   getEffectiveBenefits(baseTier?: Tier): EffectiveBenefits {
     const tier = baseTier || this.tier;
