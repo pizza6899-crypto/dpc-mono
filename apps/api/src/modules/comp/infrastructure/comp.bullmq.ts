@@ -13,7 +13,7 @@ export const COMP_QUEUES = {
         repeatableJobs: [
             {
                 name: 'comp-daily-settlement-scheduler',
-                repeat: { pattern: '0 0 * * *' }, // Run daily at midnight UTC
+                repeat: { pattern: '0 5 * * *', tz: 'Asia/Tokyo' }, // Run daily at 5:00 AM JST
             },
         ],
     },
