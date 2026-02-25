@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsOptional } from 'class-validator';
+import { IsDateString, IsEnum, IsOptional } from 'class-validator';
 import { ExchangeCurrencyCode } from '@prisma/client';
 
 export class CompStatsQueryDto {
@@ -14,9 +14,11 @@ export class CompStatsQueryDto {
 
   @ApiProperty({ example: '2024-01-01', required: false })
   @IsOptional()
+  @IsDateString()
   startDate?: string;
 
   @ApiProperty({ example: '2024-01-31', required: false })
   @IsOptional()
+  @IsDateString()
   endDate?: string;
 }

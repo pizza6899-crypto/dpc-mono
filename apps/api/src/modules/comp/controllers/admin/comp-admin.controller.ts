@@ -182,10 +182,10 @@ export class CompAdminController {
   ): Promise<AdminCompConfigResponseDto> {
     const result = await this.updateCompConfigService.execute({
       ...dto,
-      minSettlementAmount: dto.minSettlementAmount !== undefined
+      minSettlementAmount: dto.minSettlementAmount
         ? new Prisma.Decimal(dto.minSettlementAmount)
         : undefined,
-      maxDailyEarnPerUser: dto.maxDailyEarnPerUser !== undefined
+      maxDailyEarnPerUser: dto.maxDailyEarnPerUser
         ? new Prisma.Decimal(dto.maxDailyEarnPerUser)
         : undefined,
     });
