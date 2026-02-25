@@ -79,12 +79,10 @@ export class CompDailySettlementRepository implements CompDailySettlementReposit
         Array<{
             userId: bigint;
             currency: ExchangeCurrencyCode;
-            totalEarned: Prisma.Decimal;
         }>
     > {
         const results = await this.tx.compDailySettlement.groupBy({
             by: ['userId', 'currency'],
-            _sum: { totalEarned: true },
             where: {
                 status: { in: ['UNSETTLED', 'SKIPPED'] },
                 date: { lt: untilDate },
@@ -94,7 +92,6 @@ export class CompDailySettlementRepository implements CompDailySettlementReposit
         return results.map((r) => ({
             userId: r.userId,
             currency: r.currency,
-            totalEarned: r._sum.totalEarned || new Prisma.Decimal(0),
         }));
     }
 
