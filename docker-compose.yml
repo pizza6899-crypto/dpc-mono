@@ -22,6 +22,21 @@ services:
       - "6379:6379"
     restart: always
 
+  bull-board:
+    image: venatum/bull-board:latest
+    container_name: bull-board
+    platform: linux/arm64
+    ports:
+      - "4567:3000"
+    environment:
+      - REDIS_HOST=valkey
+      - REDIS_PORT=6379
+      - BULL_PREFIX=bull
+      - BULL_VERSION=BULLMQ
+    depends_on:
+      - valkey
+    restart: always
+
   mailpit:
     image: axllent/mailpit
     container_name: mailpit
