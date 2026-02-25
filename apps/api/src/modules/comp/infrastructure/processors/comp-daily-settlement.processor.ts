@@ -43,8 +43,11 @@ export class CompDailySettlementProcessor extends BaseProcessor<UserSettlementDa
     private async handleDispatcherJob(): Promise<void> {
         this.logger.log('Starting daily comp settlement dispatcher job...');
 
-        const untilDate = new Date();
-        untilDate.setUTCHours(0, 0, 0, 0); // Exclude today, only resolve past un-settled days
+        // Apply UTC+9 (JST/KST) offset to align the daily bucket strictly to 00:00 KST
+        const now = new Date();
+        const kstOffsetMs = 9 * 60 * 60 * 1000;
+        const untilDate = new Date(now.getTime() + kstOffsetMs);
+        untilDate.setUTCHours(0, 0, 0, 0); // Exclude today (KST), only resolve past un-settled days
 
         const dateStr = new Date().toISOString().split('T')[0];
         let totalDispatched = 0;

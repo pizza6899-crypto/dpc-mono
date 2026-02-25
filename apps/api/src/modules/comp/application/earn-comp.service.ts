@@ -76,8 +76,11 @@ export class EarnCompService {
     );
 
     // 2. Fetch or Create Daily Settlement (Early fetch to check daily limits)
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0); // Normalize to UTC midnight
+    // Apply UTC+9 (JST/KST) offset to align the daily bucket strictly to 00:00 KST
+    const now = new Date();
+    const kstOffsetMs = 9 * 60 * 60 * 1000;
+    const today = new Date(now.getTime() + kstOffsetMs);
+    today.setUTCHours(0, 0, 0, 0); // Normalize to UTC midnight representing KST Date
 
     let dailySettlement = await this.compDailySettlementRepository.findByUserIdAndCurrencyAndDate(
       userId,
