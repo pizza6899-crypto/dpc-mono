@@ -13,7 +13,8 @@ export const COMP_QUEUES = {
         repeatableJobs: [
             {
                 name: 'comp-daily-settlement-scheduler',
-                repeat: { pattern: '0 5 * * *', tz: 'Asia/Tokyo' }, // Run daily at 5:00 AM JST
+                // Uses BULLMQ_DEFAULT_TIMEZONE (Asia/Tokyo) automatically by bullmq.scheduler.service.ts
+                repeat: { pattern: '0 5 * * *' }, // Run daily at 5:00 AM JST
             },
         ],
     },
