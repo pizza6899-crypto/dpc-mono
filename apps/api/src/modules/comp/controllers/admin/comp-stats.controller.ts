@@ -24,7 +24,7 @@ export class CompStatsController {
     private readonly findCompOverviewService: FindCompOverviewService,
     private readonly findCompDailyStatsService: FindCompDailyStatsService,
     private readonly findCompTopEarnersService: FindCompTopEarnersService,
-  ) {}
+  ) { }
 
   @Get('overview')
   @HttpCode(HttpStatus.OK)
