@@ -15,6 +15,12 @@ export class AdminCompBalanceResponseDto {
   balance: string;
 
   @ApiProperty({
+    description: 'Is frozen / 콤프 계정 동결 여부',
+    example: false,
+  })
+  isFrozen: boolean;
+
+  @ApiProperty({
     description: 'Total earned comp points / 총 적립 콤프',
     example: '5000.00',
   })

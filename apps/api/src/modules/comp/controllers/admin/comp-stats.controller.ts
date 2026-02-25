@@ -4,7 +4,6 @@ import { UserRoleType } from '@prisma/client';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { ApiStandardErrors } from 'src/common/http/decorators/api-response.decorator';
 import { CompStatsQueryDto } from './dto/request/comp-stats-query.dto';
-
 import { FindCompOverviewService } from '../../application/find-comp-overview.service';
 import { FindCompDailyStatsService } from '../../application/find-comp-daily-stats.service';
 import { FindCompTopEarnersService } from '../../application/find-comp-top-earners.service';

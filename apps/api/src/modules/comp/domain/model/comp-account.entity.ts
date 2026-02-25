@@ -60,6 +60,19 @@ export class CompAccount {
     );
   }
 
+  updateStatus(isFrozen: boolean): CompAccount {
+    return new CompAccount(
+      this.id,
+      this.userId,
+      this.currency,
+      this.totalEarned,
+      this.totalUsed,
+      isFrozen,
+      this.createdAt,
+      new Date(),
+    );
+  }
+
   private checkStatus() {
     if (this.isFrozen) {
       throw new CompPolicyViolationException('Comp account is frozen.');
