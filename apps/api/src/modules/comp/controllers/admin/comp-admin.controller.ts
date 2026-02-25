@@ -13,7 +13,9 @@ import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 import {
   Prisma,
   UserRoleType,
+  ExchangeCurrencyCode,
 } from '@prisma/client';
+import { EarnCompService } from '../../application/earn-comp.service';
 import { FindCompTransactionsService } from '../../application/find-comp-transactions.service';
 import { AdminFindCompTransactionsQueryDto } from './dto/request/admin-find-comp-transactions-query.dto';
 import { AdminCompTransactionResponseDto } from './dto/response/admin-comp-transaction.response.dto';
@@ -49,6 +51,7 @@ export class CompAdminController {
     private readonly findCompConfigService: FindCompConfigService,
     private readonly updateCompConfigService: UpdateCompConfigService,
     private readonly updateCompAccountStatusService: UpdateCompAccountStatusService,
+    private readonly earnCompService: EarnCompService,
   ) { }
 
   @Get('users/:userId/balance')
@@ -142,6 +145,32 @@ export class CompAdminController {
       total: result.total,
       page: query.page ?? 1,
       limit: query.limit ?? 20,
+    };
+  }
+
+  @Post('test-earn')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Test Comp Earning / 테스트용 콤프 적립',
+    description: 'Manually inject comp points for testing / 테스트를 위해 수동으로 콤프 포인트를 적립합니다.',
+  })
+  async testEarn(
+    @Body() body: { userId: string; amount: string; currency: ExchangeCurrencyCode },
+  ): Promise<AdminCompBalanceResponseDto> {
+    const account = await this.earnCompService.execute({
+      userId: BigInt(body.userId),
+      currency: body.currency,
+      amount: new Prisma.Decimal(body.amount),
+      appliedRate: new Prisma.Decimal(0.01),
+      referenceId: BigInt(Date.now()),
+    });
+
+    return {
+      currency: account.currency,
+      balance: account.totalEarned.sub(account.totalUsed).toString(),
+      isFrozen: account.isFrozen,
+      totalEarned: account.totalEarned.toString(),
+      totalUsed: account.totalUsed.toString(),
     };
   }
 
