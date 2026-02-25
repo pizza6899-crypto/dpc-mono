@@ -27,7 +27,7 @@ import { UpdateCompConfigService } from '../../application/update-comp-config.se
 import { UpdateCompAccountStatusService } from '../../application/update-comp-account-status.service';
 import { FindAdminCompStatsService } from '../../application/find-admin-comp-stats.service';
 import { AdminCompBalanceResponseDto } from './dto/response/admin-comp-balance.response.dto';
-import { AdminCompStatsResponseDto } from './dto/response/admin-comp-stats.response.dto';
+import { CompDailyStatResponseDto } from './dto/response/comp-daily-stat.response.dto';
 import { CompStatsQueryDto } from './dto/request/comp-stats-query.dto';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
@@ -163,8 +163,9 @@ export class CompAdminController {
     summary: 'Get platform comp stats (Admin) / 플랫폼 콤프 통계 조회 (관리자)',
     description: 'Retrieve summary and daily trends of comp points / 콤프 적립 및 사용 요약과 일별 트렌드를 조회합니다.',
   })
-  @ApiStandardResponse(AdminCompStatsResponseDto, {
-    description: 'Successfully retrieved platform comp stats / 콤프 통계 조회 성공',
+  @ApiStandardResponse(CompDailyStatResponseDto, {
+    isArray: true,
+    description: 'Successfully retrieved platform comp daily trends / 콤프 일별 트렌드 조회 성공',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -176,7 +177,7 @@ export class CompAdminController {
   })
   async getStats(
     @Query() query: CompStatsQueryDto,
-  ): Promise<AdminCompStatsResponseDto> {
+  ): Promise<CompDailyStatResponseDto[]> {
     return this.findAdminCompStatsService.execute({
       currency: query.currency,
       startDate: query.startDate ? new Date(query.startDate) : undefined,
