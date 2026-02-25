@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Language } from '@prisma/client';
 import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository.port';
-import { TierRepositoryPort } from '../../definitions/infrastructure/tier.repository.port';
+import { TierRepositoryPort } from '../../config/infrastructure/tier.repository.port';
 export interface TierDistributionResult {
   tierId: bigint;
   tierCode: string;

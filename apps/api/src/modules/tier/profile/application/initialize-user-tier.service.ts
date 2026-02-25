@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserTierRepositoryPort } from '../infrastructure/user-tier.repository.port';
-import { TierRepositoryPort } from '../../definitions/infrastructure/tier.repository.port';
+import { TierRepositoryPort } from '../../config/infrastructure/tier.repository.port';
 import { UserTier } from '../domain/user-tier.entity';
 import {
   Prisma,

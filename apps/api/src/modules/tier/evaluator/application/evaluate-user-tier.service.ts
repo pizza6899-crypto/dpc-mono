@@ -3,9 +3,9 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository.port';
 import { DemotionPolicy } from '../domain/demotion.policy';
 import { DemoteUserTierService } from './demote-user-tier.service';
-import { Tier } from '../../definitions/domain/tier.entity';
+import { Tier } from '../../config/domain/tier.entity';
 import { TierEvaluationCycle } from '@prisma/client';
-import { TierConfigRepositoryPort } from '../../definitions/infrastructure/tier-config.repository.port';
+import { TierConfigRepositoryPort } from '../../config/infrastructure/tier-config.repository.port';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 @Injectable()

@@ -1,6 +1,6 @@
 import type { ExchangeCurrencyCode } from '@prisma/client';
 import { Prisma, UserTierStatus } from '@prisma/client';
-import { Tier } from '../../definitions/domain/tier.entity';
+import { Tier } from '../../config/domain/tier.entity';
 
 export interface EffectiveBenefits {
   compRate: Prisma.Decimal;

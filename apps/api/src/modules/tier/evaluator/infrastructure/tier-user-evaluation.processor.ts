@@ -8,7 +8,7 @@ import {
   getQueueConfig,
 } from 'src/infrastructure/bullmq/bullmq.constants';
 import { EvaluateUserTierService } from '../application/evaluate-user-tier.service';
-import { TierRepositoryPort } from '../../definitions/infrastructure/tier.repository.port';
+import { TierRepositoryPort } from '../../config/infrastructure/tier.repository.port';
 import {
   TierEvaluationJobType,
   TierEvaluationJobPayload,

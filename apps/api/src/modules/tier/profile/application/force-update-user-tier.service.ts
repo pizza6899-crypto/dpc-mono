@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { UserTierRepositoryPort } from '../infrastructure/user-tier.repository.port';
 import { RecordTierHistoryService } from '../../audit/application/record-tier-history.service';
-import { TierRepositoryPort } from '../../definitions/infrastructure/tier.repository.port';
+import { TierRepositoryPort } from '../../config/infrastructure/tier.repository.port';
 import { TierChangeType, Prisma } from '@prisma/client';
 import { UserTierNotFoundException } from '../domain/tier-profile.exception';
-import { TierNotFoundException } from '../../definitions/domain/tier-definitions.exception';
+import { TierNotFoundException } from '../../config/domain/tier-config.exception';
 
 @Injectable()
 export class ForceUpdateUserTierService {

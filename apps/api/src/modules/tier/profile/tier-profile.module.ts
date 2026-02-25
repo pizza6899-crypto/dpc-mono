@@ -16,10 +16,10 @@ import { GetTierBenefitsService } from './application/get-tier-benefits.service'
 import { UserTierController } from './controllers/user/user-tier.controller';
 import { UserTierAdminController } from './controllers/admin/user-tier-admin.controller';
 import { TierAuditModule } from '../audit/tier-audit.module';
-import { TierDefinitionsModule } from '../definitions/tier-definitions.module';
+import { TierConfigModule } from '../config/tier-config.module';
 
 @Module({
-  imports: [forwardRef(() => TierAuditModule), TierDefinitionsModule],
+  imports: [forwardRef(() => TierAuditModule), TierConfigModule],
   controllers: [UserTierController, UserTierAdminController],
   providers: [
     { provide: UserTierRepositoryPort, useClass: UserTierRepository },

@@ -4,7 +4,7 @@ import {
   UpdateTierConfigProps,
 } from '../infrastructure/tier-config.repository.port';
 import { TierConfig } from '../domain/tier-config.entity';
-import { TierConfigNotFoundException } from '../domain/tier-definitions.exception';
+import { TierConfigNotFoundException } from '../domain/tier-config.exception';
 
 @Injectable()
 export class TierConfigService {

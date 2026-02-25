@@ -11,7 +11,7 @@ import { PaginatedData } from 'src/common/http/types/pagination.types';
 import { GetMyTierService } from '../../application/get-my-tier.service';
 import { GetNextTierProgressService } from '../../application/get-next-tier-progress.service';
 import { GetUserTierHistoryService } from '../../application/get-user-tier-history.service';
-import { TierRepositoryPort } from '../../../definitions/infrastructure/tier.repository.port';
+import { TierRepositoryPort } from '../../../config/infrastructure/tier.repository.port';
 import { UserTierResponseDto } from './dto/response/user-tier.response.dto';
 import { UserTierHistoryResponseDto } from './dto/response/user-tier-history.response.dto';
 import { GetUserTierQueryDto } from './dto/request/get-user-tier.query.dto';

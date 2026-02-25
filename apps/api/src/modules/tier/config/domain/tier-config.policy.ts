@@ -1,6 +1,6 @@
 import { Injectable, HttpStatus } from '@nestjs/common';
 import { Language } from '@prisma/client';
-import { TierDefinitionsException } from './tier-definitions.exception';
+import { TierConfigException } from './tier-config.exception';
 import { MessageCode } from '@repo/shared';
 
 /**
@@ -8,7 +8,7 @@ import { MessageCode } from '@repo/shared';
  * 티어 생성, 수정 및 정의 설정과 관련된 비즈니스 규칙을 담당합니다.
  */
 @Injectable()
-export class TierDefinitionsPolicy {
+export class TierConfigPolicy {
   /**
    * 티어 번역 데이터의 무결성을 검증합니다.
    * [Rule] 모든 티어는 최종적으로 최소한 일본어(JA)와 영어(EN) 번역을 포함해야 합니다.
@@ -26,7 +26,7 @@ export class TierDefinitionsPolicy {
     const finalLanguages = new Set([...existingLanguages, ...requestedLangs]);
 
     if (!finalLanguages.has(Language.JA) || !finalLanguages.has(Language.EN)) {
-      throw new TierDefinitionsException(
+      throw new TierConfigException(
         'The final state of translations must include at least JA (Japanese) and EN (English).',
         MessageCode.VALIDATION_ERROR,
         HttpStatus.BAD_REQUEST,
@@ -91,7 +91,7 @@ export class TierDefinitionsPolicy {
   }
 
   private throwNegativeError(fieldName: string): void {
-    throw new TierDefinitionsException(
+    throw new TierConfigException(
       `${fieldName} cannot be negative.`,
       MessageCode.VALIDATION_ERROR,
       HttpStatus.BAD_REQUEST,
@@ -120,7 +120,7 @@ export class TierDefinitionsPolicy {
 
       // Rule 1: level 중복 체크
       if (i > 0 && current.level === sortedTiers[i - 1].level) {
-        throw new TierDefinitionsException(
+        throw new TierConfigException(
           `Duplicate level detected: ${current.level} (Codes: ${sortedTiers[i - 1].code}, ${current.code})`,
           MessageCode.VALIDATION_ERROR,
           HttpStatus.BAD_REQUEST,
@@ -168,7 +168,7 @@ export class TierDefinitionsPolicy {
     higherCode: string,
     lowerCode: string,
   ): void {
-    throw new TierDefinitionsException(
+    throw new TierConfigException(
       `${fieldName} of higher tier (${higherCode}) cannot be lower than that of lower tier (${lowerCode}).`,
       MessageCode.VALIDATION_ERROR,
       HttpStatus.BAD_REQUEST,

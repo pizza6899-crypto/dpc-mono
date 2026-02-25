@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Tier } from '../../definitions/domain/tier.entity';
+import { Tier } from '../../config/domain/tier.entity';
 import { UserTier } from '../../profile/domain/user-tier.entity';
 import { UserTierStatus } from '@prisma/client';
 

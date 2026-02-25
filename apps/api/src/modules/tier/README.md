@@ -2,12 +2,12 @@
 
 ## 1. 개요 (Overview)
 티어 모듈은 유저의 활동(입금, 롤링) 실적에 따라 등급(Tier)을 부여하고, 이에 따른 혜택(보너스, 요율 등)을 관리하는 핵심 도메인입니다.
-**DDD(Domain-Driven Design)** 원칙에 따라 설계되었으며, `Evaluator`(심사), `Profile`(상태), `Definitions`(설정)으로 역할이 명확히 분리되어 있습니다.
+**DDD(Domain-Driven Design)** 원칙에 따라 설계되었으며, `Evaluator`(심사), `Profile`(상태), `Config`(설정)으로 역할이 명확히 분리되어 있습니다.
 
 ## 2. 아키텍처 및 구조 (Architecture)
 
 ### 디렉토리 구조
-- **`definitions/`**: 티어 레벨, 설정, 환경 등 메타데이터 및 불변 정책 (Config)
+- **`config/`**: 티어 레벨, 설정, 환경 등 메타데이터 및 불변 정책 (Config)
 - **`profile/`**: 유저별 티어 현황(`UserTier`) 및 상태 관리 (State)
 - **`evaluator/`**: 승급/강등 심사 로직 및 정책 구현 (Brain)
 - **`reward/`**: 승급 보너스 지급 및 회수 관련 로직 (Reward)

@@ -9,7 +9,7 @@ import {
   getQueueConfig,
 } from 'src/infrastructure/bullmq/bullmq.constants';
 import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository.port';
-import { TierRepositoryPort } from '../../definitions/infrastructure/tier.repository.port';
+import { TierRepositoryPort } from '../../config/infrastructure/tier.repository.port';
 
 const queueConfig = getQueueConfig(BULLMQ_QUEUES.TIER.STATS_AGGREGATION);
 
