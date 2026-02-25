@@ -29,7 +29,7 @@ export class CompDailySettlement {
             params.currency,
             params.date,
             params.totalEarned ?? new Prisma.Decimal(0),
-            params.status ?? 'UNSETTLED',
+            params.status ?? CompSettlementStatus.UNSETTLED,
             null,
             null,
             null,

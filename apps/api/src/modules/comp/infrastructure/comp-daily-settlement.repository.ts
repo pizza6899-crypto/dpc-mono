@@ -84,7 +84,7 @@ export class CompDailySettlementRepository implements CompDailySettlementReposit
         const results = await this.tx.compDailySettlement.groupBy({
             by: ['userId', 'currency'],
             where: {
-                status: { in: ['UNSETTLED', 'SKIPPED'] },
+                status: { in: [CompSettlementStatus.UNSETTLED, CompSettlementStatus.SKIPPED] },
                 date: { lt: untilDate },
             },
         });
@@ -105,7 +105,7 @@ export class CompDailySettlementRepository implements CompDailySettlementReposit
             where: {
                 userId,
                 currency,
-                status: { in: ['UNSETTLED', 'SKIPPED'] },
+                status: { in: [CompSettlementStatus.UNSETTLED, CompSettlementStatus.SKIPPED] },
                 date: { lt: untilDate },
             },
         });
@@ -123,7 +123,7 @@ export class CompDailySettlementRepository implements CompDailySettlementReposit
             where: {
                 userId,
                 currency,
-                status: { in: ['UNSETTLED', 'SKIPPED'] },
+                status: { in: [CompSettlementStatus.UNSETTLED, CompSettlementStatus.SKIPPED] },
                 date: { lt: untilDate },
             },
             data: {
