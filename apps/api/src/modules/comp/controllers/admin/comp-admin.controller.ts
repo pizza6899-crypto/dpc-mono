@@ -12,15 +12,12 @@ import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 import {
   Prisma,
   UserRoleType,
-  CompTransactionType,
 } from '@prisma/client';
 import { FindCompTransactionsService } from '../../application/find-comp-transactions.service';
 import { AdminFindCompTransactionsQueryDto } from './dto/request/admin-find-comp-transactions-query.dto';
 import { AdminCompTransactionResponseDto } from './dto/response/admin-comp-transaction.response.dto';
 import { FindCompAccountService } from '../../application/find-comp-account.service';
 import { CompConfig } from '../../domain';
-import { EarnCompService } from '../../application/earn-comp.service';
-import { DeductCompService } from '../../application/deduct-comp.service';
 import { FindCompConfigService } from '../../application/find-comp-config.service';
 import { UpdateCompConfigService } from '../../application/update-comp-config.service';
 import { AdminCompBalanceResponseDto } from './dto/response/admin-comp-balance.response.dto';
@@ -32,16 +29,9 @@ import {
   ApiPaginatedResponse,
   ApiStandardResponse,
 } from 'src/common/http/decorators/api-response.decorator';
-import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
-import {
-  AdminCompAdjustRequestDto,
-  AdminCompAdjustType,
-} from './dto/request/admin-comp-adjust.request.dto';
 import { AdminCompBalanceQueryDto } from './dto/request/admin-comp-balance-query.dto';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
-import { AdminCompAdjustResponseDto } from './dto/response/admin-comp-adjust.response.dto';
 import { AdminCompConfigResponseDto } from './dto/response/admin-comp-config.response.dto';
 import { AdminUpdateCompConfigDto } from './dto/request/admin-update-comp-config.dto';
 
@@ -52,8 +42,6 @@ import { AdminUpdateCompConfigDto } from './dto/request/admin-update-comp-config
 export class CompAdminController {
   constructor(
     private readonly findCompAccountService: FindCompAccountService,
-    private readonly earnCompService: EarnCompService,
-    private readonly deductCompService: DeductCompService,
     private readonly findCompTransactionsService: FindCompTransactionsService,
     private readonly findCompConfigService: FindCompConfigService,
     private readonly updateCompConfigService: UpdateCompConfigService,
@@ -94,67 +82,6 @@ export class CompAdminController {
       totalEarned: account.totalEarned.toString(),
       totalUsed: account.totalUsed.toString(),
     };
-  }
-
-  @Post('users/:userId/adjust')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary:
-      'Adjust user comp balance (GIVE/DEDUCT) / 사용자 콤프 잔액 조정 (지급/차감)',
-    description:
-      'Admin manually gives or deducts comp balance from a specific user / 관리자가 특정 사용자의 콤프 잔액을 수동으로 지급하거나 차감합니다.',
-  })
-  @ApiParam({ name: 'userId', example: '1', description: 'User ID' })
-  @ApiStandardResponse(AdminCompAdjustResponseDto, {
-    description:
-      'Successfully adjusted user comp balance / 사용자 콤프 잔액 조정 성공',
-  })
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    category: 'COMP',
-    action: 'ADJUST_BALANCE',
-    extractMetadata: (_, args) => ({
-      userId: args[0],
-      type: args[1]?.type,
-      amount: args[1]?.amount,
-      currency: args[1]?.currency,
-      reason: args[1]?.reason,
-    }),
-  })
-  async adjustUserComp(
-    @Param('userId') userId: string,
-    @Body() dto: AdminCompAdjustRequestDto,
-    @CurrentUser() admin: AuthenticatedUser,
-  ): Promise<AdminCompAdjustResponseDto> {
-    const uid = BigInt(userId);
-    const amount = new Prisma.Decimal(dto.amount);
-
-    if (dto.type === AdminCompAdjustType.GIVE) {
-      const account = await this.earnCompService.execute({
-        userId: uid,
-        currency: dto.currency,
-        amount: amount,
-        description: dto.reason || 'Admin Adjustment (GIVE)',
-        options: {
-          bypassPolicy: true,
-          transactionType: CompTransactionType.ADMIN,
-          processedBy: admin.id,
-        },
-      });
-      return { newBalance: account.totalEarned.sub(account.totalUsed).toString() };
-    } else {
-      const account = await this.deductCompService.execute({
-        userId: uid,
-        currency: dto.currency,
-        amount: amount,
-        description: dto.reason || 'Admin Adjustment (DEDUCT)',
-        options: {
-          bypassPolicy: true,
-          processedBy: admin.id,
-        },
-      });
-      return { newBalance: account.totalEarned.sub(account.totalUsed).toString() };
-    }
   }
 
   @Get('users/:userId/transactions')

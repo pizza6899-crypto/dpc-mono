@@ -12,7 +12,6 @@ import { CompPolicy } from './domain/comp.policy';
 import { EarnCompService } from './application/earn-comp.service';
 import { FindCompAccountService } from './application/find-comp-account.service';
 import { FindCompTransactionsService } from './application/find-comp-transactions.service';
-import { DeductCompService } from './application/deduct-comp.service';
 import { FindCompOverviewService } from './application/find-comp-overview.service';
 import { FindCompDailyStatsService } from './application/find-comp-daily-stats.service';
 import { FindCompTopEarnersService } from './application/find-comp-top-earners.service';
@@ -47,7 +46,6 @@ import { RewardCoreModule } from '../reward/core/reward-core.module';
     EarnCompService,
     FindCompAccountService,
     FindCompTransactionsService,
-    DeductCompService,
     FindCompOverviewService,
     FindCompDailyStatsService,
     FindCompTopEarnersService,
@@ -58,7 +56,6 @@ import { RewardCoreModule } from '../reward/core/reward-core.module';
     EarnCompService,
     FindCompAccountService,
     FindCompTransactionsService,
-    DeductCompService,
     FindCompOverviewService,
     FindCompDailyStatsService,
     FindCompTopEarnersService,

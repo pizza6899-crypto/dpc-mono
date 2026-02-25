@@ -29,13 +29,12 @@ interface EarnCompParams {
   userId: bigint;
   currency: ExchangeCurrencyCode;
   amount: Prisma.Decimal;
+  appliedRate: Prisma.Decimal; // Required for better tracking (e.g. 0.001 for 0.1%)
   referenceId?: bigint; // e.g. gameRoundId or transactionId
   description?: string;
-  options?: {
-    transactionType?: CompTransactionType;
-    bypassPolicy?: boolean;
-    processedBy?: bigint; // Admin User ID
-  };
+  transactionType?: CompTransactionType;
+  bypassPolicy?: boolean;
+  processedBy?: bigint; // Admin User ID
 }
 
 @Injectable()
@@ -56,7 +55,17 @@ export class EarnCompService {
 
   @Transactional()
   async execute(params: EarnCompParams): Promise<CompAccount> {
-    const { userId, currency, amount, referenceId, description } = params;
+    const {
+      userId,
+      currency,
+      amount,
+      appliedRate,
+      referenceId,
+      description,
+      transactionType = CompTransactionType.EARN,
+      bypassPolicy = false,
+      processedBy,
+    } = params;
 
     // 0. Acquire Lock for the user's comp account
     await this.advisoryLockService.acquireLock(
@@ -68,7 +77,7 @@ export class EarnCompService {
     );
 
     // 1. Check Configuration via Policy (if not bypassed)
-    if (!params.options?.bypassPolicy) {
+    if (!bypassPolicy) {
       const config = await this.compConfigRepository.getConfig(currency);
 
       try {
@@ -131,16 +140,16 @@ export class EarnCompService {
       id: this.snowflakeService.generate().id,
       compAccountId: savedAccount.id,
       amount: amount,
-      appliedRate: new Prisma.Decimal(1), // Default rate
-      type: params.options?.transactionType ?? CompTransactionType.EARN,
+      appliedRate: appliedRate,
+      type: transactionType,
       referenceId: referenceId,
-      processedBy: params.options?.processedBy,
+      processedBy: processedBy,
       description,
     });
     await this.compRepository.createTransaction(transaction);
 
     this.logger.log(
-      `Comp Earned: user=${userId}, amount=${amount}, curr=${currency}, newTotalEarned=${savedAccount.totalEarned}`,
+      `Comp Earned: user=${userId}, amount=${amount}, rate=${appliedRate}, curr=${currency}, newTotalEarned=${savedAccount.totalEarned}`,
     );
 
     return savedAccount;

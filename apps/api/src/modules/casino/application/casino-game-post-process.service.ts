@@ -25,7 +25,7 @@ export class CasinoGamePostProcessService {
     private readonly wageringService: ProcessWageringContributionService,
     private readonly earnCompService: EarnCompService,
     private readonly accumulateUserRollingService: AccumulateUserRollingService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(gameRoundId: bigint) {
@@ -124,6 +124,7 @@ export class CasinoGamePostProcessService {
             userId: gameRound.userId,
             currency: gameRound.currency as ExchangeCurrencyCode,
             amount: compAmount,
+            appliedRate: context.compRate,
             referenceId: gameRound.id,
             description: `Game Comp: ${gameRound.id}`,
           });
