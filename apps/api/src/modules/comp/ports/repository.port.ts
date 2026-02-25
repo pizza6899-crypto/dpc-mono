@@ -66,8 +66,7 @@ export interface CompDailySettlementRepositoryPort {
     currency: ExchangeCurrencyCode,
     date: Date,
   ): Promise<CompDailySettlement | null>;
-  // 배치 처리용 (미정산 항목 조회)
-  findPendingSettlements(untilDate: Date): Promise<
+  findPendingSettlements(untilDate: Date, skip: number, take: number): Promise<
     Array<{
       userId: bigint;
       currency: ExchangeCurrencyCode;

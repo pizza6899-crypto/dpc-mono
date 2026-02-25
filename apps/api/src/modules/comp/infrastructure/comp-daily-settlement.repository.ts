@@ -75,7 +75,11 @@ export class CompDailySettlementRepository implements CompDailySettlementReposit
         return result ? this.mapper.toDailySettlementDomain(result) : null;
     }
 
-    async findPendingSettlements(untilDate: Date): Promise<
+    async findPendingSettlements(
+        untilDate: Date,
+        skip: number,
+        take: number,
+    ): Promise<
         Array<{
             userId: bigint;
             currency: ExchangeCurrencyCode;
@@ -89,6 +93,9 @@ export class CompDailySettlementRepository implements CompDailySettlementReposit
                 status: { in: [CompSettlementStatus.UNSETTLED, CompSettlementStatus.SKIPPED] },
                 date: { lt: untilDate },
             },
+            orderBy: [{ userId: 'asc' }, { currency: 'asc' }],
+            skip,
+            take,
         });
 
         return results.map((r) => ({

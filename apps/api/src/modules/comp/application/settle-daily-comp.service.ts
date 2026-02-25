@@ -33,18 +33,39 @@ export class SettleDailyCompService {
         private readonly snowflakeService: SnowflakeService,
     ) { }
 
-    async getPendingSettlements(untilDate: Date) {
-        const pendings = await this.compDailySettlementRepository.findPendingSettlements(untilDate);
-        if (pendings.length === 0) return [];
-
+    async processPendingSettlementsBatch(
+        untilDate: Date,
+        batchSize: number,
+        processor: (batch: Array<{ userId: bigint; currency: ExchangeCurrencyCode }>) => Promise<void>
+    ) {
         const configs = await this.compConfigRepository.getAllConfigs();
         const configMap = new Map(configs.map((c) => [c.currency, c]));
 
-        return pendings.filter((p) => {
-            const config = configMap.get(p.currency);
-            if (!config || !config.isSettlementEnabled) return false;
-            return p.totalEarned.gte(config.minSettlementAmount);
-        });
+        let skip = 0;
+        let hasMore = true;
+
+        while (hasMore) {
+            const pendings = await this.compDailySettlementRepository.findPendingSettlements(untilDate, skip, batchSize);
+
+            if (pendings.length === 0) {
+                break;
+            }
+
+            const filteredPendings = pendings.filter((p) => {
+                const config = configMap.get(p.currency);
+                if (!config || !config.isSettlementEnabled) return false;
+                return p.totalEarned.gte(config.minSettlementAmount);
+            });
+
+            if (filteredPendings.length > 0) {
+                await processor(filteredPendings);
+            }
+
+            skip += batchSize;
+            if (pendings.length < batchSize) {
+                hasMore = false;
+            }
+        }
     }
 
     @Transactional()

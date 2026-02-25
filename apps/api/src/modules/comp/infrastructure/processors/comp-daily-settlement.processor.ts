@@ -46,37 +46,35 @@ export class CompDailySettlementProcessor extends BaseProcessor<UserSettlementDa
         const untilDate = new Date();
         untilDate.setUTCHours(0, 0, 0, 0); // Exclude today, only resolve past un-settled days
 
-        const pendingList = await this.settleDailyCompService.getPendingSettlements(untilDate);
-
-        if (!pendingList.length) {
-            this.logger.log('No pending comp settlements found.');
-            return;
-        }
-
-        this.logger.log(`Found ${pendingList.length} pending comp settlements to dispatch.`);
-
         const dateStr = new Date().toISOString().split('T')[0];
+        let totalDispatched = 0;
 
-        for (const pending of pendingList) {
-            const data: UserSettlementData = {
-                userId: pending.userId.toString(),
-                currency: pending.currency,
-                untilDate: untilDate.toISOString(),
-            };
+        await this.settleDailyCompService.processPendingSettlementsBatch(
+            untilDate,
+            1000, // Process 1000 users per DB query batch
+            async (pendingList) => {
+                const jobs = pendingList.map((pending) => ({
+                    name: 'comp-user-settlement',
+                    data: {
+                        userId: pending.userId.toString(),
+                        currency: pending.currency,
+                        untilDate: untilDate.toISOString(),
+                    },
+                    opts: {
+                        jobId: `comp-user-settlement:${pending.userId}:${pending.currency}:${dateStr}`,
+                        removeOnComplete: true,
+                        removeOnFail: false,
+                        attempts: 3,
+                    },
+                }));
 
-            await this.compQueue.add(
-                'comp-user-settlement',
-                data,
-                {
-                    jobId: `comp-user-settlement:${pending.userId}:${pending.currency}:${dateStr}`,
-                    removeOnComplete: true,
-                    removeOnFail: false,
-                    attempts: 3,
-                },
-            );
-        }
+                await this.compQueue.addBulk(jobs as any);
+                totalDispatched += jobs.length;
+                this.logger.debug(`Dispatched batch of ${jobs.length} settlements...`);
+            }
+        );
 
-        this.logger.log(`Dispatched ${pendingList.length} user settlement jobs.`);
+        this.logger.log(`Dispatched total of ${totalDispatched} user settlement jobs.`);
     }
 
     private async handleUserSettlementJob(job: Job<UserSettlementData>): Promise<void> {
