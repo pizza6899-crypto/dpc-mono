@@ -4,9 +4,9 @@ import { Test } from '@nestjs/testing';
 import { CreateUserService } from './create-user.service';
 import { USER_REPOSITORY } from '../ports/out/user.repository.token';
 import type { UserRepositoryPort } from '../ports/out/user.repository.port';
-import { User } from '../domain';
 import { UserAlreadyExistsException } from '../domain/user.exception';
-import { UserRoleType, UserStatus, SocialType } from '@prisma/client';
+import { User } from '../domain';
+import { UserRoleType, UserStatus, SocialType, ExchangeCurrencyCode } from '@prisma/client';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 
@@ -44,10 +44,8 @@ describe('CreateUserService', () => {
           : null;
     const socialId = overrides?.socialId ?? null;
     const socialType = overrides?.socialType ?? null;
-
     return User.fromPersistence({
       id: mockId,
-      uid: mockUid,
       email: overrides?.email ?? mockEmail,
       passwordHash,
       socialId,
@@ -58,6 +56,8 @@ describe('CreateUserService', () => {
         overrides?.country !== undefined ? overrides.country : mockCountry,
       timezone:
         overrides?.timezone !== undefined ? overrides.timezone : mockTimezone,
+      primaryCurrency: ExchangeCurrencyCode.USD,
+      playCurrency: ExchangeCurrencyCode.USD,
       createdAt: mockCreatedAt,
       updatedAt: mockUpdatedAt,
     });
@@ -68,7 +68,6 @@ describe('CreateUserService', () => {
       findByEmail: jest.fn(),
       findBySocialId: jest.fn(),
       findById: jest.fn(),
-      findByUid: jest.fn(),
       create: jest.fn(),
       findMany: jest.fn(),
       updatePassword: jest.fn(),

@@ -24,22 +24,27 @@ datasource db {
 }
 
 model User {
-  id                   BigInt                @id @default(autoincrement())
-  whitecliffId         BigInt?               @unique @map("whitecliff_id")
-  whitecliffSystemId   BigInt?               @unique @map("whitecliff_system_id")
-  whitecliffUsername   String?               @unique @map("whitecliff_username")
-  dcsId                String?               @unique @map("dcs_id")
-  email                String?               @unique
-  passwordHash         String?               @map("password_hash")
-  socialType           SocialType?           @map("social_type")
-  socialId             String?               @map("social_id")
-  role                 UserRoleType          @default(USER)
-  status               UserStatus            @default(ACTIVE)
-  kycLevel             KycLevel              @default(NONE) @map("kyc_level")
-  country              String?
-  language             Language?
-  timezone             String?
-  timezoneOffset       Int?                  @map("timezone_offset")
+  id                 BigInt       @id @default(autoincrement())
+  whitecliffId       BigInt?      @unique @map("whitecliff_id")
+  whitecliffSystemId BigInt?      @unique @map("whitecliff_system_id")
+  whitecliffUsername String?      @unique @map("whitecliff_username")
+  dcsId              String?      @unique @map("dcs_id")
+  email              String?      @unique
+  passwordHash       String?      @map("password_hash")
+  socialType         SocialType?  @map("social_type")
+  socialId           String?      @map("social_id")
+  role               UserRoleType @default(USER)
+  status             UserStatus   @default(ACTIVE)
+  kycLevel           KycLevel     @default(NONE) @map("kyc_level")
+  country            String?
+  language           Language?
+  timezone           String?
+  timezoneOffset     Int?         @map("timezone_offset")
+
+  // [Currency Settings] 통화 설정
+  primaryCurrency ExchangeCurrencyCode @default(USD) @map("primary_currency")
+  playCurrency    ExchangeCurrencyCode @default(USD) @map("play_currency")
+
   createdAt            DateTime              @default(now()) @map("created_at")
   updatedAt            DateTime              @updatedAt @map("updated_at")
   affiliateCodes       AffiliateCode[]       @relation("AffiliateCodes")

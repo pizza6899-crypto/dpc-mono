@@ -1,6 +1,7 @@
 // src/modules/user/ports/out/user.repository.port.ts
 import type { User } from '../../domain';
-import type { UserRoleType, SocialType, UserStatus } from '@prisma/client';
+import type { UserRoleType, SocialType, UserStatus, ExchangeCurrencyCode } from '@prisma/client';
+
 
 /**
  * User 생성 파라미터
@@ -15,6 +16,8 @@ export interface CreateUserParams {
   role: UserRoleType;
   country: string | null;
   timezone: string | null;
+  primaryCurrency?: ExchangeCurrencyCode;
+  playCurrency?: ExchangeCurrencyCode;
 }
 
 /**

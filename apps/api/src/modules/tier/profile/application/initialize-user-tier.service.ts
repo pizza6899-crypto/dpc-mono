@@ -17,7 +17,7 @@ export class InitializeUserTierService {
     private readonly userTierRepository: UserTierRepositoryPort,
     private readonly tierRepository: TierRepositoryPort,
     private readonly recordTierHistoryService: RecordTierHistoryService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(userId: bigint): Promise<UserTier> {

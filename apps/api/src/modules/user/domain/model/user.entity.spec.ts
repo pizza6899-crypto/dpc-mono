@@ -1,6 +1,7 @@
 // src/modules/user/domain/model/user.entity.spec.ts
 import { User } from './user.entity';
-import { UserRoleType, UserStatus, SocialType } from '@prisma/client';
+import { UserRoleType, UserStatus, SocialType, ExchangeCurrencyCode } from '@prisma/client';
+
 import { UserAuth } from './value-objects/user-auth.vo';
 import { UserLocation } from './value-objects/user-location.vo';
 
@@ -20,7 +21,6 @@ describe('User', () => {
       // Arrange
       const persistenceData = {
         id: mockId,
-        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -29,6 +29,8 @@ describe('User', () => {
         role: UserRoleType.USER,
         country: mockCountry,
         timezone: mockTimezone,
+        primaryCurrency: ExchangeCurrencyCode.USD,
+        playCurrency: ExchangeCurrencyCode.USD,
         createdAt: mockCreatedAt,
         updatedAt: mockUpdatedAt,
       };
@@ -38,7 +40,6 @@ describe('User', () => {
 
       // Assert
       expect(user.id).toBe(mockId);
-      expect(user.uid).toBe(mockUid);
       expect(user.email).toBe(mockEmail);
       expect(user.status).toBe(UserStatus.ACTIVE);
       expect(user.role).toBe(UserRoleType.USER);
@@ -53,7 +54,6 @@ describe('User', () => {
       // Arrange
       const persistenceData = {
         id: mockId,
-        uid: mockUid,
         email: mockEmail,
         passwordHash: null,
         socialId: mockSocialId,
@@ -62,6 +62,8 @@ describe('User', () => {
         role: UserRoleType.USER,
         country: mockCountry,
         timezone: mockTimezone,
+        primaryCurrency: ExchangeCurrencyCode.USD,
+        playCurrency: ExchangeCurrencyCode.USD,
         createdAt: mockCreatedAt,
         updatedAt: mockUpdatedAt,
       };
@@ -71,7 +73,6 @@ describe('User', () => {
 
       // Assert
       expect(user.id).toBe(mockId);
-      expect(user.uid).toBe(mockUid);
       expect(user.email).toBe(mockEmail);
       expect(user.status).toBe(UserStatus.ACTIVE);
       expect(user.role).toBe(UserRoleType.USER);
@@ -84,7 +85,6 @@ describe('User', () => {
       // Arrange
       const persistenceData = {
         id: mockId,
-        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -93,6 +93,8 @@ describe('User', () => {
         role: UserRoleType.USER,
         country: null,
         timezone: null,
+        primaryCurrency: ExchangeCurrencyCode.USD,
+        playCurrency: ExchangeCurrencyCode.USD,
         createdAt: mockCreatedAt,
         updatedAt: mockUpdatedAt,
       };
@@ -102,7 +104,6 @@ describe('User', () => {
 
       // Assert
       expect(user.id).toBe(mockId);
-      expect(user.uid).toBe(mockUid);
       expect(user.email).toBe(mockEmail);
       const location = user.getLocation();
       expect(location.country).toBeNull();
@@ -113,7 +114,6 @@ describe('User', () => {
       // Arrange
       const persistenceData = {
         id: mockId,
-        uid: mockUid,
         email: 'admin@example.com',
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -122,6 +122,8 @@ describe('User', () => {
         role: UserRoleType.ADMIN,
         country: mockCountry,
         timezone: mockTimezone,
+        primaryCurrency: ExchangeCurrencyCode.USD,
+        playCurrency: ExchangeCurrencyCode.USD,
         createdAt: mockCreatedAt,
         updatedAt: mockUpdatedAt,
       };
@@ -137,7 +139,6 @@ describe('User', () => {
       // Arrange
       const persistenceData = {
         id: mockId,
-        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -146,6 +147,8 @@ describe('User', () => {
         role: UserRoleType.USER,
         country: mockCountry,
         timezone: mockTimezone,
+        primaryCurrency: ExchangeCurrencyCode.USD,
+        playCurrency: ExchangeCurrencyCode.USD,
         createdAt: mockCreatedAt,
         updatedAt: mockUpdatedAt,
       };
@@ -163,7 +166,6 @@ describe('User', () => {
       // Arrange
       const persistenceData = {
         id: mockId,
-        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -172,6 +174,8 @@ describe('User', () => {
         role: UserRoleType.USER,
         country: mockCountry,
         timezone: mockTimezone,
+        primaryCurrency: ExchangeCurrencyCode.USD,
+        playCurrency: ExchangeCurrencyCode.USD,
         createdAt: mockCreatedAt,
         updatedAt: mockUpdatedAt,
       };
@@ -188,7 +192,6 @@ describe('User', () => {
       // Arrange
       const persistenceData = {
         id: mockId,
-        uid: mockUid,
         email: mockEmail,
         passwordHash: null,
         socialId: mockSocialId,
@@ -197,6 +200,8 @@ describe('User', () => {
         role: UserRoleType.USER,
         country: mockCountry,
         timezone: mockTimezone,
+        primaryCurrency: ExchangeCurrencyCode.USD,
+        playCurrency: ExchangeCurrencyCode.USD,
         createdAt: mockCreatedAt,
         updatedAt: mockUpdatedAt,
       };
@@ -213,7 +218,6 @@ describe('User', () => {
       // Arrange
       const persistenceData = {
         id: mockId,
-        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -222,6 +226,8 @@ describe('User', () => {
         role: UserRoleType.USER,
         country: null,
         timezone: null,
+        primaryCurrency: ExchangeCurrencyCode.USD,
+        playCurrency: ExchangeCurrencyCode.USD,
         createdAt: mockCreatedAt,
         updatedAt: mockUpdatedAt,
       };
@@ -238,7 +244,6 @@ describe('User', () => {
       // Arrange
       const originalData = {
         id: mockId,
-        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -247,6 +252,8 @@ describe('User', () => {
         role: UserRoleType.USER,
         country: mockCountry,
         timezone: mockTimezone,
+        primaryCurrency: ExchangeCurrencyCode.USD,
+        playCurrency: ExchangeCurrencyCode.USD,
         createdAt: mockCreatedAt,
         updatedAt: mockUpdatedAt,
       };
@@ -259,7 +266,6 @@ describe('User', () => {
       // Assert
       expect(convertedData).toEqual(originalData);
       expect(recreatedUser.id).toBe(user.id);
-      expect(recreatedUser.uid).toBe(user.uid);
       expect(recreatedUser.email).toBe(user.email);
       expect(recreatedUser.status).toBe(user.status);
       expect(recreatedUser.role).toBe(user.role);
@@ -271,7 +277,6 @@ describe('User', () => {
       // Arrange
       const user = User.fromPersistence({
         id: mockId,
-        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -280,6 +285,8 @@ describe('User', () => {
         role: UserRoleType.USER,
         country: mockCountry,
         timezone: mockTimezone,
+        primaryCurrency: ExchangeCurrencyCode.USD,
+        playCurrency: ExchangeCurrencyCode.USD,
         createdAt: mockCreatedAt,
         updatedAt: mockUpdatedAt,
       });
@@ -292,7 +299,6 @@ describe('User', () => {
       // Arrange
       const user = User.fromPersistence({
         id: mockId,
-        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -301,6 +307,8 @@ describe('User', () => {
         role: UserRoleType.USER,
         country: mockCountry,
         timezone: mockTimezone,
+        primaryCurrency: ExchangeCurrencyCode.USD,
+        playCurrency: ExchangeCurrencyCode.USD,
         createdAt: mockCreatedAt,
         updatedAt: mockUpdatedAt,
       });
@@ -320,7 +328,6 @@ describe('User', () => {
       // Arrange
       const user = User.fromPersistence({
         id: mockId,
-        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -329,6 +336,8 @@ describe('User', () => {
         role: UserRoleType.USER,
         country: mockCountry,
         timezone: mockTimezone,
+        primaryCurrency: ExchangeCurrencyCode.USD,
+        playCurrency: ExchangeCurrencyCode.USD,
         createdAt: mockCreatedAt,
         updatedAt: mockUpdatedAt,
       });
@@ -346,7 +355,6 @@ describe('User', () => {
       // Arrange
       const user = User.fromPersistence({
         id: mockId,
-        uid: mockUid,
         email: mockEmail,
         passwordHash: mockPasswordHash,
         socialId: null,
@@ -355,6 +363,8 @@ describe('User', () => {
         role: UserRoleType.USER,
         country: null,
         timezone: null,
+        primaryCurrency: ExchangeCurrencyCode.USD,
+        playCurrency: ExchangeCurrencyCode.USD,
         createdAt: mockCreatedAt,
         updatedAt: mockUpdatedAt,
       });
@@ -375,7 +385,6 @@ describe('User', () => {
         // Arrange
         const user = User.fromPersistence({
           id: mockId,
-          uid: mockUid,
           email: mockEmail,
           passwordHash: mockPasswordHash,
           socialId: null,
@@ -384,6 +393,8 @@ describe('User', () => {
           role: UserRoleType.USER,
           country: mockCountry,
           timezone: mockTimezone,
+          primaryCurrency: ExchangeCurrencyCode.USD,
+          playCurrency: ExchangeCurrencyCode.USD,
           createdAt: mockCreatedAt,
           updatedAt: mockUpdatedAt,
         });
@@ -396,7 +407,6 @@ describe('User', () => {
         // Arrange
         const user = User.fromPersistence({
           id: mockId,
-          uid: mockUid,
           email: mockEmail,
           passwordHash: null,
           socialId: mockSocialId,
@@ -405,6 +415,8 @@ describe('User', () => {
           role: UserRoleType.USER,
           country: mockCountry,
           timezone: mockTimezone,
+          primaryCurrency: ExchangeCurrencyCode.USD,
+          playCurrency: ExchangeCurrencyCode.USD,
           createdAt: mockCreatedAt,
           updatedAt: mockUpdatedAt,
         });
@@ -419,7 +431,6 @@ describe('User', () => {
         // Arrange
         const user = User.fromPersistence({
           id: mockId,
-          uid: mockUid,
           email: mockEmail,
           passwordHash: null,
           socialId: mockSocialId,
@@ -428,6 +439,8 @@ describe('User', () => {
           role: UserRoleType.USER,
           country: mockCountry,
           timezone: mockTimezone,
+          primaryCurrency: ExchangeCurrencyCode.USD,
+          playCurrency: ExchangeCurrencyCode.USD,
           createdAt: mockCreatedAt,
           updatedAt: mockUpdatedAt,
         });
@@ -440,7 +453,6 @@ describe('User', () => {
         // Arrange
         const user = User.fromPersistence({
           id: mockId,
-          uid: mockUid,
           email: mockEmail,
           passwordHash: mockPasswordHash,
           socialId: null,
@@ -449,6 +461,8 @@ describe('User', () => {
           role: UserRoleType.USER,
           country: mockCountry,
           timezone: mockTimezone,
+          primaryCurrency: ExchangeCurrencyCode.USD,
+          playCurrency: ExchangeCurrencyCode.USD,
           createdAt: mockCreatedAt,
           updatedAt: mockUpdatedAt,
         });
@@ -461,7 +475,6 @@ describe('User', () => {
         // Arrange & Act & Assert
         const googleUser = User.fromPersistence({
           id: mockId,
-          uid: mockUid,
           email: mockEmail,
           passwordHash: null,
           socialId: mockSocialId,
@@ -470,6 +483,8 @@ describe('User', () => {
           role: UserRoleType.USER,
           country: mockCountry,
           timezone: mockTimezone,
+          primaryCurrency: ExchangeCurrencyCode.USD,
+          playCurrency: ExchangeCurrencyCode.USD,
           createdAt: mockCreatedAt,
           updatedAt: mockUpdatedAt,
         });
@@ -477,7 +492,6 @@ describe('User', () => {
 
         const appleUser = User.fromPersistence({
           id: mockId,
-          uid: mockUid,
           email: mockEmail,
           passwordHash: null,
           socialId: mockSocialId,
@@ -486,6 +500,8 @@ describe('User', () => {
           role: UserRoleType.USER,
           country: mockCountry,
           timezone: mockTimezone,
+          primaryCurrency: ExchangeCurrencyCode.USD,
+          playCurrency: ExchangeCurrencyCode.USD,
           createdAt: mockCreatedAt,
           updatedAt: mockUpdatedAt,
         });
@@ -493,7 +509,6 @@ describe('User', () => {
 
         const telegramUser = User.fromPersistence({
           id: mockId,
-          uid: mockUid,
           email: mockEmail,
           passwordHash: null,
           socialId: mockSocialId,
@@ -502,6 +517,8 @@ describe('User', () => {
           role: UserRoleType.USER,
           country: mockCountry,
           timezone: mockTimezone,
+          primaryCurrency: ExchangeCurrencyCode.USD,
+          playCurrency: ExchangeCurrencyCode.USD,
           createdAt: mockCreatedAt,
           updatedAt: mockUpdatedAt,
         });
@@ -514,7 +531,6 @@ describe('User', () => {
         // Arrange
         const user = User.fromPersistence({
           id: mockId,
-          uid: mockUid,
           email: mockEmail,
           passwordHash: mockPasswordHash,
           socialId: null,
@@ -523,6 +539,8 @@ describe('User', () => {
           role: UserRoleType.USER,
           country: mockCountry,
           timezone: mockTimezone,
+          primaryCurrency: ExchangeCurrencyCode.USD,
+          playCurrency: ExchangeCurrencyCode.USD,
           createdAt: mockCreatedAt,
           updatedAt: mockUpdatedAt,
         });
@@ -535,7 +553,6 @@ describe('User', () => {
         // Arrange
         const user = User.fromPersistence({
           id: mockId,
-          uid: mockUid,
           email: mockEmail,
           passwordHash: null,
           socialId: mockSocialId,
@@ -544,6 +561,8 @@ describe('User', () => {
           role: UserRoleType.USER,
           country: mockCountry,
           timezone: mockTimezone,
+          primaryCurrency: ExchangeCurrencyCode.USD,
+          playCurrency: ExchangeCurrencyCode.USD,
           createdAt: mockCreatedAt,
           updatedAt: mockUpdatedAt,
         });
@@ -559,7 +578,6 @@ describe('User', () => {
       // Arrange
       const persistenceData = {
         id: BigInt(1),
-        uid: 'u-1',
         email: 'a@b.c',
         passwordHash: 'hash',
         socialId: null,
@@ -568,6 +586,8 @@ describe('User', () => {
         role: UserRoleType.USER,
         country: null,
         timezone: null,
+        primaryCurrency: ExchangeCurrencyCode.USD,
+        playCurrency: ExchangeCurrencyCode.USD,
         createdAt: new Date(0),
         updatedAt: new Date(0),
       };
@@ -577,7 +597,6 @@ describe('User', () => {
 
       // Assert
       expect(user.id).toBe(BigInt(1));
-      expect(user.uid).toBe('u-1');
       expect(user.email).toBe('a@b.c');
     });
 
@@ -592,7 +611,6 @@ describe('User', () => {
         // Arrange
         const persistenceData = {
           id: mockId,
-          uid: mockUid,
           email: mockEmail,
           passwordHash: mockPasswordHash,
           socialId: null,
@@ -601,6 +619,8 @@ describe('User', () => {
           role: UserRoleType.USER,
           country: mockCountry,
           timezone: mockTimezone,
+          primaryCurrency: ExchangeCurrencyCode.USD,
+          playCurrency: ExchangeCurrencyCode.USD,
           createdAt: mockCreatedAt,
           updatedAt: mockUpdatedAt,
         };
@@ -629,6 +649,8 @@ describe('User', () => {
           role,
           country: mockCountry,
           timezone: mockTimezone,
+          primaryCurrency: ExchangeCurrencyCode.USD,
+          playCurrency: ExchangeCurrencyCode.USD,
           createdAt: mockCreatedAt,
           updatedAt: mockUpdatedAt,
         };

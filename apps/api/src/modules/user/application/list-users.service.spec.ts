@@ -8,7 +8,7 @@ import type {
   FindUsersResult,
 } from '../ports/out/user.repository.port';
 import { User } from '../domain';
-import { UserRoleType, UserStatus } from '@prisma/client';
+import { UserRoleType, UserStatus, ExchangeCurrencyCode } from '@prisma/client';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 
@@ -19,8 +19,6 @@ describe('ListUsersService', () => {
 
   const mockId1 = BigInt(123);
   const mockId2 = BigInt(456);
-  const mockUid1 = 'user-1234567890';
-  const mockUid2 = 'user-0987654321';
   const mockEmail1 = 'user1@example.com';
   const mockEmail2 = 'user2@example.com';
   const mockPasswordHash = '$2b$10$hashedpassword123';
@@ -31,14 +29,12 @@ describe('ListUsersService', () => {
 
   const createMockUser = (overrides?: {
     id?: bigint;
-    uid?: string;
     email?: string;
     role?: UserRoleType;
     status?: UserStatus;
   }) => {
     return User.fromPersistence({
       id: overrides?.id ?? mockId1,
-      uid: overrides?.uid ?? mockUid1,
       email: overrides?.email ?? mockEmail1,
       passwordHash: mockPasswordHash,
       socialId: null,
@@ -47,6 +43,8 @@ describe('ListUsersService', () => {
       role: overrides?.role ?? UserRoleType.USER,
       country: mockCountry,
       timezone: mockTimezone,
+      primaryCurrency: ExchangeCurrencyCode.USD,
+      playCurrency: ExchangeCurrencyCode.USD,
       createdAt: mockCreatedAt,
       updatedAt: mockUpdatedAt,
     });
@@ -57,7 +55,6 @@ describe('ListUsersService', () => {
       findByEmail: jest.fn(),
       findBySocialId: jest.fn(),
       findById: jest.fn(),
-      findByUid: jest.fn(),
       findMany: jest.fn(),
       create: jest.fn(),
       updatePassword: jest.fn(),
@@ -89,7 +86,7 @@ describe('ListUsersService', () => {
       // Given
       const users = [
         createMockUser(),
-        createMockUser({ id: mockId2, uid: mockUid2, email: mockEmail2 }),
+        createMockUser({ id: mockId2, email: mockEmail2 }),
       ];
       const result: FindUsersResult = {
         users,

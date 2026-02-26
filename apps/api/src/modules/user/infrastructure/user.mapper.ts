@@ -26,6 +26,8 @@ export class UserMapper {
       role: prismaModel.role,
       country: prismaModel.country,
       timezone: prismaModel.timezone,
+      primaryCurrency: prismaModel.primaryCurrency,
+      playCurrency: prismaModel.playCurrency,
       createdAt: prismaModel.createdAt,
       updatedAt: prismaModel.updatedAt,
     });
@@ -44,6 +46,8 @@ export class UserMapper {
     role: PrismaUser['role'];
     country: string | null;
     timezone: string | null;
+    primaryCurrency: PrismaUser['primaryCurrency'];
+    playCurrency: PrismaUser['playCurrency'];
     createdAt: Date;
     updatedAt: Date;
   } {
@@ -58,6 +62,8 @@ export class UserMapper {
       role: persistence.role,
       country: persistence.country,
       timezone: persistence.timezone,
+      primaryCurrency: persistence.primaryCurrency,
+      playCurrency: persistence.playCurrency,
       createdAt: persistence.createdAt,
       updatedAt: persistence.updatedAt,
     };
@@ -77,6 +83,8 @@ export class UserMapper {
       role: params.role,
       country: params.country,
       timezone: params.timezone,
+      ...(params.primaryCurrency && { primaryCurrency: params.primaryCurrency }),
+      ...(params.playCurrency && { playCurrency: params.playCurrency }),
     };
   }
 }

@@ -3,6 +3,8 @@ import type { UserRoleType, SocialType } from '@prisma/client';
 import type { UserStatus as PrismaUserStatus } from '@prisma/client';
 import { UserAuth } from './value-objects/user-auth.vo';
 import { UserLocation } from './value-objects/user-location.vo';
+import { UserCurrency } from './value-objects/user-currency.vo';
+import { ExchangeCurrencyCode } from '@prisma/client';
 
 /**
  * User 도메인 엔티티
@@ -21,11 +23,12 @@ export class User {
     public readonly id: bigint,
     private authInfo: UserAuth,
     private location: UserLocation,
+    private currency: UserCurrency,
     public readonly status: PrismaUserStatus,
     public readonly role: UserRoleType,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
-  ) {}
+  ) { }
 
   /**
    * DB에서 조회한 데이터로부터 엔티티 생성
@@ -41,6 +44,8 @@ export class User {
     role: UserRoleType;
     country: string | null;
     timezone: string | null;
+    primaryCurrency: ExchangeCurrencyCode;
+    playCurrency: ExchangeCurrencyCode;
     createdAt: Date;
     updatedAt: Date;
   }): User {
@@ -55,6 +60,10 @@ export class User {
       UserLocation.fromPersistence({
         country: data.country,
         timezone: data.timezone,
+      }),
+      UserCurrency.fromPersistence({
+        primaryCurrency: data.primaryCurrency,
+        playCurrency: data.playCurrency,
       }),
       data.status,
       data.role,
@@ -76,11 +85,14 @@ export class User {
     role: UserRoleType;
     country: string | null;
     timezone: string | null;
+    primaryCurrency: ExchangeCurrencyCode;
+    playCurrency: ExchangeCurrencyCode;
     createdAt: Date;
     updatedAt: Date;
   } {
     const auth = this.authInfo.toPersistence();
     const location = this.location.toPersistence();
+    const currency = this.currency.toPersistence();
 
     return {
       id: this.id,
@@ -92,6 +104,8 @@ export class User {
       role: this.role,
       country: location.country,
       timezone: location.timezone,
+      primaryCurrency: currency.primaryCurrency,
+      playCurrency: currency.playCurrency,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
@@ -144,6 +158,13 @@ export class User {
   }
 
   /**
+   * 통화 정보 조회
+   */
+  getCurrency(): UserCurrency {
+    return this.currency;
+  }
+
+  /**
    * 비밀번호 업데이트
    */
   updatePassword(newPasswordHash: string): User {
@@ -152,6 +173,7 @@ export class User {
       this.id,
       updatedAuthInfo,
       this.location,
+      this.currency,
       this.status,
       this.role,
       this.createdAt,
