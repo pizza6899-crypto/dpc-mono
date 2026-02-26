@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserRoleType, UserStatus, ExchangeCurrencyCode } from '@prisma/client';
-import type { User } from '../../../../domain/model/user.entity';
 
 export class UserDetailResponseDto {
   @ApiProperty({ description: '사용자 ID', example: '1234567890...' })
@@ -32,17 +31,4 @@ export class UserDetailResponseDto {
 
   @ApiProperty({ description: '게임 통화', enum: ExchangeCurrencyCode })
   playCurrency: ExchangeCurrencyCode;
-
-  constructor(user: User) {
-    this.id = user.id.toString();
-    this.email = user.email;
-    this.role = user.role;
-    this.status = user.status;
-    this.country = user.getLocation().country;
-    this.timezone = user.getLocation().timezone;
-    this.primaryCurrency = user.getCurrency().primaryCurrency;
-    this.playCurrency = user.getCurrency().playCurrency;
-    this.createdAt = user.createdAt;
-    this.updatedAt = user.updatedAt;
-  }
 }

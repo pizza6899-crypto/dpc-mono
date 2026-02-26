@@ -47,7 +47,18 @@ export class UserAdminController {
   })
   async findOne(@Param('id') id: string): Promise<UserDetailResponseDto> {
     const user = await this.getUserService.getById(BigInt(id));
-    return new UserDetailResponseDto(user);
+    return {
+      id: user.id.toString(),
+      email: user.email,
+      role: user.role,
+      status: user.status,
+      country: user.getLocation().country,
+      timezone: user.getLocation().timezone,
+      primaryCurrency: user.getCurrency().primaryCurrency,
+      playCurrency: user.getCurrency().playCurrency,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
   }
 
   /**
