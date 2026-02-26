@@ -1,6 +1,5 @@
-// src/modules/user/controllers/admin/dto/response/user-list.response.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { UserRoleType, UserStatus } from '@prisma/client';
+import { UserRoleType, UserStatus, ExchangeCurrencyCode } from '@prisma/client';
 
 export class UserListItemDto {
   @ApiProperty({
@@ -56,8 +55,21 @@ export class UserListItemDto {
     example: '2024-01-02T00:00:00Z',
   })
   updatedAt: Date;
-}
 
+  @ApiProperty({
+    description: '대표 통화',
+    enum: ExchangeCurrencyCode,
+    example: ExchangeCurrencyCode.USD,
+  })
+  primaryCurrency: ExchangeCurrencyCode;
+
+  @ApiProperty({
+    description: '게임 통화',
+    enum: ExchangeCurrencyCode,
+    example: ExchangeCurrencyCode.USD,
+  })
+  playCurrency: ExchangeCurrencyCode;
+}
 export class UserListResponseDto {
   @ApiProperty({
     description: '사용자 목록',

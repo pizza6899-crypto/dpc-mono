@@ -31,7 +31,7 @@ export class UserAdminController {
   constructor(
     private readonly listUsersService: ListUsersService,
     private readonly getUserService: GetUserService,
-  ) {}
+  ) { }
 
   /**
    * 사용자 상세 조회 (관리자용)
@@ -88,6 +88,8 @@ export class UserAdminController {
         status: user.status,
         country: user.getLocation().country,
         timezone: user.getLocation().timezone,
+        primaryCurrency: user.getCurrency().primaryCurrency,
+        playCurrency: user.getCurrency().playCurrency,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       })),

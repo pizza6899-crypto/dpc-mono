@@ -1,6 +1,5 @@
-// src/modules/user/controllers/admin/dto/response/user-detail.response.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { UserRoleType, UserStatus } from '@prisma/client';
+import { UserRoleType, UserStatus, ExchangeCurrencyCode } from '@prisma/client';
 import type { User } from '../../../../domain/model/user.entity';
 
 export class UserDetailResponseDto {
@@ -28,6 +27,12 @@ export class UserDetailResponseDto {
   @ApiProperty({ description: '최종 수정일' })
   updatedAt: Date;
 
+  @ApiProperty({ description: '대표 통화', enum: ExchangeCurrencyCode })
+  primaryCurrency: ExchangeCurrencyCode;
+
+  @ApiProperty({ description: '게임 통화', enum: ExchangeCurrencyCode })
+  playCurrency: ExchangeCurrencyCode;
+
   constructor(user: User) {
     this.id = user.id.toString();
     this.email = user.email;
@@ -35,6 +40,8 @@ export class UserDetailResponseDto {
     this.status = user.status;
     this.country = user.getLocation().country;
     this.timezone = user.getLocation().timezone;
+    this.primaryCurrency = user.getCurrency().primaryCurrency;
+    this.playCurrency = user.getCurrency().playCurrency;
     this.createdAt = user.createdAt;
     this.updatedAt = user.updatedAt;
   }
