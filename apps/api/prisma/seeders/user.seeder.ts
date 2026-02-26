@@ -4,10 +4,12 @@ import { Language, PrismaClient, UserRoleType, UserStatus } from '@prisma/client
 export async function seedUsers(prisma: PrismaClient) {
   // 관리자 계정 생성
   const adminPassword = await bcrypt.hash('admin123!', 10);
-  const adminUser = await prisma.user.upsert({
+  await prisma.user.upsert({
     where: { email: 'admin@dpc.com' },
     update: {},
     create: {
+      loginId: 'admin',
+      nickname: 'SuperAdmin',
       email: 'admin@dpc.com',
       passwordHash: adminPassword,
       role: UserRoleType.SUPER_ADMIN,
@@ -15,11 +17,6 @@ export async function seedUsers(prisma: PrismaClient) {
       country: 'JP',
       language: Language.KO,
       timezone: 'Asia/Tokyo',
-      // userWallets: {
-      // create: WALLET_CURRENCIES.map((currency) => ({
-      //   currency,
-      // })),
-      // },
     },
   });
 

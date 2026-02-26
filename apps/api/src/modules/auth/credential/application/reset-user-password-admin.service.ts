@@ -1,17 +1,17 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
-import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
+import { USER_REPOSITORY } from 'src/modules/user/profile/ports/out/user.repository.token';
+import type { UserRepositoryPort } from 'src/modules/user/profile/ports/out/user.repository.port';
 import { hashPassword } from 'src/utils/password.util';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
+import { UserNotFoundException } from 'src/modules/user/profile/domain/user.exception';
 import {
   LoginFailedException,
   InsufficientPermissionException,
 } from '../domain/exception';
 import { nanoid } from 'nanoid';
 import { UserRoleType } from '@prisma/client';
-import { User } from 'src/modules/user/domain';
+import { User } from 'src/modules/user/profile/domain';
 
 export interface ResetUserPasswordAdminParams {
   targetUserId: bigint;
@@ -38,7 +38,7 @@ export class ResetUserPasswordAdminService {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(
@@ -76,7 +76,7 @@ export class ResetUserPasswordAdminService {
 
     return {
       newPassword: finalPassword,
-      targetUserEmail: targetUser.email,
+      targetUserEmail: targetUser.email || '', // Audit 로그용이므로 안전하게 처리
     };
   }
 

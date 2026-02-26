@@ -18,7 +18,7 @@ import { GetUserTierQueryDto } from './dto/request/get-user-tier.query.dto';
 import { GetUserTierHistoryQueryDto } from './dto/request/get-user-tier-history.query.dto';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { SessionAuthGuard } from 'src/common/auth/guards/session-auth.guard';
-import { User } from 'src/modules/user/domain/model/user.entity';
+import { User } from 'src/modules/user/profile/domain/model/user.entity';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 

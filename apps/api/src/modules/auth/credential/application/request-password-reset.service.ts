@@ -1,7 +1,7 @@
 import { Injectable, Inject, Logger, HttpStatus } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
-import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
+import { USER_REPOSITORY } from 'src/modules/user/profile/ports/out/user.repository.token';
+import type { UserRepositoryPort } from 'src/modules/user/profile/ports/out/user.repository.port';
 import { PASSWORD_RESET_TOKEN_REPOSITORY } from '../ports/out/password-reset-token.repository.token';
 import type { PasswordResetTokenRepositoryPort } from '../ports/out/password-reset-token.repository.port';
 import { nanoid } from 'nanoid';

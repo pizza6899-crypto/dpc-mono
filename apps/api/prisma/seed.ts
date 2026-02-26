@@ -1,4 +1,5 @@
 import { seedUsers } from './seeders/user.seeder';
+import { seedUserConfig } from './seeders/user-config.seeder';
 import { seedTiers } from './seeders/tier.seeder';
 import { seedNotificationTemplates } from './seeders/notification.seeder';
 import { seedAggregators } from './seeders/aggregator.seeder';
@@ -22,6 +23,10 @@ async function main() {
   console.log('🌱 시딩을 시작합니다...');
 
   try {
+    // UserConfig 설정 시딩 처리
+    await seedUserConfig(prisma);
+    console.log('✅ 전역 사용자 설정 시딩이 완료되었습니다.');
+
     // 유저 시딩 처리
     await seedUsers(prisma);
     console.log('✅ 유저 시딩이 완료되었습니다.');

@@ -7,7 +7,7 @@ import { type RequestClientInfo } from 'src/common/http/types';
 import { IdUtil } from 'src/utils/id.util';
 import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { WhitecliffMapperService } from '../infrastructure/whitecliff-mapper.service';
-import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
+import { UserNotFoundException } from 'src/modules/user/profile/domain/user.exception';
 import { WalletNotFoundException } from 'src/modules/wallet/domain/wallet.exception';
 import { GameProvider, Language, GameAggregatorType } from '@prisma/client';
 import { CasinoGameProviderNotFoundException } from 'src/modules/casino/aggregator/domain/casino-aggregator.exception';

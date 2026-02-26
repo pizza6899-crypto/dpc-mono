@@ -14,7 +14,7 @@ import { LoginAttemptMapper } from './infrastructure/mapper';
 import { CredentialUserMapper } from './infrastructure/credential-user.mapper';
 import { CredentialPolicy } from './domain/policy';
 import { AffiliateReferralModule } from '../../affiliate/referral/referral.module';
-import { UserModule } from '../../user/user.module';
+import { UserProfileModule } from '../../user/profile/user-profile.module';
 import { ChangePasswordService } from './application/change-password.service';
 import { ResetUserPasswordAdminService } from './application/reset-user-password-admin.service';
 import { RequestPasswordResetService } from './application/request-password-reset.service';
@@ -36,7 +36,7 @@ import { SessionSerializer } from 'src/common/auth/strategies/session.serializer
     PassportModule.register({ session: true }),
     EnvModule, // LoginService가 EnvService를 사용하기 위해 필요
     AffiliateReferralModule,
-    UserModule, // UserRepository 사용을 위해 필요
+    UserProfileModule, // UserRepository 사용을 위해 필요
     SessionModule, // CreateSessionService 사용을 위해 필요
   ],
   controllers: [CredentialUserController, CredentialAdminController],
@@ -83,4 +83,4 @@ import { SessionSerializer } from 'src/common/auth/strategies/session.serializer
     VerifyCredentialService,
   ],
 })
-export class CredentialModule {}
+export class CredentialModule { }

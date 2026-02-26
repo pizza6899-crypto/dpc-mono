@@ -15,7 +15,7 @@ import { FindWalletStatisticsService } from './application/find-wallet-statistic
 import { USER_WALLET_REPOSITORY } from './ports/out/user-wallet.repository.token';
 import { WalletController } from './controllers/user/wallet.controller';
 import { WalletAdminController } from './controllers/admin/wallet-admin.controller';
-import { UserModule } from '../user/user.module';
+import { UserProfileModule } from '../user/profile/user-profile.module';
 import { USER_WALLET_TRANSACTION_REPOSITORY } from './ports/out/user-wallet-transaction.repository.token';
 import { UserWalletTransactionRepository } from './infrastructure/wallet-transaction.repository';
 import { UpdateUserBalanceService } from './application/update-user-balance.service';
@@ -50,7 +50,7 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
  */
 @Module({
   imports: [
-    UserModule,
+    UserProfileModule,
     SqidsModule,
     ConcurrencyModule,
     ExchangeModule,
@@ -98,4 +98,4 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
     USER_WALLET_STATS_REPOSITORY,
   ],
 })
-export class WalletModule {}
+export class WalletModule { }

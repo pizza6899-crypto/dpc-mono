@@ -3,9 +3,9 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { VerifyCredentialService } from './verify-credential.service';
 import { hashPassword } from 'src/utils/password.util';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import type { UserRepositoryPort } from 'src/modules/user/ports/out/user.repository.port';
-import { USER_REPOSITORY } from 'src/modules/user/ports/out/user.repository.token';
-import { UserNotFoundException } from 'src/modules/user/domain/user.exception';
+import type { UserRepositoryPort } from 'src/modules/user/profile/ports/out/user.repository.port';
+import { USER_REPOSITORY } from 'src/modules/user/profile/ports/out/user.repository.token';
+import { UserNotFoundException } from 'src/modules/user/profile/domain/user.exception';
 import {
   PasswordMismatchException,
   LoginFailedException,
@@ -32,7 +32,7 @@ export class ChangePasswordService {
     private readonly verifyService: VerifyCredentialService,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(params: ChangePasswordParams): Promise<void> {
@@ -62,7 +62,7 @@ export class ChangePasswordService {
     }
 
     const isValidPassword = await this.verifyService.execute({
-      email: user.email,
+      email: user.email!, // isCredentialUser 체크를 통해 email 존재가 보장됨
       password: currentPassword,
       isAdmin,
     });

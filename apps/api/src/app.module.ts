@@ -41,6 +41,7 @@ import { TierModule } from './modules/tier/tier.module';
 import { CacheModule } from './common/cache/cache.module';
 import { BullMqModule } from './infrastructure/bullmq/bullmq.module';
 import { RewardModule } from './modules/reward/reward.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { RewardModule } from './modules/reward/reward.module';
     ScheduleModule.forRoot(),
     AuditLogModule,
     AuthModule,
+    UserModule,
     CasinoModule,
     PaymentModule,
     DepositModule,

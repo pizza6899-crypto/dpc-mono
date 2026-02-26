@@ -2,7 +2,7 @@ import { Controller, Post, Param, HttpCode, HttpStatus, Get, Query } from '@nest
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { ApiStandardResponse, ApiPaginatedResponse, ApiStandardErrors } from 'src/common/http/decorators/api-response.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import { User } from 'src/modules/user/domain/model/user.entity';
+import { User } from 'src/modules/user/profile/domain/model/user.entity';
 import { ClaimRewardService } from '../../application/claim-reward.service';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
