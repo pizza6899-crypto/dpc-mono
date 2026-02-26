@@ -114,6 +114,18 @@ export class UserAuth {
   }
 
   /**
+   * 이메일로 새로운 UserAuth 인스턴스 생성 (불변성 유지)
+   */
+  withEmail(email: string): UserAuth {
+    return new UserAuth(
+      email,
+      this.passwordHash,
+      this.socialId,
+      this.socialType,
+    );
+  }
+
+  /**
    * 이메일 형식 검증
    */
   private isValidEmail(email: string): boolean {

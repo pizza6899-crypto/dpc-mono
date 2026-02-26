@@ -181,32 +181,37 @@ export class User {
     );
   }
 
-  // 추후 확장 예정 메서드들 (주석 처리)
-  /*
-  // 프로필 관리 (추후 구현)
-  updateProfile(newProfile: Partial<UserProfile>): void {
-    this.profile = this.profile.update(newProfile);
-  }
+  /**
+   * 관리자 도구를 통한 정보 업데이트 (불변성 유지)
+   */
+  updateAdmin(updates: {
+    email?: string;
+    status?: PrismaUserStatus;
+    primaryCurrency?: ExchangeCurrencyCode;
+    playCurrency?: ExchangeCurrencyCode;
+  }): User {
+    let newAuthInfo = this.authInfo;
+    if (updates.email && updates.email !== this.authInfo.email) {
+      newAuthInfo = this.authInfo.withEmail(updates.email);
+    }
 
-  // 계정 상태 관리 (추후 구현)
-  suspend(reason: string): void {
-    this.status = this.status.toSuspended(reason);
-  }
+    let newCurrency = this.currency;
+    if (updates.primaryCurrency || updates.playCurrency) {
+      newCurrency = this.currency.update({
+        primaryCurrency: updates.primaryCurrency,
+        playCurrency: updates.playCurrency,
+      });
+    }
 
-  activate(): void {
-    this.status = this.status.toActive();
+    return new User(
+      this.id,
+      newAuthInfo,
+      this.location,
+      newCurrency,
+      updates.status || this.status,
+      this.role,
+      this.createdAt,
+      new Date(), // 변경 일시 반영
+    );
   }
-
-  deactivate(): void {
-    this.status = this.status.toDeactivated();
-  }
-
-  // 위치 정보 업데이트 (추후 구현)
-  updateLocation(updates: Partial<{
-    country: string | null;
-    timezone: string | null;
-  }>): void {
-    this.location = this.location.update(updates);
-  }
-  */
 }

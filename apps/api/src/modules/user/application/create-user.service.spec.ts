@@ -71,6 +71,7 @@ describe('CreateUserService', () => {
       create: jest.fn(),
       findMany: jest.fn(),
       updatePassword: jest.fn(),
+      save: jest.fn(),
     };
 
     module = await Test.createTestingModule({

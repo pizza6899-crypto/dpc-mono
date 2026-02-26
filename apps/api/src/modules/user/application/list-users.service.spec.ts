@@ -58,6 +58,7 @@ describe('ListUsersService', () => {
       findMany: jest.fn(),
       create: jest.fn(),
       updatePassword: jest.fn(),
+      save: jest.fn(),
     };
 
     module = await Test.createTestingModule({

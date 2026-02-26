@@ -2,6 +2,8 @@
 import {
   Controller,
   Get,
+  Patch,
+  Body,
   Query,
   HttpCode,
   HttpStatus,
@@ -19,9 +21,14 @@ import { UserRoleType } from '@prisma/client';
 import type { PaginatedData } from 'src/common/http/types';
 import { ListUsersService } from '../../application/list-users.service';
 import { GetUserService } from '../../application/get-user.service';
+import { UpdateUserAdminService } from '../../application/update-user-admin.service';
 import { ListUsersAdminQueryDto } from './dto/request/list-users-admin-query.dto';
+import { UpdateUserAdminRequestDto } from './dto/request/update-user-admin.request.dto';
 import { UserAdminListItemDto } from './dto/response/user-admin-list.response.dto';
 import { UserAdminDetailResponseDto } from './dto/response/user-admin-detail.response.dto';
+
+import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
+import { LogType } from 'src/modules/audit-log/domain';
 
 @Controller('admin/users')
 @ApiTags('Admin Users')
@@ -31,6 +38,7 @@ export class UserAdminController {
   constructor(
     private readonly listUsersService: ListUsersService,
     private readonly getUserService: GetUserService,
+    private readonly updateUserAdminService: UpdateUserAdminService,
   ) { }
 
   /**
@@ -107,6 +115,51 @@ export class UserAdminController {
       page: result.page,
       limit: result.limit,
       total: result.total,
+    };
+  }
+
+  /**
+   * 사용자 정보 업데이트 (관리자용)
+   */
+  @Patch(':id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Update user / 사용자 정보 수정 (관리자용)',
+    description: '관리자가 특정 사용자의 이메일, 상태, 통화 설정을 변경합니다.',
+  })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'USER',
+    action: 'UPDATE_USER',
+    extractMetadata: (req) => ({ userId: req.params.id, body: req.body }),
+  })
+  @ApiStandardResponse(UserAdminDetailResponseDto, {
+    status: 200,
+    description: 'Successfully updated user / 사용자 정보 수정 성공',
+  })
+  async update(
+    @Param('id') id: string,
+    @Body() dto: UpdateUserAdminRequestDto,
+  ): Promise<UserAdminDetailResponseDto> {
+    const user = await this.updateUserAdminService.execute({
+      id: BigInt(id),
+      email: dto.email,
+      status: dto.status,
+      primaryCurrency: dto.primaryCurrency,
+      playCurrency: dto.playCurrency,
+    });
+
+    return {
+      id: user.id.toString(),
+      email: user.email,
+      role: user.role,
+      status: user.status,
+      country: user.getLocation().country,
+      timezone: user.getLocation().timezone,
+      primaryCurrency: user.getCurrency().primaryCurrency,
+      playCurrency: user.getCurrency().playCurrency,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
     };
   }
 }

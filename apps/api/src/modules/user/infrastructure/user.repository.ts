@@ -23,7 +23,7 @@ export class UserRepository implements UserRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: UserMapper,
-  ) {}
+  ) { }
 
   async findByEmail(email: string): Promise<User | null> {
     const user = await this.tx.user.findFirst({
@@ -76,11 +76,11 @@ export class UserRepository implements UserRepositoryPort {
       ...(status && { status }),
       ...(startDate &&
         endDate && {
-          createdAt: {
-            gte: startDate,
-            lte: endDate,
-          },
-        }),
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      }),
     };
 
     // 정렬 조건 구성
@@ -122,5 +122,27 @@ export class UserRepository implements UserRepositoryPort {
     });
 
     return this.mapper.toDomain(user);
+  }
+
+  async save(user: User): Promise<User> {
+    const data = user.toPersistence();
+
+    const updated = await this.tx.user.update({
+      where: { id: data.id },
+      data: {
+        email: data.email,
+        passwordHash: data.passwordHash,
+        socialId: data.socialId,
+        socialType: data.socialType,
+        status: data.status,
+        role: data.role,
+        country: data.country,
+        timezone: data.timezone,
+        primaryCurrency: data.primaryCurrency,
+        playCurrency: data.playCurrency,
+      },
+    });
+
+    return this.mapper.toDomain(updated);
   }
 }

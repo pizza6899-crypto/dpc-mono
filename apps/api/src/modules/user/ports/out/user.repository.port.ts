@@ -78,4 +78,10 @@ export interface UserRepositoryPort {
    * 사용자 비밀번호 업데이트
    */
   updatePassword(userId: bigint, passwordHash: string): Promise<User>;
+
+  /**
+   * 도메인 엔티티를 활용한 영속화 저장 (생성/수정 통합)
+   * 현재는 update 쿼리를 위해 사용됩니다.
+   */
+  save(user: User): Promise<User>;
 }
