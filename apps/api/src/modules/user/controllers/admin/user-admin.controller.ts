@@ -19,9 +19,9 @@ import { UserRoleType } from '@prisma/client';
 import type { PaginatedData } from 'src/common/http/types';
 import { ListUsersService } from '../../application/list-users.service';
 import { GetUserService } from '../../application/get-user.service';
-import { ListUsersQueryDto } from './dto/request/list-users-query.dto';
-import { UserListItemDto } from './dto/response/user-list.response.dto';
-import { UserDetailResponseDto } from './dto/response/user-detail.response.dto';
+import { ListUsersAdminQueryDto } from './dto/request/list-users-admin-query.dto';
+import { UserAdminListItemDto } from './dto/response/user-admin-list.response.dto';
+import { UserAdminDetailResponseDto } from './dto/response/user-admin-detail.response.dto';
 
 @Controller('admin/users')
 @ApiTags('Admin Users')
@@ -41,11 +41,11 @@ export class UserAdminController {
   @ApiOperation({
     summary: 'Get user details / 사용자 상세 조회 (관리자용)',
   })
-  @ApiStandardResponse(UserDetailResponseDto, {
+  @ApiStandardResponse(UserAdminDetailResponseDto, {
     status: 200,
     description: 'Successfully retrieved user details / 사용자 상세 조회 성공',
   })
-  async findOne(@Param('id') id: string): Promise<UserDetailResponseDto> {
+  async findOne(@Param('id') id: string): Promise<UserAdminDetailResponseDto> {
     const user = await this.getUserService.getById(BigInt(id));
     return {
       id: user.id.toString(),
@@ -72,13 +72,13 @@ export class UserAdminController {
     description:
       '관리자가 등록된 사용자 목록을 조회합니다. 페이징, 필터링, 정렬 기능을 지원합니다.',
   })
-  @ApiPaginatedResponse(UserListItemDto, {
+  @ApiPaginatedResponse(UserAdminListItemDto, {
     status: 200,
     description: 'Successfully retrieved user list / 사용자 목록 조회 성공',
   })
   async listUsers(
-    @Query() query: ListUsersQueryDto,
-  ): Promise<PaginatedData<UserListItemDto>> {
+    @Query() query: ListUsersAdminQueryDto,
+  ): Promise<PaginatedData<UserAdminListItemDto>> {
     const result = await this.listUsersService.execute({
       page: query.page,
       limit: query.limit,

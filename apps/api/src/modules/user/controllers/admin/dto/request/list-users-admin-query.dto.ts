@@ -6,7 +6,7 @@ import { UserRoleType, UserStatus } from '@prisma/client';
 
 type UserSortFields = 'createdAt' | 'updatedAt' | 'email';
 
-export class ListUsersQueryDto extends createPaginationQueryDto<UserSortFields>(
+export class ListUsersAdminQueryDto extends createPaginationQueryDto<UserSortFields>(
   {
     defaultLimit: 20,
     maxLimit: 100,

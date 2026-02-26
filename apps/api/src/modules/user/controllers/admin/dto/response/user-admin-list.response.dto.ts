@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserRoleType, UserStatus, ExchangeCurrencyCode } from '@prisma/client';
 
-export class UserListItemDto {
+export class UserAdminListItemDto {
   @ApiProperty({
     description: 'User ID / 사용자 ID',
     example: '1234567890123456789',
