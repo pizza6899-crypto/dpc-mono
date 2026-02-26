@@ -16,7 +16,7 @@ export class ListUsersQueryDto extends createPaginationQueryDto<UserSortFields>(
   ['createdAt', 'updatedAt', 'email'],
 ) {
   @ApiPropertyOptional({
-    description: '이메일 검색 (부분 일치)',
+    description: 'User Email (Partial Match) / 이메일 검색 (부분 일치)',
     example: 'user@example.com',
   })
   @IsOptional()
@@ -24,7 +24,7 @@ export class ListUsersQueryDto extends createPaginationQueryDto<UserSortFields>(
   email?: string;
 
   @ApiPropertyOptional({
-    description: '사용자 역할 필터',
+    description: 'User Role Filter / 사용자 역할 필터',
     enum: UserRoleType,
     example: UserRoleType.USER,
   })
@@ -33,7 +33,7 @@ export class ListUsersQueryDto extends createPaginationQueryDto<UserSortFields>(
   role?: UserRoleType;
 
   @ApiPropertyOptional({
-    description: '사용자 상태 필터',
+    description: 'User Status Filter / 사용자 상태 필터',
     enum: UserStatus,
     example: UserStatus.ACTIVE,
   })
@@ -42,7 +42,7 @@ export class ListUsersQueryDto extends createPaginationQueryDto<UserSortFields>(
   status?: UserStatus;
 
   @ApiPropertyOptional({
-    description: '시작 날짜 (ISO 8601 형식) - 가입일 기준',
+    description: 'Start Date (ISO 8601, Based on Joined Amount) / 시작 날짜 (ISO 8601 형식) - 가입일 기준',
     example: '2024-01-01T00:00:00Z',
   })
   @IsOptional()
@@ -50,7 +50,7 @@ export class ListUsersQueryDto extends createPaginationQueryDto<UserSortFields>(
   startDate?: string;
 
   @ApiPropertyOptional({
-    description: '종료 날짜 (ISO 8601 형식) - 가입일 기준',
+    description: 'End Date (ISO 8601, Based on Joined Amount) / 종료 날짜 (ISO 8601 형식) - 가입일 기준',
     example: '2024-12-31T23:59:59Z',
   })
   @IsOptional()
