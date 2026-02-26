@@ -3,6 +3,27 @@
  * 사용자 인증, 세션 추적 및 보안 유효성 검사를 위한 스키마
  */
 
+/// 인증(Auth), 로컬 로그인 정책 관리 (AuthConfig)
+/// 프로젝트 내 단일 레코드(Singleton)로 운용하기 위해 id를 강제합니다.
+model AuthConfig {
+  id Int @id @default(1)
+
+  /// 중복 로그인 방지 등 설정된 최대 다중 로그인 세션 (0이면 무제한)
+  maxSessions Int @default(0) @map("max_sessions")
+
+  /// 로그인 실패 허용 횟수 (횟수 초과 시 잠금 차단)
+  maxLoginFailed Int @default(5) @map("max_login_failed")
+
+  /// 변경/수정 관리자 메모
+  adminNote String? @map("admin_note")
+
+  updatedBy BigInt?  @map("updated_by")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("auth_configs")
+}
+
 /**
  * 세션 타입
  */

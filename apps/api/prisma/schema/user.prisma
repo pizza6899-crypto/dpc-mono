@@ -1,0 +1,22 @@
+/// 사용자 설정 및 정책 관리 (UserConfig)
+/// 
+/// 사용자 가입, 로그인 제어 및 기본 설정들을 관리하는 단일 데이터 테이블입니다.
+/// 프로젝트 내 단일 레코드(Singleton)로 운용하기 위해 id를 강제합니다.
+model UserConfig {
+    id Int @id @default(1)
+
+    /// 신규 회원가입 허용 여부
+    allowSignup Boolean @default(true) @map("allow_signup")
+
+    /// 신규 가입 시 기본으로 부여할 상태
+    defaultStatus UserStatus @default(ACTIVE) @map("default_status")
+
+    /// 변경/수정 관리자 메모
+    adminNote String? @map("admin_note")
+
+    updatedBy BigInt?  @map("updated_by")
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("user_configs")
+}
