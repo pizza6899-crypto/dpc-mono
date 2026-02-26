@@ -70,29 +70,3 @@ export class UserListItemDto {
   })
   playCurrency: ExchangeCurrencyCode;
 }
-
-export class UserListResponseDto {
-  @ApiProperty({
-    description: 'User List / 사용자 목록',
-    type: [UserListItemDto],
-  })
-  data: UserListItemDto[];
-
-  @ApiProperty({
-    description: 'Current Page / 현재 페이지',
-    example: 1,
-  })
-  page: number;
-
-  @ApiProperty({
-    description: 'Limit per Page / 페이지당 항목 수',
-    example: 20,
-  })
-  limit: number;
-
-  @ApiProperty({
-    description: 'Total Items / 전체 항목 수',
-    example: 100,
-  })
-  total: number;
-}
