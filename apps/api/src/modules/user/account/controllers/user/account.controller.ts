@@ -5,6 +5,8 @@ import {
     HttpStatus,
     HttpCode,
     UseGuards,
+    Get,
+    Query,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
@@ -16,8 +18,6 @@ import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { RegisterUserService } from '../../application/register-user.service';
 import { RegisterSocialUserService } from '../../application/register-social-user.service';
-import { GetUserConfigService } from '../../../config/application/get-user-config.service';
-import { RegistrationConfigResponseDto } from './dto/response/registration-config.response.dto';
 import { RegistrationLimitGuard } from '../../guards/registration-limit.guard';
 import { CheckAvailabilityService } from '../../application/check-availability.service';
 import { CheckAvailabilityRequestDto } from './dto/request/check-availability.request.dto';
@@ -39,21 +39,20 @@ export class UserAccountController {
         private readonly registerUserService: RegisterUserService,
         private readonly registerSocialUserService: RegisterSocialUserService,
         private readonly checkAvailabilityService: CheckAvailabilityService,
-        private readonly getUserConfigService: GetUserConfigService,
         private readonly sqidsService: SqidsService,
     ) { }
 
     @Public()
-    @Post('check-availability')
+    @Get('check-availability')
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
         summary: 'Check Login ID / Nickname Availability / 중복 확인',
         description: 'Check if the login ID or nickname is already in use. / 아이디 또는 닉네임의 중복 여부를 확인합니다.',
     })
     @ApiStandardResponse(CheckAvailabilityResponseDto)
-    @Throttle({ limit: 30, ttl: 60 }) // 중복 확인은 조금 더 여유 있게
+    @Throttle({ limit: 30, ttl: 60 })
     async checkAvailability(
-        @Body() query: CheckAvailabilityRequestDto,
+        @Query() query: CheckAvailabilityRequestDto,
     ): Promise<CheckAvailabilityResponseDto> {
         return this.checkAvailabilityService.execute(query);
     }
@@ -132,40 +131,6 @@ export class UserAccountController {
         return {
             id: this.sqidsService.encode(result.id, SqidsPrefix.USER),
             email: result.email,
-        };
-    }
-
-    @HttpCode(HttpStatus.OK)
-    @Public()
-    @Post('registration-config')
-    @ApiOperation({
-        summary: 'Get Registration Configuration / 회원가입 설정 조회',
-        description: 'Returns the current registration policy and available options. / 현재의 회원가입 정책 및 선택 가능한 옵션들을 조회합니다.',
-    })
-    @ApiStandardResponse(RegistrationConfigResponseDto)
-    async getRegistrationConfig(): Promise<RegistrationConfigResponseDto> {
-        const config = await this.getUserConfigService.execute();
-
-        return {
-            allowSignup: config.allowSignup,
-            loginIdType: config.loginIdType,
-            requireEmail: config.requireEmail,
-            requirePhoneNumber: config.requirePhoneNumber,
-            requireBirthDate: config.requireBirthDate,
-            requireNickname: config.requireNickname,
-            requireReferralCode: config.requireReferralCode,
-            allowedOAuthProviders: config.allowedOAuthProviders,
-            loginIdEmailRegex: config.loginIdEmailRegex,
-            loginIdPhoneNumberRegex: config.loginIdPhoneNumberRegex,
-            loginIdUsernameRegex: config.loginIdUsernameRegex,
-            nicknameRegex: config.nicknameRegex,
-            passwordRegex: config.passwordRegex,
-            defaultPrimaryCurrency: config.defaultPrimaryCurrency,
-            defaultPlayCurrency: config.defaultPlayCurrency,
-            defaultLanguage: config.defaultLanguage,
-            allowedRegistrationMethods: config.allowSignup
-                ? [RegistrationMethod.FIAT, RegistrationMethod.CRYPTO, RegistrationMethod.SOCIAL]
-                : [],
         };
     }
 }

@@ -12,7 +12,9 @@ import { ThrottleModule } from 'src/common/throttle/throttle.module';
 import { UserAccountController } from './controllers/user/account.controller';
 import { UserAccountAdminController } from './controllers/admin/account-admin.controller';
 import { RegisterUserService } from './application/register-user.service';
+import { RegisterSocialUserService } from './application/register-social-user.service';
 import { RegisterAdminService } from './application/register-admin.service';
+import { UserOnboardingService } from './application/user-onboarding.service';
 import { CheckAvailabilityService } from './application/check-availability.service';
 import { RegistrationLimitGuard } from './guards/registration-limit.guard';
 
@@ -32,10 +34,12 @@ import { RegistrationLimitGuard } from './guards/registration-limit.guard';
     controllers: [UserAccountController, UserAccountAdminController],
     providers: [
         RegisterUserService,
+        RegisterSocialUserService,
         RegisterAdminService,
+        UserOnboardingService,
         CheckAvailabilityService,
         RegistrationLimitGuard,
     ],
-    exports: [RegisterUserService, RegisterAdminService],
+    exports: [RegisterUserService, RegisterSocialUserService, RegisterAdminService, UserOnboardingService],
 })
 export class UserAccountModule { }
