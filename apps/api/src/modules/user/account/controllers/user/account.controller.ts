@@ -29,6 +29,8 @@ import { RegistrationMethod } from '@prisma/client';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
+import { GetUserConfigService } from 'src/modules/user/config/application/get-user-config.service';
+import { UserPolicyResponseDto } from './dto/response/user-policy.response.dto';
 
 @ApiTags('User Account')
 @Controller('users')
@@ -38,8 +40,33 @@ export class UserAccountController {
         private readonly registerUserService: RegisterUserService,
         private readonly registerSocialUserService: RegisterSocialUserService,
         private readonly checkAvailabilityService: CheckAvailabilityService,
+        private readonly getUserConfigService: GetUserConfigService,
         private readonly sqidsService: SqidsService,
     ) { }
+
+    @Public()
+    @Get('policy')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({
+        summary: 'Get User Policy / 사용자 정책 정보 조회',
+        description: 'Get current system policy (allowed signup methods, required fields, validation regex, etc.). / 현재 시스템 정책(가입 방식, 필수 필드, 유효성 검사 정규식 등) 정보를 조회합니다.',
+    })
+    @ApiStandardResponse(UserPolicyResponseDto)
+    async getUserPolicy(): Promise<UserPolicyResponseDto> {
+        const config = await this.getUserConfigService.execute();
+
+        return {
+            allowSignup: config.allowSignup,
+            loginIdType: config.loginIdType,
+            requireNickname: config.requireNickname,
+            requireReferralCode: config.requireReferralCode,
+            loginIdEmailRegex: config.loginIdEmailRegex,
+            loginIdPhoneNumberRegex: config.loginIdPhoneNumberRegex,
+            loginIdUsernameRegex: config.loginIdUsernameRegex,
+            nicknameRegex: config.nicknameRegex,
+            passwordRegex: config.passwordRegex,
+        };
+    }
 
     @Public()
     @Get('check-availability')

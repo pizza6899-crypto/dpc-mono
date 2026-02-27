@@ -6,13 +6,13 @@ import { CountryUtil } from 'src/utils/country.util';
 import { UserRoleType, RegistrationMethod, LoginIdType } from '@prisma/client';
 import { CreateUserService } from 'src/modules/user/profile/application/create-user.service';
 import { GetUserConfigService } from 'src/modules/user/config/application/get-user-config.service';
-import { UserOnboardingService } from './user-onboarding.service';
 import { CheckAvailabilityService } from './check-availability.service';
 import { AvailabilityField } from '../controllers/user/dto/request/check-availability.request.dto';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from '@repo/shared';
 import { FindCodeByCodeService } from 'src/modules/affiliate/code/application/find-code-by-code.service';
 import { ThrottleService } from 'src/common/throttle/throttle.service';
+import { IdUtil } from 'src/utils/id.util';
 import {
     ReferralCodeNotFoundException,
     ReferralCodeInactiveException,
@@ -45,7 +45,6 @@ export class RegisterUserService {
     constructor(
         private readonly findCodeByCodeService: FindCodeByCodeService,
         private readonly createUserService: CreateUserService,
-        private readonly onboardingService: UserOnboardingService,
         private readonly getUserConfigService: GetUserConfigService,
         private readonly throttleService: ThrottleService,
         private readonly checkAvailabilityService: CheckAvailabilityService,
@@ -101,13 +100,12 @@ export class RegisterUserService {
 
         // 6. 비밀번호 해싱 및 닉네임 결정
         const passwordHash = await hashPassword(password);
-        const nickname = providedNickname || `user_${finalLoginId.slice(-5)}`;
+        const nickname = providedNickname || `user_${IdUtil.generateUrlSafeNanoid(6)}`;
 
         // 7. 사용자 생성
         const { user } = await this.createUserService.execute({
             loginId: finalLoginId,
             nickname,
-            // 정책에 따라 식별자를 email이나 phoneNumber로도 매핑
             email: config.loginIdType === LoginIdType.EMAIL ? finalLoginId : null,
             phoneNumber: config.loginIdType === LoginIdType.PHONE_NUMBER ? finalLoginId : null,
             passwordHash,
@@ -119,16 +117,7 @@ export class RegisterUserService {
             playCurrency: config.defaultPlayCurrency,
         });
 
-        // 8. 온보딩 프로세스 실행 (공통 서비스 위임)
-        await this.onboardingService.execute({
-            user,
-            registrationMethod,
-            loginIdType: config.loginIdType,
-            referralCode,
-            requestInfo,
-        });
-
-        // 9. 성공 시 쓰로틀링 카운트 증가
+        // 8. 성공 시 쓰로틀링 카운트 증가
         if (config.maxDailySignupPerIp > 0) {
             const key = `registration:daily:${requestInfo.ip}`;
             await this.throttleService.checkAndIncrement(key, {

@@ -1,13 +1,13 @@
 import { Injectable, Logger, HttpStatus } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { RegistrationMethod, OAuthProvider } from '@prisma/client';
+import { RegistrationMethod, OAuthProvider, UserRoleType } from '@prisma/client';
 import { CreateUserService } from 'src/modules/user/profile/application/create-user.service';
 import { GetUserConfigService } from 'src/modules/user/config/application/get-user-config.service';
-import { UserOnboardingService } from './user-onboarding.service';
 import { ThrottleService } from 'src/common/throttle/throttle.service';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from '@repo/shared';
 import { CountryUtil } from 'src/utils/country.util';
+import { IdUtil } from 'src/utils/id.util';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 
 export interface RegisterSocialUserParams {
@@ -25,7 +25,6 @@ export class RegisterSocialUserService {
     constructor(
         private readonly createUserService: CreateUserService,
         private readonly getUserConfigService: GetUserConfigService,
-        private readonly onboardingService: UserOnboardingService,
         private readonly throttleService: ThrottleService,
     ) { }
 
@@ -51,24 +50,15 @@ export class RegisterSocialUserService {
             oauthProvider: provider,
             oauthId,
             email,
-            nickname: email ? email.split('@')[0] : `user_${oauthId.slice(-5)}`,
+            nickname: `user_${IdUtil.generateUrlSafeNanoid(6)}`,
             country: requestInfo.country,
             timezone: countryConfig.timezone,
             primaryCurrency: config.defaultPrimaryCurrency,
             playCurrency: config.defaultPlayCurrency,
-            role: 'USER',
+            role: UserRoleType.USER,
         });
 
-        // 2. 온보딩
-        await this.onboardingService.execute({
-            user,
-            registrationMethod: RegistrationMethod.SOCIAL,
-            loginIdType: config.loginIdType, // 기본 정책 참조
-            referralCode,
-            requestInfo,
-        });
-
-        // 3. 쓰로틀링
+        // 2. 쓰로틀링
         if (config.maxDailySignupPerIp > 0) {
             await this.throttleService.checkAndIncrement(`registration:daily:${requestInfo.ip}`, {
                 limit: config.maxDailySignupPerIp,

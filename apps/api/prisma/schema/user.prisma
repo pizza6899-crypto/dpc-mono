@@ -146,8 +146,8 @@ enum RegistrationMethod {
 
 enum LoginIdType {
     EMAIL
-    PHONE_NUMBER
     USERNAME
+    PHONE_NUMBER
 }
 
 enum OAuthProvider {

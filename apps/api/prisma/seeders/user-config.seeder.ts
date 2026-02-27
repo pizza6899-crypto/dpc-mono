@@ -7,7 +7,7 @@ export async function seedUserConfig(prisma: PrismaClient) {
         maxDailySignupPerIp: 10,
 
         // [Registration Policy] 가입 정책
-        loginIdType: LoginIdType.EMAIL,
+        loginIdType: LoginIdType.USERNAME,
         requireEmail: true,
         requirePhoneNumber: false,
         requireBirthDate: false,
