@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { LoginIdType, OAuthProvider, ExchangeCurrencyCode, Language } from '@prisma/client';
+import { LoginIdType, OAuthProvider, ExchangeCurrencyCode, Language, RegistrationMethod } from '@prisma/client';
 
 export class RegistrationConfigResponseDto {
     @ApiProperty({ description: 'Allow signup / 회원가입 허용 여부' })
@@ -22,6 +22,13 @@ export class RegistrationConfigResponseDto {
 
     @ApiProperty({ description: 'Require referral code / 추천 코드 필수 여부' })
     requireReferralCode: boolean;
+
+    @ApiProperty({
+        description: 'Allowed registration methods / 허용된 가입 방식',
+        enum: RegistrationMethod,
+        isArray: true
+    })
+    allowedRegistrationMethods: RegistrationMethod[];
 
     @ApiProperty({
         description: 'Allowed OAuth providers / 허용된 소셜 로그인 제공자',

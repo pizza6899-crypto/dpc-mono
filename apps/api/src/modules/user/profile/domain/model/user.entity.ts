@@ -168,7 +168,8 @@ export class User {
   getAuthInfo(): UserAuth { return this.authInfo; }
 
   // Business Logic Methods
-  isCredentialUser(): boolean { return this.authInfo.isCredentialUser(); }
+  isFiatUser(): boolean { return this.authInfo.isFiatUser(); }
+  isCryptoUser(): boolean { return this.authInfo.isCryptoUser(); }
   isSocialUser(): boolean { return this.authInfo.isSocialUser(); }
 
   /**

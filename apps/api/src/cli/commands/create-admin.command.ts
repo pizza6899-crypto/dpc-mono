@@ -94,7 +94,7 @@ export class CreateAdminCommand extends CommandRunner {
           nickname,
           email,
           passwordHash,
-          registrationMethod: 'FULL',
+          registrationMethod: 'FIAT',
           role: role as UserRoleType,
           status: UserStatus.ACTIVE,
           country,

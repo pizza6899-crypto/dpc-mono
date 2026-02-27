@@ -23,6 +23,7 @@ interface CreateUserServiceParams {
   oauthProvider?: OAuthProvider | null;
   oauthId?: string | null;
   phoneNumber?: string | null;
+  telegramUsername?: string | null;
   birthDate?: Date | null;
   role?: UserRoleType;
   country?: string | null;

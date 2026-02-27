@@ -51,7 +51,7 @@ export class ChangePasswordService {
     }
 
     // 2. 일반 회원가입 사용자인지 확인
-    if (!user.isCredentialUser()) {
+    if (!user.isFiatUser()) {
       throw new LoginFailedException('User is not a credential user');
     }
 

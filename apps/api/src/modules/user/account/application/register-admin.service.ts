@@ -17,6 +17,7 @@ import { UserRoleType, UserStatus, RegistrationMethod } from '@prisma/client';
 import { CreateUserService } from 'src/modules/user/profile/application/create-user.service';
 import { InitializeUserWalletsService } from 'src/modules/wallet/application/initialize-user-wallets.service';
 import { InitializeUserTierService } from 'src/modules/tier/profile/application/initialize-user-tier.service';
+import { GetUserConfigService } from 'src/modules/user/config/application/get-user-config.service';
 
 export interface RegisterAdminParams {
     email: string;
@@ -52,6 +53,7 @@ export class RegisterAdminService {
         private readonly createUserService: CreateUserService,
         private readonly initializeUserWalletsService: InitializeUserWalletsService,
         private readonly initializeUserTierService: InitializeUserTierService,
+        private readonly getUserConfigService: GetUserConfigService,
     ) { }
 
     @Transactional()
@@ -67,6 +69,9 @@ export class RegisterAdminService {
             referralCode,
             requestInfo,
         } = params;
+
+        // 0. 가입 정책 및 기본 설정 조회
+        const config = await this.getUserConfigService.execute();
 
         // 1. 레퍼럴 코드 검증
         if (referralCode) {
@@ -92,10 +97,12 @@ export class RegisterAdminService {
             nickname,
             email,
             passwordHash,
-            registrationMethod: RegistrationMethod.FULL,
+            registrationMethod: RegistrationMethod.FIAT,
             role,
             country,
             timezone: countryConfig.timezone,
+            primaryCurrency: config.defaultPrimaryCurrency,
+            playCurrency: config.defaultPlayCurrency,
         });
 
         // 5. 온보딩

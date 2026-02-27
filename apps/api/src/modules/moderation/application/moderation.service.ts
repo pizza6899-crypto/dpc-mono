@@ -1,6 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { RESERVED_WORDS, ModerationResult } from '../domain/moderation.constants';
 
+export interface ModerationOptions {
+    includeAi?: boolean;
+}
+
 @Injectable()
 export class ModerationService {
     private readonly logger = new Logger(ModerationService.name);
@@ -8,16 +12,18 @@ export class ModerationService {
     /**
      * 통합 콘텐츠 검토 (예약어 + AI 등)
      */
-    async inspect(text: string): Promise<ModerationResult> {
+    async inspect(text: string, options: ModerationOptions = { includeAi: true }): Promise<ModerationResult> {
         // 1. 예약어 체크 (사칭 방지)
         const reservedResult = await this.checkReservedWords(text);
         if (!reservedResult.isAllowed) {
             return reservedResult;
         }
 
-        // 2. AI 검토 (추후 구현)
-        // const aiResult = await this.inspectWithAi(text);
-        // if (!aiResult.isAllowed) return aiResult;
+        // 2. AI 검토 (옵션에 따라 수행)
+        if (options.includeAi) {
+            // const aiResult = await this.inspectWithAi(text);
+            // if (!aiResult.isAllowed) return aiResult;
+        }
 
         return {
             isAllowed: true,

@@ -2,11 +2,15 @@ import { Injectable, Logger, HttpStatus } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { hashPassword } from 'src/utils/password.util';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
-import { LogType } from 'src/modules/audit-log/domain';
 import { CountryUtil } from 'src/utils/country.util';
-import { CreateCodeService } from 'src/modules/affiliate/code/application/create-code.service';
-import { LinkReferralService } from 'src/modules/affiliate/referral/application/link-referral.service';
+import { UserRoleType, RegistrationMethod, LoginIdType } from '@prisma/client';
+import { CreateUserService } from 'src/modules/user/profile/application/create-user.service';
+import { GetUserConfigService } from 'src/modules/user/config/application/get-user-config.service';
+import { UserOnboardingService } from './user-onboarding.service';
+import { CheckAvailabilityService } from './check-availability.service';
+import { AvailabilityField } from '../controllers/user/dto/request/check-availability.request.dto';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from '@repo/shared';
 import { FindCodeByCodeService } from 'src/modules/affiliate/code/application/find-code-by-code.service';
 import { ThrottleService } from 'src/common/throttle/throttle.service';
 import {
@@ -14,21 +18,16 @@ import {
     ReferralCodeInactiveException,
     ReferralCodeExpiredException,
 } from 'src/modules/affiliate/referral/domain/referral.exception';
-import { InitializeUserWalletsService } from 'src/modules/wallet/application/initialize-user-wallets.service';
-import { InitializeUserTierService } from 'src/modules/tier/profile/application/initialize-user-tier.service';
-import { UserRoleType, RegistrationMethod, LoginIdType } from '@prisma/client';
-import { CreateUserService } from 'src/modules/user/profile/application/create-user.service';
-import { GetUserConfigService } from 'src/modules/user/config/application/get-user-config.service';
-import { ApiException } from 'src/common/http/exception/api.exception';
-import { MessageCode } from '@repo/shared';
 
 export interface RegisterUserParams {
+    registrationMethod: Exclude<RegistrationMethod, 'SOCIAL'>;
     loginId?: string;
     email?: string;
     password: string;
     phoneNumber?: string;
     nickname?: string;
     birthDate?: string;
+    telegramUsername?: string;
     referralCode?: string;
     requestInfo: RequestClientInfo;
 }
@@ -39,33 +38,32 @@ export interface RegisterUserResult {
 }
 
 /**
- * 일반 사용자 계정 생성 및 온보딩 서비스
+ * 비밀번호 기반 사용자 계정 생성 및 온보딩 서비스 (FIAT, CRYPTO)
  */
 @Injectable()
 export class RegisterUserService {
     private readonly logger = new Logger(RegisterUserService.name);
 
     constructor(
-        private readonly dispatchLogService: DispatchLogService,
-        private readonly linkReferralService: LinkReferralService,
         private readonly findCodeByCodeService: FindCodeByCodeService,
-        private readonly createCodeService: CreateCodeService,
         private readonly createUserService: CreateUserService,
-        private readonly initializeUserWalletsService: InitializeUserWalletsService,
-        private readonly initializeUserTierService: InitializeUserTierService,
+        private readonly onboardingService: UserOnboardingService,
         private readonly getUserConfigService: GetUserConfigService,
         private readonly throttleService: ThrottleService,
+        private readonly checkAvailabilityService: CheckAvailabilityService,
     ) { }
 
     @Transactional()
     async execute(params: RegisterUserParams): Promise<RegisterUserResult> {
         const {
+            registrationMethod,
             loginId: providedLoginId,
             email: providedEmail,
             password,
             phoneNumber: providedPhoneNumber,
             nickname: providedNickname,
             birthDate: providedBirthDate,
+            telegramUsername,
             referralCode,
             requestInfo,
         } = params;
@@ -78,29 +76,9 @@ export class RegisterUserService {
             throw new ApiException(MessageCode.SIGNUP_DISABLED, HttpStatus.FORBIDDEN);
         }
 
-        // [Validation] 필수 필드 체크
-        if (config.requireEmail && !providedEmail) {
-            throw new ApiException(MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST, 'Email is required.');
-        }
-        if (config.requirePhoneNumber && !providedPhoneNumber) {
-            throw new ApiException(MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST, 'Phone number is required.');
-        }
-        if (config.requireBirthDate && !providedBirthDate) {
-            throw new ApiException(MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST, 'Birth date is required.');
-        }
-        if (config.requireNickname && !providedNickname) {
-            throw new ApiException(MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST, 'Nickname is required.');
-        }
-        if (config.requireReferralCode && !referralCode) {
-            throw new ApiException(MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST, 'Referral code is required.');
-        }
-
-        // [Validation] 일반 공통 정규식 체크 (설정에 있는 경우)
-        if (config.passwordRegex && !new RegExp(config.passwordRegex).test(password)) {
-            throw new ApiException(MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST, 'Password does not meet the requirements.');
-        }
-        if (providedNickname && config.nicknameRegex && !new RegExp(config.nicknameRegex).test(providedNickname)) {
-            throw new ApiException(MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST, 'Nickname format is invalid.');
+        // 2-1. 닉네임 검증
+        if (providedNickname) {
+            await this.validateField(AvailabilityField.NICKNAME, providedNickname);
         }
 
         // 3. 레퍼럴 코드 사전 검증
@@ -111,32 +89,27 @@ export class RegisterUserService {
             if (code.isExpired()) throw new ReferralCodeExpiredException(code.code);
         }
 
-        // 4. 로그인 ID 결정 및 타입별 정규식 검증
+        // 4. 로그인 ID 결정 및 타입별 통합 검증
         let finalLoginId: string;
-        let loginIdRegex: string | null = null;
 
         switch (config.loginIdType) {
             case LoginIdType.EMAIL:
                 if (!providedEmail) throw new ApiException(MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST, 'Email is required.');
                 finalLoginId = providedEmail;
-                loginIdRegex = config.loginIdEmailRegex;
+                await this.validateField(AvailabilityField.EMAIL, finalLoginId);
                 break;
             case LoginIdType.PHONE_NUMBER:
                 if (!providedPhoneNumber) throw new ApiException(MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST, 'Phone number is required.');
                 finalLoginId = providedPhoneNumber;
-                loginIdRegex = config.loginIdPhoneNumberRegex;
+                await this.validateField(AvailabilityField.PHONE_NUMBER, finalLoginId);
                 break;
             case LoginIdType.USERNAME:
                 if (!providedLoginId) throw new ApiException(MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST, 'Login ID is required.');
                 finalLoginId = providedLoginId;
-                loginIdRegex = config.loginIdUsernameRegex;
+                await this.validateField(AvailabilityField.LOGIN_ID, finalLoginId);
                 break;
             default:
                 finalLoginId = providedEmail || providedLoginId || '';
-        }
-
-        if (loginIdRegex && !new RegExp(loginIdRegex).test(finalLoginId)) {
-            throw new ApiException(MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST, 'Login ID format is invalid.');
         }
 
         // 5. 국가 및 지역화 설정 결정
@@ -147,17 +120,18 @@ export class RegisterUserService {
 
         // 6. 비밀번호 해싱 및 닉네임 결정
         const passwordHash = await hashPassword(password);
-        const nickname = providedNickname || (providedEmail ? providedEmail.split('@')[0] : finalLoginId);
+        const nickname = providedNickname || (providedEmail ? providedEmail.split('@')[0] : `user_${finalLoginId.slice(-5)}`);
 
-        // 7. 사용자 생성 (Profile 모듈의 CreateUserService 호출)
+        // 7. 사용자 생성
         const { user } = await this.createUserService.execute({
             loginId: finalLoginId,
             nickname,
             email: providedEmail,
             phoneNumber: providedPhoneNumber,
+            telegramUsername,
             birthDate: providedBirthDate ? new Date(providedBirthDate) : null,
             passwordHash,
-            registrationMethod: RegistrationMethod.FULL,
+            registrationMethod,
             role: UserRoleType.USER,
             country: requestInfo.country,
             timezone: countryConfig.timezone,
@@ -165,30 +139,16 @@ export class RegisterUserService {
             playCurrency: config.defaultPlayCurrency,
         });
 
-        // 5. 온보딩 프로세스 실행 (월렛, 티어, 자체 레퍼럴 코드)
-        await this.initializeUserWalletsService.execute(user.id);
-        await this.initializeUserTierService.execute(user.id);
-        await this.createCodeService.execute({
-            userId: user.id,
-            campaignName: 'Default',
+        // 8. 온보딩 프로세스 실행 (공통 서비스 위임)
+        await this.onboardingService.execute({
+            user,
+            registrationMethod,
+            loginIdType: config.loginIdType,
+            referralCode,
+            requestInfo,
         });
 
-        // 6. 레퍼럴 연결 (제공된 경우)
-        if (referralCode) {
-            await this.linkReferralService.execute({
-                subUserId: user.id,
-                referralCode,
-                ipAddress: requestInfo.ip,
-                deviceFingerprint: requestInfo.fingerprint,
-                userAgent: requestInfo.userAgent,
-                requestInfo,
-            });
-        }
-
-        // 7. Audit 로그 기록
-        await this.logActivity(user.id, config.loginIdType, referralCode, requestInfo);
-
-        // 8. 성공 시 쓰로틀링 카운트 증가
+        // 9. 성공 시 쓰로틀링 카운트 증가
         if (config.maxDailySignupPerIp > 0) {
             const key = `registration:daily:${requestInfo.ip}`;
             await this.throttleService.checkAndIncrement(key, {
@@ -203,27 +163,18 @@ export class RegisterUserService {
         };
     }
 
-    private async logActivity(userId: bigint, loginIdType: LoginIdType, referralCode: string | undefined, requestInfo: RequestClientInfo) {
-        try {
-            await this.dispatchLogService.dispatch(
-                {
-                    type: LogType.AUTH,
-                    data: {
-                        userId: userId.toString(),
-                        action: 'USER_REGISTER',
-                        status: 'SUCCESS',
-                        metadata: {
-                            registrationMethod: RegistrationMethod.FULL,
-                            loginIdType: loginIdType,
-                            referralCode: referralCode || null,
-                            country: requestInfo.country,
-                        },
-                    },
-                },
-                requestInfo,
-            );
-        } catch (error) {
-            this.logger.error(`Audit log failed: ${error.message}`);
+    /**
+     * 필드 유효성 및 가용성 통합 검증 (Regex + Moderation + Duplication)
+     */
+    private async validateField(field: AvailabilityField, value: string) {
+        const result = await this.checkAvailabilityService.execute({
+            field,
+            value,
+            options: { includeAi: true }, // 가입 시에는 엄격하게 AI 검토 포함
+        });
+
+        if (!result.available) {
+            throw new ApiException(MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST, result.message);
         }
     }
 }

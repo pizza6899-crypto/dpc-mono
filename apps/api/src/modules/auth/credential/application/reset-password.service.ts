@@ -29,7 +29,7 @@ export class ResetPasswordService {
     private readonly userRepository: UserRepositoryPort,
     @Inject(PASSWORD_RESET_TOKEN_REPOSITORY)
     private readonly tokenRepository: PasswordResetTokenRepositoryPort,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(params: ResetPasswordParams): Promise<void> {
@@ -48,7 +48,7 @@ export class ResetPasswordService {
     }
 
     // 3. 일반 회원가입 사용자인지 확인
-    if (!user.isCredentialUser()) {
+    if (!user.isFiatUser()) {
       throw new InvalidPasswordResetTokenException();
     }
 

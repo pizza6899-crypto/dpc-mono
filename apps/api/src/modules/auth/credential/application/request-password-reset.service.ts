@@ -28,7 +28,7 @@ export class RequestPasswordResetService {
     private readonly userRepository: UserRepositoryPort,
     @Inject(PASSWORD_RESET_TOKEN_REPOSITORY)
     private readonly tokenRepository: PasswordResetTokenRepositoryPort,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(params: RequestPasswordResetParams): Promise<void> {
@@ -45,7 +45,7 @@ export class RequestPasswordResetService {
     }
 
     // 3. 일반 회원가입 사용자인지 확인
-    if (!user.isCredentialUser()) {
+    if (!user.isFiatUser()) {
       // 소셜 로그인 사용자는 비밀번호 재설정 불가
       return;
     }

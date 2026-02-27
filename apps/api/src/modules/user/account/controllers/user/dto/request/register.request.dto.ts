@@ -2,6 +2,7 @@ import {
   IsEmail,
   IsString,
   IsOptional,
+  IsNotEmpty,
   MaxLength,
   IsDateString,
 } from 'class-validator';
@@ -9,14 +10,14 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 
 export class RegisterRequestDto {
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'Login ID (Email/Phone/Username) / 로그인 아이디',
     example: 'user123',
   })
-  @IsOptional()
+  @IsNotEmpty({ message: 'Login ID is required.' })
   @IsString()
   @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
-  loginId?: string;
+  loginId: string;
 
   @ApiPropertyOptional({
     description: 'Email / 이메일',
