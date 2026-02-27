@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpStatus, HttpCode, Get } from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus, HttpCode, Get, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
     ApiStandardResponse,
@@ -7,15 +7,15 @@ import {
 import { Public } from 'src/common/auth/decorators/roles.decorator';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
-import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
+
 import { RegisterUserService } from '../../application/register-user.service';
-import { RegisterRequestDto } from '../../dto/request/register.request.dto';
-import { RegisterResponseDto } from '../../dto/response/register.response.dto';
+import { RegisterRequestDto } from './dto/request/register.request.dto';
+import { RegisterResponseDto } from './dto/response/register.response.dto';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { GetUserConfigService } from '../../../config/application/get-user-config.service';
-import { RegistrationConfigResponseDto } from '../../dto/response/registration-config.response.dto';
+import { RegistrationConfigResponseDto } from './dto/response/registration-config.response.dto';
+import { RegistrationLimitGuard } from '../../guards/registration-limit.guard';
 
 @Controller('users')
 @ApiTags('Users')
@@ -60,11 +60,8 @@ export class UserAccountController {
     @Post('register')
     @HttpCode(HttpStatus.CREATED)
     @Public()
-    @Throttle({
-        limit: 10,
-        ttl: 60,
-        scope: ThrottleScope.IP,
-    })
+    @UseGuards(RegistrationLimitGuard)
+
     @ApiOperation({
         summary: 'Register User / 사용자 회원가입',
         description: 'Creates a new user account with email, password, and optional referral code. This process initializes the user profile, default wallet, and loyalty tier. / 이메일과 비밀번호, 선택적인 추천 코드를 사용하여 새로운 사용자 계정을 생성합니다. 이 과정에서 유저 프로필, 기본 지갑 및 멤버십 티어가 함께 초기화됩니다.',
