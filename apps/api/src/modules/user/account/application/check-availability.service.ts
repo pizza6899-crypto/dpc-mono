@@ -3,6 +3,7 @@ import { USER_REPOSITORY } from 'src/modules/user/profile/ports/out/user.reposit
 import type { UserRepositoryPort } from 'src/modules/user/profile/ports/out/user.repository.port';
 import { AvailabilityField } from '../controllers/user/dto/request/check-availability.request.dto';
 import { GetUserConfigService } from '../../config/application/get-user-config.service';
+import { ModerationService } from 'src/modules/moderation/application/moderation.service';
 import { LoginIdType } from '@prisma/client';
 
 export interface CheckAvailabilityParams {
@@ -24,6 +25,7 @@ export class CheckAvailabilityService {
         @Inject(USER_REPOSITORY)
         private readonly userRepository: UserRepositoryPort,
         private readonly getUserConfigService: GetUserConfigService,
+        private readonly moderationService: ModerationService,
     ) { }
 
     async execute(params: CheckAvailabilityParams): Promise<CheckAvailabilityResult> {
@@ -65,6 +67,18 @@ export class CheckAvailabilityService {
             };
         }
 
+        // 2.5. 콘텐츠 검토 (예약어 / 사칭 / 부적절한 언어)
+        // 닉네임과 로그인 ID(Username 타입일 때)에 대해 수행
+        if (field === AvailabilityField.NICKNAME || (field === AvailabilityField.LOGIN_ID && config.loginIdType === LoginIdType.USERNAME)) {
+            const moderationResult = await this.moderationService.inspect(value);
+            if (!moderationResult.isAllowed) {
+                return {
+                    available: false,
+                    message: moderationResult.message,
+                };
+            }
+        }
+
         // 3. DB 중복 검사
         let isDuplicate = false;
 
@@ -86,8 +100,8 @@ export class CheckAvailabilityService {
         return {
             available: !isDuplicate,
             message: isDuplicate
-                ? `${field} is already in use.`
-                : `${field} is available.`,
+                ? `This ${field} is unavailable.`
+                : `This ${field} is available.`,
         };
     }
 }

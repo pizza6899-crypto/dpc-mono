@@ -42,6 +42,7 @@ import { CacheModule } from './common/cache/cache.module';
 import { BullMqModule } from './infrastructure/bullmq/bullmq.module';
 import { RewardModule } from './modules/reward/reward.module';
 import { UserModule } from './modules/user/user.module';
+import { ModerationModule } from './modules/moderation/moderation.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { UserModule } from './modules/user/user.module';
     AuditLogModule,
     AuthModule,
     UserModule,
+    ModerationModule,
     CasinoModule,
     PaymentModule,
     DepositModule,

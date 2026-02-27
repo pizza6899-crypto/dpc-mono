@@ -19,7 +19,7 @@ export async function seedUserConfig(prisma: PrismaClient) {
         loginIdEmailRegex: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$', // 일반 이메일 형식 (example@domain.com)
         loginIdPhoneNumberRegex: '^\\+?[1-9]\\d{1,14}$', // E.164 전화번호 형식 (+국가코드 포함 최대 15자리)
         loginIdUsernameRegex: '^[a-zA-Z0-9_]{4,16}$', // 영문/숫자/언더바, 4~16자
-        nicknameRegex: '^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ_]{2,10}$', // 영문/숫자/한글/언더바, 2~10자
+        nicknameRegex: '^[a-zA-Z0-9가-힣_]{2,10}$', // 영문/숫자/완성형 한글/언더바, 2~10자
         passwordRegex: '^(?=.*[a-z])(?=.*\\d).{8,20}$', // 최소 영문 소문자 1자 + 숫자 1자 포함, 8~20자
 
         // [Onboarding Defaults] 신규 가입 시 기본 설정
