@@ -6,6 +6,7 @@ import { EnvModule } from 'src/common/env/env.module';
 import { UserProfileModule } from '../profile/user-profile.module';
 import { WalletModule } from '../../wallet/wallet.module';
 import { TierModule } from '../../tier/tier.module';
+import { UserConfigModule } from '../config/user-config.module';
 import { AffiliateReferralModule } from 'src/modules/affiliate/referral/referral.module';
 import { UserAccountController } from './controllers/user/account.controller';
 import { UserAccountAdminController } from './controllers/admin/account-admin.controller';
@@ -22,6 +23,7 @@ import { RegisterAdminService } from './application/register-admin.service';
         UserProfileModule,
         WalletModule,
         TierModule,
+        UserConfigModule,
     ],
     controllers: [UserAccountController, UserAccountAdminController],
     providers: [

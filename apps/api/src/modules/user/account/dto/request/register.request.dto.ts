@@ -10,14 +10,14 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class RegisterRequestDto {
   @ApiProperty({
-    description: 'Email',
+    description: 'Email / 이메일',
     example: 'user@example.com',
   })
   @IsEmail({}, { message: 'Invalid email format.' })
   email: string;
 
   @ApiProperty({
-    description: 'Password',
+    description: 'Password / 비밀번호',
     example: 'password123!',
     minLength: 8,
   })
@@ -29,7 +29,7 @@ export class RegisterRequestDto {
   password: string;
 
   @ApiPropertyOptional({
-    description: 'Referral code',
+    description: 'Referral code / 추천인 코드',
     example: 'REFERRAL123',
   })
   @IsOptional()
