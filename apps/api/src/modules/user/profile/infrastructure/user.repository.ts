@@ -49,6 +49,14 @@ export class UserRepository implements UserRepositoryPort {
     return user ? this.mapper.toDomain(user) : null;
   }
 
+  async findByPhoneNumber(phoneNumber: string): Promise<User | null> {
+    const user = await this.tx.user.findFirst({
+      where: { phoneNumber },
+    });
+
+    return user ? this.mapper.toDomain(user) : null;
+  }
+
   async findByOAuthId(provider: OAuthProvider, oauthId: string): Promise<User | null> {
     const user = await this.tx.user.findFirst({
       where: {
@@ -178,6 +186,8 @@ export class UserRepository implements UserRepositoryPort {
         timezoneOffset: data.timezoneOffset,
         primaryCurrency: data.primaryCurrency,
         playCurrency: data.playCurrency,
+        birthDate: data.birthDate,
+        phoneNumber: data.phoneNumber,
         isEmailVerified: data.isEmailVerified,
         isPhoneVerified: data.isPhoneVerified,
         isTelegramVerified: data.isTelegramVerified,

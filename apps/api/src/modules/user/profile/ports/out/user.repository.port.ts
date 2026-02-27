@@ -16,6 +16,7 @@ export interface CreateUserParams {
   oauthProvider?: OAuthProvider | null;
   oauthId?: string | null;
   phoneNumber?: string | null;
+  birthDate?: Date | null;
   role?: UserRoleType;
   status?: UserStatus;
   country?: string | null;
@@ -71,6 +72,11 @@ export interface UserRepositoryPort {
    * 닉네임으로 사용자 조회
    */
   findByNickname(nickname: string): Promise<User | null>;
+
+  /**
+   * 휴대폰 번호로 사용자 조회
+   */
+  findByPhoneNumber(phoneNumber: string): Promise<User | null>;
 
   /**
    * OAuth ID로 사용자 조회

@@ -13,6 +13,7 @@ import { UserAccountController } from './controllers/user/account.controller';
 import { UserAccountAdminController } from './controllers/admin/account-admin.controller';
 import { RegisterUserService } from './application/register-user.service';
 import { RegisterAdminService } from './application/register-admin.service';
+import { CheckAvailabilityService } from './application/check-availability.service';
 import { RegistrationLimitGuard } from './guards/registration-limit.guard';
 
 @Module({
@@ -32,6 +33,7 @@ import { RegistrationLimitGuard } from './guards/registration-limit.guard';
     providers: [
         RegisterUserService,
         RegisterAdminService,
+        CheckAvailabilityService,
         RegistrationLimitGuard,
     ],
     exports: [RegisterUserService, RegisterAdminService],

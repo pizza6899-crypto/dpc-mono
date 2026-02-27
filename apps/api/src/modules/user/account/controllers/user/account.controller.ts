@@ -7,7 +7,6 @@ import {
 import { Public } from 'src/common/auth/decorators/roles.decorator';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-
 import { RegisterUserService } from '../../application/register-user.service';
 import { RegisterRequestDto } from './dto/request/register.request.dto';
 import { RegisterResponseDto } from './dto/response/register.response.dto';
@@ -16,6 +15,11 @@ import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { GetUserConfigService } from '../../../config/application/get-user-config.service';
 import { RegistrationConfigResponseDto } from './dto/response/registration-config.response.dto';
 import { RegistrationLimitGuard } from '../../guards/registration-limit.guard';
+import { CheckAvailabilityService } from '../../application/check-availability.service';
+import { CheckAvailabilityRequestDto } from './dto/request/check-availability.request.dto';
+import { CheckAvailabilityResponseDto } from './dto/response/check-availability.response.dto';
+import { Query } from '@nestjs/common';
+import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
 
 @Controller('users')
 @ApiTags('Users')
@@ -25,6 +29,7 @@ export class UserAccountController {
         private readonly registerUserService: RegisterUserService,
         private readonly sqidsService: SqidsService,
         private readonly getUserConfigService: GetUserConfigService,
+        private readonly checkAvailabilityService: CheckAvailabilityService,
     ) { }
 
     @Get('registration-config')
@@ -57,11 +62,24 @@ export class UserAccountController {
         };
     }
 
+    @Get('check-availability')
+    @Public()
+    @Throttle({ limit: 30, ttl: 60 })
+    @ApiOperation({
+        summary: 'Check Field Availability / 중복 확인',
+        description: 'Checks if a specific value for nickname, email, loginId, or phoneNumber is already in use. / 닉네임, 이메일, 로그인 ID, 휴대폰 번호의 중복 여부를 확인합니다.',
+    })
+    @ApiStandardResponse(CheckAvailabilityResponseDto)
+    async checkAvailability(
+        @Query() query: CheckAvailabilityRequestDto,
+    ): Promise<CheckAvailabilityResponseDto> {
+        return this.checkAvailabilityService.execute(query);
+    }
+
     @Post('register')
     @HttpCode(HttpStatus.CREATED)
     @Public()
     @UseGuards(RegistrationLimitGuard)
-
     @ApiOperation({
         summary: 'Register User / 사용자 회원가입',
         description: 'Creates a new user account with email, password, and optional referral code. This process initializes the user profile, default wallet, and loyalty tier. / 이메일과 비밀번호, 선택적인 추천 코드를 사용하여 새로운 사용자 계정을 생성합니다. 이 과정에서 유저 프로필, 기본 지갑 및 멤버십 티어가 함께 초기화됩니다.',
@@ -75,9 +93,7 @@ export class UserAccountController {
         @Body() registerDto: RegisterRequestDto,
     ): Promise<RegisterResponseDto> {
         const result = await this.registerUserService.execute({
-            email: registerDto.email,
-            password: registerDto.password,
-            referralCode: registerDto.referralCode,
+            ...registerDto,
             requestInfo,
         });
 

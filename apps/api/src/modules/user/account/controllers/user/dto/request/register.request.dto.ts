@@ -2,31 +2,63 @@ import {
   IsEmail,
   IsString,
   IsOptional,
-  MinLength,
   MaxLength,
-  Matches,
+  IsDateString,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 
 export class RegisterRequestDto {
-  @ApiProperty({
+  @ApiPropertyOptional({
+    description: 'Login ID (Email/Phone/Username) / 로그인 아이디',
+    example: 'user123',
+  })
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+  loginId?: string;
+
+  @ApiPropertyOptional({
     description: 'Email / 이메일',
     example: 'user@example.com',
   })
+  @IsOptional()
   @IsEmail({}, { message: 'Invalid email format.' })
-  email: string;
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+  email?: string;
 
   @ApiProperty({
     description: 'Password / 비밀번호',
     example: 'password123!',
-    minLength: 8,
   })
   @IsString()
-  @MinLength(8, { message: 'Password must be at least 8 characters long.' })
-  @Matches(/^(?=.{8,20}$)(?=.*[a-z])(?=.*\d).+$/, {
-    message: 'Password must include at least one letter and one number.',
-  })
   password: string;
+
+  @ApiPropertyOptional({
+    description: 'Phone Number / 휴대폰 번호',
+    example: '+1234567890',
+  })
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+  phoneNumber?: string;
+
+  @ApiPropertyOptional({
+    description: 'Nickname / 닉네임',
+    example: 'superhero',
+  })
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+  nickname?: string;
+
+  @ApiPropertyOptional({
+    description: 'Birth Date (YYYY-MM-DD) / 생년월일',
+    example: '1990-01-01',
+  })
+  @IsOptional()
+  @IsDateString()
+  birthDate?: string;
 
   @ApiPropertyOptional({
     description: 'Referral code / 추천인 코드',
@@ -34,11 +66,9 @@ export class RegisterRequestDto {
   })
   @IsOptional()
   @IsString()
-  @MinLength(6, {
-    message: 'Referral code must be at least 6 characters long.',
-  })
   @MaxLength(20, {
     message: 'Referral code must be at most 20 characters long.',
   })
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   referralCode?: string;
 }

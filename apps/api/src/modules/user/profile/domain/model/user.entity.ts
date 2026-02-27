@@ -22,6 +22,8 @@ export class User {
     public readonly status: PrismaUserStatus,
     public readonly role: UserRoleType,
     public readonly language: Language,
+    public readonly birthDate: Date | null,
+    public readonly phoneNumber: string | null,
     // [Lifecycle & Audit]
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
@@ -68,6 +70,7 @@ export class User {
     closedAt: Date | null;
     closedBy: bigint | null;
     closeReason: string | null;
+    birthDate: Date | null;
     createdAt: Date;
     updatedAt: Date;
   }): User {
@@ -102,6 +105,8 @@ export class User {
       data.status,
       data.role,
       data.language,
+      data.birthDate,
+      data.phoneNumber,
       data.createdAt,
       data.updatedAt,
       data.closedAt,
@@ -140,6 +145,8 @@ export class User {
       status: this.status,
       role: this.role,
       language: this.language,
+      birthDate: this.birthDate,
+      phoneNumber: this.phoneNumber,
       whitecliffId: this.whitecliffId,
       whitecliffUsername: this.whitecliffUsername,
       dcsId: this.dcsId,
@@ -197,6 +204,8 @@ export class User {
       updates.status || this.status,
       this.role,
       this.language,
+      this.birthDate,
+      this.phoneNumber,
       this.createdAt,
       new Date(), // updatedAt
       this.closedAt,

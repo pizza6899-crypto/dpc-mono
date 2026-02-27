@@ -33,15 +33,73 @@ export class UserNotFoundException extends UserException {
 }
 
 /**
- * User가 이미 존재할 때 발생하는 예외
+ * 이메일이 이미 존재할 때 발생하는 예외
  */
-export class UserAlreadyExistsException extends UserException {
+export class DuplicateEmailException extends UserException {
   constructor(email: string) {
     super(
-      `User already exists: ${email}`,
+      `Email already in use: ${email}`,
       MessageCode.USER_ALREADY_EXISTS,
-      HttpStatus.BAD_REQUEST,
+      HttpStatus.CONFLICT,
     );
-    this.name = 'UserAlreadyExistsException';
+    this.name = 'DuplicateEmailException';
   }
 }
+
+/**
+ * 로그인 ID가 이미 존재할 때 발생하는 예외
+ */
+export class DuplicateLoginIdException extends UserException {
+  constructor(loginId: string) {
+    super(
+      `Login ID already in use: ${loginId}`,
+      MessageCode.USER_ALREADY_EXISTS,
+      HttpStatus.CONFLICT,
+    );
+    this.name = 'DuplicateLoginIdException';
+  }
+}
+
+/**
+ * 닉네임이 이미 존재할 때 발생하는 예외
+ */
+export class DuplicateNicknameException extends UserException {
+  constructor(nickname: string) {
+    super(
+      `Nickname already in use: ${nickname}`,
+      MessageCode.USER_ALREADY_EXISTS,
+      HttpStatus.CONFLICT,
+    );
+    this.name = 'DuplicateNicknameException';
+  }
+}
+
+/**
+ * 휴대폰 번호가 이미 존재할 때 발생하는 예외
+ */
+export class DuplicatePhoneNumberException extends UserException {
+  constructor(phoneNumber: string) {
+    super(
+      `Phone number already in use: ${phoneNumber}`,
+      MessageCode.USER_ALREADY_EXISTS,
+      HttpStatus.CONFLICT,
+    );
+    this.name = 'DuplicatePhoneNumberException';
+  }
+}
+
+/**
+ * 소셜 계정(OAuth)이 이미 연동되어 있을 때 발생하는 예외
+ */
+export class DuplicateOAuthIdException extends UserException {
+  constructor() {
+    super(
+      `Social account already linked.`,
+      MessageCode.USER_ALREADY_EXISTS,
+      HttpStatus.CONFLICT,
+    );
+    this.name = 'DuplicateOAuthIdException';
+  }
+}
+
+

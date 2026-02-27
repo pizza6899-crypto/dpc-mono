@@ -1,6 +1,13 @@
-import { Inject, Injectable, Logger, ConflictException } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { User } from '../domain';
+import {
+  DuplicateLoginIdException,
+  DuplicateNicknameException,
+  DuplicateEmailException,
+  DuplicateOAuthIdException,
+  DuplicatePhoneNumberException,
+} from '../domain/user.exception';
 import { USER_REPOSITORY } from '../ports/out/user.repository.token';
 import type {
   UserRepositoryPort,
@@ -15,6 +22,8 @@ interface CreateUserServiceParams {
   registrationMethod: RegistrationMethod;
   oauthProvider?: OAuthProvider | null;
   oauthId?: string | null;
+  phoneNumber?: string | null;
+  birthDate?: Date | null;
   role?: UserRoleType;
   country?: string | null;
   timezone?: string | null;
@@ -49,6 +58,7 @@ export class CreateUserService {
       loginId,
       nickname,
       email,
+      phoneNumber,
       registrationMethod,
       oauthId,
       oauthProvider,
@@ -57,28 +67,36 @@ export class CreateUserService {
     // 1. 로그인 ID 중복 확인 (필수)
     const existingByLoginId = await this.userRepository.findByLoginId(loginId);
     if (existingByLoginId) {
-      throw new ConflictException(`이미 사용 중인 로그인 ID입니다: ${loginId}`);
+      throw new DuplicateLoginIdException(loginId);
     }
 
     // 2. 닉네임 중복 확인 (필수)
     const existingByNickname = await this.userRepository.findByNickname(nickname);
     if (existingByNickname) {
-      throw new ConflictException(`이미 사용 중인 닉네임입니다: ${nickname}`);
+      throw new DuplicateNicknameException(nickname);
     }
 
     // 3. 이메일 중복 확인 (있는 경우)
     if (email) {
       const existingByEmail = await this.userRepository.findByEmail(email);
       if (existingByEmail) {
-        throw new ConflictException(`이미 사용 중인 이메일입니다: ${email}`);
+        throw new DuplicateEmailException(email);
       }
     }
 
-    // 4. OAuth ID 중복 확인 (소셜 가입인 경우)
+    // 4. 휴대폰 번호 중복 확인 (있는 경우)
+    if (phoneNumber) {
+      const existingByPhone = await this.userRepository.findByPhoneNumber(phoneNumber);
+      if (existingByPhone) {
+        throw new DuplicatePhoneNumberException(phoneNumber);
+      }
+    }
+
+    // 5. OAuth ID 중복 확인 (소셜 가입인 경우)
     if (oauthProvider && oauthId) {
       const existingByOAuth = await this.userRepository.findByOAuthId(oauthProvider, oauthId);
       if (existingByOAuth) {
-        throw new ConflictException(`이미 연동된 소셜 계정입니다.`);
+        throw new DuplicateOAuthIdException();
       }
     }
 

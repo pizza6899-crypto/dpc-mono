@@ -14,7 +14,7 @@ export class ThrottleService {
   private readonly logger = new Logger(ThrottleService.name);
   private readonly keyPrefix = 'throttle:';
 
-  constructor(private readonly redisService: RedisService) {}
+  constructor(private readonly redisService: RedisService) { }
 
   /**
    * 요청 쓰로틀링 체크 및 카운트 증가
@@ -58,6 +58,42 @@ export class ThrottleService {
       this.logger.error(error, `쓰로틀링 체크 중 오류: ${key}`);
 
       // Redis 오류 시 요청 허용 (fail-open 방식)
+      return {
+        allowed: true,
+        limit: options.limit,
+        remaining: options.limit,
+        resetTime: Math.floor(nowUtc().getTime() / 1000) + options.ttl,
+      };
+    }
+  }
+
+  /**
+   * 요청 쓰로틀링 체크만 수행 (카운트 증가 X)
+   */
+  async checkLimit(
+    key: string,
+    options: ThrottleOptions,
+  ): Promise<ThrottleResult> {
+    const fullKey = `${this.keyPrefix}${key}`;
+
+    try {
+      const count = await this.getCurrentCount(key);
+      const ttl = await this.getTtl(key);
+
+      const resetTime =
+        Math.floor(nowUtc().getTime() / 1000) + (ttl > 0 ? ttl : options.ttl);
+      const allowed = count < options.limit; // 다음번 증가 시 limit을 넘지 않아야 함
+      const remaining = Math.max(0, options.limit - count);
+
+      return {
+        allowed,
+        limit: options.limit,
+        remaining,
+        resetTime,
+        retryAfter: !allowed && ttl > 0 ? ttl : undefined,
+      };
+    } catch (error) {
+      this.logger.error(error, `쓰로틀링 체크 중 오류: ${key}`);
       return {
         allowed: true,
         limit: options.limit,

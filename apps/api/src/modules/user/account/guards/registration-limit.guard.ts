@@ -46,7 +46,7 @@ export class RegistrationLimitGuard implements CanActivate {
         // 3. IP당 일일 가입 제한 체크
         if (config.maxDailySignupPerIp > 0) {
             const key = `registration:daily:${ip}`;
-            const result = await this.throttleService.checkAndIncrement(key, {
+            const result = await this.throttleService.checkLimit(key, {
                 limit: config.maxDailySignupPerIp,
                 ttl: 86400, // 24시간
             });

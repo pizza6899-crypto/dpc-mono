@@ -47,6 +47,7 @@ export class UserMapper {
       closedAt: prismaModel.closedAt,
       closedBy: prismaModel.closedBy,
       closeReason: prismaModel.closeReason,
+      birthDate: prismaModel.birthDate,
       createdAt: prismaModel.createdAt,
       updatedAt: prismaModel.updatedAt,
     });
@@ -81,6 +82,7 @@ export class UserMapper {
       timezoneOffset: params.timezoneOffset,
       primaryCurrency: params.primaryCurrency,
       playCurrency: params.playCurrency,
+      birthDate: params.birthDate,
     };
   }
 }
