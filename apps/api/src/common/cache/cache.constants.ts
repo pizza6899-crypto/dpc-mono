@@ -46,4 +46,16 @@ export const CACHE_CONFIG = {
       store: CacheStore.MEMORY,
     },
   },
+
+  /**
+   * 사용자 설정 관련 (UserConfig)
+   * 숏텀 메모리 캐시 (L1)
+   */
+  USER_CONFIG: {
+    GLOBAL: {
+      key: 'user:config:global',
+      ttlSeconds: 5, // 5초 L1 캐시
+      store: CacheStore.MEMORY,
+    },
+  },
 } as const;

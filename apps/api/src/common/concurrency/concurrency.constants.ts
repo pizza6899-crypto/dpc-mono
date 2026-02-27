@@ -22,6 +22,7 @@ export enum LockNamespace {
   GAME_ROUND = 2002,
 
   // 향후 추가될 네임스페이스들
+  USER_CONFIG = 1013,
   TIER_REWARD = 1012,
 }
 
