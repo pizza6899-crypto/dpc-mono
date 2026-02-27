@@ -38,8 +38,8 @@ export class UserConfigAdminController {
     @Get()
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
-        summary: 'Get global user configuration / 전역 사용자 설정 조회',
-        description: '관리자가 시스템 전역 사용자 가입 및 정책 설정을 조회합니다.',
+        summary: 'Get Global User Config / 전역 사용자 설정 조회',
+        description: 'Retrieves the system-wide user registration policies, required fields, and validation rules. / 시스템 전역 사용자 가입 정책, 필수 필드 여부 및 유효성 검사 규칙을 조회합니다.',
     })
     @ApiStandardResponse(UserConfigResponseDto, {
         status: 200,
@@ -81,8 +81,8 @@ export class UserConfigAdminController {
     @Patch()
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
-        summary: 'Update global user configuration / 전역 사용자 설정 수정',
-        description: '관리자가 시스템 전역 사용자 가입 정책 및 정규식 설정을 변경합니다.',
+        summary: 'Update Global User Config / 전역 사용자 설정 수정',
+        description: 'Updates the global user registration policies and validation regex. This affects the behavior of the public registration forms. / 시스템 전역 사용자 가입 정책 및 정규식 설정을 변경합니다. 이 설정은 공개 회원가입 폼의 동작에 즉시 영향을 미칩니다.',
     })
     @AuditLog({
         type: LogType.ACTIVITY,
