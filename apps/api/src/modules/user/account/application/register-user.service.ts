@@ -7,12 +7,13 @@ import { UserRoleType, RegistrationMethod, LoginIdType } from '@prisma/client';
 import { CreateUserService } from 'src/modules/user/profile/application/create-user.service';
 import { GetUserConfigService } from 'src/modules/user/config/application/get-user-config.service';
 import { CheckAvailabilityService } from './check-availability.service';
-import { AvailabilityField } from '../controllers/user/dto/request/check-availability.request.dto';
+import { AvailabilityField } from '../controllers/user/dto/request/availability.request.dto';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from '@repo/shared';
 import { FindCodeByCodeService } from 'src/modules/affiliate/code/application/find-code-by-code.service';
 import { ThrottleService } from 'src/common/throttle/throttle.service';
 import { IdUtil } from 'src/utils/id.util';
+import { LinkReferralService } from 'src/modules/affiliate/referral/application/link-referral.service';
 import {
     ReferralCodeNotFoundException,
     ReferralCodeInactiveException,
@@ -33,6 +34,7 @@ export interface RegisterUserResult {
     loginId: string | null;
     nickname: string;
     email: string | null;
+    referralCode?: string;
 }
 
 /**
@@ -44,6 +46,7 @@ export class RegisterUserService {
 
     constructor(
         private readonly findCodeByCodeService: FindCodeByCodeService,
+        private readonly linkReferralService: LinkReferralService,
         private readonly createUserService: CreateUserService,
         private readonly getUserConfigService: GetUserConfigService,
         private readonly throttleService: ThrottleService,
@@ -69,9 +72,12 @@ export class RegisterUserService {
             throw new ApiException(MessageCode.SIGNUP_DISABLED, HttpStatus.FORBIDDEN);
         }
 
-        // 2-1. 닉네임 검증
+        // 2-1. 닉네임 정책 검증
         if (providedNickname) {
             await this.validateField(AvailabilityField.NICKNAME, providedNickname);
+        } else if (config.requireNickname) {
+            // 정책적으로 닉네임이 필수인데 입력하지 않은 경우
+            throw new ApiException(MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST, 'Nickname is required.');
         }
 
         // 3. 레퍼럴 코드 사전 검증
@@ -80,17 +86,16 @@ export class RegisterUserService {
             if (!code) throw new ReferralCodeNotFoundException(referralCode);
             if (!code.isActive) throw new ReferralCodeInactiveException(code.code);
             if (code.isExpired()) throw new ReferralCodeExpiredException(code.code);
+        } else if (config.requireReferralCode) {
+            // 정책적으로 레퍼럴 코드가 필수인데 입력하지 않은 경우
+            throw new ApiException(MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST, 'Referral code is required.');
         }
 
         // 4. 로그인 ID 결정 및 타입별 통합 검증
         const finalLoginId = providedLoginId;
-        const fieldMap: Record<LoginIdType, AvailabilityField> = {
-            [LoginIdType.EMAIL]: AvailabilityField.EMAIL,
-            [LoginIdType.PHONE_NUMBER]: AvailabilityField.PHONE_NUMBER,
-            [LoginIdType.USERNAME]: AvailabilityField.LOGIN_ID,
-        };
-
-        await this.validateField(fieldMap[config.loginIdType], finalLoginId);
+        // 모든 로그인 타입은 중복 검사 시 LOGIN_ID 필드로 통합하여 처리합니다.
+        // (내부적으로 LoginIdType에 따른 정규식 검증은 CheckAvailabilityService에서 수행됨)
+        await this.validateField(AvailabilityField.LOGIN_ID, finalLoginId);
 
         // 5. 국가 및 지역화 설정 결정
         const countryConfig = CountryUtil.getCountryConfig({
@@ -117,7 +122,19 @@ export class RegisterUserService {
             playCurrency: config.defaultPlayCurrency,
         });
 
-        // 8. 성공 시 쓰로틀링 카운트 증가
+        // 8. 레퍼럴 매핑 (코드가 있는 경우에만)
+        if (referralCode) {
+            await this.linkReferralService.execute({
+                subUserId: user.id,
+                referralCode,
+                ipAddress: requestInfo.ip,
+                deviceFingerprint: requestInfo.fingerprint,
+                userAgent: requestInfo.userAgent,
+                requestInfo,
+            });
+        }
+
+        // 9. 성공 시 쓰로틀링 카운트 증가
         if (config.maxDailySignupPerIp > 0) {
             const key = `registration:daily:${requestInfo.ip}`;
             await this.throttleService.checkAndIncrement(key, {
@@ -131,6 +148,7 @@ export class RegisterUserService {
             loginId: user.loginId,
             nickname: user.nickname,
             email: user.email,
+            referralCode,
         };
     }
 

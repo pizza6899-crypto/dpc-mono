@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AffiliateCodeModule } from '../../affiliate/code/code.module';
+import { AffiliateReferralModule } from '../../affiliate/referral/referral.module';
 import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
@@ -22,6 +23,7 @@ import { RegistrationLimitGuard } from './guards/registration-limit.guard';
         UserConfigModule,
         ThrottleModule,
         AffiliateCodeModule,
+        AffiliateReferralModule,
         AuditLogModule,
     ],
     controllers: [UserAccountController, UserAccountAdminController],

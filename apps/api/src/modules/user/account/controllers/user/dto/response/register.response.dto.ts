@@ -12,4 +12,7 @@ export class RegisterResponseDto {
 
   @ApiProperty({ description: 'Email / 이메일' })
   email: string | null;
+
+  @ApiProperty({ description: 'Referral Code / 추천 코드', required: false })
+  referralCode?: string;
 }

@@ -20,8 +20,8 @@ import { RegisterUserService } from '../../application/register-user.service';
 import { RegisterSocialUserService } from '../../application/register-social-user.service';
 import { RegistrationLimitGuard } from '../../guards/registration-limit.guard';
 import { CheckAvailabilityService } from '../../application/check-availability.service';
-import { CheckAvailabilityRequestDto } from './dto/request/check-availability.request.dto';
-import { CheckAvailabilityResponseDto } from './dto/response/check-availability.response.dto';
+import { AvailabilityRequestDto } from './dto/request/availability.request.dto';
+import { AvailabilityResponseDto } from './dto/response/availability.response.dto';
 import { RegisterRequestDto } from './dto/request/register.request.dto';
 import { RegisterSocialRequestDto } from './dto/request/register-social.request.dto';
 import { RegisterResponseDto } from './dto/response/register.response.dto';
@@ -48,8 +48,8 @@ export class UserAccountController {
     @Get('policy')
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
-        summary: 'Get User Policy / 사용자 정책 정보 조회',
-        description: 'Get current system policy (allowed signup methods, required fields, validation regex, etc.). / 현재 시스템 정책(가입 방식, 필수 필드, 유효성 검사 정규식 등) 정보를 조회합니다.',
+        summary: 'Get Registration Policy / 가입 정책 정보 조회',
+        description: 'Get current registration policy for dynamic form configuration (required fields, validation regex, etc.). / 회원가입 폼 구성을 위해 현재 설정된 가입 정책(필수 필드, 유효성 검사 정규식 등) 정보를 조회합니다.',
     })
     @ApiStandardResponse(UserPolicyResponseDto)
     async getUserPolicy(): Promise<UserPolicyResponseDto> {
@@ -69,17 +69,17 @@ export class UserAccountController {
     }
 
     @Public()
-    @Get('check-availability')
+    @Get('availability')
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
-        summary: 'Check Login ID / Nickname Availability / 중복 확인',
+        summary: 'Check Availability / 중복 확인',
         description: 'Check if the login ID or nickname is already in use. / 아이디 또는 닉네임의 중복 여부를 확인합니다.',
     })
-    @ApiStandardResponse(CheckAvailabilityResponseDto)
+    @ApiStandardResponse(AvailabilityResponseDto)
     @Throttle({ limit: 30, ttl: 60 })
     async checkAvailability(
-        @Query() query: CheckAvailabilityRequestDto,
-    ): Promise<CheckAvailabilityResponseDto> {
+        @Query() query: AvailabilityRequestDto,
+    ): Promise<AvailabilityResponseDto> {
         return this.checkAvailabilityService.execute(query);
     }
 
@@ -89,7 +89,7 @@ export class UserAccountController {
     @UseGuards(RegistrationLimitGuard)
     @ApiOperation({
         summary: 'Register User / 회원가입',
-        description: 'ID, 비밀번호를 사용하여 계정을 생성합니다.',
+        description: 'Create an account using ID and password. The required fields and validation rules follow the settings from "GET /users/policy". / 아이디와 비밀번호를 사용하여 계정을 생성합니다. 필수 입력 항목 및 검증 규칙은 "/users/policy" API의 설정을 따릅니다.',
     })
     @ApiStandardResponse(RegisterResponseDto, { status: HttpStatus.CREATED })
     async register(
@@ -107,6 +107,7 @@ export class UserAccountController {
             loginId: result.loginId,
             nickname: result.nickname,
             email: result.email,
+            referralCode: result.referralCode,
         };
     }
 
@@ -116,7 +117,7 @@ export class UserAccountController {
     @UseGuards(RegistrationLimitGuard)
     @ApiOperation({
         summary: 'Register User (SOCIAL) / 소셜 연동 가입',
-        description: 'Google, Apple 등 소셜 계정을 연동하여 계정을 생성합니다.',
+        description: 'Create an account by linking a social account (Google, Apple, etc.). Validation rules follow the settings from "GET /users/policy". / 소셜 계정(Google, Apple 등)을 연동하여 계정을 생성합니다. 검증 규칙은 "/users/policy" API의 설정을 따릅니다.',
     })
     @ApiStandardResponse(RegisterResponseDto, { status: HttpStatus.CREATED })
     async registerSocial(

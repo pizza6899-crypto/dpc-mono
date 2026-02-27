@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { USER_REPOSITORY } from 'src/modules/user/profile/ports/out/user.repository.token';
 import type { UserRepositoryPort } from 'src/modules/user/profile/ports/out/user.repository.port';
-import { AvailabilityField } from '../controllers/user/dto/request/check-availability.request.dto';
+import { AvailabilityField } from '../controllers/user/dto/request/availability.request.dto';
 import { GetUserConfigService } from '../../config/application/get-user-config.service';
 import { ModerationService, ModerationOptions } from 'src/modules/moderation/application/moderation.service';
 import { LoginIdType } from '@prisma/client';
@@ -44,20 +44,12 @@ export class CheckAvailabilityService {
                 regex = config.nicknameRegex;
                 formatErrorMessage = 'Nickname format is invalid.';
                 break;
-            case AvailabilityField.EMAIL:
-                regex = config.loginIdEmailRegex;
-                formatErrorMessage = 'Email format is invalid.';
-                break;
             case AvailabilityField.LOGIN_ID:
                 // 현재 설정된 로그인 ID 타입에 맞는 정규식 적용
                 if (config.loginIdType === LoginIdType.EMAIL) regex = config.loginIdEmailRegex;
                 else if (config.loginIdType === LoginIdType.PHONE_NUMBER) regex = config.loginIdPhoneNumberRegex;
                 else if (config.loginIdType === LoginIdType.USERNAME) regex = config.loginIdUsernameRegex;
                 formatErrorMessage = 'Login ID format is invalid.';
-                break;
-            case AvailabilityField.PHONE_NUMBER:
-                regex = config.loginIdPhoneNumberRegex;
-                formatErrorMessage = 'Phone number format is invalid.';
                 break;
         }
 
@@ -87,14 +79,8 @@ export class CheckAvailabilityService {
             case AvailabilityField.NICKNAME:
                 isDuplicate = !!(await this.userRepository.findByNickname(value));
                 break;
-            case AvailabilityField.EMAIL:
-                isDuplicate = !!(await this.userRepository.findByEmail(value));
-                break;
             case AvailabilityField.LOGIN_ID:
                 isDuplicate = !!(await this.userRepository.findByLoginId(value));
-                break;
-            case AvailabilityField.PHONE_NUMBER:
-                isDuplicate = !!(await this.userRepository.findByPhoneNumber(value));
                 break;
         }
 

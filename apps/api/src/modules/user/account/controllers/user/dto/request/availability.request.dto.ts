@@ -4,12 +4,10 @@ import { Transform } from 'class-transformer';
 
 export enum AvailabilityField {
     NICKNAME = 'nickname',
-    EMAIL = 'email',
     LOGIN_ID = 'loginId',
-    PHONE_NUMBER = 'phoneNumber',
 }
 
-export class CheckAvailabilityRequestDto {
+export class AvailabilityRequestDto {
     @ApiProperty({
         description: 'Field to check / 중복 검사할 필드',
         enum: AvailabilityField,
