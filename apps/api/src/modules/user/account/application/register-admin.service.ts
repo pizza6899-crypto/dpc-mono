@@ -97,7 +97,7 @@ export class RegisterAdminService {
             nickname,
             email,
             passwordHash,
-            registrationMethod: RegistrationMethod.FIAT,
+            registrationMethod: RegistrationMethod.ADMIN,
             role,
             country,
             timezone: countryConfig.timezone,

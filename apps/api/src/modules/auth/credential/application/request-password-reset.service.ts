@@ -45,7 +45,7 @@ export class RequestPasswordResetService {
     }
 
     // 3. 일반 회원가입 사용자인지 확인
-    if (!user.isFiatUser()) {
+    if (!user.isCredentialUser()) {
       // 소셜 로그인 사용자는 비밀번호 재설정 불가
       return;
     }

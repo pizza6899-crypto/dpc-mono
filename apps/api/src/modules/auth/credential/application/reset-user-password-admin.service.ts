@@ -53,7 +53,7 @@ export class ResetUserPasswordAdminService {
     }
 
     // 2. 일반 회원가입 사용자인지 확인
-    if (!targetUser.isFiatUser()) {
+    if (!targetUser.isCredentialUser()) {
       throw new LoginFailedException('Target user is not a credential user');
     }
 

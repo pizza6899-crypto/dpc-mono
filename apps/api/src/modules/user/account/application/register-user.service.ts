@@ -21,24 +21,22 @@ import {
 
 export interface RegisterUserParams {
     registrationMethod: Exclude<RegistrationMethod, 'SOCIAL'>;
-    loginId?: string;
-    email?: string;
+    loginId: string;
     password: string;
-    phoneNumber?: string;
     nickname?: string;
-    birthDate?: string;
-    telegramUsername?: string;
     referralCode?: string;
     requestInfo: RequestClientInfo;
 }
 
 export interface RegisterUserResult {
     id: bigint;
+    loginId: string | null;
+    nickname: string;
     email: string | null;
 }
 
 /**
- * 비밀번호 기반 사용자 계정 생성 및 온보딩 서비스 (FIAT, CRYPTO)
+ * 비밀번호 기반 사용자 계정 생성 및 온보딩 서비스 (FIAT, CRYPTO 통합)
  */
 @Injectable()
 export class RegisterUserService {
@@ -58,12 +56,8 @@ export class RegisterUserService {
         const {
             registrationMethod,
             loginId: providedLoginId,
-            email: providedEmail,
             password,
-            phoneNumber: providedPhoneNumber,
             nickname: providedNickname,
-            birthDate: providedBirthDate,
-            telegramUsername,
             referralCode,
             requestInfo,
         } = params;
@@ -90,27 +84,14 @@ export class RegisterUserService {
         }
 
         // 4. 로그인 ID 결정 및 타입별 통합 검증
-        let finalLoginId: string;
+        const finalLoginId = providedLoginId;
+        const fieldMap: Record<LoginIdType, AvailabilityField> = {
+            [LoginIdType.EMAIL]: AvailabilityField.EMAIL,
+            [LoginIdType.PHONE_NUMBER]: AvailabilityField.PHONE_NUMBER,
+            [LoginIdType.USERNAME]: AvailabilityField.LOGIN_ID,
+        };
 
-        switch (config.loginIdType) {
-            case LoginIdType.EMAIL:
-                if (!providedEmail) throw new ApiException(MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST, 'Email is required.');
-                finalLoginId = providedEmail;
-                await this.validateField(AvailabilityField.EMAIL, finalLoginId);
-                break;
-            case LoginIdType.PHONE_NUMBER:
-                if (!providedPhoneNumber) throw new ApiException(MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST, 'Phone number is required.');
-                finalLoginId = providedPhoneNumber;
-                await this.validateField(AvailabilityField.PHONE_NUMBER, finalLoginId);
-                break;
-            case LoginIdType.USERNAME:
-                if (!providedLoginId) throw new ApiException(MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST, 'Login ID is required.');
-                finalLoginId = providedLoginId;
-                await this.validateField(AvailabilityField.LOGIN_ID, finalLoginId);
-                break;
-            default:
-                finalLoginId = providedEmail || providedLoginId || '';
-        }
+        await this.validateField(fieldMap[config.loginIdType], finalLoginId);
 
         // 5. 국가 및 지역화 설정 결정
         const countryConfig = CountryUtil.getCountryConfig({
@@ -120,16 +101,15 @@ export class RegisterUserService {
 
         // 6. 비밀번호 해싱 및 닉네임 결정
         const passwordHash = await hashPassword(password);
-        const nickname = providedNickname || (providedEmail ? providedEmail.split('@')[0] : `user_${finalLoginId.slice(-5)}`);
+        const nickname = providedNickname || `user_${finalLoginId.slice(-5)}`;
 
         // 7. 사용자 생성
         const { user } = await this.createUserService.execute({
             loginId: finalLoginId,
             nickname,
-            email: providedEmail,
-            phoneNumber: providedPhoneNumber,
-            telegramUsername,
-            birthDate: providedBirthDate ? new Date(providedBirthDate) : null,
+            // 정책에 따라 식별자를 email이나 phoneNumber로도 매핑
+            email: config.loginIdType === LoginIdType.EMAIL ? finalLoginId : null,
+            phoneNumber: config.loginIdType === LoginIdType.PHONE_NUMBER ? finalLoginId : null,
             passwordHash,
             registrationMethod,
             role: UserRoleType.USER,
@@ -159,6 +139,8 @@ export class RegisterUserService {
 
         return {
             id: user.id,
+            loginId: user.loginId,
+            nickname: user.nickname,
             email: user.email,
         };
     }

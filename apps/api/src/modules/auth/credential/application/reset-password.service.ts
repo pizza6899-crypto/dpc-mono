@@ -48,7 +48,7 @@ export class ResetPasswordService {
     }
 
     // 3. 일반 회원가입 사용자인지 확인
-    if (!user.isFiatUser()) {
+    if (!user.isCredentialUser()) {
       throw new InvalidPasswordResetTokenException();
     }
 

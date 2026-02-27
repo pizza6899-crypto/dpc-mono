@@ -85,17 +85,24 @@ export class UserAuth {
   }
 
   /**
-   * 기명(FIAT) 회원가입 사용자인지 확인
+   * 직접 가입(CREDENTIAL) 사용자인지 확인
    */
-  isFiatUser(): boolean {
-    return this.registrationMethod === 'FIAT';
+  isCredentialUser(): boolean {
+    return this.registrationMethod === 'CREDENTIAL';
   }
 
   /**
-   * 무기명(CRYPTO) 회원가입 사용자인지 확인
+   * 관리자 생성(ADMIN) 사용자인지 확인
    */
-  isCryptoUser(): boolean {
-    return this.registrationMethod === 'CRYPTO';
+  isAdminCreated(): boolean {
+    return this.registrationMethod === 'ADMIN';
+  }
+
+  /**
+   * 패스워드 기반 가입자인지 확인 (직접 가입 또는 관리자 생성)
+   */
+  isPasswordUser(): boolean {
+    return this.registrationMethod === 'CREDENTIAL' || this.registrationMethod === 'ADMIN';
   }
 
   /**
@@ -106,18 +113,14 @@ export class UserAuth {
   }
 
   /**
-   * 사용자 타입이 유효한지 확인
+   * 사용자 타입별 필수 데이터 유효성 확인
    */
   hasValidUserType(): boolean {
-    if (this.registrationMethod === 'FIAT') {
+    if (this.isPasswordUser()) {
       return this.passwordHash !== null;
     }
-    if (this.registrationMethod === 'SOCIAL') {
+    if (this.isSocialUser()) {
       return this.oauthId !== null && this.oauthProvider !== null;
-    }
-    if (this.registrationMethod === 'CRYPTO') {
-      // CRYPTO 가입 시 필요한 지갑 정보나 텔레그램 정보 검증 로직 추가 가능
-      return true;
     }
     return true;
   }

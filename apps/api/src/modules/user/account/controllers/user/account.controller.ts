@@ -22,8 +22,7 @@ import { RegistrationLimitGuard } from '../../guards/registration-limit.guard';
 import { CheckAvailabilityService } from '../../application/check-availability.service';
 import { CheckAvailabilityRequestDto } from './dto/request/check-availability.request.dto';
 import { CheckAvailabilityResponseDto } from './dto/response/check-availability.response.dto';
-import { RegisterFiatRequestDto } from './dto/request/register-fiat.request.dto';
-import { RegisterCryptoRequestDto } from './dto/request/register-crypto.request.dto';
+import { RegisterRequestDto } from './dto/request/register.request.dto';
 import { RegisterSocialRequestDto } from './dto/request/register-social.request.dto';
 import { RegisterResponseDto } from './dto/response/register.response.dto';
 import { RegistrationMethod } from '@prisma/client';
@@ -57,52 +56,29 @@ export class UserAccountController {
         return this.checkAvailabilityService.execute(query);
     }
 
-    @Post('register/fiat')
+    @Post('register')
     @HttpCode(HttpStatus.CREATED)
     @Public()
     @UseGuards(RegistrationLimitGuard)
     @ApiOperation({
-        summary: 'Register User (FIAT) / 기명 회원가입',
-        description: 'ID, 비밀번호를 사용하여 계좌 기반의 정식 계정을 생성합니다.',
+        summary: 'Register User / 회원가입',
+        description: 'ID, 비밀번호를 사용하여 계정을 생성합니다.',
     })
     @ApiStandardResponse(RegisterResponseDto, { status: HttpStatus.CREATED })
-    async registerFiat(
+    async register(
         @RequestClientInfoParam() requestInfo: RequestClientInfo,
-        @Body() dto: RegisterFiatRequestDto,
+        @Body() dto: RegisterRequestDto,
     ): Promise<RegisterResponseDto> {
         const result = await this.registerUserService.execute({
             ...dto,
-            registrationMethod: RegistrationMethod.FIAT,
+            registrationMethod: RegistrationMethod.CREDENTIAL,
             requestInfo,
         });
 
         return {
             id: this.sqidsService.encode(result.id, SqidsPrefix.USER),
-            email: result.email,
-        };
-    }
-
-    @Post('register/crypto')
-    @HttpCode(HttpStatus.CREATED)
-    @Public()
-    @UseGuards(RegistrationLimitGuard)
-    @ApiOperation({
-        summary: 'Register User (CRYPTO) / 무기명 회원가입',
-        description: 'ID, 비밀번호, 텔레그램 아이디 정보를 사용하여 간편 계정을 생성합니다.',
-    })
-    @ApiStandardResponse(RegisterResponseDto, { status: HttpStatus.CREATED })
-    async registerCrypto(
-        @RequestClientInfoParam() requestInfo: RequestClientInfo,
-        @Body() dto: RegisterCryptoRequestDto,
-    ): Promise<RegisterResponseDto> {
-        const result = await this.registerUserService.execute({
-            ...dto,
-            registrationMethod: RegistrationMethod.CRYPTO,
-            requestInfo,
-        });
-
-        return {
-            id: this.sqidsService.encode(result.id, SqidsPrefix.USER),
+            loginId: result.loginId,
+            nickname: result.nickname,
             email: result.email,
         };
     }
@@ -130,6 +106,8 @@ export class UserAccountController {
 
         return {
             id: this.sqidsService.encode(result.id, SqidsPrefix.USER),
+            loginId: result.loginId,
+            nickname: result.nickname,
             email: result.email,
         };
     }

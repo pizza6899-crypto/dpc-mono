@@ -1,6 +1,6 @@
 import { Injectable, Logger, HttpStatus } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { RegistrationMethod, LoginIdType, OAuthProvider } from '@prisma/client';
+import { RegistrationMethod, OAuthProvider } from '@prisma/client';
 import { CreateUserService } from 'src/modules/user/profile/application/create-user.service';
 import { GetUserConfigService } from 'src/modules/user/config/application/get-user-config.service';
 import { UserOnboardingService } from './user-onboarding.service';
@@ -76,6 +76,11 @@ export class RegisterSocialUserService {
             });
         }
 
-        return { id: user.id, email: user.email };
+        return {
+            id: user.id,
+            loginId: user.loginId,
+            nickname: user.nickname,
+            email: user.email,
+        };
     }
 }

@@ -65,8 +65,8 @@ model User {
     passwordHash String?      @map("password_hash")
 
     // [Registration & Social]
-    // 가입 방식 (FULL: 일반, QUICK: 간편, SOCIAL: 소셜)
-    registrationMethod RegistrationMethod @default(FIAT) @map("registration_method")
+    // 가입 경로 (CREDENTIAL: 직접 가입, SOCIAL: 소셜 가입, ADMIN: 관리자 생성)
+    registrationMethod RegistrationMethod @default(CREDENTIAL) @map("registration_method")
     // 유저가 가입 시 직접 입력한 텔레그램 아이디 (@username)
     telegramUsername   String?            @unique @map("telegram_username")
     // 소셜 로그인(OAuth) 시 시스템이 받아오는 고유 식별값
@@ -139,9 +139,9 @@ model User {
 }
 
 enum RegistrationMethod {
-    FIAT // 방법 1: 기명 가입 (계좌 정보, 휴대폰 번호 등 실명 중심 정보 요구)
-    CRYPTO // 방법 2: 무기명 가입 (텔레그램 ID, 코인 지갑 주소 등 위주)
-    SOCIAL // 방법 3: 소셜 연동 가입 (Google, Apple 등)
+    CREDENTIAL // ID/비밀번호 기반 직접 가입
+    SOCIAL // 소셜 연동(OAuth) 가입
+    ADMIN // 관리자 시스템을 통한 가입
 }
 
 enum LoginIdType {

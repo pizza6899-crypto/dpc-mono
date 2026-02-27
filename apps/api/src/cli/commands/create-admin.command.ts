@@ -1,9 +1,8 @@
 import { Command, CommandRunner, Option } from 'nest-commander';
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
-import { UserRoleType, UserStatus, Language } from '@prisma/client';
+import { UserRoleType, UserStatus, Language, RegistrationMethod } from '@prisma/client';
 import { hashPassword } from 'src/utils/password.util';
-import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 import { IdUtil } from 'src/utils/id.util';
 
 @Injectable()
@@ -94,7 +93,7 @@ export class CreateAdminCommand extends CommandRunner {
           nickname,
           email,
           passwordHash,
-          registrationMethod: 'FIAT',
+          registrationMethod: RegistrationMethod.ADMIN,
           role: role as UserRoleType,
           status: UserStatus.ACTIVE,
           country,
