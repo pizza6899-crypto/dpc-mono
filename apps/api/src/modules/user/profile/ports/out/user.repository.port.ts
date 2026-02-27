@@ -7,7 +7,7 @@ import type { UserRoleType, OAuthProvider, UserStatus, ExchangeCurrencyCode, Reg
  * 도메인 관점에서 필요한 정보만 포함합니다.
  */
 export interface CreateUserParams {
-  loginId: string;
+  loginId: string | null;
   nickname: string;
   email?: string | null;
   passwordHash?: string | null;

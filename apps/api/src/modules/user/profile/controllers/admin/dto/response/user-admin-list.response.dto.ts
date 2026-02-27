@@ -12,8 +12,9 @@ export class UserAdminListItemDto {
   @ApiProperty({
     description: 'Login ID / 로그인 ID',
     example: 'user123',
+    nullable: true,
   })
-  loginId: string;
+  loginId: string | null;
 
   @ApiProperty({
     description: 'Nickname / 닉네임',

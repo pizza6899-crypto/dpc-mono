@@ -8,7 +8,7 @@ import type { OAuthProvider, RegistrationMethod } from '@prisma/client';
  */
 export class UserAuth {
   private constructor(
-    public readonly loginId: string,
+    public readonly loginId: string | null,
     public readonly registrationMethod: RegistrationMethod,
     public readonly email: string | null,
     public readonly passwordHash: string | null,
@@ -25,7 +25,7 @@ export class UserAuth {
    * UserAuth 생성
    */
   static create(params: {
-    loginId: string;
+    loginId: string | null;
     registrationMethod: RegistrationMethod;
     email: string | null;
     passwordHash: string | null;
@@ -46,7 +46,7 @@ export class UserAuth {
    * Persistence 데이터로부터 생성
    */
   static fromPersistence(data: {
-    loginId: string;
+    loginId: string | null;
     registrationMethod: RegistrationMethod;
     email: string | null;
     passwordHash: string | null;
@@ -67,7 +67,7 @@ export class UserAuth {
    * Persistence 레이어로 변환
    */
   toPersistence(): {
-    loginId: string;
+    loginId: string | null;
     registrationMethod: RegistrationMethod;
     email: string | null;
     passwordHash: string | null;

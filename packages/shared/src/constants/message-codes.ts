@@ -43,6 +43,7 @@ export enum MessageCode {
     USER_NOT_FOUND = 'USER_NOT_FOUND', // 해당 사용자를 찾을 수 없을 때
     USER_ALREADY_EXISTS = 'USER_ALREADY_EXISTS', // 이미 존재하는 사용자(예: 이메일 중복)일 때
     USER_COUNTRY_ALREADY_SET = 'USER_COUNTRY_ALREADY_SET', // 사용자 국가가 이미 설정되어 있을 때
+    USER_CONFIG_NOT_FOUND = 'USER_CONFIG_NOT_FOUND', // 사용자 설정을 찾을 수 없을 때
 
     // --- 데이터베이스 관련 (Database) ---
     DB_CONNECTION_ERROR = 'DB_CONNECTION_ERROR', // 데이터베이스 연결에 실패했을 때

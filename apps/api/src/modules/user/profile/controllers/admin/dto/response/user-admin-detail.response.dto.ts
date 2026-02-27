@@ -5,8 +5,8 @@ export class UserAdminDetailResponseDto {
   @ApiProperty({ description: 'User ID / 사용자 ID', example: '1234567890...' })
   id: string;
 
-  @ApiProperty({ description: 'Login ID / 로그인 ID', example: 'user123' })
-  loginId: string;
+  @ApiProperty({ description: 'Login ID / 로그인 ID', example: 'user123', nullable: true })
+  loginId: string | null;
 
   @ApiProperty({ description: 'Nickname / 닉네임', example: '홍길동' })
   nickname: string;

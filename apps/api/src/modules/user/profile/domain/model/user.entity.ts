@@ -39,7 +39,7 @@ export class User {
    */
   static fromPersistence(data: {
     id: bigint;
-    loginId: string;
+    loginId: string | null;
     nickname: string;
     email: string | null;
     passwordHash: string | null;
@@ -152,7 +152,7 @@ export class User {
   }
 
   // Getters
-  get loginId(): string { return this.authInfo.loginId; }
+  get loginId(): string | null { return this.authInfo.loginId; }
   get email(): string | null { return this.authInfo.email; }
 
   getLocation(): UserLocation { return this.location; }
