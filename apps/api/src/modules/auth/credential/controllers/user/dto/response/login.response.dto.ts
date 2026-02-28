@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CredentialUserLoginUserResponseDto {
+export class UserLoginUserResponseDto {
   @ApiProperty({ description: '사용자 ID' })
   id: string;
 
@@ -8,7 +8,7 @@ export class CredentialUserLoginUserResponseDto {
   email: string;
 }
 
-export class CredentialUserLoginResponseDto {
-  @ApiProperty({ type: CredentialUserLoginUserResponseDto })
-  user: CredentialUserLoginUserResponseDto;
+export class UserLoginResponseDto {
+  @ApiProperty({ type: UserLoginUserResponseDto })
+  user: UserLoginUserResponseDto;
 }

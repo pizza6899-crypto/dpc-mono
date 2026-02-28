@@ -25,17 +25,17 @@ import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
 import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
-import { AuthenticateCredentialAdminService } from '../../application/authenticate-credential-admin.service';
+import { AuthenticateIdentityService } from '../../application/authenticate-identity.service';
 import { LoginService } from '../../application/login.service';
 import { LogoutService } from '../../application/logout.service';
 import { FindLoginAttemptsService } from '../../application/find-login-attempts.service';
 import { ChangePasswordService } from '../../application/change-password.service';
 import { ResetUserPasswordAdminService } from '../../application/reset-user-password-admin.service';
 import { CheckUserStatusService } from '../../application/check-user-status.service';
-import { CredentialAdminLoginRequestDto } from './dto/request/login.request.dto';
-import { CredentialAdminLoginResponseDto } from './dto/response/login.response.dto';
-import { CredentialAdminLogoutResponseDto } from './dto/response/logout.response.dto';
-import { CredentialAdminAuthStatusResponseDto } from './dto/response/auth-status.response.dto';
+import { AdminLoginRequestDto } from './dto/request/login.request.dto';
+import { AdminLoginResponseDto } from './dto/response/login.response.dto';
+import { AdminLogoutResponseDto } from './dto/response/logout.response.dto';
+import { AdminAuthStatusResponseDto } from './dto/response/auth-status.response.dto';
 import { LoginAttemptResponseDto } from './dto/response/login-attempt.response.dto';
 import { FindLoginAttemptsQueryDto } from './dto/request/find-login-attempts-query.dto';
 import { AdminChangePasswordRequestDto } from './dto/request/change-password.request.dto';
@@ -52,7 +52,7 @@ import { LogType } from 'src/modules/audit-log/domain';
 @ApiStandardErrors()
 export class AdminAuthController {
   constructor(
-    private readonly authenticateCredentialAdminService: AuthenticateCredentialAdminService,
+    private readonly authenticateIdentityService: AuthenticateIdentityService,
     private readonly loginService: LoginService,
     private readonly logoutService: LogoutService,
     private readonly findAttemptsService: FindLoginAttemptsService,
@@ -72,7 +72,7 @@ export class AdminAuthController {
     summary: 'Admin Login (관리자 로그인)',
     description: 'Email/Password 기반 관리자 로그인',
   })
-  @ApiStandardResponse(CredentialAdminLoginResponseDto, {
+  @ApiStandardResponse(AdminLoginResponseDto, {
     status: HttpStatus.OK,
     description: 'Login Success',
   })
@@ -103,16 +103,17 @@ export class AdminAuthController {
     },
   })
   async login(
-    @Body() dto: CredentialAdminLoginRequestDto,
+    @Body() dto: AdminLoginRequestDto,
     @RequestClientInfoParam() clientInfo: RequestClientInfo,
     @Req() req: Request,
-  ): Promise<CredentialAdminLoginResponseDto> {
+  ): Promise<AdminLoginResponseDto> {
     // 1. 관리자 자격 증명 인증 (이메일/비밀번호 검증, 계정 잠금 체크, 실패 시도 기록)
     const authenticatedUser =
-      await this.authenticateCredentialAdminService.execute({
+      await this.authenticateIdentityService.execute({
         email: dto.email,
         password: dto.password,
         clientInfo,
+        isAdmin: true,
       });
 
     await new Promise<void>((resolve, reject) => {
@@ -153,7 +154,7 @@ export class AdminAuthController {
     description:
       '현재 세션 종료. 인증 상태와 관계없이 항상 성공 응답을 반환합니다.',
   })
-  @ApiStandardResponse(CredentialAdminLogoutResponseDto, {
+  @ApiStandardResponse(AdminLogoutResponseDto, {
     status: HttpStatus.OK,
     description: 'Logout Success',
   })
@@ -167,7 +168,7 @@ export class AdminAuthController {
     @CurrentUser() user?: CurrentUserWithSession,
     @RequestClientInfoParam() clientInfo?: RequestClientInfo,
     @Req() req?: Request,
-  ): Promise<CredentialAdminLogoutResponseDto> {
+  ): Promise<AdminLogoutResponseDto> {
     // 1. DB 세션 종료 (LogoutService에서 처리)
     // 사용자가 있는 경우에만 로그아웃 서비스 실행 (에러 발생해도 무시)
     if (user && clientInfo) {
@@ -251,13 +252,13 @@ export class AdminAuthController {
     summary: 'Admin Auth Status (관리자 인증 상태)',
     description: '현재 관리자 로그인 세션 유효 여부 확인 (DB 검증 포함)',
   })
-  @ApiStandardResponse(CredentialAdminAuthStatusResponseDto, {
+  @ApiStandardResponse(AdminAuthStatusResponseDto, {
     status: HttpStatus.OK,
   })
-  async checkStatus(
+  async getStatus(
     @Req() req: Request,
     @CurrentUser() user?: CurrentUserWithSession,
-  ): Promise<CredentialAdminAuthStatusResponseDto> {
+  ): Promise<AdminAuthStatusResponseDto> {
     // 관리자 역할 체크
     const isAdmin =
       user?.role === UserRoleType.ADMIN ||

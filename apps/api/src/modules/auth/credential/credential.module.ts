@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { UserAuthController } from './controllers/user/user-auth.controller';
 import { AdminAuthController } from './controllers/admin/admin-auth.controller';
-import { AuthenticateCredentialService } from './application/authenticate-credential.service';
-import { AuthenticateCredentialAdminService } from './application/authenticate-credential-admin.service';
+import { AuthenticateIdentityService } from './application/authenticate-identity.service';
 import { LoginService } from './application/login.service';
 import { LogoutService } from './application/logout.service';
 import { RecordLoginAttemptService } from './application/record-login-attempt.service';
@@ -42,8 +41,7 @@ import { SessionSerializer } from 'src/common/auth/strategies/session.serializer
   controllers: [UserAuthController, AdminAuthController],
   providers: [
     // Application Services
-    AuthenticateCredentialService,
-    AuthenticateCredentialAdminService,
+    AuthenticateIdentityService,
     LoginService,
     LogoutService,
     RecordLoginAttemptService,

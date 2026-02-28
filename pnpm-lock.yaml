@@ -105,6 +105,9 @@ importers:
       '@casl/ability':
         specifier: ^6.7.5
         version: 6.7.5
+      '@casl/prisma':
+        specifier: ^1.6.1
+        version: 1.6.1(@casl/ability@6.7.5)(@prisma/client@7.2.0(prisma@7.2.0(@types/react@19.2.7)(magicast@0.3.5)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3))(typescript@5.9.3))
       '@nestjs-cls/transactional':
         specifier: ^3.1.1
         version: 3.1.1(@nestjs/common@11.1.10(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.10)(nestjs-cls@6.1.0(@nestjs/common@11.1.10(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.10)(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -1458,6 +1461,12 @@ packages:
 
   '@casl/ability@6.7.5':
     resolution: {integrity: sha512-NaOHPi9JMn8Kesh+GRkjNKAYkl4q8qMFAlqw7w2yrE+cBQZSbV9GkBGKvgzs3CdzEc5Yl1cn3JwDxxbBN5gjog==}
+
+  '@casl/prisma@1.6.1':
+    resolution: {integrity: sha512-VSAzfTMOZvP3Atj3F0qwJItOm1ixIiumjbBz21PL/gLUIDwoktyAx2dB7dPwjH9AQvzZPE629ee7fVU5K2hpzg==}
+    peerDependencies:
+      '@casl/ability': ^5.3.0 || ^6.0.0
+      '@prisma/client': ^2.14.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
 
   '@chevrotain/cst-dts-gen@10.5.0':
     resolution: {integrity: sha512-lhmC/FyqQ2o7pGK4Om+hzuDrm9rhFYIJ/AXoQBeongmn870Xeb0L6oGEiuR8nohFNL5sMaQEJWCxr1oIVIVXrw==}
@@ -14696,6 +14705,13 @@ snapshots:
   '@casl/ability@6.7.5':
     dependencies:
       '@ucast/mongo2js': 1.4.0
+
+  '@casl/prisma@1.6.1(@casl/ability@6.7.5)(@prisma/client@7.2.0(prisma@7.2.0(@types/react@19.2.7)(magicast@0.3.5)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3))(typescript@5.9.3))':
+    dependencies:
+      '@casl/ability': 6.7.5
+      '@prisma/client': 7.2.0(prisma@7.2.0(@types/react@19.2.7)(magicast@0.3.5)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3))(typescript@5.9.3)
+      '@ucast/core': 1.10.2
+      '@ucast/js': 3.0.4
 
   '@chevrotain/cst-dts-gen@10.5.0':
     dependencies:

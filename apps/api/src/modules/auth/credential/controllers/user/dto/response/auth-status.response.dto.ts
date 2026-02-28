@@ -1,14 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CredentialUserLoginUserResponseDto } from './login.response.dto';
+import { UserLoginUserResponseDto } from './login.response.dto';
 
-export class CredentialUserAuthStatusResponseDto {
+export class UserAuthStatusResponseDto {
   @ApiProperty({ description: '인증 여부' })
   isAuthenticated: boolean;
 
   @ApiProperty({
-    type: CredentialUserLoginUserResponseDto,
+    type: UserLoginUserResponseDto,
     required: false,
     nullable: true,
   })
-  user: CredentialUserLoginUserResponseDto | null;
+  user: UserLoginUserResponseDto | null;
 }

@@ -20,19 +20,19 @@ import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
 import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
-import { AuthenticateCredentialService } from '../../application/authenticate-credential.service';
+import { AuthenticateIdentityService } from '../../application/authenticate-identity.service';
 import { LoginService } from '../../application/login.service';
 import { LogoutService } from '../../application/logout.service';
 import { ChangePasswordService } from '../../application/change-password.service';
 import { RequestPasswordResetService } from '../../application/request-password-reset.service';
 import { ResetPasswordService } from '../../application/reset-password.service';
 import { CheckUserStatusService } from '../../application/check-user-status.service';
-import { CredentialUserLoginRequestDto } from './dto/request/login.request.dto';
-import { CredentialUserLoginResponseDto } from './dto/response/login.response.dto';
+import { UserLoginRequestDto } from './dto/request/login.request.dto';
+import { UserLoginResponseDto } from './dto/response/login.response.dto';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
-import { CredentialUserAuthStatusResponseDto } from './dto/response/auth-status.response.dto';
-import { CredentialUserLogoutResponseDto } from './dto/response/logout.response.dto';
+import { UserAuthStatusResponseDto } from './dto/response/auth-status.response.dto';
+import { UserLogoutResponseDto } from './dto/response/logout.response.dto';
 import { ChangePasswordRequestDto } from './dto/request/change-password.request.dto';
 import { ChangePasswordResponseDto } from './dto/response/change-password.response.dto';
 import { RequestPasswordResetRequestDto } from './dto/request/request-password-reset.request.dto';
@@ -49,7 +49,7 @@ import { LogType } from 'src/modules/audit-log/domain';
 @ApiStandardErrors()
 export class UserAuthController {
   constructor(
-    private readonly authenticateCredentialService: AuthenticateCredentialService,
+    private readonly authenticateIdentityService: AuthenticateIdentityService,
     private readonly loginService: LoginService,
     private readonly logoutService: LogoutService,
     private readonly changePasswordService: ChangePasswordService,
@@ -70,7 +70,7 @@ export class UserAuthController {
     summary: 'Login (로그인)',
     description: 'Email/Password 기반 로그인',
   })
-  @ApiStandardResponse(CredentialUserLoginResponseDto, {
+  @ApiStandardResponse(UserLoginResponseDto, {
     status: HttpStatus.OK,
     description: 'Login Success',
   })
@@ -87,12 +87,12 @@ export class UserAuthController {
     },
   })
   async login(
-    @Body() dto: CredentialUserLoginRequestDto,
+    @Body() dto: UserLoginRequestDto,
     @RequestClientInfoParam() clientInfo: RequestClientInfo,
     @Req() req: Request,
-  ): Promise<CredentialUserLoginResponseDto> {
+  ): Promise<UserLoginResponseDto> {
     // 1. 자격 증명 인증 (이메일/비밀번호 검증, 계정 잠금 체크, 실패 시도 기록)
-    const authenticatedUser = await this.authenticateCredentialService.execute({
+    const authenticatedUser = await this.authenticateIdentityService.execute({
       email: dto.email,
       password: dto.password,
       clientInfo,
@@ -138,7 +138,7 @@ export class UserAuthController {
     description:
       '현재 세션 종료. 인증 상태와 관계없이 항상 성공 응답을 반환합니다.',
   })
-  @ApiStandardResponse(CredentialUserLogoutResponseDto, {
+  @ApiStandardResponse(UserLogoutResponseDto, {
     status: HttpStatus.OK,
     description: 'Logout Success',
   })
@@ -152,7 +152,7 @@ export class UserAuthController {
     @CurrentUser() user?: CurrentUserWithSession,
     @RequestClientInfoParam() clientInfo?: RequestClientInfo,
     @Req() req?: Request,
-  ): Promise<CredentialUserLogoutResponseDto> {
+  ): Promise<UserLogoutResponseDto> {
     // 1. DB 세션 종료 (LogoutService에서 처리)
     if (user && clientInfo) {
       try {
@@ -198,13 +198,13 @@ export class UserAuthController {
     summary: 'Auth Status (인증 상태)',
     description: '현재 로그인 세션 유효 여부 확인 (DB 검증 포함)',
   })
-  @ApiStandardResponse(CredentialUserAuthStatusResponseDto, {
+  @ApiStandardResponse(UserAuthStatusResponseDto, {
     status: HttpStatus.OK,
   })
-  async checkStatus(
+  async getStatus(
     @Req() req: Request,
     @CurrentUser() user?: CurrentUserWithSession,
-  ): Promise<CredentialUserAuthStatusResponseDto> {
+  ): Promise<UserAuthStatusResponseDto> {
     let isAuthenticated = req.isAuthenticated() && !!user;
 
     // 세션은 유효하지만 실제 DB에 유저가 존재하는지 확인 (DB Reset 대응 등)
