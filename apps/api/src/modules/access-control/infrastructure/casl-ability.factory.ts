@@ -1,37 +1,33 @@
 import { Injectable } from '@nestjs/common';
-import {
-    Ability,
-    AbilityBuilder,
-    AbilityClass,
-    ExtractSubjectType,
-    MongoAbility,
-} from '@casl/ability';
+import { AbilityBuilder, AbilityClass } from '@casl/ability';
+import { PrismaAbility } from '@casl/prisma';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
-import { Action, Permission, SubjectType } from '../domain';
+import { Action, Permission } from '../domain';
 import type { Subjects } from '../domain';
 
 /**
  * CASL Ability 타입 정의
+ * Prisma와 연동하기 위해 PrismaAbility를 사용합니다.
  */
-export type AppAbility = MongoAbility<[Action, Subjects]>;
+export type AppAbility = PrismaAbility<[Action, Subjects]>;
 
 /**
  * CASL AbilityFactory
  *
- * CASL 라이브러리를 사용하여 Ability 객체를 생성합니다.
+ * Prisma 전용 Ability를 생성합니다.
  */
 @Injectable()
 export class CaslAbilityFactory {
     /**
-     * 사용자와 권한 정의를 기반으로 CASL Ability 생성
+     * 사용자와 권한 정의를 기반으로 PrismaAbility 생성
      *
      * @param user - 인증된 사용자
      * @param permissions - 권한 정의 목록
-     * @returns CASL Ability 객체
+     * @returns PrismaAbility 객체
      */
     create(user: AuthenticatedUser, permissions: Permission[]): AppAbility {
         const { can, build } = new AbilityBuilder<AppAbility>(
-            Ability as AbilityClass<AppAbility>,
+            PrismaAbility as AbilityClass<AppAbility>,
         );
 
         // 권한 정의를 CASL 규칙으로 변환
@@ -56,8 +52,10 @@ export class CaslAbilityFactory {
         }
 
         return build({
-            detectSubjectType: (item: any) =>
-                item.constructor as ExtractSubjectType<Subjects>,
+            detectSubjectType: (item: any) => {
+                if (typeof item === 'string') return item as any;
+                return item.constructor.name;
+            },
         });
     }
 

@@ -50,52 +50,48 @@ export class CaslPolicy {
             // 사용자 관리
             {
                 action: [Action.READ, Action.UPDATE],
-                subject: SubjectType.USER,
+                subject: SubjectType.User,
             },
             // 어필리에이트 관리
             {
                 action: Action.MANAGE,
-                subject: SubjectType.AFFILIATE_CODE,
+                subject: SubjectType.AffiliateCode,
             },
             {
                 action: Action.MANAGE,
-                subject: SubjectType.AFFILIATE_COMMISSION,
+                subject: SubjectType.AffiliateCommission,
             },
             {
                 action: Action.MANAGE,
-                subject: SubjectType.AFFILIATE_TIER,
+                subject: SubjectType.AffiliateWallet,
             },
             {
                 action: Action.MANAGE,
-                subject: SubjectType.AFFILIATE_WALLET,
-            },
-            {
-                action: Action.MANAGE,
-                subject: SubjectType.AFFILIATE_REFERRAL,
+                subject: SubjectType.Referral,
             },
             // 거래 관리
             {
                 action: [Action.READ, Action.UPDATE],
-                subject: SubjectType.DEPOSIT,
+                subject: SubjectType.DepositDetail,
             },
             {
                 action: [Action.READ, Action.UPDATE],
-                subject: SubjectType.WITHDRAW,
+                subject: SubjectType.WithdrawalDetail,
             },
             // 환율 관리
             {
                 action: Action.MANAGE,
-                subject: SubjectType.EXCHANGE_RATE,
+                subject: SubjectType.ExchangeRate,
             },
             // 프로모션 관리
             {
                 action: Action.MANAGE,
-                subject: SubjectType.PROMOTION,
+                subject: SubjectType.Promotion,
             },
             // VIP 관리
             {
                 action: [Action.READ, Action.UPDATE],
-                subject: SubjectType.VIP_MEMBERSHIP,
+                subject: SubjectType.UserTier,
             },
         ];
     }
@@ -107,27 +103,22 @@ export class CaslPolicy {
         return [
             {
                 action: Action.MANAGE,
-                subject: SubjectType.AFFILIATE_CODE,
+                subject: SubjectType.AffiliateCode,
                 conditions: { userId: '${user.id}' },
             },
             {
                 action: Action.READ,
-                subject: SubjectType.AFFILIATE_COMMISSION,
+                subject: SubjectType.AffiliateCommission,
                 conditions: { affiliateId: '${user.id}' },
             },
             {
                 action: Action.READ,
-                subject: SubjectType.AFFILIATE_TIER,
+                subject: SubjectType.AffiliateWallet,
                 conditions: { affiliateId: '${user.id}' },
             },
             {
                 action: Action.READ,
-                subject: SubjectType.AFFILIATE_WALLET,
-                conditions: { affiliateId: '${user.id}' },
-            },
-            {
-                action: Action.READ,
-                subject: SubjectType.AFFILIATE_REFERRAL,
+                subject: SubjectType.Referral,
                 conditions: { affiliateId: '${user.id}' },
             },
         ];
@@ -140,55 +131,55 @@ export class CaslPolicy {
         return [
             {
                 action: [Action.READ, Action.UPDATE],
-                subject: SubjectType.USER,
+                subject: SubjectType.User,
                 conditions: { id: '${user.id}' },
             },
             {
                 action: Action.READ,
-                subject: SubjectType.TRANSACTION,
+                subject: SubjectType.UserWalletTransaction,
                 conditions: { userId: '${user.id}' },
             },
             {
                 action: Action.READ,
-                subject: SubjectType.DEPOSIT,
+                subject: SubjectType.DepositDetail,
                 conditions: { userId: '${user.id}' },
             },
             {
                 action: Action.READ,
-                subject: SubjectType.WITHDRAW,
+                subject: SubjectType.WithdrawalDetail,
                 conditions: { userId: '${user.id}' },
             },
             {
                 action: Action.READ,
-                subject: SubjectType.PROMOTION,
+                subject: SubjectType.Promotion,
             },
             {
                 action: Action.READ,
-                subject: SubjectType.VIP_MEMBERSHIP,
+                subject: SubjectType.UserTier,
                 conditions: { userId: '${user.id}' },
             },
             {
                 action: Action.READ,
-                subject: SubjectType.EXCHANGE_RATE,
+                subject: SubjectType.ExchangeRate,
             },
             {
                 action: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE],
-                subject: SubjectType.AFFILIATE_CODE,
+                subject: SubjectType.AffiliateCode,
                 conditions: { userId: '${user.id}' },
             },
             {
                 action: Action.READ,
-                subject: SubjectType.AFFILIATE_COMMISSION,
+                subject: SubjectType.AffiliateCommission,
                 conditions: { affiliateId: '${user.id}' },
             },
             {
                 action: Action.READ,
-                subject: SubjectType.AFFILIATE_WALLET,
+                subject: SubjectType.AffiliateWallet,
                 conditions: { affiliateId: '${user.id}' },
             },
             {
                 action: Action.READ,
-                subject: SubjectType.AFFILIATE_REFERRAL,
+                subject: SubjectType.Referral,
                 conditions: { affiliateId: '${user.id}' },
             },
         ];
