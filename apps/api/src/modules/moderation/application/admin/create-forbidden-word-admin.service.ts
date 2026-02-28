@@ -1,8 +1,9 @@
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import type { ForbiddenWordRepositoryPort } from '../../ports/out/moderation-repository.port';
 import { FORBIDDEN_WORD_REPOSITORY } from '../../ports/out/moderation-repository.port';
 import { ForbiddenWord } from '../../domain/model/forbidden-word.entity';
+import { ForbiddenWordAlreadyExistsException } from '../../domain/moderation.exception';
 
 export interface CreateForbiddenWordAdminCommand {
     word: string;
@@ -22,7 +23,7 @@ export class CreateForbiddenWordAdminService {
         const existing = await this.forbiddenWordRepository.findByWord(wordValue);
 
         if (existing) {
-            throw new ConflictException(`Forbidden word "${wordValue}" already exists.`);
+            throw new ForbiddenWordAlreadyExistsException(wordValue);
         }
 
         const forbiddenWord = ForbiddenWord.create({

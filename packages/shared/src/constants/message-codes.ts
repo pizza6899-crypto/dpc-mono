@@ -217,4 +217,6 @@ export enum MessageCode {
     // --- 회원가입 관련 (Signup) ---
     SIGNUP_DISABLED = 'SIGNUP_DISABLED', // 회원가입이 비활성화되었을 때
     SIGNUP_DAILY_LIMIT_EXCEEDED = 'SIGNUP_DAILY_LIMIT_EXCEEDED', // IP당 일일 가입 한도를 초과했을 때
+    FORBIDDEN_WORD_NOT_FOUND = 'FORBIDDEN_WORD_NOT_FOUND', // 금지어를 찾을 수 없을 때
+    FORBIDDEN_WORD_ALREADY_EXISTS = 'FORBIDDEN_WORD_ALREADY_EXISTS', // 이미 존재하는 금지어일 때
 }

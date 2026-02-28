@@ -36,3 +36,21 @@ export class AiModerationRejectedException extends ModerationException {
         super(reason || 'The content was rejected by AI moderation policy.', MessageCode.VALIDATION_ERROR);
     }
 }
+
+/**
+ * 금지어를 찾을 수 없을 때 발생하는 예외
+ */
+export class ForbiddenWordNotFoundException extends ModerationException {
+    constructor(_id?: bigint | string) {
+        super(`The requested forbidden word could not be found.`, MessageCode.FORBIDDEN_WORD_NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+}
+
+/**
+ * 이미 존재하는 금지어 등록 시 발생하는 예외
+ */
+export class ForbiddenWordAlreadyExistsException extends ModerationException {
+    constructor(_word?: string) {
+        super(`This forbidden word already exists in the system.`, MessageCode.FORBIDDEN_WORD_ALREADY_EXISTS, HttpStatus.CONFLICT);
+    }
+}
