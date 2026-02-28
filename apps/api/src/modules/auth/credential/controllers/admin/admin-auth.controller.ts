@@ -50,7 +50,7 @@ import { LogType } from 'src/modules/audit-log/domain';
 @Controller('admin/auth')
 @ApiTags('Admin Auth')
 @ApiStandardErrors()
-export class CredentialAdminController {
+export class AdminAuthController {
   constructor(
     private readonly authenticateCredentialAdminService: AuthenticateCredentialAdminService,
     private readonly loginService: LoginService,
@@ -59,7 +59,7 @@ export class CredentialAdminController {
     private readonly changePasswordService: ChangePasswordService,
     private readonly resetUserPasswordAdminService: ResetUserPasswordAdminService,
     private readonly checkUserStatusService: CheckUserStatusService,
-  ) {}
+  ) { }
 
   @Post('login')
   @Public()
@@ -271,7 +271,7 @@ export class CredentialAdminController {
         isAuthenticated = false;
         // 유효하지 않은 유저라면 로그아웃 처리
         req.logout(() => {
-          req.session?.destroy(() => {});
+          req.session?.destroy(() => { });
         });
       }
     }
@@ -281,9 +281,9 @@ export class CredentialAdminController {
       user:
         isAuthenticated && user
           ? {
-              id: user.id.toString(),
-              email: user.email,
-            }
+            id: user.id.toString(),
+            email: user.email,
+          }
           : null,
     };
   }

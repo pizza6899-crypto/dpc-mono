@@ -47,7 +47,7 @@ import { LogType } from 'src/modules/audit-log/domain';
 @Controller('auth')
 @ApiTags('User Auth')
 @ApiStandardErrors()
-export class CredentialUserController {
+export class UserAuthController {
   constructor(
     private readonly authenticateCredentialService: AuthenticateCredentialService,
     private readonly loginService: LoginService,
@@ -57,7 +57,7 @@ export class CredentialUserController {
     private readonly resetPasswordService: ResetPasswordService,
     private readonly checkUserStatusService: CheckUserStatusService,
     private readonly sqidsService: SqidsService,
-  ) {}
+  ) { }
 
   @Post('login')
   @Public()
@@ -214,7 +214,7 @@ export class CredentialUserController {
         isAuthenticated = false;
         // 유효하지 않은 유저라면 로그아웃 처리 (세션 정리)
         req.logout(() => {
-          req.session?.destroy(() => {});
+          req.session?.destroy(() => { });
         });
       }
     }
@@ -224,9 +224,9 @@ export class CredentialUserController {
       user:
         isAuthenticated && user
           ? {
-              id: this.sqidsService.encode(user.id, SqidsPrefix.USER),
-              email: user.email,
-            }
+            id: this.sqidsService.encode(user.id, SqidsPrefix.USER),
+            email: user.email,
+          }
           : null,
     };
   }

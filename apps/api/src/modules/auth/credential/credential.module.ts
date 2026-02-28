@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { CredentialUserController } from './controllers/user/credential-user.controller';
-import { CredentialAdminController } from './controllers/admin/credential-admin.controller';
+import { UserAuthController } from './controllers/user/user-auth.controller';
+import { AdminAuthController } from './controllers/admin/admin-auth.controller';
 import { AuthenticateCredentialService } from './application/authenticate-credential.service';
 import { AuthenticateCredentialAdminService } from './application/authenticate-credential-admin.service';
 import { LoginService } from './application/login.service';
@@ -39,7 +39,7 @@ import { SessionSerializer } from 'src/common/auth/strategies/session.serializer
     UserProfileModule, // UserRepository 사용을 위해 필요
     SessionModule, // CreateSessionService 사용을 위해 필요
   ],
-  controllers: [CredentialUserController, CredentialAdminController],
+  controllers: [UserAuthController, AdminAuthController],
   providers: [
     // Application Services
     AuthenticateCredentialService,
