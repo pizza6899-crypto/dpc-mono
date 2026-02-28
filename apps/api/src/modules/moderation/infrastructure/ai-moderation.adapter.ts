@@ -42,12 +42,14 @@ export class AiModerationAdapter implements AiModerationPort {
                         {
                             role: 'system',
                             content: [
-                                'You are a multilingual content moderation assistant.',
-                                'You MUST analyze text in ANY language (Korean, Japanese, Chinese, English, etc.).',
-                                'Detect: hate speech, violence, sexual content, harassment, impersonation of authority figures, slurs, and profanity in ALL languages.',
-                                'ALWAYS respond in English JSON only: { "allowed": true/false, "confidence": 0.0-1.0, "label": "category", "reason": "brief explanation in English", "flagged_words": ["original_word"] }.',
-                                'flagged_words must contain the original problematic words as-is (e.g. Korean words in Korean), max 3 items.',
-                                'If allowed, flagged_words should be an empty array.',
+                                'You are an expert multilingual content moderation assistant.',
+                                'Your goal is to detect and prevent filter-bypassing attempts for inappropriate content.',
+                                '1. Detect: hate speech, violence, sexual content, slurs, profanity, and impersonation of platform staff or authority figures in any language (especially Korean).',
+                                '2. ALWAYS respond strictly in JSON format: { "allowed": boolean, "confidence": number, "label": "string", "reason": "string", "flagged_words": string[] }',
+                                '3. If disallowed, "flagged_words" MUST include: The original input string itself, AND At least 3-4 creative variations of the ENTIRE input phrase designed to bypass filters (e.g., if input is "Administrator", include variants like "Admin1strator", "Ad.min.istrator", "@dministrator", "ㅇㄷㅁㄴ").',
+                                '4. RULES for flagged_words: DO NOT split the input into separate, neutral words (e.g., do not split "Administrator" into "Strator"). Always preserve the original context and generate variants of the whole phrase. Limit the list to a maximum of 5 items.',
+                                '5. If allowed, "flagged_words" must be an empty array [].',
+                                '6. Respond with ONLY the JSON object. No intro or outro text.',
                             ].join(' '),
                         },
                         {
@@ -79,15 +81,22 @@ export class AiModerationAdapter implements AiModerationPort {
                 };
             }
 
+            // [Debug] AI가 반환한 원본 데이터 로깅
+            this.logger.debug(`[CloudflareAI] Raw AI response data: ${JSON.stringify(data)}`);
+
             // LLM 응답 JSON 파싱
             const parsed = this.parseAiResponse(data.result.response);
+
+            // [Debug] AI가 반환한 원본 데이터 로깅 (flaggedWords 유무 확인용)
+            this.logger.debug(`[CloudflareAI] Parsed Content: ${JSON.stringify(parsed)}`);
 
             return {
                 isAllowed: parsed.allowed,
                 message: parsed.reason || (parsed.allowed ? 'Content is appropriate' : 'Content is inappropriate'),
                 label: parsed.label,
                 confidence: parsed.confidence,
-                flaggedWords: parsed.flagged_words?.slice(0, 3),
+                // 스네이크 케이스와 카멜 케이스 모두 대응
+                flaggedWords: (parsed.flagged_words || (parsed as any).flaggedWords || [])?.slice(0, 3),
                 raw: data,
             };
         } catch (error: any) {

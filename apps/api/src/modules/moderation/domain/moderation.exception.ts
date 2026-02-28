@@ -20,7 +20,8 @@ export class ModerationException extends DomainException {
  */
 export class ForbiddenWordException extends ModerationException {
     constructor(word: string) {
-        super(`The content contains a forbidden word: "${word}"`, MessageCode.VALIDATION_ERROR);
+        // [Security] API 응답에는 구체적인 금지어를 노출하지 않습니다. (Fuzzing 방지 및 한글 필터링 우회)
+        super(`The content contains a forbidden word.`, MessageCode.VALIDATION_ERROR);
     }
 }
 

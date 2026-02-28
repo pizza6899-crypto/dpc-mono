@@ -1,14 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
+import { InjectTransaction } from '@nestjs-cls/transactional';
+import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { ForbiddenWordRepositoryPort } from '../ports/out/moderation-repository.port';
 import { ForbiddenWord as ForbiddenWordEntity } from '../domain/model/forbidden-word.entity';
 
 @Injectable()
 export class PrismaForbiddenWordRepository implements ForbiddenWordRepositoryPort {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(
+        @InjectTransaction()
+        private readonly tx: PrismaTransaction,
+    ) { }
 
     async findAllActive(): Promise<ForbiddenWordEntity[]> {
-        const records = await this.prisma.forbiddenWord.findMany({
+        const records = await this.tx.forbiddenWord.findMany({
             where: { isActive: true },
         });
 
@@ -16,7 +20,7 @@ export class PrismaForbiddenWordRepository implements ForbiddenWordRepositoryPor
     }
 
     async findByWord(word: string): Promise<ForbiddenWordEntity | null> {
-        const record = await this.prisma.forbiddenWord.findUnique({
+        const record = await this.tx.forbiddenWord.findUnique({
             where: { word: word.toLowerCase().trim() },
         });
 
@@ -25,7 +29,7 @@ export class PrismaForbiddenWordRepository implements ForbiddenWordRepositoryPor
     }
 
     async exists(word: string): Promise<boolean> {
-        const count = await this.prisma.forbiddenWord.count({
+        const count = await this.tx.forbiddenWord.count({
             where: {
                 word: word.toLowerCase().trim(),
                 isActive: true
@@ -35,7 +39,7 @@ export class PrismaForbiddenWordRepository implements ForbiddenWordRepositoryPor
     }
 
     private async save(forbiddenWord: ForbiddenWordEntity): Promise<void> {
-        await this.prisma.forbiddenWord.upsert({
+        await this.tx.forbiddenWord.upsert({
             where: { word: forbiddenWord.word },
             update: {
                 description: forbiddenWord.description,

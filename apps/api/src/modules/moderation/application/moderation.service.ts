@@ -1,4 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Propagation, Transactional } from '@nestjs-cls/transactional';
 import { ForbiddenWord } from '../domain/model/forbidden-word.entity';
 import { FORBIDDEN_WORD_REPOSITORY } from '../ports/out/moderation-repository.port';
 import type { ForbiddenWordRepositoryPort } from '../ports/out/moderation-repository.port';
@@ -9,7 +10,7 @@ import { ForbiddenWordException, AiModerationRejectedException } from '../domain
 @Injectable()
 export class ModerationService {
     private readonly logger = new Logger(ModerationService.name);
-    private readonly REJECT_CONFIRM_THRESHOLD = 0.5;
+    private readonly REJECT_CONFIRM_THRESHOLD = 0.8;
 
     constructor(
         @Inject(FORBIDDEN_WORD_REPOSITORY)
@@ -54,8 +55,10 @@ export class ModerationService {
 
     /**
      * AI 검토 결과를 기반으로 새로운 금지어를 DB에 자동으로 등록합니다.
+     * 상위 트랜잭션이 롤백되더라도 학습 내용은 보존되어야 하므로 REQUIRES_NEW 전파 속성을 사용합니다.
      */
-    private async learnFromAi(originalContent: string, flaggedWords: string[], reason: string): Promise<void> {
+    @Transactional(Propagation.RequiresNew)
+    public async learnFromAi(originalContent: string, flaggedWords: string[], reason: string): Promise<void> {
         try {
             // 중복 단어 제거를 위해 Set 사용
             const wordsToBlock = new Set<string>();
@@ -70,7 +73,7 @@ export class ModerationService {
             );
 
             await this.forbiddenWordRepository.saveAll(forbiddenWords);
-            this.logger.log(`[Auto-Learn] Successfully added ${forbiddenWords.length} new forbidden words.`);
+            this.logger.log(`[Auto-Learn] Successfully added ${forbiddenWords.length} new forbidden words: [${Array.from(wordsToBlock).join(', ')}]`);
         } catch (error: any) {
             this.logger.error(`[Auto-Learn] Failed to save AI-detected words: ${error.message}`);
         }

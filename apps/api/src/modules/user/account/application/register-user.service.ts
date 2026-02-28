@@ -67,35 +67,44 @@ export class RegisterUserService {
         // 1. 전역 정책 조회
         const config = await this.getUserConfigService.execute();
 
-        // 2. 가입 정책 검증
+        // 2. 가입 정책 검증 (비용이 적은 체크 우선)
+        // 2-1. IP별 일일 가입 제한 체크 (쓰로틀링)
+        const throttleKey = `registration:daily:${requestInfo.ip}`;
+        if (config.maxDailySignupPerIp > 0) {
+            const throttleResult = await this.throttleService.checkLimit(throttleKey, {
+                limit: config.maxDailySignupPerIp,
+                ttl: 86400,
+            });
+            if (!throttleResult.allowed) {
+                throw new ApiException(MessageCode.SIGNUP_DAILY_LIMIT_EXCEEDED, HttpStatus.TOO_MANY_REQUESTS, 'Daily signup limit exceeded for this IP.');
+            }
+        }
+
+        // 2-2. 서비스 가입 허용 여부
         if (!config.allowSignup) {
             throw new ApiException(MessageCode.SIGNUP_DISABLED, HttpStatus.FORBIDDEN);
         }
 
-        // 2-1. 닉네임 정책 검증
-        if (providedNickname) {
-            await this.validateField(AvailabilityField.NICKNAME, providedNickname);
-        } else if (config.requireNickname) {
-            // 정책적으로 닉네임이 필수인데 입력하지 않은 경우
-            throw new ApiException(MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST, 'Nickname is required.');
-        }
-
-        // 3. 레퍼럴 코드 사전 검증
+        // 3. 레퍼럴 코드 사전 검증 (DB 조회)
         if (referralCode) {
             const code = await this.findCodeByCodeService.execute({ code: referralCode });
             if (!code) throw new ReferralCodeNotFoundException(referralCode);
             if (!code.isActive) throw new ReferralCodeInactiveException(code.code);
             if (code.isExpired()) throw new ReferralCodeExpiredException(code.code);
         } else if (config.requireReferralCode) {
-            // 정책적으로 레퍼럴 코드가 필수인데 입력하지 않은 경우
             throw new ApiException(MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST, 'Referral code is required.');
         }
 
-        // 4. 로그인 ID 결정 및 타입별 통합 검증
-        const finalLoginId = providedLoginId;
-        // 모든 로그인 타입은 중복 검사 시 LOGIN_ID 필드로 통합하여 처리합니다.
-        // (내부적으로 LoginIdType에 따른 정규식 검증은 CheckAvailabilityService에서 수행됨)
-        await this.validateField(AvailabilityField.LOGIN_ID, finalLoginId);
+        // 4. 필드 유효성 및 가용성 검증 (Regex + DB 중복 + AI 모더레이션 - 비용이 큼)
+        // 4-1. 로그인 ID 검증
+        await this.validateField(AvailabilityField.LOGIN_ID, providedLoginId);
+
+        // 4-2. 닉네임 정책 및 검증
+        if (providedNickname) {
+            await this.validateField(AvailabilityField.NICKNAME, providedNickname);
+        } else if (config.requireNickname) {
+            throw new ApiException(MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST, 'Nickname is required.');
+        }
 
         // 5. 국가 및 지역화 설정 결정
         const countryConfig = CountryUtil.getCountryConfig({
@@ -109,10 +118,10 @@ export class RegisterUserService {
 
         // 7. 사용자 생성
         const { user } = await this.createUserService.execute({
-            loginId: finalLoginId,
+            loginId: providedLoginId,
             nickname,
-            email: config.loginIdType === LoginIdType.EMAIL ? finalLoginId : null,
-            phoneNumber: config.loginIdType === LoginIdType.PHONE_NUMBER ? finalLoginId : null,
+            email: config.loginIdType === LoginIdType.EMAIL ? providedLoginId : null,
+            phoneNumber: config.loginIdType === LoginIdType.PHONE_NUMBER ? providedLoginId : null,
             passwordHash,
             registrationMethod,
             role: UserRoleType.USER,
@@ -136,8 +145,7 @@ export class RegisterUserService {
 
         // 9. 성공 시 쓰로틀링 카운트 증가
         if (config.maxDailySignupPerIp > 0) {
-            const key = `registration:daily:${requestInfo.ip}`;
-            await this.throttleService.checkAndIncrement(key, {
+            await this.throttleService.checkAndIncrement(throttleKey, {
                 limit: config.maxDailySignupPerIp,
                 ttl: 86400,
             });
@@ -156,7 +164,7 @@ export class RegisterUserService {
      * 필드 유효성 및 가용성 통합 검증 (Regex + Moderation + Duplication)
      */
     private async validateField(field: AvailabilityField, value: string) {
-        // 1. 기본 형식 및 중복 검사 (Moderation 단순 체크 포함)
+        // 1. 기본 형식 및 중복 검사 (DB 기반 금지어 단순 체크 포함)
         const result = await this.checkAvailabilityService.execute({
             field,
             value,
@@ -166,7 +174,11 @@ export class RegisterUserService {
             throw new ApiException(MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST, result.message);
         }
 
-        // 2. 실제 가입 시점의 상세 모더레이션 (AI 검증 포함)
-        await this.moderationService.verify(value);
+        // 2. 상세 모더레이션 (AI 검증)
+        // [Policy] 로그인 ID는 비공개이며 형식이 엄격하므로 AI 검토를 제외하여 비용/오탐을 줄입니다.
+        // 닉네임만 AI 검토를 수행합니다.
+        if (field === AvailabilityField.NICKNAME) {
+            await this.moderationService.verify(value);
+        }
     }
 }
