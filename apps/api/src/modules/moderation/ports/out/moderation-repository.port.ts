@@ -9,4 +9,5 @@ export interface ForbiddenWordRepositoryPort {
     findAllActive(): Promise<ForbiddenWord[]>;
     findByWord(word: string): Promise<ForbiddenWord | null>;
     exists(word: string): Promise<boolean>;
+    saveAll(forbiddenWords: ForbiddenWord[]): Promise<void>;
 }

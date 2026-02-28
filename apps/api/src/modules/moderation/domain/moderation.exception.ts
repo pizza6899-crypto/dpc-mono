@@ -28,7 +28,10 @@ export class ForbiddenWordException extends ModerationException {
  * AI 검토 결과 부적절 판정 시 발생하는 예외
  */
 export class AiModerationRejectedException extends ModerationException {
-    constructor(reason?: string) {
+    constructor(
+        reason?: string,
+        public readonly flaggedWords: string[] = [],
+    ) {
         super(reason || 'The content was rejected by AI moderation policy.', MessageCode.VALIDATION_ERROR);
     }
 }

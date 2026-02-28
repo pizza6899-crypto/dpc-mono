@@ -33,4 +33,27 @@ export class PrismaForbiddenWordRepository implements ForbiddenWordRepositoryPor
         });
         return count > 0;
     }
+
+    private async save(forbiddenWord: ForbiddenWordEntity): Promise<void> {
+        await this.prisma.forbiddenWord.upsert({
+            where: { word: forbiddenWord.word },
+            update: {
+                description: forbiddenWord.description,
+                isActive: forbiddenWord.isActive,
+                updatedAt: new Date(),
+            },
+            create: {
+                word: forbiddenWord.word,
+                description: forbiddenWord.description,
+                isActive: forbiddenWord.isActive,
+            },
+        });
+    }
+
+    async saveAll(forbiddenWords: ForbiddenWordEntity[]): Promise<void> {
+        // 병렬 upsert 처리 (단일 트랜잭션 대신 개별 upsert가 중복 방어에 안전함)
+        await Promise.all(
+            forbiddenWords.map(word => this.save(word))
+        );
+    }
 }
