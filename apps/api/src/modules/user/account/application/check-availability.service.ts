@@ -3,13 +3,13 @@ import { USER_REPOSITORY } from 'src/modules/user/profile/ports/out/user.reposit
 import type { UserRepositoryPort } from 'src/modules/user/profile/ports/out/user.repository.port';
 import { AvailabilityField } from '../controllers/user/dto/request/availability.request.dto';
 import { GetUserConfigService } from '../../config/application/get-user-config.service';
-import { ModerationService, ModerationOptions } from 'src/modules/moderation/application/moderation.service';
+import { ModerationService } from 'src/modules/moderation/application/moderation.service';
+import { ForbiddenWordException } from 'src/modules/moderation/domain';
 import { LoginIdType } from '@prisma/client';
 
 export interface CheckAvailabilityParams {
     field: AvailabilityField;
     value: string;
-    options?: ModerationOptions;
 }
 
 export interface CheckAvailabilityResult {
@@ -60,15 +60,18 @@ export class CheckAvailabilityService {
             };
         }
 
-        // 2.5. 콘텐츠 검토 (예약어 / 사칭)
-        // AI 검토 여부를 옵션에 따라 결정합니다. (기본값: false, 실시간 체크용)
+        // 2.5. 콘텐츠 검토 (예약어 / 사칭 / 금지어)
         if (field === AvailabilityField.NICKNAME || (field === AvailabilityField.LOGIN_ID && config.loginIdType === LoginIdType.USERNAME)) {
-            const moderationResult = await this.moderationService.inspect(value, params.options || { includeAi: false });
-            if (!moderationResult.isAllowed) {
-                return {
-                    available: false,
-                    message: moderationResult.message,
-                };
+            try {
+                await this.moderationService.verify(value, { skipAi: true });
+            } catch (error) {
+                if (error instanceof ForbiddenWordException) {
+                    return {
+                        available: false,
+                        message: error.message,
+                    };
+                }
+                throw error;
             }
         }
 

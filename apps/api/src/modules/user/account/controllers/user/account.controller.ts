@@ -31,6 +31,8 @@ import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
 import { GetUserConfigService } from 'src/modules/user/config/application/get-user-config.service';
 import { UserPolicyResponseDto } from './dto/response/user-policy.response.dto';
+import { LogType } from 'src/modules/audit-log/domain';
+import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 
 @ApiTags('User Account')
 @Controller('users')
@@ -75,6 +77,15 @@ export class UserAccountController {
         summary: 'Check Availability / 중복 확인',
         description: 'Check if the login ID or nickname is already in use. / 아이디 또는 닉네임의 중복 여부를 확인합니다.',
     })
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        action: 'CHECK_AVAILABILITY',
+        category: 'AUTH',
+        extractMetadata: (req) => ({
+            field: req.query.field,
+            value: req.query.value,
+        }),
+    })
     @ApiStandardResponse(AvailabilityResponseDto)
     @Throttle({ limit: 30, ttl: 60 })
     async checkAvailability(
@@ -90,6 +101,16 @@ export class UserAccountController {
     @ApiOperation({
         summary: 'Register User / 회원가입',
         description: 'Create an account using ID and password. The required fields and validation rules follow the settings from "GET /users/policy". / 아이디와 비밀번호를 사용하여 계정을 생성합니다. 필수 입력 항목 및 검증 규칙은 "/users/policy" API의 설정을 따릅니다.',
+    })
+    @AuditLog({
+        type: LogType.AUTH,
+        action: 'REGISTER',
+        extractMetadata: (_req, [requestInfo, dto]) => ({
+            method: RegistrationMethod.CREDENTIAL,
+            loginId: dto.loginId,
+            nickname: dto.nickname,
+            referralCode: dto.referralCode,
+        }),
     })
     @ApiStandardResponse(RegisterResponseDto, { status: HttpStatus.CREATED })
     async register(
@@ -118,6 +139,16 @@ export class UserAccountController {
     @ApiOperation({
         summary: 'Register User (SOCIAL) / 소셜 연동 가입',
         description: 'Create an account by linking a social account (Google, Apple, etc.). Validation rules follow the settings from "GET /users/policy". / 소셜 계정(Google, Apple 등)을 연동하여 계정을 생성합니다. 검증 규칙은 "/users/policy" API의 설정을 따릅니다.',
+    })
+    @AuditLog({
+        type: LogType.AUTH,
+        action: 'REGISTER_SOCIAL',
+        extractMetadata: (_req, [requestInfo, dto]) => ({
+            method: RegistrationMethod.SOCIAL,
+            provider: dto.provider,
+            email: dto.email,
+            referralCode: dto.referralCode,
+        }),
     })
     @ApiStandardResponse(RegisterResponseDto, { status: HttpStatus.CREATED })
     async registerSocial(

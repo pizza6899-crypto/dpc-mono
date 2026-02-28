@@ -1,70 +1,49 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { RESERVED_WORDS, ModerationResult } from '../domain/moderation.constants';
-
-export interface ModerationOptions {
-    includeAi?: boolean;
-}
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { FORBIDDEN_WORD_REPOSITORY } from '../ports/out/moderation-repository.port';
+import type { ForbiddenWordRepositoryPort } from '../ports/out/moderation-repository.port';
+import { ForbiddenWordException, AiModerationRejectedException } from '../domain/moderation.exception';
 
 @Injectable()
 export class ModerationService {
     private readonly logger = new Logger(ModerationService.name);
 
+    constructor(
+        @Inject(FORBIDDEN_WORD_REPOSITORY)
+        private readonly forbiddenWordRepository: ForbiddenWordRepositoryPort,
+    ) { }
+
     /**
-     * 통합 콘텐츠 검토 (예약어 + AI 등)
+     * 콘텐츠 검증 (금지어 + AI)
+     *
+     * @param content  검사할 텍스트
+     * @param options  skipAi: true 이면 AI 검토를 건너뜁니다 (가용성 체크 등 빠른 응답이 필요한 경우)
      */
-    async inspect(text: string, options: ModerationOptions = { includeAi: true }): Promise<ModerationResult> {
-        // 1. 예약어 체크 (사칭 방지)
-        const reservedResult = await this.checkReservedWords(text);
-        if (!reservedResult.isAllowed) {
-            return reservedResult;
+    async verify(content: string, options?: { skipAi?: boolean }): Promise<void> {
+        const input = content.toLowerCase().trim();
+
+        // 1. DB 금지어 체크 (정확히 일치하는 단어만)
+        const isForbidden = await this.forbiddenWordRepository.exists(input);
+        if (isForbidden) {
+            throw new ForbiddenWordException(input);
         }
 
-        // 2. AI 검토 (옵션에 따라 수행)
-        if (options.includeAi) {
-            // const aiResult = await this.inspectWithAi(text);
-            // if (!aiResult.isAllowed) return aiResult;
+        // 2. AI 검토 (skipAi가 아닐 때만)
+        if (!options?.skipAi) {
+            const aiResult = await this.checkAiModeration(content);
+            if (!aiResult.isAllowed) {
+                throw new AiModerationRejectedException(aiResult.message);
+            }
         }
-
-        return {
-            isAllowed: true,
-            type: 'ALLOWED',
-            message: 'Content is acceptable.',
-        };
     }
 
     /**
-     * 시스템 예약어 및 사칭 단어 체크
+     * AI 모더레이션 체크 (Placeholder)
      */
-    async checkReservedWords(text: string): Promise<ModerationResult> {
-        const normalizedText = text.toLowerCase().trim();
-
-        // 정확히 일치하거나 포함되어 있는지 확인 (정책에 따라 조정 가능)
-        const isReserved = RESERVED_WORDS.some(word => normalizedText.includes(word));
-
-        if (isReserved) {
-            return {
-                isAllowed: false,
-                type: 'RESERVED_WORD',
-                message: 'This name contains reserved words and cannot be used.',
-            };
-        }
-
+    private async checkAiModeration(content: string): Promise<{ isAllowed: boolean; message: string }> {
+        // [TODO] OpenAI Moderation API 연동 예정
         return {
             isAllowed: true,
-            type: 'ALLOWED',
-            message: 'No reserved words found.',
-        };
-    }
-
-    /**
-     * AI 기반 콘텐츠 분석 (Placeholder)
-     */
-    private async inspectWithAi(text: string): Promise<ModerationResult> {
-        // TODO: OpenAI Moderation API 등 연동
-        return {
-            isAllowed: true,
-            type: 'ALLOWED',
-            message: 'AI passed.',
+            message: 'AI Moderation passed (Mock)',
         };
     }
 }

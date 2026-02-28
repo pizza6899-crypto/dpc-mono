@@ -37,9 +37,8 @@ export interface RegisterUserResult {
     referralCode?: string;
 }
 
-/**
- * 비밀번호 기반 사용자 계정 생성 및 온보딩 서비스 (FIAT, CRYPTO 통합)
- */
+import { ModerationService } from 'src/modules/moderation/application/moderation.service';
+
 @Injectable()
 export class RegisterUserService {
     private readonly logger = new Logger(RegisterUserService.name);
@@ -51,6 +50,7 @@ export class RegisterUserService {
         private readonly getUserConfigService: GetUserConfigService,
         private readonly throttleService: ThrottleService,
         private readonly checkAvailabilityService: CheckAvailabilityService,
+        private readonly moderationService: ModerationService,
     ) { }
 
     @Transactional()
@@ -156,14 +156,17 @@ export class RegisterUserService {
      * 필드 유효성 및 가용성 통합 검증 (Regex + Moderation + Duplication)
      */
     private async validateField(field: AvailabilityField, value: string) {
+        // 1. 기본 형식 및 중복 검사 (Moderation 단순 체크 포함)
         const result = await this.checkAvailabilityService.execute({
             field,
             value,
-            options: { includeAi: true }, // 가입 시에는 엄격하게 AI 검토 포함
         });
 
         if (!result.available) {
             throw new ApiException(MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST, result.message);
         }
+
+        // 2. 실제 가입 시점의 상세 모더레이션 (AI 검증 포함)
+        await this.moderationService.verify(value);
     }
 }

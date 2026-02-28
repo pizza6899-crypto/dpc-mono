@@ -1,0 +1,18 @@
+/// 콘텐츠 검증 및 금지어 관리 (Moderation)
+model ForbiddenWord {
+    id BigInt @id @default(autoincrement())
+
+    /// 금지어 (중복 불가)
+    word String @unique
+
+    /// 차단 사유 또는 관리자 메모
+    description String?
+
+    /// 활성화 여부
+    isActive Boolean @default(true) @map("is_active")
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("forbidden_words")
+}
