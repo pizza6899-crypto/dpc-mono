@@ -293,7 +293,7 @@ export class UserAuthController {
     extractMetadata: (_, args) => {
       const [dto] = args;
       return {
-        email: dto.email,
+        loginId: dto.loginId,
       };
     },
   })
@@ -302,7 +302,7 @@ export class UserAuthController {
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<RequestPasswordResetResponseDto> {
     await this.requestPasswordResetService.execute({
-      email: dto.email,
+      loginId: dto.loginId,
       requestInfo,
     });
 

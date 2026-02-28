@@ -8,7 +8,7 @@ import { nanoid } from 'nanoid';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 
 export interface RequestPasswordResetParams {
-  email: string;
+  loginId: string;
   requestInfo: RequestClientInfo;
 }
 
@@ -32,10 +32,10 @@ export class RequestPasswordResetService {
 
   @Transactional()
   async execute(params: RequestPasswordResetParams): Promise<void> {
-    const { email, requestInfo } = params;
+    const { loginId, requestInfo } = params;
 
     // 1. 사용자 조회
-    const user = await this.userRepository.findByEmail(email);
+    const user = await this.userRepository.findByLoginId(loginId);
 
     // 2. 보안을 위해 사용자가 없어도 성공 응답 반환 (타이밍 공격 방지)
     if (!user) {

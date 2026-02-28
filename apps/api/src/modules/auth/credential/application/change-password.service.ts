@@ -62,7 +62,7 @@ export class ChangePasswordService {
     }
 
     const isValidPassword = await this.verifyService.execute({
-      email: user.email!, // isCredentialUser 체크를 통해 email 존재가 보장됨
+      loginId: user.loginId || user.email!, // isCredentialUser 체크를 통해 식별자 존재가 보장됨
       password: currentPassword,
       isAdmin,
     });
