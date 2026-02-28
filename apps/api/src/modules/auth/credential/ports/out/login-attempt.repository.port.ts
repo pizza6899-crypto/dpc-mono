@@ -10,7 +10,7 @@ export interface LoginAttemptRepositoryPort {
    * 최근 로그인 시도 목록 조회
    */
   listRecent(params: {
-    email?: string;
+    loginId?: string;
     ipAddress?: string;
     limit: number;
   }): Promise<LoginAttempt[]>;

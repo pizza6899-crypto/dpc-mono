@@ -80,7 +80,7 @@ export class UserAuthController {
     extractMetadata: (_, args, result, error) => {
       const [dto] = args;
       return {
-        email: dto.email,
+        loginId: dto.loginId,
         success: !error,
         failureReason: error ? error.message : undefined,
       };
@@ -92,12 +92,13 @@ export class UserAuthController {
     @Req() req: Request,
   ): Promise<UserLoginResponseDto> {
     // 1. 자격 증명 인증 (이메일/비밀번호 검증, 계정 잠금 체크, 실패 시도 기록)
-    const authenticatedUser = await this.authenticateIdentityService.execute({
-      email: dto.email,
-      password: dto.password,
-      clientInfo,
-      isAdmin: false,
-    });
+    const authenticatedUser =
+      await this.authenticateIdentityService.execute({
+        loginId: dto.loginId,
+        password: dto.password,
+        clientInfo,
+        isAdmin: false,
+      });
 
     // 2. 세션에 사용자 저장
     await new Promise<void>((resolve, reject) => {

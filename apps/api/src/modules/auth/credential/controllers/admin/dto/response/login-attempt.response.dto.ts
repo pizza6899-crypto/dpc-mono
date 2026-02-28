@@ -19,8 +19,8 @@ export class LoginAttemptResponseDto {
   @ApiProperty({ description: 'IP 주소', nullable: true })
   ipAddress: string | null;
 
-  @ApiProperty({ description: '이메일', nullable: true })
-  email: string | null;
+  @ApiProperty({ description: '로그인 ID', nullable: true })
+  loginId: string | null;
 
   @ApiProperty({ description: '시도 시간' })
   attemptedAt: Date;

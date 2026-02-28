@@ -6,7 +6,7 @@ import {
 import { LoginAttempt } from '../domain';
 
 export interface FindLoginAttemptsParams {
-  email?: string;
+  loginId?: string;
   ipAddress?: string;
   limit?: number;
 }
@@ -23,21 +23,21 @@ export class FindLoginAttemptsService {
   constructor(
     @Inject(LOGIN_ATTEMPT_REPOSITORY)
     private readonly repository: LoginAttemptRepositoryPort,
-  ) {}
+  ) { }
 
   async execute({
-    email,
+    loginId,
     ipAddress,
     limit,
   }: FindLoginAttemptsParams): Promise<LoginAttempt[]> {
     // 빈 문자열을 undefined로 정규화
-    const normalizedEmail = email?.trim() || undefined;
+    const normalizedLoginId = loginId?.trim() || undefined;
     const normalizedIpAddress = ipAddress?.trim() || undefined;
 
-    // 필터 조건 검증: email 또는 ipAddress 중 하나는 필수 (빈 문자열 제외)
-    if (!normalizedEmail && !normalizedIpAddress) {
+    // 필터 조건 검증: loginId 또는 ipAddress 중 하나는 필수 (빈 문자열 제외)
+    if (!normalizedLoginId && !normalizedIpAddress) {
       throw new BadRequestException(
-        'At least one filter condition (email or ipAddress) is required',
+        'At least one filter condition (loginId or ipAddress) is required',
       );
     }
 
@@ -45,7 +45,7 @@ export class FindLoginAttemptsService {
     const validatedLimit = this.validateLimit(limit);
 
     return await this.repository.listRecent({
-      email: normalizedEmail,
+      loginId: normalizedLoginId,
       ipAddress: normalizedIpAddress,
       limit: validatedLimit,
     });

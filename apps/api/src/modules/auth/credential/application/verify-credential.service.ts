@@ -7,7 +7,7 @@ import { comparePassword } from 'src/utils/password.util';
 import { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 
 export interface VerifyCredentialParams {
-  email: string;
+  loginId: string;
   password: string;
   isAdmin?: boolean;
 }
@@ -33,14 +33,14 @@ export class VerifyCredentialService {
   constructor(
     @Inject(CREDENTIAL_USER_REPOSITORY)
     private readonly userRepository: CredentialUserRepositoryPort,
-  ) {}
+  ) { }
 
   async execute({
-    email,
+    loginId,
     password,
     isAdmin = false,
   }: VerifyCredentialParams): Promise<AuthenticatedUser | null> {
-    const user = await this.userRepository.findByEmail(email);
+    const user = await this.userRepository.findByLoginId(loginId);
 
     // 타이밍 공격 방지: 사용자가 없어도 더미 해시로 비밀번호 검증 수행
     // bcrypt.compare는 이미 상당한 시간이 소요되므로 자연스러운 타이밍 공격 방지 효과

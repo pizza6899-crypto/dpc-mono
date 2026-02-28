@@ -28,7 +28,7 @@ export class LoginService {
     private readonly recordService: RecordLoginAttemptService,
     private readonly createSessionService: CreateSessionService,
     private readonly envService: EnvService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute({
@@ -46,7 +46,7 @@ export class LoginService {
       userAgent: clientInfo.userAgent ?? null,
       deviceFingerprint: clientInfo.fingerprint ?? null,
       isMobile: clientInfo.isMobile ?? null,
-      email: user.email,
+      loginId: user.email,
       isAdmin,
     });
 

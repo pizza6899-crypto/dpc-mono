@@ -18,7 +18,7 @@ export interface RecordLoginAttemptParams {
   userAgent?: string | null;
   deviceFingerprint?: string | null;
   isMobile?: boolean | null;
-  email?: string | null;
+  loginId?: string | null;
   isAdmin?: boolean;
 }
 
@@ -27,7 +27,7 @@ export class RecordLoginAttemptService {
   constructor(
     @Inject(LOGIN_ATTEMPT_REPOSITORY)
     private readonly repository: LoginAttemptRepositoryPort,
-  ) {}
+  ) { }
 
   async execute({
     userId,
@@ -37,7 +37,7 @@ export class RecordLoginAttemptService {
     userAgent,
     deviceFingerprint,
     isMobile,
-    email,
+    loginId,
     isAdmin,
   }: RecordLoginAttemptParams): Promise<LoginAttempt> {
     const uid = generateUid(); // CUID2 생성
@@ -54,7 +54,7 @@ export class RecordLoginAttemptService {
         userAgent,
         deviceFingerprint,
         isMobile,
-        email,
+        loginId,
         isAdmin,
       });
     } else {
@@ -67,7 +67,7 @@ export class RecordLoginAttemptService {
         userAgent,
         deviceFingerprint,
         isMobile,
-        email,
+        loginId,
         isAdmin,
       });
     }

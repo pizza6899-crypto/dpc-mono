@@ -20,7 +20,7 @@ import {
 } from '../domain/model/login-attempt.entity';
 
 export interface AuthenticateIdentityParams {
-    email: string;
+    loginId: string;
     password: string;
     clientInfo: RequestClientInfo;
     isAdmin?: boolean;
@@ -47,14 +47,14 @@ export class AuthenticateIdentityService {
 
     @Transactional()
     async execute({
-        email,
+        loginId,
         password,
         clientInfo,
         isAdmin = false,
     }: AuthenticateIdentityParams): Promise<AuthenticatedUser> {
         // 1. 계정 잠금 체크
         const recentAttempts = await this.findAttemptsService.execute({
-            email,
+            loginId,
             limit: 5,
         });
 
@@ -62,7 +62,7 @@ export class AuthenticateIdentityService {
         if (this.policy.isAccountLocked(recentAttempts)) {
             // 계정 잠김 시도 기록
             await this.recordService.execute({
-                email,
+                loginId,
                 result: LoginAttemptResult.FAILED,
                 failureReason: LoginFailureReason.THROTTLE_LIMIT_EXCEEDED,
                 ipAddress: clientInfo.ip ?? null,
@@ -77,7 +77,7 @@ export class AuthenticateIdentityService {
 
         // 2. 자격 증명 검증 (비밀번호 체크 및 타입 검증)
         const user = await this.verifyService.execute({
-            email,
+            loginId,
             password,
             isAdmin,
         });
@@ -85,11 +85,11 @@ export class AuthenticateIdentityService {
         // 3. 실패 시도 기록
         if (!user) {
             // 사용자 조회를 시도하여 userId를 얻을 수 있는지 확인 (로그 기록용)
-            const foundUser = await this.userRepository.findByEmail(email);
+            const foundUser = await this.userRepository.findByLoginId(loginId);
 
             await this.recordService.execute({
                 userId: foundUser?.id || null,
-                email,
+                loginId,
                 result: LoginAttemptResult.FAILED,
                 failureReason: foundUser
                     ? LoginFailureReason.INVALID_CREDENTIALS

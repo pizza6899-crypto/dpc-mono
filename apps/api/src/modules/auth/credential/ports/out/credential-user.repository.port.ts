@@ -1,6 +1,6 @@
 import type { CredentialUser } from '../../domain';
 
 export interface CredentialUserRepositoryPort {
-  findByEmail(email: string): Promise<CredentialUser | null>;
+  findByLoginId(loginId: string): Promise<CredentialUser | null>;
   findById(id: bigint): Promise<CredentialUser | null>;
 }

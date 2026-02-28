@@ -4,12 +4,12 @@ import { Type } from 'class-transformer';
 
 export class FindLoginAttemptsQueryDto {
   @ApiPropertyOptional({
-    description: '이메일 필터',
+    description: '로그인 ID 필터',
     example: 'user@example.com',
   })
   @IsOptional()
   @IsString()
-  email?: string;
+  loginId?: string;
 
   @ApiPropertyOptional({
     description: 'IP 주소 필터',

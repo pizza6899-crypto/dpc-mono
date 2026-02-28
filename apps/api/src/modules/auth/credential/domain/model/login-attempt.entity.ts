@@ -40,9 +40,9 @@ export class LoginAttempt {
     public readonly deviceFingerprint: string | null,
     public readonly isMobile: boolean | null,
     public readonly attemptedAt: Date,
-    public readonly email: string | null, // 시도한 이메일
+    public readonly loginId: string | null, // 시도한 로그인 ID
     public readonly isAdmin: boolean, // 관리자 로그인 시도 여부
-  ) {}
+  ) { }
 
   /**
    * 성공한 로그인 시도 생성
@@ -54,7 +54,7 @@ export class LoginAttempt {
     userAgent?: string | null;
     deviceFingerprint?: string | null;
     isMobile?: boolean | null;
-    email?: string | null;
+    loginId?: string | null;
     isAdmin?: boolean;
     attemptedAt?: Date;
   }): LoginAttempt {
@@ -69,7 +69,7 @@ export class LoginAttempt {
       params.deviceFingerprint ?? null,
       params.isMobile ?? null,
       params.attemptedAt ?? new Date(),
-      params.email ?? null,
+      params.loginId ?? null,
       params.isAdmin ?? false,
     );
   }
@@ -86,7 +86,7 @@ export class LoginAttempt {
     userAgent?: string | null;
     deviceFingerprint?: string | null;
     isMobile?: boolean | null;
-    email?: string | null;
+    loginId?: string | null;
     isAdmin?: boolean;
     attemptedAt?: Date;
   }): LoginAttempt {
@@ -101,7 +101,7 @@ export class LoginAttempt {
       params.deviceFingerprint ?? null,
       params.isMobile ?? null,
       params.attemptedAt ?? new Date(),
-      params.email ?? null,
+      params.loginId ?? null,
       params.isAdmin ?? false,
     );
   }
@@ -121,7 +121,7 @@ export class LoginAttempt {
     deviceFingerprint: string | null;
     isMobile: boolean | null;
     attemptedAt: Date;
-    email: string | null;
+    loginId: string | null;
     isAdmin: boolean;
   }): LoginAttempt {
     // result enum 값 검증
@@ -171,7 +171,7 @@ export class LoginAttempt {
       data.deviceFingerprint,
       data.isMobile,
       data.attemptedAt,
-      data.email,
+      data.loginId,
       data.isAdmin,
     );
   }
@@ -204,7 +204,7 @@ export class LoginAttempt {
       deviceFingerprint: this.deviceFingerprint,
       isMobile: this.isMobile,
       attemptedAt: this.attemptedAt,
-      email: this.email,
+      loginId: this.loginId,
       isAdmin: this.isAdmin,
     };
   }

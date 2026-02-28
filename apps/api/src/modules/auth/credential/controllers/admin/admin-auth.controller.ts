@@ -86,19 +86,19 @@ export class AdminAuthController {
         // 에러 타입에 따라 failureReason 결정
         if (error.message?.includes('THROTTLE')) {
           return {
-            email: params.email,
+            loginId: params.loginId,
             failureReason: 'THROTTLE_LIMIT_EXCEEDED',
           };
         }
         return {
-          email: params.email,
+          loginId: params.loginId,
           failureReason: 'INVALID_CREDENTIALS',
         };
       }
 
       // 성공 시
       return {
-        email: params.email,
+        loginId: params.loginId,
       };
     },
   })
@@ -110,7 +110,7 @@ export class AdminAuthController {
     // 1. 관리자 자격 증명 인증 (이메일/비밀번호 검증, 계정 잠금 체크, 실패 시도 기록)
     const authenticatedUser =
       await this.authenticateIdentityService.execute({
-        email: dto.email,
+        loginId: dto.loginId,
         password: dto.password,
         clientInfo,
         isAdmin: true,
@@ -303,7 +303,7 @@ export class AdminAuthController {
     @Query() query: FindLoginAttemptsQueryDto,
   ): Promise<LoginAttemptResponseDto[]> {
     const attempts = await this.findAttemptsService.execute({
-      email: query.email,
+      loginId: query.loginId,
       ipAddress: query.ipAddress,
       limit: query.limit,
     });
@@ -315,7 +315,7 @@ export class AdminAuthController {
       result: attempt.result,
       failureReason: attempt.failureReason,
       ipAddress: attempt.ipAddress,
-      email: attempt.email,
+      loginId: attempt.loginId,
       attemptedAt: attempt.attemptedAt,
       isAdmin: attempt.isAdmin,
     }));

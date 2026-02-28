@@ -18,7 +18,7 @@ export class LoginAttemptMapper {
       deviceFingerprint: prismaModel.deviceFingerprint,
       isMobile: prismaModel.isMobile,
       attemptedAt: prismaModel.attemptedAt,
-      email: prismaModel.email,
+      loginId: prismaModel.email,
       isAdmin: prismaModel.isAdmin,
     });
   }
@@ -37,7 +37,7 @@ export class LoginAttemptMapper {
       deviceFingerprint: domain.deviceFingerprint,
       isMobile: domain.isMobile,
       attemptedAt: domain.attemptedAt,
-      email: domain.email,
+      email: domain.loginId,
       isAdmin: domain.isAdmin,
     };
   }
