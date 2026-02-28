@@ -8,7 +8,7 @@ import { UserNotFoundException } from 'src/modules/user/profile/domain/user.exce
 import {
   LoginFailedException,
   InsufficientPermissionException,
-} from '../domain/exception';
+} from '../../credential/domain/exception';
 import { nanoid } from 'nanoid';
 import { UserRoleType } from '@prisma/client';
 import { User } from 'src/modules/user/profile/domain';

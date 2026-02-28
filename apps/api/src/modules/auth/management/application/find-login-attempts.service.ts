@@ -2,8 +2,8 @@ import { Inject, Injectable, BadRequestException } from '@nestjs/common';
 import {
   LOGIN_ATTEMPT_REPOSITORY,
   type LoginAttemptRepositoryPort,
-} from '../ports/out';
-import { LoginAttempt } from '../domain';
+} from '../../credential/ports/out';
+import { LoginAttempt } from '../../credential/domain';
 
 export interface FindLoginAttemptsParams {
   loginId?: string;

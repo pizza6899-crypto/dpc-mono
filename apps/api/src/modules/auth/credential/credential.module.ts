@@ -5,7 +5,6 @@ import { AuthenticateIdentityService } from './application/authenticate-identity
 import { LoginService } from './application/login.service';
 import { LogoutService } from './application/logout.service';
 import { RecordLoginAttemptService } from './application/record-login-attempt.service';
-import { FindLoginAttemptsService } from './application/find-login-attempts.service';
 import { VerifyCredentialService } from './application/verify-credential.service';
 import { LoginAttemptRepository } from './infrastructure/login-attempt.repository';
 import { CredentialUserRepository } from './infrastructure/credential-user.repository';
@@ -15,7 +14,6 @@ import { CredentialPolicy } from './domain/policy';
 import { AffiliateReferralModule } from '../../affiliate/referral/referral.module';
 import { UserProfileModule } from '../../user/profile/user-profile.module';
 import { ChangePasswordService } from './application/change-password.service';
-import { ResetUserPasswordAdminService } from './application/reset-user-password-admin.service';
 import { RequestPasswordResetService } from './application/request-password-reset.service';
 import { ResetPasswordService } from './application/reset-password.service';
 import { CheckUserStatusService } from './application/check-user-status.service';
@@ -45,10 +43,8 @@ import { SessionSerializer } from 'src/common/auth/strategies/session.serializer
     LoginService,
     LogoutService,
     RecordLoginAttemptService,
-    FindLoginAttemptsService,
     VerifyCredentialService,
     ChangePasswordService,
-    ResetUserPasswordAdminService,
     RequestPasswordResetService,
     ResetPasswordService,
     CheckUserStatusService,
@@ -79,6 +75,8 @@ import { SessionSerializer } from 'src/common/auth/strategies/session.serializer
     LoginService,
     LogoutService,
     VerifyCredentialService,
+    LOGIN_ATTEMPT_REPOSITORY,
+    CREDENTIAL_USER_REPOSITORY,
   ],
 })
 export class CredentialModule { }
