@@ -20,6 +20,7 @@ import {
   openExchangeRatesConfig,
   sqidsConfig,
   storageConfig,
+  cloudflareAiConfig,
 } from './env.config';
 
 @Module({
@@ -45,10 +46,11 @@ import {
         walletConfig,
         sqidsConfig,
         storageConfig,
+        cloudflareAiConfig,
       ],
     }),
   ],
   providers: [EnvService],
   exports: [EnvService, ConfigModule],
 })
-export class EnvModule {}
+export class EnvModule { }

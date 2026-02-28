@@ -1,6 +1,8 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { FORBIDDEN_WORD_REPOSITORY } from '../ports/out/moderation-repository.port';
 import type { ForbiddenWordRepositoryPort } from '../ports/out/moderation-repository.port';
+import { AI_MODERATION_PORT } from '../ports/out/ai-moderation.port';
+import type { AiModerationPort } from '../ports/out/ai-moderation.port';
 import { ForbiddenWordException, AiModerationRejectedException } from '../domain/moderation.exception';
 
 @Injectable()
@@ -10,6 +12,8 @@ export class ModerationService {
     constructor(
         @Inject(FORBIDDEN_WORD_REPOSITORY)
         private readonly forbiddenWordRepository: ForbiddenWordRepositoryPort,
+        @Inject(AI_MODERATION_PORT)
+        private readonly aiModerationPort: AiModerationPort,
     ) { }
 
     /**
@@ -29,21 +33,10 @@ export class ModerationService {
 
         // 2. AI 검토 (skipAi가 아닐 때만)
         if (!options?.skipAi) {
-            const aiResult = await this.checkAiModeration(content);
-            if (!aiResult.isAllowed) {
-                throw new AiModerationRejectedException(aiResult.message);
+            const result = await this.aiModerationPort.check(content);
+            if (!result.isAllowed) {
+                throw new AiModerationRejectedException(result.message);
             }
         }
-    }
-
-    /**
-     * AI 모더레이션 체크 (Placeholder)
-     */
-    private async checkAiModeration(content: string): Promise<{ isAllowed: boolean; message: string }> {
-        // [TODO] OpenAI Moderation API 연동 예정
-        return {
-            isAllowed: true,
-            message: 'AI Moderation passed (Mock)',
-        };
     }
 }

@@ -150,6 +150,13 @@ export interface StorageConfig {
   forcePathStyle?: boolean;
 }
 
+export interface CloudflareAiConfig {
+  enabled: boolean;
+  accountId: string;
+  apiToken: string;
+  model: string;
+}
+
 export interface EnvironmentConfig {
   app: AppConfig;
   jwt: JwtConfig;
@@ -169,4 +176,5 @@ export interface EnvironmentConfig {
   wallet: WalletConfig;
   sqids: SqidsConfig;
   storage: StorageConfig;
+  cloudflareAi: CloudflareAiConfig;
 }
