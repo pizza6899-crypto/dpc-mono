@@ -19,6 +19,15 @@ export class PrismaForbiddenWordRepository implements ForbiddenWordRepositoryPor
         return records.map(record => ForbiddenWordEntity.fromPersistence(record));
     }
 
+    async findById(id: bigint): Promise<ForbiddenWordEntity | null> {
+        const record = await this.tx.forbiddenWord.findUnique({
+            where: { id },
+        });
+
+        if (!record) return null;
+        return ForbiddenWordEntity.fromPersistence(record);
+    }
+
     async findByWord(word: string): Promise<ForbiddenWordEntity | null> {
         const record = await this.tx.forbiddenWord.findUnique({
             where: { word: word.toLowerCase().trim() },
@@ -59,5 +68,60 @@ export class PrismaForbiddenWordRepository implements ForbiddenWordRepositoryPor
         await Promise.all(
             forbiddenWords.map(word => this.save(word))
         );
+    }
+
+    async findMany(params: {
+        skip: number;
+        take: number;
+        keyword?: string;
+        isActive?: boolean;
+    }): Promise<ForbiddenWordEntity[]> {
+        const records = await this.tx.forbiddenWord.findMany({
+            where: {
+                isActive: params.isActive,
+                word: params.keyword ? { contains: params.keyword } : undefined,
+            },
+            skip: params.skip,
+            take: params.take,
+            orderBy: { createdAt: 'desc' },
+        });
+
+        return records.map(record => ForbiddenWordEntity.fromPersistence(record));
+    }
+
+    async count(params: { keyword?: string; isActive?: boolean }): Promise<number> {
+        return await this.tx.forbiddenWord.count({
+            where: {
+                isActive: params.isActive,
+                word: params.keyword ? { contains: params.keyword } : undefined,
+            },
+        });
+    }
+
+    async update(id: bigint, data: { description?: string; isActive?: boolean }): Promise<void> {
+        await this.tx.forbiddenWord.update({
+            where: { id },
+            data: {
+                description: data.description,
+                isActive: data.isActive,
+                updatedAt: new Date(),
+            },
+        });
+    }
+
+    async delete(id: bigint): Promise<void> {
+        await this.tx.forbiddenWord.delete({
+            where: { id },
+        });
+    }
+
+    async create(forbiddenWord: ForbiddenWordEntity): Promise<void> {
+        await this.tx.forbiddenWord.create({
+            data: {
+                word: forbiddenWord.word,
+                description: forbiddenWord.description,
+                isActive: forbiddenWord.isActive,
+            },
+        });
     }
 }
