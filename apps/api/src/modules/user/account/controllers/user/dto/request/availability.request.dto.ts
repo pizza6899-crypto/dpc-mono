@@ -1,18 +1,18 @@
 import { IsString, IsNotEmpty, IsEnum } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-
-export enum AvailabilityField {
-    NICKNAME = 'nickname',
-    LOGIN_ID = 'loginId',
-}
+import { AvailabilityField } from 'src/modules/user/account/application/check-availability.service';
 
 export class AvailabilityRequestDto {
     @ApiProperty({
         description: 'Field to check / 중복 검사할 필드',
-        enum: AvailabilityField,
+        enum: [AvailabilityField.NICKNAME, AvailabilityField.EMAIL],
+        example: AvailabilityField.NICKNAME,
     })
-    @IsEnum(AvailabilityField)
+    @IsEnum({
+        [AvailabilityField.NICKNAME]: AvailabilityField.NICKNAME,
+        [AvailabilityField.EMAIL]: AvailabilityField.EMAIL
+    })
     field: AvailabilityField;
 
     @ApiProperty({

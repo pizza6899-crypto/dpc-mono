@@ -1,11 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { USER_REPOSITORY } from 'src/modules/user/profile/ports/out/user.repository.token';
 import type { UserRepositoryPort } from 'src/modules/user/profile/ports/out/user.repository.port';
-import { AvailabilityField } from '../controllers/user/dto/request/availability.request.dto';
 import { GetUserConfigService } from '../../config/application/get-user-config.service';
 import { ModerationService } from 'src/modules/moderation/application/moderation.service';
 import { ForbiddenWordException } from 'src/modules/moderation/domain';
 import { LoginIdType } from '@prisma/client';
+import { isDisposableEmailDomain } from 'disposable-email-domains-js';
+
+export enum AvailabilityField {
+    NICKNAME = 'nickname',
+    LOGIN_ID = 'loginId',
+    EMAIL = 'email',
+}
 
 export interface CheckAvailabilityParams {
     field: AvailabilityField;
@@ -51,6 +57,10 @@ export class CheckAvailabilityService {
                 else if (config.loginIdType === LoginIdType.USERNAME) regex = config.loginIdUsernameRegex;
                 formatErrorMessage = 'Login ID format is invalid.';
                 break;
+            case AvailabilityField.EMAIL:
+                regex = config.loginIdEmailRegex; // 기본적으로 이메일 정규식 사용
+                formatErrorMessage = 'Email format is invalid.';
+                break;
         }
 
         if (regex && !new RegExp(regex).test(value)) {
@@ -58,6 +68,16 @@ export class CheckAvailabilityService {
                 available: false,
                 message: formatErrorMessage,
             };
+        }
+
+        // 2.2. 일회용 이메일 검사 (이메일 필드이거나 로그인ID가 이메일인 경우)
+        if (field === AvailabilityField.EMAIL || (field === AvailabilityField.LOGIN_ID && config.loginIdType === LoginIdType.EMAIL)) {
+            if (this.isDisposableEmail(value)) {
+                return {
+                    available: false,
+                    message: 'Disposable email addresses are not allowed.',
+                };
+            }
         }
 
         // 2.5. 콘텐츠 검토 (예약어 / 사칭 / 금지어)
@@ -85,6 +105,9 @@ export class CheckAvailabilityService {
             case AvailabilityField.LOGIN_ID:
                 isDuplicate = !!(await this.userRepository.findByLoginId(value));
                 break;
+            case AvailabilityField.EMAIL:
+                isDuplicate = !!(await this.userRepository.findByEmail(value));
+                break;
         }
 
         return {
@@ -93,5 +116,20 @@ export class CheckAvailabilityService {
                 ? `This ${field} is unavailable.`
                 : `This ${field} is available.`,
         };
+    }
+
+    /**
+     * 일회용 이메일 여부 확인
+     */
+    private isDisposableEmail(email: string): boolean {
+        try {
+            const domain = email.split('@')[1];
+            if (!domain) return false;
+
+            return isDisposableEmailDomain(domain);
+        } catch (error) {
+            // 에러 발생 시 안전하게 가입을 허용하거나 로그를 남깁니다.
+            return false;
+        }
     }
 }
