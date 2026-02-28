@@ -1,30 +1,30 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class LoginAttemptResponseDto {
-  @ApiProperty({ description: '내부 ID', type: 'string' })
+  @ApiProperty({ description: 'Internal ID / 내부 ID', type: 'string' })
   id: string;
 
-  @ApiProperty({ description: '비즈니스 UID' })
+  @ApiProperty({ description: 'Business UID / 비즈니스 UID' })
   uid: string;
 
-  @ApiProperty({ description: '사용자 ID', nullable: true })
+  @ApiProperty({ description: 'User ID / 사용자 ID', nullable: true })
   userId: bigint | null;
 
-  @ApiProperty({ description: '결과 (SUCCESS/FAILED)' })
+  @ApiProperty({ description: 'Result (SUCCESS/FAILED) / 결과' })
   result: string;
 
-  @ApiProperty({ description: '실패 이유', nullable: true })
+  @ApiProperty({ description: 'Failure Reason / 실패 이유', nullable: true })
   failureReason: string | null;
 
-  @ApiProperty({ description: 'IP 주소', nullable: true })
+  @ApiProperty({ description: 'IP Address / IP 주소', nullable: true })
   ipAddress: string | null;
 
-  @ApiProperty({ description: '로그인 ID', nullable: true })
+  @ApiProperty({ description: 'Login ID / 로그인 ID', nullable: true })
   loginId: string | null;
 
-  @ApiProperty({ description: '시도 시간' })
+  @ApiProperty({ description: 'Attempted At / 시도 시간' })
   attemptedAt: Date;
 
-  @ApiProperty({ description: '관리자 시도 여부' })
+  @ApiProperty({ description: 'Is Admin Attempt / 관리자 시도 여부' })
   isAdmin: boolean;
 }

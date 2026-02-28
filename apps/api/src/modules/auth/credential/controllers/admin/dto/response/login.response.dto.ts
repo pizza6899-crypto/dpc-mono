@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class AdminLoginUserResponseDto {
-  @ApiProperty({ description: '관리자 ID' })
+  @ApiProperty({ description: 'Admin ID / 관리자 ID' })
   id: string;
 
-  @ApiProperty({ description: '관리자 이메일' })
+  @ApiProperty({ description: 'Admin Email / 관리자 이메일' })
   email: string;
 }
 

@@ -4,7 +4,7 @@ import { Type } from 'class-transformer';
 
 export class FindLoginAttemptsQueryDto {
   @ApiPropertyOptional({
-    description: '로그인 ID 필터',
+    description: 'Login ID Filter / 로그인 ID 필터',
     example: 'user@example.com',
   })
   @IsOptional()
@@ -12,7 +12,7 @@ export class FindLoginAttemptsQueryDto {
   loginId?: string;
 
   @ApiPropertyOptional({
-    description: 'IP 주소 필터',
+    description: 'IP Address Filter / IP 주소 필터',
     example: '192.168.1.1',
   })
   @IsOptional()
@@ -20,7 +20,7 @@ export class FindLoginAttemptsQueryDto {
   ipAddress?: string;
 
   @ApiPropertyOptional({
-    description: '조회할 최대 개수 (기본값: 50, 최대: 100)',
+    description: 'Max Count to Retrieve / 조회할 최대 개수 (기본값: 50, 최대: 100)',
     example: 50,
     minimum: 1,
     maximum: 100,

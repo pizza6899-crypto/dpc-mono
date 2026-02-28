@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { AdminLoginUserResponseDto } from './login.response.dto';
 
 export class AdminAuthStatusResponseDto {
-  @ApiProperty({ description: '인증 여부' })
+  @ApiProperty({ description: 'Is Authenticated / 인증 여부' })
   isAuthenticated: boolean;
 
   @ApiProperty({
