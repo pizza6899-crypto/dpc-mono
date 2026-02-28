@@ -10,8 +10,8 @@ export const CHECK_ABILITY_KEY = 'checkAbility';
  * 권한 검증 인터페이스
  */
 export interface CheckAbilityMetadata {
-  action: Action;
-  subject: Subjects;
+    action: Action;
+    subject: Subjects;
 }
 
 /**
@@ -28,4 +28,4 @@ export interface CheckAbilityMetadata {
  * ```
  */
 export const CheckAbility = (action: Action, subject: Subjects) =>
-  SetMetadata(CHECK_ABILITY_KEY, { action, subject });
+    SetMetadata(CHECK_ABILITY_KEY, { action, subject });

@@ -43,6 +43,7 @@ import { BullMqModule } from './infrastructure/bullmq/bullmq.module';
 import { RewardModule } from './modules/reward/reward.module';
 import { UserModule } from './modules/user/user.module';
 import { ModerationModule } from './modules/moderation/moderation.module';
+import { AccessControlModule } from './modules/access-control/access-control.module';
 
 @Module({
   imports: [
@@ -77,6 +78,7 @@ import { ModerationModule } from './modules/moderation/moderation.module';
     FileModule,
     TierModule,
     RewardModule,
+    AccessControlModule,
   ],
   providers: [
     Reflector,
