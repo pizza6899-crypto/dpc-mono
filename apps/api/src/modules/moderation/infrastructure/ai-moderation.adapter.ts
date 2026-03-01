@@ -58,7 +58,7 @@ export class AiModerationAdapter implements AiModerationPort {
                             content,
                         },
                     ],
-                    max_tokens: 500,
+                    max_tokens: 200,
                     temperature: 0, // 모더레이션은 일관된 판단이 중요하므로 0 고정
                     stream: false,
                 }, {

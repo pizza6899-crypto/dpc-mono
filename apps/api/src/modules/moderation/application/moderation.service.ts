@@ -12,7 +12,7 @@ import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 @Injectable()
 export class ModerationService {
     private readonly logger = new Logger(ModerationService.name);
-    private readonly REJECT_CONFIRM_THRESHOLD = 0.8;
+    private readonly REJECT_CONFIRM_THRESHOLD = 0.85;
 
     constructor(
         @Inject(FORBIDDEN_WORD_REPOSITORY)
