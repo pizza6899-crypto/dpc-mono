@@ -218,4 +218,41 @@ export class User {
       this.dcsId,
     );
   }
+
+  /**
+   * 사용자 본인의 정보 업데이트 (불변성 유지)
+   */
+  updateProfile(updates: {
+    nickname?: string;
+    language?: Language;
+    timezone?: string;
+    phoneNumber?: string;
+  }): User {
+    let newLocation = this.location;
+    if (updates.timezone !== undefined) {
+      newLocation = this.location.update({ timezone: updates.timezone });
+    }
+
+    return new User(
+      this.id,
+      updates.nickname || this.nickname,
+      this.authInfo,
+      newLocation,
+      this.currency,
+      this.trust,
+      this.status,
+      this.role,
+      updates.language || this.language,
+      this.birthDate,
+      updates.phoneNumber || this.phoneNumber,
+      this.createdAt,
+      new Date(), // updatedAt
+      this.closedAt,
+      this.closedBy,
+      this.closeReason,
+      this.whitecliffId,
+      this.whitecliffUsername,
+      this.dcsId,
+    );
+  }
 }
