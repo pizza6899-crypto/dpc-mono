@@ -9,6 +9,8 @@ import type {
 } from '../ports/out';
 import { UserSession, SessionStatus, SessionType } from '../domain';
 import { UserSessionMapper } from './user-session.mapper';
+import { RedisService } from 'src/infrastructure/redis/redis.service';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 
 @Injectable()
 export class UserSessionRepository implements UserSessionRepositoryPort {
@@ -16,7 +18,8 @@ export class UserSessionRepository implements UserSessionRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: UserSessionMapper,
-  ) {}
+    private readonly redisService: RedisService,
+  ) { }
 
   async create(session: UserSession): Promise<UserSession> {
     const data = this.mapper.toPrisma(session);
@@ -80,11 +83,11 @@ export class UserSessionRepository implements UserSessionRepositoryPort {
       ...(activeOnly && { status: SessionStatus.ACTIVE }),
       ...(startDate &&
         endDate && {
-          createdAt: {
-            gte: startDate,
-            lte: endDate,
-          },
-        }),
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      }),
     };
 
     // 정렬 조건 구성
@@ -157,5 +160,51 @@ export class UserSessionRepository implements UserSessionRepositoryPort {
       },
     });
     return result.count;
+  }
+
+  async updateRedisSessionData(
+    sessionId: string,
+    isAdmin: boolean,
+    updateData: Partial<AuthenticatedUser>,
+  ): Promise<void> {
+    const prefix = isAdmin ? 'admin-sess:' : 'sess:';
+    const key = `${prefix}${sessionId}`;
+
+    const rawData = await this.redisService.getClient().get(key);
+    if (!rawData) return;
+
+    try {
+      const sessionData = JSON.parse(rawData);
+
+      if (sessionData.passport?.user) {
+        // 기존 세션 유저 데이터와 병합
+        sessionData.passport.user = {
+          ...sessionData.passport.user,
+          ...updateData,
+        };
+
+        // BigInt 필드 안전 처리를 포함하여 직렬화
+        const serializedData = JSON.stringify(sessionData, (_, v) =>
+          typeof v === 'bigint' ? v.toString() : v,
+        );
+
+        // 세션 데이터 저장 (기존 TTL 유지)
+        const ttl = await this.redisService.getClient().ttl(key);
+        if (ttl === -2) return; // 그 사이 키가 삭제되었다면 중단
+
+        if (ttl > 0) {
+          await this.redisService
+            .getClient()
+            .set(key, serializedData, 'EX', ttl);
+        } else if (ttl === -1) {
+          // TTL이 없는 경우 (무제한 세션)
+          await this.redisService.getClient().set(key, serializedData);
+        }
+        // -2(없음)인 경우는 위에서 처리됨
+      }
+    } catch (error) {
+      // JSON 파싱 에러 등 무시 또는 로깅
+      console.error(`Failed to update Redis session: ${sessionId}`, error);
+    }
   }
 }

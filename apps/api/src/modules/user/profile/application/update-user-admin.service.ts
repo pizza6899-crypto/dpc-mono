@@ -1,4 +1,5 @@
-import { Injectable, Inject, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException, BadRequestException, Optional } from '@nestjs/common';
+import { SynchronizeUserSessionService } from 'src/modules/auth/session/application/synchronize-user-session.service';
 import { USER_REPOSITORY } from '../ports/out/user.repository.token';
 import type { UserRepositoryPort } from '../ports/out/user.repository.port';
 import { User } from '../domain';
@@ -18,6 +19,8 @@ export class UpdateUserAdminService {
     constructor(
         @Inject(USER_REPOSITORY)
         private readonly userRepository: UserRepositoryPort,
+        @Optional()
+        private readonly synchronizeUserSessionService?: SynchronizeUserSessionService,
     ) { }
 
     async execute(params: UpdateUserAdminParams): Promise<User> {
@@ -43,6 +46,31 @@ export class UpdateUserAdminService {
             playCurrency: params.playCurrency,
         });
 
-        return await this.userRepository.save(updatedUser);
+        const savedUser = await this.userRepository.save(updatedUser);
+
+        // 세션 정보 동기화 (Redis)
+        if (this.synchronizeUserSessionService) {
+            await this.synchronizeUserSessionService.execute({
+                userId: savedUser.id!,
+                updateData: {
+                    email: savedUser.email ?? undefined,
+                    nickname: savedUser.nickname,
+                    status: savedUser.status,
+                    role: savedUser.role,
+                    language: savedUser.language,
+                    primaryCurrency: savedUser.getCurrency().primaryCurrency,
+                    timezone: savedUser.getLocation().timezone ?? undefined,
+                    isEmailVerified: savedUser.getTrust().isEmailVerified,
+                    isPhoneVerified: savedUser.getTrust().isPhoneVerified,
+                    isIdentityVerified: savedUser.getTrust().isIdentityVerified,
+                    isKycMandatory: savedUser.getTrust().isKycMandatory,
+                },
+            }).catch(err => {
+                // 세션 동기화 실패는 주 비즈니스 로직에 영향을 주지 않도록 로깅만 함
+                console.error(`Failed to synchronize user sessions for user ${savedUser.id}:`, err);
+            });
+        }
+
+        return savedUser;
     }
 }

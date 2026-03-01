@@ -1,5 +1,6 @@
 import type { UserSession } from '../../domain';
 import type { SessionType, SessionStatus } from '../../domain';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 
 export interface FindSessionsParams {
   page?: number;
@@ -67,4 +68,16 @@ export interface UserSessionRepositoryPort {
    * @returns 삭제된 세션 수
    */
   deleteExpiredSessions(beforeDate: Date): Promise<number>;
+
+  /**
+   * Redis 세션 데이터 업데이트
+   * @param sessionId - 실제 세션 ID (Express session ID)
+   * @param isAdmin - 관리자 세션 여부 (상태에 따라 Redis prefix 결정)
+   * @param updateData - 업데이트할 유저 데이터
+   */
+  updateRedisSessionData(
+    sessionId: string,
+    isAdmin: boolean,
+    updateData: Partial<AuthenticatedUser>,
+  ): Promise<void>;
 }

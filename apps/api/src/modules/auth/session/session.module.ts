@@ -7,6 +7,7 @@ import { ExpireSessionsBatchService } from './application/expire-sessions-batch.
 import { ExpireUserSessionsService } from './application/expire-user-sessions.service';
 import { ListSessionsService } from './application/list-sessions.service';
 import { RevokeSessionService } from './application/revoke-session.service';
+import { SynchronizeUserSessionService } from './application/synchronize-user-session.service';
 import { SessionPolicy } from './domain/policy';
 import { SessionTrackerService } from './infrastructure/session-tracker.service';
 import { UserSessionRepository } from './infrastructure/user-session.repository';
@@ -38,6 +39,7 @@ import { AUTH_QUEUES } from './infrastructure/session.bullmq';
     ExpireUserSessionsService,
     ListSessionsService,
     RevokeSessionService,
+    SynchronizeUserSessionService,
 
     // Domain Policies
     SessionPolicy,
@@ -59,8 +61,9 @@ import { AUTH_QUEUES } from './infrastructure/session.bullmq';
     ExpireUserSessionsService,
     ListSessionsService,
     RevokeSessionService,
+    SynchronizeUserSessionService,
     SessionTrackerService,
     USER_SESSION_REPOSITORY, // SessionSerializer에서 사용
   ],
 })
-export class SessionModule {}
+export class SessionModule { }
