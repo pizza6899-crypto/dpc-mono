@@ -34,6 +34,7 @@ export class AiModerationAdapter implements AiModerationPort {
         }
 
         const url = `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${model}`;
+        const startTime = Date.now();
 
         try {
             const response = await firstValueFrom(
@@ -57,7 +58,7 @@ export class AiModerationAdapter implements AiModerationPort {
                             content,
                         },
                     ],
-                    max_tokens: 100,
+                    max_tokens: 500,
                     temperature: 0, // 모더레이션은 일관된 판단이 중요하므로 0 고정
                     stream: false,
                 }, {
@@ -69,6 +70,7 @@ export class AiModerationAdapter implements AiModerationPort {
                 }),
             );
 
+            const durationMs = Date.now() - startTime;
             const data = response.data;
 
             // Cloudflare AI 응답 구조: { result: { response: "..." }, success: true }
@@ -78,6 +80,9 @@ export class AiModerationAdapter implements AiModerationPort {
                 return {
                     isAllowed: true,
                     message: 'AI moderation response parsing failed, allowing by default',
+                    durationMs,
+                    provider: 'cloudflare',
+                    model,
                 };
             }
 
@@ -96,16 +101,23 @@ export class AiModerationAdapter implements AiModerationPort {
                 label: parsed.label,
                 confidence: parsed.confidence,
                 // 스네이크 케이스와 카멜 케이스 모두 대응
-                flaggedWords: (parsed.flagged_words || (parsed as any).flaggedWords || [])?.slice(0, 3),
+                flaggedWords: (parsed.flagged_words || (parsed as any).flaggedWords || [])?.slice(0, 10),
                 raw: data,
+                durationMs,
+                provider: 'cloudflare',
+                model,
             };
         } catch (error: any) {
+            const durationMs = Date.now() - startTime;
             this.logger.error(`[CloudflareAI] API call failed: ${error.message}`, error.stack);
 
             // API 장애 시 안전하게 통과 (서비스 가용성 우선)
             return {
                 isAllowed: true,
                 message: `AI moderation unavailable: ${error.message}`,
+                durationMs,
+                provider: 'cloudflare',
+                model,
             };
         }
     }

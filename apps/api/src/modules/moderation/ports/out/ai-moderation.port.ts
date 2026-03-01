@@ -14,6 +14,12 @@ export interface AiModerationResult {
     flaggedWords?: string[];
     /** 원본 응답 (디버깅용) */
     raw?: any;
+    /** 소요 시간 (ms) */
+    durationMs?: number;
+    /** 사용된 공급자 */
+    provider?: string;
+    /** 사용된 모델명 */
+    model?: string;
 }
 
 /**

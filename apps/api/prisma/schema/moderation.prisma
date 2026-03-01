@@ -16,3 +16,46 @@ model ForbiddenWord {
 
     @@map("forbidden_words")
 }
+
+/// AI 모더레이션 검사 이력 로그 (파티셔닝 고려)
+model AiModerationLog {
+    /// Snowflake ID (Application Generated)
+    id BigInt @map("id")
+
+    /// 검사 대상 원문
+    input String
+
+    /// AI 통과 여부
+    isAllowed Boolean @map("is_allowed")
+
+    /// AI가 판단한 카테고리/라벨 (e.g. Hate, Violence, Clean)
+    label String?
+
+    /// 판단 신뢰도 (0.0 ~ 1.0)
+    confidence Float?
+
+    /// 판정 사유 (메시지)
+    reason String?
+
+    /// AI가 감지한 의심 단어/변종 목록
+    flaggedWords String[] @map("flagged_words")
+
+    /// API 응답 전문 (디버깅을 위한 원본 데이터 보존)
+    rawResponse Json? @map("raw_response")
+
+    /// 사용된 AI 공급자 (e.g. "cloudflare")
+    provider String?
+
+    /// 사용된 AI 모델명
+    model String?
+
+    /// API 요청 소요 시간 (ms) - 성능 모니터링용
+    durationMs Int? @map("duration_ms")
+
+    createdAt DateTime @default(now()) @map("created_at")
+
+    /// 파티셔닝을 위해 PK에 created_at 포함
+    @@id([id, createdAt])
+    @@index([createdAt])
+    @@map("ai_moderation_logs")
+}

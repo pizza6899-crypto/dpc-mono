@@ -1,11 +1,13 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Propagation, Transactional } from '@nestjs-cls/transactional';
 import { ForbiddenWord } from '../domain/model/forbidden-word.entity';
-import { FORBIDDEN_WORD_REPOSITORY } from '../ports/out/moderation-repository.port';
-import type { ForbiddenWordRepositoryPort } from '../ports/out/moderation-repository.port';
+import { AiModerationLog } from '../domain/model/ai-moderation-log.entity';
+import { FORBIDDEN_WORD_REPOSITORY, AI_MODERATION_LOG_REPOSITORY } from '../ports/out/moderation-repository.port';
+import type { ForbiddenWordRepositoryPort, AiModerationLogRepositoryPort } from '../ports/out/moderation-repository.port';
 import { AI_MODERATION_PORT } from '../ports/out/ai-moderation.port';
-import type { AiModerationPort } from '../ports/out/ai-moderation.port';
+import type { AiModerationPort, AiModerationResult } from '../ports/out/ai-moderation.port';
 import { ForbiddenWordException, AiModerationRejectedException } from '../domain/moderation.exception';
+import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
 @Injectable()
 export class ModerationService {
@@ -15,8 +17,11 @@ export class ModerationService {
     constructor(
         @Inject(FORBIDDEN_WORD_REPOSITORY)
         private readonly forbiddenWordRepository: ForbiddenWordRepositoryPort,
+        @Inject(AI_MODERATION_LOG_REPOSITORY)
+        private readonly aiModerationLogRepository: AiModerationLogRepositoryPort,
         @Inject(AI_MODERATION_PORT)
         private readonly aiModerationPort: AiModerationPort,
+        private readonly snowflakeService: SnowflakeService,
     ) { }
 
     /**
@@ -38,6 +43,9 @@ export class ModerationService {
         if (!options?.skipAi) {
             const result = await this.aiModerationPort.check(content);
 
+            // AI 모더레이션 결과 로그 저장
+            await this.saveModerationLog(content, result);
+
             // AI가 불합격 시켰더라도, 신뢰도가 너무 낮으면(오탐 방지) 통과
             if (!result.isAllowed) {
                 if ((result.confidence ?? 0) >= this.REJECT_CONFIRM_THRESHOLD) {
@@ -50,6 +58,36 @@ export class ModerationService {
                 }
                 this.logger.warn(`AI rejected but confidence too low (${result.confidence}), allowing as potential false positive: "${content}"`);
             }
+        }
+    }
+
+    /**
+     * AI 모더레이션 결과를 DB에 로그로 남깁니다.
+     * 상위 트랜잭션이 실패하더라도 로그는 남아야 하므로 새 트랜잭션을 사용합니다.
+     */
+    @Transactional(Propagation.RequiresNew)
+    public async saveModerationLog(input: string, result: AiModerationResult): Promise<void> {
+        try {
+            const { id: logId, timestamp } = this.snowflakeService.generate();
+            const log = AiModerationLog.create({
+                id: logId,
+                input,
+                isAllowed: result.isAllowed,
+                label: result.label,
+                confidence: result.confidence,
+                reason: result.message,
+                flaggedWords: result.flaggedWords,
+                rawResponse: result.raw,
+                provider: result.provider,
+                model: result.model,
+                durationMs: result.durationMs,
+                createdAt: timestamp,
+            });
+
+            await this.aiModerationLogRepository.save(log);
+        } catch (error: any) {
+            // 로그 저장 실패가 메인 로직에 영항을 주지 않도록 로깅만 수행
+            this.logger.error(`[AI-Log] Failed to save moderation log: ${error.message}`);
         }
     }
 
