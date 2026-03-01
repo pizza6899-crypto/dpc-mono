@@ -1,6 +1,6 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { VerifyCredentialService } from './verify-credential.service';
+import { VerifyCredentialService } from '../../credential/application/verify-credential.service';
 import { hashPassword } from 'src/utils/password.util';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import type { UserRepositoryPort } from 'src/modules/user/profile/ports/out/user.repository.port';
@@ -9,7 +9,7 @@ import { UserNotFoundException } from 'src/modules/user/profile/domain/user.exce
 import {
   PasswordMismatchException,
   LoginFailedException,
-} from '../domain/exception';
+} from '../../credential/domain/exception';
 
 export interface ChangePasswordParams {
   userId: bigint;

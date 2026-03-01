@@ -1,12 +1,13 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { VerifyCredentialService } from './verify-credential.service';
-import { FindLoginAttemptsService } from './find-login-attempts.service';
 import { RecordLoginAttemptService } from './record-login-attempt.service';
 import { CredentialPolicy } from '../domain/policy';
 import {
     CREDENTIAL_USER_REPOSITORY,
+    LOGIN_ATTEMPT_REPOSITORY,
     type CredentialUserRepositoryPort,
+    type LoginAttemptRepositoryPort,
 } from '../ports/out';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
@@ -38,11 +39,12 @@ export class AuthenticateIdentityService {
 
     constructor(
         private readonly verifyService: VerifyCredentialService,
-        private readonly findAttemptsService: FindLoginAttemptsService,
         private readonly recordService: RecordLoginAttemptService,
         private readonly policy: CredentialPolicy,
         @Inject(CREDENTIAL_USER_REPOSITORY)
         private readonly userRepository: CredentialUserRepositoryPort,
+        @Inject(LOGIN_ATTEMPT_REPOSITORY)
+        private readonly loginAttemptRepository: LoginAttemptRepositoryPort,
     ) { }
 
     @Transactional()
@@ -53,7 +55,7 @@ export class AuthenticateIdentityService {
         isAdmin = false,
     }: AuthenticateIdentityParams): Promise<AuthenticatedUser> {
         // 1. 계정 잠금 체크
-        const recentAttempts = await this.findAttemptsService.execute({
+        const recentAttempts = await this.loginAttemptRepository.listRecent({
             loginId,
             limit: 5,
         });

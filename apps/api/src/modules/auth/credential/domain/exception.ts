@@ -44,19 +44,6 @@ export class AccountLockedException extends DomainException {
   }
 }
 
-/**
- * 유효하지 않은 비밀번호 재설정 토큰 예외
- */
-export class InvalidPasswordResetTokenException extends DomainException {
-  constructor() {
-    super(
-      'Invalid or expired password reset token',
-      MessageCode.PASSWORD_RESET_TOKEN_INVALID,
-      HttpStatus.BAD_REQUEST,
-    );
-    this.name = 'InvalidPasswordResetTokenException';
-  }
-}
 
 /**
  * 권한 부족 예외

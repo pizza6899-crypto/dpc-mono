@@ -6,7 +6,7 @@ import { PASSWORD_RESET_TOKEN_REPOSITORY } from '../ports/out/password-reset-tok
 import type { PasswordResetTokenRepositoryPort } from '../ports/out/password-reset-token.repository.port';
 import { hashPassword } from 'src/utils/password.util';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
-import { InvalidPasswordResetTokenException } from '../domain/exception';
+import { InvalidPasswordResetTokenException } from '../domain/password.exception';
 import { UserNotFoundException } from 'src/modules/user/profile/domain/user.exception';
 
 export interface ResetPasswordParams {

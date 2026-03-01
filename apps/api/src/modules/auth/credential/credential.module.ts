@@ -13,16 +13,11 @@ import { CredentialUserMapper } from './infrastructure/credential-user.mapper';
 import { CredentialPolicy } from './domain/policy';
 import { AffiliateReferralModule } from '../../affiliate/referral/referral.module';
 import { UserProfileModule } from '../../user/profile/user-profile.module';
-import { ChangePasswordService } from './application/change-password.service';
-import { RequestPasswordResetService } from './application/request-password-reset.service';
-import { ResetPasswordService } from './application/reset-password.service';
 import { CheckUserStatusService } from './application/check-user-status.service';
 import {
   LOGIN_ATTEMPT_REPOSITORY,
   CREDENTIAL_USER_REPOSITORY,
-  PASSWORD_RESET_TOKEN_REPOSITORY,
 } from './ports/out';
-import { PasswordResetTokenRepository } from './infrastructure/password-reset-token.repository';
 import { SessionModule } from '../session/session.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { PassportModule } from '@nestjs/passport';
@@ -44,9 +39,6 @@ import { SessionSerializer } from 'src/common/auth/strategies/session.serializer
     LogoutService,
     RecordLoginAttemptService,
     VerifyCredentialService,
-    ChangePasswordService,
-    RequestPasswordResetService,
-    ResetPasswordService,
     CheckUserStatusService,
 
     // Domain Policies
@@ -62,10 +54,6 @@ import { SessionSerializer } from 'src/common/auth/strategies/session.serializer
     {
       provide: CREDENTIAL_USER_REPOSITORY,
       useClass: CredentialUserRepository,
-    },
-    {
-      provide: PASSWORD_RESET_TOKEN_REPOSITORY,
-      useClass: PasswordResetTokenRepository,
     },
 
     SessionSerializer,

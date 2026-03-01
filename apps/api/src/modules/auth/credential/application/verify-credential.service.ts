@@ -18,15 +18,10 @@ export interface VerifyCredentialParams {
  * 타이밍 공격 방지를 위해 사용자가 없어도 비밀번호 검증을 수행합니다.
  * bcrypt.compare는 이미 상당한 시간(수십~수백 밀리초)이 소요되므로
  * 더미 해시로 검증하는 것만으로도 충분한 타이밍 공격 방지 효과가 있습니다.
- *
- * 참고: 고정된 딜레이는 공격자가 예측할 수 있어 효과가 제한적입니다.
- * bcrypt.compare의 가변적인 실행 시간이 더 자연스러운 보호를 제공합니다.
  */
 @Injectable()
 export class VerifyCredentialService {
   // 타이밍 공격 방지를 위한 더미 해시
-  // 유효한 bcrypt 형식이어야 하며, 실제 사용자 해시와 유사한 길이를 가져야 함
-  // '$2a$12$'는 bcryptjs의 표준 형식 (rounds=12)
   private readonly DUMMY_HASH =
     '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyY5Y5Y5Y5Y5';
 
