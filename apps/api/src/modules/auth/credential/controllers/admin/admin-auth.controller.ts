@@ -15,7 +15,6 @@ import {
   Public,
 } from 'src/common/auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
@@ -32,6 +31,7 @@ import { UserRoleType } from '@prisma/client';
 import type { Request } from 'express';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 
 @Controller('admin/auth')
 @ApiTags('Admin Auth')
@@ -145,7 +145,7 @@ export class AdminAuthController {
     logOnError: false, // 로그아웃 실패는 기록하지 않음
   })
   async logout(
-    @CurrentUser() user?: CurrentUserWithSession,
+    @CurrentUser() user?: AuthenticatedUser,
     @RequestClientInfoParam() clientInfo?: RequestClientInfo,
     @Req() req?: Request,
   ): Promise<AdminLogoutResponseDto> {
@@ -237,7 +237,7 @@ export class AdminAuthController {
   })
   async getStatus(
     @Req() req: Request,
-    @CurrentUser() user?: CurrentUserWithSession,
+    @CurrentUser() user?: AuthenticatedUser,
   ): Promise<AdminAuthStatusResponseDto> {
     // 관리자 역할 체크
     const isAdmin =

@@ -10,7 +10,7 @@ import { WhitecliffGameService } from '../providers/whitecliff/application/white
 import { DcsGameService } from '../providers/dcs/application/dcs-game.service';
 import { CasinoLaunchPolicy } from '../domain/casino-launch.policy';
 import { CasinoAggregatorUnsupportedException } from '../aggregator/domain/casino-aggregator.exception';
-import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import type { RequestClientInfo } from 'src/common/http/types';
 import { Language, GameAggregatorType } from '@prisma/client';
 import { AGGREGATOR_CODE_MAP } from '../aggregator/ports/aggregator-game.dto';
@@ -41,7 +41,7 @@ export class LaunchGameService {
   ) {}
 
   async execute(
-    user: CurrentUserWithSession,
+    user: AuthenticatedUser,
     params: LaunchGameParams,
     requestInfo: RequestClientInfo,
   ): Promise<LaunchGameResult> {

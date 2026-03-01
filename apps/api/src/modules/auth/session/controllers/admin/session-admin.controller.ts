@@ -16,7 +16,7 @@ import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { ApiPaginatedResponse } from 'src/common/http/decorators/api-response.decorator';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { UserRoleType } from '@prisma/client';
 import { PaginatedData } from 'src/common/http/types';
 import { ListSessionsService } from '../../application/list-sessions.service';
@@ -59,7 +59,7 @@ export class SessionAdminController {
   })
   async listSessions(
     @Query() query: ListSessionsQueryDto,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<PaginatedData<SessionListItemDto>> {
     const result = await this.listSessionsService.execute({
@@ -101,7 +101,7 @@ export class SessionAdminController {
   })
   async revokeSession(
     @Param('sessionId') sessionId: string,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<RevokeSessionResponseDto> {
     const revokedSession = await this.revokeSessionService.execute({
@@ -134,7 +134,7 @@ export class SessionAdminController {
   })
   async revokeUserSessions(
     @Param('userId') userId: string,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<RevokeUserSessionsResponseDto> {
     const result = await this.expireUserSessionsService.execute({

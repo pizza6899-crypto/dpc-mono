@@ -22,7 +22,7 @@ import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@prisma/client';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { FindCodesAdminService } from '../../application/find-codes-admin.service';
 import { CreateCodeService } from '../../application/create-code.service';
 import { UpdateCodeService } from '../../application/update-code.service';
@@ -48,7 +48,7 @@ export class AffiliateCodeAdminController {
     private readonly updateCodeService: UpdateCodeService,
     private readonly findCodeByIdAdminService: FindCodeByIdAdminService,
     private readonly deleteCodeAdminService: DeleteCodeAdminService,
-  ) {}
+  ) { }
 
   /**
    * 어플리에이트 코드 목록 조회 (관리자용)
@@ -79,7 +79,7 @@ export class AffiliateCodeAdminController {
   })
   async listCodes(
     @Query() query: FindCodesQueryDto,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
   ): Promise<PaginatedResponseDto<AdminCodeListItemDto>> {
     const result = await this.findCodesAdminService.execute({
       page: query.page,

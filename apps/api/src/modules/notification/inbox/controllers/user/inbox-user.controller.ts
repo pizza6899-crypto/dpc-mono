@@ -18,7 +18,7 @@ import {
 import { LogType } from 'src/modules/audit-log/domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { MessageCode } from '@repo/shared';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
@@ -62,7 +62,7 @@ export class InboxUserController {
   @ApiOperation({ summary: 'List user notifications' })
   @ApiStandardResponse(NotificationListResponseDto)
   async listNotifications(
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @Query() query: FindNotificationsQueryDto,
   ): Promise<NotificationListResponseDto> {
     const notifications = await this.findNotificationsService.execute({
@@ -95,7 +95,7 @@ export class InboxUserController {
   @ApiOperation({ summary: 'Get unread notification count' })
   @ApiStandardResponse(UnreadCountResponseDto)
   async getUnreadCount(
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<UnreadCountResponseDto> {
     const count = await this.getUnreadCountService.execute({
       receiverId: user.id,
@@ -118,7 +118,7 @@ export class InboxUserController {
   @ApiOperation({ summary: 'Mark notification as read' })
   @ApiStandardResponse(NotificationResponseDto)
   async markAsRead(
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @Param('createdAt') createdAt: string,
     @Param('id') id: string,
   ): Promise<NotificationResponseDto> {
@@ -141,7 +141,7 @@ export class InboxUserController {
   @ApiOperation({ summary: 'Mark all notifications as read' })
   @ApiStandardResponse(MarkAllAsReadResponseDto)
   async markAllAsRead(
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<MarkAllAsReadResponseDto> {
     const count = await this.markAllAsReadService.execute({
       receiverId: user.id,
@@ -164,7 +164,7 @@ export class InboxUserController {
   @ApiOperation({ summary: 'Delete notification' })
   @ApiStandardResponse(NotificationResponseDto)
   async deleteNotification(
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @Param('createdAt') createdAt: string,
     @Param('id') id: string,
   ): Promise<NotificationResponseDto> {

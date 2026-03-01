@@ -1,8 +1,22 @@
-import type { UserRoleType, Language } from '@prisma/client';
+import type { UserRoleType, Language, UserStatus, ExchangeCurrencyCode, RegistrationMethod } from '@prisma/client';
 
 export interface AuthenticatedUser {
   id: bigint;
-  email: string;
+  email: string | null;
+  nickname: string;
   role: UserRoleType;
+  status: UserStatus;
+
+  // Verifications
+  isEmailVerified: boolean;
+  isPhoneVerified: boolean;
+  isIdentityVerified: boolean;
+  isKycMandatory: boolean;
+
+  // Settings
   language: Language;
+  primaryCurrency: ExchangeCurrencyCode;
+  timezone: string | null;
+  registrationMethod: RegistrationMethod;
+  sessionId?: string;
 }

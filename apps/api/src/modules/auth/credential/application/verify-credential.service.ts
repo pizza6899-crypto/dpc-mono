@@ -16,8 +16,6 @@ export interface VerifyCredentialParams {
  * 자격 증명(이메일/비밀번호) 검증 Use Case
  *
  * 타이밍 공격 방지를 위해 사용자가 없어도 비밀번호 검증을 수행합니다.
- * bcrypt.compare는 이미 상당한 시간(수십~수백 밀리초)이 소요되므로
- * 더미 해시로 검증하는 것만으로도 충분한 타이밍 공격 방지 효과가 있습니다.
  */
 @Injectable()
 export class VerifyCredentialService {
@@ -37,13 +35,9 @@ export class VerifyCredentialService {
   }: VerifyCredentialParams): Promise<AuthenticatedUser | null> {
     const user = await this.userRepository.findByLoginId(loginId);
 
-    // 타이밍 공격 방지: 사용자가 없어도 더미 해시로 비밀번호 검증 수행
-    // bcrypt.compare는 이미 상당한 시간이 소요되므로 자연스러운 타이밍 공격 방지 효과
-    // 고정된 딜레이보다 예측 불가능한 bcrypt 연산 시간이 더 효과적
     const hashToCompare = user?.passwordHash || this.DUMMY_HASH;
     const isValidPassword = await comparePassword(password, hashToCompare);
 
-    // 사용자가 없거나 비밀번호가 틀린 경우
     if (!user || !user.passwordHash || !isValidPassword) {
       return null;
     }
@@ -52,17 +46,14 @@ export class VerifyCredentialService {
       return null;
     }
 
-    // 관리자 로그인 시도인 경우 권한 체크
     if (isAdmin && !user.isAdmin()) {
       return null;
     }
 
-    // 일반 사용자 로그인 시도인 경우 관리자 차단
     if (!isAdmin && user.isAdmin()) {
       return null;
     }
 
-    // fromPersistence를 통해 생성된 엔티티는 항상 id가 있어야 함
     if (!user.id) {
       return null;
     }
@@ -70,8 +61,17 @@ export class VerifyCredentialService {
     return {
       id: user.id,
       email: user.email,
+      nickname: user.nickname,
       role: user.role,
+      status: user.status,
+      isEmailVerified: user.isEmailVerified,
+      isPhoneVerified: user.isPhoneVerified,
+      isIdentityVerified: user.isIdentityVerified,
+      isKycMandatory: user.isKycMandatory,
       language: user.language,
+      primaryCurrency: user.primaryCurrency,
+      timezone: user.timezone,
+      registrationMethod: user.registrationMethod,
     };
   }
 }

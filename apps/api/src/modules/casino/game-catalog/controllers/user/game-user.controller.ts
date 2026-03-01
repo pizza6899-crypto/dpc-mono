@@ -32,7 +32,7 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { LaunchGameRequestDto } from './dto/request/launch-game.request.dto';
 import { LaunchGameResponseDto } from './dto/response/launch-game.response.dto';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 
 @ApiTags('User Casino Game')
@@ -133,7 +133,7 @@ export class GameUserController {
     description: 'Game launch success',
   })
   async launchGame(
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @Body() dto: LaunchGameRequestDto,
     @RequestClientInfoParam() request: RequestClientInfo,
   ): Promise<LaunchGameResponseDto> {

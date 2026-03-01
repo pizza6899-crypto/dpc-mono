@@ -1,81 +1,95 @@
-import { UserStatus, UserRoleType, Language } from '@prisma/client';
+import { UserStatus, UserRoleType, Language, ExchangeCurrencyCode, RegistrationMethod } from '@prisma/client';
 
 export class CredentialUser {
   private constructor(
-    public readonly id: bigint | null, // 내부 관리용 (DB 저장 시 자동 생성)
-    public readonly uid: string,
-    public readonly email: string,
+    public readonly id: bigint | null,
+    public readonly email: string | null,
+    public readonly nickname: string,
     public readonly passwordHash: string | null,
     public readonly status: UserStatus,
     public readonly role: UserRoleType,
     public readonly language: Language,
+    public readonly isEmailVerified: boolean,
+    public readonly isPhoneVerified: boolean,
+    public readonly isIdentityVerified: boolean,
+    public readonly isKycMandatory: boolean,
+    public readonly primaryCurrency: ExchangeCurrencyCode,
+    public readonly timezone: string | null,
+    public readonly registrationMethod: RegistrationMethod,
   ) { }
 
-  /**
-   * 새로운 CredentialUser 생성
-   * @description Application 레이어에서 새 사용자 생성 시 사용
-   * @param params - 사용자 생성 파라미터
-   * @param params.id - 사용자 ID (선택적, DB 저장 시 자동 생성)
-   * @returns CredentialUser 엔티티 인스턴스
-   */
   static create(params: {
     id?: bigint;
-    uid: string;
-    email: string;
+    email: string | null;
+    nickname: string;
     passwordHash: string | null;
     status: UserStatus;
     role: UserRoleType;
     language: Language;
+    isEmailVerified: boolean;
+    isPhoneVerified: boolean;
+    isIdentityVerified: boolean;
+    isKycMandatory: boolean;
+    primaryCurrency: ExchangeCurrencyCode;
+    timezone: string | null;
+    registrationMethod: RegistrationMethod;
   }): CredentialUser {
     return new CredentialUser(
       params.id ?? null,
-      params.uid,
       params.email,
+      params.nickname,
       params.passwordHash,
       params.status,
       params.role,
       params.language,
+      params.isEmailVerified,
+      params.isPhoneVerified,
+      params.isIdentityVerified,
+      params.isKycMandatory,
+      params.primaryCurrency,
+      params.timezone,
+      params.registrationMethod,
     );
   }
 
-  /**
-   * DB에서 조회한 데이터로부터 엔티티 생성
-   * @description Repository에서 Prisma를 통해 생성/조회된 데이터를 Domain Entity로 변환할 때 사용
-   * @param data - DB에서 조회한 사용자 데이터
-   * @returns CredentialUser 엔티티 인스턴스
-   */
   static fromPersistence(data: {
     id: bigint | null;
-    uid: string;
-    email: string;
+    email: string | null;
+    nickname: string;
     passwordHash: string | null;
     status: UserStatus;
     role: UserRoleType;
-    language?: Language; // Optional for backward compatibility if needed, but should be there
+    language?: Language;
+    isEmailVerified?: boolean;
+    isPhoneVerified?: boolean;
+    isIdentityVerified?: boolean;
+    isKycMandatory?: boolean;
+    primaryCurrency?: ExchangeCurrencyCode;
+    timezone?: string | null;
+    registrationMethod?: RegistrationMethod;
   }): CredentialUser {
     return new CredentialUser(
       data.id,
-      data.uid,
       data.email,
+      data.nickname,
       data.passwordHash,
       data.status,
       data.role,
-      data.language ?? Language.JA, // Default to JA if missing
+      data.language ?? Language.JA,
+      data.isEmailVerified ?? false,
+      data.isPhoneVerified ?? false,
+      data.isIdentityVerified ?? false,
+      data.isKycMandatory ?? false,
+      data.primaryCurrency ?? ExchangeCurrencyCode.USD,
+      data.timezone ?? null,
+      data.registrationMethod ?? RegistrationMethod.CREDENTIAL,
     );
   }
 
-  // Business Logic Methods
-
-  /**
-   * 사용자가 활성 상태인지 확인
-   */
   isActive(): boolean {
     return this.status === UserStatus.ACTIVE;
   }
 
-  /**
-   * 사용자가 관리자 권한을 가지고 있는지 확인
-   */
   isAdmin(): boolean {
     return (
       this.role === UserRoleType.ADMIN || this.role === UserRoleType.SUPER_ADMIN

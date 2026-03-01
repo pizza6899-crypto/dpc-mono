@@ -20,7 +20,7 @@ import { UpdateUserConfigDto } from './dto/request/update-user-config.dto';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 
 @Controller('admin/user-config')
 @ApiTags('Admin User Config')
@@ -95,7 +95,7 @@ export class UserConfigAdminController {
         description: 'Successfully updated user configuration / 설정 수정 성공',
     })
     async updateConfig(
-        @CurrentUser() admin: CurrentUserWithSession,
+        @CurrentUser() admin: AuthenticatedUser,
         @Body() dto: UpdateUserConfigDto,
     ): Promise<UserConfigResponseDto> {
         const config = await this.updateUserConfigAdminService.execute(admin.id, dto);

@@ -16,7 +16,7 @@ import {
   ApiPaginatedResponse,
 } from 'src/common/http/decorators/api-response.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
@@ -58,7 +58,7 @@ export class AdminReferralController {
   })
   async getReferrals(
     @Query() query: GetReferralsQueryDto,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<PaginatedData<AdminReferralListItemDto>> {
     return await this.adminReferralService.getReferrals(
@@ -96,7 +96,7 @@ export class AdminReferralController {
   })
   async getReferralById(
     @Param('id') id: string,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<AdminReferralListItemDto> {
     return await this.adminReferralService.getReferralById(

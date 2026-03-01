@@ -22,7 +22,7 @@ import {
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
@@ -83,7 +83,7 @@ export class WithdrawalUserController {
     category: 'WITHDRAWAL',
   })
   async getWithdrawalEligibility(
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @Query() query: GetWithdrawalEligibilityQueryDto,
   ): Promise<WithdrawalEligibilityResponseDto> {
     return this.getWithdrawalEligibilityService.execute({
@@ -117,7 +117,7 @@ export class WithdrawalUserController {
   })
   async getMyWithdrawals(
     @Query() query: GetWithdrawalsQueryDto,
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<PaginatedData<WithdrawalResponseDto>> {
     const page = query.page!;
     const limit = query.limit!;
@@ -211,7 +211,7 @@ export class WithdrawalUserController {
   })
   async getWithdrawalDetail(
     @Param('id') id: string,
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<WithdrawalResponseDto> {
     const decodedId = this.sqidsService.decode(id, SqidsPrefix.WITHDRAWAL);
     const withdrawal = await this.getWithdrawalService.execute({
@@ -243,7 +243,7 @@ export class WithdrawalUserController {
   })
   async requestCryptoWithdrawal(
     @Body() dto: RequestCryptoWithdrawalDto,
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @RequestClientInfoParam() clientInfo: RequestClientInfo,
   ): Promise<CreateWithdrawalResponseDto> {
     const result = await this.requestCryptoWithdrawalService.execute({
@@ -296,7 +296,7 @@ export class WithdrawalUserController {
   })
   async cancelWithdrawal(
     @Param('id') id: string,
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<CancelWithdrawalResponseDto> {
     const decodedId = this.sqidsService.decode(id, SqidsPrefix.WITHDRAWAL);
@@ -337,7 +337,7 @@ export class WithdrawalUserController {
   })
   async requestBankWithdrawal(
     @Body() dto: RequestBankWithdrawalDto,
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @RequestClientInfoParam() clientInfo: RequestClientInfo,
   ): Promise<CreateWithdrawalResponseDto> {
     const decodedBankConfigId = this.sqidsService.decode(

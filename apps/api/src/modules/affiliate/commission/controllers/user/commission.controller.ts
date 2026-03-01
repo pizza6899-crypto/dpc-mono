@@ -15,7 +15,7 @@ import {
   ApiPaginatedResponse,
 } from 'src/common/http/decorators/api-response.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { PaginatedResponseDto } from 'src/common/http/types/pagination.types';
@@ -78,7 +78,7 @@ export class AffiliateCommissionController {
       'Successfully retrieved commission list / 커미션 목록 조회 성공',
   })
   async getCommissions(
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @Query() query: FindCommissionsQueryDto,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<PaginatedResponseDto<CommissionResponseDto>> {
@@ -139,7 +139,7 @@ export class AffiliateCommissionController {
     description: 'Successfully retrieved commission / 커미션 조회 성공',
   })
   async getCommissionById(
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @Param('id') id: string,
   ): Promise<CommissionResponseDto> {
     const decodedId = this.sqidsService.decode(id, SqidsPrefix.COMMISSION);
@@ -182,7 +182,7 @@ export class AffiliateCommissionController {
     description: 'Successfully retrieved wallet balance / 월렛 잔액 조회 성공',
   })
   async getWalletBalance(
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @Query('currency') currency?: string,
     @RequestClientInfoParam() requestInfo?: RequestClientInfo,
   ): Promise<WalletBalanceResponseDto> {
@@ -226,7 +226,7 @@ export class AffiliateCommissionController {
     description: 'Successfully withdrawn commission / 커미션 출금 성공',
   })
   async withdrawCommission(
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @Body() dto: WithdrawCommissionDto,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<WithdrawCommissionResponseDto> {

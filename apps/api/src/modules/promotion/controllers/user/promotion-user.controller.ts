@@ -23,7 +23,7 @@ import {
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import type { PaginatedData } from 'src/common/http/types/pagination.types';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 import { GetActivePromotionsForUserService } from '../../application/get-active-promotions-for-user.service';
@@ -83,7 +83,7 @@ export class PromotionUserController {
     },
   })
   async getActivePromotions(
-    @CurrentUser() user: CurrentUserWithSession | undefined,
+    @CurrentUser() user: AuthenticatedUser | undefined,
     @Query() query: ListActivePromotionsQueryDto,
   ): Promise<PaginatedData<PromotionResponseDto>> {
     const result = await this.getActivePromotionsForUserService.execute({
@@ -144,7 +144,7 @@ export class PromotionUserController {
     },
   })
   async getMyPromotions(
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @Query() query: ListMyPromotionsQueryDto,
   ): Promise<PaginatedData<UserPromotionResponseDto>> {
     const result = await this.getMyPromotionsForUserService.execute({
@@ -250,7 +250,7 @@ export class PromotionUserController {
     },
   })
   async applyCoupon(
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @Body() dto: ApplyCouponRequestDto,
   ): Promise<UserPromotionResponseDto> {
     const userPromotion = await this.applyCouponPromotionService.execute({

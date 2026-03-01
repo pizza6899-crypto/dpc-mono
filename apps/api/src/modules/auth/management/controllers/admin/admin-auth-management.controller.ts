@@ -16,7 +16,7 @@ import {
     RequireRoles,
 } from 'src/common/auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { FindLoginAttemptsService } from '../../application/find-login-attempts.service';
@@ -100,7 +100,7 @@ export class AdminAuthManagementController {
     async resetUserPassword(
         @Param('userId') userId: string,
         @Body() dto: ResetUserPasswordRequestDto,
-        @CurrentUser() admin: CurrentUserWithSession,
+        @CurrentUser() admin: AuthenticatedUser,
         @RequestClientInfoParam() requestInfo: RequestClientInfo,
     ): Promise<ResetUserPasswordResponseDto> {
         const targetUserId = BigInt(userId);
@@ -147,7 +147,7 @@ export class AdminAuthManagementController {
         },
     })
     async changePassword(
-        @CurrentUser() admin: CurrentUserWithSession,
+        @CurrentUser() admin: AuthenticatedUser,
         @Body() dto: AdminChangePasswordRequestDto,
         @RequestClientInfoParam() requestInfo: RequestClientInfo,
     ): Promise<AdminChangePasswordResponseDto> {

@@ -17,7 +17,7 @@ import {
 } from 'src/common/http/decorators/api-response.decorator';
 import { Admin } from 'src/common/auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 import { AdjustUserBalanceService } from '../../application/adjust-user-balance.service';
@@ -146,7 +146,7 @@ export class WalletAdminController {
   })
   async adjustBalance(
     @Body() dto: AdminAdjustBalanceRequestDto,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
   ): Promise<AdjustBalanceResponseDto> {
     const wallet = await this.adjustUserBalanceService.execute({
       userId: BigInt(dto.userId),
@@ -278,7 +278,7 @@ export class WalletAdminController {
   async updateStatus(
     @Param('userId') userId: string,
     @Body() dto: AdminUpdateWalletStatusRequestDto,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
   ): Promise<UpdateWalletStatusResponseDto> {
     const wallet = await this.updateWalletStatusService.execute({
       userId: BigInt(userId),

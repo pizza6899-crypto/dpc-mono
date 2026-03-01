@@ -13,7 +13,7 @@ import {
 } from '../../../../../common/http/decorators/api-response.decorator';
 import { Public } from 'src/common/auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
@@ -64,7 +64,7 @@ export class UserPasswordController {
         },
     })
     async changePassword(
-        @CurrentUser() user: CurrentUserWithSession,
+        @CurrentUser() user: AuthenticatedUser,
         @Body() dto: ChangePasswordRequestDto,
         @RequestClientInfoParam() requestInfo: RequestClientInfo,
     ): Promise<ChangePasswordResponseDto> {

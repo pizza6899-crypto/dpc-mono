@@ -1,17 +1,18 @@
 // src/platform/auth/strategies/session.serializer.ts
 import { Injectable, Inject } from '@nestjs/common';
 import { PassportSerializer } from '@nestjs/passport';
-import { UserStatus, UserRoleType, Language } from '@prisma/client';
+import {
+  UserStatus,
+} from '@prisma/client';
 import { AuthenticatedUser } from '../types/auth.types';
 import { USER_SESSION_REPOSITORY } from 'src/modules/auth/session/ports/out';
 import type { UserSessionRepositoryPort } from 'src/modules/auth/session/ports/out';
 
-interface UserForSerialization {
+/**
+ * 세션 직렬화용 인터페이스 (id를 string으로 변환)
+ */
+interface UserForSerialization extends Omit<AuthenticatedUser, 'id'> {
   id: string; // bigint를 문자열로 변환하여 저장
-  email: string;
-  role: UserRoleType;
-  status: UserStatus;
-  language: Language;
 }
 
 @Injectable()
@@ -27,14 +28,10 @@ export class SessionSerializer extends PassportSerializer {
     user: AuthenticatedUser,
     done: (err: Error | null, payload?: UserForSerialization) => void,
   ) {
-    // 세션에 필요한 모든 정보 저장 (DB 쿼리 제거)
-    // status는 로그인 시점의 값이지만, 세션 만료 시 재검증됨
+    // 세션에 모든 정보 저장 (BigInt -> string 변환 포함)
     const serializedUser: UserForSerialization = {
+      ...user,
       id: user.id.toString(),
-      email: user.email,
-      role: user.role,
-      status: UserStatus.ACTIVE, // 로그인 시점에는 항상 ACTIVE
-      language: user.language ?? Language.JA,
     };
 
     done(null, serializedUser);
@@ -43,7 +40,7 @@ export class SessionSerializer extends PassportSerializer {
   async deserializeUser(
     payload: UserForSerialization,
     done: (err: Error | null, user?: AuthenticatedUser | false) => void,
-    req?: any, // express Request 객체 (passport에서 제공)
+    req?: any, // express Request 객체
   ) {
     // 1. 세션 ID로 세션 유효성 검증 (DB 세션 상태 확인)
     if (req?.sessionID) {
@@ -67,20 +64,21 @@ export class SessionSerializer extends PassportSerializer {
       }
     }
 
-    // 2. 세션에 저장된 정보를 사용 (DB 쿼리 없음)
-    // 세션 유효성은 이미 DB 세션 테이블에서 확인했으므로 추가 쿼리 불필요
+    // 2. 계정 상태 실시간 체크 (활성 상태가 아니면 즉시 차단)
     if (payload.status !== UserStatus.ACTIVE) {
       return done(null, false);
     }
 
-    // 세션에 저장된 정보를 사용하여 AuthenticatedUser 생성
-    const authUser: AuthenticatedUser = {
-      id: BigInt(payload.id),
-      email: payload.email,
-      role: payload.role,
-      language: payload.language ?? Language.JA,
-    };
-
-    done(null, authUser);
+    // 3. 세션 정보 복원 (데이터 오염 방지를 위해 기본값 없이 전달받은 그대로 복원)
+    try {
+      const authUser: AuthenticatedUser = {
+        ...payload,
+        id: BigInt(payload.id),
+      };
+      done(null, authUser);
+    } catch (error) {
+      // BigInt 변환 실패 등 예기치 못한 페이로드 오류 시 세션 무효화
+      done(null, false);
+    }
   }
 }

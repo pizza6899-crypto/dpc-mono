@@ -22,7 +22,7 @@ import {
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
@@ -74,7 +74,7 @@ export class WithdrawalAdminController {
   })
   async getPendingWithdrawals(
     @Query() query: GetAdminWithdrawalsQueryDto,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<PaginatedData<AdminWithdrawalResponseDto>> {
     const page = query.page ?? 1;
@@ -119,7 +119,7 @@ export class WithdrawalAdminController {
   })
   async getWithdrawalDetail(
     @Param('id') id: string,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<AdminWithdrawalResponseDto> {
     // Admin can view any withdrawal
@@ -157,7 +157,7 @@ export class WithdrawalAdminController {
   async approveWithdrawal(
     @Param('id') id: string,
     @Body() dto: ApproveWithdrawalDto,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<ApproveWithdrawalResponseDto> {
     const result = await this.approveWithdrawalService.execute({
@@ -200,7 +200,7 @@ export class WithdrawalAdminController {
   async rejectWithdrawal(
     @Param('id') id: string,
     @Body() dto: RejectWithdrawalDto,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<RejectWithdrawalResponseDto> {
     const result = await this.rejectWithdrawalService.execute({

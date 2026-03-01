@@ -19,7 +19,7 @@ import {
 import { PaginatedResponseDto } from 'src/common/http/types/pagination.types';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { CreateCodeService } from '../../application/create-code.service';
 import { FindCodesService } from '../../application/find-codes.service';
 import { FindDefaultCodeService } from '../../application/find-default-code.service';
@@ -73,7 +73,7 @@ export class AffiliateCodeController {
       'Successfully created affiliate code / 어플리에이트 코드 생성 성공',
   })
   async create(
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @Body() dto: CreateAffiliateCodeDto,
   ): Promise<AffiliateCodeResponseDto> {
     const code = await this.createCodeService.execute({
@@ -110,7 +110,7 @@ export class AffiliateCodeController {
       'Successfully retrieved affiliate codes / 어플리에이트 코드 목록 조회 성공',
   })
   async getCodes(
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @Query() query: GetCodesRequestDto,
   ): Promise<PaginatedResponseDto<AffiliateCodeResponseDto>> {
     const result = await this.findCodesService.execute({
@@ -152,7 +152,7 @@ export class AffiliateCodeController {
       'Successfully retrieved default affiliate code / 대표 어플리에이트 코드 조회 성공',
   })
   async getDefaultCode(
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
   ): Promise<AffiliateCodeResponseDto> {
     const code = await this.findDefaultCodeService.execute({
       userId: user.id,
@@ -183,7 +183,7 @@ export class AffiliateCodeController {
       'Successfully updated affiliate code / 어플리에이트 코드 수정 성공',
   })
   async update(
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @Param('id') id: string,
     @Body() dto: UpdateAffiliateCodeDto,
   ): Promise<AffiliateCodeResponseDto> {

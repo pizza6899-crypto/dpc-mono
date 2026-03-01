@@ -11,7 +11,7 @@ import {
   CasinoAggregatorInactiveException,
   CasinoAggregatorMaintenanceException,
 } from '../aggregator/domain/casino-aggregator.exception';
-import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import {
   GAMING_CURRENCIES,
   type GamingCurrencyCode,
@@ -25,7 +25,7 @@ export class CasinoLaunchPolicy {
    * 카지노 게임 실행 가능 여부를 통합 검증합니다.
    */
   validate(
-    user: CurrentUserWithSession,
+    user: AuthenticatedUser,
     game: CasinoGame,
     provider: CasinoGameProvider,
     aggregator: CasinoAggregator,
@@ -73,7 +73,7 @@ export class CasinoLaunchPolicy {
     this.validateUser(user);
   }
 
-  private validateUser(user: CurrentUserWithSession): void {
+  private validateUser(user: AuthenticatedUser): void {
     // 현재는 특별한 제약이 없으나 향후 확장 가능
     // if (user.status === UserStatus.SUSPENDED) ...
   }

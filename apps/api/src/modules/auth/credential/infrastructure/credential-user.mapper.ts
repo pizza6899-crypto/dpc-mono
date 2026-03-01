@@ -10,12 +10,19 @@ export class CredentialUserMapper {
   toDomain(prismaModel: any): CredentialUser {
     return CredentialUser.fromPersistence({
       id: prismaModel.id,
-      uid: prismaModel.uid,
       email: prismaModel.email,
+      nickname: prismaModel.nickname,
       passwordHash: prismaModel.passwordHash,
       status: prismaModel.status,
       role: prismaModel.role,
       language: prismaModel.language,
+      isEmailVerified: prismaModel.isEmailVerified,
+      isPhoneVerified: prismaModel.isPhoneVerified,
+      isIdentityVerified: prismaModel.isIdentityVerified,
+      isKycMandatory: prismaModel.isKycMandatory,
+      primaryCurrency: prismaModel.primaryCurrency,
+      timezone: prismaModel.timezone,
+      registrationMethod: prismaModel.registrationMethod,
     });
   }
 }

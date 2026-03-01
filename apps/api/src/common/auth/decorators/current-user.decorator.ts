@@ -2,15 +2,11 @@ import type { ExecutionContext } from '@nestjs/common';
 import { createParamDecorator } from '@nestjs/common';
 import type { AuthenticatedUser } from '../types/auth.types';
 
-export interface CurrentUserWithSession extends AuthenticatedUser {
-  sessionId?: string;
-}
-
 export const CurrentUser = createParamDecorator(
   (
     data: unknown,
     ctx: ExecutionContext,
-  ): CurrentUserWithSession | undefined => {
+  ): AuthenticatedUser | undefined => {
     const type = ctx.getType<'http' | 'ws'>();
 
     if (type === 'http') {

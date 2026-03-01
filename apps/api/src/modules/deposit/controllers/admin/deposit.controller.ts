@@ -19,7 +19,7 @@ import {
   ApiPaginatedResponse,
 } from 'src/common/http/decorators/api-response.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
@@ -107,7 +107,7 @@ export class AdminDepositController {
     category: 'DEPOSIT',
   })
   async getDepositStats(
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<DepositStatsResponseDto> {
     return await this.getDepositStatsService.execute();
@@ -132,7 +132,7 @@ export class AdminDepositController {
   })
   async getDeposits(
     @Query() query: GetDepositsQueryDto,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<PaginatedData<AdminDepositListItemDto>> {
     const result = await this.getDepositsService.execute({
@@ -194,7 +194,7 @@ export class AdminDepositController {
   })
   async getDepositDetail(
     @Param('id') id: string,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<AdminDepositListItemDto> {
     const result = await this.getDepositDetailService.execute({
@@ -243,7 +243,7 @@ export class AdminDepositController {
   async approveDeposit(
     @Param('id') id: string,
     @Body() dto: ApproveBankDepositDto,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<ApproveDepositResponseDto> {
     return await this.approveDepositService.execute({
@@ -283,7 +283,7 @@ export class AdminDepositController {
   async rejectDeposit(
     @Param('id') id: string,
     @Body() dto: RejectDepositDto,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<RejectDepositResponseDto> {
     return await this.rejectDepositService.execute({
@@ -317,7 +317,7 @@ export class AdminDepositController {
   })
   async getBankConfigs(
     @Query() query: GetBankConfigsQueryDto,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<PaginatedData<BankConfigResponseDto>> {
     const result = await this.findBankConfigsAdminService.execute(query);
@@ -349,7 +349,7 @@ export class AdminDepositController {
   })
   async createBankConfig(
     @Body() dto: CreateBankConfigRequestDto,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<BankConfigResponseDto> {
     const config = await this.createBankConfigService.execute(dto);
@@ -401,7 +401,7 @@ export class AdminDepositController {
   })
   async getBankConfigDetail(
     @Param('id') id: string,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<BankConfigResponseDto> {
     const config = await this.getBankConfigAdminService.execute({
@@ -438,7 +438,7 @@ export class AdminDepositController {
   async updateBankConfig(
     @Param('id') id: string,
     @Body() dto: UpdateBankConfigRequestDto,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<BankConfigResponseDto> {
     const config = await this.updateBankConfigAdminService.execute({
@@ -474,7 +474,7 @@ export class AdminDepositController {
   })
   async deleteBankConfig(
     @Param('id') id: string,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<SuccessResponseDto> {
     await this.deleteBankConfigAdminService.execute({ id: BigInt(id) });
@@ -505,7 +505,7 @@ export class AdminDepositController {
   })
   async getCryptoConfigs(
     @Query() query: GetCryptoConfigsQueryDto,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<PaginatedData<CryptoConfigResponseDto>> {
     const paginated = await this.findCryptoConfigsAdminService.execute(query);
@@ -544,7 +544,7 @@ export class AdminDepositController {
   })
   async getCryptoConfigDetail(
     @Param('id') id: string,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<CryptoConfigResponseDto> {
     const config = await this.getCryptoConfigAdminService.execute({
@@ -581,7 +581,7 @@ export class AdminDepositController {
   async updateCryptoConfig(
     @Param('id') id: string,
     @Body() dto: UpdateCryptoConfigRequestDto,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<CryptoConfigResponseDto> {
     const config = await this.updateCryptoConfigAdminService.execute({
@@ -613,7 +613,7 @@ export class AdminDepositController {
   })
   async createCryptoConfig(
     @Body() dto: CreateCryptoConfigRequestDto,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<CryptoConfigResponseDto> {
     const config = await this.createCryptoConfigService.execute(dto);
@@ -646,7 +646,7 @@ export class AdminDepositController {
   })
   async deleteCryptoConfig(
     @Param('id') id: string,
-    @CurrentUser() admin: CurrentUserWithSession,
+    @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<SuccessResponseDto> {
     await this.deleteCryptoConfigAdminService.execute({ id: BigInt(id) });

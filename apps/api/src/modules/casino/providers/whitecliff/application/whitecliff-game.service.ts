@@ -5,7 +5,7 @@ import {
 } from '../infrastructure/whitecliff-api.service';
 import { type RequestClientInfo } from 'src/common/http/types';
 import { IdUtil } from 'src/utils/id.util';
-import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { WhitecliffMapperService } from '../infrastructure/whitecliff-mapper.service';
 import { UserNotFoundException } from 'src/modules/user/profile/domain/user.exception';
 import { WalletNotFoundException } from 'src/modules/wallet/domain/wallet.exception';
@@ -40,7 +40,7 @@ export class WhitecliffGameService {
    * 게임 실행 (회원가입 겸용)
    */
   async launchGame(
-    authUser: CurrentUserWithSession,
+    authUser: AuthenticatedUser,
     data: {
       game: CasinoGame;
       provider: CasinoGameProvider;

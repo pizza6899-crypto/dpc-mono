@@ -27,7 +27,7 @@ import { CreateDepositResponseDto } from './dto/response/create-deposit-response
 import { CreateCryptoDepositRequestDto } from './dto/request/create-crypto-deposit-request.dto';
 import { CreateBankDepositRequestDto } from './dto/request/create-bank-deposit-request.dto';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
@@ -83,7 +83,7 @@ export class DepositController {
     category: 'DEPOSIT',
   })
   async getAvailableMethods(
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<GetAvailableDepositMethodsResponseDto> {
     return this.getAvailableMethodsService.execute();
@@ -112,7 +112,7 @@ export class DepositController {
   })
   async getMyDeposits(
     @Query() query: GetDepositsQueryDto,
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<PaginatedData<UserDepositResponseDto>> {
     const result = await this.getMyDepositsService.execute({
@@ -163,7 +163,7 @@ export class DepositController {
   })
   async getDepositDetail(
     @Param('id') id: string,
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<UserDepositResponseDto> {
     const decodedId = this.sqidsService.decode(id, SqidsPrefix.DEPOSIT);
@@ -197,7 +197,7 @@ export class DepositController {
   })
   async createCryptoDeposit(
     @Body() dto: CreateCryptoDepositRequestDto,
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @RequestClientInfoParam() clientInfo: RequestClientInfo,
   ): Promise<CreateDepositResponseDto> {
     const deposit = await this.createCryptoDepositService.execute({
@@ -240,7 +240,7 @@ export class DepositController {
   })
   async createBankDeposit(
     @Body() dto: CreateBankDepositRequestDto,
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @RequestClientInfoParam() clientInfo: RequestClientInfo,
   ): Promise<CreateDepositResponseDto> {
     const result = await this.createBankDepositService.execute({
@@ -286,7 +286,7 @@ export class DepositController {
   })
   async cancelDeposit(
     @Param('id') id: string,
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<CancelDepositResponseDto> {
     const decodedId = this.sqidsService.decode(id, SqidsPrefix.DEPOSIT);

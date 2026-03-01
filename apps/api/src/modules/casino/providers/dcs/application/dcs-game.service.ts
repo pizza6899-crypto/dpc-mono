@@ -16,7 +16,7 @@ import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module'
 import { CreateCasinoGameSessionService } from 'src/modules/casino/game-session/application/create-casino-game-session.service';
 import { CasinoGame } from 'src/modules/casino/game-catalog/domain';
 import { CasinoGameProvider } from 'src/modules/casino/aggregator/domain';
-import { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 
 @Injectable()
 export class DcsGameService {
@@ -25,7 +25,7 @@ export class DcsGameService {
     private readonly tx: PrismaTransaction,
     private readonly dcsApiService: DcsApiService,
     private readonly createCasinoGameSessionService: CreateCasinoGameSessionService,
-  ) {}
+  ) { }
 
   async launchGame({
     user: authUser,
@@ -37,7 +37,7 @@ export class DcsGameService {
     language,
     requestInfo,
   }: {
-    user: CurrentUserWithSession;
+    user: AuthenticatedUser;
     game: CasinoGame;
     provider: CasinoGameProvider;
     isMobile: boolean;

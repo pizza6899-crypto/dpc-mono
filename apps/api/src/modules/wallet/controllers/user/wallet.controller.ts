@@ -6,7 +6,7 @@ import {
   ApiPaginatedResponse,
 } from 'src/common/http/decorators/api-response.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
-import type { CurrentUserWithSession } from 'src/common/auth/decorators/current-user.decorator';
+import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 import { FindUserWalletService } from '../../application/find-user-wallet.service';
@@ -76,7 +76,7 @@ export class WalletController {
     }),
   })
   async getBalance(
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @Query() query: GetUserBalanceQueryDto,
   ): Promise<UserWalletListResponseDto> {
     const userId = BigInt(user.id);
@@ -132,7 +132,7 @@ export class WalletController {
     }),
   })
   async getTransactionHistory(
-    @CurrentUser() user: CurrentUserWithSession,
+    @CurrentUser() user: AuthenticatedUser,
     @Query() query: GetUserWalletTransactionHistoryQueryDto,
   ): Promise<PaginatedData<UserWalletTransactionResponseDto>> {
     const page = query.page ?? 1;
