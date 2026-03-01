@@ -7,12 +7,15 @@ import {
   DuplicateEmailException,
   DuplicateOAuthIdException,
   DuplicatePhoneNumberException,
+  InvalidNicknameException,
+  InvalidLoginIdException,
 } from '../domain/user.exception';
 import { USER_REPOSITORY } from '../ports/out/user.repository.token';
-import type {
-  UserRepositoryPort,
+import {
+  type UserRepositoryPort,
 } from '../ports/out/user.repository.port';
-import { RegistrationMethod, UserRoleType, OAuthProvider, ExchangeCurrencyCode } from '@prisma/client';
+import { RegistrationMethod, UserRoleType, OAuthProvider, ExchangeCurrencyCode, LoginIdType } from '@prisma/client';
+import { GetUserConfigService } from '../../config/application/get-user-config.service';
 
 interface CreateUserServiceParams {
   loginId: string;
@@ -40,7 +43,7 @@ interface CreateUserServiceResult {
  * 사용자 생성 Use Case
  *
  * 새로운 사용자를 생성합니다.
- * 구체적인 가입 방식(FULL, OAUTH, QUICK 등)에 따라 필요한 정보를 받아 처리합니다.
+ * 구체적인 가입 방식(CREDENTIAL, SOCIAL, ADMIN)에 따라 필요한 정보를 받아 처리합니다.
  */
 @Injectable()
 export class CreateUserService {
@@ -49,6 +52,7 @@ export class CreateUserService {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
+    private readonly getUserConfigService: GetUserConfigService,
   ) { }
 
   @Transactional()
@@ -65,23 +69,43 @@ export class CreateUserService {
       oauthProvider,
     } = params;
 
+    // 0. 전역 설정(UserConfig)의 정규식 검증 적용
+    const config = await this.getUserConfigService.execute();
+
+    // 로그인 ID 형식 검증 (일반 가입 시에만)
+    if (registrationMethod === RegistrationMethod.CREDENTIAL) {
+      let loginIdRegex: string | null = null;
+      if (config.loginIdType === LoginIdType.EMAIL) loginIdRegex = config.loginIdEmailRegex;
+      else if (config.loginIdType === LoginIdType.PHONE_NUMBER) loginIdRegex = config.loginIdPhoneNumberRegex;
+      else if (config.loginIdType === LoginIdType.USERNAME) loginIdRegex = config.loginIdUsernameRegex;
+
+      if (loginIdRegex && !new RegExp(loginIdRegex).test(loginId)) {
+        throw new InvalidLoginIdException();
+      }
+    }
+
+    // 닉네임 형식 검증
+    if (config.requireNickname && config.nicknameRegex && !new RegExp(config.nicknameRegex).test(nickname)) {
+      throw new InvalidNicknameException();
+    }
+
     // 1. 로그인 ID 중복 확인 (필수)
     const existingByLoginId = await this.userRepository.findByLoginId(loginId);
     if (existingByLoginId) {
-      throw new DuplicateLoginIdException(loginId);
+      throw new DuplicateLoginIdException();
     }
 
     // 2. 닉네임 중복 확인 (필수)
     const existingByNickname = await this.userRepository.findByNickname(nickname);
     if (existingByNickname) {
-      throw new DuplicateNicknameException(nickname);
+      throw new DuplicateNicknameException();
     }
 
     // 3. 이메일 중복 확인 (있는 경우)
     if (email) {
       const existingByEmail = await this.userRepository.findByEmail(email);
       if (existingByEmail) {
-        throw new DuplicateEmailException(email);
+        throw new DuplicateEmailException();
       }
     }
 
@@ -89,7 +113,7 @@ export class CreateUserService {
     if (phoneNumber) {
       const existingByPhone = await this.userRepository.findByPhoneNumber(phoneNumber);
       if (existingByPhone) {
-        throw new DuplicatePhoneNumberException(phoneNumber);
+        throw new DuplicatePhoneNumberException();
       }
     }
 

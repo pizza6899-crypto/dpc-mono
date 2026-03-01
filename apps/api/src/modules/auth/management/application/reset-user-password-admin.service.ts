@@ -49,7 +49,7 @@ export class ResetUserPasswordAdminService {
     // 1. 대상 사용자 조회
     const targetUser = await this.userRepository.findById(targetUserId);
     if (!targetUser) {
-      throw new UserNotFoundException(targetUserId.toString());
+      throw new UserNotFoundException();
     }
 
     // 2. 일반 회원가입 사용자인지 확인
@@ -60,7 +60,7 @@ export class ResetUserPasswordAdminService {
     // 3. 관리자(실행자) 조회 및 권한 체크
     const adminUser = await this.userRepository.findById(adminUserId);
     if (!adminUser) {
-      throw new UserNotFoundException(adminUserId.toString());
+      throw new UserNotFoundException();
     }
 
     this.validatePermission(adminUser, targetUser);

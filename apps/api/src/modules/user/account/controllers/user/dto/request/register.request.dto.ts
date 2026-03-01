@@ -3,6 +3,7 @@ import {
   IsOptional,
   IsNotEmpty,
   MaxLength,
+  Length,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
@@ -31,6 +32,7 @@ export class RegisterRequestDto {
   })
   @IsOptional()
   @IsString()
+  @Length(2, 50)
   @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   nickname?: string;
 

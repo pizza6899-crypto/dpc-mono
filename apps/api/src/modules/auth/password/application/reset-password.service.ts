@@ -44,7 +44,7 @@ export class ResetPasswordService {
     // 2. 사용자 조회
     const user = await this.userRepository.findById(tokenData.userId);
     if (!user) {
-      throw new UserNotFoundException(tokenData.userId.toString());
+      throw new UserNotFoundException();
     }
 
     // 3. 일반 회원가입 사용자인지 확인

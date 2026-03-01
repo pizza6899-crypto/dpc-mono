@@ -163,6 +163,7 @@ export enum MessageCode {
     // --- 비밀번호 관련 (Password) ---
     PASSWORD_RESET_TOKEN_INVALID = 'PASSWORD_RESET_TOKEN_INVALID', // 비밀번호 재설정 토큰이 유효하지 않을 때
     PASSWORD_SAME_AS_CURRENT = 'PASSWORD_SAME_AS_CURRENT', // 새 비밀번호와 현재 비밀번호가 같을 때
+    NICKNAME_SAME_AS_CURRENT = 'NICKNAME_SAME_AS_CURRENT', // 새 닉네임과 현재 닉네임이 같을 때
 
     // --- 어플리에이트 관련 (Affiliate) ---
     AFFILIATE_LINK_LIMIT_EXCEEDED = 'AFFILIATE_LINK_LIMIT_EXCEEDED', // 레퍼럴 링크 최대 개수 초과

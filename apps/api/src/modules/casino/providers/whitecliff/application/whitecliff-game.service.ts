@@ -34,7 +34,7 @@ export class WhitecliffGameService {
     private readonly whitecliffMapperService: WhitecliffMapperService,
     private readonly createCasinoGameSessionService: CreateCasinoGameSessionService,
     private readonly exchangeRateService: ExchangeRateService,
-  ) {}
+  ) { }
 
   /**
    * 게임 실행 (회원가입 겸용)
@@ -78,7 +78,7 @@ export class WhitecliffGameService {
       }),
     ]);
 
-    if (!user) throw new UserNotFoundException(authUser.id);
+    if (!user) throw new UserNotFoundException();
     if (!userBalance)
       throw new WalletNotFoundException(authUser.id, walletCurrency);
 

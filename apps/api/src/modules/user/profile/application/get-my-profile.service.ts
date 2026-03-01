@@ -1,9 +1,10 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { USER_REPOSITORY } from '../ports/out/user.repository.token';
 import type { UserRepositoryPort } from '../ports/out/user.repository.port';
 import { MyProfileResponseDto } from '../controllers/user/dto/response/my-profile.response.dto';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { UserNotFoundException } from '../domain';
 
 @Injectable()
 export class GetMyProfileService {
@@ -17,7 +18,7 @@ export class GetMyProfileService {
         const user = await this.userRepository.findById(userId);
 
         if (!user) {
-            throw new NotFoundException('User not found / 사용자를 찾을 수 없습니다.');
+            throw new UserNotFoundException();
         }
 
         return {

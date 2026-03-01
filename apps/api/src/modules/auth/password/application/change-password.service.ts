@@ -41,7 +41,7 @@ export class ChangePasswordService {
     // 1. 사용자 조회
     const user = await this.userRepository.findById(userId);
     if (!user) {
-      throw new UserNotFoundException(userId.toString());
+      throw new UserNotFoundException();
     }
 
     // 2. 일반 회원가입 사용자인지 확인

@@ -1,11 +1,13 @@
 // src/modules/user/profile/user-profile.module.ts
 import { Module } from '@nestjs/common';
 import { SessionModule } from 'src/modules/auth/session/session.module';
+import { UserConfigModule } from '../config/user-config.module';
 import { CreateUserService } from './application/create-user.service';
 import { ListUsersService } from './application/list-users.service';
 import { GetUserService } from './application/get-user.service';
 import { GetMyProfileService } from './application/get-my-profile.service';
 import { UpdateMyProfileService } from './application/update-my-profile.service';
+import { UpdateNicknameService } from './application/update-nickname.service';
 import { UpdateUserAdminService } from './application/update-user-admin.service';
 import { UserRepository } from './infrastructure/user.repository';
 import { UserMapper } from './infrastructure/user.mapper';
@@ -14,13 +16,14 @@ import { UserAdminController } from './controllers/admin/user-admin.controller';
 import { UserProfileController } from './controllers/user/user-profile.controller';
 
 @Module({
-    imports: [SessionModule],
+    imports: [SessionModule, UserConfigModule],
     providers: [
         CreateUserService,
         ListUsersService,
         GetUserService,
         GetMyProfileService,
         UpdateMyProfileService,
+        UpdateNicknameService,
         UpdateUserAdminService,
         UserMapper,
         {
@@ -35,6 +38,7 @@ import { UserProfileController } from './controllers/user/user-profile.controlle
         GetUserService,
         GetMyProfileService,
         UpdateMyProfileService,
+        UpdateNicknameService,
         UpdateUserAdminService,
         USER_REPOSITORY,
     ],

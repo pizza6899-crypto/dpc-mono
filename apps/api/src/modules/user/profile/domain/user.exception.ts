@@ -20,11 +20,9 @@ export class UserException extends DomainException {
  * User를 찾을 수 없을 때 발생하는 예외
  */
 export class UserNotFoundException extends UserException {
-  constructor(identifier: string | bigint) {
-    const id =
-      typeof identifier === 'bigint' ? identifier.toString() : identifier;
+  constructor() {
     super(
-      `User not found: ${id}`,
+      'User not found',
       MessageCode.USER_NOT_FOUND,
       HttpStatus.NOT_FOUND,
     );
@@ -36,9 +34,9 @@ export class UserNotFoundException extends UserException {
  * 이메일이 이미 존재할 때 발생하는 예외
  */
 export class DuplicateEmailException extends UserException {
-  constructor(email: string) {
+  constructor() {
     super(
-      `Email already in use: ${email}`,
+      'Email already in use',
       MessageCode.USER_ALREADY_EXISTS,
       HttpStatus.CONFLICT,
     );
@@ -50,9 +48,9 @@ export class DuplicateEmailException extends UserException {
  * 로그인 ID가 이미 존재할 때 발생하는 예외
  */
 export class DuplicateLoginIdException extends UserException {
-  constructor(loginId: string) {
+  constructor() {
     super(
-      `Login ID already in use: ${loginId}`,
+      'Login ID already in use',
       MessageCode.USER_ALREADY_EXISTS,
       HttpStatus.CONFLICT,
     );
@@ -64,9 +62,9 @@ export class DuplicateLoginIdException extends UserException {
  * 닉네임이 이미 존재할 때 발생하는 예외
  */
 export class DuplicateNicknameException extends UserException {
-  constructor(nickname: string) {
+  constructor() {
     super(
-      `Nickname already in use: ${nickname}`,
+      'Nickname already in use',
       MessageCode.USER_ALREADY_EXISTS,
       HttpStatus.CONFLICT,
     );
@@ -75,12 +73,54 @@ export class DuplicateNicknameException extends UserException {
 }
 
 /**
+ * 닉네임이 현재와 동일할 때 발생하는 예외
+ */
+export class NicknameSameAsCurrentException extends UserException {
+  constructor() {
+    super(
+      'New nickname must be different from the current one',
+      MessageCode.NICKNAME_SAME_AS_CURRENT,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'NicknameSameAsCurrentException';
+  }
+}
+
+/**
+ * 닉네임 형식이 잘못되었을 때 발생하는 예외
+ */
+export class InvalidNicknameException extends UserException {
+  constructor() {
+    super(
+      'Nickname format is invalid',
+      MessageCode.VALIDATION_ERROR,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'InvalidNicknameException';
+  }
+}
+
+/**
+ * 로그인 ID 형식이 잘못되었을 때 발생하는 예외
+ */
+export class InvalidLoginIdException extends UserException {
+  constructor() {
+    super(
+      'Login ID format is invalid',
+      MessageCode.VALIDATION_ERROR,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'InvalidLoginIdException';
+  }
+}
+
+/**
  * 휴대폰 번호가 이미 존재할 때 발생하는 예외
  */
 export class DuplicatePhoneNumberException extends UserException {
-  constructor(phoneNumber: string) {
+  constructor() {
     super(
-      `Phone number already in use: ${phoneNumber}`,
+      'Phone number already in use',
       MessageCode.USER_ALREADY_EXISTS,
       HttpStatus.CONFLICT,
     );
@@ -94,7 +134,7 @@ export class DuplicatePhoneNumberException extends UserException {
 export class DuplicateOAuthIdException extends UserException {
   constructor() {
     super(
-      `Social account already linked.`,
+      'Social account already linked',
       MessageCode.USER_ALREADY_EXISTS,
       HttpStatus.CONFLICT,
     );

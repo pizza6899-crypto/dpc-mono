@@ -1,8 +1,8 @@
-import { Injectable, Inject, NotFoundException, BadRequestException, Optional } from '@nestjs/common';
+import { Injectable, Inject, Optional } from '@nestjs/common';
 import { SynchronizeUserSessionService } from 'src/modules/auth/session/application/synchronize-user-session.service';
 import { USER_REPOSITORY } from '../ports/out/user.repository.token';
 import type { UserRepositoryPort } from '../ports/out/user.repository.port';
-import { User } from '../domain';
+import { User, UserNotFoundException, DuplicateEmailException } from '../domain';
 import { ExchangeCurrencyCode, UserStatus } from '@prisma/client';
 
 export interface UpdateUserAdminParams {
@@ -27,14 +27,14 @@ export class UpdateUserAdminService {
         const user = await this.userRepository.findById(params.id);
 
         if (!user) {
-            throw new NotFoundException('User not found / 사용자를 찾을 수 없습니다.');
+            throw new UserNotFoundException();
         }
 
         // 이메일 변경을 원할 경우 중복 이메일 체크
         if (params.email && params.email !== user.email) {
             const existingUser = await this.userRepository.findByEmail(params.email);
             if (existingUser) {
-                throw new BadRequestException('Email is already in use / 이미 사용 중인 이메일입니다.');
+                throw new DuplicateEmailException();
             }
         }
 
