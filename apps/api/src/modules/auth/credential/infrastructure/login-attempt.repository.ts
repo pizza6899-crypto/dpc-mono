@@ -3,7 +3,7 @@ import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import type { LoginAttemptRepositoryPort } from '../ports/out';
 import { LoginAttempt } from '../domain';
-import { LoginAttemptMapper } from './mapper';
+import { LoginAttemptMapper } from './login-attempt.mapper';
 
 @Injectable()
 export class LoginAttemptRepository implements LoginAttemptRepositoryPort {

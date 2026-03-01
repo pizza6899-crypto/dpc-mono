@@ -106,10 +106,7 @@ export class UserAuthController {
     });
 
     return {
-      user: {
-        id: this.sqidsService.encode(authenticatedUser.id, SqidsPrefix.USER),
-        email: authenticatedUser.email,
-      },
+      id: this.sqidsService.encode(authenticatedUser.id, SqidsPrefix.USER),
     };
   }
 
@@ -212,7 +209,7 @@ export class UserAuthController {
         isAuthenticated && user
           ? {
             id: this.sqidsService.encode(user.id, SqidsPrefix.USER),
-            email: user.email,
+            role: user.role,
           }
           : null,
     };

@@ -15,3 +15,17 @@ export class InvalidPasswordResetTokenException extends DomainException {
         this.name = 'InvalidPasswordResetTokenException';
     }
 }
+
+/**
+ * 비밀번호 불일치 예외
+ */
+export class PasswordMismatchException extends DomainException {
+    constructor() {
+        super(
+            'Current password does not match',
+            MessageCode.AUTH_PASSWORD_MISMATCH,
+            HttpStatus.UNAUTHORIZED,
+        );
+        this.name = 'PasswordMismatchException';
+    }
+}

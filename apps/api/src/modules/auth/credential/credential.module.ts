@@ -8,7 +8,7 @@ import { RecordLoginAttemptService } from './application/record-login-attempt.se
 import { VerifyCredentialService } from './application/verify-credential.service';
 import { LoginAttemptRepository } from './infrastructure/login-attempt.repository';
 import { CredentialUserRepository } from './infrastructure/credential-user.repository';
-import { LoginAttemptMapper } from './infrastructure/mapper';
+import { LoginAttemptMapper } from './infrastructure/login-attempt.mapper';
 import { CredentialUserMapper } from './infrastructure/credential-user.mapper';
 import { CredentialPolicy } from './domain/policy';
 import { AffiliateReferralModule } from '../../affiliate/referral/referral.module';

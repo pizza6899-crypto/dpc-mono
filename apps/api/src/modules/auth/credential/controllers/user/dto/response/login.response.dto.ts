@@ -1,14 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UserLoginUserResponseDto {
+/**
+ * User Login Response (Flat id only)
+ */
+export class UserLoginResponseDto {
   @ApiProperty({ description: 'User ID / 사용자 ID' })
   id: string;
-
-  @ApiProperty({ description: 'User Email / 사용자 이메일' })
-  email: string;
-}
-
-export class UserLoginResponseDto {
-  @ApiProperty({ type: UserLoginUserResponseDto })
-  user: UserLoginUserResponseDto;
 }

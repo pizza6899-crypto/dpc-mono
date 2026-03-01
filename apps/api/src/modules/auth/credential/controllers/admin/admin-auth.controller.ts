@@ -118,17 +118,14 @@ export class AdminAuthController {
     });
 
     return {
-      user: {
-        id: authenticatedUser.id.toString(),
-        email: authenticatedUser.email,
-      },
+      id: authenticatedUser.id.toString(),
     };
   }
 
   @Post('logout')
   @Public()
   @Throttle({
-    limit: 10,
+    limit: 60,
     ttl: 60, // 1분
     scope: ThrottleScope.IP,
   })
@@ -266,7 +263,7 @@ export class AdminAuthController {
         isAuthenticated && user
           ? {
             id: user.id.toString(),
-            email: user.email,
+            role: user.role,
           }
           : null,
     };

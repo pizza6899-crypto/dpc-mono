@@ -16,19 +16,6 @@ export class LoginFailedException extends DomainException {
   }
 }
 
-/**
- * 비밀번호 불일치 예외
- */
-export class PasswordMismatchException extends DomainException {
-  constructor() {
-    super(
-      'Password does not match',
-      MessageCode.AUTH_PASSWORD_MISMATCH,
-      HttpStatus.UNAUTHORIZED,
-    );
-    this.name = 'PasswordMismatchException';
-  }
-}
 
 /**
  * 계정 잠김 예외

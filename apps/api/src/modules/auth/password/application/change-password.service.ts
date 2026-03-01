@@ -1,15 +1,12 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { VerifyCredentialService } from '../../credential/application/verify-credential.service';
-import { hashPassword } from 'src/utils/password.util';
+import { comparePassword, hashPassword } from 'src/utils/password.util';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import type { UserRepositoryPort } from 'src/modules/user/profile/ports/out/user.repository.port';
 import { USER_REPOSITORY } from 'src/modules/user/profile/ports/out/user.repository.token';
 import { UserNotFoundException } from 'src/modules/user/profile/domain/user.exception';
-import {
-  PasswordMismatchException,
-  LoginFailedException,
-} from '../../credential/domain/exception';
+import { LoginFailedException } from '../../credential/domain/exception';
+import { PasswordMismatchException } from '../domain/password.exception';
 
 export interface ChangePasswordParams {
   userId: bigint;
@@ -29,7 +26,6 @@ export class ChangePasswordService {
   private readonly logger = new Logger(ChangePasswordService.name);
 
   constructor(
-    private readonly verifyService: VerifyCredentialService,
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
   ) { }
@@ -40,8 +36,6 @@ export class ChangePasswordService {
       userId,
       currentPassword,
       newPassword,
-      requestInfo,
-      isAdmin = false,
     } = params;
 
     // 1. 사용자 조회
@@ -61,11 +55,7 @@ export class ChangePasswordService {
       throw new LoginFailedException('User has no password set');
     }
 
-    const isValidPassword = await this.verifyService.execute({
-      loginId: user.loginId || user.email!, // isCredentialUser 체크를 통해 식별자 존재가 보장됨
-      password: currentPassword,
-      isAdmin,
-    });
+    const isValidPassword = await comparePassword(currentPassword, authInfo.passwordHash);
 
     if (!isValidPassword) {
       throw new PasswordMismatchException();
