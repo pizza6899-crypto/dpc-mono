@@ -135,6 +135,7 @@ model User {
     userRewards            UserReward[]
     compDailySettlements   CompDailySettlement[]
     userConfigsUpdated     UserConfig[]            @relation("UserConfigUpdatedBy")
+    userExpLogs            UserExpLog[]
 
     @@map("users")
 }

@@ -1,5 +1,5 @@
 model TierConfig {
-  id BigInt @id @default(autoincrement()) // 실제로는 id=1 인 row 하나만 사용
+  id BigInt @id @default(1) // 실제로는 id=1 인 row 하나만 사용
 
   // [Master Switch] 시스템 제어
   isUpgradeEnabled   Boolean @default(true) @map("is_upgrade_enabled") // 승급 심사 전체 ON/OFF
@@ -14,6 +14,11 @@ model TierConfig {
   updatedAt DateTime @updatedAt @map("updated_at")
   updatedBy BigInt?  @map("updated_by") // 변경한 관리자 ID
 
+  // [XP Policy]
+  // 1 XP를 획득하기 위해 필요한 롤링 금액 (USD)
+  // 예: 10.00 이면 10달러 롤링당 1 XP 지급
+  rollingUsdPerExp Decimal @default(1) @map("rolling_usd_per_exp") @db.Decimal(32, 18)
+
   updatedByUser User? @relation("TierConfigUpdatedBy", fields: [updatedBy], references: [id])
 
   @@map("tier_config")
@@ -25,16 +30,13 @@ model Tier {
   // code: 시스템 내부 식별자 (불변), 어드민/백오피스 및 코드 레벨 참조용 (e.g., "BRONZE", "VIP_GOLD")
   code  String @unique
 
-  // upgrade_rolling_required_usd: 다음 레벨 승급에 필요한 누적 롤링액 (USD)
-  upgradeRollingRequiredUsd  Decimal @map("upgrade_rolling_required_usd") @db.Decimal(32, 18)
-  // upgrade_deposit_required_usd: 다음 레벨 승급에 필요한 누적 입금액 (USD)
-  upgradeDepositRequiredUsd  Decimal @default(0) @map("upgrade_deposit_required_usd") @db.Decimal(32, 18)
-  // maintain_rolling_required_usd: 등급 유지를 위해 필요한 최소 롤링액 (USD)
-  maintainRollingRequiredUsd Decimal @default(0) @map("maintain_rolling_required_usd") @db.Decimal(32, 18)
-
   // evaluation_cycle: 등급 유지/강등 심사 주기
   // NONE: 강등 없음, ROLLING_30_DAYS: 30일 평가, ROLLING_90_DAYS: 90일 평가
   evaluationCycle TierEvaluationCycle @default(NONE) @map("evaluation_cycle")
+
+  // [Gaming XP]
+  // 다음 레벨 승급에 필요한 XP
+  upgradeExpRequired BigInt @default(0) @map("upgrade_exp_required")
 
   // Benefits
   upgradeBonusUsd                Decimal @default(0) @map("upgrade_bonus_usd") @db.Decimal(32, 18)
@@ -97,12 +99,10 @@ model UserTier {
   tierId BigInt @map("tier_id")
 
   // 상태 데이터
-  lifetimeRollingUsd      Decimal  @default(0) @map("lifetime_rolling_usd") @db.Decimal(32, 18)
-  statusRollingUsd        Decimal  @default(0) @map("status_rolling_usd") @db.Decimal(32, 18) // 승급(Upgrade) 판정용 실적 (강등 시 Cap 처리)
-  currentPeriodRollingUsd Decimal  @default(0) @map("current_period_rolling_usd") @db.Decimal(32, 18)
-  lifetimeDepositUsd      Decimal  @default(0) @map("lifetime_deposit_usd") @db.Decimal(32, 18) // 평생 누적 입금액
-  currentPeriodDepositUsd Decimal  @default(0) @map("current_period_deposit_usd") @db.Decimal(32, 18) // 이번 주기 누적 입금액
-  lastEvaluationAt        DateTime @default(now()) @map("last_evaluation_at")
+  lifetimeRollingUsd Decimal  @default(0) @map("lifetime_rolling_usd") @db.Decimal(32, 18)
+  statusRollingUsd   Decimal  @default(0) @map("status_rolling_usd") @db.Decimal(32, 18) // (통계용) 현재 등급 누적 롤링액
+  lifetimeDepositUsd Decimal  @default(0) @map("lifetime_deposit_usd") @db.Decimal(32, 18) // 평생 누적 입금액
+  lastEvaluationAt   DateTime @default(now()) @map("last_evaluation_at")
 
   // 승급/강등 제어
   // [Policy: Soft Landing & Reset]
@@ -138,6 +138,10 @@ model UserTier {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  // [XP Status]
+  statusExp   BigInt @default(0) @map("status_exp") // 승급 판정 시 사용되는 XP (승급 시 초기화 정책에 따름)
+  lifetimeExp BigInt @default(0) @map("lifetime_exp") // 평생 누적 XP (UI 표시 및 랭킹용)
+
   nextEvaluationAt DateTime? @map("next_evaluation_at")
 
   // --- Downgrade Warning State ---
@@ -164,22 +168,21 @@ model TierHistory {
   reason     String?
 
   // Snapshot data (변경 시점의 데이터 기록)
-  statusRollingUsdSnap        Decimal @default(0) @map("status_rolling_usd_snap") @db.Decimal(32, 18)
-  currentPeriodDepositUsdSnap Decimal @default(0) @map("current_period_deposit_usd_snap") @db.Decimal(32, 18)
-  compRateSnap                Decimal @default(0) @map("comp_rate_snap") @db.Decimal(8, 4)
-  weeklyLossbackRateSnap      Decimal @default(0) @map("weekly_lossback_rate_snap") @db.Decimal(8, 4)
-  monthlyLossbackRateSnap     Decimal @default(0) @map("monthly_lossback_rate_snap") @db.Decimal(8, 4)
+  statusRollingUsdSnap    Decimal @default(0) @map("status_rolling_usd_snap") @db.Decimal(32, 18)
+  compRateSnap            Decimal @default(0) @map("comp_rate_snap") @db.Decimal(8, 4)
+  weeklyLossbackRateSnap  Decimal @default(0) @map("weekly_lossback_rate_snap") @db.Decimal(8, 4)
+  monthlyLossbackRateSnap Decimal @default(0) @map("monthly_lossback_rate_snap") @db.Decimal(8, 4)
 
-  // [Snapshot: Rules & Status] 당시 정책 기준 및 유저 누적 상태
-  upgradeRollingRequiredUsdSnap Decimal @default(0) @map("upgrade_rolling_required_usd_snap") @db.Decimal(32, 18)
-  upgradeDepositRequiredUsdSnap Decimal @default(0) @map("upgrade_deposit_required_usd_snap") @db.Decimal(32, 18)
-  lifetimeRollingUsdSnap        Decimal @default(0) @map("lifetime_rolling_usd_snap") @db.Decimal(32, 18)
-  lifetimeDepositUsdSnap        Decimal @default(0) @map("lifetime_deposit_usd_snap") @db.Decimal(32, 18)
+  lifetimeRollingUsdSnap Decimal @default(0) @map("lifetime_rolling_usd_snap") @db.Decimal(32, 18)
+  lifetimeDepositUsdSnap Decimal @default(0) @map("lifetime_deposit_usd_snap") @db.Decimal(32, 18)
 
   // [Reward Audit] 보너스 지급 관련
   hasBonusGenerated  Boolean @default(false) @map("has_bonus_generated")
   bonusAmountUsdSnap Decimal @default(0) @map("bonus_amount_usd_snap") @db.Decimal(32, 18)
   skippedReason      String? @map("skipped_reason")
+
+  // [XP Snapshot]
+  statusExpSnap BigInt @default(0) @map("status_exp_snap")
 
   changedAt DateTime @default(now()) @map("changed_at")
   changeBy  String?  @map("change_by")
@@ -250,4 +253,35 @@ enum UserTierStatus {
   ACTIVE // 정상 유지
   GRACE // 강등 유예 (Grace Period)
   LOCKED // 등급 고정 (Retention Lock / 관리자 수동 고정)
+}
+
+// --- XP Gamification Models ---
+
+model UserExpLog {
+  id     BigInt
+  userId BigInt @map("user_id")
+
+  amount        BigInt // 증감량 (+ 또는 -)
+  statusExpSnap BigInt @map("status_exp_snap") // 지급 후 최종 잔액 스냅샷
+
+  sourceType  ExpSourceType @map("source_type")
+  referenceId BigInt?       @map("reference_id") // CasinoGameRound ID 등 원천 데이터 참조
+
+  reason String? // 관리자 조정 시 사유 등
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@id([id, createdAt])
+  @@unique([id])
+  @@index([userId, createdAt])
+  @@map("user_exp_log")
+}
+
+enum ExpSourceType {
+  ROLLING_REWARD // 롤링에 따른 자동 지급
+  ADMIN_ADJUSTMENT // 관리자 수동 조정
+  EVENT_BONUS // 이벤트성 지급
+  MISSION_COMPLETE // 미션 달성 보상
 }
