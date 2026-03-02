@@ -1,12 +1,12 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
-import { type GameRoundRepositoryPort } from '../../../ports/out/game-round.repository.port';
-import { GAME_ROUND_REPOSITORY_TOKEN } from '../../../ports/out/game-round.repository.token';
+import { type GameRoundRepositoryPort } from 'src/modules/casino/ports/out/game-round.repository.port';
+import { GAME_ROUND_REPOSITORY_TOKEN } from 'src/modules/casino/ports/out/game-round.repository.token';
 import { DcsApiService } from '../infrastructure/dcs-api.service';
 import { GameAggregatorType, Prisma } from '@prisma/client';
-import { GameResultMeta } from '../../../domain/model/game-round.entity';
+import { GameResultMeta } from 'src/modules/casino/domain/model/game-round.entity';
 import { ClsService } from 'nestjs-cls';
-import { CASINO_GAME_SESSION_REPOSITORY } from '../../../game-session/ports/casino-game-session.repository.token';
-import { type CasinoGameSessionRepositoryPort } from '../../../game-session/ports/casino-game-session.repository.port';
+import { CASINO_GAME_SESSION_REPOSITORY } from 'src/modules/casino-session/ports/casino-game-session.repository.token';
+import { type CasinoGameSessionRepositoryPort } from 'src/modules/casino-session/ports/casino-game-session.repository.port';
 
 import { DcsResponseCode } from '../constants/dcs-response-codes';
 
@@ -21,7 +21,7 @@ export class DcsFetchGameResultService {
     private readonly gameSessionRepository: CasinoGameSessionRepositoryPort,
     private readonly dcsApiService: DcsApiService,
     private readonly cls: ClsService,
-  ) {}
+  ) { }
 
   async execute(gameRoundId: bigint, startedAt: Date): Promise<void> {
     return this.cls.run(async () => {

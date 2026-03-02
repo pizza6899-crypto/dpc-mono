@@ -2,13 +2,10 @@ import { Injectable, Logger, NotFoundException, Inject } from '@nestjs/common';
 import { Prisma, GameAggregatorType, GameProvider } from '@prisma/client';
 import { ProcessCasinoBetService } from '../application/process-casino-bet.service';
 import { ProcessCasinoCreditService } from '../application/process-casino-credit.service';
-import { FindCasinoGameSessionService } from '../game-session/application/find-casino-game-session.service';
+import { FindCasinoGameSessionService } from 'src/modules/casino-session/application/find-casino-game-session.service';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
-import {
-  SimulateRoundRequestDto,
-  SimulateRoundResponseDto,
-} from './dto/simulate-round.dto';
-import { CreateCasinoGameSessionService } from '../game-session/application/create-casino-game-session.service';
+import { SimulateRoundRequestDto, SimulateRoundResponseDto } from './dto/simulate-round.dto';
+import { CreateCasinoGameSessionService } from 'src/modules/casino-session/application/create-casino-game-session.service';
 import { UpdatePushedBetService } from '../application/update-pushed-bet.service';
 import { GAME_ROUND_REPOSITORY_TOKEN } from '../ports/out/game-round.repository.token';
 import type { GameRoundRepositoryPort } from '../ports/out/game-round.repository.port';
@@ -26,7 +23,7 @@ export class CasinoSimulatorService {
     private readonly updatePushedBetService: UpdatePushedBetService,
     @Inject(GAME_ROUND_REPOSITORY_TOKEN)
     private readonly gameRoundRepository: GameRoundRepositoryPort,
-  ) {}
+  ) { }
 
   async simulateRound(
     dto: SimulateRoundRequestDto,
@@ -62,6 +59,7 @@ export class CasinoSimulatorService {
           gameCurrency: currency as any,
           token: `SIM_TOKEN_${Date.now()}`,
           playerName: `User_${userId}`,
+          compRate: new Prisma.Decimal(1),
         });
         logs.push(`[Session] 세션 생성 완료: ${session.id}`);
       } catch (e) {

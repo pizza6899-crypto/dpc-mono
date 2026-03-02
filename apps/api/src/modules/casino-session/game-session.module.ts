@@ -5,12 +5,10 @@ import { RevokeUserGameSessionsService } from './application/revoke-user-game-se
 import { CasinoGameSessionMapper } from './infrastructure/mapper/casino-game-session.mapper';
 import { CasinoGameSessionRepository } from './infrastructure/repository/casino-game-session.repository';
 import { CASINO_GAME_SESSION_REPOSITORY } from './ports/casino-game-session.repository.token';
-import { ExchangeModule } from '../../exchange/exchange.module';
-
-import { TierProfileModule } from '../../tier/profile/tier-profile.module';
+import { ExchangeModule } from '../exchange/exchange.module';
 
 @Module({
-  imports: [ExchangeModule, TierProfileModule],
+  imports: [ExchangeModule],
   providers: [
     CasinoGameSessionMapper,
     {
@@ -28,4 +26,4 @@ import { TierProfileModule } from '../../tier/profile/tier-profile.module';
     CASINO_GAME_SESSION_REPOSITORY,
   ],
 })
-export class GameSessionModule { }
+export class CasinoSessionModule { }

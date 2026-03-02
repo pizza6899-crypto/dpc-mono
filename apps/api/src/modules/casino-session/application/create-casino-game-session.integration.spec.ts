@@ -2,7 +2,7 @@ import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { CreateCasinoGameSessionService } from './create-casino-game-session.service';
-import { GameSessionModule } from '../game-session.module';
+import { CasinoSessionModule } from '../game-session.module';
 import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';
 import {
   ExchangeCurrencyCode,
@@ -18,7 +18,7 @@ describe('CreateCasinoGameSessionService (Integration)', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [GameSessionModule],
+      imports: [CasinoSessionModule],
     }).compile();
 
     service = module.get<CreateCasinoGameSessionService>(
@@ -53,6 +53,7 @@ describe('CreateCasinoGameSessionService (Integration)', () => {
       gameCurrency,
       token: IdUtil.generateUrlSafeNanoid(32),
       playerName: 'test_player',
+      compRate: new Prisma.Decimal(0.01),
     });
 
     // 3. Verify

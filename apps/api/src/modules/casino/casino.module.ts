@@ -1,7 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { AggregatorModule } from './aggregator/aggregator.module';
 import { GameCatalogModule } from './game-catalog/game-catalog.module';
-import { GameSessionModule } from './game-session/game-session.module';
+import { CasinoSessionModule } from '../casino-session/game-session.module';
 import { WhitecliffModule } from './providers/whitecliff/whitecliff.module';
 import { DcsModule } from './providers/dcs/dcs.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
@@ -38,7 +38,7 @@ import { TierEvaluatorModule } from '../tier/evaluator/tier-evaluator.module';
   imports: [
     AggregatorModule,
     GameCatalogModule,
-    GameSessionModule,
+    CasinoSessionModule,
     forwardRef(() => WhitecliffModule),
     forwardRef(() => DcsModule),
     ConcurrencyModule,
@@ -84,7 +84,7 @@ import { TierEvaluatorModule } from '../tier/evaluator/tier-evaluator.module';
     CasinoSimulatorService, // [DEV] Simulator
   ],
   exports: [
-    GameSessionModule,
+    CasinoSessionModule,
     LaunchGameService,
     CheckCasinoBalanceService,
     ProcessCasinoBetService,
@@ -95,4 +95,4 @@ import { TierEvaluatorModule } from '../tier/evaluator/tier-evaluator.module';
     GAME_TRANSACTION_REPOSITORY_TOKEN,
   ],
 })
-export class CasinoModule {}
+export class CasinoModule { }

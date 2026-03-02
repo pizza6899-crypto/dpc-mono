@@ -26,14 +26,14 @@ import {
 
 import { DcsMapperService } from '../infrastructure/dcs-mapper.service';
 import { GameAggregatorType, Prisma, GameProvider } from '@prisma/client';
-import { CheckCasinoBalanceService } from '../../../application/check-casino-balance.service';
-import { FindCasinoGameSessionService } from '../../../game-session/application/find-casino-game-session.service';
-import { CasinoErrorCode } from '../../../constants/casino-error-codes';
+import { CheckCasinoBalanceService } from 'src/modules/casino/application/check-casino-balance.service';
+import { FindCasinoGameSessionService } from 'src/modules/casino-session/application/find-casino-game-session.service';
+import { CasinoErrorCode } from 'src/modules/casino/constants/casino-error-codes';
 import { InsufficientBalanceException } from 'src/modules/wallet/domain/wallet.exception';
-import { ProcessCasinoBetService } from '../../../application/process-casino-bet.service';
-import { ProcessCasinoCreditService } from '../../../application/process-casino-credit.service';
-import { GAME_ROUND_REPOSITORY_TOKEN } from '../../../ports/out/game-round.repository.token';
-import { type GameRoundRepositoryPort } from '../../../ports/out/game-round.repository.port';
+import { ProcessCasinoBetService } from 'src/modules/casino/application/process-casino-bet.service';
+import { ProcessCasinoCreditService } from 'src/modules/casino/application/process-casino-credit.service';
+import { GAME_ROUND_REPOSITORY_TOKEN } from 'src/modules/casino/ports/out/game-round.repository.token';
+import { type GameRoundRepositoryPort } from 'src/modules/casino/ports/out/game-round.repository.port';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LogType } from 'src/modules/audit-log/domain';
 

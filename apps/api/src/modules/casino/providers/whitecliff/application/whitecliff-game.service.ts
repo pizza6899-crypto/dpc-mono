@@ -9,7 +9,7 @@ import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { WhitecliffMapperService } from '../infrastructure/whitecliff-mapper.service';
 import { UserNotFoundException } from 'src/modules/user/profile/domain/user.exception';
 import { WalletNotFoundException } from 'src/modules/wallet/domain/wallet.exception';
-import { GameProvider, Language, GameAggregatorType } from '@prisma/client';
+import { GameProvider, Language, GameAggregatorType, Prisma } from '@prisma/client';
 import { CasinoGameProviderNotFoundException } from 'src/modules/casino/aggregator/domain/casino-aggregator.exception';
 import { GameNotFoundException } from 'src/modules/casino/game-catalog/domain';
 import {
@@ -19,7 +19,8 @@ import {
 import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { CreateCasinoGameSessionService } from 'src/modules/casino/game-session/application/create-casino-game-session.service';
+import { CreateCasinoGameSessionService } from 'src/modules/casino-session/application/create-casino-game-session.service';
+import { GetTierBenefitsService } from 'src/modules/tier/profile/application/get-tier-benefits.service';
 import { CasinoGame } from 'src/modules/casino/game-catalog/domain';
 import { CasinoGameProvider } from 'src/modules/casino/aggregator/domain';
 
@@ -34,6 +35,7 @@ export class WhitecliffGameService {
     private readonly whitecliffMapperService: WhitecliffMapperService,
     private readonly createCasinoGameSessionService: CreateCasinoGameSessionService,
     private readonly exchangeRateService: ExchangeRateService,
+    private readonly getTierBenefitsService: GetTierBenefitsService,
   ) { }
 
   /**
@@ -169,7 +171,11 @@ export class WhitecliffGameService {
       });
     }
 
-    // 6. 게임 세션 생성 (애플리케이션 레이어 위임)
+    // 6. 티어 콤프 요율 조회
+    const benefits = await this.getTierBenefitsService.execute(user.id);
+    const compRate = benefits?.compRate ?? new Prisma.Decimal(0);
+
+    // 7. 게임 세션 생성 (애플리케이션 레이어 위임)
     await this.createCasinoGameSessionService.execute({
       userId: user.id,
       gameId: game.id!,
@@ -178,6 +184,7 @@ export class WhitecliffGameService {
       gameCurrency,
       token: result.sid,
       playerName: identity.username,
+      compRate,
     });
 
     return { gameUrl: result.launch_url };

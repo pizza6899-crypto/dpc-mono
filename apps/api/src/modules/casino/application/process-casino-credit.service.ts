@@ -6,7 +6,7 @@ import {
   UserWalletBalanceType,
   UserWalletTransactionType,
 } from '@prisma/client';
-import { CasinoGameSession } from '../game-session/domain';
+import { CasinoGameSession } from 'src/modules/casino-session/domain';
 import { Transactional } from '@nestjs-cls/transactional';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { GAME_ROUND_REPOSITORY_TOKEN } from '../ports/out/game-round.repository.token';
@@ -65,7 +65,7 @@ export class ProcessCasinoCreditService {
     private readonly gameResultFetchQueue: Queue,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly findUserWalletService: FindUserWalletService, // [Inject] Added
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(

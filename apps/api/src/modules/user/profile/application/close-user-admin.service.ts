@@ -5,6 +5,7 @@ import type { UserRepositoryPort } from '../ports/out/user.repository.port';
 import { UserNotFoundException, AccountAlreadyClosedException } from '../domain';
 import { ExpireUserSessionsService } from 'src/modules/auth/session/application/expire-user-sessions.service';
 import { UserStatus } from '@prisma/client';
+import { RevokeUserGameSessionsService } from 'src/modules/casino-session/application/revoke-user-game-sessions.service';
 
 export interface CloseUserAdminParams {
     userId: bigint;
@@ -23,6 +24,7 @@ export class CloseUserAdminService {
         @Inject(USER_REPOSITORY)
         private readonly userRepository: UserRepositoryPort,
         private readonly expireUserSessionsService: ExpireUserSessionsService,
+        private readonly revokeUserGameSessionsService: RevokeUserGameSessionsService,
     ) { }
 
     @Transactional()
@@ -51,6 +53,9 @@ export class CloseUserAdminService {
             userId: user.id,
             revokedBy: adminId,
         });
+
+        // 6. 모든 게임 세션 파기
+        await this.revokeUserGameSessionsService.execute(user.id);
 
         this.logger.log(`Successfully closed account and expired sessions for user ${userId}`);
     }

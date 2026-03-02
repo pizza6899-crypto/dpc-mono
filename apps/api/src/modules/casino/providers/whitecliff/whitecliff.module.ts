@@ -9,6 +9,7 @@ import { WhitecliffFetchGameResultService } from './application/whitecliff-fetch
 import { RedisModule } from 'src/infrastructure/redis/redis.module';
 import { WhitecliffMapperService } from './infrastructure/whitecliff-mapper.service';
 import { ExchangeModule } from 'src/modules/exchange/exchange.module';
+import { TierProfileModule } from 'src/modules/tier/profile/tier-profile.module';
 import { WhitecliffPushedBetHistoryProcessor } from './infrastructure/processors/whitecliff-pushed-bet-history.processor';
 import { BullModule } from '@nestjs/bullmq';
 import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
@@ -26,6 +27,7 @@ import { CASINO_QUEUES } from '../../infrastructure/casino.bullmq';
     RedisModule,
     forwardRef(() => CasinoModule),
     ExchangeModule,
+    TierProfileModule,
     AuditLogModule,
     WalletModule,
     BullMqModule,
@@ -51,4 +53,4 @@ import { CASINO_QUEUES } from '../../infrastructure/casino.bullmq';
     WhitecliffFetchGameResultService,
   ],
 })
-export class WhitecliffModule {}
+export class WhitecliffModule { }

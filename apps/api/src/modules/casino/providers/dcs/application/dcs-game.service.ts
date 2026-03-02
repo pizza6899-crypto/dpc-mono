@@ -13,7 +13,9 @@ import {
 import { GameAggregatorType, Language } from '@prisma/client';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { CreateCasinoGameSessionService } from 'src/modules/casino/game-session/application/create-casino-game-session.service';
+import { CreateCasinoGameSessionService } from 'src/modules/casino-session/application/create-casino-game-session.service';
+import { GetTierBenefitsService } from 'src/modules/tier/profile/application/get-tier-benefits.service';
+import { Prisma } from '@prisma/client';
 import { CasinoGame } from 'src/modules/casino/game-catalog/domain';
 import { CasinoGameProvider } from 'src/modules/casino/aggregator/domain';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
@@ -25,6 +27,7 @@ export class DcsGameService {
     private readonly tx: PrismaTransaction,
     private readonly dcsApiService: DcsApiService,
     private readonly createCasinoGameSessionService: CreateCasinoGameSessionService,
+    private readonly getTierBenefitsService: GetTierBenefitsService,
   ) { }
 
   async launchGame({
@@ -94,6 +97,10 @@ export class DcsGameService {
         );
       }
 
+      // 4. 티어 콤프 요율 조회
+      const benefits = await this.getTierBenefitsService.execute(authUser.id);
+      const compRate = benefits?.compRate ?? new Prisma.Decimal(0);
+
       await this.createCasinoGameSessionService.execute({
         userId: authUser.id,
         gameId: game.id!,
@@ -102,6 +109,7 @@ export class DcsGameService {
         gameCurrency,
         token: newDcsToken,
         playerName: updatedUser.dcsId!,
+        compRate,
       });
 
       return {

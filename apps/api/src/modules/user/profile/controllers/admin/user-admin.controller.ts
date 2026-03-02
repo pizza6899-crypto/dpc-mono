@@ -27,6 +27,7 @@ import { UpdateUserAdminService } from '../../application/update-user-admin.serv
 import { CloseUserAdminService } from '../../application/close-user-admin.service';
 import { RestoreUserAdminService } from '../../application/restore-user-admin.service';
 import { ExpireUserSessionsService } from 'src/modules/auth/session/application/expire-user-sessions.service';
+import { RevokeUserGameSessionsService } from 'src/modules/casino-session/application/revoke-user-game-sessions.service';
 import { ListUsersAdminQueryDto } from './dto/request/list-users-admin-query.dto';
 import { UpdateUserAdminRequestDto } from './dto/request/update-user-admin.request.dto';
 import { CloseUserAccountRequestDto } from './dto/request/close-user-account.request.dto';
@@ -50,6 +51,7 @@ export class UserAdminController {
     private readonly closeUserAdminService: CloseUserAdminService,
     private readonly restoreUserAdminService: RestoreUserAdminService,
     private readonly expireUserSessionsService: ExpireUserSessionsService,
+    private readonly revokeUserGameSessionsService: RevokeUserGameSessionsService,
   ) { }
 
   /**
@@ -273,5 +275,8 @@ export class UserAdminController {
       revokedBy: admin.id,
       requestInfo,
     });
+
+    // 2. 게임 세션 즉시 파기
+    await this.revokeUserGameSessionsService.execute(BigInt(id));
   }
 }

@@ -3,11 +3,11 @@ import { EnvService } from 'src/common/env/env.service';
 import { GameAggregatorType, Prisma, GameProvider } from '@prisma/client';
 import { WhitecliffMapperService } from '../infrastructure/whitecliff-mapper.service';
 import { getCasinoErrorCode } from '../utils/whitecliff-error-response.util';
-import { CasinoErrorCode } from '../../../constants/casino-error-codes';
-import { CheckCasinoBalanceService } from '../../../application/check-casino-balance.service';
-import { FindCasinoGameSessionService } from '../../../game-session/application/find-casino-game-session.service';
-import { ProcessCasinoBetService } from '../../../application/process-casino-bet.service';
-import { ProcessCasinoCreditService } from '../../../application/process-casino-credit.service';
+import { CasinoErrorCode } from 'src/modules/casino/constants/casino-error-codes';
+import { CheckCasinoBalanceService } from 'src/modules/casino/application/check-casino-balance.service';
+import { FindCasinoGameSessionService } from 'src/modules/casino-session/application/find-casino-game-session.service';
+import { ProcessCasinoBetService } from 'src/modules/casino/application/process-casino-bet.service';
+import { ProcessCasinoCreditService } from 'src/modules/casino/application/process-casino-credit.service';
 import { type GamingCurrencyCode } from 'src/utils/currency.util';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LogType } from 'src/modules/audit-log/domain';
@@ -33,7 +33,7 @@ export class WhitecliffCallbackService {
     private readonly processCasinoBetService: ProcessCasinoBetService,
     private readonly processCasinoCreditService: ProcessCasinoCreditService,
     private readonly dispatchLogService: DispatchLogService,
-  ) {}
+  ) { }
 
   /**
    * 통합 검증 헬퍼
@@ -469,7 +469,7 @@ export class WhitecliffCallbackService {
           currentBalance = res.balance.toNumber();
         }
       }
-    } catch (e) {}
+    } catch (e) { }
 
     const errorCode = getCasinoErrorCode(error);
 

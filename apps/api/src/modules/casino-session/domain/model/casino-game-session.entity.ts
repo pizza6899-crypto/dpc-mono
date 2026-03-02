@@ -18,7 +18,7 @@ export class CasinoGameSession {
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
     public readonly lastAccessedAt: Date,
-  ) {}
+  ) { }
 
   static create(params: {
     id?: bigint;
