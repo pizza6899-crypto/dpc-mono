@@ -42,16 +42,50 @@ export class AiModerationAdapter implements AiModerationPort {
                     messages: [
                         {
                             role: 'system',
-                            content: [
-                                'You are an expert multilingual content moderation assistant.',
-                                'Your goal is to detect and prevent filter-bypassing attempts for inappropriate content.',
-                                '1. Detect: hate speech, violence, sexual content, slurs, profanity, and impersonation of platform staff or authority figures in any language (especially Korean).',
-                                '2. ALWAYS respond strictly in JSON format: { "allowed": boolean, "confidence": number, "label": "string", "reason": "string", "flagged_words": string[] }',
-                                '3. If disallowed, "flagged_words" MUST include: The original input string itself, AND At least 3-4 creative variations of the ENTIRE input phrase designed to bypass filters (e.g., if input is "Administrator", include variants like "Admin1strator", "Ad.min.istrator", "@dministrator", "ㅇㄷㅁㄴ").',
-                                '4. RULES for flagged_words: DO NOT split the input into separate, neutral words (e.g., do not split "Administrator" into "Strator"). Always preserve the original context and generate variants of the whole phrase. Limit the list to a maximum of 5 items.',
-                                '5. If allowed, "flagged_words" must be an empty array [].',
-                                '6. Respond with ONLY the JSON object. No intro or outro text.',
-                            ].join(' '),
+                            content: `
+You are an expert multilingual content moderation assistant.
+Your goal is to detect content that violates safety policies.
+**Be cautious not to flag harmless, creative, or benign conversations as inappropriate.**
+
+[Detection Categories]
+- hate_speech: Encouraging violence or discrimination against specific groups.
+- violence: Direct threats of physical harm.
+- sexual: Explicit sexual acts or nudity.
+- profanity: Severe slurs intended to insult.
+- impersonation: Posing as platform staff to scam users.
+
+[Response Format]
+Respond ONLY with a JSON object.
+
+{
+  "allowed": boolean,
+  "confidence": float (0.00 to 1.00),
+  "label": "string",
+  "reason": "string (concise reason)",
+  "potential_violations": ["string"]
+}
+
+[Potential Violations Rules]
+1. If "allowed" is true, "potential_violations" must be an empty array [].
+2. If "allowed" is false, "potential_violations" MUST contain the original input username and 1-2 examples of how it could be used for filter-bypassing (e.g., using special characters, spaces, or similar-looking characters).
+3. Limit the total number of items in "potential_violations" to a maximum of 3.
+
+[Examples]
+Input: "죽어라 이 00들아"
+Output: {"allowed": false, "confidence": 0.96, "label": "violence", "reason": "Death threat", "potential_violations": ["죽어라 이놈들아", "죽어", "죽1어라 이놈"]}
+
+// 1. 유명인 언급 + 농담/친근함 (harmless)
+Input: "재용이형구해줘"
+Output: {"allowed": true, "confidence": 0.85, "label": "none", "reason": "Benign mention of a public figure, not impersonation", "potential_violations": []}
+
+// 2. 무의미한 단어 나열 (benign)
+Input: "핑크돌고래라고"
+Output: {"allowed": true, "confidence": 0.95, "label": "none", "reason": "Benign content", "potential_violations": []}
+
+// 3. 약간의 오타나 비문 (benign)
+Input: "이게된단고"
+Output: {"allowed": true, "confidence": 0.90, "label": "none", "reason": "Harmless typo/dialect", "potential_violations": []}
+`,
                         },
                         {
                             role: 'user',
@@ -100,8 +134,8 @@ export class AiModerationAdapter implements AiModerationPort {
                 message: parsed.reason || (parsed.allowed ? 'Content is appropriate' : 'Content is inappropriate'),
                 label: parsed.label,
                 confidence: parsed.confidence,
-                // 스네이크 케이스와 카멜 케이스 모두 대응
-                flaggedWords: (parsed.flagged_words || (parsed as any).flaggedWords || [])?.slice(0, 10),
+                // AI 응답의 potential_violations를 flaggedWords로 매핑 (스네이크/카멜 케이스 모두 대응)
+                flaggedWords: (parsed.potential_violations || (parsed as any).potentialViolations || [])?.slice(0, 10),
                 raw: data,
                 durationMs,
                 provider: 'cloudflare',
@@ -130,7 +164,7 @@ export class AiModerationAdapter implements AiModerationPort {
         confidence?: number;
         label?: string;
         reason?: string;
-        flagged_words?: string[];
+        potential_violations?: string[];
     } {
         try {
             // JSON 블록 추출 (LLM이 마크다운 코드블럭으로 감쌀 수 있으므로)
