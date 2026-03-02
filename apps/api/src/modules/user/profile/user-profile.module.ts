@@ -8,8 +8,9 @@ import { ListUsersService } from './application/list-users.service';
 import { GetUserService } from './application/get-user.service';
 import { GetMyProfileService } from './application/get-my-profile.service';
 import { UpdateMyProfileService } from './application/update-my-profile.service';
-import { UpdateNicknameService } from './application/update-nickname.service';
+import { UpdateMyNicknameService } from './application/update-my-nickname.service';
 import { UpdateMyAvatarService } from './application/update-my-avatar.service';
+import { ChangeMyPasswordService } from './application/change-my-password.service';
 import { UpdateUserAdminService } from './application/update-user-admin.service';
 import { UserRepository } from './infrastructure/user.repository';
 import { UserMapper } from './infrastructure/user.mapper';
@@ -26,8 +27,9 @@ import { EnvModule } from 'src/common/env/env.module';
         GetUserService,
         GetMyProfileService,
         UpdateMyProfileService,
-        UpdateNicknameService,
+        UpdateMyNicknameService,
         UpdateMyAvatarService,
+        ChangeMyPasswordService,
         UpdateUserAdminService,
         UserMapper,
         {
@@ -42,8 +44,9 @@ import { EnvModule } from 'src/common/env/env.module';
         GetUserService,
         GetMyProfileService,
         UpdateMyProfileService,
-        UpdateNicknameService,
+        UpdateMyNicknameService,
         UpdateMyAvatarService,
+        ChangeMyPasswordService,
         UpdateUserAdminService,
         USER_REPOSITORY,
     ],

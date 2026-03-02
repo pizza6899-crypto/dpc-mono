@@ -17,10 +17,12 @@ import { MyProfileResponseDto } from './dto/response/my-profile.response.dto';
 import { UpdateMyProfileRequestDto } from './dto/request/update-my-profile.request.dto';
 import { UpdateNicknameRequestDto } from './dto/request/update-nickname.request.dto';
 import { UpdateMyAvatarRequestDto } from './dto/request/update-my-avatar.request.dto';
+import { ChangePasswordRequestDto } from './dto/request/change-password.request.dto';
 import { GetMyProfileService } from '../../application/get-my-profile.service';
 import { UpdateMyProfileService } from '../../application/update-my-profile.service';
-import { UpdateNicknameService } from '../../application/update-nickname.service';
+import { UpdateMyNicknameService } from '../../application/update-my-nickname.service';
 import { UpdateMyAvatarService } from '../../application/update-my-avatar.service';
+import { ChangeMyPasswordService } from '../../application/change-my-password.service';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 
@@ -31,8 +33,9 @@ export class UserProfileController {
     constructor(
         private readonly getMyProfileService: GetMyProfileService,
         private readonly updateMyProfileService: UpdateMyProfileService,
-        private readonly updateNicknameService: UpdateNicknameService,
+        private readonly updateMyNicknameService: UpdateMyNicknameService,
         private readonly updateMyAvatarService: UpdateMyAvatarService,
+        private readonly changeMyPasswordService: ChangeMyPasswordService,
     ) { }
 
     @Get()
@@ -94,7 +97,7 @@ export class UserProfileController {
         @CurrentUser() user: AuthTypes.AuthenticatedUser,
         @Body() dto: UpdateNicknameRequestDto,
     ): Promise<MyProfileResponseDto> {
-        return this.updateNicknameService.execute(user.id, dto);
+        return this.updateMyNicknameService.execute(user.id, dto);
     }
 
     @Patch('avatar')
@@ -118,5 +121,28 @@ export class UserProfileController {
         @Body() dto: UpdateMyAvatarRequestDto,
     ): Promise<MyProfileResponseDto> {
         return this.updateMyAvatarService.execute(user.id, dto.fileId);
+    }
+
+    @Patch('password')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({
+        summary: 'Change my password / 내 비밀번호 변경',
+        description: 'Updates the logged-in user password. / 로그인한 사용자의 비밀번호를 변경합니다.',
+    })
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'USER',
+        action: 'CHANGE_MY_PASSWORD',
+        extractMetadata: (req) => ({ body: req.body }),
+    })
+    @ApiStandardResponse(Object, {
+        status: HttpStatus.OK,
+        description: 'Successfully changed password',
+    })
+    async changePassword(
+        @CurrentUser() user: AuthTypes.AuthenticatedUser,
+        @Body() dto: ChangePasswordRequestDto,
+    ): Promise<void> {
+        return this.changeMyPasswordService.execute(user.id, dto);
     }
 }

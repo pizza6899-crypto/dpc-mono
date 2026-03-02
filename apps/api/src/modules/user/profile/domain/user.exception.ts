@@ -142,4 +142,32 @@ export class DuplicateOAuthIdException extends UserException {
   }
 }
 
+/**
+ * 기존 비밀번호가 일치하지 않을 때 발생하는 예외
+ */
+export class IncorrectPasswordException extends UserException {
+  constructor() {
+    super(
+      'Incorrect current password',
+      MessageCode.AUTH_LOGIN_FAILED,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'IncorrectPasswordException';
+  }
+}
+
+/**
+ * 비밀번호 형식이 잘못되었을 때 발생하는 예외
+ */
+export class InvalidPasswordException extends UserException {
+  constructor() {
+    super(
+      'Password format is invalid',
+      MessageCode.VALIDATION_ERROR,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'InvalidPasswordException';
+  }
+}
+
 

@@ -16,7 +16,7 @@ import {
 import { ModerationService } from 'src/modules/moderation/application/moderation.service';
 
 @Injectable()
-export class UpdateNicknameService {
+export class UpdateMyNicknameService {
     constructor(
         @Inject(USER_REPOSITORY)
         private readonly userRepository: UserRepositoryPort,
