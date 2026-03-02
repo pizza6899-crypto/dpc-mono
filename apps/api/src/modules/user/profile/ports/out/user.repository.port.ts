@@ -25,6 +25,7 @@ export interface CreateUserParams {
   timezoneOffset?: number | null;
   primaryCurrency?: ExchangeCurrencyCode;
   playCurrency?: ExchangeCurrencyCode;
+  avatarUrl?: string | null;
 }
 
 /**

@@ -47,8 +47,8 @@ export class FilePolicy {
   ];
 
   private static readonly CONFIG: Record<FileUsageType, FilePolicyConfig> = {
-    [FileUsageType.USER_PROFILE]: {
-      folder: 'user/profile',
+    [FileUsageType.USER_AVATAR]: {
+      folder: 'user/avatar',
       accessType: FileAccessType.PUBLIC,
       uploadRoles: ['USER', 'ADMIN', 'SUPER_ADMIN'], // User can update their own profile
       maxSize: 2 * 1024 * 1024, // 2MB

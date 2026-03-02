@@ -13,7 +13,7 @@ export interface FileUsageConfig {
 }
 
 export const FILE_USAGE_CONFIGS: Record<FileUsageType, FileUsageConfig> = {
-  [FileUsageType.USER_PROFILE]: {
+  [FileUsageType.USER_AVATAR]: {
     accessType: FileAccessType.PUBLIC,
     sqidsPrefix: SqidsPrefix.USER,
   },

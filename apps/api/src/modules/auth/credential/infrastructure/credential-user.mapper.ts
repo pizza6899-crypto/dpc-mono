@@ -22,6 +22,7 @@ export class CredentialUserMapper {
       isKycMandatory: prismaModel.isKycMandatory,
       primaryCurrency: prismaModel.primaryCurrency,
       timezone: prismaModel.timezone,
+      avatarUrl: prismaModel.avatarUrl,
       registrationMethod: prismaModel.registrationMethod,
     });
   }

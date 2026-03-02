@@ -15,6 +15,7 @@ export class CredentialUser {
     public readonly isKycMandatory: boolean,
     public readonly primaryCurrency: ExchangeCurrencyCode,
     public readonly timezone: string | null,
+    public readonly avatarUrl: string | null,
     public readonly registrationMethod: RegistrationMethod,
   ) { }
 
@@ -32,6 +33,7 @@ export class CredentialUser {
     isKycMandatory: boolean;
     primaryCurrency: ExchangeCurrencyCode;
     timezone: string | null;
+    avatarUrl: string | null;
     registrationMethod: RegistrationMethod;
   }): CredentialUser {
     return new CredentialUser(
@@ -48,6 +50,7 @@ export class CredentialUser {
       params.isKycMandatory,
       params.primaryCurrency,
       params.timezone,
+      params.avatarUrl,
       params.registrationMethod,
     );
   }
@@ -66,6 +69,7 @@ export class CredentialUser {
     isKycMandatory?: boolean;
     primaryCurrency?: ExchangeCurrencyCode;
     timezone?: string | null;
+    avatarUrl?: string | null;
     registrationMethod?: RegistrationMethod;
   }): CredentialUser {
     return new CredentialUser(
@@ -82,6 +86,7 @@ export class CredentialUser {
       data.isKycMandatory ?? false,
       data.primaryCurrency ?? ExchangeCurrencyCode.USD,
       data.timezone ?? null,
+      data.avatarUrl ?? null,
       data.registrationMethod ?? RegistrationMethod.CREDENTIAL,
     );
   }

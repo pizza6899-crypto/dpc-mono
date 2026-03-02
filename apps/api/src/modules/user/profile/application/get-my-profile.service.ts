@@ -25,6 +25,7 @@ export class GetMyProfileService {
             id: this.sqidsService.encode(user.id, SqidsPrefix.USER),
             loginId: user.loginId,
             nickname: user.nickname,
+            avatarUrl: user.avatarUrl,
             email: user.email,
             role: user.role,
             status: user.status,

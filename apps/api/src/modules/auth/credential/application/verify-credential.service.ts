@@ -71,6 +71,7 @@ export class VerifyCredentialService {
       language: user.language,
       primaryCurrency: user.primaryCurrency,
       timezone: user.timezone,
+      avatarUrl: user.avatarUrl,
       registrationMethod: user.registrationMethod,
     };
   }

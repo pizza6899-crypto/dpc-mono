@@ -188,6 +188,7 @@ export class UserRepository implements UserRepositoryPort {
         playCurrency: data.playCurrency,
         birthDate: data.birthDate,
         phoneNumber: data.phoneNumber,
+        avatarUrl: data.avatarUrl,
         isEmailVerified: data.isEmailVerified,
         isPhoneVerified: data.isPhoneVerified,
         isTelegramVerified: data.isTelegramVerified,

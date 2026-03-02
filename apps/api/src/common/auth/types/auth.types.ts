@@ -6,6 +6,7 @@ export interface AuthenticatedUser {
   nickname: string;
   role: UserRoleType;
   status: UserStatus;
+  avatarUrl: string | null;
 
   // Verifications
   isEmailVerified: boolean;

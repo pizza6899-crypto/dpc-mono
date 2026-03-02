@@ -74,6 +74,7 @@ model User {
     oauthId            String?            @unique @map("oauth_id")
 
     // [Profile & Settings]
+    avatarUrl      String?      @map("avatar_url")
     phoneNumber    String?      @unique @map("phone_number")
     mobileCarrier  String?      @map("mobile_carrier")
     birthDate      DateTime?    @map("birth_date") @db.Date

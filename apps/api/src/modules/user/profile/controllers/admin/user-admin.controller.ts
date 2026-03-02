@@ -9,7 +9,7 @@ import {
   HttpStatus,
   Param,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiCookieAuth } from '@nestjs/swagger';
 import {
   ApiStandardErrors,
   ApiPaginatedResponse,
@@ -26,7 +26,6 @@ import { ListUsersAdminQueryDto } from './dto/request/list-users-admin-query.dto
 import { UpdateUserAdminRequestDto } from './dto/request/update-user-admin.request.dto';
 import { UserAdminListItemDto } from './dto/response/user-admin-list.response.dto';
 import { UserAdminDetailResponseDto } from './dto/response/user-admin-detail.response.dto';
-
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 
@@ -34,6 +33,7 @@ import { LogType } from 'src/modules/audit-log/domain';
 @ApiTags('Admin Users')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 @ApiStandardErrors()
+@ApiCookieAuth()
 export class UserAdminController {
   constructor(
     private readonly listUsersService: ListUsersService,

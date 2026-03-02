@@ -33,6 +33,7 @@ export class UserMapper {
       language: prismaModel.language || 'KO', // Language enum의 기본값을 확보
       timezone: prismaModel.timezone,
       timezoneOffset: prismaModel.timezoneOffset,
+      avatarUrl: prismaModel.avatarUrl,
       primaryCurrency: prismaModel.primaryCurrency,
       playCurrency: prismaModel.playCurrency,
       isEmailVerified: prismaModel.isEmailVerified,
@@ -82,6 +83,7 @@ export class UserMapper {
       timezoneOffset: params.timezoneOffset,
       primaryCurrency: params.primaryCurrency,
       playCurrency: params.playCurrency,
+      avatarUrl: params.avatarUrl,
       birthDate: params.birthDate,
     };
   }

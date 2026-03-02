@@ -24,6 +24,7 @@ export class User {
     public readonly language: Language,
     public readonly birthDate: Date | null,
     public readonly phoneNumber: string | null,
+    public readonly avatarUrl: string | null,
     // [Lifecycle & Audit]
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
@@ -56,6 +57,7 @@ export class User {
     language: Language;
     timezone: string | null;
     timezoneOffset: number | null;
+    avatarUrl: string | null;
     primaryCurrency: ExchangeCurrencyCode;
     playCurrency: ExchangeCurrencyCode;
     isEmailVerified: boolean;
@@ -107,6 +109,7 @@ export class User {
       data.language,
       data.birthDate,
       data.phoneNumber,
+      data.avatarUrl,
       data.createdAt,
       data.updatedAt,
       data.closedAt,
@@ -147,6 +150,7 @@ export class User {
       language: this.language,
       birthDate: this.birthDate,
       phoneNumber: this.phoneNumber,
+      avatarUrl: this.avatarUrl,
       whitecliffId: this.whitecliffId,
       whitecliffUsername: this.whitecliffUsername,
       dcsId: this.dcsId,
@@ -208,6 +212,7 @@ export class User {
       this.language,
       this.birthDate,
       this.phoneNumber,
+      this.avatarUrl,
       this.createdAt,
       new Date(), // updatedAt
       this.closedAt,
@@ -227,6 +232,7 @@ export class User {
     language?: Language;
     timezone?: string;
     phoneNumber?: string;
+    avatarUrl?: string | null;
   }): User {
     let newLocation = this.location;
     if (updates.timezone !== undefined) {
@@ -245,6 +251,7 @@ export class User {
       updates.language || this.language,
       this.birthDate,
       updates.phoneNumber || this.phoneNumber,
+      updates.avatarUrl !== undefined ? updates.avatarUrl : this.avatarUrl,
       this.createdAt,
       new Date(), // updatedAt
       this.closedAt,

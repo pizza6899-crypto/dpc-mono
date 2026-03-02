@@ -11,6 +11,9 @@ export class MyProfileResponseDto {
     @ApiProperty({ description: 'Nickname / 닉네임' })
     nickname: string;
 
+    @ApiPropertyOptional({ description: 'Avatar URL / 아바타 URL' })
+    avatarUrl: string | null;
+
     @ApiPropertyOptional({ description: 'Email / 이메일' })
     email: string | null;
 
