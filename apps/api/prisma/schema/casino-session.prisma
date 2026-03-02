@@ -1,0 +1,40 @@
+// ═══════════════════════════════════════════════════════════════
+// 카지노 세션 (Access & Session Management)
+// ═══════════════════════════════════════════════════════════════
+
+model CasinoGameSession {
+  id             BigInt               @id @default(autoincrement())
+  userId         BigInt               @map("user_id")
+  token          String               @unique
+  playerName     String               @map("player_name")
+  createdAt      DateTime             @default(now()) @map("created_at")
+  updatedAt      DateTime             @updatedAt @map("updated_at")
+  lastAccessedAt DateTime             @default(now()) @map("last_accessed_at")
+  aggregatorType GameAggregatorType   @map("aggregator_type")
+  walletCurrency ExchangeCurrencyCode @map("wallet_currency")
+  gameCurrency   ExchangeCurrencyCode @map("game_currency")
+
+  // [Exchange Rate Snapshots]
+  // exchangeRate: 게임 통화에서 지갑 통화로 변환하는 비율 (1 GameUnit = X WalletUnit)
+  exchangeRate           Decimal  @map("exchange_rate") @db.Decimal(32, 18)
+  exchangeRateSnapshotAt DateTime @default(now()) @map("exchange_rate_snapshot_at")
+
+  // usdExchangeRate: 지갑 통화에서 USD(Base)로 변환하는 비율 (1 WalletUnit = X USD)
+  // 전사 통합 티어 및 통계 계산을 위한 기준 환율입니다.
+  usdExchangeRate Decimal @map("usd_exchange_rate") @db.Decimal(32, 18)
+
+  compRate   Decimal           @map("comp_rate") @db.Decimal(8, 4)
+  gameId     BigInt?           @map("game_id") // 현재 실행 중인 게임 (선택적)
+  casinoGame CasinoGame?       @relation(fields: [gameId], references: [id])
+  user       User              @relation(fields: [userId], references: [id])
+  gameRounds CasinoGameRound[]
+
+  // [Revocation] 세션 파기 정보
+  revokedAt     DateTime? @map("revoked_at")
+  revokedBy     BigInt?   @map("revoked_by")
+  revokedByUser User?     @relation("RevokedGameSessions", fields: [revokedBy], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([revokedAt])
+  @@map("casino_game_sessions")
+}

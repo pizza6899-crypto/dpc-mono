@@ -9,7 +9,7 @@ export class FindCasinoGameSessionService {
   constructor(
     @Inject(CASINO_GAME_SESSION_REPOSITORY)
     private readonly repository: CasinoGameSessionRepositoryPort,
-  ) {}
+  ) { }
 
   async findByToken(token: string): Promise<CasinoGameSession | null> {
     return await this.repository.findByToken(token);

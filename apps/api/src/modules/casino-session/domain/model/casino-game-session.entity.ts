@@ -18,10 +18,12 @@ export class CasinoGameSession {
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
     public readonly lastAccessedAt: Date,
+    public readonly revokedAt: Date | null = null,
+    public readonly revokedBy: bigint | null = null,
   ) { }
 
   static create(params: {
-    id?: bigint;
+    id?: bigint | null;
     userId: bigint;
     playerName: string;
     token: string;
@@ -36,6 +38,8 @@ export class CasinoGameSession {
     createdAt?: Date;
     updatedAt?: Date;
     lastAccessedAt?: Date;
+    revokedAt?: Date | null;
+    revokedBy?: bigint | null;
   }): CasinoGameSession {
     return new CasinoGameSession(
       params.id ?? null,
@@ -53,9 +57,27 @@ export class CasinoGameSession {
       params.createdAt ?? new Date(),
       params.updatedAt ?? new Date(),
       params.lastAccessedAt ?? new Date(),
+      params.revokedAt ?? null,
+      params.revokedBy ?? null,
     );
   }
 
-  // 비즈니스 로직 예시 (필요시 추가)
-  // hasExpired(): boolean { ... }
+  /**
+   * 세션 파기 처리
+   * @param revokedBy 파기한 관리자 ID
+   */
+  revoke(revokedBy: bigint): CasinoGameSession {
+    return CasinoGameSession.create({
+      ...this,
+      revokedAt: new Date(),
+      revokedBy,
+    });
+  }
+
+  /**
+   * 세션이 파기되었는지 확인
+   */
+  get isRevoked(): boolean {
+    return this.revokedAt !== null;
+  }
 }

@@ -3,179 +3,180 @@
 /// 사용자 가입, 로그인 제어 및 기본 설정들을 관리하는 단일 데이터 테이블입니다.
 /// 프로젝트 내 단일 레코드(Singleton)로 운용하기 위해 id를 강제합니다.
 model UserConfig {
-    id Int @id @default(1)
+  id Int @id @default(1)
 
-    /// 신규 회원가입 허용 여부
-    allowSignup Boolean @default(true) @map("allow_signup")
+  /// 신규 회원가입 허용 여부
+  allowSignup Boolean @default(true) @map("allow_signup")
 
-    /// 신규 가입 시 기본으로 부여할 상태
-    defaultStatus UserStatus @default(ACTIVE) @map("default_status")
+  /// 신규 가입 시 기본으로 부여할 상태
+  defaultStatus UserStatus @default(ACTIVE) @map("default_status")
 
-    /// IP당 일일 최대 가입 허용 횟수
-    maxDailySignupPerIp Int @default(10) @map("max_daily_signup_per_ip")
+  /// IP당 일일 최대 가입 허용 횟수
+  maxDailySignupPerIp Int @default(10) @map("max_daily_signup_per_ip")
 
-    /// [Registration Policy] 가입 정책 (가입 폼 구성 및 유효성 검사)
-    loginIdType           LoginIdType     @default(EMAIL) @map("login_id_type")
-    requireEmail          Boolean         @default(true) @map("require_email")
-    requirePhoneNumber    Boolean         @default(false) @map("require_phone_number")
-    requireBirthDate      Boolean         @default(false) @map("require_birth_date")
-    requireNickname       Boolean         @default(true) @map("require_nickname")
-    requireReferralCode   Boolean         @default(false) @map("require_referral_code")
-    allowedOAuthProviders OAuthProvider[] @default([GOOGLE, APPLE, TELEGRAM]) @map("allowed_oauth_providers")
+  /// [Registration Policy] 가입 정책 (가입 폼 구성 및 유효성 검사)
+  loginIdType           LoginIdType     @default(EMAIL) @map("login_id_type")
+  requireEmail          Boolean         @default(true) @map("require_email")
+  requirePhoneNumber    Boolean         @default(false) @map("require_phone_number")
+  requireBirthDate      Boolean         @default(false) @map("require_birth_date")
+  requireNickname       Boolean         @default(true) @map("require_nickname")
+  requireReferralCode   Boolean         @default(false) @map("require_referral_code")
+  allowedOAuthProviders OAuthProvider[] @default([GOOGLE, APPLE, TELEGRAM]) @map("allowed_oauth_providers")
 
-    /// [Registration Validation] 가입 유효성 검사 (Regex)
-    loginIdEmailRegex       String? @map("login_id_email_regex")
-    loginIdPhoneNumberRegex String? @map("login_id_phone_number_regex")
-    loginIdUsernameRegex    String? @map("login_id_username_regex")
-    nicknameRegex           String? @map("nickname_regex")
-    passwordRegex           String? @map("password_regex")
+  /// [Registration Validation] 가입 유효성 검사 (Regex)
+  loginIdEmailRegex       String? @map("login_id_email_regex")
+  loginIdPhoneNumberRegex String? @map("login_id_phone_number_regex")
+  loginIdUsernameRegex    String? @map("login_id_username_regex")
+  nicknameRegex           String? @map("nickname_regex")
+  passwordRegex           String? @map("password_regex")
 
-    /// [Onboarding Defaults] 신규 가입 시 기본 설정
-    defaultPrimaryCurrency ExchangeCurrencyCode @default(USD) @map("default_primary_currency")
-    defaultPlayCurrency    ExchangeCurrencyCode @default(USD) @map("default_play_currency")
-    defaultLanguage        Language             @default(KO) @map("default_language")
+  /// [Onboarding Defaults] 신규 가입 시 기본 설정
+  defaultPrimaryCurrency ExchangeCurrencyCode @default(USD) @map("default_primary_currency")
+  defaultPlayCurrency    ExchangeCurrencyCode @default(USD) @map("default_play_currency")
+  defaultLanguage        Language             @default(KO) @map("default_language")
 
-    /// 변경/수정 관리자 메모
-    adminNote String? @map("admin_note")
+  /// 변경/수정 관리자 메모
+  adminNote String? @map("admin_note")
 
-    /// 변경/수정 관리자 정보 (관계)
-    updatedBy     BigInt? @map("updated_by")
-    updatedByUser User?   @relation("UserConfigUpdatedBy", fields: [updatedBy], references: [id])
+  /// 변경/수정 관리자 정보 (관계)
+  updatedBy     BigInt? @map("updated_by")
+  updatedByUser User?   @relation("UserConfigUpdatedBy", fields: [updatedBy], references: [id])
 
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-    @@map("user_configs")
+  @@map("user_configs")
 }
 
 model User {
-    id BigInt @id @default(autoincrement())
+  id BigInt @id @default(autoincrement())
 
-    // [External Integration] 외부 카지노 프로바이더 연동 ID
-    whitecliffId       BigInt? @unique @map("whitecliff_id")
-    whitecliffSystemId BigInt? @unique @map("whitecliff_system_id")
-    whitecliffUsername String? @unique @map("whitecliff_username")
-    dcsId              String? @unique @map("dcs_id")
+  // [External Integration] 외부 카지노 프로바이더 연동 ID
+  whitecliffId       BigInt? @unique @map("whitecliff_id")
+  whitecliffSystemId BigInt? @unique @map("whitecliff_system_id")
+  whitecliffUsername String? @unique @map("whitecliff_username")
+  dcsId              String? @unique @map("dcs_id")
 
-    // [Auth & Identity]
-    loginId      String?      @unique @map("login_id")
-    loginIdType  LoginIdType? @map("login_id_type")
-    nickname     String       @unique
-    email        String?      @unique
-    passwordHash String?      @map("password_hash")
+  // [Auth & Identity]
+  loginId      String?      @unique @map("login_id")
+  loginIdType  LoginIdType? @map("login_id_type")
+  nickname     String       @unique
+  email        String?      @unique
+  passwordHash String?      @map("password_hash")
 
-    // [Registration & Social]
-    // 가입 경로 (CREDENTIAL: 직접 가입, SOCIAL: 소셜 가입, ADMIN: 관리자 생성)
-    registrationMethod RegistrationMethod @default(CREDENTIAL) @map("registration_method")
-    // 유저가 가입 시 직접 입력한 텔레그램 아이디 (@username)
-    telegramUsername   String?            @unique @map("telegram_username")
-    // 소셜 로그인(OAuth) 시 시스템이 받아오는 고유 식별값
-    oauthProvider      OAuthProvider?     @map("oauth_provider")
-    oauthId            String?            @unique @map("oauth_id")
+  // [Registration & Social]
+  // 가입 경로 (CREDENTIAL: 직접 가입, SOCIAL: 소셜 가입, ADMIN: 관리자 생성)
+  registrationMethod RegistrationMethod @default(CREDENTIAL) @map("registration_method")
+  // 유저가 가입 시 직접 입력한 텔레그램 아이디 (@username)
+  telegramUsername   String?            @unique @map("telegram_username")
+  // 소셜 로그인(OAuth) 시 시스템이 받아오는 고유 식별값
+  oauthProvider      OAuthProvider?     @map("oauth_provider")
+  oauthId            String?            @unique @map("oauth_id")
 
-    // [Profile & Settings]
-    avatarUrl      String?      @map("avatar_url")
-    phoneNumber    String?      @unique @map("phone_number")
-    mobileCarrier  String?      @map("mobile_carrier")
-    birthDate      DateTime?    @map("birth_date") @db.Date
-    role           UserRoleType @default(USER)
-    status         UserStatus   @default(ACTIVE)
-    country        String?
-    language       Language?
-    timezone       String?
-    timezoneOffset Int?         @map("timezone_offset")
+  // [Profile & Settings]
+  avatarUrl      String?      @map("avatar_url")
+  phoneNumber    String?      @unique @map("phone_number")
+  mobileCarrier  String?      @map("mobile_carrier")
+  birthDate      DateTime?    @map("birth_date") @db.Date
+  role           UserRoleType @default(USER)
+  status         UserStatus   @default(ACTIVE)
+  country        String?
+  language       Language?
+  timezone       String?
+  timezoneOffset Int?         @map("timezone_offset")
 
-    // [Verifications]
-    isEmailVerified    Boolean @default(false) @map("is_email_verified")
-    isPhoneVerified    Boolean @default(false) @map("is_phone_verified")
-    isTelegramVerified Boolean @default(false) @map("is_telegram_verified")
-    isIdentityVerified Boolean @default(false) @map("is_identity_verified") // 서드파티 KYC 결과
-    isBankVerified     Boolean @default(false) @map("is_bank_verified") // 계좌 인증 결과
-    isKycMandatory     Boolean @default(false) @map("is_kyc_mandatory") // KYC 강제 필요 여부
+  // [Verifications]
+  isEmailVerified    Boolean @default(false) @map("is_email_verified")
+  isPhoneVerified    Boolean @default(false) @map("is_phone_verified")
+  isTelegramVerified Boolean @default(false) @map("is_telegram_verified")
+  isIdentityVerified Boolean @default(false) @map("is_identity_verified") // 서드파티 KYC 결과
+  isBankVerified     Boolean @default(false) @map("is_bank_verified") // 계좌 인증 결과
+  isKycMandatory     Boolean @default(false) @map("is_kyc_mandatory") // KYC 강제 필요 여부
 
-    // [Currency Settings] 통화 설정
-    primaryCurrency ExchangeCurrencyCode @default(USD) @map("primary_currency")
-    playCurrency    ExchangeCurrencyCode @default(USD) @map("play_currency")
+  // [Currency Settings] 통화 설정
+  primaryCurrency ExchangeCurrencyCode @default(USD) @map("primary_currency")
+  playCurrency    ExchangeCurrencyCode @default(USD) @map("play_currency")
 
-    // [Lifecycle] 계정 종료 감사 정보 (관리자만 종료 가능, 데이터 삭제 없음)
-    closedAt    DateTime? @map("closed_at") // 계정 종료 시점
-    closedBy    BigInt?   @map("closed_by") // 종료한 관리자 ID
-    closeReason String?   @map("close_reason") // 종료 사유
+  // [Lifecycle] 계정 종료 감사 정보 (관리자만 종료 가능, 데이터 삭제 없음)
+  closedAt    DateTime? @map("closed_at") // 계정 종료 시점
+  closedBy    BigInt?   @map("closed_by") // 종료한 관리자 ID
+  closeReason String?   @map("close_reason") // 종료 사유
 
-    createdAt            DateTime              @default(now()) @map("created_at")
-    updatedAt            DateTime              @updatedAt @map("updated_at")
-    affiliateCodes       AffiliateCode[]       @relation("AffiliateCodes")
-    affiliateCommissions AffiliateCommission[] @relation("AffiliateCommissions")
-    subUserCommissions   AffiliateCommission[] @relation("SubUserCommissions")
-    affiliateWallets     AffiliateWallet[]     @relation("AffiliateWallets")
+  createdAt            DateTime              @default(now()) @map("created_at")
+  updatedAt            DateTime              @updatedAt @map("updated_at")
+  affiliateCodes       AffiliateCode[]       @relation("AffiliateCodes")
+  affiliateCommissions AffiliateCommission[] @relation("AffiliateCommissions")
+  subUserCommissions   AffiliateCommission[] @relation("SubUserCommissions")
+  affiliateWallets     AffiliateWallet[]     @relation("AffiliateWallets")
 
-    gameSessions           CasinoGameSession[]
-    affiliateReferrals     Referral[]              @relation("AffiliateReferrals")
-    referredUsers          Referral[]              @relation("ReferredUsers")
-    depositDetails         DepositDetail[]
-    withdrawalDetails      WithdrawalDetail[]
-    userWallets            UserWallet[]
-    userTotalStats         UserWalletTotalStats[]
-    userHourlyStats        UserWalletHourlyStats[]
-    userPromotions         UserPromotion[]
-    userSessions           UserSession[]           @relation("UserSessions")
-    revokedSessions        UserSession[]           @relation("RevokedSessions")
-    verificationTokens     VerificationToken[]
-    loginAttempts          LoginAttempt[]
-    userTier               UserTier?
-    tierHistory            TierHistory[]
-    adminAdjustmentDetails AdminAdjustmentDetail[] @relation("AdminAdjustments")
-    wageringRequirements   WageringRequirement[]
-    compAccounts           UserCompAccount[]
-    alerts                 Alert[]
-    notificationLogs       NotificationLog[]
-    casinoGameRounds       CasinoGameRound[]
-    tierConfigsUpdated     TierConfig[]            @relation("TierConfigUpdatedBy")
-    tiersUpdated           Tier[]                  @relation("TierUpdatedBy")
-    userRewards            UserReward[]
-    compDailySettlements   CompDailySettlement[]
-    userConfigsUpdated     UserConfig[]            @relation("UserConfigUpdatedBy")
-    userExpLogs            UserExpLog[]
+  gameSessions           CasinoGameSession[]
+  affiliateReferrals     Referral[]              @relation("AffiliateReferrals")
+  referredUsers          Referral[]              @relation("ReferredUsers")
+  depositDetails         DepositDetail[]
+  withdrawalDetails      WithdrawalDetail[]
+  userWallets            UserWallet[]
+  userTotalStats         UserWalletTotalStats[]
+  userHourlyStats        UserWalletHourlyStats[]
+  userPromotions         UserPromotion[]
+  userSessions           UserSession[]           @relation("UserSessions")
+  revokedSessions        UserSession[]           @relation("RevokedSessions")
+  revokedGameSessions    CasinoGameSession[]     @relation("RevokedGameSessions")
+  verificationTokens     VerificationToken[]
+  loginAttempts          LoginAttempt[]
+  userTier               UserTier?
+  tierHistory            TierHistory[]
+  adminAdjustmentDetails AdminAdjustmentDetail[] @relation("AdminAdjustments")
+  wageringRequirements   WageringRequirement[]
+  compAccounts           UserCompAccount[]
+  alerts                 Alert[]
+  notificationLogs       NotificationLog[]
+  casinoGameRounds       CasinoGameRound[]
+  tierConfigsUpdated     TierConfig[]            @relation("TierConfigUpdatedBy")
+  tiersUpdated           Tier[]                  @relation("TierUpdatedBy")
+  userRewards            UserReward[]
+  compDailySettlements   CompDailySettlement[]
+  userConfigsUpdated     UserConfig[]            @relation("UserConfigUpdatedBy")
+  userExpLogs            UserExpLog[]
 
-    @@map("users")
+  @@map("users")
 }
 
 enum RegistrationMethod {
-    CREDENTIAL // ID/비밀번호 기반 직접 가입
-    SOCIAL // 소셜 연동(OAuth) 가입
-    ADMIN // 관리자 시스템을 통한 가입
+  CREDENTIAL // ID/비밀번호 기반 직접 가입
+  SOCIAL // 소셜 연동(OAuth) 가입
+  ADMIN // 관리자 시스템을 통한 가입
 }
 
 enum LoginIdType {
-    EMAIL
-    USERNAME
-    PHONE_NUMBER
+  EMAIL
+  USERNAME
+  PHONE_NUMBER
 }
 
 enum OAuthProvider {
-    GOOGLE
-    APPLE
-    TELEGRAM
+  GOOGLE
+  APPLE
+  TELEGRAM
 }
 
 enum UserRoleType {
-    USER
-    AGENT
-    ADMIN
-    SUPER_ADMIN
+  USER
+  AGENT
+  ADMIN
+  SUPER_ADMIN
 }
 
 enum UserStatus {
-    ACTIVE // 정상 이용 가능
-    PENDING // 가입 완료 후 추가 인증/처리 대기
-    LOCKED // 보안 상의 이유로 시스템이 자동 잠금
-    SUSPENDED // 정책 위반 등으로 인해 관리자가 일시 정지
-    BANNED // 영구 차단 (블랙리스트)
-    CLOSED // 탈퇴 완료
+  ACTIVE // 정상 이용 가능
+  PENDING // 가입 완료 후 추가 인증/처리 대기
+  LOCKED // 보안 상의 이유로 시스템이 자동 잠금
+  SUSPENDED // 정책 위반 등으로 인해 관리자가 일시 정지
+  BANNED // 영구 차단 (블랙리스트)
+  CLOSED // 탈퇴 완료
 }
 
 enum Language {
-    EN
-    KO
-    JA
+  EN
+  KO
+  JA
 }

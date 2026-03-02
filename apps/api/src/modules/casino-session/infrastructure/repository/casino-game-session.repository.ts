@@ -56,9 +56,16 @@ export class CasinoGameSessionRepository implements CasinoGameSessionRepositoryP
     return found ? this.mapper.toDomain(found) : null;
   }
 
-  async deleteByUserId(userId: bigint): Promise<number> {
-    const { count } = await this.tx.casinoGameSession.deleteMany({
-      where: { userId },
+  async revokeByUserId(userId: bigint, revokedBy: bigint): Promise<number> {
+    const { count } = await this.tx.casinoGameSession.updateMany({
+      where: {
+        userId,
+        revokedAt: null, // 아직 파기되지 않은 세션만 대상
+      },
+      data: {
+        revokedAt: new Date(),
+        revokedBy,
+      },
     });
     return count;
   }

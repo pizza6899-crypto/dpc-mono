@@ -277,6 +277,6 @@ export class UserAdminController {
     });
 
     // 2. 게임 세션 즉시 파기
-    await this.revokeUserGameSessionsService.execute(BigInt(id));
+    await this.revokeUserGameSessionsService.execute(BigInt(id), admin.id);
   }
 }

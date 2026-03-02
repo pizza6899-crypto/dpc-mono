@@ -1,0 +1,115 @@
+// ═══════════════════════════════════════════════════════════════
+// 카지노 로그 (Rounds & Transactions)
+// ═══════════════════════════════════════════════════════════════
+
+model CasinoGameRound {
+    id     BigInt // 스노우플레이크 처리
+    userId BigInt @map("user_id")
+
+    // 게임 세션 및 메타 정보
+    gameSessionId BigInt       @map("game_session_id")
+    gameId        BigInt       @map("game_id")
+    provider      GameProvider
+
+    // 라운드 식별자 (외부)
+    aggregatorType    GameAggregatorType @map("aggregator_type")
+    aggregatorRoundId String             @map("aggregator_round_id") // 라운드 고유 식별자 (RoundID)
+
+    // 통화 및 환율 스냅샷 (세션 변경/삭제 대비, 영수증 역할)
+    currency     ExchangeCurrencyCode @map("currency") // Wallet Currency
+    gameCurrency ExchangeCurrencyCode @map("game_currency") // Game Currency
+
+    // exchangeRate: 게임 통화에서 지갑 통화로 변환하는 비율 (1 GameUnit = X WalletUnit)
+    exchangeRate Decimal @map("exchange_rate") @db.Decimal(32, 18)
+
+    // usdExchangeRate: 지갑 통화에서 USD(Base)로 변환하는 비율 (1 WalletUnit = X USD)
+    // 이 스냅샷은 해당 라운드의 실적을 USD로 통합 집계(티어 승급 심사 등)하는 데 사용됩니다.
+    usdExchangeRate Decimal @default(0) @map("usd_exchange_rate") @db.Decimal(32, 18)
+
+    compRate Decimal @default(0) @map("comp_rate") @db.Decimal(8, 4) // 콤프 요율 스냅샷
+
+    // 통계 및 검증용 스냅샷 (실제 원장은 WalletTransaction 집계)
+    totalBetAmount            Decimal @default(0) @map("total_bet_amount") @db.Decimal(32, 18) // Wallet Currency 기준
+    totalWinAmount            Decimal @default(0) @map("total_win_amount") @db.Decimal(32, 18) // Wallet Currency 기준
+    totalGameBetAmount        Decimal @default(0) @map("total_game_bet_amount") @db.Decimal(32, 18) // Game Currency 기준
+    totalGameWinAmount        Decimal @default(0) @map("total_game_win_amount") @db.Decimal(32, 18) // Game Currency 기준
+    totalRefundAmount         Decimal @default(0) @map("total_refund_amount") @db.Decimal(32, 18) // Wallet Currency 기준 (환불)
+    totalGameRefundAmount     Decimal @default(0) @map("total_game_refund_amount") @db.Decimal(32, 18) // Game Currency 기준 (환불)
+    totalJackpotAmount        Decimal @default(0) @map("total_jackpot_amount") @db.Decimal(32, 18) // Wallet Currency 기준 (잭팟 당첨금)
+    totalGameJackpotAmount    Decimal @default(0) @map("total_game_jackpot_amount") @db.Decimal(32, 18) // Game Currency 기준 (잭팟 당첨금)
+    jackpotContributionAmount Decimal @default(0) @map("jackpot_contribution_amount") @db.Decimal(32, 18) // 잭팟 기여금 (통계)
+    compEarned                Decimal @default(0) @map("comp_earned") @db.Decimal(32, 18) // 적립된 콤프 (통계)
+    tierContributionUsd       Decimal @default(0) @map("tier_contribution_usd") @db.Decimal(32, 18) // 티어 기여액 (USD 스냅샷)
+
+    /**
+     * 게임 결과 메타데이터 (URL, JSON 등 통합)
+     * Application Level Interface: GameResultMeta
+     * - { type: 'url', value: string }
+     * - { type: 'data', value: object }
+     */
+    resultMeta Json? @map("result_meta")
+
+    // 상태 관리
+    startedAt   DateTime  @default(now()) @map("started_at")
+    completedAt DateTime? @map("completed_at")
+    isCompleted Boolean   @default(false) @map("is_completed")
+    isOrphaned  Boolean   @default(false) @map("is_orphaned") // 베팅 없이 생성된 라운드 여부 (Orphaned Round)
+
+    // 라이브 카지노 푸시(무승부/취소) 검증 여부
+    pushedBetCheckedAt DateTime? @map("pushed_bet_checked_at")
+
+    // Relations
+    transactions CasinoGameTransaction[]
+    user         User                    @relation(fields: [userId], references: [id])
+    gameSession  CasinoGameSession       @relation(fields: [gameSessionId], references: [id])
+    casinoGame   CasinoGame              @relation(fields: [gameId], references: [id])
+
+    // 파티셔닝을 위한 복합키 설정
+    @@id([id, startedAt])
+    // 유니크 제약조건에도 파티션 키(startedAt) 포함 필수
+    @@unique([aggregatorRoundId, aggregatorType, startedAt])
+    @@index([userId, startedAt])
+    @@map("casino_game_rounds")
+}
+
+model CasinoGameTransaction {
+    id BigInt // 스노우플레이크 처리
+
+    // 라운드 정보 (복합키 참조를 위해 startedAt 포함)
+    gameRoundId    BigInt   @map("game_round_id")
+    roundStartedAt DateTime @map("round_started_at") // FK용 메타 데이터
+    userId         BigInt   @map("user_id")
+
+    // 행위 유형
+    type CasinoGameTransactionType // BET, WIN, CANCEL, ROLLBACK, JACKPOT
+
+    // 외부 식별자 (제공사가 주는 Transaction ID)
+    aggregatorTxId String @map("aggregator_tx_id")
+
+    // 금액 정보
+    amount        Decimal               @map("amount") @db.Decimal(32, 18) // Wallet Currency 기준 (실제 차감/지급액)
+    balanceBefore Decimal               @map("balance_before") @db.Decimal(32, 18) // 변동 전 잔액 (무결성 검증용)
+    gameAmount    Decimal?              @map("game_amount") @db.Decimal(32, 18) // Game Currency 기준 (원본 금액)
+    balanceType   UserWalletBalanceType // CASH or BONUS
+    currency      ExchangeCurrencyCode // Wallet Currency
+
+    createdAt DateTime @default(now()) @map("created_at")
+
+    // Relation
+    gameRound CasinoGameRound @relation(fields: [gameRoundId, roundStartedAt], references: [id, startedAt], onDelete: Cascade)
+
+    // 파티셔닝을 위한 복합키 설정 (부모 라운드 시간 기준 Co-located Partitioning)
+    @@id([id, roundStartedAt])
+    // 유니크 제약조건에도 파티션 키(roundStartedAt) 포함 필수
+    @@unique([aggregatorTxId, type, roundStartedAt])
+    @@index([gameRoundId, roundStartedAt])
+    @@map("casino_game_transactions")
+}
+
+enum CasinoGameTransactionType {
+    BET
+    WIN
+    CANCEL
+    ROLLBACK
+    JACKPOT
+}

@@ -21,6 +21,8 @@ export class CasinoGameSessionMapper {
       createdAt: model.createdAt,
       updatedAt: model.updatedAt,
       lastAccessedAt: model.lastAccessedAt,
+      revokedAt: model.revokedAt,
+      revokedBy: model.revokedBy,
     });
   }
 
@@ -28,7 +30,7 @@ export class CasinoGameSessionMapper {
   toPersistence(entity: CasinoGameSession): any {
     return {
       // id는 자동 생성이므로 제외 (또는 존재할 경우 포함)
-      ...(entity.id && { id: entity.id }),
+      id: entity.id,
       userId: entity.userId,
       playerName: entity.playerName,
       token: entity.token,
@@ -44,6 +46,8 @@ export class CasinoGameSessionMapper {
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
       lastAccessedAt: entity.lastAccessedAt,
+      revokedAt: entity.revokedAt,
+      revokedBy: entity.revokedBy,
     };
   }
 }

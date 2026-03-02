@@ -14,11 +14,12 @@ export class RevokeUserGameSessionsService {
     /**
      * 유저의 모든 게임 세션 파기
      * @param userId 유저 ID
+     * @param revokedBy 파기한 관리자 ID
      * @returns 파기된 세션 수
      */
-    async execute(userId: bigint): Promise<number> {
-        this.logger.log(`Revoking all game sessions for user ${userId}`);
-        const count = await this.repository.deleteByUserId(userId);
+    async execute(userId: bigint, revokedBy: bigint): Promise<number> {
+        this.logger.log(`Revoking all game sessions for user ${userId} by admin ${revokedBy}`);
+        const count = await this.repository.revokeByUserId(userId, revokedBy);
         if (count > 0) {
             this.logger.log(`Successfully revoked ${count} game sessions for user ${userId}`);
         }

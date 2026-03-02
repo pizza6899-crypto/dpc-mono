@@ -55,7 +55,7 @@ export class CloseUserAdminService {
         });
 
         // 6. 모든 게임 세션 파기
-        await this.revokeUserGameSessionsService.execute(user.id);
+        await this.revokeUserGameSessionsService.execute(user.id, adminId);
 
         this.logger.log(`Successfully closed account and expired sessions for user ${userId}`);
     }

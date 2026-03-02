@@ -1,0 +1,198 @@
+// ═══════════════════════════════════════════════════════════════
+// 카지노 카탈로그 (Aggregators, Providers, Categories, Games)
+// ═══════════════════════════════════════════════════════════════
+
+model CasinoAggregator {
+  id   BigInt @id @default(autoincrement())
+  name String @map("name") // 표기용 이름 (예: DC, W)
+  code String @unique @map("code") // 시스템 식별 코드 (예: DC, WC)
+
+  // 상태 관리 (Active, Inactive, Maintenance)
+  status AggregatorStatus @map("status")
+
+  // API 호출 활성화 여부
+  apiEnabled Boolean @default(true) @map("api_enabled")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  providers CasinoGameProvider[]
+
+  @@map("casino_aggregators")
+}
+
+model CasinoGameProvider {
+  id           BigInt @id @default(autoincrement())
+  aggregatorId BigInt @map("aggregator_id")
+
+  // 식별 정보
+  externalId String @map("external_id") // 애그리게이터 API 호출 시 사용하는 프로바이더 ID
+  code       String @map("code") // 내부 식별 코드 (예: PRAGMATIC, EVO_KR, EVO_IN)
+  groupCode  String @map("group_code") // 브랜드 통합 코드 (예: PRAGMATIC, EVOLUTION)
+
+  name     String  @map("name") // 표기용 이름
+  imageUrl String? @map("image_url") // 로고 이미지 URL
+
+  isActive Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  aggregator CasinoAggregator @relation(fields: [aggregatorId], references: [id])
+  games      CasinoGame[]
+
+  @@unique([aggregatorId, code])
+  @@unique([aggregatorId, externalId]) // 애그리게이터 내 외부 ID 유니크
+  @@map("casino_game_providers")
+}
+
+model CasinoGameCategory {
+  id   BigInt @id @default(autoincrement())
+  code String @unique @map("code") // 식별 코드 (예: SLOTS, LIVE_CASINO, WEEKLY_HOT)
+
+  type CategoryType @default(PRIMARY) @map("type") // PRIMARY: 게임 타입, COLLECTION: 마케팅 그룹
+
+  iconUrl   String? @map("icon_url") // 카테고리 아이콘 URL
+  bannerUrl String? @map("banner_url") // 배너 이미지 URL
+
+  sortOrder Int     @default(0) @map("sort_order") // 정렬 순서 (값이 낮을수록 왼쪽부터 표시)
+  isActive  Boolean @default(true) @map("is_active") // 활성화 여부
+  isSystem  Boolean @default(false) @map("is_system") // 시스템 생성 (삭제 방지)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  gameItems    CasinoGameCategoryItem[]
+  translations CasinoGameCategoryTranslation[]
+
+  @@map("casino_game_categories")
+}
+
+model CasinoGameCategoryTranslation {
+  id          BigInt   @id @default(autoincrement())
+  categoryId  BigInt   @map("category_id")
+  language    Language
+  name        String   @map("name") // 번역된 카테고리 이름
+  description String?  @map("description") // 번역된 설명
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  category CasinoGameCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([categoryId, language])
+  @@map("casino_game_category_translations")
+}
+
+model CasinoGameCategoryItem {
+  id         BigInt @id @default(autoincrement())
+  categoryId BigInt @map("category_id")
+  gameId     BigInt @map("game_id")
+
+  sortOrder Int     @default(0) @map("sort_order") // 카테고리 내에서의 순위
+  isPrimary Boolean @default(false) @map("is_primary") // 게임의 기본 카테고리 여부 (삭제 방지)
+
+  addedAt   DateTime  @default(now()) @map("added_at") // 추가 일시
+  expiresAt DateTime? @map("expires_at") // 만료 일시 (프로모션/기간한정용)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  category CasinoGameCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  game     CasinoGame         @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([categoryId, gameId]) // 같은 게임은 같은 카테고리에 중복 불가
+  @@index([categoryId, sortOrder]) // 카테고리별 정렬 조회 최적화
+  @@index([gameId, isPrimary]) // 게임의 기본 카테고리 조회
+  @@index([expiresAt]) // 만료 체크용
+  @@map("casino_game_category_items")
+}
+
+model CasinoGame {
+  id         BigInt @id @default(autoincrement())
+  providerId BigInt @map("provider_id")
+
+  // 게임 식별 정보 (애그리게이터에서 제공하는 원본 값)
+  externalGameId String @map("external_game_id") // 애그리게이터에서 제공하는 게임 ID
+  code           String @map("code") // 게임 코드 (예: pragmatic_gates_of_olympus)
+
+  // 이미지
+  thumbnailUrl String? @map("thumbnail_url") // 썸네일 이미지 URL
+  bannerUrl    String? @map("banner_url") // 배너 이미지 URL (선택)
+
+  // 게임 속성
+  rtp        Decimal? @map("rtp") @db.Decimal(5, 2) // Return To Player % (예: 96.50 = 96.50%)
+  volatility String?  @map("volatility") // LOW, MEDIUM, HIGH, VERY_HIGH
+  gameType   String?  @map("game_type") // 상세 타입 (예: video_slots, classic_slots)
+  tableId    String?  @map("table_id") // 라이브 게임의 경우 테이블 ID
+  tags       String[] @map("tags") // 관리자 지정 태그 (예: ["jackpot", "megaways", "bonus_buy"])
+
+  // 베팅/운영 정보
+  houseEdge        Decimal @default(0.04) @map("house_edge") @db.Decimal(8, 4) // 하우스 엣지
+  contributionRate Decimal @default(1.0) @map("contribution_rate") @db.Decimal(8, 4) // 롤링 기여율
+
+  // 표시/정렬
+  sortOrder Int     @default(0) @map("sort_order") // 전역 정렬 순서
+  isEnabled Boolean @default(true) @map("is_enabled") // 관리자 활성화 (운영 제어)
+  isVisible Boolean @default(true) @map("is_visible") // 사용자 노출 여부
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  provider           CasinoGameProvider       @relation(fields: [providerId], references: [id])
+  translations       CasinoGameTranslation[]
+  categoryItems      CasinoGameCategoryItem[] // N:M 카테고리 관계
+  casinoGameSessions CasinoGameSession[]
+  gameRounds         CasinoGameRound[]
+
+  @@unique([providerId, externalGameId]) // 프로바이더 + 외부게임ID 조합은 유니크
+  @@index([isEnabled, isVisible])
+  @@index([sortOrder])
+  @@map("casino_games")
+}
+
+model CasinoGameTranslation {
+  id       BigInt   @id @default(autoincrement())
+  gameId   BigInt   @map("game_id")
+  language Language
+  name     String   @map("name") // 번역된 게임 이름
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  game CasinoGame @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, language])
+  @@index([language])
+  @@index([name(ops: raw("gin_trgm_ops"))], type: Gin)
+  @@map("casino_game_translations")
+}
+
+enum AggregatorStatus {
+  ACTIVE
+  INACTIVE
+  MAINTENANCE
+}
+
+enum CategoryType {
+  PRIMARY
+  COLLECTION
+}
+
+enum GameAggregatorType {
+  WHITECLIFF
+  DC
+}
+
+enum GameProvider {
+  EVOLUTION
+  EVOLUTION_ASIA
+  EVOLUTION_INDIA
+  EVOLUTION_KOREA
+  PRAGMATIC_PLAY_LIVE
+  PG_SOFT
+  PRAGMATIC_PLAY_SLOTS
+  RELAX_GAMING
+  PLAYNGO
+}
