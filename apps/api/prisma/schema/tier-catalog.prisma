@@ -1,0 +1,117 @@
+model TierConfig {
+    id BigInt @id @default(1) // 실제로는 id=1 인 row 하나만 사용
+
+    // [Master Switch] 시스템 제어
+    isUpgradeEnabled   Boolean @default(true) @map("is_upgrade_enabled") // 승급 심사 전체 ON/OFF
+    isDowngradeEnabled Boolean @default(false) @map("is_downgrade_enabled") // 강등 심사 전체 ON/OFF
+    isBonusEnabled     Boolean @default(true) @map("is_bonus_enabled") // 보너스 지급 전체 ON/OFF
+
+    // [Default Policy] 기본 정책
+    defaultDowngradeGracePeriodDays Int @default(7) @map("default_downgrade_grace_period_days") // 기본 강등 유예 기간 (Days)
+    defaultRewardExpiryDays         Int @default(30) @map("default_reward_expiry_days") // 기본 보상 수령 만료 기간 (Days)
+
+    // [Audit] 누가 언제 바꿨나
+    updatedAt DateTime @updatedAt @map("updated_at")
+    updatedBy BigInt?  @map("updated_by") // 변경한 관리자 ID
+
+    // [XP Policy]
+    // 1 XP를 획득하기 위해 필요한 롤링 금액 (USD)
+    // 예: 10.00 이면 10달러 롤링당 1 XP 지급
+    expGrantRollingUsd Decimal @default(1) @map("exp_grant_rolling_usd") @db.Decimal(32, 18)
+
+    updatedByUser User? @relation("TierConfigUpdatedBy", fields: [updatedBy], references: [id])
+
+    @@map("tier_config")
+}
+
+model Tier {
+    id    BigInt @id @default(autoincrement())
+    level Int    @unique // Higher value means higher tier level (e.g., 1=Bronze, 2=Silver)
+    // code: 시스템 내부 식별자 (불변), 어드민/백오피스 및 코드 레벨 참조용 (e.g., "BRONZE", "VIP_GOLD")
+    code  String @unique
+
+    // evaluation_cycle: 등급 유지/강등 심사 주기
+    // NONE: 강등 없음, ROLLING_30_DAYS: 30일 평가, ROLLING_90_DAYS: 90일 평가
+    evaluationCycle TierEvaluationCycle @default(NONE) @map("evaluation_cycle")
+
+    // [Gaming XP]
+    // 다음 레벨 승급에 필요한 XP
+    upgradeExpRequired BigInt @default(0) @map("upgrade_exp_required")
+
+    // Benefits
+    upgradeBonusWageringMultiplier Decimal @default(0) @map("upgrade_bonus_wagering_multiplier") @db.Decimal(8, 4) // 승급 보너스 베팅 요구 배수 (0=즉시 출금)
+    compRate                       Decimal @default(0) @map("comp_rate") @db.Decimal(8, 4) // 통합 컴프 요율
+    weeklyLossbackRate             Decimal @default(0) @map("weekly_lossback_rate") @db.Decimal(8, 4) // 주간 루징백(캐시백) 요율
+    monthlyLossbackRate            Decimal @default(0) @map("monthly_lossback_rate") @db.Decimal(8, 4) // 월간 루징백(캐시백) 요율
+
+    dailyWithdrawalLimitUsd   Decimal @default(0) @map("daily_withdrawal_limit_usd") @db.Decimal(32, 18)
+    weeklyWithdrawalLimitUsd  Decimal @default(0) @map("weekly_withdrawal_limit_usd") @db.Decimal(32, 18)
+    monthlyWithdrawalLimitUsd Decimal @default(0) @map("monthly_withdrawal_limit_usd") @db.Decimal(32, 18)
+    isWithdrawalUnlimited     Boolean @default(false) @map("is_withdrawal_unlimited") // True일 경우 한도 무시 (무제한)
+
+    hasDedicatedManager Boolean @default(false) @map("has_dedicated_manager")
+    rewardExpiryDays    Int?    @map("reward_expiry_days") // 해당 등급 승급 보너스 수령 만료 기간 (Days, Null 일 경우 전역 설정 따름)
+
+    isActive     Boolean @default(true) @map("is_active") // 해당 등급 활성 여부 (비활성 시 승급 대상에서 제외)
+    isHidden     Boolean @default(false) @map("is_hidden") // UI 노출 여부 (VIP 전용 등급 등)
+    isManualOnly Boolean @default(false) @map("is_manual_only") // [추가] true일 경우 자동 배치 심사에서 제외, 오직 관리자 수동 승급만 가능
+
+    // UI & Additional Info
+    imageUrl String? @map("image_url") // 등급 아이콘/뱃지 이미지 URL
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+    updatedBy BigInt?  @map("updated_by") // 변경한 관리자 ID
+
+    updatedByUser User? @relation("TierUpdatedBy", fields: [updatedBy], references: [id])
+
+    userTiers    UserTier[]
+    translations TierTranslation[]
+    historyFrom  TierHistory[]     @relation("HistoryFrom")
+    historyTo    TierHistory[]     @relation("HistoryTo")
+    benefits     TierBenefit[]
+
+    stats TierStats[]
+
+    downgradeTargetUserTiers UserTier[] @relation("DowngradeTarget")
+
+    @@index([level])
+    @@map("tier")
+}
+
+model TierTranslation {
+    id BigInt @id @default(autoincrement())
+
+    tierId      BigInt   @map("tier_id")
+    language    Language
+    name        String // Display name (e.g., "브론즈", "Bronze")
+    description String?  @db.Text // 등급 혜택 상세 설명 (UI 노출용)
+
+    tier Tier @relation(fields: [tierId], references: [id], onDelete: Cascade)
+
+    @@unique([tierId, language])
+    @@index([language])
+    @@map("tier_translation")
+}
+
+model TierBenefit {
+    id     BigInt @id @default(autoincrement())
+    tierId BigInt @map("tier_id")
+
+    currency ExchangeCurrencyCode
+
+    // ✅ 통화별 고정 금액 혜택 (지급/Grant 성격)
+    upgradeBonus  Decimal @default(0) @map("upgrade_bonus") @db.Decimal(32, 18)
+    birthdayBonus Decimal @default(0) @map("birthday_bonus") @db.Decimal(32, 18)
+
+    tier Tier @relation(fields: [tierId], references: [id], onDelete: Cascade)
+
+    @@unique([tierId, currency])
+    @@map("tier_benefits")
+}
+
+enum TierEvaluationCycle {
+    NONE // 평가 없음 (강등 없음, 평생 유지)
+    ROLLING_30_DAYS // 최근 30일 기준 순환 평가
+    ROLLING_90_DAYS // 최근 90일 기준 순환 평가
+}

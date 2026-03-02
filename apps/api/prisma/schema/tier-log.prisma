@@ -1,0 +1,90 @@
+model TierHistory {
+    id     BigInt
+    userId BigInt @map("user_id")
+
+    fromTierId BigInt?        @map("from_tier_id")
+    toTierId   BigInt         @map("to_tier_id")
+    changeType TierChangeType @map("change_type") // UPGRADE, DOWNGRADE, MANUAL, INITIAL
+    reason     String?
+
+    // Snapshot data (변경 시점의 데이터 기록)
+    statusRollingUsdSnap    Decimal @default(0) @map("status_rolling_usd_snap") @db.Decimal(32, 18)
+    compRateSnap            Decimal @default(0) @map("comp_rate_snap") @db.Decimal(8, 4)
+    weeklyLossbackRateSnap  Decimal @default(0) @map("weekly_lossback_rate_snap") @db.Decimal(8, 4)
+    monthlyLossbackRateSnap Decimal @default(0) @map("monthly_lossback_rate_snap") @db.Decimal(8, 4)
+
+    lifetimeRollingUsdSnap Decimal @default(0) @map("lifetime_rolling_usd_snap") @db.Decimal(32, 18)
+    lifetimeDepositUsdSnap Decimal @default(0) @map("lifetime_deposit_usd_snap") @db.Decimal(32, 18)
+
+    // [Limit Snapshot] 출금 한도 스냅샷 (USD 기준)
+    dailyWithdrawalLimitUsdSnap   Decimal @default(0) @map("daily_withdrawal_limit_usd_snap") @db.Decimal(32, 18)
+    weeklyWithdrawalLimitUsdSnap  Decimal @default(0) @map("weekly_withdrawal_limit_usd_snap") @db.Decimal(32, 18)
+    monthlyWithdrawalLimitUsdSnap Decimal @default(0) @map("monthly_withdrawal_limit_usd_snap") @db.Decimal(32, 18)
+
+    // [Reward Audit] 보너스 지급 관련
+    hasBonusGenerated Boolean              @default(false) @map("has_bonus_generated")
+    currency          ExchangeCurrencyCode @map("currency") // 유저 대표 통화 (지급 당시)
+    upgradeBonusSnap  Decimal              @default(0) @map("upgrade_bonus_snap") @db.Decimal(32, 18)
+    skippedReason     String?              @map("skipped_reason")
+
+    // [XP Snapshot]
+    statusExpSnap BigInt @default(0) @map("status_exp_snap")
+
+    changedAt DateTime @default(now()) @map("changed_at")
+    changedBy BigInt?  @map("changed_by") // 변경한 관리자 ID
+
+    // [Audit] 변경을 유발한 원천 데이터 참조
+    referenceType TierHistoryReferenceType? @map("reference_type")
+    referenceId   BigInt?                   @map("reference_id")
+
+    user          User  @relation(fields: [userId], references: [id])
+    fromTier      Tier? @relation("HistoryFrom", fields: [fromTierId], references: [id])
+    toTier        Tier  @relation("HistoryTo", fields: [toTierId], references: [id])
+    changedByUser User? @relation("TierHistoryChangedBy", fields: [changedBy], references: [id])
+
+    @@id([id, changedAt]) // 파티셔닝 대응을 위한 복합 PK
+    @@index([userId, changedAt(sort: Desc)])
+    @@map("tier_history")
+}
+
+model UserExpLog {
+    id     BigInt
+    userId BigInt @map("user_id")
+
+    amount        BigInt // 증감량 (+ 또는 -)
+    statusExpSnap BigInt @map("status_exp_snap") // 지급 후 최종 잔액 스냅샷
+
+    sourceType  ExpSourceType @map("source_type")
+    referenceId BigInt?       @map("reference_id") // CasinoGameRound ID 등 원천 데이터 참조
+
+    reason String? // 관리자 조정 시 사유 등
+
+    createdAt DateTime @default(now()) @map("created_at")
+
+    user User @relation(fields: [userId], references: [id])
+
+    @@id([id, createdAt])
+    @@index([userId, createdAt])
+    @@map("user_exp_log")
+}
+
+enum TierHistoryReferenceType {
+    CASINO_ROUND // 카지노 게임 결과 (Round 테이블 ID)
+    WALLET_TRANSACTION // 입금/출금 등 거래 (Transaction 테이블 ID)
+    ADMIN_LOG // 관리자 수동 조작 (AdminActionLog 테이블 ID)
+}
+
+enum TierChangeType {
+    INITIAL // 초기 등급
+    UPGRADE // 승급
+    DOWNGRADE // 강등
+    MANUAL_UPDATE // 관리자 수동 변경
+    CORRECTION // 오류 정정 (관리자 실수 등)
+}
+
+enum ExpSourceType {
+    ROLLING_REWARD // 롤링에 따른 자동 지급
+    ADMIN_ADJUSTMENT // 관리자 수동 조정
+    EVENT_BONUS // 이벤트성 지급
+    MISSION_COMPLETE // 미션 달성 보상
+}

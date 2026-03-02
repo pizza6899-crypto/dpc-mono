@@ -1,0 +1,64 @@
+// 1. 등급별 시계열 통계 요약 (모니터링 및 대시보드용)
+model TierStats {
+    // timestamp: 해당 통계 구간의 시작 시각 (UTC)
+    // 시계열 분석을 위해 분/초를 0으로 맞춘 정시(Hourly) 단위 또는 00:00:00(Daily) 단위의 값을 가집니다.
+    timestamp DateTime @map("timestamp")
+    tierId    BigInt   @map("tier_id")
+
+    // [Snapshot] 해당 시점의 해당 등급 총 유저 수
+    snapshotUserCount Int @default(0) @map("snapshot_user_count")
+
+    // [Metrics] 해당 구간(예: 1시간) 동안 발생한 합계 데이터 (USD 기준 통합)
+    periodRollingUsd          Decimal @default(0) @map("period_rolling_usd") @db.Decimal(32, 18) // 총 베팅액 (Wager)
+    periodPayoutUsd           Decimal @default(0) @map("period_payout_usd") @db.Decimal(32, 18) // 총 당첨 지급액 (Win)
+    periodNetRevenueUsd       Decimal @default(0) @map("period_net_revenue_usd") @db.Decimal(32, 18) // GGR (Rolling - Payout)
+    periodUpgradeBonusPaidUsd Decimal @default(0) @map("period_upgrade_bonus_paid_usd") @db.Decimal(32, 18)
+    periodCompPaidUsd         Decimal @default(0) @map("period_comp_paid_usd") @db.Decimal(32, 18) // 지급된 콤프 합계
+    periodLossbackPaidUsd     Decimal @default(0) @map("period_lossback_paid_usd") @db.Decimal(32, 18) // 지급된 루징백 합계
+    periodDepositUsd          Decimal @default(0) @map("period_deposit_usd") @db.Decimal(32, 18) // 총 입금액
+    periodWithdrawalUsd       Decimal @default(0) @map("period_withdrawal_usd") @db.Decimal(32, 18) // 총 출금액
+
+    // [Active Metrics] 활성도 분석
+    periodActiveUserCount Int @default(0) @map("period_active_user_count") // 해당 구간 실제 베팅 활동 유저 수
+
+    // [Changes] 해당 구간 동안 발생한 티어 변동 및 심사 결과 인원 수
+    upgradedCount   Int @default(0) @map("upgraded_count") // 승급 인원
+    downgradedCount Int @default(0) @map("downgraded_count") // 강등 인원
+    maintainedCount Int @default(0) @map("maintained_count") // 유지 인원
+    graceCount      Int @default(0) @map("grace_count") // 유예 대상 인원
+
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    tier Tier @relation(fields: [tierId], references: [id])
+
+    @@id([timestamp, tierId])
+    @@map("tier_stats")
+}
+
+// 2. 유저별 시계열 통계 (기간별 실적 분석용)
+model UserStats {
+    // timestamp는 일자(00:00:00) 단위로 저장하여 일별 통계를 관리합니다.
+    timestamp DateTime @map("timestamp")
+    userId    BigInt   @map("user_id")
+    tierId    BigInt?  @map("tier_id") // 해당 시점의 티어 (티어별 유저 분석용)
+
+    // ✅ 해당 일자의 활동 지표 (USD 환산 기준)
+    periodRollingUsd    Decimal @default(0) @map("period_rolling_usd") @db.Decimal(32, 18)
+    periodPayoutUsd     Decimal @default(0) @map("period_payout_usd") @db.Decimal(32, 18)
+    periodNetRevenueUsd Decimal @default(0) @map("period_net_revenue_usd") @db.Decimal(32, 18) // GGR
+
+    periodUpgradeBonusPaidUsd Decimal @default(0) @map("period_upgrade_bonus_paid_usd") @db.Decimal(32, 18)
+    periodCompPaidUsd         Decimal @default(0) @map("period_comp_paid_usd") @db.Decimal(32, 18)
+    periodLossbackPaidUsd     Decimal @default(0) @map("period_lossback_paid_usd") @db.Decimal(32, 18)
+
+    periodDepositUsd    Decimal @default(0) @map("period_deposit_usd") @db.Decimal(32, 18)
+    periodWithdrawalUsd Decimal @default(0) @map("period_withdrawal_usd") @db.Decimal(32, 18)
+
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    user User @relation(fields: [userId], references: [id])
+
+    @@id([timestamp, userId])
+    @@index([userId, timestamp(sort: Desc)])
+    @@map("user_stats")
+}

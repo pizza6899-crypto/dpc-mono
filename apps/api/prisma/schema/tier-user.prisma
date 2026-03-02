@@ -1,0 +1,82 @@
+model UserTier {
+    id     BigInt @id @default(autoincrement())
+    userId BigInt @unique @map("user_id")
+    tierId BigInt @map("tier_id")
+
+    // 상태 데이터
+    // ✅ [Lifetime LTV Metrics] 평생 누적 실적 (USD 환산 기준)
+    lifetimeRollingUsd    Decimal @default(0) @map("lifetime_rolling_usd") @db.Decimal(32, 18)
+    lifetimePayoutUsd     Decimal @default(0) @map("lifetime_payout_usd") @db.Decimal(32, 18)
+    lifetimeGgrUsd        Decimal @default(0) @map("lifetime_ggr_usd") @db.Decimal(32, 18)
+    lifetimeDepositUsd    Decimal @default(0) @map("lifetime_deposit_usd") @db.Decimal(32, 18)
+    lifetimeWithdrawalUsd Decimal @default(0) @map("lifetime_withdrawal_usd") @db.Decimal(32, 18)
+
+    // ✅ [Lifetime Cost Metrics] 평생 지급 혜택 누적
+    lifetimeUpgradeBonusPaidUsd Decimal @default(0) @map("lifetime_upgrade_bonus_paid_usd") @db.Decimal(32, 18)
+    lifetimeCompPaidUsd         Decimal @default(0) @map("lifetime_comp_paid_usd") @db.Decimal(32, 18)
+    lifetimeLossbackPaidUsd     Decimal @default(0) @map("lifetime_lossback_paid_usd") @db.Decimal(32, 18)
+
+    statusRollingUsd Decimal  @default(0) @map("status_rolling_usd") @db.Decimal(32, 18) // (통계용) 현재 등급 누적 롤링액
+    lastEvaluationAt DateTime @default(now()) @map("last_evaluation_at")
+
+    // 승급/강등 제어
+    // [Policy: Soft Landing & Reset]
+    // - 강등 확정 시: Level 산술 연산(-1)이 아닌, 현재 등급보다 낮은 Level 중에서 '가장 높은 등급'을 찾아 이동 (Next Lower Tier)
+    // - 평가 주기 리셋: 강등과 동시에 lastEvaluationAt을 현재(Now)로 갱신하여 즉시 재강등 방지 및 활동 기회 부여
+    currentLevel               Int            @default(0) @map("current_level") // 현재 등급 (정렬 및 인덱싱용)
+    maxLevelAchieved           Int            @default(0) @map("max_level_achieved") // 보너스 중복 지급 방지용 (최고 달성 레벨)
+    lastBonusReceivedAt        DateTime?      @map("last_bonus_received_at") // 마지막 승급 보너스 수령 시점
+    status                     UserTierStatus @default(ACTIVE) @map("status") // ACTIVE, GRACE, LOCKED
+    downgradeGracePeriodEndsAt DateTime?      @map("downgrade_grace_period_ends_at") // 강등 유예 종료 시점
+    lastTierChangedAt          DateTime       @default(now()) @map("last_tier_changed_at")
+    lastUpgradeAt              DateTime?      @map("last_upgrade_at") // 마지막 승급 시점 (마케팅 타겟팅용)
+    lastDowngradeAt            DateTime?      @map("last_downgrade_at") // 마지막 강등 시점
+
+    // [Advanced Retention] VIP 매니저 오버라이드 (기본 Tier 혜택보다 우선 적용)
+    customCompRate            Decimal? @map("custom_comp_rate") @db.Decimal(8, 4)
+    customWeeklyLossbackRate  Decimal? @map("custom_weekly_lossback_rate") @db.Decimal(8, 4)
+    customMonthlyLossbackRate Decimal? @map("custom_monthly_lossback_rate") @db.Decimal(8, 4)
+
+    customDailyWithdrawalLimitUsd   Decimal? @map("custom_daily_withdrawal_limit_usd") @db.Decimal(32, 18)
+    customWeeklyWithdrawalLimitUsd  Decimal? @map("custom_weekly_withdrawal_limit_usd") @db.Decimal(32, 18)
+    customMonthlyWithdrawalLimitUsd Decimal? @map("custom_monthly_withdrawal_limit_usd") @db.Decimal(32, 18)
+    isCustomWithdrawalUnlimited     Boolean? @map("is_custom_withdrawal_unlimited")
+
+    isCustomDedicatedManager Boolean? @map("is_custom_dedicated_manager")
+
+    note String? @map("note") // 관리자 메모
+
+    // [Risk Management] 승급은 시키되 현금성 보너스 지급은 차단 (기본값 true=지급)
+    isBonusEligible Boolean @default(true) @map("is_bonus_eligible")
+
+    // [Preference] 보너스 자동 지급 및 클레임 기본 통화 (없으면 즉시지급 X)
+    preferredRewardCurrency ExchangeCurrencyCode? @map("preferred_reward_currency")
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    // [XP Status]
+    statusExp   BigInt @default(0) @map("status_exp") // 승급 판정 시 사용되는 XP (승급 시 초기화 정책에 따름)
+    lifetimeExp BigInt @default(0) @map("lifetime_exp") // 평생 누적 XP (UI 표시 및 랭킹용)
+
+    nextEvaluationAt DateTime? @map("next_evaluation_at")
+
+    // --- Downgrade Warning State ---
+    downgradeWarningIssuedAt     DateTime? @map("downgrade_warning_issued_at")
+    downgradeWarningTargetTierId BigInt?   @map("downgrade_warning_target_tier_id")
+
+    user                       User  @relation(fields: [userId], references: [id])
+    tier                       Tier  @relation(fields: [tierId], references: [id])
+    downgradeWarningTargetTier Tier? @relation("DowngradeTarget", fields: [downgradeWarningTargetTierId], references: [id])
+
+    @@index([userId])
+    @@index([tierId])
+    @@index([nextEvaluationAt, status])
+    @@map("user_tier")
+}
+
+enum UserTierStatus {
+    ACTIVE // 정상 유지
+    GRACE // 강등 유예 (Grace Period)
+    LOCKED // 등급 고정 (Retention Lock / 관리자 수동 고정)
+}
