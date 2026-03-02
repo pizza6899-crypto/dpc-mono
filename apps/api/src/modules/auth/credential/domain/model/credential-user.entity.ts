@@ -14,6 +14,7 @@ export class CredentialUser {
     public readonly isIdentityVerified: boolean,
     public readonly isKycMandatory: boolean,
     public readonly primaryCurrency: ExchangeCurrencyCode,
+    public readonly playCurrency: ExchangeCurrencyCode,
     public readonly timezone: string | null,
     public readonly avatarUrl: string | null,
     public readonly registrationMethod: RegistrationMethod,
@@ -32,6 +33,7 @@ export class CredentialUser {
     isIdentityVerified: boolean;
     isKycMandatory: boolean;
     primaryCurrency: ExchangeCurrencyCode;
+    playCurrency: ExchangeCurrencyCode;
     timezone: string | null;
     avatarUrl: string | null;
     registrationMethod: RegistrationMethod;
@@ -49,6 +51,7 @@ export class CredentialUser {
       params.isIdentityVerified,
       params.isKycMandatory,
       params.primaryCurrency,
+      params.playCurrency,
       params.timezone,
       params.avatarUrl,
       params.registrationMethod,
@@ -68,6 +71,7 @@ export class CredentialUser {
     isIdentityVerified?: boolean;
     isKycMandatory?: boolean;
     primaryCurrency?: ExchangeCurrencyCode;
+    playCurrency?: ExchangeCurrencyCode;
     timezone?: string | null;
     avatarUrl?: string | null;
     registrationMethod?: RegistrationMethod;
@@ -85,6 +89,7 @@ export class CredentialUser {
       data.isIdentityVerified ?? false,
       data.isKycMandatory ?? false,
       data.primaryCurrency ?? ExchangeCurrencyCode.USD,
+      data.playCurrency ?? ExchangeCurrencyCode.USD,
       data.timezone ?? null,
       data.avatarUrl ?? null,
       data.registrationMethod ?? RegistrationMethod.CREDENTIAL,

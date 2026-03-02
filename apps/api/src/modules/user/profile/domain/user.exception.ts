@@ -170,4 +170,32 @@ export class InvalidPasswordException extends UserException {
   }
 }
 
+/**
+ * 이미 종료된 계정일 때 발생하는 예외
+ */
+export class AccountAlreadyClosedException extends UserException {
+  constructor() {
+    super(
+      'Account is already closed',
+      MessageCode.VALIDATION_ERROR,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'AccountAlreadyClosedException';
+  }
+}
+
+/**
+ * 종료(CLOSED) 상태가 아닌 계정을 복구하려 할 때 발생하는 예외
+ */
+export class UserNotClosedException extends UserException {
+  constructor() {
+    super(
+      'User is not in closed status',
+      MessageCode.VALIDATION_ERROR,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'UserNotClosedException';
+  }
+}
+
 

@@ -3,13 +3,14 @@ import { SynchronizeUserSessionService } from 'src/modules/auth/session/applicat
 import { USER_REPOSITORY } from '../ports/out/user.repository.token';
 import type { UserRepositoryPort } from '../ports/out/user.repository.port';
 import { User, UserNotFoundException, DuplicateEmailException } from '../domain';
-import { ExchangeCurrencyCode, UserStatus } from '@prisma/client';
+import { ExchangeCurrencyCode, UserStatus, UserRoleType } from '@prisma/client';
 
 export interface UpdateUserAdminParams {
     id: bigint;
     email?: string | null;
     nickname?: string;
     status?: UserStatus;
+    role?: UserRoleType;
     primaryCurrency?: ExchangeCurrencyCode;
     playCurrency?: ExchangeCurrencyCode;
 }

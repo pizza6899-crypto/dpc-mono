@@ -12,6 +12,8 @@ import { UpdateMyNicknameService } from './application/update-my-nickname.servic
 import { UpdateMyAvatarService } from './application/update-my-avatar.service';
 import { ChangeMyPasswordService } from './application/change-my-password.service';
 import { UpdateUserAdminService } from './application/update-user-admin.service';
+import { CloseUserAdminService } from './application/close-user-admin.service';
+import { RestoreUserAdminService } from './application/restore-user-admin.service';
 import { UpdateMyCurrencyService } from './application/update-my-currency.service';
 import { UserRepository } from './infrastructure/user.repository';
 import { UserMapper } from './infrastructure/user.mapper';
@@ -32,6 +34,8 @@ import { EnvModule } from 'src/common/env/env.module';
         UpdateMyAvatarService,
         ChangeMyPasswordService,
         UpdateUserAdminService,
+        CloseUserAdminService,
+        RestoreUserAdminService,
         UpdateMyCurrencyService,
         UserMapper,
         {
@@ -50,6 +54,8 @@ import { EnvModule } from 'src/common/env/env.module';
         UpdateMyAvatarService,
         ChangeMyPasswordService,
         UpdateUserAdminService,
+        CloseUserAdminService,
+        RestoreUserAdminService,
         UpdateMyCurrencyService,
         USER_REPOSITORY,
     ],

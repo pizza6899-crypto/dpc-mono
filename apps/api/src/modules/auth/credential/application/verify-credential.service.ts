@@ -70,6 +70,7 @@ export class VerifyCredentialService {
       isKycMandatory: user.isKycMandatory,
       language: user.language,
       primaryCurrency: user.primaryCurrency,
+      playCurrency: user.playCurrency,
       timezone: user.timezone,
       avatarUrl: user.avatarUrl,
       registrationMethod: user.registrationMethod,

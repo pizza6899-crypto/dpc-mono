@@ -21,6 +21,7 @@ export class CredentialUserMapper {
       isIdentityVerified: prismaModel.isIdentityVerified,
       isKycMandatory: prismaModel.isKycMandatory,
       primaryCurrency: prismaModel.primaryCurrency,
+      playCurrency: prismaModel.playCurrency,
       timezone: prismaModel.timezone,
       avatarUrl: prismaModel.avatarUrl,
       registrationMethod: prismaModel.registrationMethod,

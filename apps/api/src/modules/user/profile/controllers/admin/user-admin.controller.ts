@@ -18,12 +18,17 @@ import {
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@prisma/client';
+import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
+import * as AuthTypes from 'src/common/auth/types/auth.types';
 import type { PaginatedData } from 'src/common/http/types';
 import { ListUsersService } from '../../application/list-users.service';
 import { GetUserService } from '../../application/get-user.service';
 import { UpdateUserAdminService } from '../../application/update-user-admin.service';
+import { CloseUserAdminService } from '../../application/close-user-admin.service';
+import { RestoreUserAdminService } from '../../application/restore-user-admin.service';
 import { ListUsersAdminQueryDto } from './dto/request/list-users-admin-query.dto';
 import { UpdateUserAdminRequestDto } from './dto/request/update-user-admin.request.dto';
+import { CloseUserAccountRequestDto } from './dto/request/close-user-account.request.dto';
 import { UserAdminListItemDto } from './dto/response/user-admin-list.response.dto';
 import { UserAdminDetailResponseDto } from './dto/response/user-admin-detail.response.dto';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
@@ -39,6 +44,8 @@ export class UserAdminController {
     private readonly listUsersService: ListUsersService,
     private readonly getUserService: GetUserService,
     private readonly updateUserAdminService: UpdateUserAdminService,
+    private readonly closeUserAdminService: CloseUserAdminService,
+    private readonly restoreUserAdminService: RestoreUserAdminService,
   ) { }
 
   /**
@@ -80,11 +87,11 @@ export class UserAdminController {
   @ApiOperation({
     summary: 'Get user list / 사용자 목록 조회 (관리자용)',
     description:
-      '관리자가 등록된 사용자 목록을 조회합니다. 페이징, 필터링, 정렬 기능을 지원합니다.',
+      'Retrieve a list of registered users as an administrator. Supports paging, filtering, and sorting. / 관리자가 등록된 사용자 목록을 조회합니다. 페이징, 필터링, 정렬 기능을 지원합니다.',
   })
   @ApiPaginatedResponse(UserAdminListItemDto, {
     status: 200,
-    description: 'Successfully retrieved user list / 사용자 목록 조회 성공',
+    description: 'Successfully retrieved user list',
   })
   async listUsers(
     @Query() query: ListUsersAdminQueryDto,
@@ -131,7 +138,7 @@ export class UserAdminController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Update user / 사용자 정보 수정 (관리자용)',
-    description: '관리자가 특정 사용자의 이메일, 상태, 통화 설정을 변경합니다.',
+    description: 'Administrator updates the specific user\'s email, status, and currency settings. / 관리자가 특정 사용자의 이메일, 상태, 통화 설정을 변경합니다.',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -141,7 +148,7 @@ export class UserAdminController {
   })
   @ApiStandardResponse(UserAdminDetailResponseDto, {
     status: 200,
-    description: 'Successfully updated user / 사용자 정보 수정 성공',
+    description: 'Successfully updated user',
   })
   async update(
     @Param('id') id: string,
@@ -152,6 +159,7 @@ export class UserAdminController {
       email: dto.email,
       nickname: dto.nickname,
       status: dto.status,
+      role: dto.role,
       primaryCurrency: dto.primaryCurrency,
       playCurrency: dto.playCurrency,
     });
@@ -170,5 +178,65 @@ export class UserAdminController {
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
+  }
+
+  /**
+   * 사용자 계정 종료 (관리자용)
+   */
+  @Patch(':id/close')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Close user account / 사용자 계정 종료/탈퇴 처리 (관리자용)',
+    description: 'Permanently close the user account and terminate all active sessions. / 사용자의 계정을 종료 처리하고 모든 활성 세션을 즉시 파기합니다.',
+  })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'USER',
+    action: 'CLOSE_USER_ACCOUNT',
+    extractMetadata: (req) => ({ userId: req.params.id, body: req.body }),
+  })
+  @ApiStandardResponse(Object, {
+    status: 200,
+    description: 'Successfully closed user account',
+  })
+  async closeUser(
+    @Param('id') id: string,
+    @Body() dto: CloseUserAccountRequestDto,
+    @CurrentUser() admin: AuthTypes.AuthenticatedUser,
+  ): Promise<void> {
+    return this.closeUserAdminService.execute({
+      userId: BigInt(id),
+      adminId: admin.id,
+      reason: dto.reason,
+    });
+  }
+
+  /**
+   * 사용자 계정 복구 (관리자용)
+   */
+  @Patch(':id/restore')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Restore user account / 사용자 계정 복구 (관리자용)',
+    description: 'Restore a previously closed user account back to active status. / 이전의 종료(탈퇴)된 사용자 계정을 다시 활성 상태로 복구합니다.',
+  })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'USER',
+    action: 'RESTORE_USER_ACCOUNT',
+    extractMetadata: (req) => ({ userId: req.params.id }),
+  })
+  @ApiStandardResponse(Object, {
+    status: 200,
+    description: 'Successfully restored user account',
+  })
+  async restoreUser(
+    @Param('id') id: string,
+    @CurrentUser() admin: AuthTypes.AuthenticatedUser,
+  ): Promise<void> {
+    return this.restoreUserAdminService.execute({
+      userId: BigInt(id),
+      adminId: admin.id,
+    });
   }
 }

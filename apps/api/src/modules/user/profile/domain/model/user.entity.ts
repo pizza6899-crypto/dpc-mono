@@ -1,10 +1,15 @@
-import type { UserRoleType, OAuthProvider, RegistrationMethod, Language } from '@prisma/client';
-import type { UserStatus as PrismaUserStatus } from '@prisma/client';
+import {
+  UserRoleType,
+  OAuthProvider,
+  RegistrationMethod,
+  Language,
+  UserStatus,
+  ExchangeCurrencyCode,
+} from '@prisma/client';
 import { UserAuth } from './value-objects/user-auth.vo';
 import { UserLocation } from './value-objects/user-location.vo';
 import { UserCurrency } from './value-objects/user-currency.vo';
 import { UserTrust } from './value-objects/user-trust.vo';
-import { ExchangeCurrencyCode } from '@prisma/client';
 
 /**
  * User 도메인 엔티티
@@ -19,7 +24,7 @@ export class User {
     private location: UserLocation,
     private currency: UserCurrency,
     private trust: UserTrust,
-    public readonly status: PrismaUserStatus,
+    public readonly status: UserStatus,
     public readonly role: UserRoleType,
     public readonly language: Language,
     public readonly birthDate: Date | null,
@@ -51,7 +56,7 @@ export class User {
     oauthProvider: OAuthProvider | null;
     oauthId: string | null;
     phoneNumber: string | null;
-    status: PrismaUserStatus;
+    status: UserStatus;
     role: UserRoleType;
     country: string | null;
     language: Language;
@@ -183,7 +188,8 @@ export class User {
   updateAdmin(updates: {
     email?: string | null;
     nickname?: string;
-    status?: PrismaUserStatus;
+    status?: UserStatus;
+    role?: UserRoleType; // 추가
     primaryCurrency?: ExchangeCurrencyCode;
     playCurrency?: ExchangeCurrencyCode;
   }): User {
@@ -208,7 +214,7 @@ export class User {
       newCurrency,
       this.trust,
       updates.status || this.status,
-      this.role,
+      updates.role || this.role, // 업데이트 반영
       this.language,
       this.birthDate,
       this.phoneNumber,
@@ -218,6 +224,61 @@ export class User {
       this.closedAt,
       this.closedBy,
       this.closeReason,
+      this.whitecliffId,
+      this.whitecliffUsername,
+      this.dcsId,
+    );
+  }
+
+  /**
+   * 계정 종료 처리 (관리자용)
+   */
+  closeAccount(closedBy: bigint, reason: string): User {
+    return new User(
+      this.id,
+      this.nickname,
+      this.authInfo,
+      this.location,
+      this.currency,
+      this.trust,
+      UserStatus.CLOSED, // 탈퇴 상태로 변경
+      this.role,
+      this.language,
+      this.birthDate,
+      this.phoneNumber,
+      this.avatarUrl,
+      this.createdAt,
+      new Date(), // updatedAt
+      new Date(), // closedAt
+      closedBy,
+      reason,
+      this.whitecliffId,
+      this.whitecliffUsername,
+      this.dcsId,
+    );
+  }
+  /**
+   * 계정 복구 처리 (관리자용)
+   */
+  restoreAccount(): User {
+    return new User(
+      this.id,
+      this.nickname,
+      this.authInfo,
+      this.location,
+      this.currency,
+      this.trust,
+      UserStatus.ACTIVE, // 다시 활성 상태로 변경
+      this.role,
+      this.language,
+      this.birthDate,
+      this.phoneNumber,
+      this.avatarUrl,
+      this.createdAt,
+      new Date(), // updatedAt
+      null, // closedAt 초기화
+      null, // closedBy 초기화
+      null, // closeReason 초기화
       this.whitecliffId,
       this.whitecliffUsername,
       this.dcsId,

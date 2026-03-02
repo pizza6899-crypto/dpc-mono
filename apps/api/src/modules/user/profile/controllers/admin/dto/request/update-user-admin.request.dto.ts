@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { ExchangeCurrencyCode, UserStatus } from '@prisma/client';
+import { ExchangeCurrencyCode, UserStatus, UserRoleType } from '@prisma/client';
 import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class UpdateUserAdminRequestDto {
@@ -27,6 +27,15 @@ export class UpdateUserAdminRequestDto {
     @IsOptional()
     @IsEnum(UserStatus)
     status?: UserStatus;
+
+    @ApiPropertyOptional({
+        description: 'User Role / 권한 변경 (Optional)',
+        enum: UserRoleType,
+        example: UserRoleType.USER,
+    })
+    @IsOptional()
+    @IsEnum(UserRoleType)
+    role?: UserRoleType;
 
     @ApiPropertyOptional({
         description: 'Primary Currency / 대표 통화 변경 (Optional)',
