@@ -29,7 +29,7 @@ export class CreateFileService {
     private readonly repository: FileRepositoryPort,
     private readonly storageService: StorageService,
     private readonly envService: EnvService,
-  ) {}
+  ) { }
 
   async execute(command: CreateFileCommand): Promise<FileEntity> {
     const { file, uploaderId, accessType } = command;

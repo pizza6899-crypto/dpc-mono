@@ -25,7 +25,7 @@ export async function seedUserConfig(prisma: PrismaClient) {
         // [Onboarding Defaults] 신규 가입 시 기본 설정
         defaultPrimaryCurrency: ExchangeCurrencyCode.USD,
         defaultPlayCurrency: ExchangeCurrencyCode.USD,
-        defaultLanguage: Language.KO,
+        defaultLanguage: Language.EN,
 
         adminNote: 'Initial system configuration.',
     };
