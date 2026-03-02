@@ -48,7 +48,7 @@ export class CloseUserAdminService {
 
         // 5. 사용자의 모든 활성 세션 즉시 파기
         await this.expireUserSessionsService.execute({
-            userId,
+            userId: user.id,
             revokedBy: adminId,
         });
 

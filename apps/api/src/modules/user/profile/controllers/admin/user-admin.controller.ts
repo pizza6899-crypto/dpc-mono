@@ -26,6 +26,7 @@ import { GetUserService } from '../../application/get-user.service';
 import { UpdateUserAdminService } from '../../application/update-user-admin.service';
 import { CloseUserAdminService } from '../../application/close-user-admin.service';
 import { RestoreUserAdminService } from '../../application/restore-user-admin.service';
+import { ExpireUserSessionsService } from 'src/modules/auth/session/application/expire-user-sessions.service';
 import { ListUsersAdminQueryDto } from './dto/request/list-users-admin-query.dto';
 import { UpdateUserAdminRequestDto } from './dto/request/update-user-admin.request.dto';
 import { CloseUserAccountRequestDto } from './dto/request/close-user-account.request.dto';
@@ -33,6 +34,8 @@ import { UserAdminListItemDto } from './dto/response/user-admin-list.response.dt
 import { UserAdminDetailResponseDto } from './dto/response/user-admin-detail.response.dto';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
+import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
+import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 
 @Controller('admin/users')
 @ApiTags('Admin Users')
@@ -46,6 +49,7 @@ export class UserAdminController {
     private readonly updateUserAdminService: UpdateUserAdminService,
     private readonly closeUserAdminService: CloseUserAdminService,
     private readonly restoreUserAdminService: RestoreUserAdminService,
+    private readonly expireUserSessionsService: ExpireUserSessionsService,
   ) { }
 
   /**
@@ -237,6 +241,37 @@ export class UserAdminController {
     return this.restoreUserAdminService.execute({
       userId: BigInt(id),
       adminId: admin.id,
+    });
+  }
+
+  /**
+   * 사용자 강제 로그아웃 (관리자용)
+   */
+  @Patch(':id/logout')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Force logout user / 사용자 강제 로그아웃 (관리자용)',
+    description: 'Imidiatly terminate all active sessions of the user. / 해당 사용자의 모든 활성 세션을 즉시 파기하여 강제 로그아웃 처리합니다.',
+  })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'USER',
+    action: 'FORCE_LOGOUT_USER',
+    extractMetadata: (req) => ({ userId: req.params.id }),
+  })
+  @ApiStandardResponse(Object, {
+    status: 200,
+    description: 'Successfully forced logout user',
+  })
+  async forceLogout(
+    @Param('id') id: string,
+    @CurrentUser() admin: AuthTypes.AuthenticatedUser,
+    @RequestClientInfoParam() requestInfo: RequestClientInfo,
+  ): Promise<void> {
+    await this.expireUserSessionsService.execute({
+      userId: BigInt(id),
+      revokedBy: admin.id,
+      requestInfo,
     });
   }
 }

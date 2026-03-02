@@ -1,5 +1,5 @@
 // src/modules/user/profile/user-profile.module.ts
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { SessionModule } from 'src/modules/auth/session/session.module';
 import { UserConfigModule } from '../config/user-config.module';
 import { FileModule } from 'src/modules/file/file.module';

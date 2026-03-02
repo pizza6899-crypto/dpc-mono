@@ -12,4 +12,5 @@ export interface CasinoGameSessionRepositoryPort {
     playerName: string,
     aggregatorType: string,
   ): Promise<CasinoGameSession | null>;
+  deleteByUserId(userId: bigint): Promise<number>;
 }

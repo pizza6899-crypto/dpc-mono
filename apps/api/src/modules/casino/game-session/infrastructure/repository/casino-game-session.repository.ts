@@ -12,7 +12,7 @@ export class CasinoGameSessionRepository implements CasinoGameSessionRepositoryP
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: CasinoGameSessionMapper,
-  ) {}
+  ) { }
 
   async create(session: CasinoGameSession): Promise<CasinoGameSession> {
     const data = this.mapper.toPersistence(session);
@@ -54,5 +54,12 @@ export class CasinoGameSessionRepository implements CasinoGameSessionRepositoryP
       orderBy: { createdAt: 'desc' },
     });
     return found ? this.mapper.toDomain(found) : null;
+  }
+
+  async deleteByUserId(userId: bigint): Promise<number> {
+    const { count } = await this.tx.casinoGameSession.deleteMany({
+      where: { userId },
+    });
+    return count;
   }
 }
