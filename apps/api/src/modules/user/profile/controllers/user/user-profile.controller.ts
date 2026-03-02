@@ -18,11 +18,13 @@ import { UpdateMyProfileRequestDto } from './dto/request/update-my-profile.reque
 import { UpdateNicknameRequestDto } from './dto/request/update-nickname.request.dto';
 import { UpdateMyAvatarRequestDto } from './dto/request/update-my-avatar.request.dto';
 import { ChangePasswordRequestDto } from './dto/request/change-password.request.dto';
+import { UpdateMyCurrencyRequestDto } from './dto/request/update-my-currency.request.dto';
 import { GetMyProfileService } from '../../application/get-my-profile.service';
 import { UpdateMyProfileService } from '../../application/update-my-profile.service';
 import { UpdateMyNicknameService } from '../../application/update-my-nickname.service';
 import { UpdateMyAvatarService } from '../../application/update-my-avatar.service';
 import { ChangeMyPasswordService } from '../../application/change-my-password.service';
+import { UpdateMyCurrencyService } from '../../application/update-my-currency.service';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 
@@ -36,6 +38,7 @@ export class UserProfileController {
         private readonly updateMyNicknameService: UpdateMyNicknameService,
         private readonly updateMyAvatarService: UpdateMyAvatarService,
         private readonly changeMyPasswordService: ChangeMyPasswordService,
+        private readonly updateMyCurrencyService: UpdateMyCurrencyService,
     ) { }
 
     @Get()
@@ -144,5 +147,28 @@ export class UserProfileController {
         @Body() dto: ChangePasswordRequestDto,
     ): Promise<void> {
         return this.changeMyPasswordService.execute(user.id, dto);
+    }
+
+    @Patch('currency')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({
+        summary: 'Update my currency settings / 내 통화 설정 수정',
+        description: 'Update the user primary and play currency settings. / 본인의 대표 통화 및 플레이 통화 설정을 수정합니다.',
+    })
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'USER',
+        action: 'UPDATE_MY_CURRENCY',
+        extractMetadata: (req) => ({ body: req.body }),
+    })
+    @ApiStandardResponse(MyProfileResponseDto, {
+        status: HttpStatus.OK,
+        description: 'Successfully updated currency settings',
+    })
+    async updateCurrency(
+        @CurrentUser() user: AuthTypes.AuthenticatedUser,
+        @Body() dto: UpdateMyCurrencyRequestDto,
+    ): Promise<MyProfileResponseDto> {
+        return this.updateMyCurrencyService.execute(user.id, dto);
     }
 }

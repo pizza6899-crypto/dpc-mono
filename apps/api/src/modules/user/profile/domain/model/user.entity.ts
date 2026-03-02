@@ -233,10 +233,20 @@ export class User {
     timezone?: string;
     phoneNumber?: string;
     avatarUrl?: string | null;
+    primaryCurrency?: ExchangeCurrencyCode;
+    playCurrency?: ExchangeCurrencyCode;
   }): User {
     let newLocation = this.location;
     if (updates.timezone !== undefined) {
       newLocation = this.location.update({ timezone: updates.timezone });
+    }
+
+    let newCurrency = this.currency;
+    if (updates.primaryCurrency || updates.playCurrency) {
+      newCurrency = this.currency.update({
+        primaryCurrency: updates.primaryCurrency,
+        playCurrency: updates.playCurrency,
+      });
     }
 
     return new User(
@@ -244,7 +254,7 @@ export class User {
       updates.nickname || this.nickname,
       this.authInfo,
       newLocation,
-      this.currency,
+      newCurrency,
       this.trust,
       this.status,
       this.role,

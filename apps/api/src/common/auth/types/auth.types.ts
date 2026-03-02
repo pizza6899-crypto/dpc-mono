@@ -17,6 +17,7 @@ export interface AuthenticatedUser {
   // Settings
   language: Language;
   primaryCurrency: ExchangeCurrencyCode;
+  playCurrency: ExchangeCurrencyCode;
   timezone: string | null;
   registrationMethod: RegistrationMethod;
   sessionId?: string;

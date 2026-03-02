@@ -12,6 +12,7 @@ import { UpdateMyNicknameService } from './application/update-my-nickname.servic
 import { UpdateMyAvatarService } from './application/update-my-avatar.service';
 import { ChangeMyPasswordService } from './application/change-my-password.service';
 import { UpdateUserAdminService } from './application/update-user-admin.service';
+import { UpdateMyCurrencyService } from './application/update-my-currency.service';
 import { UserRepository } from './infrastructure/user.repository';
 import { UserMapper } from './infrastructure/user.mapper';
 import { USER_REPOSITORY } from './ports/out/user.repository.token';
@@ -31,6 +32,7 @@ import { EnvModule } from 'src/common/env/env.module';
         UpdateMyAvatarService,
         ChangeMyPasswordService,
         UpdateUserAdminService,
+        UpdateMyCurrencyService,
         UserMapper,
         {
             provide: USER_REPOSITORY,
@@ -48,6 +50,7 @@ import { EnvModule } from 'src/common/env/env.module';
         UpdateMyAvatarService,
         ChangeMyPasswordService,
         UpdateUserAdminService,
+        UpdateMyCurrencyService,
         USER_REPOSITORY,
     ],
 })
