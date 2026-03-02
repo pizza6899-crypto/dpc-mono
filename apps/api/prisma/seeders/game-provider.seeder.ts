@@ -30,53 +30,53 @@ export async function seedGameProviders(prisma: PrismaClient) {
 
     // 2. Whitecliff Providers
     for (const p of WC_PROVIDERS) {
-        await prisma.casinoGameProvider.upsert({
+        const existing = await prisma.casinoGameProvider.findUnique({
             where: {
                 aggregatorId_externalId: {
                     aggregatorId: wc.id,
                     externalId: p.externalId,
                 }
-            },
-            update: {
-                code: p.code,
-                name: p.name,
-                groupCode: p.groupCode,
-            },
-            create: {
-                aggregatorId: wc.id,
-                externalId: p.externalId,
-                code: p.code,
-                name: p.name,
-                groupCode: p.groupCode,
-                isActive: true
             }
         });
+
+        if (!existing) {
+            await prisma.casinoGameProvider.create({
+                data: {
+                    aggregatorId: wc.id,
+                    externalId: p.externalId,
+                    code: p.code,
+                    name: p.name,
+                    groupCode: p.groupCode,
+                    isActive: true
+                }
+            });
+        }
     }
     console.log(`✅ WC 프로바이더 ${WC_PROVIDERS.length}개 처리 완료`);
 
     // 3. DCS Providers
     for (const p of DCS_PROVIDERS) {
-        await prisma.casinoGameProvider.upsert({
+        const existing = await prisma.casinoGameProvider.findUnique({
             where: {
                 aggregatorId_externalId: {
                     aggregatorId: dcs.id,
                     externalId: p.externalId,
                 }
-            },
-            update: {
-                code: p.code,
-                name: p.name,
-                groupCode: p.groupCode,
-            },
-            create: {
-                aggregatorId: dcs.id,
-                externalId: p.externalId,
-                code: p.code,
-                name: p.name,
-                groupCode: p.groupCode,
-                isActive: true
             }
         });
+
+        if (!existing) {
+            await prisma.casinoGameProvider.create({
+                data: {
+                    aggregatorId: dcs.id,
+                    externalId: p.externalId,
+                    code: p.code,
+                    name: p.name,
+                    groupCode: p.groupCode,
+                    isActive: true
+                }
+            });
+        }
     }
     console.log(`✅ DCS 프로바이더 ${DCS_PROVIDERS.length}개 처리 완료`);
 

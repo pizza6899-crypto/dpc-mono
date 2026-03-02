@@ -81,42 +81,43 @@ export async function seedGameCategories(prisma: PrismaClient) {
 
     for (const categoryData of CATEGORIES) {
         // 1. Category Upsert
-        const category = await prisma.casinoGameCategory.upsert({
+        let category = await prisma.casinoGameCategory.findUnique({
             where: { code: categoryData.code },
-            update: {
-                type: categoryData.type,
-                sortOrder: categoryData.sortOrder,
-                isSystem: categoryData.isSystem,
-            },
-            create: {
-                code: categoryData.code,
-                type: categoryData.type,
-                sortOrder: categoryData.sortOrder,
-                isActive: true,
-                isSystem: categoryData.isSystem,
-            },
         });
+
+        if (!category) {
+            category = await prisma.casinoGameCategory.create({
+                data: {
+                    code: categoryData.code,
+                    type: categoryData.type,
+                    sortOrder: categoryData.sortOrder,
+                    isActive: true,
+                    isSystem: categoryData.isSystem,
+                },
+            });
+        }
 
         // 2. Translations Upsert
         for (const [lang, translation] of Object.entries(categoryData.translations)) {
-            await prisma.casinoGameCategoryTranslation.upsert({
+            const existingTranslation = await prisma.casinoGameCategoryTranslation.findUnique({
                 where: {
                     categoryId_language: {
                         categoryId: category.id,
                         language: lang as Language,
                     },
                 },
-                update: {
-                    name: translation.name,
-                    description: translation.description,
-                },
-                create: {
-                    categoryId: category.id,
-                    language: lang as Language,
-                    name: translation.name,
-                    description: translation.description,
-                },
             });
+
+            if (!existingTranslation) {
+                await prisma.casinoGameCategoryTranslation.create({
+                    data: {
+                        categoryId: category.id,
+                        language: lang as Language,
+                        name: translation.name,
+                        description: translation.description,
+                    },
+                });
+            }
         }
 
         console.log(`  ✓ ${categoryData.code} (${categoryData.type}) 카테고리 생성 완료`);

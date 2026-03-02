@@ -30,15 +30,20 @@ export async function seedUserConfig(prisma: PrismaClient) {
         adminNote: 'Initial system configuration.',
     };
 
-    await prisma.userConfig.upsert({
+    const existing = await prisma.userConfig.findUnique({
         where: { id: 1 },
-        update: {}, // 기존 데이터가 존재하면 변경하지 않음
-        create: {
-            id: 1,
-            ...configData,
-        },
     });
 
-    console.log('✅ 전역 사용자 설정(UserConfig)이 시딩되었습니다.');
+    if (!existing) {
+        await prisma.userConfig.create({
+            data: {
+                id: 1,
+                ...configData,
+            },
+        });
+        console.log('✅ 전역 사용자 설정(UserConfig)이 시딩되었습니다.');
+    } else {
+        console.log('⏩ 전역 사용자 설정(UserConfig)이 이미 존재하여 건너뜁니다.');
+    }
 }
 

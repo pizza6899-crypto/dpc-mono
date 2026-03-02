@@ -15,16 +15,20 @@ export async function seedAggregators(prisma: PrismaClient) {
     ];
 
     for (const aggregatorData of AGGREGATORS) {
-        const aggregator = await prisma.casinoAggregator.upsert({
+        const existing = await prisma.casinoAggregator.findUnique({
             where: { code: aggregatorData.code },
-            update: {},
-            create: {
-                name: aggregatorData.name,
-                code: aggregatorData.code,
-                status: AggregatorStatus.ACTIVE,
-            },
         });
-        console.log(`✅ 애그리게이터 생성 완료: ${aggregator.name} (ID: ${aggregator.id})`);
+
+        if (!existing) {
+            const aggregator = await prisma.casinoAggregator.create({
+                data: {
+                    name: aggregatorData.name,
+                    code: aggregatorData.code,
+                    status: AggregatorStatus.ACTIVE,
+                },
+            });
+            console.log(`✅ 애그리게이터 생성 완료: ${aggregator.name} (ID: ${aggregator.id})`);
+        }
     }
 
     console.log('✅ 카지노 애그리게이터 시딩이 완료되었습니다.');

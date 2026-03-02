@@ -71,32 +71,18 @@ export async function seedNotificationTemplates(prisma: PrismaClient) {
         });
 
         if (existing) {
-            // 템플릿 메타데이터만 업데이트 (운영자가 수정한 번역은 건드리지 않음)
-            await prisma.notificationTemplate.update({
-                where: { id: existing.id },
-                data: {
-                    name: data.name,
-                    variables: data.variables as any,
-                },
-            });
-
-            // 만약 번역이 하나도 없다면 기본 번역 추가
-            if (existing.translations.length === 0) {
-                await prisma.notificationTemplate.update({
-                    where: { id: existing.id },
-                    data: { translations },
-                });
-            }
-        } else {
-            // 신규 생성
-            await prisma.notificationTemplate.create({
-                data: {
-                    ...data,
-                    channel: data.channel as any,
-                    variables: data.variables as any,
-                    translations,
-                },
-            });
+            console.log(`    ⏩ 템플릿 [${data.event} / ${data.channel}] 가 이미 존재합니다. 업데이트를 건너뜁니다.`);
+            continue;
         }
+
+        // 신규 생성
+        await prisma.notificationTemplate.create({
+            data: {
+                ...data,
+                channel: data.channel as any,
+                variables: data.variables as any,
+                translations,
+            },
+        });
     }
 }

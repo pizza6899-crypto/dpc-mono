@@ -4,21 +4,28 @@ import { Language, PrismaClient, UserRoleType, UserStatus } from '@prisma/client
 export async function seedUsers(prisma: PrismaClient) {
   // 관리자 계정 생성
   const adminPassword = await bcrypt.hash('admin123!', 10);
-  await prisma.user.upsert({
+  const existingAdmin = await prisma.user.findUnique({
     where: { email: 'admin@dpc.com' },
-    update: {},
-    create: {
-      loginId: 'admin',
-      nickname: 'SuperAdmin',
-      email: 'admin@dpc.com',
-      passwordHash: adminPassword,
-      role: UserRoleType.SUPER_ADMIN,
-      status: UserStatus.ACTIVE,
-      country: 'JP',
-      language: Language.KO,
-      timezone: 'Asia/Tokyo',
-    },
   });
+
+  if (!existingAdmin) {
+    await prisma.user.create({
+      data: {
+        loginId: 'admin',
+        nickname: 'SuperAdmin',
+        email: 'admin@dpc.com',
+        passwordHash: adminPassword,
+        role: UserRoleType.SUPER_ADMIN,
+        status: UserStatus.ACTIVE,
+        country: 'JP',
+        language: Language.KO,
+        timezone: 'Asia/Tokyo',
+      },
+    });
+    console.log(`✅ 관리자 계정이 생성되었습니다. (admin@dpc.com)`);
+  } else {
+    console.log(`⏩ 관리자 계정이 이미 존재하여 건너뜜 (admin@dpc.com)`);
+  }
 
   // 에이전트 계정 생성
   // const agentPassword = await bcrypt.hash('agent123!', 10);
