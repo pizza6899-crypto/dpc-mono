@@ -8,7 +8,7 @@ export class GetUserService {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
-  ) { }
+  ) {}
 
   async findById(id: bigint): Promise<User | null> {
     return this.userRepository.findById(id);

@@ -98,4 +98,4 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
     USER_WALLET_STATS_REPOSITORY,
   ],
 })
-export class WalletModule { }
+export class WalletModule {}

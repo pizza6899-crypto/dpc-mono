@@ -16,24 +16,28 @@ import { CheckAvailabilityService } from './application/check-availability.servi
 import { RegistrationLimitGuard } from './guards/registration-limit.guard';
 
 @Module({
-    imports: [
-        PrismaModule,
-        EnvModule,
-        UserProfileModule,
-        UserConfigModule,
-        ThrottleModule,
-        AffiliateCodeModule,
-        AffiliateReferralModule,
-        AuditLogModule,
-    ],
-    controllers: [UserAccountController, UserAccountAdminController],
-    providers: [
-        RegisterUserService,
-        RegisterSocialUserService,
-        RegisterAdminService,
-        CheckAvailabilityService,
-        RegistrationLimitGuard,
-    ],
-    exports: [RegisterUserService, RegisterSocialUserService, RegisterAdminService],
+  imports: [
+    PrismaModule,
+    EnvModule,
+    UserProfileModule,
+    UserConfigModule,
+    ThrottleModule,
+    AffiliateCodeModule,
+    AffiliateReferralModule,
+    AuditLogModule,
+  ],
+  controllers: [UserAccountController, UserAccountAdminController],
+  providers: [
+    RegisterUserService,
+    RegisterSocialUserService,
+    RegisterAdminService,
+    CheckAvailabilityService,
+    RegistrationLimitGuard,
+  ],
+  exports: [
+    RegisterUserService,
+    RegisterSocialUserService,
+    RegisterAdminService,
+  ],
 })
-export class UserAccountModule { }
+export class UserAccountModule {}

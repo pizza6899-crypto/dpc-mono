@@ -19,7 +19,7 @@ export class UserSessionRepository implements UserSessionRepositoryPort {
     private readonly tx: PrismaTransaction,
     private readonly mapper: UserSessionMapper,
     private readonly redisService: RedisService,
-  ) { }
+  ) {}
 
   async create(session: UserSession): Promise<UserSession> {
     const data = this.mapper.toPrisma(session);
@@ -83,11 +83,11 @@ export class UserSessionRepository implements UserSessionRepositoryPort {
       ...(activeOnly && { status: SessionStatus.ACTIVE }),
       ...(startDate &&
         endDate && {
-        createdAt: {
-          gte: startDate,
-          lte: endDate,
-        },
-      }),
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        }),
     };
 
     // 정렬 조건 구성

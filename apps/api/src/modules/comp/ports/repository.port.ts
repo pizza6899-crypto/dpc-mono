@@ -1,4 +1,8 @@
-import type { ExchangeCurrencyCode, Prisma, CompSettlementStatus } from '@prisma/client';
+import type {
+  ExchangeCurrencyCode,
+  Prisma,
+  CompSettlementStatus,
+} from '@prisma/client';
 import type { CompAccount } from '../domain/model/comp-account.entity';
 import type { CompAccountTransaction } from '../domain/model/comp-account-transaction.entity';
 import type { CompConfig } from '../domain/model/comp-config.entity';
@@ -10,7 +14,9 @@ export interface CompRepositoryPort {
     currency: ExchangeCurrencyCode,
   ): Promise<CompAccount | null>;
   save(account: CompAccount): Promise<CompAccount>;
-  createTransaction(transaction: CompAccountTransaction): Promise<CompAccountTransaction>;
+  createTransaction(
+    transaction: CompAccountTransaction,
+  ): Promise<CompAccountTransaction>;
 
   findTransactions(params: {
     userId: bigint;
@@ -66,14 +72,28 @@ export interface CompDailySettlementRepositoryPort {
     currency: ExchangeCurrencyCode,
     date: Date,
   ): Promise<CompDailySettlement | null>;
-  findPendingSettlements(untilDate: Date, skip: number, take: number): Promise<
+  findPendingSettlements(
+    untilDate: Date,
+    skip: number,
+    take: number,
+  ): Promise<
     Array<{
       userId: bigint;
       currency: ExchangeCurrencyCode;
       totalEarned: Prisma.Decimal;
     }>
   >;
-  updateStatuses(userId: bigint, currency: ExchangeCurrencyCode, status: CompSettlementStatus, untilDate: Date, rewardId?: bigint): Promise<void>;
-  getPendingTotalForUser(userId: bigint, currency: ExchangeCurrencyCode, untilDate: Date): Promise<Prisma.Decimal>;
+  updateStatuses(
+    userId: bigint,
+    currency: ExchangeCurrencyCode,
+    status: CompSettlementStatus,
+    untilDate: Date,
+    rewardId?: bigint,
+  ): Promise<void>;
+  getPendingTotalForUser(
+    userId: bigint,
+    currency: ExchangeCurrencyCode,
+    untilDate: Date,
+  ): Promise<Prisma.Decimal>;
   create(settlement: CompDailySettlement): Promise<CompDailySettlement>;
 }

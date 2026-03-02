@@ -65,7 +65,7 @@ export class ProcessCasinoCreditService {
     private readonly gameResultFetchQueue: Queue,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly findUserWalletService: FindUserWalletService, // [Inject] Added
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(

@@ -11,21 +11,21 @@ import { CaslAbilityGuard } from './guards/casl-ability.guard';
  * CASL 라이브러리를 통해 속성 기반 접근 제어(ABAC)를 구현합니다.
  */
 @Module({
-    providers: [
-        CaslPolicy,
-        CaslAbilityFactory,
-        DefineAbilitiesService,
-        CaslAbilityGuard,
-        {
-            provide: APP_GUARD,
-            useClass: CaslAbilityGuard,
-        },
-    ],
-    exports: [
-        DefineAbilitiesService,
-        CaslAbilityFactory,
-        CaslAbilityGuard,
-        CaslPolicy,
-    ],
+  providers: [
+    CaslPolicy,
+    CaslAbilityFactory,
+    DefineAbilitiesService,
+    CaslAbilityGuard,
+    {
+      provide: APP_GUARD,
+      useClass: CaslAbilityGuard,
+    },
+  ],
+  exports: [
+    DefineAbilitiesService,
+    CaslAbilityFactory,
+    CaslAbilityGuard,
+    CaslPolicy,
+  ],
 })
-export class AccessControlModule { }
+export class AccessControlModule {}

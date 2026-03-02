@@ -18,7 +18,7 @@ export class CompConfigRepository implements CompConfigRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: CompMapper,
-  ) { }
+  ) {}
 
   async getConfig(currency: ExchangeCurrencyCode): Promise<CompConfig | null> {
     const cached = this.configCache.get(currency);

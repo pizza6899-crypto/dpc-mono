@@ -73,4 +73,4 @@ import { CompDailySettlementProcessor } from './infrastructure/processors/comp-d
     CompPolicy,
   ],
 })
-export class CompModule { }
+export class CompModule {}

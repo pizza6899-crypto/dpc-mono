@@ -36,6 +36,12 @@ export class TierStatsRecordProcessor extends BaseProcessor<
       case TierAuditJobType.INCREMENT_TIER_STATS:
         await this.handleStatsService.handleIncrement(payload.data);
         break;
+      case TierAuditJobType.RECORD_TIER_HISTORY:
+        await this.handleStatsService.handleTierHistory(payload.data);
+        break;
+      case TierAuditJobType.RECORD_USER_EXP_LOG:
+        await this.handleStatsService.handleUserExpLog(payload.data);
+        break;
       default:
         this.logger.warn(
           `Unknown or missing tier audit job type: ${(payload as any)?.type}`,

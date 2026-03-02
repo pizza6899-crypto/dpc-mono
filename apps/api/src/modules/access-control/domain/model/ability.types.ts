@@ -21,11 +21,11 @@ export type SubjectType = Prisma.ModelName;
  * CASL 표준 액션을 따릅니다.
  */
 export enum Action {
-    CREATE = 'create',
-    READ = 'read',
-    UPDATE = 'update',
-    DELETE = 'delete',
-    MANAGE = 'manage', // 모든 액션 (CRUD + 기타)
+  CREATE = 'create',
+  READ = 'read',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  MANAGE = 'manage', // 모든 액션 (CRUD + 기타)
 }
 
 /**
@@ -39,7 +39,7 @@ export type Subjects = SubjectType | 'all';
  * 권한 정의 인터페이스
  */
 export interface Permission {
-    action: Action | Action[];
-    subject: Subjects;
-    conditions?: Record<string, any>; // 조건부 권한 (예: 자신의 리소스만 수정 가능)
+  action: Action | Action[];
+  subject: Subjects;
+  conditions?: Record<string, any>; // 조건부 권한 (예: 자신의 리소스만 수정 가능)
 }

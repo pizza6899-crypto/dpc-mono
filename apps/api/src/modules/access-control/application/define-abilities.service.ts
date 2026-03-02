@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { CaslPolicy } from '../domain';
 import {
-    CaslAbilityFactory,
-    type AppAbility,
+  CaslAbilityFactory,
+  type AppAbility,
 } from '../infrastructure/casl-ability.factory';
 
 /**
@@ -13,22 +13,22 @@ import {
  */
 @Injectable()
 export class DefineAbilitiesService {
-    constructor(
-        private readonly policy: CaslPolicy,
-        private readonly abilityFactory: CaslAbilityFactory,
-    ) { }
+  constructor(
+    private readonly policy: CaslPolicy,
+    private readonly abilityFactory: CaslAbilityFactory,
+  ) {}
 
-    /**
-     * 사용자별 권한 정의 및 Ability 생성
-     *
-     * @param user - 인증된 사용자
-     * @returns CASL Ability 객체
-     */
-    async execute(user: AuthenticatedUser): Promise<AppAbility> {
-        // 1. 역할별 권한 정의
-        const permissions = this.policy.defineRolePermissions(user.role);
+  /**
+   * 사용자별 권한 정의 및 Ability 생성
+   *
+   * @param user - 인증된 사용자
+   * @returns CASL Ability 객체
+   */
+  async execute(user: AuthenticatedUser): Promise<AppAbility> {
+    // 1. 역할별 권한 정의
+    const permissions = this.policy.defineRolePermissions(user.role);
 
-        // 2. CASL Ability 생성
-        return this.abilityFactory.create(user, permissions);
-    }
+    // 2. CASL Ability 생성
+    return this.abilityFactory.create(user, permissions);
+  }
 }

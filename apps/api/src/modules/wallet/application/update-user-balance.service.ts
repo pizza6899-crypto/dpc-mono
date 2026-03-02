@@ -77,7 +77,7 @@ export class UpdateUserBalanceService {
     private readonly statsRepository: UserWalletStatsRepositoryPort,
     private readonly exchangeRateService: ExchangeRateService,
     private readonly snowflakeService: SnowflakeService,
-  ) { }
+  ) {}
 
   /**
    * 잔액 변경 및 트랜잭션 기록 (Atomic Operation)
@@ -173,7 +173,12 @@ export class UpdateUserBalanceService {
     });
 
     // Generate Snowflake ID & Timestamp exactly here (Or use injected)
-    const injected = params.txId ? { id: params.txId, timestamp: this.snowflakeService.parse(params.txId).date } : null;
+    const injected = params.txId
+      ? {
+          id: params.txId,
+          timestamp: this.snowflakeService.parse(params.txId).date,
+        }
+      : null;
     const { id: txId, timestamp: txCreatedAt } =
       injected ?? this.snowflakeService.generate();
 

@@ -42,7 +42,7 @@ export class LoginAttempt {
     public readonly attemptedAt: Date,
     public readonly loginId: string | null, // 시도한 로그인 ID
     public readonly isAdmin: boolean, // 관리자 로그인 시도 여부
-  ) { }
+  ) {}
 
   /**
    * 성공한 로그인 시도 생성

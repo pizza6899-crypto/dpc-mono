@@ -1,11 +1,11 @@
-import {
+import type {
   UserRoleType,
   OAuthProvider,
   RegistrationMethod,
   Language,
-  UserStatus,
   ExchangeCurrencyCode,
 } from '@prisma/client';
+import { UserStatus } from '@prisma/client';
 import { UserAuth } from './value-objects/user-auth.vo';
 import { UserLocation } from './value-objects/user-location.vo';
 import { UserCurrency } from './value-objects/user-currency.vo';
@@ -40,7 +40,7 @@ export class User {
     public readonly whitecliffId: bigint | null,
     public readonly whitecliffUsername: string | null,
     public readonly dcsId: string | null,
-  ) { }
+  ) {}
 
   /**
    * DB에서 조회한 데이터로부터 엔티티 생성
@@ -168,19 +168,39 @@ export class User {
   }
 
   // Getters
-  get loginId(): string | null { return this.authInfo.loginId; }
-  get email(): string | null { return this.authInfo.email; }
+  get loginId(): string | null {
+    return this.authInfo.loginId;
+  }
+  get email(): string | null {
+    return this.authInfo.email;
+  }
 
-  getLocation(): UserLocation { return this.location; }
-  getCurrency(): UserCurrency { return this.currency; }
-  getTrust(): UserTrust { return this.trust; }
-  getAuthInfo(): UserAuth { return this.authInfo; }
+  getLocation(): UserLocation {
+    return this.location;
+  }
+  getCurrency(): UserCurrency {
+    return this.currency;
+  }
+  getTrust(): UserTrust {
+    return this.trust;
+  }
+  getAuthInfo(): UserAuth {
+    return this.authInfo;
+  }
 
   // Business Logic Methods
-  isCredentialUser(): boolean { return this.authInfo.isCredentialUser(); }
-  isAdminCreated(): boolean { return this.authInfo.isAdminCreated(); }
-  isPasswordUser(): boolean { return this.authInfo.isPasswordUser(); }
-  isSocialUser(): boolean { return this.authInfo.isSocialUser(); }
+  isCredentialUser(): boolean {
+    return this.authInfo.isCredentialUser();
+  }
+  isAdminCreated(): boolean {
+    return this.authInfo.isAdminCreated();
+  }
+  isPasswordUser(): boolean {
+    return this.authInfo.isPasswordUser();
+  }
+  isSocialUser(): boolean {
+    return this.authInfo.isSocialUser();
+  }
 
   /**
    * 관리자 도구를 통한 정보 업데이트 (불변성 유지)

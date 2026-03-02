@@ -36,7 +36,7 @@ export class CreatePromotionService {
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
     private readonly policy: PromotionPolicy,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(params: CreatePromotionParams): Promise<Promotion> {

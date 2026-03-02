@@ -49,7 +49,7 @@ export class Tier {
     public readonly updatedBy: bigint | null,
     public readonly translations: TierTranslationProps[],
     private readonly currentLanguage: Language | null = null,
-  ) { }
+  ) {}
 
   getName(language?: Language): string {
     const targetLang = language || this.currentLanguage;
@@ -115,7 +115,7 @@ export class Tier {
       Cast.bigint(data.updatedBy),
       translations,
       contextLanguage ??
-      (translations.length === 1 ? translations[0].language : null),
+        (translations.length === 1 ? translations[0].language : null),
     );
   }
 }

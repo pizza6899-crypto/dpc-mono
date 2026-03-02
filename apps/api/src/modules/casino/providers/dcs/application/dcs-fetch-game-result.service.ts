@@ -21,7 +21,7 @@ export class DcsFetchGameResultService {
     private readonly gameSessionRepository: CasinoGameSessionRepositoryPort,
     private readonly dcsApiService: DcsApiService,
     private readonly cls: ClsService,
-  ) { }
+  ) {}
 
   async execute(gameRoundId: bigint, startedAt: Date): Promise<void> {
     return this.cls.run(async () => {

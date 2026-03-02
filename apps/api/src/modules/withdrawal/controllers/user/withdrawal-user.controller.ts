@@ -65,13 +65,15 @@ export class WithdrawalUserController {
     private readonly getWithdrawalOptionsService: GetWithdrawalOptionsService,
     private readonly getWithdrawalEligibilityService: GetWithdrawalEligibilityService,
     private readonly sqidsService: SqidsService,
-  ) { }
+  ) {}
 
   @Get('eligibility')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Get withdrawal eligibility and available balance / 출금 가능 금액 및 자격 정보 조회',
-    description: '현재 보유중인 캐시 잔액과 롤링 달성 여부를 검사하여 최종 출금 가능 한도(Withdrawable Amount)를 반환합니다.',
+    summary:
+      'Get withdrawal eligibility and available balance / 출금 가능 금액 및 자격 정보 조회',
+    description:
+      '현재 보유중인 캐시 잔액과 롤링 달성 여부를 검사하여 최종 출금 가능 한도(Withdrawable Amount)를 반환합니다.',
   })
   @ApiStandardResponse(WithdrawalEligibilityResponseDto, {
     status: 200,

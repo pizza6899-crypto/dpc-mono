@@ -9,38 +9,37 @@ import { CACHE_CONFIG } from 'src/common/cache/cache.constants';
 
 @Injectable()
 export class UserConfigRepository implements UserConfigRepositoryPort {
-    private readonly CONFIG_ID = 1;
+  private readonly CONFIG_ID = 1;
 
-    constructor(
-        @InjectTransaction()
-        private readonly tx: PrismaTransaction,
-        private readonly cacheService: CacheService,
-    ) { }
+  constructor(
+    @InjectTransaction()
+    private readonly tx: PrismaTransaction,
+    private readonly cacheService: CacheService,
+  ) {}
 
-    async findConfig(): Promise<UserConfig | null> {
-        // L1 캐시 적용 (5초)
-        const record = await this.cacheService.getOrSet(
-            CACHE_CONFIG.USER_CONFIG.GLOBAL,
-            async () => {
-                return await this.tx.userConfig.findUnique({
-                    where: { id: this.CONFIG_ID },
-                });
-            },
-        );
-
-        return record ? UserConfigMapper.toDomain(record) : null;
-    }
-
-    async save(userConfig: UserConfig): Promise<void> {
-        const data = UserConfigMapper.toPersistence(userConfig);
-
-        await this.tx.userConfig.update({
-            where: { id: this.CONFIG_ID },
-            data,
+  async findConfig(): Promise<UserConfig | null> {
+    // L1 캐시 적용 (5초)
+    const record = await this.cacheService.getOrSet(
+      CACHE_CONFIG.USER_CONFIG.GLOBAL,
+      async () => {
+        return await this.tx.userConfig.findUnique({
+          where: { id: this.CONFIG_ID },
         });
+      },
+    );
 
-        // 저장 시 캐시 무효화
-        await this.cacheService.del(CACHE_CONFIG.USER_CONFIG.GLOBAL);
-    }
+    return record ? UserConfigMapper.toDomain(record) : null;
+  }
+
+  async save(userConfig: UserConfig): Promise<void> {
+    const data = UserConfigMapper.toPersistence(userConfig);
+
+    await this.tx.userConfig.update({
+      where: { id: this.CONFIG_ID },
+      data,
+    });
+
+    // 저장 시 캐시 무효화
+    await this.cacheService.del(CACHE_CONFIG.USER_CONFIG.GLOBAL);
+  }
 }
-

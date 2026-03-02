@@ -6,27 +6,27 @@ import { AiModerationLog as AiModerationLogEntity } from '../domain/model/ai-mod
 
 @Injectable()
 export class PrismaAiModerationLogRepository implements AiModerationLogRepositoryPort {
-    constructor(
-        @InjectTransaction()
-        private readonly tx: PrismaTransaction,
-    ) { }
+  constructor(
+    @InjectTransaction()
+    private readonly tx: PrismaTransaction,
+  ) {}
 
-    async save(log: AiModerationLogEntity): Promise<void> {
-        await this.tx.aiModerationLog.create({
-            data: {
-                id: log.id,
-                input: log.input,
-                isAllowed: log.isAllowed,
-                label: log.label,
-                confidence: log.confidence,
-                reason: log.reason,
-                flaggedWords: log.flaggedWords,
-                rawResponse: log.rawResponse,
-                provider: log.provider,
-                model: log.model,
-                durationMs: log.durationMs,
-                createdAt: log.createdAt,
-            },
-        });
-    }
+  async save(log: AiModerationLogEntity): Promise<void> {
+    await this.tx.aiModerationLog.create({
+      data: {
+        id: log.id,
+        input: log.input,
+        isAllowed: log.isAllowed,
+        label: log.label,
+        confidence: log.confidence,
+        reason: log.reason,
+        flaggedWords: log.flaggedWords,
+        rawResponse: log.rawResponse,
+        provider: log.provider,
+        model: log.model,
+        durationMs: log.durationMs,
+        createdAt: log.createdAt,
+      },
+    });
+  }
 }

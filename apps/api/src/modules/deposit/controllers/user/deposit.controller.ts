@@ -60,7 +60,7 @@ export class DepositController {
     private readonly getMyDepositDetailService: GetMyDepositDetailService,
     private readonly cancelDepositService: CancelDepositService,
     private readonly sqidsService: SqidsService,
-  ) { }
+  ) {}
 
   // ============================================
   // 입금 수단 조회

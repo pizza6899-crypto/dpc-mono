@@ -21,11 +21,7 @@ export class UserException extends DomainException {
  */
 export class UserNotFoundException extends UserException {
   constructor() {
-    super(
-      'User not found',
-      MessageCode.USER_NOT_FOUND,
-      HttpStatus.NOT_FOUND,
-    );
+    super('User not found', MessageCode.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
     this.name = 'UserNotFoundException';
   }
 }
@@ -197,5 +193,3 @@ export class UserNotClosedException extends UserException {
     this.name = 'UserNotClosedException';
   }
 }
-
-

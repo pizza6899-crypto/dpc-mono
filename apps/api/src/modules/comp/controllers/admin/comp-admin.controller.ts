@@ -10,12 +10,13 @@ import {
   HttpStatus,
   NotFoundException,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiParam, ApiExcludeEndpoint } from '@nestjs/swagger';
 import {
-  Prisma,
-  UserRoleType,
-  ExchangeCurrencyCode,
-} from '@prisma/client';
+  ApiTags,
+  ApiOperation,
+  ApiParam,
+  ApiExcludeEndpoint,
+} from '@nestjs/swagger';
+import { Prisma, UserRoleType, ExchangeCurrencyCode } from '@prisma/client';
 import { EarnCompService } from '../../application/earn-comp.service';
 import { FindCompTransactionsService } from '../../application/find-comp-transactions.service';
 import { AdminFindCompTransactionsQueryDto } from './dto/request/admin-find-comp-transactions-query.dto';
@@ -60,7 +61,7 @@ export class CompAdminController {
     private readonly earnCompService: EarnCompService,
     private readonly envService: EnvService,
     private readonly findAdminCompStatsService: FindAdminCompStatsService,
-  ) { }
+  ) {}
 
   @Get('users/:userId/balance')
   @HttpCode(HttpStatus.OK)
@@ -144,7 +145,9 @@ export class CompAdminController {
         appliedRate: item.appliedRate ? item.appliedRate.toString() : undefined,
         type: item.type,
         referenceId: item.referenceId ? item.referenceId.toString() : undefined,
-        parentTransactionId: item.parentTransactionId ? item.parentTransactionId.toString() : undefined,
+        parentTransactionId: item.parentTransactionId
+          ? item.parentTransactionId.toString()
+          : undefined,
         processedBy: item.processedBy ? item.processedBy.toString() : undefined,
         metadata: item.metadata,
         description: item.description ?? undefined,
@@ -161,11 +164,13 @@ export class CompAdminController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Get platform comp stats (Admin) / 플랫폼 콤프 통계 조회 (관리자)',
-    description: 'Retrieve summary and daily trends of comp points / 콤프 적립 및 사용 요약과 일별 트렌드를 조회합니다.',
+    description:
+      'Retrieve summary and daily trends of comp points / 콤프 적립 및 사용 요약과 일별 트렌드를 조회합니다.',
   })
   @ApiStandardResponse(CompDailyStatResponseDto, {
     isArray: true,
-    description: 'Successfully retrieved platform comp daily trends / 콤프 일별 트렌드 조회 성공',
+    description:
+      'Successfully retrieved platform comp daily trends / 콤프 일별 트렌드 조회 성공',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -189,7 +194,8 @@ export class CompAdminController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Test Comp Earning / 테스트용 콤프 적립',
-    description: 'Manually inject comp points for testing / 테스트를 위해 수동으로 콤프 포인트를 적립합니다.',
+    description:
+      'Manually inject comp points for testing / 테스트를 위해 수동으로 콤프 포인트를 적립합니다.',
   })
   @ApiStandardResponse(AdminCompBalanceResponseDto, {
     description: 'Successfully injected comp points / 콤프 적립 성공',
@@ -221,12 +227,15 @@ export class CompAdminController {
   @Patch('users/:userId/status')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Update user comp account status (Admin) / 사용자 콤프 계정 상태 업데이트 (관리자)',
-    description: 'Admin can freeze or unfreeze a specific user\'s comp account / 관리자가 특정 사용자의 콤프 계정을 동결 또는 활성화합니다.',
+    summary:
+      'Update user comp account status (Admin) / 사용자 콤프 계정 상태 업데이트 (관리자)',
+    description:
+      "Admin can freeze or unfreeze a specific user's comp account / 관리자가 특정 사용자의 콤프 계정을 동결 또는 활성화합니다.",
   })
   @ApiParam({ name: 'userId', example: '1', description: 'User ID' })
   @ApiStandardResponse(AdminCompBalanceResponseDto, {
-    description: 'Successfully updated user comp account status / 콤프 계정 상태 업데이트 성공',
+    description:
+      'Successfully updated user comp account status / 콤프 계정 상태 업데이트 성공',
   })
   @AuditLog({
     type: LogType.ACTIVITY,

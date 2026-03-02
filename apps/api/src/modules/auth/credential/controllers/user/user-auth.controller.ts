@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Post,
-  Get,
-  Body,
-  Req,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Post, Get, Body, Req, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
@@ -43,7 +36,7 @@ export class UserAuthController {
     private readonly logoutService: LogoutService,
     private readonly checkUserStatusService: CheckUserStatusService,
     private readonly sqidsService: SqidsService,
-  ) { }
+  ) {}
 
   @Post('login')
   @Public()
@@ -78,13 +71,12 @@ export class UserAuthController {
     @Req() req: Request,
   ): Promise<UserLoginResponseDto> {
     // 1. 자격 증명 인증 (이메일/비밀번호 검증, 계정 잠금 체크, 실패 시도 기록)
-    const authenticatedUser =
-      await this.authenticateIdentityService.execute({
-        loginId: dto.loginId,
-        password: dto.password,
-        clientInfo,
-        isAdmin: false,
-      });
+    const authenticatedUser = await this.authenticateIdentityService.execute({
+      loginId: dto.loginId,
+      password: dto.password,
+      clientInfo,
+      isAdmin: false,
+    });
 
     // 2. 세션에 사용자 저장
     await new Promise<void>((resolve, reject) => {
@@ -198,7 +190,7 @@ export class UserAuthController {
         isAuthenticated = false;
         // 유효하지 않은 유저라면 로그아웃 처리 (세션 정리)
         req.logout(() => {
-          req.session?.destroy(() => { });
+          req.session?.destroy(() => {});
         });
       }
     }
@@ -208,9 +200,9 @@ export class UserAuthController {
       user:
         isAuthenticated && user
           ? {
-            id: this.sqidsService.encode(user.id, SqidsPrefix.USER),
-            role: user.role,
-          }
+              id: this.sqidsService.encode(user.id, SqidsPrefix.USER),
+              role: user.role,
+            }
           : null,
     };
   }

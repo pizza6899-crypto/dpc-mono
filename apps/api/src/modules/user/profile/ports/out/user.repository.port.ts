@@ -1,6 +1,12 @@
 // src/modules/user/profile/ports/out/user.repository.port.ts
 import type { User } from '../../domain';
-import type { UserRoleType, OAuthProvider, UserStatus, ExchangeCurrencyCode, RegistrationMethod } from '@prisma/client';
+import type {
+  UserRoleType,
+  OAuthProvider,
+  UserStatus,
+  ExchangeCurrencyCode,
+  RegistrationMethod,
+} from '@prisma/client';
 
 /**
  * User 생성 파라미터

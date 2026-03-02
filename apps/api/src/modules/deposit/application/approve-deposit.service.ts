@@ -51,7 +51,7 @@ export class ApproveDepositService {
     private readonly exchangeRateService: ExchangeRateService,
     private readonly accumulateUserDepositService: AccumulateUserDepositService,
     private readonly wageringConfigService: GetWageringConfigService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(params: ApproveDepositParams): Promise<ApproveDepositResult> {

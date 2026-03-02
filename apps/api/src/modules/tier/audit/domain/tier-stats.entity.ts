@@ -6,10 +6,18 @@ export class TierStats {
     public readonly tierId: bigint,
     public readonly snapshotUserCount: number,
 
-    // Metrics
-    public readonly periodBonusPaidUsd: Prisma.Decimal,
+    // Performance Metrics (USD)
     public readonly periodRollingUsd: Prisma.Decimal,
+    public readonly periodPayoutUsd: Prisma.Decimal,
+    public readonly periodNetRevenueUsd: Prisma.Decimal,
+    public readonly periodUpgradeBonusPaidUsd: Prisma.Decimal,
+    public readonly periodCompPaidUsd: Prisma.Decimal,
+    public readonly periodLossbackPaidUsd: Prisma.Decimal,
     public readonly periodDepositUsd: Prisma.Decimal,
+    public readonly periodWithdrawalUsd: Prisma.Decimal,
+
+    // Active Metrics
+    public readonly periodActiveUserCount: number,
 
     // Changes
     public readonly upgradedCount: number,
@@ -25,9 +33,15 @@ export class TierStats {
       data.timestamp,
       data.tierId,
       data.snapshotUserCount,
-      data.periodBonusPaidUsd,
       data.periodRollingUsd,
+      data.periodPayoutUsd,
+      data.periodNetRevenueUsd,
+      data.periodUpgradeBonusPaidUsd,
+      data.periodCompPaidUsd,
+      data.periodLossbackPaidUsd,
       data.periodDepositUsd,
+      data.periodWithdrawalUsd,
+      data.periodActiveUserCount,
       data.upgradedCount,
       data.downgradedCount,
       data.maintainedCount,

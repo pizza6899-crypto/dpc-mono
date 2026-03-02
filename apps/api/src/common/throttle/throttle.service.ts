@@ -14,7 +14,7 @@ export class ThrottleService {
   private readonly logger = new Logger(ThrottleService.name);
   private readonly keyPrefix = 'throttle:';
 
-  constructor(private readonly redisService: RedisService) { }
+  constructor(private readonly redisService: RedisService) {}
 
   /**
    * 요청 쓰로틀링 체크 및 카운트 증가

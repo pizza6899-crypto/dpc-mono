@@ -3,10 +3,10 @@
  */
 
 export {
-    Action,
-    SubjectType,
-    type Subjects,
-    type Permission,
+  Action,
+  SubjectType,
+  type Subjects,
+  type Permission,
 } from './model/ability.types';
 export { CaslPolicy } from './policy';
 export { InsufficientPermissionException } from './exception';

@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, TierChangeType } from '@prisma/client';
+import { Prisma, TierChangeType, ExpSourceType } from '@prisma/client';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import {
   TierAuditRepositoryPort,
   CreateTierHistoryProps,
   UpdateTierStatsProps,
+  CreateUserExpLogProps,
 } from './tier-audit.repository.port';
 import { TierHistory } from '../domain/tier-history.entity';
+import { UserExpLog } from '../domain/user-exp-log.entity';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
 
 @Injectable()
@@ -22,7 +24,6 @@ export class TierAuditRepository implements TierAuditRepositoryPort {
     const record = await this.tx.tierHistory.create({
       data: {
         ...props,
-        changeBy: props.changeBy || 'SYSTEM',
       },
     });
     return TierHistory.fromPersistence(record);
@@ -71,6 +72,59 @@ export class TierAuditRepository implements TierAuditRepositoryPort {
     };
   }
 
+  // --- XP Log ---
+  async saveExpLog(props: CreateUserExpLogProps): Promise<UserExpLog> {
+    const record = await this.tx.userExpLog.create({
+      data: {
+        ...props,
+      },
+    });
+    return UserExpLog.fromPersistence(record);
+  }
+
+  async findExpLogsByUserId(
+    userId: bigint,
+    params: {
+      startDate?: Date;
+      endDate?: Date;
+      page?: number;
+      limit?: number;
+      sourceType?: ExpSourceType;
+    } = {},
+  ): Promise<PaginatedData<UserExpLog>> {
+    const { startDate, endDate, page = 1, limit = 20, sourceType } = params;
+    const where: Prisma.UserExpLogWhereInput = {
+      userId,
+    };
+
+    if (startDate || endDate) {
+      where.createdAt = {};
+      if (startDate) where.createdAt.gte = startDate;
+      if (endDate) where.createdAt.lte = endDate;
+    }
+
+    if (sourceType) {
+      where.sourceType = sourceType;
+    }
+
+    const [total, records] = await Promise.all([
+      this.tx.userExpLog.count({ where }),
+      this.tx.userExpLog.findMany({
+        where,
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+      }),
+    ]);
+
+    return {
+      data: records.map(UserExpLog.fromPersistence),
+      total,
+      page,
+      limit,
+    };
+  }
+
   // --- Stats ---
   async updateStats(
     timestamp: Date,
@@ -89,40 +143,17 @@ export class TierAuditRepository implements TierAuditRepositoryPort {
     tierId: bigint,
     data: Partial<Record<keyof UpdateTierStatsProps, number | Prisma.Decimal>>,
   ): Promise<void> {
+    const createData: any = { timestamp, tierId };
     const updateData: any = {};
+
     for (const [key, value] of Object.entries(data)) {
       updateData[key] = { increment: value };
+      createData[key] = value;
     }
 
     await this.tx.tierStats.upsert({
       where: { timestamp_tierId: { timestamp, tierId } },
-      create: {
-        timestamp,
-        tierId,
-        snapshotUserCount:
-          typeof data.snapshotUserCount === 'number'
-            ? data.snapshotUserCount
-            : 0,
-        periodBonusPaidUsd:
-          data.periodBonusPaidUsd instanceof Prisma.Decimal
-            ? data.periodBonusPaidUsd
-            : 0,
-        periodRollingUsd:
-          data.periodRollingUsd instanceof Prisma.Decimal
-            ? data.periodRollingUsd
-            : 0,
-        periodDepositUsd:
-          data.periodDepositUsd instanceof Prisma.Decimal
-            ? data.periodDepositUsd
-            : 0,
-        upgradedCount:
-          typeof data.upgradedCount === 'number' ? data.upgradedCount : 0,
-        downgradedCount:
-          typeof data.downgradedCount === 'number' ? data.downgradedCount : 0,
-        maintainedCount:
-          typeof data.maintainedCount === 'number' ? data.maintainedCount : 0,
-        graceCount: typeof data.graceCount === 'number' ? data.graceCount : 0,
-      },
+      create: createData,
       update: updateData,
     });
   }

@@ -53,4 +53,4 @@ import { CASINO_QUEUES } from '../../infrastructure/casino.bullmq';
     WhitecliffFetchGameResultService,
   ],
 })
-export class WhitecliffModule { }
+export class WhitecliffModule {}

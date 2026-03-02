@@ -26,7 +26,7 @@ export class CreateCasinoGameSessionService {
     @Inject(CASINO_GAME_SESSION_REPOSITORY)
     private readonly repository: CasinoGameSessionRepositoryPort,
     private readonly exchangeRateService: ExchangeRateService,
-  ) { }
+  ) {}
 
   async execute(params: CreateSessionParams): Promise<CasinoGameSession> {
     const {

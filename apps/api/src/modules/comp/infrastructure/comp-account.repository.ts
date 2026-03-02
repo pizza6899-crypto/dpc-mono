@@ -12,7 +12,7 @@ export class CompAccountRepository implements CompRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: CompMapper,
-  ) { }
+  ) {}
 
   async findByUserIdAndCurrency(
     userId: bigint,

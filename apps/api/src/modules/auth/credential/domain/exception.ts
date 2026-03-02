@@ -16,7 +16,6 @@ export class LoginFailedException extends DomainException {
   }
 }
 
-
 /**
  * 계정 잠김 예외
  */
@@ -30,7 +29,6 @@ export class AccountLockedException extends DomainException {
     this.name = 'AccountLockedException';
   }
 }
-
 
 /**
  * 권한 부족 예외

@@ -9,7 +9,7 @@ export class FindCompAccountService {
   constructor(
     @Inject(COMP_REPOSITORY)
     private readonly compRepository: CompRepositoryPort,
-  ) { }
+  ) {}
 
   async execute(
     userId: bigint,

@@ -2,7 +2,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class UserLoginRequestDto {
-  @ApiProperty({ description: 'Login ID (Email, Username, Phone) / 로그인 ID (이메일, 사용자명, 휴대폰)', example: 'user123' })
+  @ApiProperty({
+    description:
+      'Login ID (Email, Username, Phone) / 로그인 ID (이메일, 사용자명, 휴대폰)',
+    example: 'user123',
+  })
   @IsString()
   @IsNotEmpty()
   loginId: string;

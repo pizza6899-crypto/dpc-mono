@@ -11,7 +11,7 @@ export class LoginAttemptRepository implements LoginAttemptRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: LoginAttemptMapper,
-  ) { }
+  ) {}
 
   async create(attempt: LoginAttempt): Promise<LoginAttempt> {
     const data = this.mapper.toPrisma(attempt);
@@ -27,7 +27,10 @@ export class LoginAttemptRepository implements LoginAttemptRepositoryPort {
     const { loginId, ipAddress, limit } = params;
     const results = await this.tx.loginAttempt.findMany({
       where: {
-        AND: [loginId ? { email: loginId } : {}, ipAddress ? { ipAddress } : {}],
+        AND: [
+          loginId ? { email: loginId } : {},
+          ipAddress ? { ipAddress } : {},
+        ],
       },
       orderBy: { attemptedAt: 'desc' },
       take: limit,

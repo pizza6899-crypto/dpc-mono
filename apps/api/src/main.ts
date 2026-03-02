@@ -19,7 +19,6 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import { Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/client';
 
-
 // BigInt JSON 직렬화 설정
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();

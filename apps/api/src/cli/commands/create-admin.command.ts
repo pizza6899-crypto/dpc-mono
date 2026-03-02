@@ -1,7 +1,12 @@
 import { Command, CommandRunner, Option } from 'nest-commander';
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
-import { UserRoleType, UserStatus, Language, RegistrationMethod } from '@prisma/client';
+import {
+  UserRoleType,
+  UserStatus,
+  Language,
+  RegistrationMethod,
+} from '@prisma/client';
 import { hashPassword } from 'src/utils/password.util';
 import { IdUtil } from 'src/utils/id.util';
 
@@ -55,16 +60,14 @@ export class CreateAdminCommand extends CommandRunner {
       // 중복 확인 (email, loginId, nickname)
       const existingUser = await this.prismaService.user.findFirst({
         where: {
-          OR: [
-            { email },
-            { loginId },
-            { nickname },
-          ],
+          OR: [{ email }, { loginId }, { nickname }],
         },
       });
 
       if (existingUser) {
-        this.logger.error(`❌ 이미 존재하는 사용자 정보입니다. (Email, LoginID 또는 Nickname 중복)`);
+        this.logger.error(
+          `❌ 이미 존재하는 사용자 정보입니다. (Email, LoginID 또는 Nickname 중복)`,
+        );
         process.exit(1);
       }
 

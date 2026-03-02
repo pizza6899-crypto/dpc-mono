@@ -47,22 +47,19 @@ export class EarnCompService {
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly compPolicy: CompPolicy,
     private readonly snowflakeService: SnowflakeService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(params: EarnCompParams): Promise<CompAccount> {
-    const {
-      userId,
-      currency,
-      amount,
-      appliedRate,
-      referenceId,
-    } = params;
+    const { userId, currency, amount, appliedRate, referenceId } = params;
 
     // 0. Early Exit for zero or negative amounts
     if (amount.lte(0)) {
       this.logger.warn(`Comp earn skipped: amount is <= 0 (${amount})`);
-      const account = await this.compRepository.findByUserIdAndCurrency(userId, currency);
+      const account = await this.compRepository.findByUserIdAndCurrency(
+        userId,
+        currency,
+      );
       return account ?? CompAccount.create({ userId, currency });
     }
 
@@ -82,11 +79,12 @@ export class EarnCompService {
     const today = new Date(now.getTime() + kstOffsetMs);
     today.setUTCHours(0, 0, 0, 0); // Normalize to UTC midnight representing KST Date
 
-    let dailySettlement = await this.compDailySettlementRepository.findByUserIdAndCurrencyAndDate(
-      userId,
-      currency,
-      today,
-    );
+    let dailySettlement =
+      await this.compDailySettlementRepository.findByUserIdAndCurrencyAndDate(
+        userId,
+        currency,
+        today,
+      );
 
     if (!dailySettlement) {
       dailySettlement = CompDailySettlement.create({
@@ -107,7 +105,10 @@ export class EarnCompService {
     } catch (error) {
       if (error instanceof CompPolicyViolationException) {
         this.logger.warn(`Comp earn skipped: ${error.message}`);
-        const account = await this.compRepository.findByUserIdAndCurrency(userId, currency);
+        const account = await this.compRepository.findByUserIdAndCurrency(
+          userId,
+          currency,
+        );
         return account ?? CompAccount.create({ userId, currency });
       }
       throw error;
@@ -115,22 +116,34 @@ export class EarnCompService {
 
     // 4. Enforce maxDailyEarnPerUser limit
     if (config && config.maxDailyEarnPerUser.gt(0)) {
-      const remainingDailyLimit = config.maxDailyEarnPerUser.sub(dailySettlement.totalEarned);
+      const remainingDailyLimit = config.maxDailyEarnPerUser.sub(
+        dailySettlement.totalEarned,
+      );
 
       if (remainingDailyLimit.lte(0)) {
-        this.logger.warn(`Comp earn skipped: User reached the max daily limit (${config.maxDailyEarnPerUser})`);
-        const account = await this.compRepository.findByUserIdAndCurrency(userId, currency);
+        this.logger.warn(
+          `Comp earn skipped: User reached the max daily limit (${config.maxDailyEarnPerUser})`,
+        );
+        const account = await this.compRepository.findByUserIdAndCurrency(
+          userId,
+          currency,
+        );
         return account ?? CompAccount.create({ userId, currency });
       }
 
       if (actualAmount.gt(remainingDailyLimit)) {
-        this.logger.log(`Comp earn amount capped: original=${actualAmount}, capped=${remainingDailyLimit}`);
+        this.logger.log(
+          `Comp earn amount capped: original=${actualAmount}, capped=${remainingDailyLimit}`,
+        );
         actualAmount = remainingDailyLimit;
       }
     }
 
     // 5. Get or Create Account
-    let account = await this.compRepository.findByUserIdAndCurrency(userId, currency);
+    let account = await this.compRepository.findByUserIdAndCurrency(
+      userId,
+      currency,
+    );
     if (!account) {
       account = CompAccount.create({ userId, currency });
     }
@@ -140,7 +153,9 @@ export class EarnCompService {
       account = account.earn(actualAmount);
     } catch (error) {
       if (error instanceof CompPolicyViolationException) {
-        this.logger.warn(`Comp earn failed for user ${userId}: ${error.message}`);
+        this.logger.warn(
+          `Comp earn failed for user ${userId}: ${error.message}`,
+        );
         return account; // Return current state (skip earn)
       }
       throw error;

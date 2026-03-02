@@ -8,7 +8,8 @@ export class ResetUserPasswordResponseDto {
   message: string;
 
   @ApiPropertyOptional({
-    description: 'Generated Password (if auto-generated) / 생성된 비밀번호 (자동 생성된 경우)',
+    description:
+      'Generated Password (if auto-generated) / 생성된 비밀번호 (자동 생성된 경우)',
     example: 'Abc123xy',
   })
   generatedPassword?: string;

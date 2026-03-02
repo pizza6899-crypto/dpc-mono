@@ -1,1 +1,1 @@
-export class UserLogoutResponseDto { }
+export class UserLogoutResponseDto {}

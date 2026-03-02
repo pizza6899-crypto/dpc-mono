@@ -11,7 +11,7 @@ export class UserLocation {
     public readonly country: string | null,
     public readonly timezone: string | null,
     public readonly timezoneOffset: number | null,
-  ) { }
+  ) {}
 
   /**
    * UserLocation 생성
@@ -67,7 +67,9 @@ export class UserLocation {
     return new UserLocation(
       updates.country !== undefined ? updates.country : this.country,
       updates.timezone !== undefined ? updates.timezone : this.timezone,
-      updates.timezoneOffset !== undefined ? updates.timezoneOffset : this.timezoneOffset,
+      updates.timezoneOffset !== undefined
+        ? updates.timezoneOffset
+        : this.timezoneOffset,
     );
   }
 }

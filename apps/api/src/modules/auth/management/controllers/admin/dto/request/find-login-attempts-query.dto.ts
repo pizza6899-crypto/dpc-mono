@@ -20,7 +20,8 @@ export class FindLoginAttemptsQueryDto {
   ipAddress?: string;
 
   @ApiPropertyOptional({
-    description: 'Max Count to Retrieve / 조회할 최대 개수 (기본값: 50, 최대: 100)',
+    description:
+      'Max Count to Retrieve / 조회할 최대 개수 (기본값: 50, 최대: 100)',
     example: 50,
     minimum: 1,
     maximum: 100,

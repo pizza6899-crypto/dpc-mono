@@ -4,7 +4,13 @@ import { RecordTierHistoryService } from '../../audit/application/record-tier-hi
 import { TierStatsService } from '../../audit/application/tier-stats.service';
 import { TierRepositoryPort } from '../../config/infrastructure/tier.repository.port';
 import { TierConfigRepositoryPort } from '../../config/infrastructure/tier-config.repository.port';
-import { TierChangeType, Prisma, RewardSourceType, RewardItemType, WageringTargetType } from '@prisma/client';
+import {
+  TierChangeType,
+  Prisma,
+  RewardSourceType,
+  RewardItemType,
+  WageringTargetType,
+} from '@prisma/client';
 import { UserTierNotFoundException } from '../domain/tier-profile.exception';
 import { TierNotFoundException } from '../../config/domain/tier-config.exception';
 import { Transactional } from '@nestjs-cls/transactional';
@@ -25,7 +31,7 @@ export class ForceUpdateUserTierService {
     private readonly grantRewardService: GrantRewardService,
     private readonly claimRewardService: CoreClaimRewardService,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(
@@ -54,7 +60,10 @@ export class ForceUpdateUserTierService {
     const previousHighestLevel = userTier.maxLevelAchieved;
 
     // 티어 이동 (레벨 증가분에 대해 지급 여부 판단)
-    const isEligibleForPromotionBonus = userTier.upgradeTier(targetTierId, targetTier.level);
+    const isEligibleForPromotionBonus = userTier.upgradeTier(
+      targetTierId,
+      targetTier.level,
+    );
 
     let earnedBonusAmount = new Prisma.Decimal(0);
     let skippedReason: string | undefined;
@@ -75,7 +84,8 @@ export class ForceUpdateUserTierService {
         const config = await this.tierConfigRepository.find();
 
         if (config?.isBonusEnabled !== false) {
-          const expiryDays = targetTier.rewardExpiryDays ?? config?.defaultRewardExpiryDays;
+          const expiryDays =
+            targetTier.rewardExpiryDays ?? config?.defaultRewardExpiryDays;
           let expiresAt: Date | undefined;
 
           if (expiryDays && expiryDays > 0) {
@@ -102,17 +112,25 @@ export class ForceUpdateUserTierService {
                 userId,
                 rewardId: reward.id,
               });
-              this.logger.log(`[ForceUpdate:Auto-Payout] User ${userId} received ${earnedBonusAmount} USD bonus.`);
+              this.logger.log(
+                `[ForceUpdate:Auto-Payout] User ${userId} received ${earnedBonusAmount} USD bonus.`,
+              );
               bonusClaimedAt = new Date();
             } else {
-              this.logger.log(`[ForceUpdate:Auto-Wait] User ${userId} has no preferred currency. Waiting for manual claim.`);
+              this.logger.log(
+                `[ForceUpdate:Auto-Wait] User ${userId} has no preferred currency. Waiting for manual claim.`,
+              );
             }
           } else {
-            this.logger.log(`[ForceUpdate:Claim-Wait] User ${userId} earned ${earnedBonusAmount} USD bonus. Waiting for manual claim.`);
+            this.logger.log(
+              `[ForceUpdate:Claim-Wait] User ${userId} earned ${earnedBonusAmount} USD bonus. Waiting for manual claim.`,
+            );
           }
         } else {
           skippedReason = 'GLOBAL_BONUS_DISABLED';
-          this.logger.debug(`Bonus disabled globally. Skipping payout for ForceUpdate of user ${userId}.`);
+          this.logger.debug(
+            `Bonus disabled globally. Skipping payout for ForceUpdate of user ${userId}.`,
+          );
         }
       }
     }
@@ -128,8 +146,10 @@ export class ForceUpdateUserTierService {
       statusRollingUsdSnap: userTier.statusRollingUsd,
       currentPeriodDepositUsdSnap: userTier.currentPeriodDepositUsd,
       compRateSnap: userTier.customCompRate ?? targetTier.compRate,
-      weeklyLossbackRateSnap: userTier.customWeeklyLossbackRate ?? targetTier.weeklyLossbackRate,
-      monthlyLossbackRateSnap: userTier.customMonthlyLossbackRate ?? targetTier.monthlyLossbackRate,
+      weeklyLossbackRateSnap:
+        userTier.customWeeklyLossbackRate ?? targetTier.weeklyLossbackRate,
+      monthlyLossbackRateSnap:
+        userTier.customMonthlyLossbackRate ?? targetTier.monthlyLossbackRate,
       upgradeRollingRequiredUsdSnap: targetTier.upgradeRollingRequiredUsd,
       upgradeDepositRequiredUsdSnap: targetTier.upgradeDepositRequiredUsd,
       lifetimeRollingUsdSnap: userTier.lifetimeRollingUsd,
@@ -140,13 +160,19 @@ export class ForceUpdateUserTierService {
     });
 
     // 만약 보너스가 발급되었다면 통계 갱신
-    if (isGrantBonus && isEligibleForPromotionBonus && targetTier.level > previousHighestLevel) {
+    if (
+      isGrantBonus &&
+      isEligibleForPromotionBonus &&
+      targetTier.level > previousHighestLevel
+    ) {
       await this.tierStatsService.increment(new Date(), targetTier.id, {
         upgradedCount: 1,
         periodBonusPaidUsd: bonusClaimedAt ? earnedBonusAmount : undefined,
       });
     }
 
-    this.logger.log(`User ${userId} force updated to tier ${targetTier.code} with isGrantBonus=${isGrantBonus}`);
+    this.logger.log(
+      `User ${userId} force updated to tier ${targetTier.code} with isGrantBonus=${isGrantBonus}`,
+    );
   }
 }

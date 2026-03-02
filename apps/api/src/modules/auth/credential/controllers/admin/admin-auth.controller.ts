@@ -1,19 +1,10 @@
-import {
-  Controller,
-  Post,
-  Get,
-  Body,
-  Req,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Post, Get, Body, Req, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
   ApiStandardErrors,
 } from '../../../../../common/http/decorators/api-response.decorator';
-import {
-  Public,
-} from 'src/common/auth/decorators/roles.decorator';
+import { Public } from 'src/common/auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
@@ -42,7 +33,7 @@ export class AdminAuthController {
     private readonly loginService: LoginService,
     private readonly logoutService: LogoutService,
     private readonly checkUserStatusService: CheckUserStatusService,
-  ) { }
+  ) {}
 
   @Post('login')
   @Public()
@@ -91,13 +82,12 @@ export class AdminAuthController {
     @Req() req: Request,
   ): Promise<AdminLoginResponseDto> {
     // 1. 관리자 자격 증명 인증 (이메일/비밀번호 검증, 계정 잠금 체크, 실패 시도 기록)
-    const authenticatedUser =
-      await this.authenticateIdentityService.execute({
-        loginId: dto.loginId,
-        password: dto.password,
-        clientInfo,
-        isAdmin: true,
-      });
+    const authenticatedUser = await this.authenticateIdentityService.execute({
+      loginId: dto.loginId,
+      password: dto.password,
+      clientInfo,
+      isAdmin: true,
+    });
 
     await new Promise<void>((resolve, reject) => {
       req.login(authenticatedUser as any, (err) => {
@@ -252,7 +242,7 @@ export class AdminAuthController {
         isAuthenticated = false;
         // 유효하지 않은 유저라면 로그아웃 처리
         req.logout(() => {
-          req.session?.destroy(() => { });
+          req.session?.destroy(() => {});
         });
       }
     }
@@ -262,9 +252,9 @@ export class AdminAuthController {
       user:
         isAuthenticated && user
           ? {
-            id: user.id.toString(),
-            role: user.role,
-          }
+              id: user.id.toString(),
+              role: user.role,
+            }
           : null,
     };
   }

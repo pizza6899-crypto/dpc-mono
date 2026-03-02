@@ -128,4 +128,4 @@ import {
     GetMyDepositDetailService,
   ],
 })
-export class DepositModule { }
+export class DepositModule {}

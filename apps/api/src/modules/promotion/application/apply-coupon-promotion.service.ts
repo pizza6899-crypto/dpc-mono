@@ -47,7 +47,7 @@ export class ApplyCouponPromotionService {
     private readonly updateUserBalanceService: UpdateUserBalanceService,
     private readonly sendAlertService: SendAlertService,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute({

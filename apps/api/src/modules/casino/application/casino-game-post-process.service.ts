@@ -25,7 +25,7 @@ export class CasinoGamePostProcessService {
     private readonly wageringService: ProcessWageringContributionService,
     private readonly earnCompService: EarnCompService,
     private readonly accumulateUserRollingService: AccumulateUserRollingService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(gameRoundId: bigint) {

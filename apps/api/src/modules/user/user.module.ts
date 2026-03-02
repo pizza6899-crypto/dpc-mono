@@ -8,4 +8,4 @@ import { UserConfigModule } from './config/user-config.module';
   imports: [UserProfileModule, UserAccountModule, UserConfigModule],
   exports: [UserProfileModule, UserAccountModule, UserConfigModule],
 })
-export class UserModule { }
+export class UserModule {}

@@ -6,31 +6,31 @@ import { ForbiddenWord } from '../../domain/model/forbidden-word.entity';
 import { ForbiddenWordAlreadyExistsException } from '../../domain/moderation.exception';
 
 export interface CreateForbiddenWordAdminCommand {
-    word: string;
-    description?: string;
+  word: string;
+  description?: string;
 }
 
 @Injectable()
 export class CreateForbiddenWordAdminService {
-    constructor(
-        @Inject(FORBIDDEN_WORD_REPOSITORY)
-        private readonly forbiddenWordRepository: ForbiddenWordRepositoryPort,
-    ) { }
+  constructor(
+    @Inject(FORBIDDEN_WORD_REPOSITORY)
+    private readonly forbiddenWordRepository: ForbiddenWordRepositoryPort,
+  ) {}
 
-    @Transactional()
-    async execute(command: CreateForbiddenWordAdminCommand): Promise<void> {
-        const wordValue = command.word.toLowerCase().trim();
-        const existing = await this.forbiddenWordRepository.findByWord(wordValue);
+  @Transactional()
+  async execute(command: CreateForbiddenWordAdminCommand): Promise<void> {
+    const wordValue = command.word.toLowerCase().trim();
+    const existing = await this.forbiddenWordRepository.findByWord(wordValue);
 
-        if (existing) {
-            throw new ForbiddenWordAlreadyExistsException(wordValue);
-        }
-
-        const forbiddenWord = ForbiddenWord.create({
-            word: wordValue,
-            description: command.description,
-        });
-
-        await this.forbiddenWordRepository.create(forbiddenWord);
+    if (existing) {
+      throw new ForbiddenWordAlreadyExistsException(wordValue);
     }
+
+    const forbiddenWord = ForbiddenWord.create({
+      word: wordValue,
+      description: command.description,
+    });
+
+    await this.forbiddenWordRepository.create(forbiddenWord);
+  }
 }

@@ -8,7 +8,7 @@ import { EnvService } from 'src/common/env/env.service';
 export class BullMqSchedulerService implements OnModuleInit {
   private readonly logger = new Logger(BullMqSchedulerService.name);
 
-  constructor(private readonly envService: EnvService) { }
+  constructor(private readonly envService: EnvService) {}
 
   async onModuleInit() {
     this.logger.log('🔄 Initializing BullMQ Schedulers (Repeatable Jobs)...');

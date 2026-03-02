@@ -14,4 +14,4 @@ import { SessionModule } from './session/session.module';
   providers: [],
   exports: [],
 })
-export class AuthModule { }
+export class AuthModule {}

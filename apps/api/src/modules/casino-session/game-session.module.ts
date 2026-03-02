@@ -26,4 +26,4 @@ import { ExchangeModule } from '../exchange/exchange.module';
     CASINO_GAME_SESSION_REPOSITORY,
   ],
 })
-export class CasinoSessionModule { }
+export class CasinoSessionModule {}

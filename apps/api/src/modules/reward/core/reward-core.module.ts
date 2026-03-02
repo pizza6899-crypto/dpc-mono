@@ -16,36 +16,33 @@ import { WalletModule } from 'src/modules/wallet/wallet.module';
 import { RequirementModule } from 'src/modules/wagering/requirement/requirement.module';
 
 @Module({
-    imports: [
-        PrismaModule,
-        SnowflakeModule,
-        SqidsModule,
-        ConcurrencyModule,
-        WalletModule,
-        RequirementModule,
-    ],
-    controllers: [
-        RewardController,
-        RewardAdminController,
-    ],
-    providers: [
-        {
-            provide: REWARD_REPOSITORY,
-            useClass: RewardRepository,
-        },
-        ClaimRewardService,
-        GrantRewardService,
-        GetUserRewardsService,
-        GetAdminRewardsService,
-        VoidRewardService,
-    ],
-    exports: [
-        REWARD_REPOSITORY,
-        ClaimRewardService,
-        GrantRewardService,
-        GetUserRewardsService,
-        GetAdminRewardsService,
-        VoidRewardService,
-    ],
+  imports: [
+    PrismaModule,
+    SnowflakeModule,
+    SqidsModule,
+    ConcurrencyModule,
+    WalletModule,
+    RequirementModule,
+  ],
+  controllers: [RewardController, RewardAdminController],
+  providers: [
+    {
+      provide: REWARD_REPOSITORY,
+      useClass: RewardRepository,
+    },
+    ClaimRewardService,
+    GrantRewardService,
+    GetUserRewardsService,
+    GetAdminRewardsService,
+    VoidRewardService,
+  ],
+  exports: [
+    REWARD_REPOSITORY,
+    ClaimRewardService,
+    GrantRewardService,
+    GetUserRewardsService,
+    GetAdminRewardsService,
+    VoidRewardService,
+  ],
 })
-export class RewardCoreModule { }
+export class RewardCoreModule {}

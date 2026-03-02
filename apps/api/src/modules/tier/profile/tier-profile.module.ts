@@ -66,4 +66,4 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
     GetTierBenefitsService,
   ],
 })
-export class TierProfileModule { }
+export class TierProfileModule {}

@@ -38,7 +38,7 @@ export class ResetUserPasswordAdminService {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(

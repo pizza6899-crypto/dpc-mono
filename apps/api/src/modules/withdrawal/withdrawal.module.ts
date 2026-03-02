@@ -98,4 +98,4 @@ import { WithdrawalConfigAdminController } from './controllers/admin/withdrawal-
     ProcessWithdrawalService,
   ],
 })
-export class WithdrawalModule { }
+export class WithdrawalModule {}

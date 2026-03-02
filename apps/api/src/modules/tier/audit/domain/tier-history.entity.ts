@@ -2,6 +2,7 @@ import type {
   Prisma,
   TierChangeType,
   TierHistoryReferenceType,
+  ExchangeCurrencyCode,
   TierHistory as PrismaTierHistory,
 } from '@prisma/client';
 import { Cast } from 'src/infrastructure/persistence/persistence.util';
@@ -15,31 +16,33 @@ export class TierHistory {
     public readonly changeType: TierChangeType,
     public readonly reason: string | null,
 
-    // Snapshot: Data at the time of change
+    // Snapshot: Performance & Status
     public readonly statusRollingUsdSnap: Prisma.Decimal,
-    public readonly currentPeriodDepositUsdSnap: Prisma.Decimal,
+    public readonly statusExpSnap: bigint,
     public readonly compRateSnap: Prisma.Decimal,
     public readonly weeklyLossbackRateSnap: Prisma.Decimal,
     public readonly monthlyLossbackRateSnap: Prisma.Decimal,
-
-    // Snapshot: Rules & Status
-    public readonly upgradeRollingRequiredUsdSnap: Prisma.Decimal,
-    public readonly upgradeDepositRequiredUsdSnap: Prisma.Decimal,
     public readonly lifetimeRollingUsdSnap: Prisma.Decimal,
     public readonly lifetimeDepositUsdSnap: Prisma.Decimal,
 
-    // Bonus Info
+    // Snapshot: Limits
+    public readonly dailyWithdrawalLimitUsdSnap: Prisma.Decimal,
+    public readonly weeklyWithdrawalLimitUsdSnap: Prisma.Decimal,
+    public readonly monthlyWithdrawalLimitUsdSnap: Prisma.Decimal,
+
+    // Reward Audit
     public readonly hasBonusGenerated: boolean,
-    public readonly bonusAmountUsdSnap: Prisma.Decimal,
+    public readonly currency: ExchangeCurrencyCode,
+    public readonly upgradeBonusSnap: Prisma.Decimal,
     public readonly skippedReason: string | null,
 
     public readonly changedAt: Date,
-    public readonly changeBy: string | null,
+    public readonly changedBy: bigint | null,
 
     // Audit Reference
     public readonly referenceType: TierHistoryReferenceType | null,
     public readonly referenceId: bigint | null,
-  ) { }
+  ) {}
 
   static fromPersistence(data: PrismaTierHistory): TierHistory {
     return new TierHistory(
@@ -50,19 +53,21 @@ export class TierHistory {
       data.changeType,
       data.reason,
       Cast.decimal(data.statusRollingUsdSnap),
-      Cast.decimal(data.currentPeriodDepositUsdSnap),
+      Cast.bigint(data.statusExpSnap),
       Cast.decimal(data.compRateSnap),
       Cast.decimal(data.weeklyLossbackRateSnap),
       Cast.decimal(data.monthlyLossbackRateSnap),
-      Cast.decimal(data.upgradeRollingRequiredUsdSnap),
-      Cast.decimal(data.upgradeDepositRequiredUsdSnap),
       Cast.decimal(data.lifetimeRollingUsdSnap),
       Cast.decimal(data.lifetimeDepositUsdSnap),
+      Cast.decimal(data.dailyWithdrawalLimitUsdSnap),
+      Cast.decimal(data.weeklyWithdrawalLimitUsdSnap),
+      Cast.decimal(data.monthlyWithdrawalLimitUsdSnap),
       data.hasBonusGenerated,
-      Cast.decimal(data.bonusAmountUsdSnap),
+      data.currency,
+      Cast.decimal(data.upgradeBonusSnap),
       data.skippedReason,
       Cast.date(data.changedAt),
-      data.changeBy,
+      Cast.bigint(data.changedBy),
       data.referenceType,
       Cast.bigint(data.referenceId),
     );

@@ -48,4 +48,4 @@ import { RewardCoreModule } from 'src/modules/reward/core/reward-core.module';
     DemoteUserTierService,
   ],
 })
-export class TierEvaluatorModule { }
+export class TierEvaluatorModule {}

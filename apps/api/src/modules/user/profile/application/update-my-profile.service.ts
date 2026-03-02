@@ -9,43 +9,48 @@ import { UserNotFoundException } from '../domain';
 
 @Injectable()
 export class UpdateMyProfileService {
-    constructor(
-        @Inject(USER_REPOSITORY)
-        private readonly userRepository: UserRepositoryPort,
-        private readonly getMyProfileService: GetMyProfileService,
-        private readonly synchronizeUserSessionService: SynchronizeUserSessionService,
-    ) { }
+  constructor(
+    @Inject(USER_REPOSITORY)
+    private readonly userRepository: UserRepositoryPort,
+    private readonly getMyProfileService: GetMyProfileService,
+    private readonly synchronizeUserSessionService: SynchronizeUserSessionService,
+  ) {}
 
-    async execute(userId: bigint, dto: UpdateMyProfileRequestDto): Promise<MyProfileResponseDto> {
-        const user = await this.userRepository.findById(userId);
+  async execute(
+    userId: bigint,
+    dto: UpdateMyProfileRequestDto,
+  ): Promise<MyProfileResponseDto> {
+    const user = await this.userRepository.findById(userId);
 
-        if (!user) {
-            throw new UserNotFoundException();
-        }
-
-        const updatedUser = user.updateProfile({
-            language: dto.language,
-            timezone: dto.timezone,
-            phoneNumber: dto.phoneNumber,
-        });
-
-        const savedUser = await this.userRepository.save(updatedUser);
-
-        const result = await this.getMyProfileService.execute(savedUser.id!);
-
-        // 세션 정보 실시간 동기화 (Redis)
-        await this.synchronizeUserSessionService.execute({
-            userId: savedUser.id!,
-            updateData: {
-                language: savedUser.language,
-                timezone: savedUser.getLocation().timezone ?? undefined,
-                isPhoneVerified: savedUser.getTrust().isPhoneVerified,
-            },
-        }).catch(err => {
-            // 동기화 실패는 로그만 남김
-            console.error(`Failed to sync session for user ${savedUser.id}:`, err);
-        });
-
-        return result;
+    if (!user) {
+      throw new UserNotFoundException();
     }
+
+    const updatedUser = user.updateProfile({
+      language: dto.language,
+      timezone: dto.timezone,
+      phoneNumber: dto.phoneNumber,
+    });
+
+    const savedUser = await this.userRepository.save(updatedUser);
+
+    const result = await this.getMyProfileService.execute(savedUser.id);
+
+    // 세션 정보 실시간 동기화 (Redis)
+    await this.synchronizeUserSessionService
+      .execute({
+        userId: savedUser.id,
+        updateData: {
+          language: savedUser.language,
+          timezone: savedUser.getLocation().timezone ?? undefined,
+          isPhoneVerified: savedUser.getTrust().isPhoneVerified,
+        },
+      })
+      .catch((err) => {
+        // 동기화 실패는 로그만 남김
+        console.error(`Failed to sync session for user ${savedUser.id}:`, err);
+      });
+
+    return result;
+  }
 }

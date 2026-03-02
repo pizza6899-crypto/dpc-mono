@@ -48,7 +48,7 @@ export class GrantPromotionBonusService {
     private readonly createWageringRequirementService: CreateWageringRequirementService,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute({
@@ -184,7 +184,9 @@ export class GrantPromotionBonusService {
         multiplier: new Prisma.Decimal(rollingMultiplier),
         bonusAmount: bonusAmount,
         initialFundAmount: initialFundAmount,
-        realMoneyRatio: initialFundAmount.isZero() ? new Prisma.Decimal(0) : depositAmount.div(initialFundAmount),
+        realMoneyRatio: initialFundAmount.isZero()
+          ? new Prisma.Decimal(0)
+          : depositAmount.div(initialFundAmount),
         isForfeitable: true,
         sourceId: BigInt(userPromotion.id),
         appliedConfig: { depositId: depositDetailId?.toString() },

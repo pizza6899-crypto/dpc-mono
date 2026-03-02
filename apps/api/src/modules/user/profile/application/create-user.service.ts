@@ -11,10 +11,14 @@ import {
   InvalidLoginIdException,
 } from '../domain/user.exception';
 import { USER_REPOSITORY } from '../ports/out/user.repository.token';
+import { type UserRepositoryPort } from '../ports/out/user.repository.port';
 import {
-  type UserRepositoryPort,
-} from '../ports/out/user.repository.port';
-import { RegistrationMethod, UserRoleType, OAuthProvider, ExchangeCurrencyCode, LoginIdType } from '@prisma/client';
+  RegistrationMethod,
+  UserRoleType,
+  OAuthProvider,
+  ExchangeCurrencyCode,
+  LoginIdType,
+} from '@prisma/client';
 import { GetUserConfigService } from '../../config/application/get-user-config.service';
 
 interface CreateUserServiceParams {
@@ -53,7 +57,7 @@ export class CreateUserService {
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
     private readonly getUserConfigService: GetUserConfigService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(
@@ -75,9 +79,12 @@ export class CreateUserService {
     // 로그인 ID 형식 검증 (일반 가입 시에만)
     if (registrationMethod === RegistrationMethod.CREDENTIAL) {
       let loginIdRegex: string | null = null;
-      if (config.loginIdType === LoginIdType.EMAIL) loginIdRegex = config.loginIdEmailRegex;
-      else if (config.loginIdType === LoginIdType.PHONE_NUMBER) loginIdRegex = config.loginIdPhoneNumberRegex;
-      else if (config.loginIdType === LoginIdType.USERNAME) loginIdRegex = config.loginIdUsernameRegex;
+      if (config.loginIdType === LoginIdType.EMAIL)
+        loginIdRegex = config.loginIdEmailRegex;
+      else if (config.loginIdType === LoginIdType.PHONE_NUMBER)
+        loginIdRegex = config.loginIdPhoneNumberRegex;
+      else if (config.loginIdType === LoginIdType.USERNAME)
+        loginIdRegex = config.loginIdUsernameRegex;
 
       if (loginIdRegex && !new RegExp(loginIdRegex).test(loginId)) {
         throw new InvalidLoginIdException();
@@ -85,7 +92,11 @@ export class CreateUserService {
     }
 
     // 닉네임 형식 검증
-    if (config.requireNickname && config.nicknameRegex && !new RegExp(config.nicknameRegex).test(nickname)) {
+    if (
+      config.requireNickname &&
+      config.nicknameRegex &&
+      !new RegExp(config.nicknameRegex).test(nickname)
+    ) {
       throw new InvalidNicknameException();
     }
 
@@ -96,7 +107,8 @@ export class CreateUserService {
     }
 
     // 2. 닉네임 중복 확인 (필수)
-    const existingByNickname = await this.userRepository.findByNickname(nickname);
+    const existingByNickname =
+      await this.userRepository.findByNickname(nickname);
     if (existingByNickname) {
       throw new DuplicateNicknameException();
     }
@@ -111,7 +123,8 @@ export class CreateUserService {
 
     // 4. 휴대폰 번호 중복 확인 (있는 경우)
     if (phoneNumber) {
-      const existingByPhone = await this.userRepository.findByPhoneNumber(phoneNumber);
+      const existingByPhone =
+        await this.userRepository.findByPhoneNumber(phoneNumber);
       if (existingByPhone) {
         throw new DuplicatePhoneNumberException();
       }
@@ -119,7 +132,10 @@ export class CreateUserService {
 
     // 5. OAuth ID 중복 확인 (소셜 가입인 경우)
     if (oauthProvider && oauthId) {
-      const existingByOAuth = await this.userRepository.findByOAuthId(oauthProvider, oauthId);
+      const existingByOAuth = await this.userRepository.findByOAuthId(
+        oauthProvider,
+        oauthId,
+      );
       if (existingByOAuth) {
         throw new DuplicateOAuthIdException();
       }

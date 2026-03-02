@@ -12,7 +12,7 @@ export class CasinoGameSessionRepository implements CasinoGameSessionRepositoryP
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: CasinoGameSessionMapper,
-  ) { }
+  ) {}
 
   async create(session: CasinoGameSession): Promise<CasinoGameSession> {
     const data = this.mapper.toPersistence(session);

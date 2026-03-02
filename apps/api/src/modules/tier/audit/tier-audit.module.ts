@@ -4,6 +4,7 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { TierAuditRepositoryPort } from './infrastructure/tier-audit.repository.port';
 import { TierAuditRepository } from './infrastructure/tier-audit.repository';
 import { RecordTierHistoryService } from './application/record-tier-history.service';
+import { RecordUserExpLogService } from './application/record-user-exp-log.service';
 import { TierStatsService } from './application/tier-stats.service';
 import { HandleTierStatsService } from './application/handle-tier-stats.service';
 import { TierStatsAggregationProcessor } from './infrastructure/tier-stats-aggregation.processor';
@@ -30,6 +31,7 @@ import { TIER_QUEUES } from './infrastructure/tier-audit.bullmq';
   providers: [
     { provide: TierAuditRepositoryPort, useClass: TierAuditRepository },
     RecordTierHistoryService,
+    RecordUserExpLogService,
     TierStatsService,
     HandleTierStatsService,
     TierStatsAggregationProcessor,
@@ -39,6 +41,7 @@ import { TIER_QUEUES } from './infrastructure/tier-audit.bullmq';
   exports: [
     TierAuditRepositoryPort,
     RecordTierHistoryService,
+    RecordUserExpLogService,
     TierStatsService,
     HandleTierStatsService,
   ],

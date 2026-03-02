@@ -52,7 +52,7 @@ export class ProcessCasinoBetService {
     private readonly checkCasinoBalanceService: CheckCasinoBalanceService,
     private readonly findUserWalletService: FindUserWalletService,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(

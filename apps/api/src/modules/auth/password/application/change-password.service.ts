@@ -28,15 +28,11 @@ export class ChangePasswordService {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(params: ChangePasswordParams): Promise<void> {
-    const {
-      userId,
-      currentPassword,
-      newPassword,
-    } = params;
+    const { userId, currentPassword, newPassword } = params;
 
     // 1. 사용자 조회
     const user = await this.userRepository.findById(userId);
@@ -55,7 +51,10 @@ export class ChangePasswordService {
       throw new LoginFailedException('User has no password set');
     }
 
-    const isValidPassword = await comparePassword(currentPassword, authInfo.passwordHash);
+    const isValidPassword = await comparePassword(
+      currentPassword,
+      authInfo.passwordHash,
+    );
 
     if (!isValidPassword) {
       throw new PasswordMismatchException();

@@ -104,4 +104,4 @@ import { AccessControlModule } from './modules/access-control/access-control.mod
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

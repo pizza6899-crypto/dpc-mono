@@ -12,7 +12,7 @@ export interface CheckCasinoBalanceResult {
 export class CheckCasinoBalanceService {
   private readonly logger = new Logger(CheckCasinoBalanceService.name);
 
-  constructor(private readonly findUserWalletService: FindUserWalletService) { }
+  constructor(private readonly findUserWalletService: FindUserWalletService) {}
 
   /**
    * 특정된 세션 정보를 기반으로 유저의 카지노 잔액을 조회합니다.

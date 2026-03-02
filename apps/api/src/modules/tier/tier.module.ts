@@ -18,4 +18,4 @@ import { TierAuditModule } from './audit/tier-audit.module';
     TierAuditModule,
   ],
 })
-export class TierModule { }
+export class TierModule {}

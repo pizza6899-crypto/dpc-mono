@@ -9,25 +9,25 @@ import { CredentialModule } from '../credential/credential.module';
 import { UserProfileModule } from '../../user/profile/user-profile.module';
 
 @Module({
-    imports: [
-        CredentialModule, // VerifyCredentialService 사용을 위해 필요
-        UserProfileModule, // UserRepository 사용을 위해 필요
-    ],
-    controllers: [UserPasswordController],
-    providers: [
-        ChangePasswordService,
-        RequestPasswordResetService,
-        ResetPasswordService,
-        {
-            provide: PASSWORD_RESET_TOKEN_REPOSITORY,
-            useClass: PasswordResetTokenRepository,
-        },
-    ],
-    exports: [
-        ChangePasswordService,
-        RequestPasswordResetService,
-        ResetPasswordService,
-        PASSWORD_RESET_TOKEN_REPOSITORY,
-    ],
+  imports: [
+    CredentialModule, // VerifyCredentialService 사용을 위해 필요
+    UserProfileModule, // UserRepository 사용을 위해 필요
+  ],
+  controllers: [UserPasswordController],
+  providers: [
+    ChangePasswordService,
+    RequestPasswordResetService,
+    ResetPasswordService,
+    {
+      provide: PASSWORD_RESET_TOKEN_REPOSITORY,
+      useClass: PasswordResetTokenRepository,
+    },
+  ],
+  exports: [
+    ChangePasswordService,
+    RequestPasswordResetService,
+    ResetPasswordService,
+    PASSWORD_RESET_TOKEN_REPOSITORY,
+  ],
 })
-export class AuthPasswordModule { }
+export class AuthPasswordModule {}
