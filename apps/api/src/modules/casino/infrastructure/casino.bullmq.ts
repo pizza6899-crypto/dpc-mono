@@ -1,5 +1,4 @@
-import type { QueueConfig } from 'src/infrastructure/bullmq/bullmq.types';
-import { BULLMQ_DEFAULT_TIMEZONE } from 'src/infrastructure/bullmq/bullmq.types';
+import { QueueConfig, BULLMQ_RETENTION, BULLMQ_DEFAULT_TIMEZONE } from 'src/infrastructure/bullmq/bullmq.types';
 
 export const CASINO_QUEUES = {
   GAME_POST_PROCESS: {
@@ -7,8 +6,8 @@ export const CASINO_QUEUES = {
     defaultJobOptions: {
       attempts: 999999,
       backoff: { type: 'fixed', delay: 5000 },
-      removeOnComplete: 1000,
-      removeOnFail: 5000,
+      removeOnComplete: BULLMQ_RETENTION.DEFAULT_COMPLETED,
+      removeOnFail: BULLMQ_RETENTION.LONG_TERM_FAILED,
     },
     workerOptions: { concurrency: 5 },
   },
@@ -18,8 +17,8 @@ export const CASINO_QUEUES = {
       attempts: 10,
       backoff: { type: 'exponential', delay: 5000 },
       delay: 5000,
-      removeOnComplete: 1000,
-      removeOnFail: 5000,
+      removeOnComplete: BULLMQ_RETENTION.DEFAULT_COMPLETED,
+      removeOnFail: BULLMQ_RETENTION.LONG_TERM_FAILED,
     },
     workerOptions: { concurrency: 5 },
   },
@@ -28,8 +27,8 @@ export const CASINO_QUEUES = {
     defaultJobOptions: {
       attempts: 3,
       backoff: { type: 'exponential', delay: 5000 },
-      removeOnComplete: 100,
-      removeOnFail: 500,
+      removeOnComplete: BULLMQ_RETENTION.DEFAULT_COMPLETED,
+      removeOnFail: BULLMQ_RETENTION.DEFAULT_FAILED,
     },
     workerOptions: { concurrency: 1 },
     repeatableJobs: [

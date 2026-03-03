@@ -1,4 +1,4 @@
-import type { QueueConfig } from 'src/infrastructure/bullmq/bullmq.types';
+import { QueueConfig, BULLMQ_RETENTION } from 'src/infrastructure/bullmq/bullmq.types';
 
 export const TIER_EVALUATOR_QUEUES = {
   // 1. 심사 트리거 큐 (매시간 정기적으로 심사 시작)
@@ -7,8 +7,8 @@ export const TIER_EVALUATOR_QUEUES = {
     defaultJobOptions: {
       attempts: 3,
       backoff: { type: 'exponential', delay: 5000 },
-      removeOnComplete: 100,
-      removeOnFail: 1000,
+      removeOnComplete: BULLMQ_RETENTION.DEFAULT_COMPLETED,
+      removeOnFail: BULLMQ_RETENTION.DEFAULT_FAILED,
     },
     workerOptions: { concurrency: 1 },
     repeatableJobs: [
@@ -24,8 +24,8 @@ export const TIER_EVALUATOR_QUEUES = {
     defaultJobOptions: {
       attempts: 5,
       backoff: { type: 'exponential', delay: 1000 },
-      removeOnComplete: 1000,
-      removeOnFail: 5000,
+      removeOnComplete: BULLMQ_RETENTION.DEFAULT_COMPLETED,
+      removeOnFail: BULLMQ_RETENTION.LONG_TERM_FAILED,
     },
     workerOptions: { concurrency: 5 }, // 5명의 유저를 동시에 심사
   },

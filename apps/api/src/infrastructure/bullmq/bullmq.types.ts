@@ -5,6 +5,15 @@ import type { Scope } from '@nestjs/common';
 export const BULLMQ_DEFAULT_TIMEZONE = 'Asia/Tokyo';
 
 /**
+ * BullMQ 데이터 보관 제한 기본값
+ */
+export const BULLMQ_RETENTION = {
+  DEFAULT_COMPLETED: 100, // 성공한 잡은 기본 100개 보관
+  DEFAULT_FAILED: 1000,    // 실패한 잡은 디버깅을 위해 1000개 보관
+  LONG_TERM_FAILED: 5000,  // 중요한 데이터의 경우 실패 내역을 더 길게 보관
+} as const;
+
+/**
  * NestJS BullMQ 전용 프로세서 설정
  */
 export interface ProcessorOptions {

@@ -1,4 +1,4 @@
-import { QueueConfig } from 'src/infrastructure/bullmq/bullmq.types';
+import { QueueConfig, BULLMQ_RETENTION } from 'src/infrastructure/bullmq/bullmq.types';
 import { UserWalletTransactionType } from '@prisma/client';
 
 /**
@@ -21,8 +21,8 @@ export const USER_ANALYTICS_QUEUES = {
         defaultJobOptions: {
             attempts: 5,
             backoff: { type: 'exponential', delay: 2000 },
-            removeOnComplete: 1000,
-            removeOnFail: 5000,
+            removeOnComplete: BULLMQ_RETENTION.DEFAULT_COMPLETED,
+            removeOnFail: BULLMQ_RETENTION.DEFAULT_FAILED,
         },
         workerOptions: { concurrency: 10 }, // 여러 트랜잭션 병렬 처리 허용
     },

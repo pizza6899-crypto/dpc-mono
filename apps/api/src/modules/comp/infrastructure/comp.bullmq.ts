@@ -1,4 +1,4 @@
-import type { QueueConfig } from 'src/infrastructure/bullmq/bullmq.types';
+import { QueueConfig, BULLMQ_RETENTION } from 'src/infrastructure/bullmq/bullmq.types';
 
 export const COMP_QUEUES = {
     DAILY_SETTLEMENT: {
@@ -6,8 +6,8 @@ export const COMP_QUEUES = {
         defaultJobOptions: {
             attempts: 3,
             backoff: { type: 'exponential', delay: 5000 },
-            removeOnComplete: 100,
-            removeOnFail: 500,
+            removeOnComplete: BULLMQ_RETENTION.DEFAULT_COMPLETED,
+            removeOnFail: BULLMQ_RETENTION.DEFAULT_FAILED,
         },
         workerOptions: { concurrency: 1 },
         repeatableJobs: [

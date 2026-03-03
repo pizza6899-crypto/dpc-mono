@@ -1,4 +1,4 @@
-import type { QueueConfig } from 'src/infrastructure/bullmq/bullmq.types';
+import { QueueConfig, BULLMQ_RETENTION } from 'src/infrastructure/bullmq/bullmq.types';
 
 export const AUDIT_QUEUES = {
   CRITICAL: {
@@ -6,8 +6,8 @@ export const AUDIT_QUEUES = {
     defaultJobOptions: {
       attempts: 10,
       backoff: { type: 'exponential', delay: 1000 },
-      removeOnComplete: 1000,
-      removeOnFail: 5000,
+      removeOnComplete: BULLMQ_RETENTION.DEFAULT_COMPLETED,
+      removeOnFail: BULLMQ_RETENTION.LONG_TERM_FAILED,
     },
     workerOptions: {
       concurrency: 1,
@@ -18,8 +18,8 @@ export const AUDIT_QUEUES = {
     defaultJobOptions: {
       attempts: 3,
       backoff: { type: 'exponential', delay: 2000 },
-      removeOnComplete: 500,
-      removeOnFail: 1000,
+      removeOnComplete: BULLMQ_RETENTION.DEFAULT_COMPLETED,
+      removeOnFail: BULLMQ_RETENTION.DEFAULT_FAILED,
     },
     workerOptions: {
       concurrency: 10,
