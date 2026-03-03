@@ -45,7 +45,7 @@ export class UserPasswordController {
     @ApiOperation({
         summary: 'Change Password / 비밀번호 변경',
         description:
-            '로그인한 사용자가 현재 비밀번호를 알고 있는 상태에서 비밀번호를 변경합니다.',
+            'Change the password while the logged-in user knows the current password. / 로그인한 사용자가 현재 비밀번호를 알고 있는 상태에서 비밀번호를 변경합니다.',
     })
     @ApiStandardResponse(ChangePasswordResponseDto, {
         status: HttpStatus.OK,
@@ -89,7 +89,7 @@ export class UserPasswordController {
     })
     @ApiOperation({
         summary: 'Request Password Reset / 비밀번호 재설정 요청',
-        description: '비밀번호를 잊은 경우 이메일로 재설정 토큰을 발송합니다.',
+        description: 'Sends a reset token via email if the password is forgotten. / 비밀번호를 잊은 경우 이메일로 재설정 토큰을 발송합니다.',
     })
     @ApiStandardResponse(RequestPasswordResetResponseDto, {
         status: HttpStatus.OK,
@@ -129,7 +129,7 @@ export class UserPasswordController {
     })
     @ApiOperation({
         summary: 'Reset Password / 비밀번호 재설정',
-        description: '이메일로 받은 토큰을 사용하여 비밀번호를 재설정합니다.',
+        description: 'Resets the password using the token received via email. / 이메일로 받은 토큰을 사용하여 비밀번호를 재설정합니다.',
     })
     @ApiStandardResponse(ResetPasswordResponseDto, {
         status: HttpStatus.OK,
