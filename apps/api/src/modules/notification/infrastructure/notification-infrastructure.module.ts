@@ -20,12 +20,14 @@ import { EmailProcessor } from './processors/email.processor';
 import { SMSProcessor } from './processors/sms.processor';
 import { AlertProcessor } from './processors/alert.processor';
 import { EnvModule } from 'src/common/env/env.module';
+import { UserProfileModule } from 'src/modules/user/profile/user-profile.module';
 
 @Module({
   imports: [
     EnvModule,
     forwardRef(() => InboxModule),
-    AlertModule,
+    forwardRef(() => AlertModule),
+    forwardRef(() => UserProfileModule),
     TemplateModule,
     BullMqModule,
     NotificationQueueModule,
@@ -48,4 +50,4 @@ import { EnvModule } from 'src/common/env/env.module';
   ],
   exports: [SocketSender, EmailSender, SMSSender],
 })
-export class NotificationInfrastructureModule {}
+export class NotificationInfrastructureModule { }

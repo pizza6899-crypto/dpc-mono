@@ -62,12 +62,21 @@ export class EmailProcessor extends BaseProcessor<NotificationJobData, void> {
     };
 
     // 발송
-    await this.emailSender.send(sendParams);
+    try {
+      await this.emailSender.send(sendParams);
 
-    // 성공 상태 업데이트
-    log.markAsSuccess();
-    await this.notificationLogRepository.update(log);
+      // 성공 상태 업데이트
+      log.markAsSuccess();
+      await this.notificationLogRepository.update(log);
 
-    this.logger.debug(`Successfully sent email for log ${log.id}`);
+      this.logger.debug(`Successfully sent email for log ${log.id}`);
+    } catch (error: any) {
+      // 실패 상태 업데이트
+      log.markAsFailed(error.message || 'Email sending failed');
+      await this.notificationLogRepository.update(log);
+
+      // BullMQ가 에러를 감지하고 설정된 정책(예: 지수 백오프)에 따라 재시도하도록 에러 재발생
+      throw error;
+    }
   }
 }

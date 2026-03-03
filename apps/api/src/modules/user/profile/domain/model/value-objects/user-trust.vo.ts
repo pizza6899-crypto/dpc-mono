@@ -77,4 +77,32 @@ export class UserTrust {
             isKycMandatory: this.isKycMandatory,
         };
     }
+
+    /**
+     * 휴대폰 인증 상태로 변경
+     */
+    verifyPhone(): UserTrust {
+        return new UserTrust(
+            this.isEmailVerified,
+            true, // isPhoneVerified
+            this.isTelegramVerified,
+            this.isIdentityVerified,
+            this.isBankVerified,
+            this.isKycMandatory,
+        );
+    }
+
+    /**
+     * 이메일 인증 상태로 변경
+     */
+    verifyEmail(): UserTrust {
+        return new UserTrust(
+            true, // isEmailVerified
+            this.isPhoneVerified,
+            this.isTelegramVerified,
+            this.isIdentityVerified,
+            this.isBankVerified,
+            this.isKycMandatory,
+        );
+    }
 }

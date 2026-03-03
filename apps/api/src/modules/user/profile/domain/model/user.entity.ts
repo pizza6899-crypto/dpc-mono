@@ -333,4 +333,60 @@ export class User {
       this.dcsId,
     );
   }
+
+  /**
+   * 휴대폰 번호 인증 및 등록
+   */
+  verifyAndSetPhoneNumber(phoneNumber: string): User {
+    return new User(
+      this.id,
+      this.nickname,
+      this.authInfo,
+      this.location,
+      this.currency,
+      this.trust.verifyPhone(),
+      this.status,
+      this.role,
+      this.language,
+      this.birthDate,
+      phoneNumber,
+      this.avatarUrl,
+      this.createdAt,
+      new Date(), // updatedAt
+      this.closedAt,
+      this.closedBy,
+      this.closeReason,
+      this.whitecliffId,
+      this.whitecliffUsername,
+      this.dcsId,
+    );
+  }
+
+  /**
+   * 이메일 인증 완료 처리
+   */
+  verifyEmail(): User {
+    return new User(
+      this.id,
+      this.nickname,
+      this.authInfo,
+      this.location,
+      this.currency,
+      this.trust.verifyEmail(),
+      this.status,
+      this.role,
+      this.language,
+      this.birthDate,
+      this.phoneNumber,
+      this.avatarUrl,
+      this.createdAt,
+      new Date(), // updatedAt
+      this.closedAt,
+      this.closedBy,
+      this.closeReason,
+      this.whitecliffId,
+      this.whitecliffUsername,
+      this.dcsId,
+    );
+  }
 }

@@ -1,17 +1,32 @@
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import { Queue } from 'bullmq';
 import { ALL_BULLMQ_QUEUES } from './bullmq.constants';
-import { QueueConfig, BULLMQ_DEFAULT_TIMEZONE } from './bullmq.types';
+import { QueueConfig, BULLMQ_DEFAULT_TIMEZONE, BULLMQ_PREFIX } from './bullmq.types';
 import { EnvService } from 'src/common/env/env.service';
+import { ConcurrencyService, GlobalLockKey } from 'src/common/concurrency';
 import Redis from 'ioredis';
 
 @Injectable()
 export class BullMqSchedulerService implements OnModuleInit {
   private readonly logger = new Logger(BullMqSchedulerService.name);
 
-  constructor(private readonly envService: EnvService) { }
+  constructor(
+    private readonly envService: EnvService,
+    private readonly concurrencyService: ConcurrencyService,
+  ) { }
 
   async onModuleInit() {
+    // 분산 환경에서 한 대의 서버만 동기화 로직을 수행하도록 Global Lock 적용
+    await this.concurrencyService.runExclusive(
+      GlobalLockKey.BULLMQ_SCHEDULER_INIT,
+      async () => {
+        await this.syncSchedulers();
+      },
+      { timeoutSeconds: 300 }, // 초기화 작업이므로 넉넉하게 5분 설정
+    );
+  }
+
+  private async syncSchedulers() {
     this.logger.log('🔄 Initializing BullMQ Schedulers (Repeatable Jobs)...');
 
     const definedQueueNames = ALL_BULLMQ_QUEUES.map((q) => (q as QueueConfig).name);
@@ -19,21 +34,15 @@ export class BullMqSchedulerService implements OnModuleInit {
     // 1. 유령 큐(코드에서 삭제되었으나 Redis에 남은 큐) 정리
     await this.purgeObsoleteQueues(definedQueueNames);
 
-    // 2. 정의된 큐들에 대한 잡(Job) 동기화
-    // repeatableJobs가 있는 큐만 필터링하여 처리
-    const targetQueues = ALL_BULLMQ_QUEUES.filter(
-      (q) =>
-        (q as QueueConfig).repeatableJobs &&
-        (q as QueueConfig).repeatableJobs!.length > 0,
-    );
-
-    for (const queueConfig of targetQueues) {
+    // 2. 정의된 모든 큐에 대해 반복 작업(Repeatable Jobs) 동기화
+    // (예전에는 repeatableJobs가 있는 큐만 필터링했으나, 
+    // 기존에 있던 작업을 모두 삭제한 큐의 정리 작업을 위해 모든 큐를 순회합니다.)
+    for (const queueConfig of ALL_BULLMQ_QUEUES) {
       const config = queueConfig as QueueConfig;
       const targetJobs = config.repeatableJobs || [];
 
-      // 큐 인스턴스를 직접 생성 (NestJS 의존성 주입 없이 Redis 설정을 직접 사용)
-      // 이는 전역 registerQueue 선언 여부와 관계없이 스케줄 동기화를 가능하게 합니다.
       const queue = new Queue(config.name, {
+        prefix: BULLMQ_PREFIX,
         connection: {
           host: this.envService.redis.host,
           port: this.envService.redis.port,
@@ -65,14 +74,14 @@ export class BullMqSchedulerService implements OnModuleInit {
           const definedTz = definedJob.repeat.tz || BULLMQ_DEFAULT_TIMEZONE;
           const isTzSame = job.tz === definedTz;
 
-          // Case 3: 수동 지정한 jobId(repeat-${name}) 형식이 아닌 경우 (Old Legacy)
-          const expectedId = `repeat-${definedJob.name}`;
-          const isIdSame = job.id === expectedId;
+          // Case 3: 레거시 수동 지정 ID(repeat-${name})가 남아있는 경우 -> 삭제 (Migration)
+          // 이제 BullMQ 표준 ID(repeat:<hash>)를 사용하기 위해 기존 수동 ID를 정리합니다.
+          const isLegacyId = job.id === `repeat-${definedJob.name}`;
 
-          if (!isPatternSame || !isTzSame || !isIdSame) {
+          if (!isPatternSame || !isTzSame || isLegacyId) {
             await queue.removeJobScheduler(job.key);
             this.logger.log(
-              `🔄 Updating scheduler config: [${config.name}] ${job.name} (Changed or Legacy ID removed)`,
+              `🔄 Updating scheduler config: [${config.name}] ${job.name} (Key: ${job.key}${isLegacyId ? ', Legacy ID removed' : ''})`,
             );
           }
         }
@@ -82,10 +91,9 @@ export class BullMqSchedulerService implements OnModuleInit {
           try {
             await queue.add(jobConfig.name, jobConfig.data || {}, {
               repeat: {
-                tz: BULLMQ_DEFAULT_TIMEZONE, // 기본 타임존 적용
-                ...jobConfig.repeat, // 개별 설정이 있으면 덮어씀
+                tz: BULLMQ_DEFAULT_TIMEZONE,
+                ...jobConfig.repeat,
               },
-              jobId: `repeat-${jobConfig.name}`,
             });
 
             this.logger.debug(
@@ -99,7 +107,6 @@ export class BullMqSchedulerService implements OnModuleInit {
           }
         }
       } finally {
-        // 작업 완료 후 큐 연결 닫기
         await queue.close();
       }
     }
@@ -109,6 +116,12 @@ export class BullMqSchedulerService implements OnModuleInit {
    * 코드에서 삭제되었지만 Redis에 남아있는 유령 큐들의 리피터블 잡을 정리합니다.
    */
   private async purgeObsoleteQueues(definedQueueNames: string[]) {
+    // 안전장치: 정의된 큐 목록이 비어있으면 실행 중단 (실수로 모든 큐가 날아가는 것 방지)
+    if (definedQueueNames.length === 0) {
+      this.logger.warn('⚠️ No BullMQ queues defined. Skipping purge to prevent accidental data loss.');
+      return;
+    }
+
     this.logger.log('🧹 Checking for obsolete BullMQ queues in Redis...');
 
     const redis = new Redis({
@@ -120,23 +133,26 @@ export class BullMqSchedulerService implements OnModuleInit {
     try {
       let cursor = '0';
       const redisQueues = new Set<string>();
+      const scanPattern = `${BULLMQ_PREFIX}:*:meta`;
 
       do {
-        // MATCH 'bull:*:meta' 패턴으로 큐 메타데이터 키 스캔 (BullMQ 디폴트 prefix 'bull' 가정)
         const [nextCursor, keys] = await redis.scan(
           cursor,
           'MATCH',
-          'bull:*:meta',
+          scanPattern,
           'COUNT',
           100,
         );
         cursor = nextCursor;
 
         for (const key of keys) {
-          // 키 형식: bull:queue-name:meta
+          // 키 형식: {prefix}:{queue-name}:meta
           const parts = key.split(':');
+          // prefix가 ':'를 포함할 수 있으므로, 뒤에서부터 계산하거나 parts 구조를 고려해야 함
+          // dpc:bull:queue-name:meta -> parts = ['dpc', 'bull', 'queue-name', 'meta']
           if (parts.length >= 3) {
-            redisQueues.add(parts[1]);
+            const queueName = parts[parts.length - 2];
+            redisQueues.add(queueName);
           }
         }
       } while (cursor !== '0');
@@ -148,6 +164,7 @@ export class BullMqSchedulerService implements OnModuleInit {
           );
 
           const queue = new Queue(queueName, {
+            prefix: BULLMQ_PREFIX,
             connection: {
               host: this.envService.redis.host,
               port: this.envService.redis.port,
@@ -156,7 +173,6 @@ export class BullMqSchedulerService implements OnModuleInit {
           });
 
           try {
-            // 큐의 모든 작업, 설정, 데이터를 완전히 삭제
             await queue.obliterate({ force: true });
             this.logger.log(`✅ Successfully obliterated queue: ${queueName}`);
           } catch (err) {

@@ -15,6 +15,7 @@ import {
   NOTIFICATION_QUEUES,
   NOTIFICATION_EVENTS,
 } from '../../common';
+import { Language } from '@prisma/client';
 
 interface SendAlertParams<T extends keyof NotificationPayloadMap> {
   event: T;
@@ -23,6 +24,7 @@ interface SendAlertParams<T extends keyof NotificationPayloadMap> {
   payload: NotificationPayloadMap[T];
   channels: ChannelType[];
   idempotencyKey?: string;
+  locale?: Language;
 }
 
 @Injectable()
@@ -32,13 +34,13 @@ export class SendAlertService {
     private readonly alertRepository: AlertRepositoryPort,
     @InjectQueue(NOTIFICATION_QUEUES.ALERT)
     private readonly alertQueue: Queue,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute<T extends keyof NotificationPayloadMap>(
     params: SendAlertParams<T>,
   ): Promise<Alert> {
-    const { event, userId, targetGroup, payload, channels, idempotencyKey } =
+    const { event, userId, targetGroup, payload, channels, idempotencyKey, locale } =
       params;
 
     // 0. Payload 검증
@@ -60,7 +62,7 @@ export class SendAlertService {
       event: event as string,
       userId,
       targetGroup,
-      payload: { ...payload, channels }, // channels도 payload에 저장
+      payload: { ...payload, channels, locale }, // locale도 payload에 저장
       channels,
       idempotencyKey,
     });
@@ -120,6 +122,10 @@ export class SendAlertService {
       case NOTIFICATION_EVENTS.MAINTENANCE_NOTICE:
         if (!p.title) missingFields.push('title');
         if (!p.message) missingFields.push('message');
+        break;
+
+      case NOTIFICATION_EVENTS.PHONE_VERIFICATION_CODE:
+        if (!p.code) missingFields.push('code');
         break;
     }
 

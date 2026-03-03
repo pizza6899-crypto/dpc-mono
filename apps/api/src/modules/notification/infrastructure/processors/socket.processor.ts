@@ -66,21 +66,28 @@ export class SocketProcessor extends BaseProcessor<
     log.markAsSending();
     await this.notificationLogRepository.update(log);
 
-    // 소켓 발송
-    this.socketService.sendToUser(log.receiverId, 'notification:new', {
-      id: log.id!.toString(),
-      createdAt: log.createdAt.toISOString(),
-      title: log.title,
-      body: log.body,
-      actionUri: log.actionUri,
-      metadata: log.metadata,
-    });
+    try {
+      // 소켓 발송
+      this.socketService.sendToUser(log.receiverId, 'notification:new', {
+        id: log.id!.toString(),
+        createdAt: log.createdAt.toISOString(),
+        title: log.title,
+        body: log.body,
+        actionUri: log.actionUri,
+        metadata: log.metadata,
+      });
 
-    // 성공 처리
-    log.markAsSuccess();
-    await this.notificationLogRepository.update(log);
+      // 성공 처리
+      log.markAsSuccess();
+      await this.notificationLogRepository.update(log);
 
-    this.logger.debug(`Sent notification ${log.id} to user ${log.receiverId}`);
+      this.logger.debug(`Sent notification ${log.id} to user ${log.receiverId}`);
+    } catch (error: any) {
+      log.markAsFailed(error.message || 'Socket sending failed');
+      await this.notificationLogRepository.update(log);
+
+      throw error;
+    }
   }
 
   private async processVolatile(data: VolatileJobData): Promise<void> {

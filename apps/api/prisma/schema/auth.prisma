@@ -144,6 +144,8 @@ model LoginAttempt {
 
 enum TokenType {
   PASSWORD_RESET
+  EMAIL_VERIFICATION
+  PHONE_VERIFICATION
 }
 
 enum LoginAttemptResult {

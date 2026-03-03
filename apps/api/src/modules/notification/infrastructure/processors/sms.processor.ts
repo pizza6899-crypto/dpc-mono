@@ -62,12 +62,21 @@ export class SMSProcessor extends BaseProcessor<NotificationJobData, void> {
     };
 
     // 발송
-    await this.smsSender.send(sendParams);
+    try {
+      await this.smsSender.send(sendParams);
 
-    // 성공 상태 업데이트
-    log.markAsSuccess();
-    await this.notificationLogRepository.update(log);
+      // 성공 상태 업데이트
+      log.markAsSuccess();
+      await this.notificationLogRepository.update(log);
 
-    this.logger.debug(`Successfully sent SMS for log ${log.id}`);
+      this.logger.debug(`Successfully sent SMS for log ${log.id}`);
+    } catch (error: any) {
+      // 실패 상태 업데이트
+      log.markAsFailed(error.message || 'SMS sending failed');
+      await this.notificationLogRepository.update(log);
+
+      // BullMQ가 에러를 감지하고 설정된 정책(예: 지수 백오프)에 따라 재시도하도록 에러 재발생
+      throw error;
+    }
   }
 }

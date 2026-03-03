@@ -50,6 +50,9 @@ export const GlobalLockKey = {
 
   // Casino
   WHITECLIFF_PUSHED_BET_HISTORY: 'whitecliff-pushed-bet-history-scheduler',
+
+  // System
+  BULLMQ_SCHEDULER_INIT: 'bullmq:scheduler-init',
 } as const;
 
 export type GlobalLockKey = (typeof GlobalLockKey)[keyof typeof GlobalLockKey];

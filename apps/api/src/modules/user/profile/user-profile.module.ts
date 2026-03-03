@@ -16,6 +16,7 @@ import { UpdateUserAdminService } from './application/update-user-admin.service'
 import { CloseUserAdminService } from './application/close-user-admin.service';
 import { RestoreUserAdminService } from './application/restore-user-admin.service';
 import { UpdateMyCurrencyService } from './application/update-my-currency.service';
+import { UpdateVerifiedPhoneService } from './application/update-verified-phone.service';
 import { UserRepository } from './infrastructure/user.repository';
 import { UserMapper } from './infrastructure/user.mapper';
 import { USER_REPOSITORY } from './ports/out/user.repository.token';
@@ -38,6 +39,7 @@ import { EnvModule } from 'src/common/env/env.module';
         CloseUserAdminService,
         RestoreUserAdminService,
         UpdateMyCurrencyService,
+        UpdateVerifiedPhoneService,
         UserMapper,
         {
             provide: USER_REPOSITORY,
@@ -58,6 +60,7 @@ import { EnvModule } from 'src/common/env/env.module';
         CloseUserAdminService,
         RestoreUserAdminService,
         UpdateMyCurrencyService,
+        UpdateVerifiedPhoneService,
         USER_REPOSITORY,
     ],
 })

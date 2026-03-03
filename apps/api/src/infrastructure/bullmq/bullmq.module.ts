@@ -5,6 +5,8 @@ import { BullModule } from '@nestjs/bullmq';
 import { EnvModule } from 'src/common/env/env.module';
 import { EnvService } from 'src/common/env/env.service';
 import { BullMqSchedulerService } from './bullmq.scheduler.service';
+import { BULLMQ_PREFIX } from './bullmq.types';
+import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 
 /**
  * 프로젝트 전체의 BullMQ 인프라를 담당하는 모듈입니다.
@@ -16,10 +18,12 @@ import { BullMqSchedulerService } from './bullmq.scheduler.service';
 @Module({
   imports: [
     EnvModule,
+    ConcurrencyModule,
     // 1. 인큐용 커넥션 (기본)
     BullModule.forRootAsync({
       imports: [EnvModule],
       useFactory: (envService: EnvService) => ({
+        prefix: BULLMQ_PREFIX,
         connection: {
           host: envService.redis.host,
           port: envService.redis.port,
@@ -32,6 +36,7 @@ import { BullMqSchedulerService } from './bullmq.scheduler.service';
     BullModule.forRootAsync('WORKER', {
       imports: [EnvModule],
       useFactory: (envService: EnvService) => ({
+        prefix: BULLMQ_PREFIX,
         connection: {
           host: envService.redis.host,
           port: envService.redis.port,
@@ -48,4 +53,4 @@ import { BullMqSchedulerService } from './bullmq.scheduler.service';
   providers: [BullMqSchedulerService],
   exports: [BullModule],
 })
-export class BullMqModule {}
+export class BullMqModule { }

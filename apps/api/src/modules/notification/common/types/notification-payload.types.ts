@@ -39,6 +39,11 @@ export interface SystemPayload {
   severity?: 'info' | 'warning' | 'error';
 }
 
+export interface VerificationPayload {
+  code: string;
+  target?: string;
+}
+
 // --- 실시간 유저 상태 ---
 export interface BalanceUpdatedPayload {
   balance: string;
@@ -81,6 +86,7 @@ export type NotificationPayloadMap = {
   // 시스템
   [NOTIFICATION_EVENTS.SYSTEM_ANNOUNCEMENT]: SystemPayload;
   [NOTIFICATION_EVENTS.MAINTENANCE_NOTICE]: SystemPayload;
+  [NOTIFICATION_EVENTS.PHONE_VERIFICATION_CODE]: VerificationPayload;
 
   // 기본 타입 (정의되지 않은 이벤트용)
   [key: string]: any;

@@ -23,6 +23,8 @@ import {
   BULLMQ_QUEUES,
 } from 'src/infrastructure/bullmq/bullmq.constants';
 
+import { GetUserService } from 'src/modules/user/profile/application/get-user.service';
+
 const queueConfig = getQueueConfig(BULLMQ_QUEUES.NOTIFICATION.ALERT);
 
 interface AlertJobData {
@@ -49,6 +51,7 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
     @InjectQueue(BULLMQ_QUEUES.NOTIFICATION.SOCKET.name)
     private readonly socketQueue: Queue,
     protected readonly cls: ClsService,
+    private readonly getUserService: GetUserService,
   ) {
     super();
   }
@@ -78,6 +81,9 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
       return;
     }
 
+    // [New]Fetch User metadata for fallback (locale, target)
+    const user = await this.getUserService.findById(userId);
+
     // 3. Find applicable templates for this event
     const templates = await this.templateRepository.findByEvent(alert.event);
     if (templates.length === 0) {
@@ -93,13 +99,15 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
     for (const template of templates) {
       try {
         // Render Template
-        // Locale: Hardcoded 'ko' for now, or fetch from User entity if available
-        const locale = Language.JA;
+        // 1순위: 페이로드의 locale, 2순위: 유저 프로필의 language, 3순위: KO
+        const { locale: localeFromPayload, channels: _, ...variables } = alert.payload as any;
+        const locale = (localeFromPayload as Language) || user?.language || Language.KO;
+
         const renderResult = await this.renderService.execute({
           event: alert.event,
           channel: template.channel,
           locale,
-          variables: alert.payload,
+          variables,
         });
 
         // Create NotificationLog
@@ -112,9 +120,10 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
           body: renderResult.body,
           actionUri: renderResult.actionUri,
           templateId: template.id,
-          templateEvent: alert.event, // snapshot
+          templateEvent: alert.event,
           locale,
-          target: this.extractTarget(alert, template.channel), // Helper to get email/phone
+          // 1순위: 페이로드의 target, 2순위: 유저 프로필의 연락처
+          target: this.extractTarget(alert, template.channel, user),
         });
 
         const savedLog = await this.notificationLogRepository.create(log);
@@ -147,7 +156,6 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
           `Failed to process template ${template.id} for alert ${alert.id}:`,
           innerError,
         );
-        // Continue to next template? Yes.
       }
     }
 
@@ -156,11 +164,17 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
     this.logger.debug(`Successfully processed alert ${alert.id}`);
   }
 
-  private extractTarget(alert: any, channel: ChannelType): string | undefined {
+  private extractTarget(alert: any, channel: ChannelType, user: any): string | undefined {
     const payload = alert.payload;
-    if (channel === ChannelType.EMAIL) return payload.email ?? payload.target;
-    if (channel === ChannelType.SMS)
-      return payload.phone ?? payload.phoneNumber ?? payload.target;
+
+    if (channel === ChannelType.EMAIL) {
+      return payload.email ?? payload.target ?? user?.email;
+    }
+
+    if (channel === ChannelType.SMS) {
+      return payload.phone ?? payload.phoneNumber ?? payload.target ?? user?.phoneNumber;
+    }
+
     return undefined;
   }
 }

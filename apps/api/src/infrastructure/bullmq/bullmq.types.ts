@@ -3,6 +3,7 @@ import type { WorkerOptions } from 'bullmq';
 import type { Scope } from '@nestjs/common';
 
 export const BULLMQ_DEFAULT_TIMEZONE = 'Asia/Tokyo';
+export const BULLMQ_PREFIX = 'bull';
 
 /**
  * BullMQ 데이터 보관 제한 기본값
