@@ -51,6 +51,31 @@ const templates = [
             ],
         },
     },
+    {
+        name: '휴대폰 번호 인증',
+        event: 'PHONE_VERIFICATION_CODE',
+        channel: ChannelType.SMS,
+        variables: ['code'],
+        translations: {
+            create: [
+                {
+                    locale: Language.KO,
+                    titleTemplate: '휴대폰 인증번호',
+                    bodyTemplate: '인증번호 [{{code}}]를 입력해 주세요.',
+                },
+                {
+                    locale: Language.EN,
+                    titleTemplate: 'Phone Verification',
+                    bodyTemplate: 'Please enter your verification code: [{{code}}]',
+                },
+                {
+                    locale: Language.JA,
+                    titleTemplate: '携帯電話番号認証',
+                    bodyTemplate: '認証番号 [{{code}}] を入力してください。',
+                },
+            ],
+        },
+    },
 ];
 
 export async function seedNotificationTemplates(prisma: PrismaClient) {

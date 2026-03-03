@@ -15,8 +15,8 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
 import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
 
-@ApiTags('Phone Verification')
-@Controller('users/me/phone')
+@ApiTags('User Auth')
+@Controller('auth/phone')
 @ApiStandardErrors()
 @ApiCookieAuth()
 export class PhoneVerificationController {
@@ -41,7 +41,6 @@ export class PhoneVerificationController {
         status: HttpStatus.ACCEPTED,
         description: 'Verification code sent successfully',
     })
-    @Throttle({ limit: 5, ttl: 3600, scope: ThrottleScope.USER }) // 시간당 5회 제한 (사용자 기준)
     @Throttle({ limit: 10, ttl: 3600, scope: ThrottleScope.IP })   // 시간당 10회 제한 (IP 기준)
     async requestVerification(
         @CurrentUser() user: AuthTypes.AuthenticatedUser,

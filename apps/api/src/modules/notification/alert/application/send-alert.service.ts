@@ -79,8 +79,6 @@ export class SendAlertService {
       },
       {
         jobId: `alert-${savedAlert.id}`,
-        removeOnComplete: true,
-        removeOnFail: 100,
       },
     );
 
