@@ -96,10 +96,10 @@ model UserSession {
  * 보안 검증 토큰 (비밀번호 재설정, 이메일 인증 등 일회성 인증)
  */
 model VerificationToken {
-  id        Int       @id @default(autoincrement())
+  id        BigInt    @id @default(autoincrement())
   userId    BigInt    @map("user_id")
   type      TokenType
-  token     String    @unique
+  token     String
   expiresAt DateTime  @map("expires_at")
   usedAt    DateTime? @map("used_at")
   metadata  Json?     @default("{}")
@@ -107,6 +107,7 @@ model VerificationToken {
   updatedAt DateTime  @updatedAt @map("updated_at")
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([token])
   @@index([userId, type])
   @@index([type, expiresAt])
   @@index([userId, type, usedAt])

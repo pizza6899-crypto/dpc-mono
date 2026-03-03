@@ -56,3 +56,14 @@ export class TooManyVerificationRequestsException extends PhoneVerificationExcep
         this.name = 'TooManyVerificationRequestsException';
     }
 }
+
+export class PhoneNumberAlreadyVerifiedException extends PhoneVerificationException {
+    constructor() {
+        super(
+            'This phone number is already verified',
+            MessageCode.VALIDATION_ERROR,
+            HttpStatus.BAD_REQUEST,
+        );
+        this.name = 'PhoneNumberAlreadyVerifiedException';
+    }
+}

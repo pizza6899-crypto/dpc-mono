@@ -1,11 +1,11 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { TokenType } from '@prisma/client';
+import { Transactional } from '@nestjs-cls/transactional';
 import { UpdateVerifiedPhoneService } from 'src/modules/user/profile/application/update-verified-phone.service';
 import { PHONE_VERIFICATION_REPOSITORY } from '../ports/out/phone-verification.repository.token';
 import type { PhoneVerificationRepositoryPort } from '../ports/out/phone-verification.repository.port';
 import { SynchronizeUserSessionService } from 'src/modules/auth/session/application/synchronize-user-session.service';
 import {
-    VerificationTokenNotFoundException,
     VerificationCodeExpiredException,
     InvalidVerificationCodeException,
 } from '../domain/phone-verification.exception';
@@ -19,23 +19,22 @@ export class VerifyPhoneService {
         private readonly synchronizeUserSessionService: SynchronizeUserSessionService,
     ) { }
 
+    @Transactional()
     async execute(userId: bigint, phoneNumber: string, code: string): Promise<void> {
-        // 1. 토큰 조회 (가장 최근 것)
-        const tokenRecord = await this.phoneVerificationRepository.findLatest(
-            userId,
+        // 1. 토큰 조회 (본인이 요청한 특정 코드의 미사용 토큰 조회)
+        const tokenRecord = await this.phoneVerificationRepository.findByToken(
+            code,
             TokenType.PHONE_VERIFICATION,
+            userId,
         );
 
         if (!tokenRecord) {
-            throw new VerificationTokenNotFoundException();
-        }
-
-        // 2. 검증 (번호 일치여부, 코드 일치여부, 만료여부)
-        if (tokenRecord.metadata?.phoneNumber !== phoneNumber) {
             throw new InvalidVerificationCodeException();
         }
 
-        if (tokenRecord.metadata?.code !== code) {
+        // 2. 검증 (번호 일치여부, 만료여부)
+        // 토큰이 유니크하지 않으므로, 요청한 번호와 토큰 생성 시점의 번호가 일치하는지 반드시 확인
+        if (tokenRecord.metadata?.phoneNumber !== phoneNumber) {
             throw new InvalidVerificationCodeException();
         }
 
@@ -47,7 +46,7 @@ export class VerifyPhoneService {
         const savedUser = await this.updateVerifiedPhoneService.execute(userId, phoneNumber);
 
         // 4. 토큰 사용 처리
-        await this.phoneVerificationRepository.markAsUsed(tokenRecord.token);
+        await this.phoneVerificationRepository.markAsUsed(tokenRecord.token, userId);
 
         // 5. 세션 동기화 (Redis)
         await this.synchronizeUserSessionService.execute({

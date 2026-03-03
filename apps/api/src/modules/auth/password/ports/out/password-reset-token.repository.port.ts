@@ -1,7 +1,7 @@
 // src/modules/auth/credential/ports/out/password-reset-token.repository.port.ts
 
 export interface PasswordResetTokenData {
-  id: number;
+  id: bigint;
   userId: bigint;
   token: string;
   expiresAt: Date;
@@ -28,7 +28,7 @@ export interface PasswordResetTokenRepositoryPort {
   /**
    * 토큰 사용 처리
    */
-  markAsUsed(tokenId: number): Promise<void>;
+  markAsUsed(tokenId: bigint): Promise<void>;
 
   /**
    * 사용자의 기존 미사용 토큰 삭제 (새 토큰 생성 전)

@@ -21,6 +21,6 @@ export class VerifyPhoneRequestDto {
     })
     @IsString()
     @IsNumberString()
-    @Length(2, 6)
+    @Length(6, 6)
     code: string;
 }

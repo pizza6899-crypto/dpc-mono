@@ -13,7 +13,7 @@ export class PasswordResetTokenRepository implements PasswordResetTokenRepositor
   constructor(
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
-  ) {}
+  ) { }
 
   async create(params: {
     userId: bigint;
@@ -67,7 +67,7 @@ export class PasswordResetTokenRepository implements PasswordResetTokenRepositor
     };
   }
 
-  async markAsUsed(tokenId: number): Promise<void> {
+  async markAsUsed(tokenId: bigint): Promise<void> {
     await this.tx.verificationToken.update({
       where: { id: tokenId },
       data: { usedAt: new Date() },
