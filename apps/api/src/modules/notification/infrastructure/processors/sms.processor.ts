@@ -38,7 +38,7 @@ export class SMSProcessor extends BaseProcessor<NotificationJobData, void> {
 
   protected async processJob(job: Job<NotificationJobData>): Promise<void> {
     const { data } = job;
-    this.logger.debug(`Processing SMS job ${job.id} for log ${data.logId}`);
+    this.logger.log(`Processing SMS job ${job.id} for log ${data.logId}`);
 
     const log = await this.notificationLogRepository.getById(
       new Date(data.logCreatedAt),
@@ -69,7 +69,7 @@ export class SMSProcessor extends BaseProcessor<NotificationJobData, void> {
       log.markAsSuccess();
       await this.notificationLogRepository.update(log);
 
-      this.logger.debug(`Successfully sent SMS for log ${log.id}`);
+      this.logger.log(`Successfully sent SMS for log ${log.id}`);
     } catch (error: any) {
       // 실패 상태 업데이트
       log.markAsFailed(error.message || 'SMS sending failed');

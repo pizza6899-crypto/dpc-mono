@@ -35,7 +35,7 @@ export class VerifyPhoneService {
             throw new InvalidVerificationCodeException();
         }
 
-        if (tokenRecord.token !== code) {
+        if (tokenRecord.metadata?.code !== code) {
             throw new InvalidVerificationCodeException();
         }
 

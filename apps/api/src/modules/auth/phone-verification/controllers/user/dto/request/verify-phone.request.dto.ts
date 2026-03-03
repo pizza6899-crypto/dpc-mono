@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsNotEmpty, IsPhoneNumber, IsString, Length } from 'class-validator';
+import { IsNotEmpty, IsNumberString, IsPhoneNumber, IsString, Length } from 'class-validator';
 
 export class VerifyPhoneRequestDto {
     @ApiProperty({
@@ -20,6 +20,7 @@ export class VerifyPhoneRequestDto {
         example: '123456',
     })
     @IsString()
-    @Length(6, 6)
+    @IsNumberString()
+    @Length(2, 6)
     code: string;
 }

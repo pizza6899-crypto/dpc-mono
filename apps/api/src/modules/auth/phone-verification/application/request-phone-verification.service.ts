@@ -33,17 +33,23 @@ export class RequestPhoneVerificationService {
             }
         }
 
-        // 3. 6자리 인증번호 생산
-        const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+        // 3. 6자리 인증번호 생산 및 DB 저장용 고유 토큰(UUID) 발급
+        // DB 테이블의 token 필드가 @unique 이므로 6자리 랜덤 숫자는 충돌 위험이 큽니다.
+        const { randomUUID, randomInt } = require('crypto');
+        const verificationCode = randomInt(100000, 1000000).toString();
+        const secureTokenId = randomUUID();
 
         // 4. 토큰 저장 (유효기간 5분)
         const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
         await this.phoneVerificationRepository.save({
             userId,
             type: TokenType.PHONE_VERIFICATION,
-            token: verificationCode, // 실무에서는 암호화해서 저장하는 경우도 있지만, 여기선 간결하게 진행
+            token: secureTokenId, // 충돌 방지를 위해 UUID 저장
             expiresAt,
-            metadata: { phoneNumber },
+            metadata: {
+                phoneNumber,
+                code: verificationCode // 실제 6자리 인증 코드는 메타데이터에 보관 
+            },
         });
 
         // 5. 알림 발송 요청 (비동기)
