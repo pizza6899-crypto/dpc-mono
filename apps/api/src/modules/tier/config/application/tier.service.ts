@@ -9,6 +9,7 @@ import { AttachFileService } from '../../../file/application/attach-file.service
 import { EnvService } from 'src/common/env/env.service';
 import { FileUsageType } from '../../../file/domain';
 import { Transactional } from '@nestjs-cls/transactional';
+import { Cast } from 'src/infrastructure/persistence/persistence.util';
 
 @Injectable()
 export class TierService {
@@ -17,7 +18,7 @@ export class TierService {
     private readonly policy: TierConfigPolicy,
     private readonly attachFileService: AttachFileService,
     private readonly envService: EnvService,
-  ) {}
+  ) { }
 
   async findAll(): Promise<Tier[]> {
     return this.repository.findAll();
@@ -44,7 +45,7 @@ export class TierService {
 
     // 도메인 정책 검증
     this.policy.validateTranslations(props.translations, existingLanguages);
-    this.policy.validateUpdateProps(props);
+    this.policy.validateUpdateProps(props as any);
 
     // 전체 티어 정합성 검증 (레벨 중복 및 요건 역전 방지)
     // 동시성 문제를 방지하기 위해 캐시를 무시하고 DB에서 최신 목록을 직접 가져옵니다.
@@ -54,18 +55,10 @@ export class TierService {
         return {
           ...t,
           level: props.level ?? t.level,
-          upgradeRollingRequiredUsd:
-            props.upgradeRollingRequiredUsd !== undefined
-              ? new Prisma.Decimal(props.upgradeRollingRequiredUsd)
-              : t.upgradeRollingRequiredUsd,
-          upgradeDepositRequiredUsd:
-            props.upgradeDepositRequiredUsd !== undefined
-              ? new Prisma.Decimal(props.upgradeDepositRequiredUsd)
-              : t.upgradeDepositRequiredUsd,
-          maintainRollingRequiredUsd:
-            props.maintainRollingRequiredUsd !== undefined
-              ? new Prisma.Decimal(props.maintainRollingRequiredUsd)
-              : t.maintainRollingRequiredUsd,
+          upgradeExpRequired:
+            props.upgradeExpRequired !== undefined
+              ? Cast.bigint(props.upgradeExpRequired)
+              : t.upgradeExpRequired,
         } as any;
       }
       return t;

@@ -6,6 +6,7 @@ export interface UpdateTierConfigProps {
   isBonusEnabled?: boolean;
   defaultDowngradeGracePeriodDays?: number;
   defaultRewardExpiryDays?: number;
+  expGrantRollingUsd?: number;
   updatedBy: bigint;
 }
 

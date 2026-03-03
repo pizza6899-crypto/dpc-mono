@@ -38,44 +38,36 @@ export class TierConfigPolicy {
    * 티어 수정 시 입력 데이터의 유효성을 검증합니다.
    */
   validateUpdateProps(props: {
-    upgradeRollingRequiredUsd?: number;
-    upgradeDepositRequiredUsd?: number;
-    maintainRollingRequiredUsd?: number;
-    upgradeBonusUsd?: number;
+    upgradeExpRequired?: bigint | number;
+    upgradeBonusWageringMultiplier?: number;
     compRate?: number;
     weeklyLossbackRate?: number;
     monthlyLossbackRate?: number;
     dailyWithdrawalLimitUsd?: number;
+    weeklyWithdrawalLimitUsd?: number;
+    monthlyWithdrawalLimitUsd?: number;
+    benefits?: any[]; // Currency-specific benefits
   }): void {
     const {
-      upgradeRollingRequiredUsd,
-      upgradeDepositRequiredUsd,
-      maintainRollingRequiredUsd,
-      upgradeBonusUsd,
+      upgradeExpRequired,
+      upgradeBonusWageringMultiplier,
       compRate,
       weeklyLossbackRate,
       monthlyLossbackRate,
       dailyWithdrawalLimitUsd,
+      weeklyWithdrawalLimitUsd,
+      monthlyWithdrawalLimitUsd,
     } = props;
 
     // [Rule] 금액 및 요건 관련 수치는 음수일 수 없습니다.
+    if (upgradeExpRequired !== undefined && upgradeExpRequired < 0)
+      this.throwNegativeError('Upgrade EXP Required');
+
     if (
-      upgradeRollingRequiredUsd !== undefined &&
-      upgradeRollingRequiredUsd < 0
+      upgradeBonusWageringMultiplier !== undefined &&
+      upgradeBonusWageringMultiplier < 0
     )
-      this.throwNegativeError('Upgrade Rolling Required USD');
-    if (
-      upgradeDepositRequiredUsd !== undefined &&
-      upgradeDepositRequiredUsd < 0
-    )
-      this.throwNegativeError('Upgrade Deposit Required USD');
-    if (
-      maintainRollingRequiredUsd !== undefined &&
-      maintainRollingRequiredUsd < 0
-    )
-      this.throwNegativeError('Maintain Rolling Required USD');
-    if (upgradeBonusUsd !== undefined && upgradeBonusUsd < 0)
-      this.throwNegativeError('Upgrade bonus USD');
+      this.throwNegativeError('Upgrade bonus wagering multiplier');
 
     // [Rule] 각종 요율(Rate)은 0 이상의 값이어야 합니다.
     if (compRate !== undefined && compRate < 0)
@@ -88,6 +80,23 @@ export class TierConfigPolicy {
     // [Rule] 한도 관련
     if (dailyWithdrawalLimitUsd !== undefined && dailyWithdrawalLimitUsd < 0)
       this.throwNegativeError('Daily withdrawal limit');
+    if (weeklyWithdrawalLimitUsd !== undefined && weeklyWithdrawalLimitUsd < 0)
+      this.throwNegativeError('Weekly withdrawal limit');
+    if (
+      monthlyWithdrawalLimitUsd !== undefined &&
+      monthlyWithdrawalLimitUsd < 0
+    )
+      this.throwNegativeError('Monthly withdrawal limit');
+
+    // [Rule] Benefits 내 통화별 보너스 금액 등도 음수일 수 없습니다.
+    if (props.benefits) {
+      for (const b of props.benefits) {
+        if (b.upgradeBonus !== undefined && b.upgradeBonus < 0)
+          this.throwNegativeError(`Upgrade bonus for ${b.currency}`);
+        if (b.birthdayBonus !== undefined && b.birthdayBonus < 0)
+          this.throwNegativeError(`Birthday bonus for ${b.currency}`);
+      }
+    }
   }
 
   private throwNegativeError(fieldName: string): void {
@@ -107,9 +116,7 @@ export class TierConfigPolicy {
   validateTierIntegrity(
     allTiers: {
       level: number;
-      upgradeRollingRequiredUsd: { gte: (val: any) => boolean };
-      upgradeDepositRequiredUsd: { gte: (val: any) => boolean };
-      maintainRollingRequiredUsd: { gte: (val: any) => boolean };
+      upgradeExpRequired: bigint;
       code: string;
     }[],
   ): void {
@@ -127,34 +134,12 @@ export class TierConfigPolicy {
         );
       }
 
-      // Rule 2: 요구치 역전 체크 (이전 티어보다 요구치가 낮으면 안됨)
+      // Rule 2: 요구치 역전 체크 (이전 티어보다 요구치(EXP)가 낮으면 안됨)
       if (i > 0) {
         const prev = sortedTiers[i - 1];
-        if (
-          !current.upgradeRollingRequiredUsd.gte(prev.upgradeRollingRequiredUsd)
-        ) {
+        if (current.upgradeExpRequired < prev.upgradeExpRequired) {
           this.throwInversionError(
-            'Upgrade Rolling Required USD',
-            current.code,
-            prev.code,
-          );
-        }
-        if (
-          !current.upgradeDepositRequiredUsd.gte(prev.upgradeDepositRequiredUsd)
-        ) {
-          this.throwInversionError(
-            'Upgrade Deposit Required USD',
-            current.code,
-            prev.code,
-          );
-        }
-        if (
-          !current.maintainRollingRequiredUsd.gte(
-            prev.maintainRollingRequiredUsd,
-          )
-        ) {
-          this.throwInversionError(
-            'Maintain Rolling Required USD',
+            'Upgrade EXP Required',
             current.code,
             prev.code,
           );

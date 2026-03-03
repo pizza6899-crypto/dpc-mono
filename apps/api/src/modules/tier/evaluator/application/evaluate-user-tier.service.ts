@@ -18,7 +18,7 @@ export class EvaluateUserTierService {
     private readonly demotionPolicy: DemotionPolicy,
     private readonly demoteUserTierService: DemoteUserTierService,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) {}
+  ) { }
 
   @Transactional()
   async evaluateUser(userId: bigint, allTiers: Tier[]): Promise<void> {
@@ -53,7 +53,7 @@ export class EvaluateUserTierService {
     switch (result.action) {
       case 'MAINTAIN':
         const maintainDays = this.getCycleDays(userTier.tier.evaluationCycle);
-        userTier.resetPeriodPerformance(maintainDays);
+        userTier.resetEvaluationState(maintainDays);
         await this.userTierRepository.save(userTier);
         break;
       case 'GRACE':

@@ -6,18 +6,11 @@ import { UserTierStatus } from '@prisma/client';
 @Injectable()
 export class PromotionPolicy {
   /**
-   * 유저가 대상 티어의 자격 요건(롤링액 및 입금액)을 갖추었는지 확인합니다.
+   * 유저가 대상 티어의 자격 요건(EXP)을 갖추었는지 확인합니다.
    */
   checkQualification(userTier: UserTier, candidateTier: Tier): boolean {
-    // [Policy] 승급(Upgrade) 판정에 사용되는 실적은 statusRollingUsd와 lifetimeDepositUsd입니다.
-    const isRollingMet = userTier.statusRollingUsd.gte(
-      candidateTier.upgradeRollingRequiredUsd,
-    );
-    const isDepositMet = userTier.lifetimeDepositUsd.gte(
-      candidateTier.upgradeDepositRequiredUsd,
-    );
-
-    return isRollingMet && isDepositMet;
+    // [Policy] 승급(Upgrade) 판정에 사용되는 실적은 현재 등급에서 획득한 statusExp입니다.
+    return userTier.statusExp >= candidateTier.upgradeExpRequired;
   }
 
   /**

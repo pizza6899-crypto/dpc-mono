@@ -28,7 +28,7 @@ import { TierConfig } from '../../domain/tier-config.entity';
 @ApiStandardErrors()
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class TierConfigAdminController {
-  constructor(private readonly tierConfigService: TierConfigService) {}
+  constructor(private readonly tierConfigService: TierConfigService) { }
 
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -87,6 +87,7 @@ export class TierConfigAdminController {
       isBonusEnabled: config.isBonusEnabled,
       defaultDowngradeGracePeriodDays: config.defaultDowngradeGracePeriodDays,
       defaultRewardExpiryDays: config.defaultRewardExpiryDays,
+      expGrantRollingUsd: config.expGrantRollingUsd.toString(),
       updatedAt: config.updatedAt,
       updatedBy: config.updatedBy?.toString() ?? null,
     };

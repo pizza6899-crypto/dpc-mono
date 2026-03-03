@@ -10,27 +10,33 @@ export class UserTierRepository implements UserTierRepositoryPort {
   constructor(
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
-  ) {}
+  ) { }
 
   async findByUserId(userId: bigint): Promise<UserTier | null> {
     const record = await this.tx.userTier.findUnique({
       where: { userId },
       include: {
-        tier: { include: { translations: true } },
-        downgradeWarningTargetTier: { include: { translations: true } },
+        tier: { include: { translations: true, benefits: true } },
+        downgradeWarningTargetTier: {
+          include: { translations: true, benefits: true },
+        },
       },
     });
-    return record ? UserTier.fromPersistence(record) : null;
+    return record ? UserTier.fromPersistence(record as any) : null;
   }
 
   async save(userTier: UserTier): Promise<UserTier> {
     const data = {
       tierId: userTier.tierId,
       lifetimeRollingUsd: userTier.lifetimeRollingUsd,
-      statusRollingUsd: userTier.statusRollingUsd,
-      currentPeriodRollingUsd: userTier.currentPeriodRollingUsd,
+      lifetimePayoutUsd: userTier.lifetimePayoutUsd,
+      lifetimeGgrUsd: userTier.lifetimeGgrUsd,
       lifetimeDepositUsd: userTier.lifetimeDepositUsd,
-      currentPeriodDepositUsd: userTier.currentPeriodDepositUsd,
+      lifetimeWithdrawalUsd: userTier.lifetimeWithdrawalUsd,
+      lifetimeUpgradeBonusPaidUsd: userTier.lifetimeUpgradeBonusPaidUsd,
+      lifetimeCompPaidUsd: userTier.lifetimeCompPaidUsd,
+      lifetimeLossbackPaidUsd: userTier.lifetimeLossbackPaidUsd,
+      statusRollingUsd: userTier.statusRollingUsd,
       lastEvaluationAt: userTier.lastEvaluationAt,
       currentLevel: userTier.currentLevel,
       maxLevelAchieved: userTier.maxLevelAchieved,
@@ -43,9 +49,13 @@ export class UserTierRepository implements UserTierRepositoryPort {
       customCompRate: userTier.customCompRate,
       customWeeklyLossbackRate: userTier.customWeeklyLossbackRate,
       customMonthlyLossbackRate: userTier.customMonthlyLossbackRate,
-      customWithdrawalLimitUsd: userTier.customWithdrawalLimitUsd,
+      customDailyWithdrawalLimitUsd: userTier.customDailyWithdrawalLimitUsd,
+      customWeeklyWithdrawalLimitUsd: userTier.customWeeklyWithdrawalLimitUsd,
+      customMonthlyWithdrawalLimitUsd: userTier.customMonthlyWithdrawalLimitUsd,
       isCustomWithdrawalUnlimited: userTier.isCustomWithdrawalUnlimited,
       isCustomDedicatedManager: userTier.isCustomDedicatedManager,
+      statusExp: userTier.statusExp,
+      lifetimeExp: userTier.lifetimeExp,
       isBonusEligible: userTier.isBonusEligible,
       nextEvaluationAt: userTier.nextEvaluationAt,
       preferredRewardCurrency: userTier.preferredRewardCurrency,
@@ -59,12 +69,14 @@ export class UserTierRepository implements UserTierRepositoryPort {
       create: { userId: userTier.userId, ...data },
       update: data,
       include: {
-        tier: { include: { translations: true } },
-        downgradeWarningTargetTier: { include: { translations: true } },
+        tier: { include: { translations: true, benefits: true } },
+        downgradeWarningTargetTier: {
+          include: { translations: true, benefits: true },
+        },
       },
     });
 
-    return UserTier.fromPersistence(record);
+    return UserTier.fromPersistence(record as any);
   }
 
   async countGroupByTierId(): Promise<{ tierId: bigint; count: number }[]> {
@@ -94,21 +106,40 @@ export class UserTierRepository implements UserTierRepositoryPort {
     }));
   }
 
+  async incrementExp(userId: bigint, amount: bigint): Promise<UserTier> {
+    const record = await this.tx.userTier.update({
+      where: { userId },
+      data: {
+        statusExp: { increment: amount },
+        lifetimeExp: { increment: amount },
+      },
+      include: {
+        tier: { include: { translations: true, benefits: true } },
+        downgradeWarningTargetTier: {
+          include: { translations: true, benefits: true },
+        },
+      },
+    });
+
+    return UserTier.fromPersistence(record as any);
+  }
+
   async incrementRolling(userId: bigint, amountUsd: number): Promise<UserTier> {
     const record = await this.tx.userTier.update({
       where: { userId },
       data: {
         lifetimeRollingUsd: { increment: amountUsd },
         statusRollingUsd: { increment: amountUsd },
-        currentPeriodRollingUsd: { increment: amountUsd },
       },
       include: {
-        tier: { include: { translations: true } },
-        downgradeWarningTargetTier: { include: { translations: true } },
+        tier: { include: { translations: true, benefits: true } },
+        downgradeWarningTargetTier: {
+          include: { translations: true, benefits: true },
+        },
       },
     });
 
-    return UserTier.fromPersistence(record);
+    return UserTier.fromPersistence(record as any);
   }
 
   async incrementDeposit(userId: bigint, amountUsd: number): Promise<UserTier> {
@@ -116,15 +147,16 @@ export class UserTierRepository implements UserTierRepositoryPort {
       where: { userId },
       data: {
         lifetimeDepositUsd: { increment: amountUsd },
-        currentPeriodDepositUsd: { increment: amountUsd },
       },
       include: {
-        tier: { include: { translations: true } },
-        downgradeWarningTargetTier: { include: { translations: true } },
+        tier: { include: { translations: true, benefits: true } },
+        downgradeWarningTargetTier: {
+          include: { translations: true, benefits: true },
+        },
       },
     });
 
-    return UserTier.fromPersistence(record);
+    return UserTier.fromPersistence(record as any);
   }
 
   async findIdsNeedingEvaluation(
@@ -184,8 +216,10 @@ export class UserTierRepository implements UserTierRepositoryPort {
       this.tx.userTier.findMany({
         where,
         include: {
-          tier: { include: { translations: true } },
-          downgradeWarningTargetTier: { include: { translations: true } },
+          tier: { include: { translations: true, benefits: true } },
+          downgradeWarningTargetTier: {
+            include: { translations: true, benefits: true },
+          },
         },
         skip,
         take: limit,
@@ -195,7 +229,7 @@ export class UserTierRepository implements UserTierRepositoryPort {
     ]);
 
     return {
-      items: records.map(UserTier.fromPersistence),
+      items: records.map((r) => UserTier.fromPersistence(r as any)),
       total,
     };
   }

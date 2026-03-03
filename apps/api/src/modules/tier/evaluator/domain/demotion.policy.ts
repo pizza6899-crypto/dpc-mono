@@ -23,11 +23,10 @@ export class DemotionPolicy {
       return { action: 'MAINTAIN' };
     }
 
-    // 1. 유지 조건 확인 (현재 기간 롤링액이 티어 유지 요구량보다 큰지)
-    // [Policy] 유지(Maintain) 판정에 사용되는 실적은 currentPeriodRollingUsd입니다.
-    const isMaintenanceMet = userTier.currentPeriodRollingUsd.gte(
-      userTier.tier.maintainRollingRequiredUsd,
-    );
+    // 1. 유지 조건 확인 (현재 등급 획득 XP가 해당 등급 최소 요건을 상회하는지)
+    // [Policy] 유지(Maintain) 판정에 사용되는 실적은 현재 등급에서 획득한 statusExp입니다.
+    const isMaintenanceMet =
+      userTier.statusExp >= userTier.tier.upgradeExpRequired;
     if (isMaintenanceMet) return { action: 'MAINTAIN' };
 
     // 2. 조건 미달 시: 현재 상태에 따른 판단

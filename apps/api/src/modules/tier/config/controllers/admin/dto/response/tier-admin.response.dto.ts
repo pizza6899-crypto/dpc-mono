@@ -1,5 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Language, TierEvaluationCycle } from '@prisma/client';
+import {
+  Language,
+  TierEvaluationCycle,
+  ExchangeCurrencyCode,
+} from '@prisma/client';
 
 export class TierTranslationResponseDto {
   @ApiProperty({ enum: Language })
@@ -12,6 +16,17 @@ export class TierTranslationResponseDto {
   description: string | null;
 }
 
+export class TierBenefitResponseDto {
+  @ApiProperty({ enum: ExchangeCurrencyCode })
+  currency: ExchangeCurrencyCode;
+
+  @ApiProperty({ type: String })
+  upgradeBonus: string;
+
+  @ApiProperty({ type: String })
+  birthdayBonus: string;
+}
+
 export class TierAdminResponseDto {
   @ApiProperty()
   level: number;
@@ -20,28 +35,16 @@ export class TierAdminResponseDto {
   code: string;
 
   @ApiProperty({ type: String })
-  upgradeRollingRequiredUsd: string;
-
-  @ApiProperty({ type: String })
-  upgradeDepositRequiredUsd: string;
-
-  @ApiProperty({ type: String })
-  maintainRollingRequiredUsd: string;
+  upgradeExpRequired: string;
 
   @ApiProperty({ enum: TierEvaluationCycle })
   evaluationCycle: TierEvaluationCycle;
-
-  @ApiProperty({ type: String })
-  upgradeBonusUsd: string;
 
   @ApiProperty({ type: String })
   upgradeBonusWageringMultiplier: string;
 
   @ApiProperty({ type: Number, nullable: true })
   rewardExpiryDays: number | null;
-
-  @ApiProperty()
-  isImmediateBonusEnabled: boolean;
 
   @ApiProperty({ type: String })
   compRate: string;
@@ -54,6 +57,12 @@ export class TierAdminResponseDto {
 
   @ApiProperty({ type: String })
   dailyWithdrawalLimitUsd: string;
+
+  @ApiProperty({ type: String })
+  weeklyWithdrawalLimitUsd: string;
+
+  @ApiProperty({ type: String })
+  monthlyWithdrawalLimitUsd: string;
 
   @ApiProperty()
   isWithdrawalUnlimited: boolean;
@@ -75,6 +84,9 @@ export class TierAdminResponseDto {
 
   @ApiProperty({ type: [TierTranslationResponseDto] })
   translations: TierTranslationResponseDto[];
+
+  @ApiProperty({ type: [TierBenefitResponseDto] })
+  benefits: TierBenefitResponseDto[];
 
   @ApiProperty()
   updatedAt: Date;

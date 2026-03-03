@@ -28,7 +28,7 @@ export class PromoteUserTierService {
     private readonly tierConfigRepository: TierConfigRepositoryPort,
     private readonly grantRewardService: GrantRewardService,
     private readonly claimRewardService: CoreClaimRewardService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(
@@ -63,6 +63,8 @@ export class PromoteUserTierService {
     let skippedReason: string | undefined;
     let bonusClaimedAt: Date | null = null;
 
+    const targetCurrency = userTier.preferredRewardCurrency || 'USD';
+
     if (isEligibleForPromotionBonus) {
       // [Logic] 지급 가능 여부와 관계없이, 이번 승급으로 인해 발생한 보너스 원천 금액을 먼저 계산합니다.
       const allTiers = await this.tierRepository.findAll();
@@ -70,10 +72,10 @@ export class PromoteUserTierService {
         (t) => t.level > previousHighestLevel && t.level <= targetTier.level,
       );
 
-      earnedBonusAmount = eligibleTiers.reduce(
-        (sum, t) => sum.add(t.upgradeBonusUsd),
-        new Prisma.Decimal(0),
-      );
+      earnedBonusAmount = eligibleTiers.reduce((sum, t) => {
+        const benefit = t.getBenefit(targetCurrency);
+        return sum.add(benefit?.upgradeBonus || 0);
+      }, new Prisma.Decimal(0));
 
       // [Logic] 보너스 금액이 존재할 때만 지급 정책을 확인합니다.
       if (earnedBonusAmount.gt(0)) {
@@ -93,39 +95,20 @@ export class PromoteUserTierService {
             userId,
             sourceType: RewardSourceType.TIER_REWARD,
             sourceId: targetTier.id,
-            rewardType: RewardItemType.BONUS_MONEY, // 즉시 출금 가능한 캐시나 보너스로 사용 가능하도록 기본 부여
-            currency: userTier.preferredRewardCurrency || 'USD', // 티어에서는 보상 발급 시점에 기준 통화를 USD등으로 시작하나, 향후 환산 될 수 있음
+            rewardType: RewardItemType.BONUS_MONEY,
+            currency: targetCurrency,
             amount: earnedBonusAmount,
             wageringTargetType: WageringTargetType.AMOUNT,
             wageringMultiplier: targetTier.upgradeBonusWageringMultiplier,
             expiresAt,
-            metadata: undefined, // 별도의 번역키나 프리스핀 없이 지급되므로 명시적 undefined 처리
+            metadata: undefined,
           });
 
-          if (targetTier.isImmediateBonusEnabled) {
-            // [Action] 즉시 지급 대상 티어인 경우
-            if (userTier.preferredRewardCurrency) {
-              // 유저가 선호 통화를 등록한 경우에만 자동 지급 처리 (코어 모듈 클레임 호출)
-              await this.claimRewardService.execute({
-                userId,
-                rewardId: reward.id,
-              });
-              this.logger.log(
-                `[Promotion:Auto-Payout] User ${userId} received ${earnedBonusAmount} USD bonus in ${userTier.preferredRewardCurrency}.`,
-              );
-              bonusClaimedAt = new Date();
-            } else {
-              // 선호 통화가 없는 경우 즉시 지급 대상이라도 클레임 대기로 전환 (유저가 통화를 선택하며 클레임하도록 유도)
-              this.logger.log(
-                `[Promotion:Auto-Wait] User ${userId} eligible for immediate payout but has no preferred currency. Waiting for manual claim.`,
-              );
-            }
-          } else {
-            // [Action] 클레임 대상 티어인 경우 (유저가 직접 버튼을 눌러야 함)
-            this.logger.log(
-              `[Promotion:Claim-Wait] User ${userId} earned ${earnedBonusAmount} USD bonus. Waiting for manual claim.`,
-            );
-          }
+          // [Policy] XP 기반 시스템에서는 보너스를 유저가 직접 클레임하도록 유도 (즉시 지급 대신)
+          // 만약 선호 통화가 이미 설정되어 있고, 시스템적으로 즉시 지급을 원한다면 추가 로직 가능
+          this.logger.log(
+            `[Promotion:Reward-Granted] User ${userId} earned ${earnedBonusAmount} ${targetCurrency} bonus.`,
+          );
         } else {
           // [Policy] 시스템 설정에 의해 지급이 중단된 경우
           skippedReason = 'GLOBAL_BONUS_DISABLED';
@@ -138,6 +121,8 @@ export class PromoteUserTierService {
 
     await this.userTierRepository.save(userTier);
 
+    const benefits = userTier.getEffectiveBenefits(targetTier);
+
     // 2. 히스토리 스냅샷 기록 (Audit 및 클레임 증빙용)
     await this.recordTierHistoryService.execute({
       userId,
@@ -146,25 +131,25 @@ export class PromoteUserTierService {
       changeType: TierChangeType.UPGRADE,
       reason,
       statusRollingUsdSnap: userTier.statusRollingUsd,
-      currentPeriodDepositUsdSnap: userTier.currentPeriodDepositUsd,
-      compRateSnap: userTier.customCompRate ?? targetTier.compRate,
-      weeklyLossbackRateSnap:
-        userTier.customWeeklyLossbackRate ?? targetTier.weeklyLossbackRate,
-      monthlyLossbackRateSnap:
-        userTier.customMonthlyLossbackRate ?? targetTier.monthlyLossbackRate,
-      upgradeRollingRequiredUsdSnap: targetTier.upgradeRollingRequiredUsd,
-      upgradeDepositRequiredUsdSnap: targetTier.upgradeDepositRequiredUsd,
+      compRateSnap: benefits.compRate,
+      weeklyLossbackRateSnap: benefits.weeklyLossbackRate,
+      monthlyLossbackRateSnap: benefits.monthlyLossbackRate,
+      dailyWithdrawalLimitUsdSnap: benefits.dailyWithdrawalLimitUsd,
+      weeklyWithdrawalLimitUsdSnap: benefits.weeklyWithdrawalLimitUsd,
+      monthlyWithdrawalLimitUsdSnap: benefits.monthlyWithdrawalLimitUsd,
+      statusExpSnap: userTier.statusExp,
       lifetimeRollingUsdSnap: userTier.lifetimeRollingUsd,
       lifetimeDepositUsdSnap: userTier.lifetimeDepositUsd,
       hasBonusGenerated: earnedBonusAmount.gt(0) && !skippedReason,
-      bonusAmountUsdSnap: earnedBonusAmount,
+      currency: targetCurrency,
+      upgradeBonusSnap: earnedBonusAmount,
       skippedReason: skippedReason,
     });
 
     // 3. 실시간 통계 갱신 (승급 카운트 증분)
     await this.tierStatsService.increment(new Date(), targetTier.id, {
       upgradedCount: 1,
-      periodBonusPaidUsd: bonusClaimedAt ? earnedBonusAmount : undefined,
+      periodUpgradeBonusPaidUsd: bonusClaimedAt ? earnedBonusAmount : undefined,
     });
 
     this.logger.log(

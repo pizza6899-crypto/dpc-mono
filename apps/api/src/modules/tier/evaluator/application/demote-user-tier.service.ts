@@ -15,7 +15,7 @@ export class DemoteUserTierService {
     private readonly userTierRepository: UserTierRepositoryPort,
     private readonly recordTierHistoryService: RecordTierHistoryService,
     private readonly tierStatsService: TierStatsService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(
@@ -33,9 +33,11 @@ export class DemoteUserTierService {
 
     // 1. 상태 업데이트 (강등 전용 메서드 호출 및 실적 리셋)
     userTier.downgradeTier(targetTier);
-    userTier.resetPeriodPerformance(cycleDays);
+    userTier.resetEvaluationState(cycleDays);
 
     await this.userTierRepository.save(userTier);
+
+    const benefits = userTier.getEffectiveBenefits(targetTier);
 
     // 2. 강등 이력 기록
     await this.recordTierHistoryService.execute({
@@ -45,18 +47,19 @@ export class DemoteUserTierService {
       changeType: TierChangeType.DOWNGRADE,
       reason,
       statusRollingUsdSnap: userTier.statusRollingUsd,
-      currentPeriodDepositUsdSnap: userTier.currentPeriodDepositUsd,
-      compRateSnap: userTier.customCompRate ?? targetTier.compRate,
-      weeklyLossbackRateSnap:
-        userTier.customWeeklyLossbackRate ?? targetTier.weeklyLossbackRate,
-      monthlyLossbackRateSnap:
-        userTier.customMonthlyLossbackRate ?? targetTier.monthlyLossbackRate,
-      upgradeRollingRequiredUsdSnap: targetTier.upgradeRollingRequiredUsd,
-      upgradeDepositRequiredUsdSnap: targetTier.upgradeDepositRequiredUsd,
+      compRateSnap: benefits.compRate,
+      weeklyLossbackRateSnap: benefits.weeklyLossbackRate,
+      monthlyLossbackRateSnap: benefits.monthlyLossbackRate,
+      dailyWithdrawalLimitUsdSnap: benefits.dailyWithdrawalLimitUsd,
+      weeklyWithdrawalLimitUsdSnap: benefits.weeklyWithdrawalLimitUsd,
+      monthlyWithdrawalLimitUsdSnap: benefits.monthlyWithdrawalLimitUsd,
+      statusExpSnap: userTier.statusExp,
       lifetimeRollingUsdSnap: userTier.lifetimeRollingUsd,
       lifetimeDepositUsdSnap: userTier.lifetimeDepositUsd,
       hasBonusGenerated: false,
-      bonusAmountUsdSnap: new Prisma.Decimal(0),
+      currency: userTier.preferredRewardCurrency || 'USD',
+      upgradeBonusSnap: new Prisma.Decimal(0),
+      skippedReason: null,
     });
 
     // 3. 실시간 통계 갱신 (강등 카운트 증분)

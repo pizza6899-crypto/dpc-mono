@@ -1,19 +1,26 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ExchangeCurrencyCode } from '@prisma/client';
 import { Type } from 'class-transformer';
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString, IsEnum } from 'class-validator';
 
 export class TierPublicRequirementDto {
-  @ApiProperty()
+  @ApiProperty({ description: 'Required EXP for upgrade' })
   @IsString()
-  upgradeRolling: string;
+  upgradeExp: string;
+}
 
-  @ApiProperty()
-  @IsString()
-  upgradeDeposit: string;
+export class TierPublicCurrencyBenefitDto {
+  @ApiProperty({ enum: ExchangeCurrencyCode })
+  @IsEnum(ExchangeCurrencyCode)
+  currency: ExchangeCurrencyCode;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'Upgrade bonus amount' })
   @IsString()
-  maintenance: string;
+  upgradeBonus: string;
+
+  @ApiProperty({ description: 'Birthday bonus amount' })
+  @IsString()
+  birthdayBonus: string;
 }
 
 export class TierPublicBenefitsDto {
@@ -31,21 +38,30 @@ export class TierPublicBenefitsDto {
 
   @ApiProperty()
   @IsString()
-  upgradeBonus: string;
-
-  @ApiProperty()
-  @IsString()
   upgradeBonusWager: string;
 
   @ApiProperty({ type: Number, nullable: true })
   @IsOptional()
+  @IsNumber()
   rewardExpiryDays: number | null;
+
+  @ApiProperty({ type: [TierPublicCurrencyBenefitDto] })
+  @Type(() => TierPublicCurrencyBenefitDto)
+  currencyBenefits: TierPublicCurrencyBenefitDto[];
 }
 
 export class TierPublicLimitsDto {
   @ApiProperty()
   @IsString()
   dailyWithdrawal: string;
+
+  @ApiProperty()
+  @IsString()
+  weeklyWithdrawal: string;
+
+  @ApiProperty()
+  @IsString()
+  monthlyWithdrawal: string;
 
   @ApiProperty()
   @IsBoolean()

@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
@@ -5,6 +6,7 @@ import { Tier } from '../domain/tier.entity';
 import { TierRepositoryPort, UpdateTierProps } from './tier.repository.port';
 import { CacheService } from 'src/common/cache/cache.service';
 import { CACHE_CONFIG } from 'src/common/cache/cache.constants';
+import { Cast } from 'src/infrastructure/persistence/persistence.util';
 
 @Injectable()
 export class TierRepository implements TierRepositoryPort {
@@ -12,12 +14,12 @@ export class TierRepository implements TierRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly cacheService: CacheService,
-  ) {}
+  ) { }
 
   async findAll(options?: { ignoreCache?: boolean }): Promise<Tier[]> {
     const fetcher = async () => {
       return await this.tx.tier.findMany({
-        include: { translations: true },
+        include: { translations: true, benefits: true },
         orderBy: { level: 'asc' },
       });
     };
@@ -46,7 +48,14 @@ export class TierRepository implements TierRepositoryPort {
   }
 
   async update(props: UpdateTierProps): Promise<Tier> {
-    const { code, updatedBy, translations, ...data } = props;
+    const {
+      code,
+      updatedBy,
+      translations,
+      benefits,
+      imageFileId: _,
+      ...dto
+    } = props;
 
     const current = await this.tx.tier.findUnique({ where: { code } });
     if (!current) {
@@ -55,31 +64,58 @@ export class TierRepository implements TierRepositoryPort {
 
     const tierId = current.id;
 
+    const data = {
+      ...dto,
+      upgradeExpRequired:
+        dto.upgradeExpRequired !== undefined
+          ? Cast.bigint(dto.upgradeExpRequired)
+          : undefined,
+      updatedBy,
+      translations: translations
+        ? {
+          upsert: translations.map((t) => ({
+            where: {
+              tierId_language: { tierId: tierId, language: t.language },
+            },
+            update: { name: t.name, description: t.description },
+            create: {
+              language: t.language,
+              name: t.name,
+              description: t.description,
+            },
+          })),
+        }
+        : undefined,
+      benefits: benefits
+        ? {
+          upsert: benefits.map((b) => ({
+            where: {
+              tierId_currency: {
+                tierId: tierId,
+                currency: b.currency,
+              },
+            },
+            update: {
+              upgradeBonus: b.upgradeBonus,
+              birthdayBonus: b.birthdayBonus,
+            },
+            create: {
+              currency: b.currency,
+              upgradeBonus: b.upgradeBonus,
+              birthdayBonus: b.birthdayBonus,
+            },
+          })),
+        }
+        : undefined,
+    };
+
     const record = await this.tx.tier.update({
       where: { code },
-      data: {
-        ...data,
-        updatedBy,
-        translations: translations
-          ? {
-              upsert: translations.map((t) => ({
-                where: {
-                  tierId_language: { tierId: tierId, language: t.language },
-                },
-                update: { name: t.name, description: t.description },
-                create: {
-                  language: t.language,
-                  name: t.name,
-                  description: t.description,
-                },
-              })),
-            }
-          : undefined,
-      },
-      include: { translations: true },
+      data: data as any,
+      include: { translations: true, benefits: true },
     });
 
-    const updated = Tier.fromPersistence(record);
+    const updated = Tier.fromPersistence(record as any);
     await this.cacheService.del(CACHE_CONFIG.TIER.LIST);
     return updated;
   }

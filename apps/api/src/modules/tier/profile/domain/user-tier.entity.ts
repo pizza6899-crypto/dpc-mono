@@ -7,6 +7,8 @@ export interface EffectiveBenefits {
   weeklyLossbackRate: Prisma.Decimal;
   monthlyLossbackRate: Prisma.Decimal;
   dailyWithdrawalLimitUsd: Prisma.Decimal;
+  weeklyWithdrawalLimitUsd: Prisma.Decimal;
+  monthlyWithdrawalLimitUsd: Prisma.Decimal;
   isWithdrawalUnlimited: boolean;
   hasDedicatedManager: boolean;
 }
@@ -17,12 +19,19 @@ export class UserTier {
     public readonly userId: bigint,
     public tierId: bigint,
 
-    // 상태 데이터
+    // 상태 데이터 (LTV Metrics)
     public lifetimeRollingUsd: Prisma.Decimal,
-    public statusRollingUsd: Prisma.Decimal,
-    public currentPeriodRollingUsd: Prisma.Decimal,
+    public lifetimePayoutUsd: Prisma.Decimal,
+    public lifetimeGgrUsd: Prisma.Decimal,
     public lifetimeDepositUsd: Prisma.Decimal,
-    public currentPeriodDepositUsd: Prisma.Decimal,
+    public lifetimeWithdrawalUsd: Prisma.Decimal,
+
+    // Cost Metrics (혜택 누적)
+    public lifetimeUpgradeBonusPaidUsd: Prisma.Decimal,
+    public lifetimeCompPaidUsd: Prisma.Decimal,
+    public lifetimeLossbackPaidUsd: Prisma.Decimal,
+
+    public statusRollingUsd: Prisma.Decimal, // (통계용) 현재 등급 누적 롤링액
     public lastEvaluationAt: Date,
 
     // 승급/강등 제어
@@ -39,9 +48,15 @@ export class UserTier {
     public customCompRate: Prisma.Decimal | null,
     public customWeeklyLossbackRate: Prisma.Decimal | null,
     public customMonthlyLossbackRate: Prisma.Decimal | null,
-    public customWithdrawalLimitUsd: Prisma.Decimal | null,
+    public customDailyWithdrawalLimitUsd: Prisma.Decimal | null,
+    public customWeeklyWithdrawalLimitUsd: Prisma.Decimal | null,
+    public customMonthlyWithdrawalLimitUsd: Prisma.Decimal | null,
     public isCustomWithdrawalUnlimited: boolean | null,
     public isCustomDedicatedManager: boolean | null,
+
+    // XP Status
+    public statusExp: bigint,
+    public lifetimeExp: bigint,
 
     // Audit & Misc
     public note: string | null,
@@ -56,7 +71,7 @@ export class UserTier {
     // Joined Data
     public readonly tier?: Tier,
     public readonly downgradeWarningTargetTier?: Tier,
-  ) {}
+  ) { }
 
   getEffectiveBenefits(baseTier?: Tier): EffectiveBenefits {
     const tier = baseTier || this.tier;
@@ -69,7 +84,11 @@ export class UserTier {
       monthlyLossbackRate:
         this.customMonthlyLossbackRate ?? tier.monthlyLossbackRate,
       dailyWithdrawalLimitUsd:
-        this.customWithdrawalLimitUsd ?? tier.dailyWithdrawalLimitUsd,
+        this.customDailyWithdrawalLimitUsd ?? tier.dailyWithdrawalLimitUsd,
+      weeklyWithdrawalLimitUsd:
+        this.customWeeklyWithdrawalLimitUsd ?? tier.weeklyWithdrawalLimitUsd,
+      monthlyWithdrawalLimitUsd:
+        this.customMonthlyWithdrawalLimitUsd ?? tier.monthlyWithdrawalLimitUsd,
       isWithdrawalUnlimited:
         this.isCustomWithdrawalUnlimited ?? tier.isWithdrawalUnlimited,
       hasDedicatedManager:
@@ -95,6 +114,9 @@ export class UserTier {
     this.downgradeWarningIssuedAt = null;
     this.downgradeWarningTargetTierId = null;
 
+    // [Policy] 승급 시 현재 등급 XP는 리셋하거나 차감할 수 있음 (현재는 전액 유지 정책이라 가정하거나 명시적 리셋 로직 도입 가능)
+    // 여기서는 승급 요구치를 소진하는 방식으로도 구현 가능하나, 일단 스키마에 맞춰 필드 존재 확인
+
     return isBonusEligibleJump && this.isBonusEligible;
   }
 
@@ -111,10 +133,9 @@ export class UserTier {
     this.downgradeWarningIssuedAt = null;
     this.downgradeWarningTargetTierId = null;
 
-    // [Policy] 강등 시 승급용 실적(statusRollingUsd)을 새 티어의 요구치로 Cap 처리합니다.
-    // 이는 강등된 유저가 바로 다시 승급하는 것을 방지하고, 해당 등급에서 일정 실적을 다시 쌓게 하기 위함입니다.
-    if (this.statusRollingUsd.gt(targetTier.upgradeRollingRequiredUsd)) {
-      this.statusRollingUsd = targetTier.upgradeRollingRequiredUsd;
+    // [Policy] 강등 시 승급용 실적(statusExp)을 새 티어의 요구치로 Cap 처리합니다.
+    if (this.statusExp > targetTier.upgradeExpRequired) {
+      this.statusExp = targetTier.upgradeExpRequired;
     }
   }
 
@@ -126,14 +147,20 @@ export class UserTier {
   }
 
   /**
+   * XP를 누적합니다.
+   */
+  incrementExp(amount: bigint): void {
+    this.statusExp += amount;
+    this.lifetimeExp += amount;
+  }
+
+  /**
    * 실적을 누적합니다.
    */
   incrementRolling(amount: Prisma.Decimal | number): void {
     const decimalAmount = new Prisma.Decimal(amount);
     this.lifetimeRollingUsd = this.lifetimeRollingUsd.add(decimalAmount);
     this.statusRollingUsd = this.statusRollingUsd.add(decimalAmount);
-    this.currentPeriodRollingUsd =
-      this.currentPeriodRollingUsd.add(decimalAmount);
   }
 
   /**
@@ -142,16 +169,12 @@ export class UserTier {
   incrementDeposit(amount: Prisma.Decimal | number): void {
     const decimalAmount = new Prisma.Decimal(amount);
     this.lifetimeDepositUsd = this.lifetimeDepositUsd.add(decimalAmount);
-    this.currentPeriodDepositUsd =
-      this.currentPeriodDepositUsd.add(decimalAmount);
   }
 
   /**
-   * 주기적 심사 완료 후 실적을 리셋하고 상태를 ACTIVE로 복구합니다. (등급 유지 시 호출)
+   * 주기적 심사 완료 후 상태를 ACTIVE로 복구합니다. (등급 유지 시 호출)
    */
-  resetPeriodPerformance(evaluationCycleDays: number): void {
-    this.currentPeriodRollingUsd = new Prisma.Decimal(0);
-    this.currentPeriodDepositUsd = new Prisma.Decimal(0);
+  resetEvaluationState(evaluationCycleDays: number): void {
     this.lastEvaluationAt = new Date();
 
     // 상태 복구 및 경고 초기화
@@ -176,8 +199,10 @@ export class UserTier {
   static fromPersistence(
     data: Prisma.UserTierGetPayload<{
       include: {
-        tier: { include: { translations: true } };
-        downgradeWarningTargetTier: { include: { translations: true } };
+        tier: { include: { translations: true; benefits: true } };
+        downgradeWarningTargetTier: {
+          include: { translations: true; benefits: true };
+        };
       };
     }>,
   ): UserTier {
@@ -191,10 +216,14 @@ export class UserTier {
       data.userId,
       data.tierId,
       data.lifetimeRollingUsd,
-      data.statusRollingUsd,
-      data.currentPeriodRollingUsd,
+      data.lifetimePayoutUsd,
+      data.lifetimeGgrUsd,
       data.lifetimeDepositUsd,
-      data.currentPeriodDepositUsd,
+      data.lifetimeWithdrawalUsd,
+      data.lifetimeUpgradeBonusPaidUsd,
+      data.lifetimeCompPaidUsd,
+      data.lifetimeLossbackPaidUsd,
+      data.statusRollingUsd,
       data.lastEvaluationAt,
       data.currentLevel,
       data.maxLevelAchieved,
@@ -207,9 +236,13 @@ export class UserTier {
       data.customCompRate,
       data.customWeeklyLossbackRate,
       data.customMonthlyLossbackRate,
-      data.customWithdrawalLimitUsd,
+      data.customDailyWithdrawalLimitUsd,
+      data.customWeeklyWithdrawalLimitUsd,
+      data.customMonthlyWithdrawalLimitUsd,
       data.isCustomWithdrawalUnlimited,
       data.isCustomDedicatedManager,
+      data.statusExp,
+      data.lifetimeExp,
       data.note,
       data.isBonusEligible,
       data.nextEvaluationAt,

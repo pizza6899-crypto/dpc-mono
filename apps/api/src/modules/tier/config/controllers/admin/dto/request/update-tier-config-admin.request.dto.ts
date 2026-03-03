@@ -49,4 +49,14 @@ export class UpdateTierConfigAdminRequestDto {
   @Min(1)
   @IsOptional()
   defaultRewardExpiryDays?: number;
+
+  @ApiProperty({
+    description: 'Amount of USD rolling required to grant 1 XP',
+    example: 1.0,
+    required: false,
+  })
+  @IsNumber()
+  @Min(0.000001)
+  @IsOptional()
+  expGrantRollingUsd?: number;
 }

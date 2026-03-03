@@ -32,6 +32,12 @@ export class TierConfigAdminResponseDto {
   })
   defaultRewardExpiryDays: number;
 
+  @ApiProperty({
+    description: 'Amount of USD rolling required to grant 1 XP',
+    example: '1.0',
+  })
+  expGrantRollingUsd: string;
+
   @ApiProperty({ description: 'Updated at / 수정 일시' })
   updatedAt: Date;
 

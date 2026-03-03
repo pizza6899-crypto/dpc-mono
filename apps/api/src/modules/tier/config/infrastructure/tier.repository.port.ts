@@ -1,21 +1,23 @@
-import type { TierEvaluationCycle, Language } from '@prisma/client';
+import type {
+  TierEvaluationCycle,
+  Language,
+  ExchangeCurrencyCode,
+} from '@prisma/client';
 import type { Tier } from '../domain/tier.entity';
 
 export interface UpdateTierProps {
   code: string;
   level?: number;
-  upgradeRollingRequiredUsd?: number;
-  upgradeDepositRequiredUsd?: number;
-  maintainRollingRequiredUsd?: number;
+  upgradeExpRequired?: bigint | number | string;
   evaluationCycle?: TierEvaluationCycle;
-  upgradeBonusUsd?: number;
   upgradeBonusWageringMultiplier?: number;
   rewardExpiryDays?: number | null;
-  isImmediateBonusEnabled?: boolean;
   compRate?: number;
   weeklyLossbackRate?: number;
   monthlyLossbackRate?: number;
   dailyWithdrawalLimitUsd?: number;
+  weeklyWithdrawalLimitUsd?: number;
+  monthlyWithdrawalLimitUsd?: number;
   isWithdrawalUnlimited?: boolean;
   hasDedicatedManager?: boolean;
   isActive?: boolean;
@@ -27,6 +29,11 @@ export interface UpdateTierProps {
     language: Language;
     name: string;
     description?: string | null;
+  }[];
+  benefits?: {
+    currency: ExchangeCurrencyCode;
+    upgradeBonus: number | string;
+    birthdayBonus: number | string;
   }[];
   updatedBy: bigint;
 }

@@ -1,5 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Language, TierEvaluationCycle } from '@prisma/client';
+import {
+  Language,
+  TierEvaluationCycle,
+  ExchangeCurrencyCode,
+} from '@prisma/client';
 import {
   IsBoolean,
   IsEnum,
@@ -26,6 +30,22 @@ export class TierTranslationRequestDto {
   description?: string | null;
 }
 
+export class TierBenefitRequestDto {
+  @ApiProperty({ enum: ExchangeCurrencyCode })
+  @IsEnum(ExchangeCurrencyCode)
+  currency: ExchangeCurrencyCode;
+
+  @ApiProperty({ type: Number, description: 'Upgrade bonus amount' })
+  @IsNumber()
+  @Min(0)
+  upgradeBonus: number;
+
+  @ApiProperty({ type: Number, description: 'Birthday bonus amount' })
+  @IsNumber()
+  @Min(0)
+  birthdayBonus: number;
+}
+
 export class UpdateTierAdminRequestDto {
   @ApiProperty({ required: false })
   @IsOptional()
@@ -33,34 +53,17 @@ export class UpdateTierAdminRequestDto {
   @Min(0)
   level?: number;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    required: false,
+    description: 'Required EXP for upgrade (string or number)',
+  })
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  upgradeRollingRequiredUsd?: number;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  upgradeDepositRequiredUsd?: number;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  maintainRollingRequiredUsd?: number;
+  upgradeExpRequired?: string | number;
 
   @ApiProperty({ enum: TierEvaluationCycle, required: false })
   @IsOptional()
   @IsEnum(TierEvaluationCycle)
   evaluationCycle?: TierEvaluationCycle;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  upgradeBonusUsd?: number;
 
   @ApiProperty({ required: false })
   @IsOptional()
@@ -77,15 +80,6 @@ export class UpdateTierAdminRequestDto {
   @IsNumber()
   @Min(1)
   rewardExpiryDays?: number | null;
-
-  @ApiProperty({
-    required: false,
-    description:
-      'Whether to pay bonus immediately (true) or wait for claim (false)',
-  })
-  @IsOptional()
-  @IsBoolean()
-  isImmediateBonusEnabled?: boolean;
 
   @ApiProperty({ required: false })
   @IsOptional()
@@ -110,6 +104,18 @@ export class UpdateTierAdminRequestDto {
   @IsNumber()
   @Min(0)
   dailyWithdrawalLimitUsd?: number;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  weeklyWithdrawalLimitUsd?: number;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  monthlyWithdrawalLimitUsd?: number;
 
   @ApiProperty({ required: false })
   @IsOptional()
@@ -150,4 +156,10 @@ export class UpdateTierAdminRequestDto {
   @ValidateNested({ each: true })
   @Type(() => TierTranslationRequestDto)
   translations?: TierTranslationRequestDto[];
+
+  @ApiProperty({ type: [TierBenefitRequestDto], required: false })
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => TierBenefitRequestDto)
+  benefits?: TierBenefitRequestDto[];
 }

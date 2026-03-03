@@ -21,7 +21,7 @@ export class TierPublicController {
   constructor(
     private readonly tierService: TierService,
     private readonly sqidsService: SqidsService,
-  ) {}
+  ) { }
 
   @Get()
   @Public()
@@ -79,20 +79,24 @@ export class TierPublicController {
       description: translation?.description ?? null,
       imageUrl: tier.imageUrl,
       requirements: {
-        upgradeRolling: formatUsd(tier.upgradeRollingRequiredUsd),
-        upgradeDeposit: formatUsd(tier.upgradeDepositRequiredUsd),
-        maintenance: formatUsd(tier.maintainRollingRequiredUsd),
+        upgradeExp: tier.upgradeExpRequired.toString(),
       },
       benefits: {
         comp: formatRate(tier.compRate),
         weeklyLossback: formatRate(tier.weeklyLossbackRate),
         monthlyLossback: formatRate(tier.monthlyLossbackRate),
-        upgradeBonus: formatUsd(tier.upgradeBonusUsd),
         upgradeBonusWager: tier.upgradeBonusWageringMultiplier.toFixed(0),
         rewardExpiryDays: tier.rewardExpiryDays,
+        currencyBenefits: tier.benefits.map((b) => ({
+          currency: b.currency,
+          upgradeBonus: formatUsd(b.upgradeBonus),
+          birthdayBonus: formatUsd(b.birthdayBonus),
+        })),
       },
       limits: {
         dailyWithdrawal: formatUsd(tier.dailyWithdrawalLimitUsd),
+        weeklyWithdrawal: formatUsd(tier.weeklyWithdrawalLimitUsd),
+        monthlyWithdrawal: formatUsd(tier.monthlyWithdrawalLimitUsd),
         isUnlimited: tier.isWithdrawalUnlimited,
       },
     };

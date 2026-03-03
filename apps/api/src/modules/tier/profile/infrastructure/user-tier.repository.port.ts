@@ -8,6 +8,7 @@ export abstract class UserTierRepositoryPort {
   abstract countGroupByTierAndStatus(): Promise<
     { tierId: bigint; status: UserTierStatus; count: number }[]
   >;
+  abstract incrementExp(userId: bigint, amount: bigint): Promise<UserTier>;
   abstract incrementRolling(
     userId: bigint,
     amountUsd: number,
