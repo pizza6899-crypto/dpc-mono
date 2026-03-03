@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { UserPasswordController } from './presentation/user/user-password.controller';
+import { UserPasswordController } from './controllers/user-password.controller';
 import { ChangePasswordService } from './application/change-password.service';
 import { RequestPasswordResetService } from './application/request-password-reset.service';
 import { ResetPasswordService } from './application/reset-password.service';

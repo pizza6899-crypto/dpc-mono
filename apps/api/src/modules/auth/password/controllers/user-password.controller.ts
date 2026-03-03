@@ -10,7 +10,7 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
     ApiStandardResponse,
     ApiStandardErrors,
-} from '../../../../../common/http/decorators/api-response.decorator';
+} from '../../../../common/http/decorators/api-response.decorator';
 import { Public } from 'src/common/auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
@@ -18,15 +18,15 @@ import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
 import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
-import { ChangePasswordService } from '../../application/change-password.service';
-import { RequestPasswordResetService } from '../../application/request-password-reset.service';
-import { ResetPasswordService } from '../../application/reset-password.service';
-import { ChangePasswordRequestDto } from './dto/request/change-password.request.dto';
-import { ChangePasswordResponseDto } from './dto/response/change-password.response.dto';
-import { RequestPasswordResetRequestDto } from './dto/request/request-password-reset.request.dto';
-import { RequestPasswordResetResponseDto } from './dto/response/request-password-reset.response.dto';
-import { ResetPasswordRequestDto } from './dto/request/reset-password.request.dto';
-import { ResetPasswordResponseDto } from './dto/response/reset-password.response.dto';
+import { ChangePasswordService } from '../application/change-password.service';
+import { RequestPasswordResetService } from '../application/request-password-reset.service';
+import { ResetPasswordService } from '../application/reset-password.service';
+import { ChangePasswordRequestDto } from './dto/change-password.request.dto';
+import { ChangePasswordResponseDto } from './dto/change-password.response.dto';
+import { RequestPasswordResetRequestDto } from './dto/request-password-reset.request.dto';
+import { RequestPasswordResetResponseDto } from './dto/request-password-reset.response.dto';
+import { ResetPasswordRequestDto } from './dto/reset-password.request.dto';
+import { ResetPasswordResponseDto } from './dto/reset-password.response.dto';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 
