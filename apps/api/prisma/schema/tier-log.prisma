@@ -7,19 +7,22 @@ model TierHistory {
     changeType TierChangeType @map("change_type") // UPGRADE, DOWNGRADE, MANUAL, INITIAL
     reason     String?
 
-    // Snapshot data (변경 시점의 데이터 기록)
-    statusRollingUsdSnap    Decimal @default(0) @map("status_rolling_usd_snap") @db.Decimal(32, 18)
-    compRateSnap            Decimal @default(0) @map("comp_rate_snap") @db.Decimal(8, 4)
-    weeklyLossbackRateSnap  Decimal @default(0) @map("weekly_lossback_rate_snap") @db.Decimal(8, 4)
-    monthlyLossbackRateSnap Decimal @default(0) @map("monthly_lossback_rate_snap") @db.Decimal(8, 4)
+    // [Benefit Snapshot] 당시 등급의 핵심 혜택 데이터 기록
+    compRateSnap                       Decimal @default(0) @map("comp_rate_snap") @db.Decimal(8, 4)
+    weeklyLossbackRateSnap             Decimal @default(0) @map("weekly_lossback_rate_snap") @db.Decimal(8, 4)
+    monthlyLossbackRateSnap            Decimal @default(0) @map("monthly_lossback_rate_snap") @db.Decimal(8, 4)
+    upgradeBonusWageringMultiplierSnap Decimal @default(0) @map("upgrade_bonus_wagering_multiplier_snap") @db.Decimal(8, 4) // 승급 보너스 필요 롤링 배수 스냅샷
 
-    lifetimeRollingUsdSnap Decimal @default(0) @map("lifetime_rolling_usd_snap") @db.Decimal(32, 18)
-    lifetimeDepositUsdSnap Decimal @default(0) @map("lifetime_deposit_usd_snap") @db.Decimal(32, 18)
-
-    // [Limit Snapshot] 출금 한도 스냅샷 (USD 기준)
+    // [Limit & Flag Snapshot] 출금 한도 및 특수 기능 스냅샷
     dailyWithdrawalLimitUsdSnap   Decimal @default(0) @map("daily_withdrawal_limit_usd_snap") @db.Decimal(32, 18)
     weeklyWithdrawalLimitUsdSnap  Decimal @default(0) @map("weekly_withdrawal_limit_usd_snap") @db.Decimal(32, 18)
     monthlyWithdrawalLimitUsdSnap Decimal @default(0) @map("monthly_withdrawal_limit_usd_snap") @db.Decimal(32, 18)
+    isWithdrawalUnlimitedSnap     Boolean @default(false) @map("is_withdrawal_unlimited_snap")
+    hasDedicatedManagerSnap       Boolean @default(false) @map("has_dedicated_manager_snap")
+
+    // [Custom Override Status] 변경 시점에 유저별 커스텀 혜택(Custom Rate/Limit)이 적용된 상태였는지 여부
+    // 이 값이 true인 경우, 상단 snap 데이터는 관리자가 지정한 custom 값이 반영된 수치일 수 있음
+    isCustomBenefitAppliedSnap Boolean @default(false) @map("is_custom_benefit_applied_snap")
 
     // [Reward Audit] 보너스 지급 관련
     hasBonusGenerated Boolean              @default(false) @map("has_bonus_generated")

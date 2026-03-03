@@ -137,7 +137,6 @@ model User {
   compDailySettlements   CompDailySettlement[]
   userConfigsUpdated     UserConfig[]            @relation("UserConfigUpdatedBy")
   userExpLogs            UserExpLog[]
-  userStats              UserStats[]
   tierHistoriesChangedBy TierHistory[]           @relation("TierHistoryChangedBy")
 
   @@map("users")

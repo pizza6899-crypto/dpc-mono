@@ -4,19 +4,6 @@ model UserTier {
     tierId BigInt @map("tier_id")
 
     // 상태 데이터
-    // ✅ [Lifetime LTV Metrics] 평생 누적 실적 (USD 환산 기준)
-    lifetimeRollingUsd    Decimal @default(0) @map("lifetime_rolling_usd") @db.Decimal(32, 18)
-    lifetimePayoutUsd     Decimal @default(0) @map("lifetime_payout_usd") @db.Decimal(32, 18)
-    lifetimeGgrUsd        Decimal @default(0) @map("lifetime_ggr_usd") @db.Decimal(32, 18)
-    lifetimeDepositUsd    Decimal @default(0) @map("lifetime_deposit_usd") @db.Decimal(32, 18)
-    lifetimeWithdrawalUsd Decimal @default(0) @map("lifetime_withdrawal_usd") @db.Decimal(32, 18)
-
-    // ✅ [Lifetime Cost Metrics] 평생 지급 혜택 누적
-    lifetimeUpgradeBonusPaidUsd Decimal @default(0) @map("lifetime_upgrade_bonus_paid_usd") @db.Decimal(32, 18)
-    lifetimeCompPaidUsd         Decimal @default(0) @map("lifetime_comp_paid_usd") @db.Decimal(32, 18)
-    lifetimeLossbackPaidUsd     Decimal @default(0) @map("lifetime_lossback_paid_usd") @db.Decimal(32, 18)
-
-    statusRollingUsd Decimal  @default(0) @map("status_rolling_usd") @db.Decimal(32, 18) // (통계용) 현재 등급 누적 롤링액
     lastEvaluationAt DateTime @default(now()) @map("last_evaluation_at")
 
     // 승급/강등 제어

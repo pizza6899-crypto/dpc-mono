@@ -79,21 +79,6 @@ model Tier {
     @@map("tier")
 }
 
-model TierTranslation {
-    id BigInt @id @default(autoincrement())
-
-    tierId      BigInt   @map("tier_id")
-    language    Language
-    name        String // Display name (e.g., "브론즈", "Bronze")
-    description String?  @db.Text // 등급 혜택 상세 설명 (UI 노출용)
-
-    tier Tier @relation(fields: [tierId], references: [id], onDelete: Cascade)
-
-    @@unique([tierId, language])
-    @@index([language])
-    @@map("tier_translation")
-}
-
 model TierBenefit {
     id     BigInt @id @default(autoincrement())
     tierId BigInt @map("tier_id")
@@ -108,6 +93,21 @@ model TierBenefit {
 
     @@unique([tierId, currency])
     @@map("tier_benefits")
+}
+
+model TierTranslation {
+    id BigInt @id @default(autoincrement())
+
+    tierId      BigInt   @map("tier_id")
+    language    Language
+    name        String // Display name (e.g., "브론즈", "Bronze")
+    description String?  @db.Text // 등급 혜택 상세 설명 (UI 노출용)
+
+    tier Tier @relation(fields: [tierId], references: [id], onDelete: Cascade)
+
+    @@unique([tierId, language])
+    @@index([language])
+    @@map("tier_translation")
 }
 
 enum TierEvaluationCycle {
