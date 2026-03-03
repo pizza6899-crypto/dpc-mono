@@ -44,6 +44,7 @@ import { RewardModule } from './modules/reward/reward.module';
 import { UserModule } from './modules/user/user.module';
 import { ModerationModule } from './modules/moderation/moderation.module';
 import { AccessControlModule } from './modules/access-control/access-control.module';
+import { UserAnalyticsModule } from './modules/user-analytics/user-analytics.module';
 
 @Module({
   imports: [
@@ -79,6 +80,7 @@ import { AccessControlModule } from './modules/access-control/access-control.mod
     TierModule,
     RewardModule,
     AccessControlModule,
+    UserAnalyticsModule,
   ],
   providers: [
     Reflector,

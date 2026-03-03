@@ -30,6 +30,9 @@ import type {
 } from '../ports/out/user-wallet-stats.repository.port';
 import { ExchangeRateService } from '../../exchange/application/exchange-rate.service';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+import { USER_ANALYTICS_QUEUES, UserAnalyticsSyncPayload, USER_ANALYTICS_JOBS } from '../../user-analytics/infrastructure/queue/user-analytics.bullmq';
 
 export interface BalanceUpdateContext {
   // Admin Context
@@ -77,6 +80,8 @@ export class UpdateUserBalanceService {
     private readonly statsRepository: UserWalletStatsRepositoryPort,
     private readonly exchangeRateService: ExchangeRateService,
     private readonly snowflakeService: SnowflakeService,
+    @InjectQueue(USER_ANALYTICS_QUEUES.SYNC.name)
+    private readonly analyticsQueue: Queue<UserAnalyticsSyncPayload>,
   ) { }
 
   /**
@@ -209,6 +214,14 @@ export class UpdateUserBalanceService {
     if (statsDto) {
       await this.statsRepository.increaseTotalStats(statsDto);
       await this.statsRepository.updateHourlyStats(statsDto);
+
+      // (New) 비동기 전역 통계(USD) 동기화 작업을 큐에 추가
+      await this.analyticsQueue.add(USER_ANALYTICS_JOBS.SYNC, {
+        userId: userId.toString(),
+        type: transactionType,
+        amountUsd: amountUsd.toString(), // BullMQ 페이로드는 JSON이므로 문자열화
+        timestamp: transaction.createdAt.toISOString(),
+      });
     }
 
     return savedWallet;
