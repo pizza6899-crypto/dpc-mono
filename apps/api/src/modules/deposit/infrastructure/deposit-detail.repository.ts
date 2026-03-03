@@ -29,32 +29,16 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     private readonly mapper: DepositDetailMapper,
   ) { }
 
-  async findById(
-    id: bigint,
-    include?: {
-      bankDepositConfig?: boolean;
-      cryptoDepositConfig?: boolean;
-    },
-  ): Promise<DepositDetail | null> {
+  async findById(id: bigint): Promise<DepositDetail | null> {
     const result = await this.tx.depositDetail.findUnique({
       where: { id },
-      include: {
-        bankDepositConfig: include?.bankDepositConfig ?? false,
-        cryptoDepositConfig: include?.cryptoDepositConfig ?? false,
-      },
     });
 
     return result ? this.mapper.toDomain(result) : null;
   }
 
-  async getById(
-    id: bigint,
-    include?: {
-      bankDepositConfig?: boolean;
-      cryptoDepositConfig?: boolean;
-    },
-  ): Promise<DepositDetail> {
-    const deposit = await this.findById(id, include);
+  async getById(id: bigint): Promise<DepositDetail> {
+    const deposit = await this.findById(id);
     if (!deposit) {
       throw new DepositNotFoundException(id);
     }
@@ -117,10 +101,6 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
         orderBy: {
           [sortBy]: sortOrder,
         },
-        include: {
-          bankDepositConfig: true,
-          cryptoDepositConfig: true,
-        },
       }),
     ]);
 
@@ -171,10 +151,6 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
         skip,
         take,
         orderBy,
-        include: {
-          bankDepositConfig: true,
-          cryptoDepositConfig: true,
-        },
       }),
       this.tx.depositDetail.count({ where }),
     ]);
@@ -191,10 +167,6 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
   async getByIdWithUser(id: bigint): Promise<DepositWithUser> {
     const result = await this.tx.depositDetail.findUnique({
       where: { id },
-      include: {
-        bankDepositConfig: true,
-        cryptoDepositConfig: true,
-      },
     });
 
     if (!result) {
@@ -272,10 +244,6 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
       where: {
         id,
         userId,
-      },
-      include: {
-        bankDepositConfig: true,
-        cryptoDepositConfig: true,
       },
     });
 

@@ -9,11 +9,9 @@ import {
 
 import {
   DEPOSIT_DETAIL_REPOSITORY,
-  CRYPTO_CONFIG_REPOSITORY,
 } from '../ports/out';
 import type {
   DepositDetailRepositoryPort,
-  CryptoConfigRepositoryPort,
 } from '../ports/out';
 import {
   DepositDetail,
@@ -21,7 +19,6 @@ import {
   DepositAmount,
   PendingDepositExistsException,
   InvalidPromotionSelectionException,
-  UnavailableCryptoConfigException,
 } from '../domain';
 import { CheckEligiblePromotionsService } from '../../promotion/application/check-eligible-promotions.service';
 import { PROMOTION_REPOSITORY } from '../../promotion/ports/out';
@@ -44,8 +41,6 @@ export class CreateCryptoDepositService {
   constructor(
     @Inject(DEPOSIT_DETAIL_REPOSITORY)
     private readonly depositRepository: DepositDetailRepositoryPort,
-    @Inject(CRYPTO_CONFIG_REPOSITORY)
-    private readonly cryptoConfigRepository: CryptoConfigRepositoryPort,
     @Inject(PROMOTION_REPOSITORY)
     private readonly promotionRepository: PromotionRepositoryPort,
     private readonly checkEligiblePromotionsService: CheckEligiblePromotionsService,
@@ -109,17 +104,6 @@ export class CreateCryptoDepositService {
       promotionId = promotion.id;
     }
 
-    // 2. 암호화폐 설정 조회 및 검증
-    const cryptoConfig =
-      await this.cryptoConfigRepository.findBySymbolAndNetwork(
-        payCurrency,
-        payNetwork,
-      );
-
-    if (!cryptoConfig || !cryptoConfig.isActive) {
-      throw new UnavailableCryptoConfigException(payCurrency, payNetwork);
-    }
-
     // TODO: 주소 생성 로직 (Wallet Module 연동 필요)
     const walletAddress: string | undefined = undefined;
 
@@ -142,7 +126,6 @@ export class CreateCryptoDepositService {
       depositCurrency: payCurrency as ExchangeCurrencyCode,
       method: depositMethod,
       amount: depositAmount,
-      cryptoConfigId: cryptoConfig.id,
       promotionId,
       walletAddress,
       depositNetwork: payNetwork,

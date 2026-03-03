@@ -35,8 +35,6 @@ export class DepositDetail {
     public readonly depositorName: string | null,
     public readonly providerPaymentId: string | null,
     private _transactionHash: string | null,
-    public readonly bankConfigId: bigint | null,
-    public readonly cryptoConfigId: bigint | null,
     public readonly promotionId: bigint | null,
     private _processedBy: bigint | null,
     private _adminNote: string | null,
@@ -48,7 +46,6 @@ export class DepositDetail {
     private _updatedAt: Date,
     private _confirmedAt: Date | null,
     private _failedAt: Date | null,
-    private _bankName: string | null = null,
   ) { }
 
   /**
@@ -59,8 +56,6 @@ export class DepositDetail {
     depositCurrency: ExchangeCurrencyCode;
     method: DepositMethod;
     amount: DepositAmount;
-    bankConfigId?: bigint | null;
-    cryptoConfigId?: bigint | null;
     promotionId?: bigint | null;
     walletAddress?: string | null;
     walletAddressExtraId?: string | null;
@@ -85,8 +80,6 @@ export class DepositDetail {
       params.depositorName ?? null,
       params.providerPaymentId ?? null,
       null,
-      params.bankConfigId ?? null,
-      params.cryptoConfigId ?? null,
       params.promotionId ?? null,
       null,
       null,
@@ -96,7 +89,6 @@ export class DepositDetail {
       params.providerMetadata ?? null,
       new Date(),
       new Date(),
-      null,
       null,
       null,
     );
@@ -124,8 +116,6 @@ export class DepositDetail {
     depositorName: string | null;
     providerPaymentId: string | null;
     transactionHash: string | null;
-    bankConfigId: bigint | null;
-    cryptoConfigId: bigint | null;
     promotionId: bigint | null;
     processedBy: bigint | null;
     adminNote: string | null;
@@ -137,7 +127,6 @@ export class DepositDetail {
     updatedAt: Date;
     confirmedAt: Date | null;
     failedAt: Date | null;
-    bankName?: string | null;
   }): DepositDetail {
     return new DepositDetail(
       data.id,
@@ -162,8 +151,6 @@ export class DepositDetail {
       data.depositorName,
       data.providerPaymentId,
       data.transactionHash,
-      data.bankConfigId,
-      data.cryptoConfigId,
       data.promotionId,
       data.processedBy,
       data.adminNote,
@@ -175,7 +162,6 @@ export class DepositDetail {
       data.updatedAt,
       data.confirmedAt,
       data.failedAt,
-      data.bankName ?? null,
     );
   }
 
@@ -201,8 +187,6 @@ export class DepositDetail {
     depositorName: string | null;
     providerPaymentId: string | null;
     transactionHash: string | null;
-    bankConfigId: bigint | null;
-    cryptoConfigId: bigint | null;
     promotionId: bigint | null;
     processedBy: bigint | null;
     adminNote: string | null;
@@ -237,8 +221,6 @@ export class DepositDetail {
       depositorName: this.depositorName,
       providerPaymentId: this.providerPaymentId,
       transactionHash: this._transactionHash,
-      bankConfigId: this.bankConfigId,
-      cryptoConfigId: this.cryptoConfigId,
       promotionId: this.promotionId,
       processedBy: this._processedBy,
       adminNote: this._adminNote,
@@ -382,12 +364,6 @@ export class DepositDetail {
     return this._failedAt;
   }
 
-  /**
-   * 은행명 (관계형 데이터에서 로드된 경우)
-   */
-  get bankName(): string | null {
-    return this._bankName;
-  }
 
   /**
    * 입금 승인 처리

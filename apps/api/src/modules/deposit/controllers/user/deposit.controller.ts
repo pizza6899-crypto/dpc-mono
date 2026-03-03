@@ -252,9 +252,6 @@ export class DepositController {
     return {
       id: this.sqidsService.encode(result.deposit.id!, SqidsPrefix.DEPOSIT),
       payCurrency: result.deposit.depositCurrency,
-      bankName: result.selectedBank.bankName,
-      accountNumber: result.selectedBank.accountNumber,
-      accountHolder: result.selectedBank.accountHolder,
       transactionId: result.deposit.transactionId?.toString(),
       isDuplicate: false,
     };
@@ -312,7 +309,6 @@ export class DepositController {
       depositCurrency: deposit.depositCurrency,
       walletAddress: deposit.walletAddress,
       depositNetwork: deposit.depositNetwork,
-      bankName: deposit.bankName ?? null,
       createdAt: deposit.createdAt,
       confirmedAt: deposit.confirmedAt ?? null,
       failedAt: deposit.failedAt ?? null,

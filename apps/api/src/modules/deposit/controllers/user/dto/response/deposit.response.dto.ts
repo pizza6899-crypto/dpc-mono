@@ -163,8 +163,6 @@ export class UserDepositResponseDto {
   })
   walletAddress: string | null;
 
-  @ApiProperty({ description: 'Bank name (for bank transfer)', nullable: true })
-  bankName: string | null;
 
   @ApiProperty({ description: 'Created at' })
   createdAt: Date;

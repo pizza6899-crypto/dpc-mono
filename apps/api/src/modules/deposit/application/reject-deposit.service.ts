@@ -23,7 +23,7 @@ export class RejectDepositService {
     @Inject(DEPOSIT_DETAIL_REPOSITORY)
     private readonly depositRepository: DepositDetailRepositoryPort,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(params: RejectDepositParams): Promise<RejectDepositResult> {
@@ -39,10 +39,7 @@ export class RejectDepositService {
     );
 
     // 1. DepositDetail 조회
-    const deposit = await this.depositRepository.getById(id, {
-      bankDepositConfig: true,
-      cryptoDepositConfig: true,
-    });
+    const deposit = await this.depositRepository.getById(id);
 
     // 2. 엔티티 비즈니스 로직 실행 (거부 처리)
     deposit.reject(failureReason, adminId);

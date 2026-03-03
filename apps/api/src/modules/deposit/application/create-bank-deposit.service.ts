@@ -9,11 +9,9 @@ import {
 
 import {
   DEPOSIT_DETAIL_REPOSITORY,
-  BANK_CONFIG_REPOSITORY,
 } from '../ports/out';
 import type {
   DepositDetailRepositoryPort,
-  BankConfigRepositoryPort,
 } from '../ports/out';
 import {
   DepositDetail,
@@ -21,9 +19,6 @@ import {
   DepositAmount,
   PendingDepositExistsException,
   InvalidPromotionSelectionException,
-  NoActiveBankConfigException,
-  InvalidDepositAmountException,
-  BankConfig,
 } from '../domain';
 import { CheckEligiblePromotionsService } from '../../promotion/application/check-eligible-promotions.service';
 import { PROMOTION_REPOSITORY } from '../../promotion/ports/out';
@@ -43,7 +38,6 @@ interface CreateBankDepositParams {
 
 interface CreateBankDepositResult {
   deposit: DepositDetail;
-  selectedBank: BankConfig;
 }
 
 @Injectable()
@@ -51,8 +45,6 @@ export class CreateBankDepositService {
   constructor(
     @Inject(DEPOSIT_DETAIL_REPOSITORY)
     private readonly depositRepository: DepositDetailRepositoryPort,
-    @Inject(BANK_CONFIG_REPOSITORY)
-    private readonly bankConfigRepository: BankConfigRepositoryPort,
     @Inject(PROMOTION_REPOSITORY)
     private readonly promotionRepository: PromotionRepositoryPort,
     private readonly promotionsService: CheckEligiblePromotionsService,
@@ -115,25 +107,7 @@ export class CreateBankDepositService {
       promotionId = promotion.id;
     }
 
-    // 2. 활성화된 은행 계좌 조회
-    const activeBanks = await this.bankConfigRepository.listActive(
-      payCurrency as ExchangeCurrencyCode,
-    );
-
-    if (activeBanks.length === 0) {
-      throw new NoActiveBankConfigException(payCurrency);
-    }
-
-    // 로드 밸런싱/우선순위 로직 (여기선 단순 첫 번째 선택)
-    const selectedBank = activeBanks[0];
     const decimalAmount = new Prisma.Decimal(amount);
-
-    if (!selectedBank.isAmountValid(decimalAmount)) {
-      throw new InvalidDepositAmountException(
-        amount,
-        `Must be between ${selectedBank.minAmount} and ${selectedBank.maxAmount ?? 'unlimited'}`,
-      );
-    }
 
     // 2. DepositMethod 생성
     const depositMethod = DepositMethod.create(
@@ -152,7 +126,6 @@ export class CreateBankDepositService {
       depositCurrency: payCurrency as ExchangeCurrencyCode,
       method: depositMethod,
       amount: depositAmount,
-      bankConfigId: selectedBank.id!,
       promotionId,
       depositorName,
       ipAddress,
@@ -165,7 +138,6 @@ export class CreateBankDepositService {
     // 6. 도메인 엔티티 반환
     return {
       deposit: savedDeposit,
-      selectedBank,
     };
   }
 }

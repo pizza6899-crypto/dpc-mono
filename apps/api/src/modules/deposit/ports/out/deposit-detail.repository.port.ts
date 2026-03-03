@@ -35,14 +35,8 @@ export interface DepositWithUser {
 }
 
 export interface DepositDetailRepositoryPort {
-  findById(
-    id: bigint,
-    include?: { bankDepositConfig?: boolean; cryptoDepositConfig?: boolean },
-  ): Promise<DepositDetail | null>;
-  getById(
-    id: bigint,
-    include?: { bankDepositConfig?: boolean; cryptoDepositConfig?: boolean },
-  ): Promise<DepositDetail>;
+  findById(id: bigint): Promise<DepositDetail | null>;
+  getById(id: bigint): Promise<DepositDetail>;
   update(deposit: DepositDetail): Promise<DepositDetail>;
   create(deposit: DepositDetail): Promise<DepositDetail>;
   // User queries
