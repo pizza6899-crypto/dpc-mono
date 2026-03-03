@@ -33,7 +33,7 @@ export class UserTierController {
     private readonly getUserTierHistoryService: GetUserTierHistoryService,
     private readonly tierRepository: TierRepositoryPort,
     private readonly sqidsService: SqidsService,
-  ) {}
+  ) { }
 
   @Get('my')
   @ApiOperation({
@@ -78,27 +78,23 @@ export class UserTierController {
           myTierResult.benefits.monthlyLossbackRate.toFixed(4),
         dailyWithdrawalLimitUsd:
           myTierResult.benefits.dailyWithdrawalLimitUsd.toFixed(2),
+        weeklyWithdrawalLimitUsd:
+          myTierResult.benefits.weeklyWithdrawalLimitUsd.toFixed(2),
+        monthlyWithdrawalLimitUsd:
+          myTierResult.benefits.monthlyWithdrawalLimitUsd.toFixed(2),
         isWithdrawalUnlimited: myTierResult.benefits.isWithdrawalUnlimited,
         hasDedicatedManager: myTierResult.benefits.hasDedicatedManager,
       },
       nextTierProgress: progressResult
         ? {
-            id: this.sqidsService.encode(progressResult.id, SqidsPrefix.TIER),
-            name: progressResult.name,
-            imageUrl: progressResult.imageUrl,
-            requiredRolling: progressResult.requiredRolling.toFixed(2),
-            currentRolling: progressResult.currentRolling.toFixed(2),
-            remainingRolling: progressResult.remainingRolling.toFixed(2),
-            rollingProgressPercent: Number(
-              progressResult.rollingProgressPercent.toFixed(2),
-            ),
-            requiredDeposit: progressResult.requiredDeposit.toFixed(2),
-            currentDeposit: progressResult.currentDeposit.toFixed(2),
-            remainingDeposit: progressResult.remainingDeposit.toFixed(2),
-            depositProgressPercent: Number(
-              progressResult.depositProgressPercent.toFixed(2),
-            ),
-          }
+          id: this.sqidsService.encode(progressResult.id, SqidsPrefix.TIER),
+          name: progressResult.name,
+          imageUrl: progressResult.imageUrl,
+          requiredExp: progressResult.requiredExp.toString(),
+          currentExp: progressResult.currentExp.toString(),
+          remainingExp: progressResult.remainingExp.toString(),
+          progressPercent: Number(progressResult.progressPercent.toFixed(2)),
+        }
         : null,
     };
   }

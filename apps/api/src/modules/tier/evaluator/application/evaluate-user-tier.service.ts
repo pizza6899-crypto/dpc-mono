@@ -3,6 +3,7 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.repository.port';
 import { DemotionPolicy } from '../domain/demotion.policy';
 import { DemoteUserTierService } from './demote-user-tier.service';
+import { TierStatsService } from '../../audit/application/tier-stats.service';
 import { Tier } from '../../config/domain/tier.entity';
 import { TierEvaluationCycle } from '@prisma/client';
 import { TierConfigRepositoryPort } from '../../config/infrastructure/tier-config.repository.port';
@@ -17,8 +18,9 @@ export class EvaluateUserTierService {
     private readonly tierConfigRepository: TierConfigRepositoryPort,
     private readonly demotionPolicy: DemotionPolicy,
     private readonly demoteUserTierService: DemoteUserTierService,
+    private readonly tierStatsService: TierStatsService,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) {}
+  ) { }
 
   @Transactional()
   async evaluateUser(userId: bigint, allTiers: Tier[]): Promise<void> {
@@ -55,6 +57,11 @@ export class EvaluateUserTierService {
         const maintainDays = this.getCycleDays(userTier.tier.evaluationCycle);
         userTier.resetPeriodPerformance(maintainDays);
         await this.userTierRepository.save(userTier);
+
+        // [추가] 통계 누적: 유지 인원
+        await this.tierStatsService.increment(new Date(), userTier.tierId, {
+          maintainedCount: 1,
+        });
         break;
       case 'GRACE':
         if (result.targetTier) {
@@ -64,6 +71,11 @@ export class EvaluateUserTierService {
           );
         }
         await this.userTierRepository.save(userTier);
+
+        // [추가] 통계 누적: 유예 대상 인원
+        await this.tierStatsService.increment(new Date(), userTier.tierId, {
+          graceCount: 1,
+        });
         break;
       case 'DEMOTE':
         const demotedDays = this.getCycleDays(

@@ -8,7 +8,7 @@ import { RecordTierSnapshotJobData } from '../infrastructure/tier-audit.types';
 
 @Injectable()
 export class HandleTierStatsService {
-  constructor(private readonly auditRepository: TierAuditRepositoryPort) {}
+  constructor(private readonly auditRepository: TierAuditRepositoryPort) { }
 
   /**
    * BullMQ 프로세서에서 호출하는 실제 통계 저장 로직입니다.
@@ -22,14 +22,14 @@ export class HandleTierStatsService {
 
     const normalizedMetrics: UpdateTierStatsProps = {
       ...metrics,
-      periodBonusPaidUsd: metrics.periodBonusPaidUsd
-        ? new Prisma.Decimal(metrics.periodBonusPaidUsd)
+      periodExpGranted: metrics.periodExpGranted
+        ? BigInt(metrics.periodExpGranted)
         : undefined,
-      periodRollingUsd: metrics.periodRollingUsd
-        ? new Prisma.Decimal(metrics.periodRollingUsd)
+      periodTotalRollingUsd: metrics.periodTotalRollingUsd
+        ? new Prisma.Decimal(metrics.periodTotalRollingUsd)
         : undefined,
-      periodDepositUsd: metrics.periodDepositUsd
-        ? new Prisma.Decimal(metrics.periodDepositUsd)
+      periodRewardClaimedUsd: metrics.periodRewardClaimedUsd
+        ? new Prisma.Decimal(metrics.periodRewardClaimedUsd)
         : undefined,
     };
 
@@ -50,14 +50,14 @@ export class HandleTierStatsService {
 
     const normalizedMetrics: Partial<UpdateTierStatsProps> = {
       ...metrics,
-      periodBonusPaidUsd: metrics.periodBonusPaidUsd
-        ? new Prisma.Decimal(metrics.periodBonusPaidUsd)
+      periodExpGranted: metrics.periodExpGranted
+        ? BigInt(metrics.periodExpGranted)
         : undefined,
-      periodRollingUsd: metrics.periodRollingUsd
-        ? new Prisma.Decimal(metrics.periodRollingUsd)
+      periodTotalRollingUsd: metrics.periodTotalRollingUsd
+        ? new Prisma.Decimal(metrics.periodTotalRollingUsd)
         : undefined,
-      periodDepositUsd: metrics.periodDepositUsd
-        ? new Prisma.Decimal(metrics.periodDepositUsd)
+      periodRewardClaimedUsd: metrics.periodRewardClaimedUsd
+        ? new Prisma.Decimal(metrics.periodRewardClaimedUsd)
         : undefined,
     };
 

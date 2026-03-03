@@ -3,17 +3,9 @@ import { Type } from 'class-transformer';
 import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class TierPublicRequirementDto {
-  @ApiProperty()
+  @ApiProperty({ description: 'Required XP for upgrade' })
   @IsString()
-  upgradeRolling: string;
-
-  @ApiProperty()
-  @IsString()
-  upgradeDeposit: string;
-
-  @ApiProperty()
-  @IsString()
-  maintenance: string;
+  upgradeExp: string;
 }
 
 export class TierPublicBenefitsDto {
@@ -31,10 +23,6 @@ export class TierPublicBenefitsDto {
 
   @ApiProperty()
   @IsString()
-  upgradeBonus: string;
-
-  @ApiProperty()
-  @IsString()
   upgradeBonusWager: string;
 
   @ApiProperty({ type: Number, nullable: true })
@@ -46,6 +34,14 @@ export class TierPublicLimitsDto {
   @ApiProperty()
   @IsString()
   dailyWithdrawal: string;
+
+  @ApiProperty()
+  @IsString()
+  weeklyWithdrawal: string;
+
+  @ApiProperty()
+  @IsString()
+  monthlyWithdrawal: string;
 
   @ApiProperty()
   @IsBoolean()

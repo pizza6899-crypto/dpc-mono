@@ -20,28 +20,16 @@ export class TierAdminResponseDto {
   code: string;
 
   @ApiProperty({ type: String })
-  upgradeRollingRequiredUsd: string;
-
-  @ApiProperty({ type: String })
-  upgradeDepositRequiredUsd: string;
-
-  @ApiProperty({ type: String })
-  maintainRollingRequiredUsd: string;
+  upgradeExpRequired: string;
 
   @ApiProperty({ enum: TierEvaluationCycle })
   evaluationCycle: TierEvaluationCycle;
-
-  @ApiProperty({ type: String })
-  upgradeBonusUsd: string;
 
   @ApiProperty({ type: String })
   upgradeBonusWageringMultiplier: string;
 
   @ApiProperty({ type: Number, nullable: true })
   rewardExpiryDays: number | null;
-
-  @ApiProperty()
-  isImmediateBonusEnabled: boolean;
 
   @ApiProperty({ type: String })
   compRate: string;
@@ -54,6 +42,12 @@ export class TierAdminResponseDto {
 
   @ApiProperty({ type: String })
   dailyWithdrawalLimitUsd: string;
+
+  @ApiProperty({ type: String })
+  weeklyWithdrawalLimitUsd: string;
+
+  @ApiProperty({ type: String })
+  monthlyWithdrawalLimitUsd: string;
 
   @ApiProperty()
   isWithdrawalUnlimited: boolean;

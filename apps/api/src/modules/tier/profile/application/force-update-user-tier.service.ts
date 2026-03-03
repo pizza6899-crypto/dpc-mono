@@ -66,16 +66,18 @@ export class ForceUpdateUserTierService {
         (t) => t.level > previousHighestLevel && t.level <= targetTier.level,
       );
 
-      earnedBonusAmount = eligibleTiers.reduce(
-        (sum, t) => sum.add(t.upgradeBonusUsd),
-        new Prisma.Decimal(0),
-      );
+      const rewardCurrency = userTier.preferredRewardCurrency || 'USD';
+      earnedBonusAmount = eligibleTiers.reduce((sum, t) => {
+        const benefit = t.getBenefitByCurrency(rewardCurrency);
+        return sum.add(benefit?.upgradeBonus ?? 0);
+      }, new Prisma.Decimal(0));
 
       if (earnedBonusAmount.gt(0)) {
         const config = await this.tierConfigRepository.find();
 
         if (config?.isBonusEnabled !== false) {
-          const expiryDays = targetTier.rewardExpiryDays ?? config?.defaultRewardExpiryDays;
+          const expiryDays =
+            targetTier.rewardExpiryDays ?? config?.defaultRewardExpiryDays;
           let expiresAt: Date | undefined;
 
           if (expiryDays && expiryDays > 0) {
@@ -88,7 +90,7 @@ export class ForceUpdateUserTierService {
             sourceType: RewardSourceType.TIER_REWARD,
             sourceId: targetTier.id,
             rewardType: RewardItemType.BONUS_MONEY,
-            currency: userTier.preferredRewardCurrency || 'USD',
+            currency: rewardCurrency,
             amount: earnedBonusAmount,
             wageringTargetType: WageringTargetType.AMOUNT,
             wageringMultiplier: targetTier.upgradeBonusWageringMultiplier,
@@ -96,54 +98,72 @@ export class ForceUpdateUserTierService {
             metadata: undefined,
           });
 
-          if (targetTier.isImmediateBonusEnabled) {
-            if (userTier.preferredRewardCurrency) {
-              await this.claimRewardService.execute({
-                userId,
-                rewardId: reward.id,
-              });
-              this.logger.log(`[ForceUpdate:Auto-Payout] User ${userId} received ${earnedBonusAmount} USD bonus.`);
-              bonusClaimedAt = new Date();
-            } else {
-              this.logger.log(`[ForceUpdate:Auto-Wait] User ${userId} has no preferred currency. Waiting for manual claim.`);
-            }
-          } else {
-            this.logger.log(`[ForceUpdate:Claim-Wait] User ${userId} earned ${earnedBonusAmount} USD bonus. Waiting for manual claim.`);
-          }
+          this.logger.log(
+            `[ForceUpdate:Reward-Granted] User ${userId} earned ${earnedBonusAmount} ${rewardCurrency} bonus. RewardId: ${reward.id}`,
+          );
         } else {
           skippedReason = 'GLOBAL_BONUS_DISABLED';
-          this.logger.debug(`Bonus disabled globally. Skipping payout for ForceUpdate of user ${userId}.`);
+          this.logger.debug(
+            `Bonus disabled globally. Skipping payout for ForceUpdate of user ${userId}.`,
+          );
         }
       }
     }
 
     await this.userTierRepository.save(userTier);
 
+    const benefits = userTier.getEffectiveBenefits(targetTier);
     await this.recordTierHistoryService.execute({
       userId,
       fromTierId: oldTierId,
       toTierId: targetTierId,
       changeType: TierChangeType.MANUAL_UPDATE,
       reason: `Admin Force Update: ${reason}`,
-      statusRollingUsdSnap: userTier.statusRollingUsd,
-      currentPeriodDepositUsdSnap: userTier.currentPeriodDepositUsd,
-      compRateSnap: userTier.customCompRate ?? targetTier.compRate,
-      weeklyLossbackRateSnap: userTier.customWeeklyLossbackRate ?? targetTier.weeklyLossbackRate,
-      monthlyLossbackRateSnap: userTier.customMonthlyLossbackRate ?? targetTier.monthlyLossbackRate,
-      upgradeRollingRequiredUsdSnap: targetTier.upgradeRollingRequiredUsd,
-      upgradeDepositRequiredUsdSnap: targetTier.upgradeDepositRequiredUsd,
-      lifetimeRollingUsdSnap: userTier.lifetimeRollingUsd,
-      lifetimeDepositUsdSnap: userTier.lifetimeDepositUsd,
+
+      // Benefit Snapshot
+      compRateSnap: benefits.compRate,
+      weeklyLossbackRateSnap: benefits.weeklyLossbackRate,
+      monthlyLossbackRateSnap: benefits.monthlyLossbackRate,
+      upgradeBonusWageringMultiplierSnap: targetTier.upgradeBonusWageringMultiplier,
+
+      // Limit & Flag Snapshot
+      dailyWithdrawalLimitUsdSnap: benefits.dailyWithdrawalLimitUsd,
+      weeklyWithdrawalLimitUsdSnap: benefits.weeklyWithdrawalLimitUsd,
+      monthlyWithdrawalLimitUsdSnap: benefits.monthlyWithdrawalLimitUsd,
+      isWithdrawalUnlimitedSnap: benefits.isWithdrawalUnlimited,
+      hasDedicatedManagerSnap: benefits.hasDedicatedManager,
+
+      // Custom Override Status
+      isCustomBenefitAppliedSnap: !!(
+        userTier.customCompRate ||
+        userTier.customWeeklyLossbackRate ||
+        userTier.customMonthlyLossbackRate ||
+        userTier.customDailyWithdrawalLimitUsd ||
+        userTier.customWeeklyWithdrawalLimitUsd ||
+        userTier.customMonthlyWithdrawalLimitUsd ||
+        userTier.isCustomWithdrawalUnlimited !== null ||
+        userTier.isCustomDedicatedManager !== null
+      ),
+
+      // Reward Audit
       hasBonusGenerated: earnedBonusAmount.gt(0) && !skippedReason,
-      bonusAmountUsdSnap: earnedBonusAmount,
+      currency: userTier.preferredRewardCurrency || 'USD',
+      upgradeBonusSnap: earnedBonusAmount,
       skippedReason,
+
+      // XP Snapshot
+      statusExpSnap: userTier.statusExp,
     });
 
     // 만약 보너스가 발급되었다면 통계 갱신
-    if (isGrantBonus && isEligibleForPromotionBonus && targetTier.level > previousHighestLevel) {
+    if (
+      isGrantBonus &&
+      isEligibleForPromotionBonus &&
+      targetTier.level > previousHighestLevel
+    ) {
       await this.tierStatsService.increment(new Date(), targetTier.id, {
         upgradedCount: 1,
-        periodBonusPaidUsd: bonusClaimedAt ? earnedBonusAmount : undefined,
+        periodRewardClaimedUsd: bonusClaimedAt ? earnedBonusAmount : undefined,
       });
     }
 

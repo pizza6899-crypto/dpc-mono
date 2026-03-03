@@ -19,6 +19,8 @@ export interface MyTierResult {
     weeklyLossbackRate: Prisma.Decimal;
     monthlyLossbackRate: Prisma.Decimal;
     dailyWithdrawalLimitUsd: Prisma.Decimal;
+    weeklyWithdrawalLimitUsd: Prisma.Decimal;
+    monthlyWithdrawalLimitUsd: Prisma.Decimal;
     isWithdrawalUnlimited: boolean;
     hasDedicatedManager: boolean;
   };
@@ -26,7 +28,7 @@ export interface MyTierResult {
 
 @Injectable()
 export class GetMyTierService {
-  constructor(private readonly userTierRepository: UserTierRepositoryPort) {}
+  constructor(private readonly userTierRepository: UserTierRepositoryPort) { }
 
   /**
    * 유저 아이디로 유저 티어 엔티티를 조회합니다. (Join 포함)
@@ -61,6 +63,8 @@ export class GetMyTierService {
         weeklyLossbackRate: benefits.weeklyLossbackRate,
         monthlyLossbackRate: benefits.monthlyLossbackRate,
         dailyWithdrawalLimitUsd: benefits.dailyWithdrawalLimitUsd,
+        weeklyWithdrawalLimitUsd: benefits.weeklyWithdrawalLimitUsd,
+        monthlyWithdrawalLimitUsd: benefits.monthlyWithdrawalLimitUsd,
         isWithdrawalUnlimited: benefits.isWithdrawalUnlimited,
         hasDedicatedManager: benefits.hasDedicatedManager,
       },

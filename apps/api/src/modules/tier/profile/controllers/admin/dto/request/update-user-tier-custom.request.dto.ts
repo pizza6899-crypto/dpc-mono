@@ -16,7 +16,7 @@ export class UpdateUserTierCustomRequestDto {
   @IsOptional()
   @IsNumber()
   @Min(0)
-  customCompRate?: number;
+  customCompRate?: number | null;
 
   @ApiProperty({
     nullable: true,
@@ -27,7 +27,7 @@ export class UpdateUserTierCustomRequestDto {
   @IsOptional()
   @IsNumber()
   @Min(0)
-  customWeeklyLossbackRate?: number;
+  customWeeklyLossbackRate?: number | null;
 
   @ApiProperty({
     nullable: true,
@@ -38,7 +38,7 @@ export class UpdateUserTierCustomRequestDto {
   @IsOptional()
   @IsNumber()
   @Min(0)
-  customMonthlyLossbackRate?: number;
+  customMonthlyLossbackRate?: number | null;
 
   @ApiProperty({
     nullable: true,
@@ -49,7 +49,29 @@ export class UpdateUserTierCustomRequestDto {
   @IsOptional()
   @IsNumber()
   @Min(0)
-  customWithdrawalLimitUsd?: number;
+  customDailyWithdrawalLimitUsd?: number | null;
+
+  @ApiProperty({
+    nullable: true,
+    required: false,
+    description:
+      'Custom weekly withdrawal limit (USD) / 커스텀 주간 출금 한도 (USD)',
+  })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  customWeeklyWithdrawalLimitUsd?: number | null;
+
+  @ApiProperty({
+    nullable: true,
+    required: false,
+    description:
+      'Custom monthly withdrawal limit (USD) / 커스텀 월간 출금 한도 (USD)',
+  })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  customMonthlyWithdrawalLimitUsd?: number | null;
 
   @ApiProperty({
     nullable: true,

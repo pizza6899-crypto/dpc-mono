@@ -10,11 +10,8 @@ export interface UserTierDetailResult {
   tierName: string;
   tierCode: string;
   level: number;
-  lifetimeRollingUsd: string;
-  statusRollingUsd: string;
-  currentPeriodRollingUsd: string;
-  lifetimeDepositUsd: string;
-  currentPeriodDepositUsd: string;
+  statusExp: string;
+  lifetimeExp: string;
   lastEvaluationAt: Date;
   maxLevelAchieved: number;
   lastBonusReceivedAt: Date | null;
@@ -24,7 +21,9 @@ export interface UserTierDetailResult {
   customCompRate: string | null;
   customWeeklyLossbackRate: string | null;
   customMonthlyLossbackRate: string | null;
-  customWithdrawalLimitUsd: string | null;
+  customDailyWithdrawalLimitUsd: string | null;
+  customWeeklyWithdrawalLimitUsd: string | null;
+  customMonthlyWithdrawalLimitUsd: string | null;
   isCustomWithdrawalUnlimited: boolean | null;
   isCustomDedicatedManager: boolean | null;
   isBonusEligible: boolean;
@@ -38,6 +37,8 @@ export interface UserTierDetailResult {
     weeklyLossbackRate: string;
     monthlyLossbackRate: string;
     dailyWithdrawalLimitUsd: string;
+    weeklyWithdrawalLimitUsd: string;
+    monthlyWithdrawalLimitUsd: string;
     isWithdrawalUnlimited: boolean;
     hasDedicatedManager: boolean;
   };
@@ -45,7 +46,7 @@ export interface UserTierDetailResult {
 
 @Injectable()
 export class GetUserTierDetailService {
-  constructor(private readonly userTierRepository: UserTierRepositoryPort) {}
+  constructor(private readonly userTierRepository: UserTierRepositoryPort) { }
 
   async execute(userId: bigint): Promise<UserTierDetailResult> {
     const userTier = await this.userTierRepository.findByUserId(userId);
@@ -62,11 +63,8 @@ export class GetUserTierDetailService {
       tierName: userTier.tier.getName(),
       tierCode: userTier.tier.code,
       level: userTier.currentLevel,
-      lifetimeRollingUsd: userTier.lifetimeRollingUsd.toString(),
-      statusRollingUsd: userTier.statusRollingUsd.toString(),
-      currentPeriodRollingUsd: userTier.currentPeriodRollingUsd.toString(),
-      lifetimeDepositUsd: userTier.lifetimeDepositUsd.toString(),
-      currentPeriodDepositUsd: userTier.currentPeriodDepositUsd.toString(),
+      statusExp: userTier.statusExp.toString(),
+      lifetimeExp: userTier.lifetimeExp.toString(),
       lastEvaluationAt: userTier.lastEvaluationAt,
       maxLevelAchieved: userTier.maxLevelAchieved,
       lastBonusReceivedAt: userTier.lastBonusReceivedAt,
@@ -78,8 +76,12 @@ export class GetUserTierDetailService {
         userTier.customWeeklyLossbackRate?.toString() ?? null,
       customMonthlyLossbackRate:
         userTier.customMonthlyLossbackRate?.toString() ?? null,
-      customWithdrawalLimitUsd:
-        userTier.customWithdrawalLimitUsd?.toString() ?? null,
+      customDailyWithdrawalLimitUsd:
+        userTier.customDailyWithdrawalLimitUsd?.toString() ?? null,
+      customWeeklyWithdrawalLimitUsd:
+        userTier.customWeeklyWithdrawalLimitUsd?.toString() ?? null,
+      customMonthlyWithdrawalLimitUsd:
+        userTier.customMonthlyWithdrawalLimitUsd?.toString() ?? null,
       isCustomWithdrawalUnlimited: userTier.isCustomWithdrawalUnlimited,
       isCustomDedicatedManager: userTier.isCustomDedicatedManager,
       isBonusEligible: userTier.isBonusEligible,
@@ -95,6 +97,9 @@ export class GetUserTierDetailService {
         weeklyLossbackRate: benefits.weeklyLossbackRate.toString(),
         monthlyLossbackRate: benefits.monthlyLossbackRate.toString(),
         dailyWithdrawalLimitUsd: benefits.dailyWithdrawalLimitUsd.toString(),
+        weeklyWithdrawalLimitUsd: benefits.weeklyWithdrawalLimitUsd.toString(),
+        monthlyWithdrawalLimitUsd:
+          benefits.monthlyWithdrawalLimitUsd.toString(),
         isWithdrawalUnlimited: benefits.isWithdrawalUnlimited,
         hasDedicatedManager: benefits.hasDedicatedManager,
       },

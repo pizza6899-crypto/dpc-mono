@@ -7,7 +7,7 @@ import {
   Put,
   Req,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserRoleType } from '@prisma/client';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
@@ -27,8 +27,9 @@ import { TierConfig } from '../../domain/tier-config.entity';
 @ApiTags('Admin Tier Config')
 @ApiStandardErrors()
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
+@ApiCookieAuth()
 export class TierConfigAdminController {
-  constructor(private readonly tierConfigService: TierConfigService) {}
+  constructor(private readonly tierConfigService: TierConfigService) { }
 
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -87,6 +88,7 @@ export class TierConfigAdminController {
       isBonusEnabled: config.isBonusEnabled,
       defaultDowngradeGracePeriodDays: config.defaultDowngradeGracePeriodDays,
       defaultRewardExpiryDays: config.defaultRewardExpiryDays,
+      expGrantRollingUsd: config.expGrantRollingUsd.toString(),
       updatedAt: config.updatedAt,
       updatedBy: config.updatedBy?.toString() ?? null,
     };

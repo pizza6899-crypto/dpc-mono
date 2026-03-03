@@ -6,6 +6,7 @@ import {
   TierAuditRepositoryPort,
   CreateTierHistoryProps,
   UpdateTierStatsProps,
+  CreateUserExpLogProps,
 } from './tier-audit.repository.port';
 import { TierHistory } from '../domain/tier-history.entity';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
@@ -15,14 +16,13 @@ export class TierAuditRepository implements TierAuditRepositoryPort {
   constructor(
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
-  ) {}
+  ) { }
 
   // --- History ---
   async saveHistory(props: CreateTierHistoryProps): Promise<TierHistory> {
     const record = await this.tx.tierHistory.create({
       data: {
         ...props,
-        changeBy: props.changeBy || 'SYSTEM',
       },
     });
     return TierHistory.fromPersistence(record);
@@ -79,15 +79,15 @@ export class TierAuditRepository implements TierAuditRepositoryPort {
   ): Promise<void> {
     await this.tx.tierStats.upsert({
       where: { timestamp_tierId: { timestamp, tierId } },
-      create: { timestamp, tierId, ...data },
-      update: data,
+      create: { timestamp, tierId, ...data as any },
+      update: data as any,
     });
   }
 
   async incrementStats(
     timestamp: Date,
     tierId: bigint,
-    data: Partial<Record<keyof UpdateTierStatsProps, number | Prisma.Decimal>>,
+    data: Partial<Record<keyof UpdateTierStatsProps, number | bigint | Prisma.Decimal>>,
   ): Promise<void> {
     const updateData: any = {};
     for (const [key, value] of Object.entries(data)) {
@@ -103,18 +103,12 @@ export class TierAuditRepository implements TierAuditRepositoryPort {
           typeof data.snapshotUserCount === 'number'
             ? data.snapshotUserCount
             : 0,
-        periodBonusPaidUsd:
-          data.periodBonusPaidUsd instanceof Prisma.Decimal
-            ? data.periodBonusPaidUsd
+        periodActiveUserCount:
+          typeof data.periodActiveUserCount === 'number'
+            ? data.periodActiveUserCount
             : 0,
-        periodRollingUsd:
-          data.periodRollingUsd instanceof Prisma.Decimal
-            ? data.periodRollingUsd
-            : 0,
-        periodDepositUsd:
-          data.periodDepositUsd instanceof Prisma.Decimal
-            ? data.periodDepositUsd
-            : 0,
+        periodExpGranted:
+          typeof data.periodExpGranted === 'bigint' ? data.periodExpGranted : 0,
         upgradedCount:
           typeof data.upgradedCount === 'number' ? data.upgradedCount : 0,
         downgradedCount:
@@ -122,8 +116,24 @@ export class TierAuditRepository implements TierAuditRepositoryPort {
         maintainedCount:
           typeof data.maintainedCount === 'number' ? data.maintainedCount : 0,
         graceCount: typeof data.graceCount === 'number' ? data.graceCount : 0,
+        periodTotalRollingUsd:
+          data.periodTotalRollingUsd instanceof Prisma.Decimal
+            ? data.periodTotalRollingUsd
+            : 0,
+        periodRewardClaimedUsd:
+          data.periodRewardClaimedUsd instanceof Prisma.Decimal
+            ? data.periodRewardClaimedUsd
+            : 0,
       },
       update: updateData,
+    });
+  }
+
+  async saveExpLog(props: CreateUserExpLogProps): Promise<void> {
+    await this.tx.userExpLog.create({
+      data: {
+        ...props,
+      },
     });
   }
 }

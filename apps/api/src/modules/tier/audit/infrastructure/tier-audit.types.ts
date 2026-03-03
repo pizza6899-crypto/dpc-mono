@@ -8,22 +8,23 @@ export interface RecordTierSnapshotJobData {
   tierId: string;
   metrics: {
     snapshotUserCount?: number;
-    periodBonusPaidUsd?: string;
-    periodRollingUsd?: string;
-    periodDepositUsd?: string;
+    periodActiveUserCount?: number;
+    periodExpGranted?: string; // bigint (string serialized)
     upgradedCount?: number;
     downgradedCount?: number;
     maintainedCount?: number;
     graceCount?: number;
+    periodTotalRollingUsd?: string;
+    periodRewardClaimedUsd?: string;
   };
 }
 
 export type TierAuditJobPayload =
   | {
-      type: TierAuditJobType.RECORD_TIER_SNAPSHOT;
-      data: RecordTierSnapshotJobData;
-    }
+    type: TierAuditJobType.RECORD_TIER_SNAPSHOT;
+    data: RecordTierSnapshotJobData;
+  }
   | {
-      type: TierAuditJobType.INCREMENT_TIER_STATS;
-      data: RecordTierSnapshotJobData;
-    };
+    type: TierAuditJobType.INCREMENT_TIER_STATS;
+    data: RecordTierSnapshotJobData;
+  };

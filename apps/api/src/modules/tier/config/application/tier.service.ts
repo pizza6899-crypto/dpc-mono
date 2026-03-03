@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { TierRepositoryPort } from '../infrastructure/tier.repository.port';
 import type { UpdateTierProps } from '../infrastructure/tier.repository.port';
 import { Tier } from '../domain/tier.entity';
@@ -17,7 +16,7 @@ export class TierService {
     private readonly policy: TierConfigPolicy,
     private readonly attachFileService: AttachFileService,
     private readonly envService: EnvService,
-  ) {}
+  ) { }
 
   async findAll(): Promise<Tier[]> {
     return this.repository.findAll();
@@ -46,33 +45,24 @@ export class TierService {
     this.policy.validateTranslations(props.translations, existingLanguages);
     this.policy.validateUpdateProps(props);
 
-    // 전체 티어 정합성 검증 (레벨 중복 및 요건 역전 방지)
-    // 동시성 문제를 방지하기 위해 캐시를 무시하고 DB에서 최신 목록을 직접 가져옵니다.
+    // 전체 티어 정합성 검증
     const allTiers = await this.repository.findAll({ ignoreCache: true });
     const updatedTiers = allTiers.map((t) => {
       if (t.code === props.code) {
         return {
           ...t,
           level: props.level ?? t.level,
-          upgradeRollingRequiredUsd:
-            props.upgradeRollingRequiredUsd !== undefined
-              ? new Prisma.Decimal(props.upgradeRollingRequiredUsd)
-              : t.upgradeRollingRequiredUsd,
-          upgradeDepositRequiredUsd:
-            props.upgradeDepositRequiredUsd !== undefined
-              ? new Prisma.Decimal(props.upgradeDepositRequiredUsd)
-              : t.upgradeDepositRequiredUsd,
-          maintainRollingRequiredUsd:
-            props.maintainRollingRequiredUsd !== undefined
-              ? new Prisma.Decimal(props.maintainRollingRequiredUsd)
-              : t.maintainRollingRequiredUsd,
+          upgradeExpRequired:
+            props.upgradeExpRequired !== undefined
+              ? props.upgradeExpRequired
+              : t.upgradeExpRequired,
         } as any;
       }
       return t;
     });
     this.policy.validateTierIntegrity(updatedTiers);
 
-    // 이미지 처리 (monolithic way: AttachFileService 활용)
+    // 이미지 처리
     const { imageFileId } = props;
     let imageUrl: string | undefined | null = undefined;
 
@@ -87,7 +77,6 @@ export class TierService {
       imageUrl = null;
     }
 
-    // imageFileId는 DB 필드가 아니므로 제외하고, 대신 imageUrl을 포함시킴
     const { imageFileId: _, ...repoData } = props;
 
     const updatePayload: UpdateTierProps = {

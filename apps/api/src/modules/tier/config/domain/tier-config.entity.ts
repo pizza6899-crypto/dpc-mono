@@ -13,9 +13,10 @@ export class TierConfig {
     public readonly isBonusEnabled: boolean,
     public readonly defaultDowngradeGracePeriodDays: number,
     public readonly defaultRewardExpiryDays: number,
+    public readonly expGrantRollingUsd: Prisma.Decimal,
     public readonly updatedAt: Date,
     public readonly updatedBy: bigint | null,
-  ) {}
+  ) { }
 
   static fromPersistence(
     data: PersistenceOf<TierConfigRawPayload>,
@@ -26,6 +27,7 @@ export class TierConfig {
       data.isBonusEnabled,
       data.defaultDowngradeGracePeriodDays,
       data.defaultRewardExpiryDays,
+      Cast.decimal(data.expGrantRollingUsd), // Explicitly cast to Decimal
       Cast.date(data.updatedAt),
       Cast.bigint(data.updatedBy),
     );

@@ -1,4 +1,4 @@
-import type { Prisma, TierEvaluationCycle } from '@prisma/client';
+import type { Prisma, TierEvaluationCycle, ExchangeCurrencyCode } from '@prisma/client';
 import { Language } from '@prisma/client';
 import type { PersistenceOf } from 'src/infrastructure/persistence/persistence.util';
 import { Cast } from 'src/infrastructure/persistence/persistence.util';
@@ -9,8 +9,14 @@ export interface TierTranslationProps {
   description: string | null;
 }
 
+export interface TierBenefitProps {
+  currency: ExchangeCurrencyCode;
+  upgradeBonus: Prisma.Decimal;
+  birthdayBonus: Prisma.Decimal;
+}
+
 export type TierRawPayload = Prisma.TierGetPayload<{
-  include: { translations: true };
+  include: { translations: true; benefits: true };
 }>;
 
 export class Tier {
@@ -19,21 +25,20 @@ export class Tier {
     public readonly level: number,
     public readonly code: string,
 
-    // Requirements
-    public readonly upgradeRollingRequiredUsd: Prisma.Decimal,
-    public readonly upgradeDepositRequiredUsd: Prisma.Decimal,
-    public readonly maintainRollingRequiredUsd: Prisma.Decimal,
+    // Requirements (XP Based)
+    public readonly upgradeExpRequired: bigint,
     public readonly evaluationCycle: TierEvaluationCycle,
 
-    // Benefits
-    public readonly upgradeBonusUsd: Prisma.Decimal,
+    // Benefits (Config/Policy)
     public readonly upgradeBonusWageringMultiplier: Prisma.Decimal,
-    public readonly isImmediateBonusEnabled: boolean,
     public readonly compRate: Prisma.Decimal,
     public readonly weeklyLossbackRate: Prisma.Decimal,
     public readonly monthlyLossbackRate: Prisma.Decimal,
 
+    // Limits & Flags
     public readonly dailyWithdrawalLimitUsd: Prisma.Decimal,
+    public readonly weeklyWithdrawalLimitUsd: Prisma.Decimal,
+    public readonly monthlyWithdrawalLimitUsd: Prisma.Decimal,
     public readonly isWithdrawalUnlimited: boolean,
     public readonly hasDedicatedManager: boolean,
     public readonly rewardExpiryDays: number | null,
@@ -48,6 +53,7 @@ export class Tier {
     public readonly updatedAt: Date,
     public readonly updatedBy: bigint | null,
     public readonly translations: TierTranslationProps[],
+    public readonly benefits: TierBenefitProps[],
     private readonly currentLanguage: Language | null = null,
   ) { }
 
@@ -77,6 +83,10 @@ export class Tier {
     return this.translations[0]?.description ?? null;
   }
 
+  getBenefitByCurrency(currency: ExchangeCurrencyCode): TierBenefitProps | null {
+    return this.benefits.find((b) => b.currency === currency) || null;
+  }
+
   static fromPersistence(
     data: PersistenceOf<TierRawPayload>,
     contextLanguage?: Language,
@@ -89,21 +99,25 @@ export class Tier {
       }),
     );
 
+    const benefits: TierBenefitProps[] = (data.benefits || []).map((b) => ({
+      currency: b.currency,
+      upgradeBonus: Cast.decimal(b.upgradeBonus),
+      birthdayBonus: Cast.decimal(b.birthdayBonus),
+    }));
+
     return new Tier(
       Cast.bigint(data.id),
       data.level,
       data.code,
-      Cast.decimal(data.upgradeRollingRequiredUsd),
-      Cast.decimal(data.upgradeDepositRequiredUsd),
-      Cast.decimal(data.maintainRollingRequiredUsd),
+      Cast.bigint(data.upgradeExpRequired),
       data.evaluationCycle,
-      Cast.decimal(data.upgradeBonusUsd),
       Cast.decimal(data.upgradeBonusWageringMultiplier),
-      data.isImmediateBonusEnabled,
       Cast.decimal(data.compRate),
       Cast.decimal(data.weeklyLossbackRate),
       Cast.decimal(data.monthlyLossbackRate),
       Cast.decimal(data.dailyWithdrawalLimitUsd),
+      Cast.decimal(data.weeklyWithdrawalLimitUsd),
+      Cast.decimal(data.monthlyWithdrawalLimitUsd),
       data.isWithdrawalUnlimited,
       data.hasDedicatedManager,
       data.rewardExpiryDays,
@@ -114,6 +128,7 @@ export class Tier {
       Cast.date(data.updatedAt),
       Cast.bigint(data.updatedBy),
       translations,
+      benefits,
       contextLanguage ??
       (translations.length === 1 ? translations[0].language : null),
     );

@@ -3,9 +3,14 @@ import { UserTierRepositoryPort } from '../../profile/infrastructure/user-tier.r
 import { TierRepositoryPort } from '../../config/infrastructure/tier.repository.port';
 import { PromotionPolicy } from '../domain/promotion.policy';
 import { PromoteUserTierService } from './promote-user-tier.service';
+import { TierStatsService } from '../../audit/application/tier-stats.service';
 import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { UserTier } from '../../profile/domain/user-tier.entity';
+import { TierConfigRepositoryPort } from '../../config/infrastructure/tier-config.repository.port';
+import { TierAuditRepositoryPort } from '../../audit/infrastructure/tier-audit.repository.port';
+import { ExpSourceType, Prisma } from '@prisma/client';
+import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
 @Injectable()
 export class AccumulateUserRollingService {
@@ -14,13 +19,21 @@ export class AccumulateUserRollingService {
   constructor(
     private readonly userTierRepository: UserTierRepositoryPort,
     private readonly tierRepository: TierRepositoryPort,
+    private readonly tierConfigRepository: TierConfigRepositoryPort,
     private readonly promotionPolicy: PromotionPolicy,
     private readonly promoteUserTierService: PromoteUserTierService,
+    private readonly tierAuditRepository: TierAuditRepositoryPort,
+    private readonly tierStatsService: TierStatsService,
+    private readonly snowflakeService: SnowflakeService,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) {}
+  ) { }
 
   @Transactional()
-  async execute(userId: bigint, amountUsd: number): Promise<void> {
+  async execute(
+    userId: bigint,
+    amountUsd: number,
+    reference?: { sourceType: ExpSourceType; referenceId: bigint },
+  ): Promise<void> {
     if (amountUsd <= 0) return;
 
     try {
@@ -30,16 +43,48 @@ export class AccumulateUserRollingService {
         userId.toString(),
       );
 
-      // 1. 원자적 처리 (Repository 메서드 사용 - 업데이트된 최신 상태 반환)
-      // NOTE: 도메인 엔티티를 로드하여 변경(UserTier.increment...)하는 것이 정석이나,
-      // 롤링 누적은 빈번히 발생하는 이벤트이므로 DB Atomic Update를 사용하여 성능을 최적화함.
-      // Advisory Lock을 통해 동시성 문제를 제어하며, 반환된 최신 상태로 승급을 심사함.
-      const updatedUserTier = await this.userTierRepository.incrementRolling(
+      // 1. XP 환산 (Config 기반)
+      const config = await this.tierConfigRepository.find();
+      const expGrantRollingUsd =
+        config?.expGrantRollingUsd?.toNumber() || 1.0;
+      const expToGrant = Math.floor(amountUsd / expGrantRollingUsd);
+
+      if (expToGrant <= 0) {
+        this.logger.debug(
+          `Amount ${amountUsd} is too small to grant XP (Required: ${expGrantRollingUsd}). Skipping.`,
+        );
+        return;
+      }
+
+      // 2. 원자적 처리 (XP 누적)
+      const updatedUserTier = await this.userTierRepository.incrementExp(
         userId,
-        amountUsd,
+        BigInt(expToGrant),
       );
 
-      // 2. 비동기 승급 심사 (최신 상태 기반으로 즉시 심사)
+      // 3. XP 로그 기록
+      const snowflake = this.snowflakeService.generate();
+      await this.tierAuditRepository.saveExpLog({
+        id: snowflake.id,
+        userId,
+        amount: BigInt(expToGrant),
+        statusExpSnap: updatedUserTier.statusExp,
+        sourceType: reference?.sourceType ?? ExpSourceType.ROLLING_REWARD,
+        referenceId: reference?.referenceId,
+        createdAt: snowflake.timestamp,
+      });
+
+      // 4. 실시간 통계 갱신 (지급된 XP 및 롤링액 누적)
+      await this.tierStatsService.increment(
+        snowflake.timestamp,
+        updatedUserTier.tierId,
+        {
+          periodExpGranted: BigInt(expToGrant),
+          periodTotalRollingUsd: new Prisma.Decimal(amountUsd),
+        },
+      );
+
+      // 5. 비동기 승급 심사 (최신 상태 기반으로 즉시 심사)
       await this.attemptPromotion(updatedUserTier);
     } catch (error) {
       this.logger.error(`Failed to accumulate rolling: ${error.message}`);

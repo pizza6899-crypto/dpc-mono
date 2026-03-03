@@ -17,46 +17,24 @@ export class NextTierProgressDto {
   imageUrl: string | null;
 
   @ApiProperty({
-    description:
-      'Required rolling amount for upgrade / 승급에 필요한 롤링 금액',
+    description: 'Required XP for upgrade / 승급에 필요한 XP',
   })
-  requiredRolling: string;
+  requiredExp: string;
 
   @ApiProperty({
-    description: 'Current accumulated rolling amount / 현재 누적 롤링 금액',
+    description: 'Current accumulated XP / 현재 누적 XP',
   })
-  currentRolling: string;
+  currentExp: string;
 
   @ApiProperty({
-    description: 'Remaining rolling amount needed / 남은 롤링 금액',
+    description: 'Remaining XP needed / 남은 XP',
   })
-  remainingRolling: string;
+  remainingExp: string;
 
   @ApiProperty({
-    description: 'Progress percentage for rolling (0-100) / 롤링 진행률 (%)',
+    description: 'Progress percentage (0-100) / 승급 진행률 (%)',
   })
-  rollingProgressPercent: number;
-
-  @ApiProperty({
-    description:
-      'Required deposit amount for upgrade / 승급에 필요한 입금 금액',
-  })
-  requiredDeposit: string;
-
-  @ApiProperty({
-    description: 'Current accumulated deposit amount / 현재 누적 입금 금액',
-  })
-  currentDeposit: string;
-
-  @ApiProperty({
-    description: 'Remaining deposit amount needed / 남은 입금 금액',
-  })
-  remainingDeposit: string;
-
-  @ApiProperty({
-    description: 'Progress percentage for deposit (0-100) / 입금 진행률 (%)',
-  })
-  depositProgressPercent: number;
+  progressPercent: number;
 }
 
 export class EffectiveBenefitsDto {
@@ -73,6 +51,16 @@ export class EffectiveBenefitsDto {
     description: 'Daily withdrawal limit (USD) / 일일 출금 한도 (USD)',
   })
   dailyWithdrawalLimitUsd: string;
+
+  @ApiProperty({
+    description: 'Weekly withdrawal limit (USD) / 주간 출금 한도 (USD)',
+  })
+  weeklyWithdrawalLimitUsd: string;
+
+  @ApiProperty({
+    description: 'Monthly withdrawal limit (USD) / 월간 출금 한도 (USD)',
+  })
+  monthlyWithdrawalLimitUsd: string;
 
   @ApiProperty({
     description: 'Whether withdrawal is unlimited / 무제한 출금 여부',

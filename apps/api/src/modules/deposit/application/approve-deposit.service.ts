@@ -18,7 +18,6 @@ import {
 import { GrantPromotionBonusService } from '../../promotion/application/grant-promotion-bonus.service';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';
-import { AccumulateUserDepositService } from 'src/modules/tier/evaluator/application/accumulate-user-deposit.service';
 import { CreateWageringRequirementService } from 'src/modules/wagering/requirement/application';
 import { GetWageringConfigService } from 'src/modules/wagering/config/application/get-wagering-config.service';
 
@@ -49,7 +48,6 @@ export class ApproveDepositService {
     private readonly createWageringRequirementService: CreateWageringRequirementService,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly exchangeRateService: ExchangeRateService,
-    private readonly accumulateUserDepositService: AccumulateUserDepositService,
     private readonly wageringConfigService: GetWageringConfigService,
   ) { }
 
@@ -124,11 +122,8 @@ export class ApproveDepositService {
 
     const afterTotalAmount = updatedWallet.cash.add(updatedWallet.bonus);
 
-    // 6. 티어 입금 실적 누적
-    await this.accumulateUserDepositService.execute(
-      deposit.userId,
-      amountUsd.toNumber(),
-    );
+    // 6. Tier Stats or XP Accumulation (Skip deposit-based XP if not used)
+    // Deprecated: accumulateUserDepositService call removed.
 
     // 7. Transaction 생성 (지연 생성)
     let transactionId = deposit.transactionId;

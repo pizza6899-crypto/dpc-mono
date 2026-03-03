@@ -32,6 +32,12 @@ export class TierConfigAdminResponseDto {
   })
   defaultRewardExpiryDays: number;
 
+  @ApiProperty({
+    description: 'Required rolling amount (USD) to grant 1 XP / 1 XP를 얻기 위해 필요한 롤링 금액 (USD)',
+    example: '10.00',
+  })
+  expGrantRollingUsd: string;
+
   @ApiProperty({ description: 'Updated at / 수정 일시' })
   updatedAt: Date;
 

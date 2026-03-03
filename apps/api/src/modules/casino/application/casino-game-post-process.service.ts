@@ -1,6 +1,6 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { Prisma, ExchangeCurrencyCode } from '@prisma/client'; // ExchangeCurrencyCode 추가
+import { Prisma, ExchangeCurrencyCode, ExpSourceType } from '@prisma/client'; // ExpSourceType 추가
 import { EarnCompService } from 'src/modules/comp/application/earn-comp.service';
 import { GAME_ROUND_REPOSITORY_TOKEN } from '../ports/out/game-round.repository.token';
 import type { GameRoundRepositoryPort } from '../ports/out/game-round.repository.port';
@@ -146,10 +146,14 @@ export class CasinoGamePostProcessService {
       const usdAmount = context.betAmount.mul(context.usdExchangeRate);
 
       if (usdAmount.gt(0)) {
-        // Execute rolling accumulation
+        // Execute rolling accumulation with reference info
         await this.accumulateUserRollingService.execute(
           gameRound.userId,
           usdAmount.toNumber(),
+          {
+            sourceType: ExpSourceType.ROLLING_REWARD,
+            referenceId: gameRound.id,
+          },
         );
         this.logger.log(
           `티어 롤링 누적: userId=${gameRound.userId}, usdAmount=${usdAmount}`,

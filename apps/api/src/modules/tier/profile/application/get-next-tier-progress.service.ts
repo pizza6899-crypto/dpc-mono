@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, Language } from '@prisma/client';
+import { Language } from '@prisma/client';
 import { UserTier } from '../domain/user-tier.entity';
 import { Tier } from '../../config/domain/tier.entity';
 
@@ -7,14 +7,10 @@ export interface NextTierProgressResult {
   id: bigint;
   name: string;
   imageUrl: string | null;
-  requiredRolling: Prisma.Decimal;
-  currentRolling: Prisma.Decimal;
-  remainingRolling: Prisma.Decimal;
-  rollingProgressPercent: number;
-  requiredDeposit: Prisma.Decimal;
-  currentDeposit: Prisma.Decimal;
-  remainingDeposit: Prisma.Decimal;
-  depositProgressPercent: number;
+  requiredExp: bigint;
+  currentExp: bigint;
+  remainingExp: bigint;
+  progressPercent: number;
 }
 
 @Injectable()
@@ -30,40 +26,25 @@ export class GetNextTierProgressService {
   ): NextTierProgressResult | null {
     if (!userTier.tier || !nextTier) return null;
 
-    // [Policy] Promotion progress is calculated based on statusRollingUsd and lifetimeDepositUsd
+    // [Policy] Promotion progress is calculated based on statusExp
+    const requiredExp = nextTier.upgradeExpRequired;
+    const currentExp = userTier.statusExp;
+    const remainingExp =
+      requiredExp > currentExp ? requiredExp - currentExp : 0n;
 
-    // Rolling Progress (Upgrade Rolling Required)
-    const requiredRolling = nextTier.upgradeRollingRequiredUsd;
-    const currentRolling = userTier.statusRollingUsd;
-    const remainingRolling = requiredRolling.minus(currentRolling);
-    const rollingProgress = requiredRolling.gt(0)
-      ? currentRolling.div(requiredRolling).mul(100).toNumber()
-      : 100;
-
-    // Deposit Progress (Upgrade Deposit Required)
-    const requiredDeposit = nextTier.upgradeDepositRequiredUsd;
-    const currentDeposit = userTier.lifetimeDepositUsd;
-    const remainingDeposit = requiredDeposit.minus(currentDeposit);
-    const depositProgress = requiredDeposit.gt(0)
-      ? currentDeposit.div(requiredDeposit).mul(100).toNumber()
-      : 100;
+    const progress =
+      requiredExp > 0n
+        ? Number((currentExp * 100n) / requiredExp)
+        : 100;
 
     return {
       id: nextTier.id,
       name: nextTier.getName(language),
       imageUrl: nextTier.imageUrl,
-      requiredRolling,
-      currentRolling,
-      remainingRolling: remainingRolling.isPositive()
-        ? remainingRolling
-        : new Prisma.Decimal(0),
-      rollingProgressPercent: Math.min(100, Math.max(0, rollingProgress)),
-      requiredDeposit,
-      currentDeposit,
-      remainingDeposit: remainingDeposit.isPositive()
-        ? remainingDeposit
-        : new Prisma.Decimal(0),
-      depositProgressPercent: Math.min(100, Math.max(0, depositProgress)),
+      requiredExp,
+      currentExp,
+      remainingExp,
+      progressPercent: Math.min(100, Math.max(0, progress)),
     };
   }
 }

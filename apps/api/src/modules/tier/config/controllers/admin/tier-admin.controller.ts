@@ -29,7 +29,7 @@ import { UpdateTierAdminRequestDto } from './dto/request/update-tier-admin.reque
 @ApiStandardErrors()
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class TierAdminController {
-  constructor(private readonly tierService: TierService) {}
+  constructor(private readonly tierService: TierService) { }
 
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -72,8 +72,11 @@ export class TierAdminController {
     const before = await this.tierService.findByCode(code);
 
     const updated = await this.tierService.update({
-      code,
       ...dto,
+      code,
+      upgradeExpRequired: dto.upgradeExpRequired
+        ? BigInt(dto.upgradeExpRequired)
+        : undefined,
       updatedBy: admin.id,
     });
 
@@ -88,19 +91,17 @@ export class TierAdminController {
     return {
       level: tier.level,
       code: tier.code,
-      upgradeRollingRequiredUsd: tier.upgradeRollingRequiredUsd.toString(),
-      upgradeDepositRequiredUsd: tier.upgradeDepositRequiredUsd.toString(),
-      maintainRollingRequiredUsd: tier.maintainRollingRequiredUsd.toString(),
+      upgradeExpRequired: tier.upgradeExpRequired.toString(),
       evaluationCycle: tier.evaluationCycle,
-      upgradeBonusUsd: tier.upgradeBonusUsd.toString(),
       upgradeBonusWageringMultiplier:
         tier.upgradeBonusWageringMultiplier.toString(),
       rewardExpiryDays: tier.rewardExpiryDays,
-      isImmediateBonusEnabled: tier.isImmediateBonusEnabled,
       compRate: tier.compRate.toString(),
       weeklyLossbackRate: tier.weeklyLossbackRate.toString(),
       monthlyLossbackRate: tier.monthlyLossbackRate.toString(),
       dailyWithdrawalLimitUsd: tier.dailyWithdrawalLimitUsd.toString(),
+      weeklyWithdrawalLimitUsd: tier.weeklyWithdrawalLimitUsd.toString(),
+      monthlyWithdrawalLimitUsd: tier.monthlyWithdrawalLimitUsd.toString(),
       isWithdrawalUnlimited: tier.isWithdrawalUnlimited,
       hasDedicatedManager: tier.hasDedicatedManager,
       isActive: tier.isActive,
@@ -122,23 +123,21 @@ export class TierAdminController {
       level: tier.level,
       code: tier.code,
       requirements: {
-        upgradeRolling: tier.upgradeRollingRequiredUsd.toString(),
-        upgradeDeposit: tier.upgradeDepositRequiredUsd.toString(),
-        maintenance: tier.maintainRollingRequiredUsd.toString(),
+        upgradeExp: tier.upgradeExpRequired.toString(),
       },
       benefits: {
         comp: tier.compRate.toString(),
         weeklyLossback: tier.weeklyLossbackRate.toString(),
         monthlyLossback: tier.monthlyLossbackRate.toString(),
         upgrade: {
-          bonus: tier.upgradeBonusUsd.toString(),
           wager: tier.upgradeBonusWageringMultiplier.toString(),
-          isImmediate: tier.isImmediateBonusEnabled,
         },
         rewardExpiryDays: tier.rewardExpiryDays,
       },
       limits: {
         dailyWithdrawal: tier.dailyWithdrawalLimitUsd.toString(),
+        weeklyWithdrawal: tier.weeklyWithdrawalLimitUsd.toString(),
+        monthlyWithdrawal: tier.monthlyWithdrawalLimitUsd.toString(),
         isUnlimited: tier.isWithdrawalUnlimited,
       },
       control: {

@@ -8,6 +8,7 @@ import {
 } from './tier-config.repository.port';
 import { CacheService } from 'src/common/cache/cache.service';
 import { CACHE_CONFIG } from 'src/common/cache/cache.constants';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class TierConfigRepository implements TierConfigRepositoryPort {
@@ -15,7 +16,7 @@ export class TierConfigRepository implements TierConfigRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly cacheService: CacheService,
-  ) {}
+  ) { }
 
   async find(): Promise<TierConfig | null> {
     const record = await this.cacheService.getOrSet(
@@ -31,15 +32,17 @@ export class TierConfigRepository implements TierConfigRepositoryPort {
   }
 
   async update(props: UpdateTierConfigProps): Promise<TierConfig> {
+    const { updatedBy, expGrantRollingUsd, ...data } = props;
+
     const updated = await this.tx.tierConfig.update({
       where: { id: TierConfig.SINGLETON_ID },
       data: {
-        isUpgradeEnabled: props.isUpgradeEnabled,
-        isDowngradeEnabled: props.isDowngradeEnabled,
-        isBonusEnabled: props.isBonusEnabled,
-        defaultDowngradeGracePeriodDays: props.defaultDowngradeGracePeriodDays,
-        defaultRewardExpiryDays: props.defaultRewardExpiryDays,
-        updatedBy: props.updatedBy,
+        ...data,
+        expGrantRollingUsd:
+          expGrantRollingUsd !== undefined
+            ? new Prisma.Decimal(expGrantRollingUsd)
+            : undefined,
+        updatedBy: updatedBy,
       },
     });
 

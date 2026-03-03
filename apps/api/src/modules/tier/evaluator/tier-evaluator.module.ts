@@ -7,7 +7,6 @@ import { DemotionPolicy } from './domain/demotion.policy';
 import { PromoteUserTierService } from './application/promote-user-tier.service';
 import { DemoteUserTierService } from './application/demote-user-tier.service';
 import { AccumulateUserRollingService } from './application/accumulate-user-rolling.service';
-import { AccumulateUserDepositService } from './application/accumulate-user-deposit.service';
 import { EvaluateUserTierService } from './application/evaluate-user-tier.service';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
@@ -16,6 +15,7 @@ import { TierEvaluationTriggerProcessor } from './infrastructure/tier-evaluation
 import { TierUserEvaluationProcessor } from './infrastructure/tier-user-evaluation.processor';
 import { TierConfigModule } from '../config/tier-config.module';
 import { RewardCoreModule } from 'src/modules/reward/core/reward-core.module';
+import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 
 @Module({
   imports: [
@@ -25,6 +25,7 @@ import { RewardCoreModule } from 'src/modules/reward/core/reward-core.module';
     TierAuditModule,
     ConcurrencyModule,
     BullMqModule,
+    SnowflakeModule,
     BullModule.registerQueue(
       { name: TIER_EVALUATOR_QUEUES.EVALUATION_TRIGGER.name },
       { name: TIER_EVALUATOR_QUEUES.USER_EVALUATION.name },
@@ -36,14 +37,12 @@ import { RewardCoreModule } from 'src/modules/reward/core/reward-core.module';
     PromoteUserTierService,
     DemoteUserTierService,
     AccumulateUserRollingService,
-    AccumulateUserDepositService,
     EvaluateUserTierService,
     TierEvaluationTriggerProcessor,
     TierUserEvaluationProcessor,
   ],
   exports: [
     AccumulateUserRollingService,
-    AccumulateUserDepositService,
     EvaluateUserTierService,
     DemoteUserTierService,
   ],

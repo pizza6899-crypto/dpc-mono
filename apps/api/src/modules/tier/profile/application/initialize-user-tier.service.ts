@@ -25,11 +25,10 @@ export class InitializeUserTierService {
     if (existing) return existing;
 
     const allTiers = await this.tierRepository.findAll();
-    // findAll()은 이미 level ASC로 정렬되어 있으므로 [0]이 최하위 기초 티어입니다.
+    // [0]이 최하위 기초 티어
     const baseTier = allTiers[0];
     if (!baseTier) throw new Error('Tier definitions missing');
 
-    // 티어 주기에 따른 초기 심사일 계산
     const nextEvaluationAt = this.calculateNextEvaluationAt(
       baseTier.evaluationCycle,
     );
@@ -38,38 +37,36 @@ export class InitializeUserTierService {
       0n,
       userId,
       baseTier.id,
-      // States (초기화)
-      new Prisma.Decimal(0), // lifetimeRollingUsd
-      new Prisma.Decimal(0), // statusRollingUsd
-      new Prisma.Decimal(0), // currentPeriodRollingUsd
-      new Prisma.Decimal(0), // lifetimeDepositUsd
-      new Prisma.Decimal(0), // currentPeriodDepositUsd
+      // XP 상태 데이터
+      0n, // statusExp
+      0n, // lifetimeExp
       new Date(), // lastEvaluationAt
       // 승급/강등 제어
-      baseTier.level, // currentLevel
-      baseTier.level, // maxLevelAchieved
-      null, // lastBonusReceivedAt
-      UserTierStatus.ACTIVE, // status
-      null, // downgradeGracePeriodEndsAt
-      new Date(), // lastTierChangedAt
-      null, // lastUpgradeAt (초기화 시점이므로 null)
-      null, // lastDowngradeAt
+      baseTier.level,
+      baseTier.level,
+      null,
+      UserTierStatus.ACTIVE,
+      null,
+      new Date(),
+      null,
+      null,
       // Overrides
-      null, // customCompRate
-      null, // customWeeklyLossbackRate
-      null, // customMonthlyLossbackRate
-      null, // customWithdrawalLimitUsd
-      null, // isCustomWithdrawalUnlimited
-      null, // isCustomDedicatedManager
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
       // Audit & Misc
-      null, // note
-      true, // isBonusEligible
-      nextEvaluationAt, // nextEvaluationAt
-      null, // preferredRewardCurrency
-      // Warning State
-      null, // downgradeWarningIssuedAt
-      null, // downgradeWarningTargetTierId
-      baseTier, // Joined Tier data
+      null,
+      true,
+      nextEvaluationAt,
+      null,
+      null,
+      null,
+      baseTier,
     );
 
     const savedUserTier = await this.userTierRepository.save(newUserTier);
@@ -81,17 +78,31 @@ export class InitializeUserTierService {
       toTierId: baseTier.id,
       changeType: TierChangeType.INITIAL,
       reason: 'User initialized with base tier',
-      statusRollingUsdSnap: new Prisma.Decimal(0),
-      currentPeriodDepositUsdSnap: new Prisma.Decimal(0),
+
+      // Benefit Snapshot
       compRateSnap: baseTier.compRate,
       weeklyLossbackRateSnap: baseTier.weeklyLossbackRate,
       monthlyLossbackRateSnap: baseTier.monthlyLossbackRate,
-      upgradeRollingRequiredUsdSnap: baseTier.upgradeRollingRequiredUsd,
-      upgradeDepositRequiredUsdSnap: baseTier.upgradeDepositRequiredUsd,
-      lifetimeRollingUsdSnap: new Prisma.Decimal(0),
-      lifetimeDepositUsdSnap: new Prisma.Decimal(0),
+      upgradeBonusWageringMultiplierSnap:
+        baseTier.upgradeBonusWageringMultiplier,
+
+      // Limit & Flag Snapshot
+      dailyWithdrawalLimitUsdSnap: baseTier.dailyWithdrawalLimitUsd,
+      weeklyWithdrawalLimitUsdSnap: baseTier.weeklyWithdrawalLimitUsd,
+      monthlyWithdrawalLimitUsdSnap: baseTier.monthlyWithdrawalLimitUsd,
+      isWithdrawalUnlimitedSnap: baseTier.isWithdrawalUnlimited,
+      hasDedicatedManagerSnap: baseTier.hasDedicatedManager,
+
+      // Custom Override Status
+      isCustomBenefitAppliedSnap: false,
+
+      // Reward Audit
       hasBonusGenerated: false,
-      bonusAmountUsdSnap: new Prisma.Decimal(0),
+      currency: 'USD',
+      upgradeBonusSnap: new Prisma.Decimal(0),
+
+      // XP Snapshot
+      statusExpSnap: 0n,
     });
 
     return savedUserTier;
@@ -109,7 +120,6 @@ export class InitializeUserTierService {
       case TierEvaluationCycle.NONE:
         return null;
       default:
-        // 기본값 30일
         now.setUTCDate(now.getUTCDate() + 30);
         return now;
     }

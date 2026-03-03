@@ -74,7 +74,6 @@ export class UserTierAdminController {
       search: query.search,
     });
 
-    // Controller maps Service Result to Response DTO
     return {
       ...result,
       data: result.data.map((item) => ({ ...item })),
@@ -92,8 +91,6 @@ export class UserTierAdminController {
     @Param('userId') userId: string,
   ): Promise<UserTierAdminResponseDto> {
     const result = await this.getUserTierDetailService.execute(BigInt(userId));
-
-    // Controller maps Service Result to Response DTO
     return { ...result };
   }
 
@@ -121,11 +118,9 @@ export class UserTierAdminController {
         changeType: h.changeType,
         reason: h.reason,
         changedAt: h.changedAt,
-        statusRollingUsdSnap: h.statusRollingUsdSnap.toString(),
-        currentPeriodDepositUsdSnap: h.currentPeriodDepositUsdSnap.toString(),
-        lifetimeRollingUsdSnap: h.lifetimeRollingUsdSnap.toString(),
-        lifetimeDepositUsdSnap: h.lifetimeDepositUsdSnap.toString(),
-        bonusAmountUsdSnap: h.bonusAmountUsdSnap.toString(),
+        statusExpSnap: h.statusExpSnap.toString(),
+        upgradeBonusSnap: h.upgradeBonusSnap.toString(),
+        currency: h.currency,
       })),
       page: history.page,
       limit: history.limit,

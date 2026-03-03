@@ -16,6 +16,16 @@ export class EffectiveBenefitsAdminResponseDto {
   dailyWithdrawalLimitUsd: string;
 
   @ApiProperty({
+    description: 'Weekly withdrawal limit (USD) / 주간 출금 한도 (USD)',
+  })
+  weeklyWithdrawalLimitUsd: string;
+
+  @ApiProperty({
+    description: 'Monthly withdrawal limit (USD) / 월간 출금 한도 (USD)',
+  })
+  monthlyWithdrawalLimitUsd: string;
+
+  @ApiProperty({
     description: 'Whether withdrawal is unlimited / 무제한 출금 여부',
   })
   isWithdrawalUnlimited: boolean;

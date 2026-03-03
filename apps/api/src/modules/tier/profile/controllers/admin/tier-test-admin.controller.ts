@@ -13,7 +13,6 @@ import { UserRoleType } from '@prisma/client';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { EnvService } from 'src/common/env/env.service';
 import { AccumulateUserRollingService } from '../../../evaluator/application/accumulate-user-rolling.service';
-import { AccumulateUserDepositService } from '../../../evaluator/application/accumulate-user-deposit.service';
 import { EvaluateUserTierService } from '../../../evaluator/application/evaluate-user-tier.service';
 import { TierRepositoryPort } from '../../../config/infrastructure/tier.repository.port';
 import { AdminTestTierPerformanceRequestDto } from './dto/request/admin-test-tier-performance.dto';
@@ -26,7 +25,6 @@ export class TierTestAdminController {
     constructor(
         private readonly envService: EnvService,
         private readonly accumulateRollingService: AccumulateUserRollingService,
-        private readonly accumulateDepositService: AccumulateUserDepositService,
         private readonly evaluateUserTierService: EvaluateUserTierService,
         private readonly tierRepository: TierRepositoryPort,
     ) { }
@@ -40,17 +38,6 @@ export class TierTestAdminController {
     ): Promise<void> {
         this.ensureNotProduction();
         await this.accumulateRollingService.execute(BigInt(userId), dto.amountUsd);
-    }
-
-    @Post('users/:userId/accumulate-deposit')
-    @HttpCode(HttpStatus.OK)
-    @ApiOperation({ summary: '[TEST] Accumulate deposit for user' })
-    async testAccumulateDeposit(
-        @Param('userId') userId: string,
-        @Body() dto: AdminTestTierPerformanceRequestDto,
-    ): Promise<void> {
-        this.ensureNotProduction();
-        await this.accumulateDepositService.execute(BigInt(userId), dto.amountUsd);
     }
 
     @Post('users/:userId/evaluate')

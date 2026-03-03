@@ -24,22 +24,14 @@ export class UserTierListItemResponseDto {
   level: number;
 
   @ApiProperty({
-    description:
-      'Cumulative rolling amount (lifetime) / 누적 롤링 금액 (전체 가간)',
+    description: 'XP status for promotion / 승급 판정용 XP (status_exp)',
   })
-  lifetimeRollingUsd: string;
+  statusExp: string;
 
   @ApiProperty({
-    description:
-      'Rolling amount for the current evaluation period / 현재 심사 주기 내 롤링 금액',
+    description: 'Cumulative XP (lifetime) / 평생 누적 XP (lifetime_exp)',
   })
-  currentPeriodRollingUsd: string;
-
-  @ApiProperty({
-    description:
-      'Deposit amount for the current evaluation period / 현재 심사 주기 내 입금 금액',
-  })
-  currentPeriodDepositUsd: string;
+  lifetimeExp: string;
 
   @ApiProperty({
     enum: UserTierStatus,

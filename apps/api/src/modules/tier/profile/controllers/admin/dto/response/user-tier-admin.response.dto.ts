@@ -22,34 +22,14 @@ export class UserTierAdminResponseDto {
   level: number;
 
   @ApiProperty({
-    description:
-      'Cumulative rolling amount (lifetime) / 누적 롤링 금액 (전체 가간)',
+    description: 'XP status for promotion / 승급 판정용 XP (status_exp)',
   })
-  lifetimeRollingUsd: string;
+  statusExp: string;
 
   @ApiProperty({
-    description:
-      'Rolling amount for the current evaluation period / 현재 심사 주기 내 롤링 금액',
+    description: 'Cumulative XP (lifetime) / 평생 누적 XP (lifetime_exp)',
   })
-  currentPeriodRollingUsd: string;
-
-  @ApiProperty({
-    description:
-      'Promotion performance rolling amount / 승급 판정용 롤링 금액 (강등 시 Cap 처리됨)',
-  })
-  statusRollingUsd: string;
-
-  @ApiProperty({
-    description:
-      'Cumulative deposit amount (lifetime) / 누적 입금 금액 (전체 기간)',
-  })
-  lifetimeDepositUsd: string;
-
-  @ApiProperty({
-    description:
-      'Deposit amount for the current evaluation period / 현재 심사 주기 내 입금 금액',
-  })
-  currentPeriodDepositUsd: string;
+  lifetimeExp: string;
 
   @ApiProperty({
     description: 'Date of the last evaluation / 마지막 심사 수행 일시',
@@ -106,10 +86,21 @@ export class UserTierAdminResponseDto {
 
   @ApiProperty({
     nullable: true,
-    description:
-      'Custom daily withdrawal limit (USD) / 커스텀 일일 출금 한도 (USD)',
+    description: 'Custom daily withdrawal limit (USD) / 커스텀 일일 출금 한도 (USD)',
   })
-  customWithdrawalLimitUsd: string | null;
+  customDailyWithdrawalLimitUsd: string | null;
+
+  @ApiProperty({
+    nullable: true,
+    description: 'Custom weekly withdrawal limit (USD) / 커스텀 주간 출금 한도 (USD)',
+  })
+  customWeeklyWithdrawalLimitUsd: string | null;
+
+  @ApiProperty({
+    nullable: true,
+    description: 'Custom monthly withdrawal limit (USD) / 커스텀 월간 출금 한도 (USD)',
+  })
+  customMonthlyWithdrawalLimitUsd: string | null;
 
   @ApiProperty({
     nullable: true,

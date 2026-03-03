@@ -20,13 +20,14 @@ export class TierStatsService {
     tierId: bigint,
     metrics: {
       snapshotUserCount?: number;
-      periodBonusPaidUsd?: Prisma.Decimal;
-      periodRollingUsd?: Prisma.Decimal;
-      periodDepositUsd?: Prisma.Decimal;
+      periodActiveUserCount?: number;
+      periodExpGranted?: bigint;
       upgradedCount?: number;
       downgradedCount?: number;
       maintainedCount?: number;
       graceCount?: number;
+      periodTotalRollingUsd?: Prisma.Decimal;
+      periodRewardClaimedUsd?: Prisma.Decimal;
     },
   ): Promise<void> {
     await this.recordQueue.add(BULLMQ_QUEUES.TIER.STATS_RECORD.name, {
@@ -36,9 +37,9 @@ export class TierStatsService {
         tierId: tierId.toString(),
         metrics: {
           ...metrics,
-          periodBonusPaidUsd: metrics.periodBonusPaidUsd?.toString(),
-          periodRollingUsd: metrics.periodRollingUsd?.toString(),
-          periodDepositUsd: metrics.periodDepositUsd?.toString(),
+          periodExpGranted: metrics.periodExpGranted?.toString(),
+          periodTotalRollingUsd: metrics.periodTotalRollingUsd?.toString(),
+          periodRewardClaimedUsd: metrics.periodRewardClaimedUsd?.toString(),
         },
       },
     });
@@ -51,13 +52,14 @@ export class TierStatsService {
     timestamp: Date,
     tierId: bigint,
     metrics: {
-      periodBonusPaidUsd?: Prisma.Decimal;
-      periodRollingUsd?: Prisma.Decimal;
-      periodDepositUsd?: Prisma.Decimal;
+      periodActiveUserCount?: number;
+      periodExpGranted?: bigint;
       upgradedCount?: number;
       downgradedCount?: number;
       maintainedCount?: number;
       graceCount?: number;
+      periodTotalRollingUsd?: Prisma.Decimal;
+      periodRewardClaimedUsd?: Prisma.Decimal;
     },
   ): Promise<void> {
     await this.recordQueue.add(BULLMQ_QUEUES.TIER.STATS_RECORD.name, {
@@ -67,9 +69,9 @@ export class TierStatsService {
         tierId: tierId.toString(),
         metrics: {
           ...metrics,
-          periodBonusPaidUsd: metrics.periodBonusPaidUsd?.toString(),
-          periodRollingUsd: metrics.periodRollingUsd?.toString(),
-          periodDepositUsd: metrics.periodDepositUsd?.toString(),
+          periodExpGranted: metrics.periodExpGranted?.toString(),
+          periodTotalRollingUsd: metrics.periodTotalRollingUsd?.toString(),
+          periodRewardClaimedUsd: metrics.periodRewardClaimedUsd?.toString(),
         },
       },
     });

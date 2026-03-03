@@ -20,9 +20,8 @@ export interface UserTierListItemResult {
   tierName: string;
   tierCode: string;
   level: number;
-  lifetimeRollingUsd: string;
-  currentPeriodRollingUsd: string;
-  currentPeriodDepositUsd: string;
+  statusExp: string;
+  lifetimeExp: string;
   status: UserTierStatus;
   lastTierChangedAt: Date;
   nextEvaluationAt: Date | null;
@@ -35,6 +34,8 @@ export interface UserTierListItemResult {
     weeklyLossbackRate: string;
     monthlyLossbackRate: string;
     dailyWithdrawalLimitUsd: string;
+    weeklyWithdrawalLimitUsd: string;
+    monthlyWithdrawalLimitUsd: string;
     isWithdrawalUnlimited: boolean;
     hasDedicatedManager: boolean;
   };
@@ -42,7 +43,7 @@ export interface UserTierListItemResult {
 
 @Injectable()
 export class ListUserTiersService {
-  constructor(private readonly userTierRepository: UserTierRepositoryPort) {}
+  constructor(private readonly userTierRepository: UserTierRepositoryPort) { }
 
   async execute(
     params: ListUserTiersParams,
@@ -59,9 +60,8 @@ export class ListUserTiersService {
           tierName: ut.tier?.getName() ?? 'Unknown',
           tierCode: ut.tier?.code ?? 'UNKNOWN',
           level: ut.currentLevel,
-          lifetimeRollingUsd: ut.lifetimeRollingUsd.toString(),
-          currentPeriodRollingUsd: ut.currentPeriodRollingUsd.toString(),
-          currentPeriodDepositUsd: ut.currentPeriodDepositUsd.toString(),
+          statusExp: ut.statusExp.toString(),
+          lifetimeExp: ut.lifetimeExp.toString(),
           status: ut.status,
           lastTierChangedAt: ut.lastTierChangedAt,
           nextEvaluationAt: ut.nextEvaluationAt,
@@ -72,7 +72,9 @@ export class ListUserTiersService {
             ut.customCompRate ||
             ut.customWeeklyLossbackRate ||
             ut.customMonthlyLossbackRate ||
-            ut.customWithdrawalLimitUsd ||
+            ut.customDailyWithdrawalLimitUsd ||
+            ut.customWeeklyWithdrawalLimitUsd ||
+            ut.customMonthlyWithdrawalLimitUsd ||
             ut.isCustomWithdrawalUnlimited !== null ||
             ut.isCustomDedicatedManager !== null
           ),
@@ -80,8 +82,11 @@ export class ListUserTiersService {
             compRate: benefits.compRate.toString(),
             weeklyLossbackRate: benefits.weeklyLossbackRate.toString(),
             monthlyLossbackRate: benefits.monthlyLossbackRate.toString(),
-            dailyWithdrawalLimitUsd:
-              benefits.dailyWithdrawalLimitUsd.toString(),
+            dailyWithdrawalLimitUsd: benefits.dailyWithdrawalLimitUsd.toString(),
+            weeklyWithdrawalLimitUsd:
+              benefits.weeklyWithdrawalLimitUsd.toString(),
+            monthlyWithdrawalLimitUsd:
+              benefits.monthlyWithdrawalLimitUsd.toString(),
             isWithdrawalUnlimited: benefits.isWithdrawalUnlimited,
             hasDedicatedManager: benefits.hasDedicatedManager,
           },

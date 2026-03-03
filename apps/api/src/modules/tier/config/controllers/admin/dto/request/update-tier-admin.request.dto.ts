@@ -33,34 +33,19 @@ export class UpdateTierAdminRequestDto {
   @Min(0)
   level?: number;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({
+    required: false,
+    type: String,
+    description: 'Required XP for upgrade (BigInt as string)',
+  })
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  upgradeRollingRequiredUsd?: number;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  upgradeDepositRequiredUsd?: number;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  maintainRollingRequiredUsd?: number;
+  @IsString()
+  upgradeExpRequired?: string;
 
   @ApiProperty({ enum: TierEvaluationCycle, required: false })
   @IsOptional()
   @IsEnum(TierEvaluationCycle)
   evaluationCycle?: TierEvaluationCycle;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  upgradeBonusUsd?: number;
 
   @ApiProperty({ required: false })
   @IsOptional()
@@ -77,15 +62,6 @@ export class UpdateTierAdminRequestDto {
   @IsNumber()
   @Min(1)
   rewardExpiryDays?: number | null;
-
-  @ApiProperty({
-    required: false,
-    description:
-      'Whether to pay bonus immediately (true) or wait for claim (false)',
-  })
-  @IsOptional()
-  @IsBoolean()
-  isImmediateBonusEnabled?: boolean;
 
   @ApiProperty({ required: false })
   @IsOptional()
@@ -110,6 +86,18 @@ export class UpdateTierAdminRequestDto {
   @IsNumber()
   @Min(0)
   dailyWithdrawalLimitUsd?: number;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  weeklyWithdrawalLimitUsd?: number;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  monthlyWithdrawalLimitUsd?: number;
 
   @ApiProperty({ required: false })
   @IsOptional()

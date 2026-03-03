@@ -15,7 +15,7 @@ export class DemoteUserTierService {
     private readonly userTierRepository: UserTierRepositoryPort,
     private readonly recordTierHistoryService: RecordTierHistoryService,
     private readonly tierStatsService: TierStatsService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(
@@ -38,25 +38,46 @@ export class DemoteUserTierService {
     await this.userTierRepository.save(userTier);
 
     // 2. 강등 이력 기록
+    const benefits = userTier.getEffectiveBenefits(targetTier);
     await this.recordTierHistoryService.execute({
       userId,
       fromTierId: currentTier.id,
       toTierId: targetTier.id,
       changeType: TierChangeType.DOWNGRADE,
       reason,
-      statusRollingUsdSnap: userTier.statusRollingUsd,
-      currentPeriodDepositUsdSnap: userTier.currentPeriodDepositUsd,
-      compRateSnap: userTier.customCompRate ?? targetTier.compRate,
-      weeklyLossbackRateSnap:
-        userTier.customWeeklyLossbackRate ?? targetTier.weeklyLossbackRate,
-      monthlyLossbackRateSnap:
-        userTier.customMonthlyLossbackRate ?? targetTier.monthlyLossbackRate,
-      upgradeRollingRequiredUsdSnap: targetTier.upgradeRollingRequiredUsd,
-      upgradeDepositRequiredUsdSnap: targetTier.upgradeDepositRequiredUsd,
-      lifetimeRollingUsdSnap: userTier.lifetimeRollingUsd,
-      lifetimeDepositUsdSnap: userTier.lifetimeDepositUsd,
+
+      // Benefit Snapshot
+      compRateSnap: benefits.compRate,
+      weeklyLossbackRateSnap: benefits.weeklyLossbackRate,
+      monthlyLossbackRateSnap: benefits.monthlyLossbackRate,
+      upgradeBonusWageringMultiplierSnap: targetTier.upgradeBonusWageringMultiplier,
+
+      // Limit & Flag Snapshot
+      dailyWithdrawalLimitUsdSnap: benefits.dailyWithdrawalLimitUsd,
+      weeklyWithdrawalLimitUsdSnap: benefits.weeklyWithdrawalLimitUsd,
+      monthlyWithdrawalLimitUsdSnap: benefits.monthlyWithdrawalLimitUsd,
+      isWithdrawalUnlimitedSnap: benefits.isWithdrawalUnlimited,
+      hasDedicatedManagerSnap: benefits.hasDedicatedManager,
+
+      // Custom Override Status
+      isCustomBenefitAppliedSnap: !!(
+        userTier.customCompRate ||
+        userTier.customWeeklyLossbackRate ||
+        userTier.customMonthlyLossbackRate ||
+        userTier.customDailyWithdrawalLimitUsd ||
+        userTier.customWeeklyWithdrawalLimitUsd ||
+        userTier.customMonthlyWithdrawalLimitUsd ||
+        userTier.isCustomWithdrawalUnlimited !== null ||
+        userTier.isCustomDedicatedManager !== null
+      ),
+
+      // Reward Audit
       hasBonusGenerated: false,
-      bonusAmountUsdSnap: new Prisma.Decimal(0),
+      currency: userTier.preferredRewardCurrency || 'USD',
+      upgradeBonusSnap: new Prisma.Decimal(0),
+
+      // XP Snapshot
+      statusExpSnap: userTier.statusExp,
     });
 
     // 3. 실시간 통계 갱신 (강등 카운트 증분)
