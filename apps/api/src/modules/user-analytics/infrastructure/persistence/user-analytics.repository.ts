@@ -6,7 +6,7 @@ import {
     UserAnalyticsRepositoryPort,
     UpdateUserAnalyticsDto,
 } from '../../ports/out/user-analytics.repository.port';
-import { UserGlobalTotalStats, UserGlobalDailyStats } from '../../domain';
+import { UserGlobalTotalStats, UserGlobalHourlyStats } from '../../domain';
 import { UserAnalyticsMapper } from './user-analytics.mapper';
 
 @Injectable()
@@ -28,26 +28,28 @@ export class UserAnalyticsRepository implements UserAnalyticsRepositoryPort {
     }
 
     /**
-     * 일별 통계 조회
+     * 시간별 통계 조회
      */
-    async getDailyStats(userId: bigint, date: Date): Promise<UserGlobalDailyStats | null> {
-        const dateKey = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
-        const stats = await this.tx.userGlobalDailyStats.findUnique({
-            where: { date_userId: { date: dateKey, userId } },
+    async getHourlyStats(userId: bigint, date: Date): Promise<UserGlobalHourlyStats | null> {
+        const utcHourStr = date.toISOString().substring(0, 13) + ':00:00.000Z'; // YYYY-MM-DDTHH:00:00.000Z
+        const hourKey = new Date(utcHourStr);
+        const stats = await this.tx.userGlobalHourlyStats.findUnique({
+            where: { hour_userId: { hour: hourKey, userId } },
         });
-        return stats ? this.mapper.toDailyDomain(stats) : null;
+        return stats ? this.mapper.toHourlyDomain(stats) : null;
     }
 
     /**
      * [핵심] 원자적 통계 증감 업데이트 (Kysely 활용)
      * 
-     * 단일 트랜잭션 내에서 Total과 Daily 통계를 동시에 Upsert & Increment 합니다.
+     * 단일 트랜잭션 내에서 Total과 Hourly 통계를 동시에 Upsert & Increment 합니다.
      */
     async increaseStats(dto: UpdateUserAnalyticsDto): Promise<void> {
         const { userId } = dto;
         const now = new Date();
         const inputDate = dto.date || now;
-        const dateKey = new Date(Date.UTC(inputDate.getUTCFullYear(), inputDate.getUTCMonth(), inputDate.getUTCDate()));
+        const utcHourStr = inputDate.toISOString().substring(0, 13) + ':00:00.000Z'; // YYYY-MM-DDTHH:00:00.000Z
+        const hourKey = new Date(utcHourStr);
 
         const dUsd = dto.depositUsd?.toString() ?? '0';
         const wUsd = dto.withdrawUsd?.toString() ?? '0';
@@ -87,34 +89,34 @@ export class UserAnalyticsRepository implements UserAnalyticsRepositoryPort {
             )
             .execute();
 
-        // 2. Daily Stats Update
+        // 2. Hourly Stats Update
         await this.tx.$kysely
-            .insertInto('user_global_daily_stats')
+            .insertInto('user_global_hourly_stats')
             .values({
-                date: dateKey,
+                hour: hourKey,
                 user_id: userId.toString(),
-                daily_deposit_usd: dUsd,
-                daily_withdraw_usd: wUsd,
-                daily_bet_usd: bUsd,
-                daily_win_usd: winUsd,
-                daily_promo_usd: pUsd,
-                // 해당 날짜의 변동량 기반 (Daily 테이블은 누적이 아닌 해당 날짜 증가분임)
+                hourly_deposit_usd: dUsd,
+                hourly_withdraw_usd: wUsd,
+                hourly_bet_usd: bUsd,
+                hourly_win_usd: winUsd,
+                hourly_promo_usd: pUsd,
+                // 해당 시간의 변동량 기반
                 ltv_usd: sql`CAST(${dUsd} AS NUMERIC) - CAST(${wUsd} AS NUMERIC)`,
                 ggr_usd: sql`CAST(${bUsd} AS NUMERIC) - CAST(${winUsd} AS NUMERIC)`,
                 ngr_usd: sql`CAST(${bUsd} AS NUMERIC) - CAST(${winUsd} AS NUMERIC) - CAST(${pUsd} AS NUMERIC)`,
                 updated_at: now,
             })
             .onConflict((oc) =>
-                oc.columns(['date', 'user_id']).doUpdateSet({
-                    daily_deposit_usd: sql`user_global_daily_stats.daily_deposit_usd + CAST(${dUsd} AS NUMERIC)`,
-                    daily_withdraw_usd: sql`user_global_daily_stats.daily_withdraw_usd + CAST(${wUsd} AS NUMERIC)`,
-                    daily_bet_usd: sql`user_global_daily_stats.daily_bet_usd + CAST(${bUsd} AS NUMERIC)`,
-                    daily_win_usd: sql`user_global_daily_stats.daily_win_usd + CAST(${winUsd} AS NUMERIC)`,
-                    daily_promo_usd: sql`user_global_daily_stats.daily_promo_usd + CAST(${pUsd} AS NUMERIC)`,
-                    // 일별 증가분 기반 KPI 재계산
-                    ltv_usd: sql`user_global_daily_stats.daily_deposit_usd + CAST(${dUsd} AS NUMERIC) - (user_global_daily_stats.daily_withdraw_usd + CAST(${wUsd} AS NUMERIC))`,
-                    ggr_usd: sql`user_global_daily_stats.daily_bet_usd + CAST(${bUsd} AS NUMERIC) - (user_global_daily_stats.daily_win_usd + CAST(${winUsd} AS NUMERIC))`,
-                    ngr_usd: sql`user_global_daily_stats.daily_bet_usd + CAST(${bUsd} AS NUMERIC) - (user_global_daily_stats.daily_win_usd + CAST(${winUsd} AS NUMERIC)) - (user_global_daily_stats.daily_promo_usd + CAST(${pUsd} AS NUMERIC))`,
+                oc.columns(['hour', 'user_id']).doUpdateSet({
+                    hourly_deposit_usd: sql`user_global_hourly_stats.hourly_deposit_usd + CAST(${dUsd} AS NUMERIC)`,
+                    hourly_withdraw_usd: sql`user_global_hourly_stats.hourly_withdraw_usd + CAST(${wUsd} AS NUMERIC)`,
+                    hourly_bet_usd: sql`user_global_hourly_stats.hourly_bet_usd + CAST(${bUsd} AS NUMERIC)`,
+                    hourly_win_usd: sql`user_global_hourly_stats.hourly_win_usd + CAST(${winUsd} AS NUMERIC)`,
+                    hourly_promo_usd: sql`user_global_hourly_stats.hourly_promo_usd + CAST(${pUsd} AS NUMERIC)`,
+                    // 시간별 증가분 기반 KPI 재계산
+                    ltv_usd: sql`user_global_hourly_stats.hourly_deposit_usd + CAST(${dUsd} AS NUMERIC) - (user_global_hourly_stats.hourly_withdraw_usd + CAST(${wUsd} AS NUMERIC))`,
+                    ggr_usd: sql`user_global_hourly_stats.hourly_bet_usd + CAST(${bUsd} AS NUMERIC) - (user_global_hourly_stats.hourly_win_usd + CAST(${winUsd} AS NUMERIC))`,
+                    ngr_usd: sql`user_global_hourly_stats.hourly_bet_usd + CAST(${bUsd} AS NUMERIC) - (user_global_hourly_stats.hourly_win_usd + CAST(${winUsd} AS NUMERIC)) - (user_global_hourly_stats.hourly_promo_usd + CAST(${pUsd} AS NUMERIC))`,
                     updated_at: now,
                 }),
             )

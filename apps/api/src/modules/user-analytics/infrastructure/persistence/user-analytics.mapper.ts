@@ -1,7 +1,7 @@
-import { UserGlobalTotalStats, UserGlobalDailyStats } from '../../domain';
+import { UserGlobalTotalStats, UserGlobalHourlyStats } from '../../domain';
 import {
     UserGlobalTotalStats as PrismaTotalStats,
-    UserGlobalDailyStats as PrismaDailyStats,
+    UserGlobalHourlyStats as PrismaHourlyStats,
 } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 
@@ -26,20 +26,20 @@ export class UserAnalyticsMapper {
     }
 
     /**
-     * Prisma -> Domain (Daily)
+     * Prisma -> Domain (Hourly)
      */
-    toDailyDomain(prismaModel: PrismaDailyStats): UserGlobalDailyStats {
-        return UserGlobalDailyStats.fromPersistence({
+    toHourlyDomain(prismaModel: PrismaHourlyStats): UserGlobalHourlyStats {
+        return UserGlobalHourlyStats.fromPersistence({
             userId: prismaModel.userId,
-            date: prismaModel.date,
+            hour: prismaModel.hour,
             ltvUsd: prismaModel.ltvUsd,
             ggrUsd: prismaModel.ggrUsd,
             ngrUsd: prismaModel.ngrUsd,
-            dailyDepositUsd: prismaModel.dailyDepositUsd,
-            dailyWithdrawUsd: prismaModel.dailyWithdrawUsd,
-            dailyBetUsd: prismaModel.dailyBetUsd,
-            dailyWinUsd: prismaModel.dailyWinUsd,
-            dailyPromoUsd: prismaModel.dailyPromoUsd,
+            hourlyDepositUsd: prismaModel.hourlyDepositUsd,
+            hourlyWithdrawUsd: prismaModel.hourlyWithdrawUsd,
+            hourlyBetUsd: prismaModel.hourlyBetUsd,
+            hourlyWinUsd: prismaModel.hourlyWinUsd,
+            hourlyPromoUsd: prismaModel.hourlyPromoUsd,
             updatedAt: prismaModel.updatedAt,
         });
     }

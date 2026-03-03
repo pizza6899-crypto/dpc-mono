@@ -33,35 +33,29 @@ model UserGlobalTotalStats {
     @@map("user_global_total_stats")
 }
 
-/// 유저 일별(Daily) 전역 통합 지표 스냅샷 (USD 환산 기준)
-///
-/// 기간별 LTV, GGR 조회 및 티어/유저 내 랭킹(리더보드) 정렬에 특화된 테이블
-model UserGlobalDailyStats {
+/// 유저 시간별(Hourly) 전역 통합 지표 (USD 환산 기준)
+/// 타임존별 일간/주간/월간 집계의 원천 데이터로 사용됩니다.
+model UserGlobalHourlyStats {
     userId BigInt   @map("user_id")
-    // date: YYYY-MM-DD 형태 (시간/분/초는 00:00:00으로 절삭)
-    date   DateTime @map("date") @db.Date
+    hour   DateTime @map("hour") @db.Timestamp(3) // UTC 기준 정시 (ex: 2024-03-03 14:00:00)
 
-    // --- 해당 날짜 구간에 발생한 KPI 변동량 ---
     ltvUsd Decimal @default(0) @map("ltv_usd") @db.Decimal(32, 18)
     ggrUsd Decimal @default(0) @map("ggr_usd") @db.Decimal(32, 18)
     ngrUsd Decimal @default(0) @map("ngr_usd") @db.Decimal(32, 18)
 
-    // --- 해당 날짜 구간의 상세 변동량 (Raw Data) ---
-    dailyDepositUsd  Decimal @default(0) @map("daily_deposit_usd") @db.Decimal(32, 18)
-    dailyWithdrawUsd Decimal @default(0) @map("daily_withdraw_usd") @db.Decimal(32, 18)
-    dailyBetUsd      Decimal @default(0) @map("daily_bet_usd") @db.Decimal(32, 18)
-    dailyWinUsd      Decimal @default(0) @map("daily_win_usd") @db.Decimal(32, 18)
-    dailyPromoUsd    Decimal @default(0) @map("daily_promo_usd") @db.Decimal(32, 18)
+    hourlyDepositUsd  Decimal @default(0) @map("hourly_deposit_usd") @db.Decimal(32, 18)
+    hourlyWithdrawUsd Decimal @default(0) @map("hourly_withdraw_usd") @db.Decimal(32, 18)
+    hourlyBetUsd      Decimal @default(0) @map("hourly_bet_usd") @db.Decimal(32, 18)
+    hourlyWinUsd      Decimal @default(0) @map("hourly_win_usd") @db.Decimal(32, 18)
+    hourlyPromoUsd    Decimal @default(0) @map("hourly_promo_usd") @db.Decimal(32, 18)
 
     updatedAt DateTime @updatedAt @map("updated_at")
 
     user User @relation(fields: [userId], references: [id])
 
-    // PK (날짜 + 유저 복합키 설정 대응)
-    @@id([date, userId])
-    // (중요) "특정 날짜/기간 범위 내에서 수익성 지표가 높은 순" 정렬을 매우 빠르게 처리하기 위한 복합 인덱스
-    @@index([date, ggrUsd(sort: Desc)])
-    @@index([date, ltvUsd(sort: Desc)])
-    @@index([date, ngrUsd(sort: Desc)])
-    @@map("user_global_daily_stats")
+    @@id([hour, userId])
+    @@index([hour, ggrUsd(sort: Desc)])
+    @@index([hour, ltvUsd(sort: Desc)])
+    @@index([hour, ngrUsd(sort: Desc)])
+    @@map("user_global_hourly_stats")
 }

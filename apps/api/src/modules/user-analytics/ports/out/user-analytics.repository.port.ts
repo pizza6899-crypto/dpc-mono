@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { UserGlobalTotalStats, UserGlobalDailyStats } from '../../domain';
+import { UserGlobalTotalStats, UserGlobalHourlyStats } from '../../domain';
 
 export const USER_ANALYTICS_REPOSITORY = Symbol('USER_ANALYTICS_REPOSITORY');
 
@@ -25,12 +25,12 @@ export interface UserAnalyticsRepositoryPort {
     getTotalStats(userId: bigint): Promise<UserGlobalTotalStats | null>;
 
     /**
-     * 유저의 특정 날짜 통계를 조회합니다.
+     * 유저의 특정 시간 통계를 조회합니다.
      */
-    getDailyStats(userId: bigint, date: Date): Promise<UserGlobalDailyStats | null>;
+    getHourlyStats(userId: bigint, hour: Date): Promise<UserGlobalHourlyStats | null>;
 
     /**
-     * 유저의 전역/일별 통계를 원자적으로 증감 업데이트합니다. (Upsert 포함)
+     * 유저의 전역/시간별 통계를 원자적으로 증감 업데이트합니다. (Upsert 포함)
      * 
      * @param dto 업데이트할 증감액 정보
      */
