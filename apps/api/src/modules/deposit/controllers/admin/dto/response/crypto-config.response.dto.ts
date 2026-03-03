@@ -4,8 +4,6 @@ export class CryptoConfigResponseDto {
   @ApiProperty({ description: 'ID' })
   id: string;
 
-  @ApiProperty({ description: 'Business UID' })
-  uid: string;
 
   @ApiProperty({ description: 'Symbol' })
   symbol: string;

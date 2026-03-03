@@ -8,7 +8,6 @@ export class CryptoConfigMapper {
   toDomain(prismaCryptoConfig: PrismaCryptoConfig): CryptoConfig {
     return CryptoConfig.fromPersistence({
       id: prismaCryptoConfig.id,
-      uid: prismaCryptoConfig.uid,
       symbol: prismaCryptoConfig.symbol,
       network: prismaCryptoConfig.network,
       isActive: prismaCryptoConfig.isActive,
@@ -24,7 +23,6 @@ export class CryptoConfigMapper {
   toPrisma(cryptoConfig: CryptoConfig): Partial<PrismaCryptoConfig> {
     const persistence = cryptoConfig.toPersistence();
     return {
-      uid: persistence.uid,
       symbol: persistence.symbol,
       network: persistence.network,
       isActive: persistence.isActive,

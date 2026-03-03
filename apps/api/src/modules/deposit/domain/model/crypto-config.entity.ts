@@ -12,7 +12,6 @@ import type { Prisma } from '@prisma/client';
 export class CryptoConfig {
   private constructor(
     public readonly id: bigint | null,
-    public readonly uid: string,
     public readonly symbol: string,
     public readonly network: string,
     private _isActive: boolean,
@@ -22,13 +21,12 @@ export class CryptoConfig {
     public readonly contractAddress: string | null,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
-  ) {}
+  ) { }
 
   /**
    * 새로운 엔티티 생성 (팩토리 메서드)
    */
   static create(params: {
-    uid: string;
     symbol: string;
     network: string;
     isActive?: boolean;
@@ -39,7 +37,6 @@ export class CryptoConfig {
   }): CryptoConfig {
     return new CryptoConfig(
       null, // 새 엔티티는 id 없음
-      params.uid,
       params.symbol,
       params.network,
       params.isActive ?? true,
@@ -57,7 +54,6 @@ export class CryptoConfig {
    */
   static fromPersistence(data: {
     id: bigint;
-    uid: string;
     symbol: string;
     network: string;
     isActive: boolean;
@@ -70,7 +66,6 @@ export class CryptoConfig {
   }): CryptoConfig {
     return new CryptoConfig(
       data.id,
-      data.uid,
       data.symbol,
       data.network,
       data.isActive,
@@ -88,7 +83,6 @@ export class CryptoConfig {
    */
   toPersistence(): {
     id: bigint | null;
-    uid: string;
     symbol: string;
     network: string;
     isActive: boolean;
@@ -101,7 +95,6 @@ export class CryptoConfig {
   } {
     return {
       id: this.id,
-      uid: this.uid,
       symbol: this.symbol,
       network: this.network,
       isActive: this._isActive,
@@ -128,7 +121,6 @@ export class CryptoConfig {
   }): CryptoConfig {
     return new CryptoConfig(
       this.id,
-      this.uid,
       params.symbol ?? this.symbol,
       params.network ?? this.network,
       params.isActive ?? this._isActive,

@@ -4,7 +4,6 @@ import { BankConfig } from './bank-config.entity';
 
 describe('BankConfig Entity', () => {
   const defaultParams = {
-    uid: 'bank-uid-123',
     currency: ExchangeCurrencyCode.KRW,
     bankName: 'KB국민은행',
     accountNumber: '123-456-7890',
@@ -17,7 +16,6 @@ describe('BankConfig Entity', () => {
       const config = BankConfig.create(defaultParams);
 
       expect(config.id).toBeNull();
-      expect(config.uid).toBe('bank-uid-123');
       expect(config.currency).toBe(ExchangeCurrencyCode.KRW);
       expect(config.bankName).toBe('KB국민은행');
       expect(config.accountNumber).toBe('123-456-7890');
@@ -55,7 +53,6 @@ describe('BankConfig Entity', () => {
       const now = new Date();
       const config = BankConfig.fromPersistence({
         id: BigInt(1),
-        uid: 'bank-uid-123',
         currency: ExchangeCurrencyCode.KRW,
         bankName: 'KB국민은행',
         accountNumber: '123-456-7890',
@@ -74,7 +71,6 @@ describe('BankConfig Entity', () => {
       });
 
       expect(config.id).toBe(BigInt(1));
-      expect(config.uid).toBe('bank-uid-123');
       expect(config.totalDeposits).toBe(100);
       expect(config.totalDepositAmount).toEqual(new Prisma.Decimal('5000000'));
     });

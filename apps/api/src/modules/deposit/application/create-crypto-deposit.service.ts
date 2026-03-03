@@ -6,7 +6,7 @@ import {
   ExchangeCurrencyCode,
   PaymentProvider,
 } from '@prisma/client';
-import { createId } from '@paralleldrive/cuid2';
+
 import {
   DEPOSIT_DETAIL_REPOSITORY,
   CRYPTO_CONFIG_REPOSITORY,
@@ -50,7 +50,7 @@ export class CreateCryptoDepositService {
     private readonly promotionRepository: PromotionRepositoryPort,
     private readonly checkEligiblePromotionsService: CheckEligiblePromotionsService,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(params: CreateCryptoDepositParams): Promise<DepositDetail> {
@@ -137,9 +137,7 @@ export class CreateCryptoDepositService {
     });
 
     // 4. DepositDetail 생성
-    const uid = createId();
     const depositDetail = DepositDetail.create({
-      uid,
       userId,
       depositCurrency: payCurrency as ExchangeCurrencyCode,
       method: depositMethod,

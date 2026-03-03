@@ -43,6 +43,7 @@ import {
   BANK_CONFIG_REPOSITORY,
   CRYPTO_CONFIG_REPOSITORY,
 } from './ports/out';
+import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import {
     TierEvaluatorModule,
     ExchangeModule,
     ConcurrencyModule,
+    SnowflakeModule,
   ],
   providers: [
     // Infrastructure (Mapper)

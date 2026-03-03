@@ -11,12 +11,10 @@ import type {
 } from '../ports/out/deposit-detail.repository.port';
 import { DepositDetailMapper } from './deposit-detail.mapper';
 import {
-  ExchangeCurrencyCode,
   Prisma,
   DepositDetailStatus,
   DepositMethodType,
 } from '@prisma/client';
-import { generateUid } from 'src/utils/id.util';
 
 /**
  * DepositDetail Repository Implementation
@@ -29,7 +27,7 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: DepositDetailMapper,
-  ) {}
+  ) { }
 
   async findById(
     id: bigint,
@@ -74,31 +72,10 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     return this.mapper.toDomain(result);
   }
 
-  async getTransactionUserId(transactionId: bigint): Promise<bigint | null> {
-    // TODO: Transaction 테이블 삭제 대응 (임시 null 반환 또는 User 지갑 정보에서 조회 필요)
-    return null;
-  }
-
-  async createTransaction(data: {
-    userId: bigint;
-    type: any; // TransactionType 삭제됨
-    status: any; // TransactionStatus 삭제됨
-    currency: ExchangeCurrencyCode;
-    amount: Prisma.Decimal;
-    beforeAmount: Prisma.Decimal;
-    afterAmount: Prisma.Decimal;
-  }): Promise<bigint> {
-    // TODO: Transaction 테이블 삭제 대응 (임시 ID 반환)
-    return BigInt(Date.now());
-  }
-
   async create(deposit: DepositDetail): Promise<DepositDetail> {
     const data = this.mapper.toPrismaCreate(deposit);
     const result = await this.tx.depositDetail.create({
-      data: {
-        ...data,
-        uid: generateUid(),
-      },
+      data,
     });
 
     return this.mapper.toDomain(result);
@@ -177,11 +154,11 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
       ...(currency && { depositCurrency: currency }),
       ...(startDate &&
         endDate && {
-          createdAt: {
-            gte: new Date(startDate),
-            lte: new Date(endDate),
-          },
-        }),
+        createdAt: {
+          gte: new Date(startDate),
+          lte: new Date(endDate),
+        },
+      }),
     };
 
     const orderBy: Prisma.DepositDetailOrderByWithRelationInput = {
@@ -285,24 +262,6 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
           )?._count.id || 0,
       },
     };
-  }
-
-  async findByUidAndUserId(
-    uid: string,
-    userId: bigint,
-  ): Promise<DepositDetail | null> {
-    const result = await this.tx.depositDetail.findFirst({
-      where: {
-        uid,
-        userId,
-      },
-      include: {
-        bankDepositConfig: true,
-        cryptoDepositConfig: true,
-      },
-    });
-
-    return result ? this.mapper.toDomain(result) : null;
   }
 
   async findByIdAndUserId(

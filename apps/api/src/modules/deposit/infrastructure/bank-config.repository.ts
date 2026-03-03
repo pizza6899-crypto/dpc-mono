@@ -14,7 +14,7 @@ export class BankConfigRepository implements BankConfigRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: BankConfigMapper,
-  ) {}
+  ) { }
 
   async listActive(currency?: ExchangeCurrencyCode): Promise<BankConfig[]> {
     const configs = await this.tx.bankDepositConfig.findMany({
@@ -28,21 +28,6 @@ export class BankConfigRepository implements BankConfigRepositoryPort {
       },
     });
     return configs.map((config) => this.mapper.toDomain(config));
-  }
-
-  async findByUid(uid: string): Promise<BankConfig | null> {
-    const config = await this.tx.bankDepositConfig.findFirst({
-      where: { uid, deletedAt: null },
-    });
-    return config ? this.mapper.toDomain(config) : null;
-  }
-
-  async getByUid(uid: string): Promise<BankConfig> {
-    const config = await this.findByUid(uid);
-    if (!config) {
-      throw new BankConfigNotFoundException(uid);
-    }
-    return config;
   }
 
   async findById(id: bigint): Promise<BankConfig | null> {

@@ -4,8 +4,6 @@ import type { ExchangeCurrencyCode } from '@prisma/client';
 
 export interface BankConfigRepositoryPort {
   listActive(currency?: ExchangeCurrencyCode): Promise<BankConfig[]>;
-  findByUid(uid: string): Promise<BankConfig | null>;
-  getByUid(uid: string): Promise<BankConfig>;
   findById(id: bigint): Promise<BankConfig | null>;
   getById(id: bigint): Promise<BankConfig>;
   list(params: {

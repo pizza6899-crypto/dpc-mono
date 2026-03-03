@@ -20,6 +20,7 @@ import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';
 import { CreateWageringRequirementService } from 'src/modules/wagering/requirement/application';
 import { GetWageringConfigService } from 'src/modules/wagering/config/application/get-wagering-config.service';
+import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
 interface ApproveDepositParams {
   id: bigint;
@@ -49,6 +50,7 @@ export class ApproveDepositService {
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly exchangeRateService: ExchangeRateService,
     private readonly wageringConfigService: GetWageringConfigService,
+    private readonly snowflakeService: SnowflakeService,
   ) { }
 
   @Transactional()
@@ -100,7 +102,10 @@ export class ApproveDepositService {
       amountUsd = actuallyPaid.mul(rate);
     }
 
-    // 5. 잔액 업데이트
+    // 5. Transaction ID 생성 (Snowflake) - Wallet과 Deposit이 동일한 ID 공유
+    const txId = this.snowflakeService.generate();
+
+    // 6. 잔액 업데이트
     const updatedWallet = await this.updateUserBalanceService.updateBalance(
       {
         userId: deposit.userId,
@@ -109,6 +114,7 @@ export class ApproveDepositService {
         operation: UpdateOperation.ADD,
         balanceType: UserWalletBalanceType.CASH,
         transactionType: UserWalletTransactionType.DEPOSIT,
+        txId: txId.id, // 동기화된 ID 주입
         referenceId: deposit.id!,
         amountUsd, // 산정된 USD 금액 전달
       },
@@ -125,27 +131,13 @@ export class ApproveDepositService {
     // 6. Tier Stats or XP Accumulation (Skip deposit-based XP if not used)
     // Deprecated: accumulateUserDepositService call removed.
 
-    // 7. Transaction 생성 (지연 생성)
-    let transactionId = deposit.transactionId;
-    if (!transactionId) {
-      transactionId = await this.depositRepository.createTransaction({
-        userId: deposit.userId,
-        type: 'DEPOSIT' as any, // TransactionType 삭제됨
-        status: 'COMPLETED' as any, // TransactionStatus 삭제됨
-        currency: deposit.depositCurrency,
-        amount: actuallyPaid,
-        beforeAmount: beforeTotalAmount,
-        afterAmount: afterTotalAmount,
-      });
-    }
-
     // 8. 엔티티 승인 처리 (상태 변경 및 트랜잭션 링크)
     deposit.approve(
       actuallyPaid,
       adminId,
       transactionHash,
       memo,
-      transactionId,
+      txId.id,
     );
 
     // 9. DepositDetail 상태 업데이트 (엔티티의 변경사항 반영)
@@ -186,7 +178,7 @@ export class ApproveDepositService {
     }
 
     return {
-      transactionId: transactionId.toString(),
+      transactionId: txId.id.toString(),
       actuallyPaid: actuallyPaid.toString(),
       bonusAmount: bonusAmount.toString(),
       userId: deposit.userId.toString(),

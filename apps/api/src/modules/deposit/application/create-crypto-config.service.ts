@@ -4,7 +4,7 @@ import { Prisma } from '@prisma/client';
 import { CRYPTO_CONFIG_REPOSITORY } from '../ports/out';
 import type { CryptoConfigRepositoryPort } from '../ports/out';
 import { CryptoConfig } from '../domain';
-import { generateUid } from 'src/utils/id.util';
+
 
 interface CreateCryptoConfigParams {
   symbol: string;
@@ -21,7 +21,7 @@ export class CreateCryptoConfigService {
   constructor(
     @Inject(CRYPTO_CONFIG_REPOSITORY)
     private readonly repository: CryptoConfigRepositoryPort,
-  ) {}
+  ) { }
 
   async execute({
     symbol,
@@ -33,7 +33,6 @@ export class CreateCryptoConfigService {
     contractAddress,
   }: CreateCryptoConfigParams): Promise<CryptoConfig> {
     const config = CryptoConfig.create({
-      uid: generateUid(),
       symbol,
       network,
       isActive,

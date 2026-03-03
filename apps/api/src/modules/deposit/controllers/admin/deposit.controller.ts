@@ -84,7 +84,7 @@ export class AdminDepositController {
     private readonly updateCryptoConfigAdminService: UpdateCryptoConfigAdminService,
     private readonly deleteCryptoConfigAdminService: DeleteCryptoConfigAdminService,
     private readonly createBankConfigService: CreateBankConfigService,
-  ) {}
+  ) { }
   // ============================================
   // 입금 관리 (Deposit Management)
   // ============================================
@@ -356,7 +356,6 @@ export class AdminDepositController {
 
     return {
       id: config.id!.toString(),
-      uid: config.uid,
       currency: config.currency,
       bankName: config.bankName,
       accountNumber: config.accountNumber,
@@ -656,7 +655,6 @@ export class AdminDepositController {
   private toCryptoConfigResponseDto(config: any): CryptoConfigResponseDto {
     return {
       id: config.id.toString(),
-      uid: config.uid,
       symbol: config.symbol,
       network: config.network,
       isActive: config.isActive,
@@ -672,7 +670,6 @@ export class AdminDepositController {
   private toBankConfigResponseDto(config: any): BankConfigResponseDto {
     return {
       id: config.id.toString(),
-      uid: config.uid,
       currency: config.currency,
       bankName: config.bankName,
       accountNumber: config.accountNumber,

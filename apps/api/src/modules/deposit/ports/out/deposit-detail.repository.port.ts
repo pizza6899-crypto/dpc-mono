@@ -45,26 +45,11 @@ export interface DepositDetailRepositoryPort {
   ): Promise<DepositDetail>;
   update(deposit: DepositDetail): Promise<DepositDetail>;
   create(deposit: DepositDetail): Promise<DepositDetail>;
-  createTransaction(data: {
-    userId: bigint;
-    type: any; // TransactionType 삭제됨
-    status: any; // TransactionStatus 삭제됨
-    currency: ExchangeCurrencyCode;
-    amount: Prisma.Decimal;
-    beforeAmount: Prisma.Decimal;
-    afterAmount: Prisma.Decimal;
-  }): Promise<bigint>;
-  getTransactionUserId(transactionId: bigint): Promise<bigint | null>;
-
   // User queries
   listByUserId(
     userId: bigint,
     query: DepositListQuery,
   ): Promise<{ items: DepositDetail[]; total: number }>;
-  findByUidAndUserId(
-    uid: string,
-    userId: bigint,
-  ): Promise<DepositDetail | null>;
   findByIdAndUserId(id: bigint, userId: bigint): Promise<DepositDetail | null>;
   existsPendingByUserId(userId: bigint): Promise<boolean>;
 

@@ -23,7 +23,6 @@ import {
 export class DepositDetail {
   private constructor(
     public readonly id: bigint | null,
-    public readonly uid: string,
     public readonly userId: bigint,
     private _transactionId: bigint | null,
     private _status: DepositDetailStatus,
@@ -50,13 +49,12 @@ export class DepositDetail {
     private _confirmedAt: Date | null,
     private _failedAt: Date | null,
     private _bankName: string | null = null,
-  ) {}
+  ) { }
 
   /**
    * 새로운 입금 요청 엔티티 생성
    */
   static create(params: {
-    uid: string;
     userId: bigint;
     depositCurrency: ExchangeCurrencyCode;
     method: DepositMethod;
@@ -75,7 +73,6 @@ export class DepositDetail {
   }): DepositDetail {
     return new DepositDetail(
       null,
-      params.uid,
       params.userId,
       null,
       DepositDetailStatus.PENDING,
@@ -110,7 +107,6 @@ export class DepositDetail {
    */
   static fromPersistence(data: {
     id: bigint;
-    uid: string;
     userId: bigint;
     transactionId: bigint | null;
     status: DepositDetailStatus;
@@ -145,7 +141,6 @@ export class DepositDetail {
   }): DepositDetail {
     return new DepositDetail(
       data.id,
-      data.uid,
       data.userId,
       data.transactionId,
       data.status,
@@ -189,7 +184,6 @@ export class DepositDetail {
    */
   toPersistence(): {
     id: bigint | null;
-    uid: string;
     userId: bigint;
     transactionId: bigint | null;
     status: DepositDetailStatus;
@@ -226,7 +220,6 @@ export class DepositDetail {
 
     return {
       id: this.id,
-      uid: this.uid,
       userId: this.userId,
       transactionId: this.transactionId,
       status: this._status,

@@ -14,7 +14,6 @@ import type { ExchangeCurrencyCode } from '@prisma/client';
 export class BankConfig {
   private constructor(
     public readonly id: bigint | null,
-    public readonly uid: string,
     public readonly currency: ExchangeCurrencyCode,
     public readonly bankName: string,
     public readonly accountNumber: string,
@@ -30,13 +29,12 @@ export class BankConfig {
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
     private _deletedAt: Date | null,
-  ) {}
+  ) { }
 
   /**
    * 새로운 엔티티 생성 (팩토리 메서드)
    */
   static create(params: {
-    uid: string;
     currency: ExchangeCurrencyCode;
     bankName: string;
     accountNumber: string;
@@ -50,7 +48,6 @@ export class BankConfig {
   }): BankConfig {
     return new BankConfig(
       null, // 새 엔티티는 id 없음
-      params.uid, // 새 엔티티는 uid 없음 (DB 자동 생성)
       params.currency,
       params.bankName,
       params.accountNumber,
@@ -74,7 +71,6 @@ export class BankConfig {
    */
   static fromPersistence(data: {
     id: bigint;
-    uid: string;
     currency: ExchangeCurrencyCode;
     bankName: string;
     accountNumber: string;
@@ -93,7 +89,6 @@ export class BankConfig {
   }): BankConfig {
     return new BankConfig(
       data.id,
-      data.uid,
       data.currency,
       data.bankName,
       data.accountNumber,
@@ -117,7 +112,6 @@ export class BankConfig {
    */
   toPersistence(): {
     id: bigint | null;
-    uid: string;
     currency: ExchangeCurrencyCode;
     bankName: string;
     accountNumber: string;
@@ -136,7 +130,6 @@ export class BankConfig {
   } {
     return {
       id: this.id,
-      uid: this.uid,
       currency: this.currency,
       bankName: this.bankName,
       accountNumber: this.accountNumber,
@@ -257,7 +250,6 @@ export class BankConfig {
   }): BankConfig {
     return new BankConfig(
       this.id,
-      this.uid,
       params.currency ?? this.currency,
       params.bankName ?? this.bankName,
       params.accountNumber ?? this.accountNumber,

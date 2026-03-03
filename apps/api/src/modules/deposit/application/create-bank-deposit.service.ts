@@ -6,7 +6,7 @@ import {
   ExchangeCurrencyCode,
   PaymentProvider,
 } from '@prisma/client';
-import { createId } from '@paralleldrive/cuid2';
+
 import {
   DEPOSIT_DETAIL_REPOSITORY,
   BANK_CONFIG_REPOSITORY,
@@ -57,7 +57,7 @@ export class CreateBankDepositService {
     private readonly promotionRepository: PromotionRepositoryPort,
     private readonly promotionsService: CheckEligiblePromotionsService,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(
@@ -147,9 +147,7 @@ export class CreateBankDepositService {
     });
 
     // 4. DepositDetail 생성
-    const uid = createId();
     const depositDetail = DepositDetail.create({
-      uid,
       userId,
       depositCurrency: payCurrency as ExchangeCurrencyCode,
       method: depositMethod,

@@ -4,7 +4,6 @@ import { CryptoConfig } from './crypto-config.entity';
 
 describe('CryptoConfig Entity', () => {
   const defaultParams = {
-    uid: 'crypto-uid-123',
     symbol: 'USDT',
     network: 'TRC20',
     minDepositAmount: new Prisma.Decimal('10'),
@@ -17,7 +16,6 @@ describe('CryptoConfig Entity', () => {
       const config = CryptoConfig.create(defaultParams);
 
       expect(config.id).toBeNull();
-      expect(config.uid).toBe('crypto-uid-123');
       expect(config.symbol).toBe('USDT');
       expect(config.network).toBe('TRC20');
       expect(config.isActive).toBe(true);
@@ -48,7 +46,6 @@ describe('CryptoConfig Entity', () => {
       const now = new Date();
       const config = CryptoConfig.fromPersistence({
         id: BigInt(1),
-        uid: 'crypto-uid-123',
         symbol: 'USDT',
         network: 'TRC20',
         isActive: true,
@@ -61,7 +58,6 @@ describe('CryptoConfig Entity', () => {
       });
 
       expect(config.id).toBe(BigInt(1));
-      expect(config.uid).toBe('crypto-uid-123');
       expect(config.symbol).toBe('USDT');
       expect(config.contractAddress).toBe(
         '0xdac17f958d2ee523a2206206994597c13d831ec7',
@@ -90,7 +86,6 @@ describe('CryptoConfig Entity', () => {
       expect(updated.confirmations).toBe(20);
 
       // 다른 필드는 유지
-      expect(updated.uid).toBe('crypto-uid-123');
       expect(updated.depositFeeRate).toEqual(new Prisma.Decimal('0.01'));
     });
 
@@ -240,7 +235,6 @@ describe('CryptoConfig Entity', () => {
       const persistence = config.toPersistence();
 
       expect(persistence.id).toBeNull();
-      expect(persistence.uid).toBe('crypto-uid-123');
       expect(persistence.symbol).toBe('USDT');
       expect(persistence.network).toBe('TRC20');
       expect(persistence.isActive).toBe(true);

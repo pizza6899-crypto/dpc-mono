@@ -8,7 +8,6 @@ export class BankConfigMapper {
   toDomain(prismaBankConfig: PrismaBankConfig): BankConfig {
     return BankConfig.fromPersistence({
       id: prismaBankConfig.id,
-      uid: prismaBankConfig.uid,
       currency: prismaBankConfig.currency,
       bankName: prismaBankConfig.bankName,
       accountNumber: prismaBankConfig.accountNumber,
@@ -30,7 +29,6 @@ export class BankConfigMapper {
   toPrisma(bankConfig: BankConfig): Partial<PrismaBankConfig> {
     const persistence = bankConfig.toPersistence();
     return {
-      uid: persistence.uid,
       currency: persistence.currency,
       bankName: persistence.bankName,
       accountNumber: persistence.accountNumber,

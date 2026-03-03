@@ -19,7 +19,6 @@ export class DepositDetailMapper {
    */
   toDomain(prismaModel: {
     id: bigint;
-    uid: string;
     userId: bigint;
     transactionId?: bigint | null;
     status: DepositDetailStatus;
@@ -54,7 +53,6 @@ export class DepositDetailMapper {
   }): DepositDetail {
     return DepositDetail.fromPersistence({
       id: prismaModel.id,
-      uid: prismaModel.uid,
       userId: prismaModel.userId,
       transactionId: prismaModel.transactionId ?? null,
       status: prismaModel.status,

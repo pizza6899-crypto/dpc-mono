@@ -34,7 +34,6 @@ describe('DepositDetail Entity', () => {
   describe('create', () => {
     it('should create a new deposit with required fields', () => {
       const deposit = DepositDetail.create({
-        uid: 'dep-uid-123',
         userId,
         depositCurrency: currency,
         method: createDepositMethod(),
@@ -42,7 +41,6 @@ describe('DepositDetail Entity', () => {
       });
 
       expect(deposit.id).toBeNull();
-      expect(deposit.uid).toBe('dep-uid-123');
       expect(deposit.userId).toBe(userId);
       expect(deposit.depositCurrency).toBe(currency);
       expect(deposit.status).toBe(DepositDetailStatus.PENDING);
@@ -52,7 +50,6 @@ describe('DepositDetail Entity', () => {
 
     it('should create a deposit with optional fields', () => {
       const deposit = DepositDetail.create({
-        uid: 'dep-uid-123',
         userId,
         depositCurrency: currency,
         method: createDepositMethod(),
@@ -75,7 +72,6 @@ describe('DepositDetail Entity', () => {
       const now = new Date();
       const deposit = DepositDetail.fromPersistence({
         id: BigInt(1),
-        uid: 'dep-uid-123',
         userId,
         transactionId: BigInt(10),
         status: DepositDetailStatus.COMPLETED,
@@ -119,7 +115,6 @@ describe('DepositDetail Entity', () => {
     const createDepositWithStatus = (status: DepositDetailStatus) => {
       return DepositDetail.fromPersistence({
         id: BigInt(1),
-        uid: 'dep-uid-123',
         userId,
         transactionId: null,
         status,
@@ -202,7 +197,6 @@ describe('DepositDetail Entity', () => {
     const createPendingDeposit = () => {
       return DepositDetail.fromPersistence({
         id: BigInt(1),
-        uid: 'dep-uid-123',
         userId,
         transactionId: null,
         status: DepositDetailStatus.PENDING,
@@ -259,7 +253,6 @@ describe('DepositDetail Entity', () => {
     it('should throw error when approving already processed deposit', () => {
       const deposit = DepositDetail.fromPersistence({
         id: BigInt(1),
-        uid: 'dep-uid-123',
         userId,
         transactionId: null,
         status: DepositDetailStatus.COMPLETED,
@@ -299,7 +292,6 @@ describe('DepositDetail Entity', () => {
 
     it('should throw error when entity is not persisted', () => {
       const deposit = DepositDetail.create({
-        uid: 'dep-uid-123',
         userId,
         depositCurrency: currency,
         method: createDepositMethod(),
@@ -316,7 +308,6 @@ describe('DepositDetail Entity', () => {
     const createPendingDeposit = () => {
       return DepositDetail.fromPersistence({
         id: BigInt(1),
-        uid: 'dep-uid-123',
         userId,
         transactionId: null,
         status: DepositDetailStatus.PENDING,
@@ -364,7 +355,6 @@ describe('DepositDetail Entity', () => {
     it('should throw error when rejecting already processed deposit', () => {
       const deposit = DepositDetail.fromPersistence({
         id: BigInt(1),
-        uid: 'dep-uid-123',
         userId,
         transactionId: null,
         status: DepositDetailStatus.REJECTED,
@@ -406,7 +396,6 @@ describe('DepositDetail Entity', () => {
   describe('utility methods', () => {
     it('hasWalletAddress should return true when address exists', () => {
       const deposit = DepositDetail.create({
-        uid: 'dep-uid-123',
         userId,
         depositCurrency: currency,
         method: createDepositMethod(),
@@ -419,7 +408,6 @@ describe('DepositDetail Entity', () => {
 
     it('hasWalletAddress should return false when address is null', () => {
       const deposit = DepositDetail.create({
-        uid: 'dep-uid-123',
         userId,
         depositCurrency: currency,
         method: createDepositMethod(),
@@ -432,7 +420,6 @@ describe('DepositDetail Entity', () => {
     it('isProcessedByAdmin should return true when processedBy is set', () => {
       const deposit = DepositDetail.fromPersistence({
         id: BigInt(1),
-        uid: 'dep-uid-123',
         userId,
         transactionId: null,
         status: DepositDetailStatus.COMPLETED,

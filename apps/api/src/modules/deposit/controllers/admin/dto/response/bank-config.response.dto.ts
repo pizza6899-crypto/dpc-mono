@@ -5,8 +5,6 @@ export class BankConfigResponseDto {
   @ApiProperty({ description: 'ID' })
   id: string;
 
-  @ApiProperty({ description: 'Business UID' })
-  uid: string;
 
   @ApiProperty({ enum: ExchangeCurrencyCode, description: 'Currency' })
   currency: ExchangeCurrencyCode;

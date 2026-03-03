@@ -13,7 +13,7 @@ export class CryptoConfigRepository implements CryptoConfigRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: CryptoConfigMapper,
-  ) {}
+  ) { }
 
   async listActive(): Promise<CryptoConfig[]> {
     const configs = await this.tx.cryptoDepositConfig.findMany({
@@ -23,24 +23,6 @@ export class CryptoConfigRepository implements CryptoConfigRepositoryPort {
       },
     });
     return configs.map((config) => this.mapper.toDomain(config));
-  }
-
-  async findByUid(uid: string): Promise<CryptoConfig | null> {
-    const config = await this.tx.cryptoDepositConfig.findUnique({
-      where: {
-        uid,
-        deletedAt: null,
-      },
-    });
-    return config ? this.mapper.toDomain(config) : null;
-  }
-
-  async getByUid(uid: string): Promise<CryptoConfig> {
-    const config = await this.findByUid(uid);
-    if (!config) {
-      throw new CryptoConfigNotFoundException(uid);
-    }
-    return config;
   }
 
   async findById(id: bigint): Promise<CryptoConfig | null> {

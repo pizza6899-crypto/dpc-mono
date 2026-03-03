@@ -5,7 +5,7 @@ import { ExchangeCurrencyCode } from '@prisma/client';
 import { BankConfig } from '../domain';
 import { BANK_CONFIG_REPOSITORY } from '../ports/out';
 import type { BankConfigRepositoryPort } from '../ports/out';
-import { generateUid } from 'src/utils/id.util';
+
 
 interface CreateBankConfigParams {
   currency: ExchangeCurrencyCode;
@@ -25,7 +25,7 @@ export class CreateBankConfigService {
   constructor(
     @Inject(BANK_CONFIG_REPOSITORY)
     private readonly repository: BankConfigRepositoryPort,
-  ) {}
+  ) { }
 
   async execute({
     currency,
@@ -40,7 +40,6 @@ export class CreateBankConfigService {
     maxAmount,
   }: CreateBankConfigParams): Promise<BankConfig> {
     const bankConfig = BankConfig.create({
-      uid: generateUid(),
       currency,
       bankName,
       accountNumber,
