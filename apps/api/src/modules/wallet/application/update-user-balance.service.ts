@@ -369,9 +369,6 @@ export class UpdateUserBalanceService {
       ) {
         updateDto.depositCash =
           op === UpdateOperation.ADD ? amount : amount.neg();
-        // Deposit의 경우 보통 자산 가치 변동이므로 rate 적용
-        updateDto.depositCashUsd =
-          op === UpdateOperation.ADD ? amountUsd : amountUsd.neg();
       }
 
       // 2. Withdraw (Cash)
@@ -382,22 +379,18 @@ export class UpdateUserBalanceService {
       ) {
         updateDto.withdrawCash =
           op === UpdateOperation.SUBTRACT ? amount : amount.neg();
-        updateDto.withdrawCashUsd =
-          op === UpdateOperation.SUBTRACT ? amountUsd : amountUsd.neg();
       }
 
       // 3. Bet / Win (Cash & Bonus)
       else if (transactionType === UserWalletTransactionType.BET) {
         if (balanceType === UserWalletBalanceType.CASH) {
           updateDto.betCash = amount;
-          updateDto.betCashUsd = amountUsd;
         }
         if (balanceType === UserWalletBalanceType.BONUS)
           updateDto.betBonus = amount;
       } else if (transactionType === UserWalletTransactionType.WIN) {
         if (balanceType === UserWalletBalanceType.CASH) {
           updateDto.winCash = amount;
-          updateDto.winCashUsd = amountUsd;
         }
         if (balanceType === UserWalletBalanceType.BONUS)
           updateDto.winBonus = amount;
@@ -418,7 +411,6 @@ export class UpdateUserBalanceService {
         // REFUND는 베팅 취소로 간주하여 TotalBet 통계를 차감합니다.
         if (balanceType === UserWalletBalanceType.CASH) {
           updateDto.betCash = amount.neg();
-          updateDto.betCashUsd = amountUsd.neg();
         } else if (balanceType === UserWalletBalanceType.BONUS) {
           updateDto.betBonus = amount.neg();
         }

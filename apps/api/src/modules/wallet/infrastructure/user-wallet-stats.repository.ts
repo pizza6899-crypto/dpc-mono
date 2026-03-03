@@ -16,7 +16,7 @@ export class UserWalletStatsRepository implements UserWalletStatsRepositoryPort 
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: UserWalletStatsMapper,
-  ) {}
+  ) { }
 
   // --- Basic CRUD (Port Implementation) ---
 
@@ -78,10 +78,7 @@ export class UserWalletStatsRepository implements UserWalletStatsRepositoryPort 
     const betCash = dto.betCash?.toString() ?? '0';
     const winCash = dto.winCash?.toString() ?? '0';
 
-    const depositUsd = dto.depositCashUsd?.toString() ?? '0';
-    const withdrawUsd = dto.withdrawCashUsd?.toString() ?? '0';
-    const betUsd = dto.betCashUsd?.toString() ?? '0';
-    const winUsd = dto.winCashUsd?.toString() ?? '0';
+
 
     // Delta Calculation for Counts
     const getSign = (v: Prisma.Decimal | undefined) => {
@@ -116,13 +113,8 @@ export class UserWalletStatsRepository implements UserWalletStatsRepositoryPort 
         total_comp_used: dto.compUsed?.toString() ?? '0',
         total_vault_in: dto.vaultIn?.toString() ?? '0',
         total_vault_out: dto.vaultOut?.toString() ?? '0',
-        total_deposit_cash_usd: depositUsd,
-        total_withdraw_cash_usd: withdrawUsd,
-        total_bet_cash_usd: betUsd,
-        total_win_cash_usd: winUsd,
         max_bet_amount: betCash,
         max_win_amount: winCash,
-        max_win_amount_usd: winUsd,
         total_bet_count: betCountDelta.toString(),
         total_win_count: winCountDelta.toString(),
         last_bet_at: isNewBet ? now : null,
@@ -146,14 +138,8 @@ export class UserWalletStatsRepository implements UserWalletStatsRepositoryPort 
           total_vault_in: sql`user_wallet_total_stats.total_vault_in + ${dto.vaultIn?.toString() ?? '0'}`,
           total_vault_out: sql`user_wallet_total_stats.total_vault_out + ${dto.vaultOut?.toString() ?? '0'}`,
 
-          total_deposit_cash_usd: sql`user_wallet_total_stats.total_deposit_cash_usd + ${depositUsd}`,
-          total_withdraw_cash_usd: sql`user_wallet_total_stats.total_withdraw_cash_usd + ${withdrawUsd}`,
-          total_bet_cash_usd: sql`user_wallet_total_stats.total_bet_cash_usd + ${betUsd}`,
-          total_win_cash_usd: sql`user_wallet_total_stats.total_win_cash_usd + ${winUsd}`,
-
           max_bet_amount: sql`GREATEST(user_wallet_total_stats.max_bet_amount, ${betCash})`,
           max_win_amount: sql`GREATEST(user_wallet_total_stats.max_win_amount, ${winCash})`,
-          max_win_amount_usd: sql`GREATEST(user_wallet_total_stats.max_win_amount_usd, ${winUsd})`,
 
           total_bet_count: sql`user_wallet_total_stats.total_bet_count + ${betCountDelta.toString()}`,
           total_win_count: sql`user_wallet_total_stats.total_win_count + ${winCountDelta.toString()}`,
@@ -200,10 +186,7 @@ export class UserWalletStatsRepository implements UserWalletStatsRepositoryPort 
     const betCash = dto.betCash?.toString() ?? '0';
     const winCash = dto.winCash?.toString() ?? '0';
 
-    const depositUsd = dto.depositCashUsd?.toString() ?? '0';
-    const withdrawUsd = dto.withdrawCashUsd?.toString() ?? '0';
-    const betUsd = dto.betCashUsd?.toString() ?? '0';
-    const winUsd = dto.winCashUsd?.toString() ?? '0';
+
 
     // Delta Calculation for Counts
     const getSign = (v: Prisma.Decimal | undefined) => {
@@ -235,13 +218,8 @@ export class UserWalletStatsRepository implements UserWalletStatsRepositoryPort 
         total_win_bonus: dto.winBonus?.toString() ?? '0',
         total_bonus_given: dto.bonusGiven?.toString() ?? '0',
         total_bonus_used: dto.bonusUsed?.toString() ?? '0',
-        total_deposit_cash_usd: depositUsd,
-        total_withdraw_cash_usd: withdrawUsd,
-        total_bet_cash_usd: betUsd,
-        total_win_cash_usd: winUsd,
         max_bet_amount: betCash,
         max_win_amount: winCash,
-        max_win_amount_usd: winUsd,
         total_bet_count: betCountDelta.toString(),
         total_win_count: winCountDelta.toString(),
         transaction_count: '1',
@@ -266,14 +244,8 @@ export class UserWalletStatsRepository implements UserWalletStatsRepositoryPort 
           total_bonus_given: sql`user_wallet_hourly_stats.total_bonus_given + ${dto.bonusGiven?.toString() ?? '0'}`,
           total_bonus_used: sql`user_wallet_hourly_stats.total_bonus_used + ${dto.bonusUsed?.toString() ?? '0'}`,
 
-          total_deposit_cash_usd: sql`user_wallet_hourly_stats.total_deposit_cash_usd + ${depositUsd}`,
-          total_withdraw_cash_usd: sql`user_wallet_hourly_stats.total_withdraw_cash_usd + ${withdrawUsd}`,
-          total_bet_cash_usd: sql`user_wallet_hourly_stats.total_bet_cash_usd + ${betUsd}`,
-          total_win_cash_usd: sql`user_wallet_hourly_stats.total_win_cash_usd + ${winUsd}`,
-
           max_bet_amount: sql`GREATEST(user_wallet_hourly_stats.max_bet_amount, ${betCash})`,
           max_win_amount: sql`GREATEST(user_wallet_hourly_stats.max_win_amount, ${winCash})`,
-          max_win_amount_usd: sql`GREATEST(user_wallet_hourly_stats.max_win_amount_usd, ${winUsd})`,
 
           total_bet_count: sql`user_wallet_hourly_stats.total_bet_count + ${betCountDelta.toString()}`,
           total_win_count: sql`user_wallet_hourly_stats.total_win_count + ${winCountDelta.toString()}`,

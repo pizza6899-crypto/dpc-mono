@@ -101,16 +101,9 @@ model UserWalletTotalStats {
   totalDepositCash  Decimal @default(0) @map("total_deposit_cash") @db.Decimal(32, 18)
   totalWithdrawCash Decimal @default(0) @map("total_withdraw_cash") @db.Decimal(32, 18)
 
-  // USD 환산 통계 (Global Tier & Leveling)
-  totalBetCashUsd      Decimal @default(0) @map("total_bet_cash_usd") @db.Decimal(32, 18)
-  totalWinCashUsd      Decimal @default(0) @map("total_win_cash_usd") @db.Decimal(32, 18)
-  totalDepositCashUsd  Decimal @default(0) @map("total_deposit_cash_usd") @db.Decimal(32, 18)
-  totalWithdrawCashUsd Decimal @default(0) @map("total_withdraw_cash_usd") @db.Decimal(32, 18)
-
   // [Hall of Fame] - 최고 기록
-  maxBetAmount    Decimal @default(0) @map("max_bet_amount") @db.Decimal(32, 18)
-  maxWinAmount    Decimal @default(0) @map("max_win_amount") @db.Decimal(32, 18)
-  maxWinAmountUsd Decimal @default(0) @map("max_win_amount_usd") @db.Decimal(32, 18)
+  maxBetAmount Decimal @default(0) @map("max_bet_amount") @db.Decimal(32, 18)
+  maxWinAmount Decimal @default(0) @map("max_win_amount") @db.Decimal(32, 18)
 
   // [Count Statistics] - 횟수 통계
   totalBetCount BigInt @default(0) @map("total_bet_count")
@@ -162,16 +155,9 @@ model UserWalletHourlyStats {
   totalBetCash      Decimal @default(0) @map("total_bet_cash") @db.Decimal(32, 18) // 현금 베팅
   totalWinCash      Decimal @default(0) @map("total_win_cash") @db.Decimal(32, 18) // 현금 승리
 
-  // [USD Statistics]
-  totalDepositCashUsd  Decimal @default(0) @map("total_deposit_cash_usd") @db.Decimal(32, 18)
-  totalWithdrawCashUsd Decimal @default(0) @map("total_withdraw_cash_usd") @db.Decimal(32, 18)
-  totalBetCashUsd      Decimal @default(0) @map("total_bet_cash_usd") @db.Decimal(32, 18)
-  totalWinCashUsd      Decimal @default(0) @map("total_win_cash_usd") @db.Decimal(32, 18)
-
   // [Hall of Fame] - 시간별 최고 기록
-  maxBetAmount    Decimal @default(0) @map("max_bet_amount") @db.Decimal(32, 18)
-  maxWinAmount    Decimal @default(0) @map("max_win_amount") @db.Decimal(32, 18)
-  maxWinAmountUsd Decimal @default(0) @map("max_win_amount_usd") @db.Decimal(32, 18)
+  maxBetAmount Decimal @default(0) @map("max_bet_amount") @db.Decimal(32, 18)
+  maxWinAmount Decimal @default(0) @map("max_win_amount") @db.Decimal(32, 18)
 
   // [Count Statistics] - 시간별 횟수
   totalBetCount    BigInt @default(0) @map("total_bet_count")

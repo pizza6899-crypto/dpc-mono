@@ -22,15 +22,9 @@ export class UserWalletStatsMapper {
       totalWinCash: prismaModel.totalWinCash,
       totalBetBonus: prismaModel.totalBetBonus,
       totalWinBonus: prismaModel.totalWinBonus,
-      // USD
-      totalBetCashUsd: prismaModel.totalBetCashUsd,
-      totalWinCashUsd: prismaModel.totalWinCashUsd,
-      totalDepositCashUsd: prismaModel.totalDepositCashUsd,
-      totalWithdrawCashUsd: prismaModel.totalWithdrawCashUsd,
       // Hall of Fame
       maxBetAmount: prismaModel.maxBetAmount,
       maxWinAmount: prismaModel.maxWinAmount,
-      maxWinAmountUsd: prismaModel.maxWinAmountUsd,
       // Count
       totalBetCount: prismaModel.totalBetCount,
       totalWinCount: prismaModel.totalWinCount,
@@ -68,15 +62,9 @@ export class UserWalletStatsMapper {
       totalWinCash: domain.totalWinCash,
       totalBetBonus: domain.totalBetBonus,
       totalWinBonus: domain.totalWinBonus,
-      // USD
-      totalBetCashUsd: domain.totalBetCashUsd,
-      totalWinCashUsd: domain.totalWinCashUsd,
-      totalDepositCashUsd: domain.totalDepositCashUsd,
-      totalWithdrawCashUsd: domain.totalWithdrawCashUsd,
       // Hall of Fame
       maxBetAmount: domain.maxBetAmount,
       maxWinAmount: domain.maxWinAmount,
-      maxWinAmountUsd: domain.maxWinAmountUsd,
       // Count
       totalBetCount: domain.totalBetCount,
       totalWinCount: domain.totalWinCount,
@@ -110,15 +98,9 @@ export class UserWalletStatsMapper {
       totalWithdrawCash: prismaModel.totalWithdrawCash,
       totalBetCash: prismaModel.totalBetCash,
       totalWinCash: prismaModel.totalWinCash,
-      // USD
-      totalDepositCashUsd: prismaModel.totalDepositCashUsd,
-      totalWithdrawCashUsd: prismaModel.totalWithdrawCashUsd,
-      totalBetCashUsd: prismaModel.totalBetCashUsd,
-      totalWinCashUsd: prismaModel.totalWinCashUsd,
       // Hall of Fame
       maxBetAmount: prismaModel.maxBetAmount,
       maxWinAmount: prismaModel.maxWinAmount,
-      maxWinAmountUsd: prismaModel.maxWinAmountUsd,
       // Count
       totalBetCount: prismaModel.totalBetCount,
       totalWinCount: prismaModel.totalWinCount,
@@ -155,15 +137,9 @@ export class UserWalletStatsMapper {
       totalWithdrawCash: domain.totalWithdrawCash,
       totalBetCash: domain.totalBetCash,
       totalWinCash: domain.totalWinCash,
-      // USD
-      totalDepositCashUsd: domain.totalDepositCashUsd,
-      totalWithdrawCashUsd: domain.totalWithdrawCashUsd,
-      totalBetCashUsd: domain.totalBetCashUsd,
-      totalWinCashUsd: domain.totalWinCashUsd,
       // Hall of Fame
       maxBetAmount: domain.maxBetAmount,
       maxWinAmount: domain.maxWinAmount,
-      maxWinAmountUsd: domain.maxWinAmountUsd,
       // Count
       totalBetCount: domain.totalBetCount,
       totalWinCount: domain.totalWinCount,

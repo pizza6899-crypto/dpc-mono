@@ -139,6 +139,9 @@ model User {
   userExpLogs            UserExpLog[]
   tierHistoriesChangedBy TierHistory[]           @relation("TierHistoryChangedBy")
 
+  globalTotalStats UserGlobalTotalStats?
+  globalDailyStats UserGlobalDailyStats[]
+
   @@map("users")
 }
 

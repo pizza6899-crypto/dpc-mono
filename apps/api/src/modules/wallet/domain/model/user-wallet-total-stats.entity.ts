@@ -21,16 +21,9 @@ export class UserWalletTotalStats {
     private _totalBetBonus: Prisma.Decimal,
     private _totalWinBonus: Prisma.Decimal,
 
-    // USD Statistics (Global Tier & Leveling)
-    private _totalBetCashUsd: Prisma.Decimal,
-    private _totalWinCashUsd: Prisma.Decimal,
-    private _totalDepositCashUsd: Prisma.Decimal,
-    private _totalWithdrawCashUsd: Prisma.Decimal,
-
     // Hall of Fame - 최고 기록
     private _maxBetAmount: Prisma.Decimal,
     private _maxWinAmount: Prisma.Decimal,
-    private _maxWinAmountUsd: Prisma.Decimal,
 
     // Count Statistics
     private _totalBetCount: bigint,
@@ -55,7 +48,7 @@ export class UserWalletTotalStats {
     public lastWithdrawAt: Date | null,
 
     public readonly updatedAt: Date,
-  ) {}
+  ) { }
 
   static create(params: {
     userId: bigint;
@@ -72,13 +65,7 @@ export class UserWalletTotalStats {
       new Prisma.Decimal(0),
       new Prisma.Decimal(0),
       new Prisma.Decimal(0),
-      // USD Stats
-      new Prisma.Decimal(0),
-      new Prisma.Decimal(0),
-      new Prisma.Decimal(0),
-      new Prisma.Decimal(0),
       // Hall of Fame
-      new Prisma.Decimal(0),
       new Prisma.Decimal(0),
       new Prisma.Decimal(0),
       // Count
@@ -111,15 +98,9 @@ export class UserWalletTotalStats {
     totalWinCash: Prisma.Decimal;
     totalBetBonus: Prisma.Decimal;
     totalWinBonus: Prisma.Decimal;
-    // USD
-    totalBetCashUsd: Prisma.Decimal;
-    totalWinCashUsd: Prisma.Decimal;
-    totalDepositCashUsd: Prisma.Decimal;
-    totalWithdrawCashUsd: Prisma.Decimal;
     // Hall of Fame
     maxBetAmount: Prisma.Decimal;
     maxWinAmount: Prisma.Decimal;
-    maxWinAmountUsd: Prisma.Decimal;
     // Count
     totalBetCount: bigint;
     totalWinCount: bigint;
@@ -148,13 +129,8 @@ export class UserWalletTotalStats {
       data.totalWinCash,
       data.totalBetBonus,
       data.totalWinBonus,
-      data.totalBetCashUsd,
-      data.totalWinCashUsd,
-      data.totalDepositCashUsd,
-      data.totalWithdrawCashUsd,
       data.maxBetAmount,
       data.maxWinAmount,
-      data.maxWinAmountUsd,
       data.totalBetCount,
       data.totalWinCount,
       data.totalBonusGiven,
@@ -190,28 +166,12 @@ export class UserWalletTotalStats {
   get totalWinBonus(): Prisma.Decimal {
     return this._totalWinBonus;
   }
-  // USD
-  get totalBetCashUsd(): Prisma.Decimal {
-    return this._totalBetCashUsd;
-  }
-  get totalWinCashUsd(): Prisma.Decimal {
-    return this._totalWinCashUsd;
-  }
-  get totalDepositCashUsd(): Prisma.Decimal {
-    return this._totalDepositCashUsd;
-  }
-  get totalWithdrawCashUsd(): Prisma.Decimal {
-    return this._totalWithdrawCashUsd;
-  }
   // Hall of Fame
   get maxBetAmount(): Prisma.Decimal {
     return this._maxBetAmount;
   }
   get maxWinAmount(): Prisma.Decimal {
     return this._maxWinAmount;
-  }
-  get maxWinAmountUsd(): Prisma.Decimal {
-    return this._maxWinAmountUsd;
   }
   // Count
   get totalBetCount(): bigint {
