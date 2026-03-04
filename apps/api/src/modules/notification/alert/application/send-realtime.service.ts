@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { SocketService } from 'src/modules/socket/socket.service';
-import { SocketRoomType } from 'src/modules/socket/constants/socket-rooms';
+import { Injectable, Logger } from '@nestjs/common';
+import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
+import { SocketRoomType } from 'src/infrastructure/websocket/constants/websocket-rooms.constant';
 import { RealtimePayloadMap } from '../../common';
 
 export interface SendRealtimeParams<T extends keyof RealtimePayloadMap> {
@@ -23,7 +23,11 @@ export interface SendRealtimeParams<T extends keyof RealtimePayloadMap> {
  */
 @Injectable()
 export class SendRealtimeService {
-  constructor(private readonly socketService: SocketService) { }
+  private readonly logger = new Logger(SendRealtimeService.name);
+
+  constructor(
+    private readonly websocketService: WebsocketService,
+  ) { }
 
   async execute<T extends keyof RealtimePayloadMap>(
     params: SendRealtimeParams<T>,
@@ -32,13 +36,16 @@ export class SendRealtimeService {
 
     if (userId) {
       // 특정 사용자에게 전송
-      this.socketService.sendToUser(userId, event as string, payload);
+      this.websocketService.sendToUser(userId, event as string, payload);
+      this.logger.debug(`[SendRealtimeService] Emitted ${event as string} to user:${userId}`);
     } else if (room) {
       // 특정 룸에 전송
-      this.socketService.sendToRoom(room, event as string, payload);
+      this.websocketService.sendToRoom(room, event as string, payload);
+      this.logger.debug(`[SendRealtimeService] Emitted ${event as string} to room:${room}`);
     } else {
       // 전체 브로드캐스트
-      this.socketService.broadcast(event as string, payload);
+      this.websocketService.broadcast(event as string, payload);
+      this.logger.debug(`[SendRealtimeService] Broadcasted ${event as string}`);
     }
   }
 }

@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { ChannelType } from '@prisma/client';
 import { ChannelSender, ChannelSendParams } from '../../../common';
-import { SocketService } from 'src/modules/socket/socket.service';
-import type { SocketRoomType } from 'src/modules/socket/constants/socket-rooms';
+import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
+import type { SocketRoomType } from 'src/infrastructure/websocket/constants/websocket-rooms.constant';
 
 @Injectable()
 export class SocketSender implements ChannelSender {
-  constructor(private readonly socketService: SocketService) { }
+  constructor(private readonly websocketService: WebsocketService) { }
 
   getChannelType(): ChannelType {
     return ChannelType.IN_APP;
   }
 
   async send(params: ChannelSendParams): Promise<void> {
-    this.socketService.sendToUser(params.receiverId, 'notification:new', {
+    this.websocketService.sendToUser(params.receiverId, 'notification:new', {
       id: params.logId.toString(),
       createdAt: params.logCreatedAt.toISOString(),
       title: params.title,
@@ -31,7 +31,7 @@ export class SocketSender implements ChannelSender {
     event: string,
     data: any,
   ): Promise<void> {
-    this.socketService.sendToUser(userId, event, data);
+    this.websocketService.sendToUser(userId, event, data);
   }
 
   /**
@@ -42,13 +42,13 @@ export class SocketSender implements ChannelSender {
     event: string,
     data: any,
   ): Promise<void> {
-    this.socketService.sendToRoom(room, event, data);
+    this.websocketService.sendToRoom(room, event, data);
   }
 
   /**
    * 모든 접속자에게 이벤트를 브로드캐스트합니다.
    */
   async broadcast(event: string, data: any): Promise<void> {
-    this.socketService.broadcast(event, data);
+    this.websocketService.broadcast(event, data);
   }
 }

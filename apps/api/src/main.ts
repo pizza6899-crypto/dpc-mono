@@ -15,6 +15,7 @@ import passport from 'passport';
 import { RedisStore } from 'connect-redis';
 import { createClient } from 'redis';
 import type { NestExpressApplication } from '@nestjs/platform-express';
+import { SessionIoAdapter } from './infrastructure/websocket/adapters/session-io.adapter';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/client';
@@ -136,6 +137,24 @@ async function bootstrap() {
         return passport.session()(req, res, next);
       }
     });
+
+    // 소켓 어댑터 등록 (네임스페이스 기반 세션/패스포트 연동 + Redis Adapter)
+    const socketAdapter = new SessionIoAdapter(
+      app,
+      {
+        cookieParser: cookieParser(),
+        userSession: userSessionMiddleware,
+        adminSession: adminSessionMiddleware,
+        passportInit: passport.initialize(),
+        passportSession: passport.session(),
+      },
+      {
+        host: envService.redis.host,
+        port: envService.redis.port,
+      },
+    );
+    await socketAdapter.connectToRedis();
+    app.useWebSocketAdapter(socketAdapter);
 
     app.useGlobalInterceptors(new TransformInterceptor(app.get(Reflector)));
     app.useGlobalPipes(new CustomValidationPipe());

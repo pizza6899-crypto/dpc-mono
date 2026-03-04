@@ -18,7 +18,6 @@ import { ExchangeModule } from './modules/exchange/exchange.module';
 import { SessionAuthGuard } from './common/auth/guards/session-auth.guard';
 import { ThrottleModule } from './common/throttle/throttle.module';
 import { ThrottleGuard } from './common/throttle/throttle.guard';
-import { WebsocketModule } from './common/websocket/websocket.module';
 import { AffiliateModule } from './modules/affiliate/affiliate.module';
 import { HttpExceptionFilter } from './common/http/exception/http-exception.filter';
 import { WalletModule } from './modules/wallet/wallet.module';
@@ -34,7 +33,6 @@ import { SnowflakeModule } from './common/snowflake/snowflake.module';
 import { WithdrawalModule } from './modules/withdrawal/withdrawal.module';
 import { SqidsModule } from './common/sqids/sqids.module';
 import { NotificationModule } from './modules/notification/notification.module';
-import { SocketModule } from './modules/socket/socket.module';
 import { StorageModule } from './infrastructure/storage/storage.module';
 import { FileModule } from './modules/file/file.module';
 import { TierModule } from './modules/tier/tier.module';
@@ -45,6 +43,7 @@ import { UserModule } from './modules/user/user.module';
 import { ModerationModule } from './modules/moderation/moderation.module';
 import { AccessControlModule } from './infrastructure/access-control/access-control.module';
 import { UserAnalyticsModule } from './modules/user-analytics/user-analytics.module';
+import { WebsocketModule } from './infrastructure/websocket/websocket.module';
 
 @Module({
   imports: [
@@ -53,7 +52,6 @@ import { UserAnalyticsModule } from './modules/user-analytics/user-analytics.mod
     CacheModule,
     ThrottleModule,
     CommonLoggerModule,
-    WebsocketModule,
     NodeIdentityModule,
     SnowflakeModule,
     SqidsModule,
@@ -74,7 +72,7 @@ import { UserAnalyticsModule } from './modules/user-analytics/user-analytics.mod
     WageringModule,
     CompModule,
     NotificationModule,
-    SocketModule,
+    WebsocketModule,
     StorageModule,
     FileModule,
     TierModule,

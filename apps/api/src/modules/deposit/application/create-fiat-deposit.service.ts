@@ -35,7 +35,7 @@ import {
   NOTIFICATION_TARGET_GROUPS,
 } from '../../notification/common';
 import { ChannelType } from '@prisma/client';
-import { SOCKET_ROOMS } from '../../socket/constants/socket-rooms';
+import { SOCKET_ROOMS } from 'src/infrastructure/websocket/constants/websocket-rooms.constant';
 
 interface CreateFiatDepositParams {
   user: AuthenticatedUser;

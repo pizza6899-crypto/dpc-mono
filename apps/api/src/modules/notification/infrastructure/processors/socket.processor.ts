@@ -3,7 +3,7 @@
 import { Processor } from '@nestjs/bullmq';
 import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
-import { SocketService } from 'src/modules/socket/socket.service';
+import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
 import { ClsService } from 'nestjs-cls';
 import {
   NOTIFICATION_LOG_REPOSITORY,
@@ -38,7 +38,7 @@ export class SocketProcessor extends BaseProcessor<
   constructor(
     @Inject(NOTIFICATION_LOG_REPOSITORY)
     private readonly notificationLogRepository: NotificationLogRepositoryPort,
-    private readonly socketService: SocketService,
+    private readonly websocketService: WebsocketService,
     protected readonly cls: ClsService,
   ) {
     super();
@@ -68,7 +68,7 @@ export class SocketProcessor extends BaseProcessor<
 
     try {
       // 소켓 발송
-      this.socketService.sendToUser(log.receiverId, 'notification:new', {
+      this.websocketService.sendToUser(log.receiverId, 'notification:new', {
         id: log.id!.toString(),
         createdAt: log.createdAt.toISOString(),
         title: log.title,
@@ -92,7 +92,7 @@ export class SocketProcessor extends BaseProcessor<
 
   private async processVolatile(data: VolatileJobData): Promise<void> {
     const userId = BigInt(data.userId);
-    this.socketService.sendToUser(userId, data.type, data.data);
+    this.websocketService.sendToUser(userId, data.type, data.data);
     this.logger.debug(`Sent volatile ${data.type} to user ${userId}`);
   }
 }
