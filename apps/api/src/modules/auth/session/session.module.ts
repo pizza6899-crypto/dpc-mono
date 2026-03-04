@@ -8,6 +8,7 @@ import { ExpireUserSessionsService } from './application/expire-user-sessions.se
 import { ListSessionsService } from './application/list-sessions.service';
 import { RevokeSessionService } from './application/revoke-session.service';
 import { SynchronizeUserSessionService } from './application/synchronize-user-session.service';
+import { ExpireSessionService } from './application/expire-session.service';
 import { SessionPolicy } from './domain/policy';
 import { SessionTrackerService } from './infrastructure/session-tracker.service';
 import { UserSessionRepository } from './infrastructure/user-session.repository';
@@ -15,7 +16,6 @@ import { UserSessionMapper } from './infrastructure/user-session.mapper';
 import { USER_SESSION_REPOSITORY } from './ports/out';
 import { ExpireSessionsProcessor } from '../infrastructure/processors/expire-sessions.processor';
 import { BullModule } from '@nestjs/bullmq';
-import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
 import { EnvModule } from 'src/common/env/env.module';
 import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
@@ -40,6 +40,7 @@ import { AUTH_QUEUES } from './infrastructure/session.bullmq';
     ListSessionsService,
     RevokeSessionService,
     SynchronizeUserSessionService,
+    ExpireSessionService,
 
     // Domain Policies
     SessionPolicy,
@@ -62,6 +63,7 @@ import { AUTH_QUEUES } from './infrastructure/session.bullmq';
     ListSessionsService,
     RevokeSessionService,
     SynchronizeUserSessionService,
+    ExpireSessionService,
     SessionTrackerService,
     USER_SESSION_REPOSITORY, // SessionSerializer에서 사용
   ],

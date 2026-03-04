@@ -14,7 +14,7 @@ export class StorageService implements OnModuleInit {
   private client: S3Client;
   private readonly logger = new Logger(StorageService.name);
 
-  constructor(private readonly envService: EnvService) {}
+  constructor(private readonly envService: EnvService) { }
 
   onModuleInit() {
     const { region, accessKeyId, secretAccessKey, endpoint, forcePathStyle } =

@@ -16,11 +16,25 @@ import { AsyncApiPub, AsyncApiSub } from 'src/common/decorators/async-api.decora
 import { ExceptionResponseDto } from '../dtos/exception-response.dto';
 import { RoomRequestDto } from '../dtos/room-request.dto';
 import { SocketResponseDto } from '../dtos/socket-response.dto';
+import { Request } from 'express';
+import { CreateSessionService } from 'src/modules/auth/session/application/create-session.service';
+import { ExpireSessionService } from 'src/modules/auth/session/application/expire-session.service';
+import { SessionType, DeviceInfo } from 'src/modules/auth/session/domain';
+
+import { corsConfig } from 'src/common/security/cors.config';
+
+/**
+ * 유저 웹소켓 소켓 확장 인터페이스
+ */
+interface UserSocket extends Socket {
+  user?: AuthenticatedUser;
+  request: Request;
+}
 
 @WebSocketGateway({
   namespace: '/', // 일반 유저 네임스페이스
   cors: {
-    origin: '*',
+    origin: corsConfig.origin,
     credentials: true,
   },
 })
@@ -33,10 +47,12 @@ export class UserWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
 
   private readonly logger = new Logger(UserWebsocketGateway.name);
 
-  constructor() {
-  }
+  constructor(
+    private readonly createSessionService: CreateSessionService,
+    private readonly expireSessionService: ExpireSessionService,
+  ) { }
 
-  handleConnection(client: Socket) {
+  async handleConnection(client: UserSocket) {
     const user = this.extractUser(client);
 
     // 공통적으로 모든 사용자는 GLOBAL 룸에 자동 가입 (브로드캐스트용)
@@ -46,15 +62,42 @@ export class UserWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
       // 1. 인증된 유저: 유저 고유 룸 조인
       client.join(getSocketRoom.user(user.id));
       this.logger.log(`User connected: ${client.id}, userId: ${user.id}, role: ${user.role}`);
+
+      // 2. DB 세션 생성 (WebSocket 타입)
+      const req = client.request;
+      client.user = user; // 연결 해제 시 사용하기 위해 유저 정보 보관
+
+      await this.createSessionService.execute({
+        userId: user.id,
+        sessionId: client.id,
+        parentSessionId: req.sessionID,
+        type: SessionType.WEBSOCKET,
+        isAdmin: false,
+        deviceInfo: DeviceInfo.create({
+          ipAddress: client.handshake.address,
+          userAgent: client.handshake.headers['user-agent'],
+        }),
+        expiresAt: req.session?.cookie?.expires || new Date(Date.now() + 1000 * 60 * 60 * 24),
+      }).catch(err => this.logger.error(`Failed to create WS session: ${err.message}`));
     } else {
-      // 2. 익명(게스트) 유저: LOBBY 룸 등에 가입 (예: 채팅방 등)
+      // 3. 익명(게스트) 유저: LOBBY 룸 등에 가입 (예: 채팅방 등)
       client.join(SOCKET_ROOMS.LOBBY);
       this.logger.log(`Anonymous client connected (Guest): ${client.id}`);
     }
   }
 
-  handleDisconnect(client: Socket) {
-    this.logger.log(`Client disconnected: ${client.id}`);
+  async handleDisconnect(client: UserSocket) {
+    const user = client.user;
+    this.logger.log(`Client disconnected: ${client.id}${user ? `, userId: ${user.id}` : ''}`);
+
+    if (!user) return;
+
+    try {
+      await this.expireSessionService.execute({ sessionId: client.id });
+    } catch (err) {
+      // 이미 부모 세션 종료로 먼저 처리된 경우 등 — 무시
+      this.logger.debug(`WS session cleanup skipped: ${client.id} — ${err?.message}`);
+    }
   }
 
   /**
@@ -145,12 +188,11 @@ export class UserWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
     // 실제 전송은 WebsocketExceptionFilter에서 이루어집니다. 문서화만을 위한 빈 메서드입니다.
   }
 
-  private extractUser(client: Socket): AuthenticatedUser | null {
-    // passport.session() 미들웨어를 통과하면 client.request 에 user 객체가 주입됩니다.
-    // SessionIoAdapter를 통해 소켓 연결 시에도 동일한 혜택을 받습니다.
-    const req = client.request as any;
+  private extractUser(client: UserSocket): AuthenticatedUser | null {
+    const req = client.request;
+
     if (req.user) {
-      return req.user as AuthenticatedUser;
+      return req.user;
     }
 
     return null;
