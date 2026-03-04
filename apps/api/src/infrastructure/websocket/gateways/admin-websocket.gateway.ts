@@ -86,7 +86,11 @@ export class AdminWebsocketGateway implements OnGatewayConnection, OnGatewayDisc
         if (!user) return;
 
         try {
-            await this.expireSessionService.execute({ sessionId: client.id });
+            await this.expireSessionService.execute({
+                sessionId: client.id,
+                userId: user.id,
+                type: SessionType.WEBSOCKET,
+            });
         } catch (err) {
             // 이미 부모 세션 종료로 먼저 처리된 경우 등 — 무시
             this.logger.debug(`Admin WS session cleanup skipped: ${client.id} — ${err?.message}`);
@@ -118,8 +122,8 @@ export class AdminWebsocketGateway implements OnGatewayConnection, OnGatewayDisc
 
     @AsyncApiPub({
         channel: 'admin/exception',
-        summary: '소켓 예외/에러 발생 알림 (어드민)',
-        description: '관리자의 웹소켓 요청에 대한 오류 발생 시 보내는 예외 이벤트입니다.',
+        summary: '관리자 예외 발생 알림 (Admin exception notification)',
+        description: '관리자 요청 처리 중 발생한 예외를 전송합니다. (Sends exceptions occurred during admin request processing.)',
         message: {
             name: 'AdminExceptionResponse',
             payload: ExceptionResponseDto,

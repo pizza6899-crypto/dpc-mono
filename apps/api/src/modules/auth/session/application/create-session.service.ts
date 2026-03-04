@@ -56,10 +56,15 @@ export class CreateSessionService {
       await this.repository.findActiveByUserId(userId);
 
     // 2. 정책 확인 및 기존 세션 종료 리스트 추출
-    const sessionsToRevoke = this.policy.getSessionsToRevokeForNewLogin(
-      existingActiveSessions,
-      deviceInfo.isMobile ?? false,
-    );
+    // HTTP 세션(새 로그인)인 경우에만 기존 세션 종료 정책을 적용합니다.
+    // WebSocket 연결은 기존 HTTP 세션의 연장선이므로 기존 세션을 종료하지 않습니다.
+    const sessionsToRevoke =
+      type === SessionType.HTTP
+        ? this.policy.getSessionsToRevokeForNewLogin(
+          existingActiveSessions,
+          deviceInfo.isMobile ?? false,
+        )
+        : [];
 
     // 3. 기존 세션 종료 처리
     for (const session of sessionsToRevoke) {

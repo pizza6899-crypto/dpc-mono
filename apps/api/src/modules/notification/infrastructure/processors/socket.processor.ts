@@ -1,9 +1,8 @@
-// apps/api/src/modules/notification/infrastructure/processors/socket.processor.ts
-
 import { Processor } from '@nestjs/bullmq';
 import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
+import { SocketSender } from '../channels/socket/socket.sender';
 import { ClsService } from 'nestjs-cls';
 import {
   NOTIFICATION_LOG_REPOSITORY,
@@ -38,6 +37,7 @@ export class SocketProcessor extends BaseProcessor<
   constructor(
     @Inject(NOTIFICATION_LOG_REPOSITORY)
     private readonly notificationLogRepository: NotificationLogRepositoryPort,
+    private readonly socketSender: SocketSender,
     private readonly websocketService: WebsocketService,
     protected readonly cls: ClsService,
   ) {
@@ -67,10 +67,12 @@ export class SocketProcessor extends BaseProcessor<
     await this.notificationLogRepository.update(log);
 
     try {
-      // 소켓 발송
-      this.websocketService.sendToUser(log.receiverId, 'notification:new', {
-        id: log.id!.toString(),
-        createdAt: log.createdAt.toISOString(),
+      // SocketSender를 통해 알림 발송
+      await this.socketSender.send({
+        logId: log.id!,
+        logCreatedAt: log.createdAt,
+        receiverId: log.receiverId,
+        target: log.target,
         title: log.title,
         body: log.body,
         actionUri: log.actionUri,

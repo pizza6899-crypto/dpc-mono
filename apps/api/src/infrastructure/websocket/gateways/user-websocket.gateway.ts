@@ -93,7 +93,11 @@ export class UserWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
     if (!user) return;
 
     try {
-      await this.expireSessionService.execute({ sessionId: client.id });
+      await this.expireSessionService.execute({
+        sessionId: client.id,
+        userId: user.id,
+        type: SessionType.WEBSOCKET,
+      });
     } catch (err) {
       // 이미 부모 세션 종료로 먼저 처리된 경우 등 — 무시
       this.logger.debug(`WS session cleanup skipped: ${client.id} — ${err?.message}`);
@@ -105,11 +109,10 @@ export class UserWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
    * (추후 관리자 권한 검증 등 보안 로직 추가 예정)
    */
   @AsyncApiSub({
-    channel: 'user/room:join',
-    summary: '특정 룸 가입',
-    description: '클라이언트가 특정 소켓 룸(예: chat:support:123 등) 이벤트 수신을 위해 룸에 가입합니다. 응답(Ack)으로 SocketResponseDto 객체를 반환합니다.',
+    channel: 'room:join',
+    summary: '특정 룸 가입 (Join specific room)',
+    description: '클라이언트가 특정 소켓 룸에 가입합니다. (Client joins a specific socket room.)',
     message: {
-      name: 'JoinRoomRequest',
       payload: RoomRequestDto,
     },
   })
@@ -125,11 +128,10 @@ export class UserWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
    * 클라이언트를 특정 룸에서 퇴장시킵니다.
    */
   @AsyncApiSub({
-    channel: 'user/room:leave',
-    summary: '특정 룸 퇴장',
-    description: '클라이언트가 가입했던 룸에서 퇴장하여 해당 룸의 이벤트를 수신하지 않습니다. 응답(Ack)으로 SocketResponseDto 객체를 반환합니다.',
+    channel: 'room:leave',
+    summary: '특정 룸 퇴장 (Leave specific room)',
+    description: '클라이언트가 가입했던 룸에서 퇴장합니다. (Client leaves a previously joined room.)',
     message: {
-      name: 'LeaveRoomRequest',
       payload: RoomRequestDto,
     },
   })
@@ -177,10 +179,9 @@ export class UserWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
 
   @AsyncApiPub({
     channel: 'user/exception',
-    summary: '소켓 예외/에러 발생 알림',
-    description: '클라이언트의 웹소켓 요청에 대한 오류나 백엔드의 서버 장애 발생 시 서버에서 보내는 예외 이벤트입니다.',
+    summary: '사용자 예외 발생 알림 (User exception notification)',
+    description: '사용자 요청 처리 중 발생한 예외를 전송합니다. (Sends exceptions occurred during user request processing.)',
     message: {
-      name: 'ExceptionResponse',
       payload: ExceptionResponseDto,
     },
   })

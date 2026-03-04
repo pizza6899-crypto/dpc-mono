@@ -4,44 +4,44 @@ import { nowUtcIso } from 'src/utils/date.util';
 
 export class ExceptionResponseDto {
     @ApiProperty({
-        description: '성공 여부 (항상 false)',
+        description: '성공 여부 (Success flag, always false)',
         example: false,
     })
     success: boolean = false;
 
     @ApiProperty({
-        description: '상태 코드 (HTTP 표준 준수)',
+        description: '상태 코드 (Status code, HTTP standard)',
         example: 400,
     })
     statusCode: number;
 
     @ApiProperty({
-        description: '메시지 코드 (i18n 용)',
+        description: '메시지 코드 (Message code for i18n)',
         enum: MessageCode,
         example: MessageCode.VALIDATION_ERROR,
     })
     messageCode: MessageCode;
 
     @ApiProperty({
-        description: '에러 이름',
+        description: '에러 이름 (Error name/type)',
         example: 'BadRequestException',
     })
     error: string;
 
     @ApiProperty({
-        description: '에러 메시지 목록 (디버깅/폴백용)',
+        description: '에러 메시지 목록 (Error messages for debugging)',
         example: ['Validation failed'],
     })
     message: string[];
 
     @ApiProperty({
-        description: '원래 요청된 이벤트 이름',
+        description: '원래 요청된 이벤트 이름 (Original requested event name)',
         example: 'message',
     })
     originalEvent: string;
 
     @ApiProperty({
-        description: '응답 시간 (ISO 8601 UTC)',
+        description: '응답 시간 (Timestamp, ISO 8601 UTC)',
         example: '2024-01-01T00:00:00.000Z',
     })
     timestamp: string;

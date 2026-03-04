@@ -33,4 +33,4 @@ import { ALERT_REPOSITORY } from './ports';
     ALERT_REPOSITORY,
   ],
 })
-export class AlertModule {}
+export class AlertModule { }
