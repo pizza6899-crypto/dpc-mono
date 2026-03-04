@@ -2,19 +2,13 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class RevokeSessionResponseDto {
   @ApiProperty({
-    description: '세션 UID',
-    example: 'session-1234567890',
-  })
-  uid: string;
-
-  @ApiProperty({
-    description: '세션 ID',
+    description: '세션 ID / Session ID',
     example: 'sess-abc123',
   })
   sessionId: string;
 
   @ApiProperty({
-    description: '사용자 ID',
+    description: '사용자 ID / User ID',
     example: '1234567890123456789',
     type: String,
   })
@@ -23,13 +17,13 @@ export class RevokeSessionResponseDto {
 
 export class RevokeUserSessionsResponseDto {
   @ApiProperty({
-    description: '종료된 세션 수',
+    description: '종료된 세션 수 / Revoked Count',
     example: 3,
   })
   revokedCount: number;
 
   @ApiProperty({
-    description: '사용자 ID',
+    description: '사용자 ID / User ID',
     example: '1234567890123456789',
     type: String,
   })

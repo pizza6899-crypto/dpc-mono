@@ -54,77 +54,71 @@ export class DeviceInfoDto {
 
 export class SessionListItemDto {
   @ApiProperty({
-    description: '세션 UID',
-    example: 'session-1234567890',
-  })
-  uid: string;
-
-  @ApiProperty({
-    description: '세션 ID',
+    description: '세션 ID / Session ID',
     example: 'sess-abc123',
   })
   sessionId: string;
 
   @ApiProperty({
-    description: '사용자 ID',
+    description: '사용자 ID / User ID',
     example: '1234567890123456789',
     type: String,
   })
   userId: string;
 
   @ApiProperty({
-    description: '세션 타입',
+    description: '세션 타입 / Session Type',
     enum: SessionType,
     example: SessionType.HTTP,
   })
   type: SessionType;
 
   @ApiProperty({
-    description: '세션 상태',
+    description: '세션 상태 / Session Status',
     enum: SessionStatus,
     example: SessionStatus.ACTIVE,
   })
   status: SessionStatus;
 
   @ApiProperty({
-    description: '디바이스 정보',
+    description: '디바이스 정보 / Device Info',
     type: DeviceInfoDto,
   })
   deviceInfo: DeviceInfoDto;
 
   @ApiProperty({
-    description: '생성 시간',
+    description: '생성 시간 / Created At',
     example: '2024-01-01T00:00:00Z',
   })
   createdAt: Date;
 
   @ApiProperty({
-    description: '마지막 업데이트 시간',
+    description: '마지막 업데이트 시간 / Updated At',
     example: '2024-01-01T00:00:00Z',
   })
   updatedAt: Date;
 
   @ApiProperty({
-    description: '마지막 활동 시간',
+    description: '마지막 활동 시간 / Last Active At',
     example: '2024-01-01T00:00:00Z',
   })
   lastActiveAt: Date;
 
   @ApiProperty({
-    description: '만료 시간',
+    description: '만료 시간 / Expires At',
     example: '2024-01-08T00:00:00Z',
   })
   expiresAt: Date;
 
   @ApiProperty({
-    description: '종료 시간 (REVOKED 상태일 때)',
+    description: '종료 시간 (REVOKED 상태일 때) / Revoked At',
     example: '2024-01-01T00:00:00Z',
     nullable: true,
   })
   revokedAt: Date | null;
 
   @ApiProperty({
-    description: '종료한 사용자 ID (관리자가 종료한 경우)',
+    description: '종료한 사용자 ID (관리자가 종료한 경우) / Revoked By',
     example: '9876543210987654321',
     type: String,
     nullable: true,
@@ -134,7 +128,7 @@ export class SessionListItemDto {
 
 export class SessionListResponseDto {
   @ApiProperty({
-    description: '세션 목록',
+    description: '세션 목록 / Session List',
     type: [SessionListItemDto],
   })
   sessions: SessionListItemDto[];

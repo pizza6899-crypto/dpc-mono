@@ -14,7 +14,6 @@ import { DeviceInfo } from './device-info.vo';
 export class UserSession {
   private constructor(
     public readonly id: bigint | null, // 내부 관리용 (DB 저장 시 자동 생성)
-    public readonly uid: string, // 비즈니스용 고유 식별자 (CUID2)
     public readonly userId: bigint, // 세션 소유자 사용자 ID
     public readonly sessionId: string, // 실제 세션 ID (Express session ID 또는 Socket.io socket ID)
     public readonly type: SessionType, // 세션 타입 (HTTP, WEBSOCKET 등)
@@ -28,13 +27,12 @@ export class UserSession {
     public readonly revokedAt: Date | null, // 세션 종료 시간 (REVOKED 상태일 때)
     public readonly revokedBy: bigint | null, // 세션을 종료한 사용자 ID (관리자가 종료한 경우)
     public readonly metadata: Record<string, unknown>, // 추가 메타데이터 (JSON)
-  ) {}
+  ) { }
 
   /**
    * 새로운 활성 세션 생성
    *
    * @param params - 세션 생성 파라미터
-   * @param params.uid - 비즈니스용 고유 식별자
    * @param params.userId - 세션 소유자 사용자 ID
    * @param params.sessionId - 실제 세션 ID
    * @param params.type - 세션 타입
@@ -43,7 +41,6 @@ export class UserSession {
    * @param params.metadata - 추가 메타데이터 (선택)
    */
   static create(params: {
-    uid: string;
     userId: bigint;
     sessionId: string;
     type: SessionType;
@@ -57,7 +54,6 @@ export class UserSession {
 
     return new UserSession(
       null, // id는 DB 저장 시 자동 생성
-      params.uid,
       params.userId,
       params.sessionId,
       params.type,
@@ -81,7 +77,6 @@ export class UserSession {
    */
   static fromPersistence(data: {
     id: bigint | null;
-    uid: string;
     userId: bigint;
     sessionId: string;
     type: string;
@@ -128,7 +123,6 @@ export class UserSession {
 
     return new UserSession(
       data.id,
-      data.uid,
       data.userId,
       data.sessionId,
       data.type as SessionType,
@@ -185,7 +179,6 @@ export class UserSession {
 
     return new UserSession(
       this.id,
-      this.uid,
       this.userId,
       this.sessionId,
       this.type,
@@ -217,7 +210,6 @@ export class UserSession {
 
     return new UserSession(
       this.id,
-      this.uid,
       this.userId,
       this.sessionId,
       this.type,
@@ -245,7 +237,6 @@ export class UserSession {
 
     return new UserSession(
       this.id,
-      this.uid,
       this.userId,
       this.sessionId,
       this.type,
@@ -269,7 +260,6 @@ export class UserSession {
   updateMetadata(metadata: Record<string, unknown>): UserSession {
     return new UserSession(
       this.id,
-      this.uid,
       this.userId,
       this.sessionId,
       this.type,
@@ -305,7 +295,6 @@ export class UserSession {
 
     return {
       id: this.id,
-      uid: this.uid,
       userId: this.userId,
       sessionId: this.sessionId,
       type: this.type,

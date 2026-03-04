@@ -63,8 +63,7 @@ export class AdminAuthManagementController {
 
         return attempts.map((attempt) => ({
             id: attempt.id?.toString() || '',
-            uid: attempt.uid || '',
-            userId: attempt.userId,
+            userId: attempt.userId?.toString() || null,
             result: attempt.result,
             failureReason: attempt.failureReason,
             ipAddress: attempt.ipAddress,

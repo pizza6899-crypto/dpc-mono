@@ -13,7 +13,7 @@ export class DeviceInfo {
     public readonly deviceName: string | null, // 예: "iPhone 14 Pro", "Chrome on Windows"
     public readonly os: string | null, // 예: "iOS 17.0", "Windows 11"
     public readonly browser: string | null, // 예: "Chrome 120", "Safari 17"
-  ) {}
+  ) { }
 
   /**
    * 디바이스 정보 생성

@@ -51,7 +51,6 @@ enum SessionStatus {
  */
 model UserSession {
   id                BigInt        @id @default(autoincrement())
-  uid               String        @unique @default(cuid())
   userId            BigInt        @map("user_id")
   sessionId         String        @unique @map("session_id")
   type              SessionType
@@ -120,7 +119,6 @@ model VerificationToken {
  */
 model LoginAttempt {
   id                BigInt              @id @default(autoincrement())
-  uid               String              @unique @default(cuid())
   userId            BigInt?             @map("user_id")
   result            LoginAttemptResult
   failureReason     LoginFailureReason? @map("failure_reason")

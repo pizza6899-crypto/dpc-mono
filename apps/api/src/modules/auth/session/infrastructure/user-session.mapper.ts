@@ -16,7 +16,6 @@ export class UserSessionMapper {
   toDomain(prismaModel: PrismaUserSession): UserSession {
     return UserSession.fromPersistence({
       id: prismaModel.id,
-      uid: prismaModel.uid,
       userId: prismaModel.userId,
       sessionId: prismaModel.sessionId,
       type: prismaModel.type as SessionType,
@@ -45,7 +44,6 @@ export class UserSessionMapper {
    * create 시에는 id를 제외하고, update 시에는 id를 포함합니다.
    */
   toPrisma(domain: UserSession): {
-    uid: string;
     userId: bigint;
     sessionId: string;
     type: SessionType;
@@ -69,7 +67,6 @@ export class UserSessionMapper {
     const deviceInfo = domain.deviceInfo.toPersistence();
 
     return {
-      uid: domain.uid,
       userId: domain.userId,
       sessionId: domain.sessionId,
       type: domain.type,

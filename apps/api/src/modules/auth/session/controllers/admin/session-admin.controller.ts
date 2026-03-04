@@ -40,7 +40,7 @@ export class SessionAdminController {
     private readonly listSessionsService: ListSessionsService,
     private readonly revokeSessionService: RevokeSessionService,
     private readonly expireUserSessionsService: ExpireUserSessionsService,
-  ) {}
+  ) { }
 
   /**
    * 세션 목록 조회 (관리자용)
@@ -111,7 +111,6 @@ export class SessionAdminController {
     });
 
     return {
-      uid: revokedSession.uid,
       sessionId: revokedSession.sessionId,
       userId: revokedSession.userId.toString(),
     };
@@ -156,7 +155,6 @@ export class SessionAdminController {
    */
   private toSessionListItemDto(session: any): SessionListItemDto {
     return {
-      uid: session.uid,
       sessionId: session.sessionId,
       userId: session.userId.toString(),
       type: session.type,

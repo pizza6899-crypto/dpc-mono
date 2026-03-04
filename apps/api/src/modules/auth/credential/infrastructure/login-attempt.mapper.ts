@@ -9,7 +9,6 @@ export class LoginAttemptMapper {
   toDomain(prismaModel: any): LoginAttempt {
     return LoginAttempt.fromPersistence({
       id: prismaModel.id,
-      uid: prismaModel.uid,
       userId: prismaModel.userId,
       result: prismaModel.result,
       failureReason: prismaModel.failureReason,
@@ -28,7 +27,6 @@ export class LoginAttemptMapper {
    */
   toPrisma(domain: LoginAttempt): any {
     return {
-      uid: domain.uid,
       userId: domain.userId,
       result: domain.result,
       failureReason: domain.failureReason,

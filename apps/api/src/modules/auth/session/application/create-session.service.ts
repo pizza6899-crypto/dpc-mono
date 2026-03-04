@@ -1,6 +1,5 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { generateUid } from 'src/utils/id.util';
 import { UserSession, SessionType, DeviceInfo } from '../domain';
 import { SessionPolicy } from '../domain/policy';
 import {
@@ -36,7 +35,7 @@ export class CreateSessionService {
     private readonly repository: UserSessionRepositoryPort,
     private readonly policy: SessionPolicy,
     private readonly sessionTracker: SessionTrackerService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(params: CreateSessionParams): Promise<UserSession> {
@@ -80,10 +79,7 @@ export class CreateSessionService {
     }
 
     // 4. 새 세션 생성
-    const uid = generateUid();
-
     const newSession = UserSession.create({
-      uid,
       userId,
       sessionId,
       type,

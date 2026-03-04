@@ -31,7 +31,6 @@ export enum LoginFailureReason {
 export class LoginAttempt {
   private constructor(
     public readonly id: bigint | null, // 내부 관리용 (DB 저장 시 자동 생성)
-    public readonly uid: string, // 비즈니스용 (CUID2)
     public readonly userId: bigint | null, // 시도한 사용자 ID (알 수 있는 경우)
     public readonly result: LoginAttemptResult,
     public readonly failureReason: LoginFailureReason | null, // 실패한 경우에만 값 존재
@@ -48,7 +47,6 @@ export class LoginAttempt {
    * 성공한 로그인 시도 생성
    */
   static createSuccess(params: {
-    uid: string;
     userId: bigint;
     ipAddress?: string | null;
     userAgent?: string | null;
@@ -60,7 +58,6 @@ export class LoginAttempt {
   }): LoginAttempt {
     return new LoginAttempt(
       null,
-      params.uid,
       params.userId,
       LoginAttemptResult.SUCCESS,
       null,
@@ -79,7 +76,6 @@ export class LoginAttempt {
    * @description userId를 알 수 있는 경우(예: 패스포트 검증 중 사용자 발견 후 비번 틀림) 함께 기록하면 보안 정책 적용에 유리합니다.
    */
   static createFailure(params: {
-    uid: string;
     failureReason: LoginFailureReason;
     userId?: bigint | null;
     ipAddress?: string | null;
@@ -92,7 +88,6 @@ export class LoginAttempt {
   }): LoginAttempt {
     return new LoginAttempt(
       null,
-      params.uid,
       params.userId ?? null,
       LoginAttemptResult.FAILED,
       params.failureReason,
@@ -112,7 +107,6 @@ export class LoginAttempt {
    */
   static fromPersistence(data: {
     id: bigint | null;
-    uid: string;
     userId: bigint | null;
     result: string;
     failureReason: string | null;
@@ -162,7 +156,6 @@ export class LoginAttempt {
 
     return new LoginAttempt(
       data.id,
-      data.uid,
       data.userId,
       data.result as LoginAttemptResult,
       data.failureReason as LoginFailureReason | null,
@@ -195,7 +188,6 @@ export class LoginAttempt {
   toPersistence() {
     return {
       id: this.id,
-      uid: this.uid,
       userId: this.userId,
       result: this.result,
       failureReason: this.failureReason,
