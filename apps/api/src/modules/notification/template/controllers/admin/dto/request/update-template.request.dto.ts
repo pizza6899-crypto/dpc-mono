@@ -11,23 +11,23 @@ import { ChannelType, Language } from '@prisma/client';
 import { NOTIFICATION_EVENTS } from '../../../../../common';
 
 class UpdateTranslationDto {
-  @ApiProperty({ description: 'Locale', enum: Language, example: Language.EN })
+  @ApiProperty({ description: 'Locale / 언어', enum: Language, example: Language.EN })
   @IsEnum(Language)
   locale: Language;
 
-  @ApiProperty({ description: 'Title template', example: 'Welcome, {{name}}!' })
+  @ApiProperty({ description: 'Title template / 제목 템플릿', example: 'Welcome, {{name}}!' })
   @IsString()
   titleTemplate: string;
 
   @ApiProperty({
-    description: 'Body template',
+    description: 'Body template / 본문 템플릿',
     example: 'Hello {{name}}, welcome to our service.',
   })
   @IsString()
   bodyTemplate: string;
 
   @ApiProperty({
-    description: 'Action URI template',
+    description: 'Action URI template / 액션 URI 템플릿',
     example: '/profile',
     required: false,
   })
@@ -38,7 +38,7 @@ class UpdateTranslationDto {
 
 export class UpdateTemplateRequestDto {
   @ApiProperty({
-    description: 'Template name',
+    description: 'Template name / 템플릿 이름',
     example: 'Welcome Email',
     required: false,
   })
@@ -47,7 +47,7 @@ export class UpdateTemplateRequestDto {
   name?: string;
 
   @ApiProperty({
-    description: 'Description',
+    description: 'Description / 설명',
     example: 'Sent when a new user joins',
     required: false,
   })
@@ -56,7 +56,7 @@ export class UpdateTemplateRequestDto {
   description?: string;
 
   @ApiProperty({
-    description: 'Event name',
+    description: 'Event name / 이벤트 이름',
     enum: NOTIFICATION_EVENTS,
     example: NOTIFICATION_EVENTS.USER_REGISTERED,
     required: false,
@@ -66,7 +66,7 @@ export class UpdateTemplateRequestDto {
   event?: string;
 
   @ApiProperty({
-    description: 'Channel type',
+    description: 'Channel type / 채널 타입',
     enum: ChannelType,
     example: ChannelType.EMAIL,
     required: false,
@@ -76,7 +76,7 @@ export class UpdateTemplateRequestDto {
   channel?: ChannelType;
 
   @ApiProperty({
-    description: 'Variables used in template',
+    description: 'Variables used in template / 템플릿에서 사용되는 변수',
     example: ['name', 'expiry_date'],
     required: false,
   })

@@ -4,19 +4,19 @@ import { IsString, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateTemplateTranslationRequestDto {
-  @ApiProperty({ description: 'Title template', example: 'Welcome, {{name}}!' })
+  @ApiProperty({ description: 'Title template / 제목 템플릿', example: 'Welcome, {{name}}!' })
   @IsString()
   titleTemplate: string;
 
   @ApiProperty({
-    description: 'Body template',
+    description: 'Body template / 본문 템플릿',
     example: 'Hello {{name}}, welcome to our service.',
   })
   @IsString()
   bodyTemplate: string;
 
   @ApiProperty({
-    description: 'Action URI template',
+    description: 'Action URI template / 액션 URI 템플릿',
     example: '/profile',
     required: false,
   })

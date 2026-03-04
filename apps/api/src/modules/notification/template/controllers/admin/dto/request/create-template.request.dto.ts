@@ -11,23 +11,23 @@ import { ChannelType, Language } from '@prisma/client';
 import { NOTIFICATION_EVENTS } from '../../../../../common';
 
 class CreateTranslationDto {
-  @ApiProperty({ description: 'Locale', enum: Language, example: Language.EN })
+  @ApiProperty({ description: 'Locale / 언어', enum: Language, example: Language.EN })
   @IsEnum(Language)
   locale: Language;
 
-  @ApiProperty({ description: 'Title template', example: 'Welcome, {{name}}!' })
+  @ApiProperty({ description: 'Title template / 제목 템플릿', example: 'Welcome, {{name}}!' })
   @IsString()
   titleTemplate: string;
 
   @ApiProperty({
-    description: 'Body template',
+    description: 'Body template / 본문 템플릿',
     example: 'Hello {{name}}, welcome to our service.',
   })
   @IsString()
   bodyTemplate: string;
 
   @ApiProperty({
-    description: 'Action URI template',
+    description: 'Action URI template / 액션 URI 템플릿',
     example: '/profile',
     required: false,
   })
@@ -37,12 +37,12 @@ class CreateTranslationDto {
 }
 
 export class CreateTemplateRequestDto {
-  @ApiProperty({ description: 'Template name', example: 'Welcome Email' })
+  @ApiProperty({ description: 'Template name / 템플릿 이름', example: 'Welcome Email' })
   @IsString()
   name: string;
 
   @ApiProperty({
-    description: 'Description',
+    description: 'Description / 설명',
     example: 'Sent when a new user joins',
     required: false,
   })
@@ -51,7 +51,7 @@ export class CreateTemplateRequestDto {
   description?: string;
 
   @ApiProperty({
-    description: 'Event name',
+    description: 'Event name / 이벤트 이름',
     enum: NOTIFICATION_EVENTS,
     example: NOTIFICATION_EVENTS.USER_REGISTERED,
   })
@@ -59,7 +59,7 @@ export class CreateTemplateRequestDto {
   event: string;
 
   @ApiProperty({
-    description: 'Channel type',
+    description: 'Channel type / 채널 타입',
     enum: ChannelType,
     example: ChannelType.EMAIL,
   })
@@ -67,7 +67,7 @@ export class CreateTemplateRequestDto {
   channel: ChannelType;
 
   @ApiProperty({
-    description: 'Variables used in template',
+    description: 'Variables used in template / 템플릿에서 사용되는 변수',
     example: ['name', 'expiry_date'],
   })
   @IsArray()
