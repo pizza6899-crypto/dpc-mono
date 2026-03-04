@@ -18,6 +18,7 @@ export interface ListSessionsServiceParams {
   userId?: string;
   status?: SessionStatus;
   type?: SessionType;
+  parentSessionId?: string;
   activeOnly?: boolean;
   startDate?: string;
   endDate?: string;
@@ -31,7 +32,7 @@ export interface ListSessionsServiceParams {
   adminUserId?: bigint;
 }
 
-interface ListSessionsServiceResult extends PaginatedData<UserSession> {}
+interface ListSessionsServiceResult extends PaginatedData<UserSession> { }
 
 /**
  * 세션 목록 조회 Use Case
@@ -47,7 +48,7 @@ export class ListSessionsService {
     @Inject(USER_SESSION_REPOSITORY)
     private readonly repository: UserSessionRepositoryPort,
     private readonly dispatchLogService: DispatchLogService,
-  ) {}
+  ) { }
 
   async execute(
     params: ListSessionsServiceParams,
@@ -60,6 +61,7 @@ export class ListSessionsService {
       userId,
       status,
       type,
+      parentSessionId,
       activeOnly,
       startDate,
       endDate,
@@ -77,6 +79,7 @@ export class ListSessionsService {
         userId: userId ? BigInt(userId) : undefined,
         status,
         type,
+        parentSessionId,
         activeOnly,
         startDate: startDate ? new Date(startDate) : undefined,
         endDate: endDate ? new Date(endDate) : undefined,
@@ -107,6 +110,7 @@ export class ListSessionsService {
                     userId,
                     status,
                     type,
+                    parentSessionId,
                     activeOnly,
                     startDate,
                     endDate,

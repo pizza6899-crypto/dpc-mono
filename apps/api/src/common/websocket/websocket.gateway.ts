@@ -77,8 +77,7 @@ export class MessageResponseDto {
 @UsePipes(CustomValidationPipe)
 @UseFilters(WebsocketExceptionFilter)
 export class WebsocketGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
@@ -89,7 +88,7 @@ export class WebsocketGateway
     private readonly envService: EnvService,
     private readonly createSessionService: CreateSessionService,
     private readonly sessionTracker: SessionTrackerService,
-  ) {}
+  ) { }
 
   // Gateway 초기화 시 Redis Adapter 설정
   afterInit(server: Server) {
@@ -161,6 +160,7 @@ export class WebsocketGateway
       await this.createSessionService.execute({
         userId: user.id,
         sessionId: client.id, // Socket.io socket ID를 세션 ID로 사용
+        parentSessionId: session.id, // 부모 HTTP 세션 ID 연동
         type: SessionType.WEBSOCKET,
         isAdmin,
         deviceInfo,

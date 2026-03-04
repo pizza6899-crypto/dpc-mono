@@ -31,6 +31,7 @@ export interface RevokeSessionParams {
  * - DB에서 세션 상태를 REVOKED로 변경 (revokedBy 기록)
  * - Redis 세션 스토어에서 세션 삭제 (HTTP 세션인 경우)
  * - WebSocket 연결 해제 (WebSocket 세션인 경우)
+ * - HTTP 세션인 경우 연결된 모든 자식 세션(WebSocket)도 함께 종료
  */
 @Injectable()
 export class RevokeSessionService {
@@ -41,7 +42,7 @@ export class RevokeSessionService {
     private readonly repository: UserSessionRepositoryPort,
     private readonly sessionTracker: SessionTrackerService,
     private readonly dispatchLogService: DispatchLogService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(params: RevokeSessionParams): Promise<UserSession> {
@@ -85,7 +86,23 @@ export class RevokeSessionService {
       `세션 종료 처리 시작: sessionId=${sessionId}, userId=${session.userId}, type=${session.type}, revokedBy=${revokedBy}`,
     );
 
-    // 5. 실제 세션 연결 종료 (트랜잭션 외부)
+    // 5. 부모 세션(HTTP)인 경우 연결된 자식 세션(WebSocket)들도 함께 종료 처리
+    if (session.isHttpSession()) {
+      const childSessions = await this.repository.findActiveByParentSessionId(sessionId);
+      for (const child of childSessions) {
+        const revokedChild = child.revoke(revokedBy);
+        await this.repository.update(revokedChild);
+
+        // 자식 세션 실시간 연결 해제
+        await this.terminateSessionConnection(revokedChild, revokedChild.isAdmin);
+
+        this.logger.log(
+          `자식 세션(소켓) 자동 종료: parentSessionId=${sessionId}, childSessionId=${child.sessionId}`,
+        );
+      }
+    }
+
+    // 6. 실제 타겟 세션 연결 종료 (트랜잭션 외부)
     // DB 업데이트는 이미 완료되었으므로 연결 종료 실패해도 세션 종료는 성공 처리
     // 세션의 isAdmin 필드 사용 (HTTP 세션인 경우 Redis 키 prefix 결정)
     await this.terminateSessionConnection(
@@ -97,7 +114,7 @@ export class RevokeSessionService {
       `세션 종료 처리 완료: sessionId=${sessionId}, userId=${session.userId}, type=${session.type}, revokedBy=${revokedBy}`,
     );
 
-    // 6. Audit 로그 기록 (보안 로그)
+    // 7. Audit 로그 기록 (보안 로그)
     try {
       await this.dispatchLogService.dispatch(
         {

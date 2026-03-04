@@ -26,7 +26,7 @@ export class ListSessionsQueryDto extends createPaginationQueryDto<SessionSortFi
   ['createdAt', 'updatedAt', 'lastActiveAt', 'expiresAt'],
 ) {
   @ApiPropertyOptional({
-    description: '사용자 ID 필터',
+    description: '사용자 ID 필터 / User ID filter',
     example: '1234567890123456789',
   })
   @IsOptional()
@@ -34,7 +34,7 @@ export class ListSessionsQueryDto extends createPaginationQueryDto<SessionSortFi
   userId?: string;
 
   @ApiPropertyOptional({
-    description: '세션 상태 필터',
+    description: '세션 상태 필터 / Session status filter',
     enum: SessionStatus,
     example: SessionStatus.ACTIVE,
   })
@@ -43,7 +43,7 @@ export class ListSessionsQueryDto extends createPaginationQueryDto<SessionSortFi
   status?: SessionStatus;
 
   @ApiPropertyOptional({
-    description: '세션 타입 필터',
+    description: '세션 타입 필터 / Session type filter',
     enum: SessionType,
     example: SessionType.HTTP,
   })
@@ -52,7 +52,15 @@ export class ListSessionsQueryDto extends createPaginationQueryDto<SessionSortFi
   type?: SessionType;
 
   @ApiPropertyOptional({
-    description: '활성 세션만 조회할지 여부 (기본값: false)',
+    description: '부모 세션 ID 필터',
+    example: 'sess-parent123',
+  })
+  @IsOptional()
+  @IsString()
+  parentSessionId?: string;
+
+  @ApiPropertyOptional({
+    description: '활성 세션만 조회할지 여부 (기본값: false) / Whether to retrieve only active sessions (default: false)',
     example: true,
     type: Boolean,
   })
@@ -62,7 +70,7 @@ export class ListSessionsQueryDto extends createPaginationQueryDto<SessionSortFi
   activeOnly?: boolean;
 
   @ApiPropertyOptional({
-    description: '시작 날짜 (ISO 8601 형식) - 생성일 기준',
+    description: '시작 날짜 (ISO 8601 형식) - 생성일 기준 / Start date (ISO 8601 format) - based on creation date',
     example: '2024-01-01T00:00:00Z',
   })
   @IsOptional()
@@ -70,7 +78,7 @@ export class ListSessionsQueryDto extends createPaginationQueryDto<SessionSortFi
   startDate?: string;
 
   @ApiPropertyOptional({
-    description: '종료 날짜 (ISO 8601 형식) - 생성일 기준',
+    description: '종료 날짜 (ISO 8601 형식) - 생성일 기준 / End date (ISO 8601 format) - based on creation date',
     example: '2024-12-31T23:59:59Z',
   })
   @IsOptional()

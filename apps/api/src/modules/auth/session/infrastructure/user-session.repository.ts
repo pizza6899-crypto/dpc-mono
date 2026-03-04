@@ -47,6 +47,19 @@ export class UserSessionRepository implements UserSessionRepositoryPort {
     return results.map((result) => this.mapper.toDomain(result));
   }
 
+  async findActiveByParentSessionId(parentSessionId: string): Promise<UserSession[]> {
+    const results = await this.tx.userSession.findMany({
+      where: {
+        parentSessionId,
+        status: SessionStatus.ACTIVE,
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
+    return results.map((result) => this.mapper.toDomain(result));
+  }
+
   async findByUserId(userId: bigint): Promise<UserSession[]> {
     const results = await this.tx.userSession.findMany({
       where: {
@@ -68,6 +81,7 @@ export class UserSessionRepository implements UserSessionRepositoryPort {
       userId,
       status,
       type,
+      parentSessionId,
       activeOnly,
       startDate,
       endDate,
@@ -80,6 +94,7 @@ export class UserSessionRepository implements UserSessionRepositoryPort {
       ...(userId && { userId }),
       ...(status && { status }),
       ...(type && { type }),
+      ...(parentSessionId !== undefined && { parentSessionId }),
       ...(activeOnly && { status: SessionStatus.ACTIVE }),
       ...(startDate &&
         endDate && {

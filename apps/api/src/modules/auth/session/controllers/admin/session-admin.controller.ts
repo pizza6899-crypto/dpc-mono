@@ -70,6 +70,7 @@ export class SessionAdminController {
       userId: query.userId,
       status: query.status,
       type: query.type,
+      parentSessionId: query.parentSessionId,
       activeOnly: query.activeOnly,
       startDate: query.startDate,
       endDate: query.endDate,
@@ -156,6 +157,7 @@ export class SessionAdminController {
   private toSessionListItemDto(session: any): SessionListItemDto {
     return {
       sessionId: session.sessionId,
+      parentSessionId: session.parentSessionId,
       userId: session.userId.toString(),
       type: session.type,
       status: session.status,

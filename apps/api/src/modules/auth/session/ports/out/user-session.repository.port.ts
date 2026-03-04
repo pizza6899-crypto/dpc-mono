@@ -10,6 +10,7 @@ export interface FindSessionsParams {
   userId?: bigint;
   status?: SessionStatus;
   type?: SessionType;
+  parentSessionId?: string | null;
   activeOnly?: boolean;
   startDate?: Date;
   endDate?: Date;
@@ -35,6 +36,12 @@ export interface UserSessionRepositoryPort {
    * 사용자의 활성 세션 목록 조회
    */
   findActiveByUserId(userId: bigint): Promise<UserSession[]>;
+
+  /**
+   * 부모 세션에 연결된 모든 활성 자식 세션(소켓 등) 조회
+   * @param parentSessionId - 부모 HTTP 세터 ID
+   */
+  findActiveByParentSessionId(parentSessionId: string): Promise<UserSession[]>;
 
   /**
    * 사용자의 모든 세션 목록 조회 (활성/비활성 포함)

@@ -16,6 +16,7 @@ export class UserSession {
     public readonly id: bigint | null, // 내부 관리용 (DB 저장 시 자동 생성)
     public readonly userId: bigint, // 세션 소유자 사용자 ID
     public readonly sessionId: string, // 실제 세션 ID (Express session ID 또는 Socket.io socket ID)
+    public readonly parentSessionId: string | null, // 부모 세션 ID (HTTP 세션에서 파생된 소켓인 경우)
     public readonly type: SessionType, // 세션 타입 (HTTP, WEBSOCKET 등)
     public readonly status: SessionStatus, // 세션 상태
     public readonly isAdmin: boolean, // 관리자 세션 여부 (HTTP 세션인 경우 Redis 키 prefix 결정에 사용)
@@ -35,6 +36,7 @@ export class UserSession {
    * @param params - 세션 생성 파라미터
    * @param params.userId - 세션 소유자 사용자 ID
    * @param params.sessionId - 실제 세션 ID
+   * @param params.parentSessionId - 부모 세션 ID (선택)
    * @param params.type - 세션 타입
    * @param params.deviceInfo - 디바이스 정보
    * @param params.expiresAt - 세션 만료 시간
@@ -43,6 +45,7 @@ export class UserSession {
   static create(params: {
     userId: bigint;
     sessionId: string;
+    parentSessionId?: string | null;
     type: SessionType;
     isAdmin?: boolean;
     deviceInfo: DeviceInfo;
@@ -56,6 +59,7 @@ export class UserSession {
       null, // id는 DB 저장 시 자동 생성
       params.userId,
       params.sessionId,
+      params.parentSessionId ?? null,
       params.type,
       SessionStatus.ACTIVE,
       params.isAdmin ?? false,
@@ -79,6 +83,7 @@ export class UserSession {
     id: bigint | null;
     userId: bigint;
     sessionId: string;
+    parentSessionId: string | null;
     type: string;
     status: string;
     isAdmin: boolean;
@@ -125,6 +130,7 @@ export class UserSession {
       data.id,
       data.userId,
       data.sessionId,
+      data.parentSessionId,
       data.type as SessionType,
       data.status as SessionStatus,
       data.isAdmin,
@@ -181,6 +187,7 @@ export class UserSession {
       this.id,
       this.userId,
       this.sessionId,
+      this.parentSessionId,
       this.type,
       this.status,
       this.isAdmin,
@@ -212,6 +219,7 @@ export class UserSession {
       this.id,
       this.userId,
       this.sessionId,
+      this.parentSessionId,
       this.type,
       SessionStatus.REVOKED,
       this.isAdmin,
@@ -239,6 +247,7 @@ export class UserSession {
       this.id,
       this.userId,
       this.sessionId,
+      this.parentSessionId,
       this.type,
       SessionStatus.EXPIRED,
       this.isAdmin,
@@ -262,6 +271,7 @@ export class UserSession {
       this.id,
       this.userId,
       this.sessionId,
+      this.parentSessionId,
       this.type,
       this.status,
       this.isAdmin,
@@ -297,6 +307,7 @@ export class UserSession {
       id: this.id,
       userId: this.userId,
       sessionId: this.sessionId,
+      parentSessionId: this.parentSessionId,
       type: this.type,
       status: this.status,
       isAdmin: this.isAdmin,

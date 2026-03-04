@@ -3,49 +3,49 @@ import { SessionType, SessionStatus } from '../../../../domain';
 
 export class DeviceInfoDto {
   @ApiProperty({
-    description: 'IP 주소',
+    description: 'IP 주소 / IP Address',
     example: '192.168.1.1',
     nullable: true,
   })
   ipAddress: string | null;
 
   @ApiProperty({
-    description: 'User Agent',
+    description: 'User Agent / User Agent',
     example: 'Mozilla/5.0...',
     nullable: true,
   })
   userAgent: string | null;
 
   @ApiProperty({
-    description: '디바이스 핑거프린트',
+    description: '디바이스 핑거프린트 / Device fingerprint',
     example: 'fingerprint-123',
     nullable: true,
   })
   deviceFingerprint: string | null;
 
   @ApiProperty({
-    description: '모바일 디바이스 여부',
+    description: '모바일 디바이스 여부 / Is mobile device',
     example: false,
     nullable: true,
   })
   isMobile: boolean | null;
 
   @ApiProperty({
-    description: '디바이스 이름',
+    description: '디바이스 이름 / Device name',
     example: 'iPhone 14 Pro',
     nullable: true,
   })
   deviceName: string | null;
 
   @ApiProperty({
-    description: '운영체제',
+    description: '운영체제 / Operating System',
     example: 'iOS 17.0',
     nullable: true,
   })
   os: string | null;
 
   @ApiProperty({
-    description: '브라우저',
+    description: '브라우저 / Browser',
     example: 'Safari 17',
     nullable: true,
   })
@@ -58,6 +58,13 @@ export class SessionListItemDto {
     example: 'sess-abc123',
   })
   sessionId: string;
+
+  @ApiProperty({
+    description: '부모 세션 ID / Parent Session ID',
+    example: 'sess-parent123',
+    nullable: true,
+  })
+  parentSessionId: string | null;
 
   @ApiProperty({
     description: '사용자 ID / User ID',

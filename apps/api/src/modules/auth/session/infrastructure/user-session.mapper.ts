@@ -18,6 +18,7 @@ export class UserSessionMapper {
       id: prismaModel.id,
       userId: prismaModel.userId,
       sessionId: prismaModel.sessionId,
+      parentSessionId: prismaModel.parentSessionId,
       type: prismaModel.type as SessionType,
       status: prismaModel.status as SessionStatus,
       isAdmin: prismaModel.isAdmin,
@@ -46,6 +47,7 @@ export class UserSessionMapper {
   toPrisma(domain: UserSession): {
     userId: bigint;
     sessionId: string;
+    parentSessionId: string | null;
     type: SessionType;
     status: SessionStatus;
     isAdmin: boolean;
@@ -69,6 +71,7 @@ export class UserSessionMapper {
     return {
       userId: domain.userId,
       sessionId: domain.sessionId,
+      parentSessionId: domain.parentSessionId,
       type: domain.type,
       status: domain.status,
       isAdmin: domain.isAdmin,
