@@ -15,6 +15,7 @@ import {
   ApiOperation,
   ApiBearerAuth,
   ApiParam,
+  ApiCookieAuth,
 } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
@@ -25,23 +26,20 @@ import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
 import { CreateDepositResponseDto } from './dto/response/create-deposit-response.dto';
 import { CreateCryptoDepositRequestDto } from './dto/request/create-crypto-deposit-request.dto';
-import { CreateBankDepositRequestDto } from './dto/request/create-bank-deposit-request.dto';
+import { CreateFiatDepositRequestDto } from './dto/request/create-fiat-deposit-request.dto';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
-import { GetAvailableDepositMethodsService } from '../../application/get-available-deposit-methods.service';
 import { CreateCryptoDepositService } from '../../application/create-crypto-deposit.service';
-import { CreateBankDepositService } from '../../application/create-bank-deposit.service';
+import { CreateFiatDepositService } from '../../application/create-fiat-deposit.service';
 import { GetMyDepositsService } from '../../application/get-my-deposits.service';
-import { GetMyDepositDetailService } from '../../application/get-my-deposit-detail.service';
 import { CancelDepositService } from '../../application/cancel-deposit.service';
 import {
   UserDepositResponseDto,
   CancelDepositResponseDto,
 } from './dto/response/deposit.response.dto';
-import { GetAvailableDepositMethodsResponseDto } from './dto/response/deposit-methods.response.dto';
 import { GetDepositsQueryDto } from './dto/request/get-deposits-query.dto';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
@@ -49,45 +47,16 @@ import { DepositDetail } from '../../domain';
 
 @ApiTags('User Deposit')
 @Controller('deposits')
-@ApiBearerAuth()
+@ApiCookieAuth()
 @ApiStandardErrors()
 export class DepositController {
   constructor(
-    private readonly getAvailableMethodsService: GetAvailableDepositMethodsService,
     private readonly createCryptoDepositService: CreateCryptoDepositService,
-    private readonly createBankDepositService: CreateBankDepositService,
+    private readonly createFiatDepositService: CreateFiatDepositService,
     private readonly getMyDepositsService: GetMyDepositsService,
-    private readonly getMyDepositDetailService: GetMyDepositDetailService,
     private readonly cancelDepositService: CancelDepositService,
     private readonly sqidsService: SqidsService,
   ) { }
-
-  // ============================================
-  // 입금 수단 조회
-  // ============================================
-
-  @Get('methods')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Get available deposit methods / 사용 가능한 입금 수단 조회',
-    description:
-      'Retrieve list of available deposit methods (crypto, bank transfer). (사용 가능한 입금 수단 목록을 조회합니다.)',
-  })
-  @ApiStandardResponse(GetAvailableDepositMethodsResponseDto, {
-    status: 200,
-    description: 'Deposit methods retrieved successfully / 입금 수단 조회 성공',
-  })
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    action: 'VIEW_DEPOSIT_METHODS',
-    category: 'DEPOSIT',
-  })
-  async getAvailableMethods(
-    @CurrentUser() user: AuthenticatedUser,
-    @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<GetAvailableDepositMethodsResponseDto> {
-    return this.getAvailableMethodsService.execute();
-  }
 
   // ============================================
   // 입금 관리
@@ -97,13 +66,13 @@ export class DepositController {
   @HttpCode(HttpStatus.OK)
   @Paginated()
   @ApiOperation({
-    summary: 'Get my deposit list / 내 입금 목록 조회',
+    summary: '내 입금 목록 조회 / Get my deposit list',
     description:
-      'Retrieve my deposit history with pagination. (내 입금 내역을 페이징하여 조회합니다.)',
+      '내 입금 내역을 페이징하여 조회합니다. / Retrieve my deposit history with pagination.',
   })
   @ApiPaginatedResponse(UserDepositResponseDto, {
     status: 200,
-    description: 'Deposit list retrieved successfully / 입금 목록 조회 성공',
+    description: '입금 목록 조회 성공 / Deposit list retrieved successfully',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -137,54 +106,17 @@ export class DepositController {
     };
   }
 
-  @Get(':id')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Get deposit detail / 입금 상세 조회',
-    description:
-      'Retrieve detailed information of a specific deposit. (특정 입금의 상세 정보를 조회합니다.)',
-  })
-  @ApiParam({
-    name: 'id',
-    description: 'Deposit ID / 입금 ID',
-    type: String,
-  })
-  @ApiStandardResponse(UserDepositResponseDto, {
-    status: 200,
-    description: 'Deposit detail retrieved successfully / 입금 상세 조회 성공',
-  })
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    action: 'VIEW_DEPOSIT_DETAIL',
-    category: 'DEPOSIT',
-    extractMetadata: (_, args) => ({
-      depositId: args[0],
-    }),
-  })
-  async getDepositDetail(
-    @Param('id') id: string,
-    @CurrentUser() user: AuthenticatedUser,
-    @RequestClientInfoParam() requestInfo: RequestClientInfo,
-  ): Promise<UserDepositResponseDto> {
-    const decodedId = this.sqidsService.decode(id, SqidsPrefix.DEPOSIT);
-    const deposit = await this.getMyDepositDetailService.execute({
-      id: decodedId,
-      userId: user.id,
-    });
-    return this.toResponseDto(deposit);
-  }
-
   @Post('crypto')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
-    summary: 'Create crypto deposit request / 암호화폐 입금 요청 생성',
+    summary: '암호화폐 입금 요청 생성 / Create crypto deposit request',
     description:
-      'Create a new cryptocurrency deposit request. (새로운 암호화폐 입금 요청을 생성합니다.)',
+      '새로운 암호화폐 입금 요청을 생성합니다. / Create a new cryptocurrency deposit request.',
   })
   @ApiStandardResponse(CreateDepositResponseDto, {
     status: 201,
     description:
-      'Crypto deposit request created successfully / 암호화폐 입금 요청 생성 성공',
+      '암호화폐 입금 요청 생성 성공 / Crypto deposit request created successfully',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -217,33 +149,33 @@ export class DepositController {
     };
   }
 
-  @Post('bank')
+  @Post('fiat')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
-    summary: 'Create bank deposit request / 무통장 입금 요청 생성',
+    summary: '피아트 입금 요청 생성 / Create fiat deposit request',
     description:
-      'Create a new bank transfer deposit request. (새로운 무통장 입금 요청을 생성합니다.)',
+      '새로운 피아트 입금 요청을 생성합니다. / Create a new fiat transfer deposit request.',
   })
   @ApiStandardResponse(CreateDepositResponseDto, {
     status: 201,
     description:
-      'Bank deposit request created successfully / 무통장 입금 요청 생성 성공',
+      '피아트 입금 요청 생성 성공 / Fiat deposit request created successfully',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
-    action: 'CREATE_BANK_DEPOSIT_REQUEST',
+    action: 'CREATE_FIAT_DEPOSIT_REQUEST',
     category: 'DEPOSIT',
     extractMetadata: (_, args) => ({
       currency: args[0]?.payCurrency,
       amount: args[0]?.amount,
     }),
   })
-  async createBankDeposit(
-    @Body() dto: CreateBankDepositRequestDto,
+  async createFiatDeposit(
+    @Body() dto: CreateFiatDepositRequestDto,
     @CurrentUser() user: AuthenticatedUser,
     @RequestClientInfoParam() clientInfo: RequestClientInfo,
   ): Promise<CreateDepositResponseDto> {
-    const result = await this.createBankDepositService.execute({
+    const result = await this.createFiatDepositService.execute({
       ...dto,
       userId: user.id,
       ipAddress: clientInfo.ip,
@@ -260,18 +192,18 @@ export class DepositController {
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Cancel deposit request / 입금 신청 취소',
+    summary: '입금 신청 취소 / Cancel deposit request',
     description:
-      'Cancel a pending deposit request. (대기 중인 입금 요청을 취소합니다.)',
+      '대기 중인 입금 요청을 취소합니다. / Cancel a pending deposit request.',
   })
   @ApiParam({
     name: 'id',
-    description: 'DepositDetail ID (Encoded) / 인코딩된 입금 상세 ID',
+    description: '인코딩된 입금 상세 ID / DepositDetail ID (Encoded)',
     type: String,
   })
   @ApiStandardResponse(CancelDepositResponseDto, {
     status: 200,
-    description: 'Deposit request cancelled successfully / 입금 신청 취소 성공',
+    description: '입금 신청 취소 성공 / Deposit request cancelled successfully',
   })
   @AuditLog({
     type: LogType.ACTIVITY,

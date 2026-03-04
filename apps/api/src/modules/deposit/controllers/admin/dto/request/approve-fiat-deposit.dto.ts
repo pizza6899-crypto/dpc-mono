@@ -7,9 +7,9 @@ import {
   Min,
 } from 'class-validator';
 
-export class ApproveBankDepositDto {
+export class ApproveFiatDepositDto {
   @ApiProperty({
-    description: '실제 입금된 금액',
+    description: '실제 입금된 금액 / Actually paid amount',
     example: 100000,
   })
   @IsNotEmpty()
@@ -18,7 +18,7 @@ export class ApproveBankDepositDto {
   actuallyPaid: number;
 
   @ApiPropertyOptional({
-    description: '거래번호 (무통장 입금 거래번호)',
+    description: '거래 번호 / Transaction hash (TXID)',
     example: '20240101001',
   })
   @IsOptional()
@@ -26,7 +26,7 @@ export class ApproveBankDepositDto {
   transactionHash?: string;
 
   @ApiPropertyOptional({
-    description: '메모',
+    description: '관리자 상신용 메모 / Admin note (Memo)',
     example: '입금 확인 완료',
   })
   @IsOptional()

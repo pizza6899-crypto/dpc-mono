@@ -17,11 +17,9 @@ import { GetDepositDetailService } from './application/get-deposit-detail.servic
 import { ApproveDepositService } from './application/approve-deposit.service';
 import { RejectDepositService } from './application/reject-deposit.service';
 import { CancelDepositService } from './application/cancel-deposit.service';
-import { GetAvailableDepositMethodsService } from './application/get-available-deposit-methods.service';
 import { CreateCryptoDepositService } from './application/create-crypto-deposit.service';
-import { CreateBankDepositService } from './application/create-bank-deposit.service';
+import { CreateFiatDepositService } from './application/create-fiat-deposit.service';
 import { GetMyDepositsService } from './application/get-my-deposits.service';
-import { GetMyDepositDetailService } from './application/get-my-deposit-detail.service';
 import { DepositDetailMapper } from './infrastructure/deposit-detail.mapper';
 import { DepositDetailRepository } from './infrastructure/deposit-detail.repository';
 import {
@@ -58,11 +56,9 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
     RejectDepositService,
     CancelDepositService,
 
-    GetAvailableDepositMethodsService,
     CreateCryptoDepositService,
-    CreateBankDepositService,
+    CreateFiatDepositService,
     GetMyDepositsService,
-    GetMyDepositDetailService,
   ],
   controllers: [DepositController, AdminDepositController],
   exports: [
@@ -73,11 +69,9 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
     RejectDepositService,
     CancelDepositService,
 
-    GetAvailableDepositMethodsService,
     CreateCryptoDepositService,
-    CreateBankDepositService,
+    CreateFiatDepositService,
     GetMyDepositsService,
-    GetMyDepositDetailService,
   ],
 })
 export class DepositModule { }

@@ -22,7 +22,7 @@ import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.
 import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { GetDepositsQueryDto } from './dto/request/get-deposits-query.dto';
-import { ApproveBankDepositDto } from './dto/request/approve-bank-deposit.dto';
+import { ApproveFiatDepositDto } from './dto/request/approve-fiat-deposit.dto';
 import { RejectDepositDto } from './dto/request/reject-deposit.dto';
 import {
   AdminDepositListItemDto,
@@ -58,13 +58,13 @@ export class AdminDepositController {
   @Get('stats')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Get deposit statistics / 입금 현황 요약',
+    summary: '입금 현황 요약 / Get deposit statistics',
     description:
-      'Get real-time deposit statistics including total deposit amount today, pending requests count, and method distribution.',
+      '당일 총 입금액, 대기 중인 요청 수, 수단별 분포를 포함한 실시간 입금 통계를 조회합니다. / Get real-time deposit statistics including total deposit amount today, pending requests count, and method distribution.',
   })
   @ApiStandardResponse(DepositStatsResponseDto, {
     status: 200,
-    description: 'Deposit statistics retrieved successfully',
+    description: '입금 통화 조회 성공 / Deposit statistics retrieved successfully',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -82,12 +82,12 @@ export class AdminDepositController {
   @HttpCode(HttpStatus.OK)
   @Paginated()
   @ApiOperation({
-    summary: 'Get deposit list / 입금 목록 조회',
-    description: 'Retrieve deposit history with pagination and filtering support.',
+    summary: '입금 목록 조회 / Get deposit list',
+    description: '페이징 및 필터링을 지원하는 입금 내역 목록을 조회합니다. / Retrieve deposit history with pagination and filtering support.',
   })
   @ApiPaginatedResponse(AdminDepositListItemDto, {
     status: 200,
-    description: 'Deposit list retrieved successfully',
+    description: '입금 목록 조회 성공 / Deposit list retrieved successfully',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -135,17 +135,17 @@ export class AdminDepositController {
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Get deposit detail / 입금 상세 조회',
-    description: 'Retrieve detailed information of a specific deposit.',
+    summary: '입금 상세 조회 / Get deposit detail',
+    description: '특정 입금의 상세 정보를 조회합니다. / Retrieve detailed information of a specific deposit.',
   })
   @ApiParam({
     name: 'id',
-    description: 'DepositDetail ID',
+    description: '입금 상세 ID / DepositDetail ID',
     type: String,
   })
   @ApiStandardResponse(AdminDepositListItemDto, {
     status: 200,
-    description: 'Deposit detail retrieved successfully',
+    description: '입금 상세 조회 성공 / Deposit detail retrieved successfully',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -180,17 +180,17 @@ export class AdminDepositController {
   @Post(':id/approve')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Approve deposit / 입금 승인',
-    description: 'Approve a deposit and update user balance.',
+    summary: '입금 승인 / Approve deposit',
+    description: '입금을 승인하고 사용자의 잔액을 업데이트합니다. / Approve a deposit and update user balance.',
   })
   @ApiParam({
     name: 'id',
-    description: 'DepositDetail ID',
+    description: '입금 상세 ID / DepositDetail ID',
     type: String,
   })
   @ApiStandardResponse(ApproveDepositResponseDto, {
     status: 200,
-    description: 'Deposit approved successfully',
+    description: '입금 승인 성공 / Deposit approved successfully',
   })
   @AuditLog({
     type: LogType.AUTH,
@@ -204,7 +204,7 @@ export class AdminDepositController {
   })
   async approveDeposit(
     @Param('id') id: string,
-    @Body() dto: ApproveBankDepositDto,
+    @Body() dto: ApproveFiatDepositDto,
     @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<ApproveDepositResponseDto> {
@@ -221,17 +221,17 @@ export class AdminDepositController {
   @Post(':id/reject')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Reject deposit / 입금 거부',
-    description: 'Reject a deposit request.',
+    summary: '입금 거부 / Reject deposit',
+    description: '입금 요청을 거부 처리합니다. / Reject a deposit request.',
   })
   @ApiParam({
     name: 'id',
-    description: 'DepositDetail ID',
+    description: '입금 상세 ID / DepositDetail ID',
     type: String,
   })
   @ApiStandardResponse(RejectDepositResponseDto, {
     status: 200,
-    description: 'Deposit rejected successfully',
+    description: '입금 거부 성공 / Deposit rejected successfully',
   })
   @AuditLog({
     type: LogType.AUTH,

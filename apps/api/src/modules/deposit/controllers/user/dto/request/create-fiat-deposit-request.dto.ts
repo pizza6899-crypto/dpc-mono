@@ -8,9 +8,9 @@ import {
   Min,
 } from 'class-validator';
 
-export class CreateBankDepositRequestDto {
+export class CreateFiatDepositRequestDto {
   @ApiPropertyOptional({
-    description: 'Deposit promotion code (입금 프로모션 코드)',
+    description: '입금 프로모션 코드 / Deposit promotion code',
     example: 'WELCOME_BONUS',
   })
   @IsOptional()
@@ -18,7 +18,7 @@ export class CreateBankDepositRequestDto {
   depositPromotionCode?: string;
 
   @ApiProperty({
-    description: 'Currency code (입금할 통화 코드)',
+    description: '입금할 통화 코드 / Currency code',
     example: ExchangeCurrencyCode.KRW,
   })
   @IsNotEmpty()
@@ -26,7 +26,7 @@ export class CreateBankDepositRequestDto {
   payCurrency: string;
 
   @ApiProperty({
-    description: 'Deposit amount (입금 금액)',
+    description: '입금 금액 / Deposit amount',
     example: 100000,
   })
   @IsNotEmpty()
@@ -35,7 +35,7 @@ export class CreateBankDepositRequestDto {
   amount: number;
 
   @ApiProperty({
-    description: 'Depositor name (입금자명)',
+    description: '입금자명 / Depositor name',
     example: '김철수',
   })
   @IsNotEmpty()

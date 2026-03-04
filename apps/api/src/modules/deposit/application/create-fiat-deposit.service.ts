@@ -1,4 +1,4 @@
-// src/modules/deposit/application/create-bank-deposit.service.ts
+// src/modules/deposit/application/create-fiat-deposit.service.ts
 import { Injectable, Inject } from '@nestjs/common';
 import {
   Prisma,
@@ -26,7 +26,7 @@ import type { PromotionRepositoryPort } from '../../promotion/ports/out/promotio
 import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
-interface CreateBankDepositParams {
+interface CreateFiatDepositParams {
   userId: bigint;
   payCurrency: string;
   amount: string | number;
@@ -36,12 +36,12 @@ interface CreateBankDepositParams {
   deviceFingerprint?: string;
 }
 
-interface CreateBankDepositResult {
+interface CreateFiatDepositResult {
   deposit: DepositDetail;
 }
 
 @Injectable()
-export class CreateBankDepositService {
+export class CreateFiatDepositService {
   constructor(
     @Inject(DEPOSIT_DETAIL_REPOSITORY)
     private readonly depositRepository: DepositDetailRepositoryPort,
@@ -53,8 +53,8 @@ export class CreateBankDepositService {
 
   @Transactional()
   async execute(
-    params: CreateBankDepositParams,
-  ): Promise<CreateBankDepositResult> {
+    params: CreateFiatDepositParams,
+  ): Promise<CreateFiatDepositResult> {
     const {
       userId,
       payCurrency,

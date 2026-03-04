@@ -30,7 +30,7 @@ export class GetDepositsQueryDto extends createPaginationQueryDto<DepositSortFie
   ['createdAt', 'updatedAt', 'actuallyPaid', 'confirmedAt'],
 ) {
   @ApiPropertyOptional({
-    description: '입금 상태 필터',
+    description: '입금 상태 필터 / Deposit status filter',
     enum: DepositDetailStatus,
   })
   @IsOptional()
@@ -38,7 +38,7 @@ export class GetDepositsQueryDto extends createPaginationQueryDto<DepositSortFie
   status?: DepositDetailStatus;
 
   @ApiPropertyOptional({
-    description: '입금 방법 필터',
+    description: '입금 방법 필터 / Deposit method filter',
     enum: DepositMethodType,
   })
   @IsOptional()
@@ -46,7 +46,7 @@ export class GetDepositsQueryDto extends createPaginationQueryDto<DepositSortFie
   methodType?: DepositMethodType;
 
   @ApiPropertyOptional({
-    description: '사용자 ID 필터',
+    description: '사용자 ID 필터 / User ID filter',
   })
   @IsOptional()
   @IsNumberString()
@@ -54,7 +54,7 @@ export class GetDepositsQueryDto extends createPaginationQueryDto<DepositSortFie
   userId?: bigint;
 
   @ApiPropertyOptional({
-    description: '통화 필터',
+    description: '통화 필터 / Currency filter',
     enum: ExchangeCurrencyCode,
   })
   @IsOptional()
@@ -62,14 +62,14 @@ export class GetDepositsQueryDto extends createPaginationQueryDto<DepositSortFie
   currency?: ExchangeCurrencyCode;
 
   @ApiPropertyOptional({
-    description: '시작 날짜 (ISO 8601 형식)',
+    description: '시작 날짜 (ISO 8601 형식) / Start date (ISO 8601 format)',
   })
   @IsOptional()
   @IsDateString()
   startDate?: string;
 
   @ApiPropertyOptional({
-    description: '종료 날짜 (ISO 8601 형식)',
+    description: '종료 날짜 (ISO 8601 형식) / End date (ISO 8601 format)',
   })
   @IsOptional()
   @IsDateString()

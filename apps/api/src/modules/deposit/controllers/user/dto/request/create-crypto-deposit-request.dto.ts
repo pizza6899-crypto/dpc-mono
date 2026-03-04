@@ -4,7 +4,7 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateCryptoDepositRequestDto {
   @ApiPropertyOptional({
-    description: 'Deposit promotion code (입금 프로모션 코드)',
+    description: '입금 프로모션 코드 / Deposit promotion code',
     example: 'WELCOME_BONUS',
   })
   @IsOptional()
@@ -12,7 +12,7 @@ export class CreateCryptoDepositRequestDto {
   depositPromotionCode?: string;
 
   @ApiProperty({
-    description: 'Currency symbol (입금할 암호화폐 심볼)',
+    description: '입금할 암호화폐 심볼 / Currency symbol (Coin)',
     example: ExchangeCurrencyCode.USDT,
   })
   @IsNotEmpty()
@@ -20,7 +20,7 @@ export class CreateCryptoDepositRequestDto {
   payCurrency: string;
 
   @ApiProperty({
-    description: 'Network (입금할 네트워크)',
+    description: '입금할 네트워크 / Network',
     example: 'ethereum',
   })
   @IsNotEmpty()
@@ -28,7 +28,7 @@ export class CreateCryptoDepositRequestDto {
   payNetwork: string;
 
   @ApiPropertyOptional({
-    description: 'Expected deposit amount (입금 예정 금액)',
+    description: '입금 예정 금액 / Expected deposit amount',
     example: 100,
   })
   @IsOptional()
