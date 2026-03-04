@@ -45,6 +45,11 @@ export enum MessageCode {
     USER_COUNTRY_ALREADY_SET = 'USER_COUNTRY_ALREADY_SET', // 사용자 국가가 이미 설정되어 있을 때
     USER_CONFIG_NOT_FOUND = 'USER_CONFIG_NOT_FOUND', // 사용자 설정을 찾을 수 없을 때
 
+    // --- 인증 요구조건 관련 (Verification Requirements) ---
+    PHONE_VERIFICATION_REQUIRED = 'PHONE_VERIFICATION_REQUIRED', // 휴대전화 인증이 필요할 때
+    EMAIL_VERIFICATION_REQUIRED = 'EMAIL_VERIFICATION_REQUIRED', // 이메일 인증이 필요할 때
+    IDENTITY_VERIFICATION_REQUIRED = 'IDENTITY_VERIFICATION_REQUIRED', // 본인인증(KYC)이 필요할 때
+
     // --- 데이터베이스 관련 (Database) ---
     DB_CONNECTION_ERROR = 'DB_CONNECTION_ERROR', // 데이터베이스 연결에 실패했을 때
     DB_QUERY_ERROR = 'DB_QUERY_ERROR', // 쿼리 실행 중 오류가 발생했을 때

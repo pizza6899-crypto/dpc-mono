@@ -25,10 +25,9 @@ export class DepositException extends DomainException {
  * @httpStatus 404
  */
 export class DepositNotFoundException extends DepositException {
-  constructor(id: bigint | string) {
-    const idStr = typeof id === 'bigint' ? id.toString() : id;
+  constructor() {
     super(
-      `Deposit not found: id=${idStr}`,
+      'Deposit not found',
       MessageCode.DEPOSIT_NOT_FOUND,
       HttpStatus.NOT_FOUND,
     );
@@ -44,10 +43,9 @@ export class DepositNotFoundException extends DepositException {
  * @httpStatus 400
  */
 export class DepositAlreadyProcessedException extends DepositException {
-  constructor(id: bigint | string, currentStatus: string) {
-    const idStr = typeof id === 'bigint' ? id.toString() : id;
+  constructor(currentStatus: string) {
     super(
-      `Deposit already processed: id=${idStr}, currentStatus=${currentStatus}`,
+      `Deposit already processed (Current status: ${currentStatus})`,
       MessageCode.DEPOSIT_ALREADY_PROCESSED,
       HttpStatus.BAD_REQUEST,
     );
@@ -62,10 +60,9 @@ export class DepositAlreadyProcessedException extends DepositException {
  * @httpStatus 409
  */
 export class PendingDepositExistsException extends DepositException {
-  constructor(userId: bigint | string) {
-    const idStr = typeof userId === 'bigint' ? userId.toString() : userId;
+  constructor() {
     super(
-      `Pending deposit request already exists for user: ${idStr}`,
+      'A pending deposit request already exists for this user',
       MessageCode.DEPOSIT_REQUEST_ALREADY_EXISTS,
       HttpStatus.CONFLICT,
     );
@@ -80,14 +77,9 @@ export class PendingDepositExistsException extends DepositException {
  * @httpStatus 400
  */
 export class InvalidDepositStatusException extends DepositException {
-  constructor(
-    id: bigint | string,
-    currentStatus: string,
-    expectedStatuses: string[],
-  ) {
-    const idStr = typeof id === 'bigint' ? id.toString() : id;
+  constructor(currentStatus: string, expectedStatuses: string[]) {
     super(
-      `Invalid deposit status: id=${idStr}, currentStatus=${currentStatus}, expectedStatuses=[${expectedStatuses.join(', ')}]`,
+      `Invalid deposit status (Current status: ${currentStatus}, expected: ${expectedStatuses.join(', ')})`,
       MessageCode.DEPOSIT_INVALID_STATUS,
       HttpStatus.BAD_REQUEST,
     );
@@ -153,10 +145,9 @@ export class DepositAmountExceedsMaximumException extends DepositException {
  * @httpStatus 400
  */
 export class InvalidPromotionSelectionException extends DepositException {
-  constructor(promotionId: bigint | string | number) {
-    const idStr = promotionId.toString();
+  constructor() {
     super(
-      `Invalid or ineligible promotion selected: ${idStr}`,
+      'The selected promotion is invalid or ineligible',
       MessageCode.PROMOTION_NOT_FOUND,
       HttpStatus.BAD_REQUEST,
     );
@@ -170,8 +161,63 @@ export class InvalidPromotionSelectionException extends DepositException {
  * @httpStatus 400
  */
 export class DepositRequirementNotMetException extends DepositException {
-  constructor(reason: string) {
-    super(reason, MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST);
+  constructor(
+    reason: string,
+    errorCode: MessageCode = MessageCode.VALIDATION_ERROR,
+  ) {
+    super(reason, errorCode, HttpStatus.BAD_REQUEST);
     this.name = 'DepositRequirementNotMetException';
+  }
+}
+
+/**
+ * 활성화된 유저가 아닐 때 발생하는 예외
+ */
+export class UserStatusNotActiveException extends DepositRequirementNotMetException {
+  constructor(status: string) {
+    super(
+      `User status is not active: ${status}. Only ACTIVE users can make deposits.`,
+      MessageCode.AUTH_ACCOUNT_INACTIVE,
+    );
+    this.name = 'UserStatusNotActiveException';
+  }
+}
+
+/**
+ * 이메일 인증이 완료되지 않았을 때 발생하는 예외
+ */
+export class EmailNotVerifiedException extends DepositRequirementNotMetException {
+  constructor() {
+    super(
+      'Email verification is required for this deposit method.',
+      MessageCode.EMAIL_VERIFICATION_REQUIRED,
+    );
+    this.name = 'EmailNotVerifiedException';
+  }
+}
+
+/**
+ * 휴대전화 인증이 완료되지 않았을 때 발생하는 예외
+ */
+export class PhoneNotVerifiedException extends DepositRequirementNotMetException {
+  constructor() {
+    super(
+      'Phone verification is required for this deposit method.',
+      MessageCode.PHONE_VERIFICATION_REQUIRED,
+    );
+    this.name = 'PhoneNotVerifiedException';
+  }
+}
+
+/**
+ * 본인인증(KYC)이 완료되지 않았을 때 발생하는 예외
+ */
+export class IdentityNotVerifiedException extends DepositRequirementNotMetException {
+  constructor() {
+    super(
+      'Identity verification (KYC) is required for this deposit method.',
+      MessageCode.IDENTITY_VERIFICATION_REQUIRED,
+    );
+    this.name = 'IdentityNotVerifiedException';
   }
 }

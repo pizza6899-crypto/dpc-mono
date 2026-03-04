@@ -28,25 +28,6 @@ export class CreateDepositResponseDto {
   })
   payNetwork?: string;
 
-  // 무통장 입금 응답 필드
-  @ApiPropertyOptional({
-    description: '은행명 / Bank name',
-    example: 'KB국민은행',
-  })
-  bankName?: string;
-
-  @ApiPropertyOptional({
-    description: '계좌번호 / Account number',
-    example: '123-456-789012',
-  })
-  accountNumber?: string;
-
-  @ApiPropertyOptional({
-    description: '예금주명 / Account holder name',
-    example: '주식회사 DPC',
-  })
-  accountHolder?: string;
-
   @ApiPropertyOptional({
     description: '거래 ID / Transaction ID',
     example: '1234567890',

@@ -383,7 +383,7 @@ export class DepositDetail {
     if (!this.id)
       throw new DepositException('Entity must be persisted before approval');
     if (!this.canBeProcessed()) {
-      throw new DepositAlreadyProcessedException(this.id, this._status);
+      throw new DepositAlreadyProcessedException(this._status);
     }
 
     if (transactionId) {
@@ -418,7 +418,7 @@ export class DepositDetail {
     if (!this.id)
       throw new DepositException('Entity must be persisted before rejection');
     if (!this.canBeProcessed()) {
-      throw new DepositAlreadyProcessedException(this.id, this._status);
+      throw new DepositAlreadyProcessedException(this._status);
     }
 
     // 상태 변경
@@ -441,7 +441,7 @@ export class DepositDetail {
         'Entity must be persisted before cancellation',
       );
     if (!this.canBeProcessed()) {
-      throw new DepositAlreadyProcessedException(this.id, this._status);
+      throw new DepositAlreadyProcessedException(this._status);
     }
 
     // 상태 변경

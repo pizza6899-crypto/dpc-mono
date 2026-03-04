@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { UserStatus } from '@prisma/client';
 import {
-    DepositRequirementNotMetException,
+    UserStatusNotActiveException,
+    PhoneNotVerifiedException,
+    IdentityNotVerifiedException,
 } from '../deposit.exception';
 
 /**
@@ -27,9 +29,7 @@ export class DepositRequirementPolicy {
      */
     private validateActiveStatus(user: DepositUserContext): void {
         if (user.status !== UserStatus.ACTIVE) {
-            throw new DepositRequirementNotMetException(
-                `User account is not active (Status: ${user.status})`,
-            );
+            throw new UserStatusNotActiveException(user.status);
         }
     }
 
@@ -42,16 +42,12 @@ export class DepositRequirementPolicy {
 
         // 2. 피아트 특화 조건: 휴대폰 인증 필수
         if (!user.isPhoneVerified) {
-            throw new DepositRequirementNotMetException(
-                'Phone verification is required for fiat deposit',
-            );
+            throw new PhoneNotVerifiedException();
         }
 
         // 3. KYC 강제 대상인 경우 인증 여부 체크
         if (user.isKycMandatory && !user.isIdentityVerified) {
-            throw new DepositRequirementNotMetException(
-                'Identity verification (KYC) is mandatory for this account',
-            );
+            throw new IdentityNotVerifiedException();
         }
     }
 
@@ -62,11 +58,6 @@ export class DepositRequirementPolicy {
         // 1. 공통 상태 체크
         this.validateActiveStatus(user);
 
-        // 2. 크립토 특화 조건: 최소한 이메일 인증은 완료되어야 함
-        if (!user.isEmailVerified) {
-            throw new DepositRequirementNotMetException(
-                'Email verification is required for crypto deposit',
-            );
-        }
+        // 2. 크립토는 현재 별도의 추가 인증 없이 허용 (모든 조건 허용)
     }
 }

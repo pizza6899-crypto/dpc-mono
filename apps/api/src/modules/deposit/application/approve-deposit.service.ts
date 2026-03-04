@@ -72,7 +72,7 @@ export class ApproveDepositService {
 
     // 2. 엔티티 비즈니스 로직 실행 전 검증 (이미 처리된 경우 등)
     if (!deposit.canBeProcessed()) {
-      throw new DepositAlreadyProcessedException(id, deposit.status);
+      throw new DepositAlreadyProcessedException(deposit.status);
     }
 
     // 3. Get Initial Wallet State for Recording

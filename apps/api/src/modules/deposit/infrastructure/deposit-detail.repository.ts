@@ -40,7 +40,7 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
   async getById(id: bigint): Promise<DepositDetail> {
     const deposit = await this.findById(id);
     if (!deposit) {
-      throw new DepositNotFoundException(id);
+      throw new DepositNotFoundException();
     }
     return deposit;
   }
@@ -170,7 +170,7 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     });
 
     if (!result) {
-      throw new DepositNotFoundException(id);
+      throw new DepositNotFoundException();
     }
 
     return {

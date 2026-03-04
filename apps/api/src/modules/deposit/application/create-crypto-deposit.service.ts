@@ -80,7 +80,7 @@ export class CreateCryptoDepositService {
     const hasPendingDeposit =
       await this.depositRepository.existsPendingByUserId(userId);
     if (hasPendingDeposit) {
-      throw new PendingDepositExistsException(userId);
+      throw new PendingDepositExistsException();
     }
 
     let promotionId: bigint | null = null;
@@ -91,7 +91,7 @@ export class CreateCryptoDepositService {
       const promotion =
         await this.promotionRepository.findByCode(depositPromotionCode);
       if (!promotion) {
-        throw new InvalidPromotionSelectionException(depositPromotionCode);
+        throw new InvalidPromotionSelectionException();
       }
 
       const eligiblePromotions =
@@ -107,7 +107,7 @@ export class CreateCryptoDepositService {
         (p) => p.code === depositPromotionCode,
       );
       if (!isEligible) {
-        throw new InvalidPromotionSelectionException(depositPromotionCode);
+        throw new InvalidPromotionSelectionException();
       }
       promotionId = promotion.id;
     }
