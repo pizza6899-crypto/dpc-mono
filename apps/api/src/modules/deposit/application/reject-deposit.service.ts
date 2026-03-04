@@ -17,8 +17,6 @@ interface RejectDepositResult {
 
 @Injectable()
 export class RejectDepositService {
-  private readonly logger = new Logger(RejectDepositService.name);
-
   constructor(
     @Inject(DEPOSIT_DETAIL_REPOSITORY)
     private readonly depositRepository: DepositDetailRepositoryPort,

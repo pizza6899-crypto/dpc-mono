@@ -86,8 +86,6 @@ export class ApproveDepositService {
       throw new Error('User wallet not found');
     }
 
-    const beforeTotalAmount = walletBefore.cash.add(walletBefore.bonus);
-
     // 4. USD 환산 산정 (티어 실적 반영용)
     const depositCurrency =
       deposit.depositCurrency as unknown as ExchangeCurrencyCode;
@@ -123,8 +121,6 @@ export class ApproveDepositService {
         actionName: WalletActionName.APPROVE_DEPOSIT,
       },
     );
-
-    const afterTotalAmount = updatedWallet.cash.add(updatedWallet.bonus);
 
     // 6. Tier Stats or XP Accumulation (Skip deposit-based XP if not used)
     // Deprecated: accumulateUserDepositService call removed.
