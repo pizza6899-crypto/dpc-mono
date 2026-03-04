@@ -163,3 +163,15 @@ export class InvalidPromotionSelectionException extends DepositException {
     this.name = 'InvalidPromotionSelectionException';
   }
 }
+/**
+ * 입금 신청 요구조건을 충족하지 못했을 때 발생하는 예외 (예: 본인인증 미비 등)
+ *
+ * @errorCode MessageCode.VALIDATION_ERROR
+ * @httpStatus 400
+ */
+export class DepositRequirementNotMetException extends DepositException {
+  constructor(reason: string) {
+    super(reason, MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST);
+    this.name = 'DepositRequirementNotMetException';
+  }
+}

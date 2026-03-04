@@ -134,7 +134,7 @@ export class DepositController {
   ): Promise<CreateDepositResponseDto> {
     const deposit = await this.createCryptoDepositService.execute({
       ...dto,
-      userId: user.id,
+      user: user,
       ipAddress: clientInfo.ip,
       deviceFingerprint: clientInfo.userAgent,
     });
@@ -177,7 +177,7 @@ export class DepositController {
   ): Promise<CreateDepositResponseDto> {
     const result = await this.createFiatDepositService.execute({
       ...dto,
-      userId: user.id,
+      user: user,
       ipAddress: clientInfo.ip,
       deviceFingerprint: clientInfo.userAgent,
     });

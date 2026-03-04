@@ -20,6 +20,8 @@ import {
   PendingDepositExistsException,
   InvalidPromotionSelectionException,
 } from '../domain';
+import { DepositRequirementPolicy } from '../domain/policy/deposit-requirement.policy';
+import { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { CheckEligiblePromotionsService } from '../../promotion/application/check-eligible-promotions.service';
 import { PROMOTION_REPOSITORY } from '../../promotion/ports/out';
 import type { PromotionRepositoryPort } from '../../promotion/ports/out/promotion.repository.port';
@@ -27,7 +29,7 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 interface CreateCryptoDepositParams {
-  userId: bigint;
+  user: AuthenticatedUser;
   payCurrency: string;
   payNetwork: string;
   amount?: string | number;
@@ -45,12 +47,13 @@ export class CreateCryptoDepositService {
     private readonly promotionRepository: PromotionRepositoryPort,
     private readonly checkEligiblePromotionsService: CheckEligiblePromotionsService,
     private readonly advisoryLockService: AdvisoryLockService,
+    private readonly depositRequirementPolicy: DepositRequirementPolicy,
   ) { }
 
   @Transactional()
   async execute(params: CreateCryptoDepositParams): Promise<DepositDetail> {
     const {
-      userId,
+      user,
       payCurrency,
       payNetwork,
       amount,
@@ -58,6 +61,8 @@ export class CreateCryptoDepositService {
       ipAddress,
       deviceFingerprint,
     } = params;
+
+    const userId = user.id;
 
     // 락 획득 (DB Advisory Lock)
     await this.advisoryLockService.acquireLock(
@@ -68,7 +73,10 @@ export class CreateCryptoDepositService {
       },
     );
 
-    // 0. 중복 입금 신청 확인 (Pending 상태인 입금이 있으면 차단)
+    // 0. 유저 상태 및 요구조건 검증 (Policy 적용 - 세션 정보 활용)
+    this.depositRequirementPolicy.validateCryptoRequirements(user);
+
+    // 1. 중복 입금 신청 확인 (Pending 상태인 입금이 있으면 차단)
     const hasPendingDeposit =
       await this.depositRepository.existsPendingByUserId(userId);
     if (hasPendingDeposit) {

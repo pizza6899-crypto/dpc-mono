@@ -22,6 +22,7 @@ import { CreateFiatDepositService } from './application/create-fiat-deposit.serv
 import { GetMyDepositsService } from './application/get-my-deposits.service';
 import { DepositDetailMapper } from './infrastructure/deposit-detail.mapper';
 import { DepositDetailRepository } from './infrastructure/deposit-detail.repository';
+import { DepositRequirementPolicy } from './domain/policy/deposit-requirement.policy';
 import {
   DEPOSIT_DETAIL_REPOSITORY,
 } from './ports/out';
@@ -43,6 +44,7 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
   providers: [
     // Infrastructure (Mapper)
     DepositDetailMapper,
+    DepositRequirementPolicy,
     {
       provide: DEPOSIT_DETAIL_REPOSITORY,
       useClass: DepositDetailRepository,
