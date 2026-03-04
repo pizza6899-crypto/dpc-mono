@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { ChannelType } from '@prisma/client';
 import { ChannelSender, ChannelSendParams } from '../../../common';
 import { SocketService } from 'src/modules/socket/socket.service';
+import type { SocketRoomType } from 'src/modules/socket/constants/socket-rooms';
 
 @Injectable()
 export class SocketSender implements ChannelSender {
-  constructor(private readonly socketService: SocketService) {}
+  constructor(private readonly socketService: SocketService) { }
 
   getChannelType(): ChannelType {
     return ChannelType.IN_APP;
@@ -26,7 +27,7 @@ export class SocketSender implements ChannelSender {
    * DB 저장 없이 특정 사용자에게 실시간 이벤트를 직접 전송합니다.
    */
   async sendDirect(
-    userId: string | bigint,
+    userId: bigint,
     event: string,
     data: any,
   ): Promise<void> {
@@ -36,7 +37,11 @@ export class SocketSender implements ChannelSender {
   /**
    * 특정 룸에 실시간 이벤트를 전송합니다.
    */
-  async sendToRoom(room: string, event: string, data: any): Promise<void> {
+  async sendToRoom(
+    room: SocketRoomType,
+    event: string,
+    data: any,
+  ): Promise<void> {
     this.socketService.sendToRoom(room, event, data);
   }
 

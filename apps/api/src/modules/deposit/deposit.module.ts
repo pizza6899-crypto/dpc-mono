@@ -27,6 +27,7 @@ import {
   DEPOSIT_DETAIL_REPOSITORY,
 } from './ports/out';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { NotificationModule } from '../notification/notification.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
     ExchangeModule,
     ConcurrencyModule,
     SnowflakeModule,
+    NotificationModule,
   ],
   providers: [
     // Infrastructure (Mapper)

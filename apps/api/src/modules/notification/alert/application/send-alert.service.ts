@@ -93,18 +93,26 @@ export class SendAlertService {
     const p = payload as Record<string, unknown>;
 
     switch (event) {
-      case NOTIFICATION_EVENTS.DEPOSIT_COMPLETED:
-      case NOTIFICATION_EVENTS.DEPOSIT_REJECTED:
+      case NOTIFICATION_EVENTS.FIAT_DEPOSIT_REQUESTED:
+        if (!p.depositorName) missingFields.push('depositorName');
+      // fallthrough
+      case NOTIFICATION_EVENTS.FIAT_DEPOSIT_COMPLETED:
+      case NOTIFICATION_EVENTS.FIAT_DEPOSIT_REJECTED:
+      case NOTIFICATION_EVENTS.CRYPTO_DEPOSIT_REQUESTED:
+      case NOTIFICATION_EVENTS.CRYPTO_DEPOSIT_COMPLETED:
+      case NOTIFICATION_EVENTS.CRYPTO_DEPOSIT_REJECTED:
         if (!p.amount) missingFields.push('amount');
         if (!p.currency) missingFields.push('currency');
-        if (!p.txId) missingFields.push('txId');
         break;
 
-      case NOTIFICATION_EVENTS.WITHDRAWAL_COMPLETED:
-      case NOTIFICATION_EVENTS.WITHDRAWAL_REJECTED:
+      case NOTIFICATION_EVENTS.FIAT_WITHDRAWAL_REQUESTED:
+      case NOTIFICATION_EVENTS.FIAT_WITHDRAWAL_COMPLETED:
+      case NOTIFICATION_EVENTS.FIAT_WITHDRAWAL_REJECTED:
+      case NOTIFICATION_EVENTS.CRYPTO_WITHDRAWAL_REQUESTED:
+      case NOTIFICATION_EVENTS.CRYPTO_WITHDRAWAL_COMPLETED:
+      case NOTIFICATION_EVENTS.CRYPTO_WITHDRAWAL_REJECTED:
         if (!p.amount) missingFields.push('amount');
         if (!p.currency) missingFields.push('currency');
-        if (!p.txId) missingFields.push('txId');
         break;
 
       case NOTIFICATION_EVENTS.PROMOTION_APPLIED:

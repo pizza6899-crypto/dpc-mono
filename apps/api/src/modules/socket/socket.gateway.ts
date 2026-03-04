@@ -7,6 +7,8 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { Logger, Injectable } from '@nestjs/common';
+import { getSocketRoom } from './constants/socket-rooms';
+import type { SocketRoomType } from './constants/socket-rooms';
 
 @WebSocketGateway({
   cors: {
@@ -27,8 +29,8 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   handleConnection(client: Socket) {
     const userId = this.extractUserId(client);
-    if (userId) {
-      client.join(`user:${userId}`);
+    if (userId !== null) {
+      client.join(getSocketRoom.user(userId));
       this.logger.log(`Client connected: ${client.id}, userId: ${userId}`);
     } else {
       this.logger.warn(`Client connected without userId: ${client.id}`);
@@ -47,13 +49,32 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   /**
+   * 클라이언트를 특정 룸에 가입시킵니다.
+   * (추후 관리자 권한 검증 등 보안 로직 추가 예정)
+   */
+  @SubscribeMessage('room:join')
+  handleJoinRoom(client: Socket, room: SocketRoomType): void {
+    client.join(room);
+    this.logger.debug(`Client ${client.id} joined room: ${room}`);
+  }
+
+  /**
+   * 클라이언트를 특정 룸에서 퇴장시킵니다.
+   */
+  @SubscribeMessage('room:leave')
+  handleLeaveRoom(client: Socket, room: SocketRoomType): void {
+    client.leave(room);
+    this.logger.debug(`Client ${client.id} left room: ${room}`);
+  }
+
+  /**
    * 특정 사용자에게 이벤트를 전송합니다.
    * @param userId 타겟 사용자 ID
    * @param event 이벤트 이름
    * @param data 전송할 데이터
    */
-  emitToUser(userId: string | bigint, event: string, data: any): void {
-    this.server.to(`user:${userId}`).emit(event, data);
+  emitToUser(userId: bigint, event: string, data: any): void {
+    this.server.to(getSocketRoom.user(userId)).emit(event, data);
     this.logger.debug(`Emitted ${event} to user:${userId}`);
   }
 
@@ -63,7 +84,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
    * @param event 이벤트 이름
    * @param data 전송할 데이터
    */
-  emitToRoom(room: string, event: string, data: any): void {
+  emitToRoom(room: SocketRoomType, event: string, data: any): void {
     this.server.to(room).emit(event, data);
   }
 
@@ -76,7 +97,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.server.emit(event, data);
   }
 
-  private extractUserId(client: Socket): string | null {
+  private extractUserId(client: Socket): bigint | null {
     // 1. Handshake Auth에서 추출 (클라이언트가 socket 연결 시 auth: { token: ... } 등으로 보낼 때)
     const token =
       client.handshake.auth?.token || client.handshake.headers?.authorization;
@@ -86,6 +107,6 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const userId =
       client.handshake.query?.userId || client.handshake.auth?.userId;
 
-    return userId ? String(userId) : null;
+    return userId ? BigInt(userId) : null;
   }
 }

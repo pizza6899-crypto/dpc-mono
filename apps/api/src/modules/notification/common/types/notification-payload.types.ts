@@ -4,18 +4,52 @@ import type {
 } from '../constants/event.constants';
 
 // --- 입출금 ---
-export interface DepositPayload {
+// --- 입금 ---
+export interface BaseDepositPayload {
+  id?: string;           // 내부 입금 신청 ID (어드민 상세 페이지 링크용)
+  userId: string;
   amount: string;
   currency: string;
-  txId: string;
-  completedAt: string;
+  email?: string;
+  nickname?: string;
+  requestedAt?: string;
+  completedAt?: string;
+  txId?: string;         // 완료 시 트랜잭션 해시 등
+  reason?: string;       // 거절 사유
 }
 
-export interface WithdrawalPayload {
+export interface FiatDepositPayload extends BaseDepositPayload {
+  depositorName: string;
+}
+
+export interface CryptoDepositPayload extends BaseDepositPayload {
+  address?: string;
+  network?: string;
+}
+
+// --- 출금 ---
+export interface BaseWithdrawalPayload {
+  id?: string;
+  userId: string;
   amount: string;
   currency: string;
-  txId: string;
-  reason?: string; // 거절 사유 등
+  email?: string;
+  nickname?: string;
+  requestedAt?: string;
+  completedAt?: string;
+  txId?: string;
+  reason?: string;
+}
+
+export interface FiatWithdrawalPayload extends BaseWithdrawalPayload {
+  bankName: string;
+  accountNumber: string;
+  accountHolder: string;
+}
+
+export interface CryptoWithdrawalPayload extends BaseWithdrawalPayload {
+  address: string;
+  network: string;
 }
 
 // --- 프로모션 ---
@@ -71,10 +105,21 @@ export interface AlertPopupPayload {
  */
 export type NotificationPayloadMap = {
   // 입출금
-  [NOTIFICATION_EVENTS.DEPOSIT_COMPLETED]: DepositPayload;
-  [NOTIFICATION_EVENTS.DEPOSIT_REJECTED]: DepositPayload;
-  [NOTIFICATION_EVENTS.WITHDRAWAL_COMPLETED]: WithdrawalPayload;
-  [NOTIFICATION_EVENTS.WITHDRAWAL_REJECTED]: WithdrawalPayload;
+  // 입금
+  [NOTIFICATION_EVENTS.FIAT_DEPOSIT_REQUESTED]: FiatDepositPayload;
+  [NOTIFICATION_EVENTS.FIAT_DEPOSIT_COMPLETED]: FiatDepositPayload;
+  [NOTIFICATION_EVENTS.FIAT_DEPOSIT_REJECTED]: FiatDepositPayload;
+  [NOTIFICATION_EVENTS.CRYPTO_DEPOSIT_REQUESTED]: CryptoDepositPayload;
+  [NOTIFICATION_EVENTS.CRYPTO_DEPOSIT_COMPLETED]: CryptoDepositPayload;
+  [NOTIFICATION_EVENTS.CRYPTO_DEPOSIT_REJECTED]: CryptoDepositPayload;
+
+  // 출금
+  [NOTIFICATION_EVENTS.FIAT_WITHDRAWAL_REQUESTED]: FiatWithdrawalPayload;
+  [NOTIFICATION_EVENTS.FIAT_WITHDRAWAL_COMPLETED]: FiatWithdrawalPayload;
+  [NOTIFICATION_EVENTS.FIAT_WITHDRAWAL_REJECTED]: FiatWithdrawalPayload;
+  [NOTIFICATION_EVENTS.CRYPTO_WITHDRAWAL_REQUESTED]: CryptoWithdrawalPayload;
+  [NOTIFICATION_EVENTS.CRYPTO_WITHDRAWAL_COMPLETED]: CryptoWithdrawalPayload;
+  [NOTIFICATION_EVENTS.CRYPTO_WITHDRAWAL_REJECTED]: CryptoWithdrawalPayload;
 
   // 프로모션
   [NOTIFICATION_EVENTS.PROMOTION_APPLIED]: PromotionPayload;
@@ -99,6 +144,8 @@ export type RealtimePayloadMap = {
   [REALTIME_EVENTS.BALANCE_UPDATED]: BalanceUpdatedPayload;
   [REALTIME_EVENTS.LEVEL_UPDATED]: LevelUpdatedPayload;
   [REALTIME_EVENTS.ALERT_POPUP]: AlertPopupPayload;
+  [REALTIME_EVENTS.ADMIN_FIAT_DEPOSIT_REQUESTED]: FiatDepositPayload;
+  [REALTIME_EVENTS.ADMIN_CRYPTO_DEPOSIT_REQUESTED]: CryptoDepositPayload;
 
   // 기본 타입
   [key: string]: any;

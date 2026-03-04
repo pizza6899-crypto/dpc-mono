@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { SocketService } from 'src/modules/socket/socket.service';
+import { SocketRoomType } from 'src/modules/socket/constants/socket-rooms';
 import { RealtimePayloadMap } from '../../common';
 
 export interface SendRealtimeParams<T extends keyof RealtimePayloadMap> {
@@ -7,7 +8,7 @@ export interface SendRealtimeParams<T extends keyof RealtimePayloadMap> {
   userId?: bigint;
 
   /** 특정 룸(채널) 대상 (예: 'admin', 'lobby') */
-  room?: string;
+  room?: SocketRoomType;
 
   /** 이벤트명 (REALTIME_EVENTS 상수 사용 권장) */
   event: T;
@@ -22,7 +23,7 @@ export interface SendRealtimeParams<T extends keyof RealtimePayloadMap> {
  */
 @Injectable()
 export class SendRealtimeService {
-  constructor(private readonly socketService: SocketService) {}
+  constructor(private readonly socketService: SocketService) { }
 
   async execute<T extends keyof RealtimePayloadMap>(
     params: SendRealtimeParams<T>,

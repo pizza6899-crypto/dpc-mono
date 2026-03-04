@@ -20,7 +20,7 @@ export class CreateAlertRequestDto {
   @ApiProperty({
     description: 'Event name',
     enum: NOTIFICATION_EVENTS,
-    example: NOTIFICATION_EVENTS.DEPOSIT_COMPLETED,
+    example: NOTIFICATION_EVENTS.FIAT_DEPOSIT_COMPLETED,
   })
   @IsEnum(NOTIFICATION_EVENTS)
   event: string;
