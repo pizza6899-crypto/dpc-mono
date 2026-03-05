@@ -1,31 +1,39 @@
 import type {
   NOTIFICATION_EVENTS,
 } from '../constants/event.constants';
+import { ExchangeCurrencyCode } from '@prisma/client';
 
-// --- 입출금 ---
-// --- 입금 ---
-export interface BaseDepositPayload {
-  id?: string;           // 내부 입금 신청 ID (어드민 상세 페이지 링크용)
+/**
+ * 입금 신청 시 (어드민 알림용)
+ */
+export interface FiatDepositRequestedPayload {
+  id: string;               // 입금 신청 ID
   userId: string;
   amount: string;
-  currency: string;
-  email?: string;
-  nickname?: string;
-  requestedAt?: string;
-  completedAt?: string;
-  txId?: string;         // 완료 시 트랜잭션 해시 등
-  reason?: string;       // 거절 사유
+  currency: ExchangeCurrencyCode;
+  depositorName: string;    // 입금자명
+  requestedAt: string;      // 신청 일시
 }
 
-export interface FiatDepositPayload extends BaseDepositPayload {
-  depositorName: string;
+/**
+ * 입금 처리 완료/거절 시 (유저 알림용)
+ */
+export interface FiatDepositProcessedPayload {
+  id?: string;
+  userId: string;
+  amount: string;
+  currency: ExchangeCurrencyCode;
+  completedAt?: string;     // 처리 완료 일시
+  txId?: string;            // 트랜잭션 ID (성공 시)
+  reason?: string;          // 거절 사유 (실패 시)
+  nickname?: string;
 }
 
 // --- 프로모션 ---
 export interface PromotionPayload {
   promotionName: string;
   bonusAmount?: string;
-  currency?: string;
+  currency?: ExchangeCurrencyCode;
   expiryDate?: string;
 }
 
@@ -41,7 +49,7 @@ export interface VerificationPayload {
  */
 export type NotificationPayloadMap = {
   // 입금
-  [NOTIFICATION_EVENTS.FIAT_DEPOSIT_REQUESTED]: FiatDepositPayload;
+  [NOTIFICATION_EVENTS.FIAT_DEPOSIT_REQUESTED]: FiatDepositRequestedPayload;
 
   // 프로모션
   [NOTIFICATION_EVENTS.PROMOTION_APPLIED]: PromotionPayload;

@@ -29,6 +29,13 @@ interface AlertJobData {
   alertCreatedAt: string;
 }
 
+interface UserMetadata {
+  id: bigint;
+  email?: string | null;
+  phoneNumber?: string | null;
+  language?: Language | null;
+}
+
 @Processor(queueConfig.processorOptions, queueConfig.workerOptions)
 export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
   protected readonly logger = new Logger(AlertProcessor.name);
@@ -106,7 +113,7 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
     }
 
     // Fetch User metadata if userId exists
-    const user = userId ? await this.getUserService.findById(userId) : null;
+    const user: UserMetadata | null = userId ? await this.getUserService.findById(userId) : null;
 
     const {
       locale: localeFromPayload,
@@ -220,7 +227,7 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
   private extractTarget(
     alert: Alert<any>,
     channel: ChannelType,
-    user: any, // user 도메인 임포트가 없으므로 서비스 메서드 반환 타입과 맞춤
+    user: UserMetadata | null,
   ): string | undefined {
     const payload = alert.payload as any;
 
