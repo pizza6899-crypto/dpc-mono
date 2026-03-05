@@ -9,7 +9,9 @@ import {
   NOTIFICATION_LOG_REPOSITORY,
   type NotificationLogRepositoryPort,
 } from '../../inbox/ports';
+import { RenderTemplateService } from '../../template/application/render-template.service';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
+import { Language } from '@prisma/client';
 import {
   BULLMQ_QUEUES,
   getQueueConfig,
@@ -41,6 +43,7 @@ export class SocketProcessor extends BaseProcessor<
     private readonly notificationLogRepository: NotificationLogRepositoryPort,
     private readonly socketSender: SocketSender,
     private readonly websocketService: WebsocketService,
+    private readonly renderTemplateService: RenderTemplateService,
     protected readonly cls: ClsService,
   ) {
     super();
@@ -70,7 +73,27 @@ export class SocketProcessor extends BaseProcessor<
     await this.notificationLogRepository.update(log);
 
     try {
-      // SocketSender를 통해 알림 발송
+      // 지연 렌더링 처리
+      if (!log.title || !log.body) {
+        if (!log.templateEvent) {
+          throw new Error(`Socket notification failed: missing templateEvent for log ${log.id}`);
+        }
+
+        const renderResult = await this.renderTemplateService.execute({
+          event: log.templateEvent,
+          channel: log.channel,
+          locale: log.locale || Language.KO,
+          variables: log.metadata || {},
+        });
+
+        log.updateContent(
+          renderResult.title || '',
+          renderResult.body,
+          renderResult.actionUri || null,
+        );
+      }
+
+      // SocketSender를 통해 알림 발송 ('NEW_INBOX_ITEM' 푸시를 위해 DB에 들어갈 값들을 같이 보내줌)
       await this.socketSender.send({
         logId: log.id!,
         logCreatedAt: log.createdAt,

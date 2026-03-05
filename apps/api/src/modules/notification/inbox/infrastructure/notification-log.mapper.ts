@@ -111,6 +111,7 @@ export class NotificationLogMapper {
     deletedAt: Date | null;
     title?: string | null;
     body?: string | null;
+    actionUri?: string | null;
     status: NotifyStatus;
     errorMessage: string | null;
     sentAt: Date | null;
@@ -123,6 +124,7 @@ export class NotificationLogMapper {
       deletedAt: log.deletedAt,
       title: log.title,
       body: log.body,
+      actionUri: log.actionUri,
       status: log.status,
       errorMessage: log.errorMessage,
       sentAt: log.sentAt,

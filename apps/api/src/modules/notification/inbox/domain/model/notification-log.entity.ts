@@ -73,9 +73,9 @@ export class NotificationLog {
     public readonly channel: ChannelType,
     public readonly receiverId: bigint,
     public readonly target: string | null,
-    public readonly title: string | null,
-    public readonly body: string | null,
-    public readonly actionUri: string | null,
+    private _title: string | null,
+    private _body: string | null,
+    private _actionUri: string | null,
     private _isRead: boolean,
     private _readAt: Date | null,
     private _isDeleted: boolean,
@@ -160,6 +160,18 @@ export class NotificationLog {
     return this._readAt;
   }
 
+  get title(): string | null {
+    return this._title;
+  }
+
+  get body(): string | null {
+    return this._body;
+  }
+
+  get actionUri(): string | null {
+    return this._actionUri;
+  }
+
   get isDeleted(): boolean {
     return this._isDeleted;
   }
@@ -195,6 +207,13 @@ export class NotificationLog {
     }
     this._isRead = true;
     this._readAt = new Date();
+    this._updatedAt = new Date();
+  }
+
+  updateContent(title: string, body: string, actionUri: string | null = null): void {
+    this._title = title;
+    this._body = body;
+    this._actionUri = actionUri;
     this._updatedAt = new Date();
   }
 

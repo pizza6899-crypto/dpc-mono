@@ -99,7 +99,7 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
       locale: localeFromPayload,
       channels: _,
       ...variables
-    } = alert.payload as Record<string, unknown>;
+    } = alert.payload || {};
     const locale =
       (localeFromPayload as Language) || user?.language || Language.KO;
 

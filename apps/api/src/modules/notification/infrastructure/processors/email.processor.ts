@@ -11,7 +11,9 @@ import {
   NOTIFICATION_LOG_REPOSITORY,
   type NotificationLogRepositoryPort,
 } from '../../inbox/ports';
+import { RenderTemplateService } from '../../template/application/render-template.service';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
+import { Language } from '@prisma/client';
 import {
   BULLMQ_QUEUES,
   getQueueConfig,
@@ -32,6 +34,7 @@ export class EmailProcessor extends BaseProcessor<NotificationJobData, void> {
     @Inject(NOTIFICATION_LOG_REPOSITORY)
     private readonly notificationLogRepository: NotificationLogRepositoryPort,
     private readonly emailSender: EmailSender,
+    private readonly renderTemplateService: RenderTemplateService,
     protected readonly cls: ClsService,
   ) {
     super();
@@ -50,6 +53,26 @@ export class EmailProcessor extends BaseProcessor<NotificationJobData, void> {
     // 발송 시작 상태 업데이트
     log.markAsSending();
     await this.notificationLogRepository.update(log);
+
+    // 지연 렌더링 처리
+    if (!log.title || !log.body) {
+      if (!log.templateEvent) {
+        throw new Error(`Email sending failed: missing templateEvent for log ${log.id}`);
+      }
+
+      const renderResult = await this.renderTemplateService.execute({
+        event: log.templateEvent,
+        channel: log.channel,
+        locale: log.locale || Language.KO,
+        variables: log.metadata || {},
+      });
+
+      log.updateContent(
+        renderResult.title || '',
+        renderResult.body,
+        renderResult.actionUri || null,
+      );
+    }
 
     // 채널 Sender 파라미터 구성
     const sendParams: ChannelSendParams = {
