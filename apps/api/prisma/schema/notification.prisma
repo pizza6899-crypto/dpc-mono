@@ -131,7 +131,7 @@ enum NotifyStatus {
 enum ChannelType {
   EMAIL
   SMS
-  IN_APP
+  INBOX
   WEBSOCKET
   TELEGRAM
 }
