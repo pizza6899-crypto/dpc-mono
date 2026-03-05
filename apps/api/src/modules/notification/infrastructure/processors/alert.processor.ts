@@ -11,6 +11,7 @@ import {
   type NotificationLogRepositoryPort,
 } from '../../inbox/ports';
 import { NotificationLog } from '../../inbox/domain';
+import { Alert } from '../../alert/domain';
 import { SnowflakeService } from '../../../../common/snowflake/snowflake.service';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
 import { NOTIFICATION_TARGET_GROUPS } from '../../common/constants/target-group.constants';
@@ -56,7 +57,7 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
     const { alertId, alertCreatedAt } = data;
 
     this.logger.debug(
-      `Processing alert job ${job.id} for alert ${alertId}`,
+      `Processing alert job ${job.id} for alert ${alertId} (Attempt: ${job.attemptsMade + 1})`,
     );
 
     // 1. Fetch Alert
@@ -64,6 +65,12 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
       new Date(alertCreatedAt),
       BigInt(alertId),
     );
+
+    // ✅ 재시도 처리: 이미 완료되었거나 실패한 경우 처리 중단
+    if (alert.isCompleted() || alert.isFailed()) {
+      this.logger.warn(`Alert ${alert.id} is already ${alert.status}. Skipping.`);
+      return;
+    }
 
     // 2. Identify Target (User or Group)
     const userId = alert.userId;
@@ -74,8 +81,10 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
       this.logger.error(
         `Alert ${alert.id} has no destination (userId AND targetGroup are null). Marking as FAILED.`,
       );
-      alert.fail();
-      await this.alertRepository.update(alert);
+      if (!alert.isFailed()) {
+        alert.fail();
+        await this.alertRepository.update(alert);
+      }
       return;
     }
 
@@ -83,14 +92,18 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
       this.logger.error(
         `Alert ${alert.id} has no channels specified. Marking as FAILED.`,
       );
-      alert.fail();
-      await this.alertRepository.update(alert);
+      if (!alert.isFailed()) {
+        alert.fail();
+        await this.alertRepository.update(alert);
+      }
       return;
     }
 
-    // Status update to PROCESSING
-    alert.startProcessing();
-    await this.alertRepository.update(alert);
+    // ✅ 상태 변화 (이미 PROCESSING이면 생략 - 재시도 대응)
+    if (alert.isPending()) {
+      alert.startProcessing();
+      await this.alertRepository.update(alert);
+    }
 
     // Fetch User metadata if userId exists
     const user = userId ? await this.getUserService.findById(userId) : null;
@@ -99,9 +112,12 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
       locale: localeFromPayload,
       channels: _,
       ...variables
-    } = alert.payload || {};
+    } = (alert.payload || {}) as Record<string, any>;
+
     const locale =
       (localeFromPayload as Language) || user?.language || Language.KO;
+
+    let hasError = false;
 
     // 3. Process for each requested channel (지연 렌더링 라우팅)
     for (const channel of alert.channels) {
@@ -133,7 +149,7 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
               title: null, // 지연 렌더링
               body: null, // 지연 렌더링
               actionUri: null,
-              templateEvent: alert.event,
+              templateEvent: alert.event as string,
               locale,
               target: this.extractTarget(alert, channel, user),
               metadata: variables,
@@ -187,7 +203,13 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
           `Failed to route channel ${channel} for alert ${alert.id}:`,
           innerError,
         );
+        hasError = true;
       }
+    }
+
+    // ✅ 에러 전파: 하나라도 채널 라우팅에 실패했다면 워커가 재시도(Backoff) 루프를 타게 던짐
+    if (hasError) {
+      throw new Error(`One or more channels failed to route for alert ${alert.id}.`);
     }
 
     alert.complete();
@@ -196,11 +218,11 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
   }
 
   private extractTarget(
-    alert: any,
+    alert: Alert<any>,
     channel: ChannelType,
-    user: any,
+    user: any, // user 도메인 임포트가 없으므로 서비스 메서드 반환 타입과 맞춤
   ): string | undefined {
-    const payload = alert.payload;
+    const payload = alert.payload as any;
 
     if (channel === ChannelType.EMAIL) {
       return payload.email ?? payload.target ?? user?.email;

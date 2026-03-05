@@ -19,7 +19,7 @@ import {
   UserWalletBalanceType,
   UserWalletTransactionType,
 } from '@prisma/client';
-import { SendAlertService } from '../../notification/alert/application/send-alert.service';
+import { CreateAlertService } from '../../notification/alert/application/create-alert.service';
 import { NOTIFICATION_EVENTS } from '../../notification/common';
 import { ChannelType } from '@prisma/client';
 import { PromotionMetadata } from '../../wallet/domain/model/user-wallet-transaction-metadata';
@@ -45,7 +45,7 @@ export class ApplyCouponPromotionService {
     private readonly policy: PromotionPolicy,
     private readonly createWageringRequirementService: CreateWageringRequirementService,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
-    private readonly sendAlertService: SendAlertService,
+    private readonly createAlertService: CreateAlertService,
     private readonly advisoryLockService: AdvisoryLockService,
   ) { }
 
@@ -195,10 +195,9 @@ export class ApplyCouponPromotionService {
 
     // 15. 인박스 알림 발송
     try {
-      await this.sendAlertService.execute({
+      await this.createAlertService.execute({
         event: NOTIFICATION_EVENTS.PROMOTION_APPLIED,
         userId,
-        channels: [ChannelType.INBOX],
         payload: {
           promotionName:
             promotion.getTranslation(user.language)?.name ||
@@ -209,7 +208,6 @@ export class ApplyCouponPromotionService {
         },
       });
     } catch (error) {
-      // 알림 발송 실패가 비즈니스 로직(쿠폰 지급)을 실패하게 하면 안 됨
       this.logger.error(
         `Failed to send promotion inbox notification: ${error}`,
       );

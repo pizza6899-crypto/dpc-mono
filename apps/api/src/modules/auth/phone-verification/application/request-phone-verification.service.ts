@@ -3,7 +3,7 @@ import { TokenType, ChannelType } from '@prisma/client';
 import { GetUserService } from 'src/modules/user/profile/application/get-user.service';
 import { PHONE_VERIFICATION_REPOSITORY } from '../ports/out/phone-verification.repository.token';
 import type { PhoneVerificationRepositoryPort } from '../ports/out/phone-verification.repository.port';
-import { SendAlertService } from 'src/modules/notification/alert/application/send-alert.service';
+import { CreateAlertService } from 'src/modules/notification/alert/application/create-alert.service';
 import { NOTIFICATION_EVENTS } from 'src/modules/notification/common';
 import {
     TooManyVerificationRequestsException,
@@ -16,7 +16,7 @@ export class RequestPhoneVerificationService {
         private readonly getUserService: GetUserService,
         @Inject(PHONE_VERIFICATION_REPOSITORY)
         private readonly phoneVerificationRepository: PhoneVerificationRepositoryPort,
-        private readonly sendAlertService: SendAlertService,
+        private readonly createAlertService: CreateAlertService,
     ) { }
 
     async execute(userId: bigint, phoneNumber: string): Promise<void> {
@@ -59,11 +59,10 @@ export class RequestPhoneVerificationService {
         // 6. 알림 발송 요청 (비동기)
         // 유저 언어와 기본 연락처 정보는 알림 워커가 자동으로 처리합니다.
         // 하지만 휴대폰인증은 "입력받은 번호"로 보내야 하므로 target을 명시합니다.
-        await this.sendAlertService.execute({
+        await this.createAlertService.execute({
             event: NOTIFICATION_EVENTS.PHONE_VERIFICATION_CODE,
             userId,
             payload: { code: verificationCode, target: phoneNumber },
-            channels: [ChannelType.SMS],
         });
     }
 }

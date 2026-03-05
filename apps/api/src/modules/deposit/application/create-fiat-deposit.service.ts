@@ -27,7 +27,7 @@ import { PROMOTION_REPOSITORY } from '../../promotion/ports/out';
 import type { PromotionRepositoryPort } from '../../promotion/ports/out/promotion.repository.port';
 import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
-import { SendAlertService } from '../../notification/alert/application/send-alert.service';
+import { CreateAlertService } from '../../notification/alert/application/create-alert.service';
 import {
   NOTIFICATION_EVENTS,
   NOTIFICATION_TARGET_GROUPS,
@@ -58,7 +58,7 @@ export class CreateFiatDepositService {
     private readonly promotionsService: CheckEligiblePromotionsService,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly depositRequirementPolicy: DepositRequirementPolicy,
-    private readonly sendAlertService: SendAlertService,
+    private readonly createAlertService: CreateAlertService,
   ) { }
 
   @Transactional()
@@ -183,11 +183,10 @@ export class CreateFiatDepositService {
     };
 
     // 2. 알림 로그 생성 및 발송 (DB 저장 + 실시간 팝업 브로드캐스트)
-    await this.sendAlertService.execute({
+    await this.createAlertService.execute({
       event: NOTIFICATION_EVENTS.FIAT_DEPOSIT_REQUESTED,
       targetGroup: NOTIFICATION_TARGET_GROUPS.ADMIN,
       payload,
-      channels: [ChannelType.INBOX, ChannelType.WEBSOCKET, ChannelType.TELEGRAM], // 관리자 인박스 + 실시간 팝업
     });
   }
 }

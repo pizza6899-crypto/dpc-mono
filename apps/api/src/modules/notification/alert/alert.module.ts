@@ -1,17 +1,15 @@
 import { Module } from '@nestjs/common';
 import { NotificationQueueModule } from '../common/notification-queue.module';
-import { SendAlertService } from './application/send-alert.service';
-import { SendRealtimeService } from './application/send-realtime.service';
-import { FindAlertsService } from './application/find-alerts.service';
+import { CreateAlertService } from './application/create-alert.service';
 import { AlertMapper } from './infrastructure/alert.mapper';
 import { AlertRepository } from './infrastructure/alert.repository';
-import { AlertAdminController } from './controllers/admin/alert-admin.controller';
+import { NotificationChannelPolicy } from './domain/policy/notification-channel.policy';
 import { ALERT_REPOSITORY } from './ports';
 import { SnowflakeModule } from '../../../common/snowflake/snowflake.module';
 
 @Module({
   imports: [NotificationQueueModule, SnowflakeModule],
-  controllers: [AlertAdminController],
+  controllers: [],
   providers: [
     // Mapper
     AlertMapper,
@@ -23,14 +21,11 @@ import { SnowflakeModule } from '../../../common/snowflake/snowflake.module';
     },
 
     // Services
-    SendAlertService,
-    SendRealtimeService,
-    FindAlertsService,
+    CreateAlertService,
+    NotificationChannelPolicy,
   ],
   exports: [
-    SendAlertService,
-    SendRealtimeService,
-    FindAlertsService,
+    CreateAlertService,
     ALERT_REPOSITORY,
   ],
 })

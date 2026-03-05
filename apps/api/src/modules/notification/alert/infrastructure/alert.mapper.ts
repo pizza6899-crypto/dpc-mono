@@ -1,7 +1,7 @@
 // apps/api/src/modules/notification/alert/infrastructure/alert.mapper.ts
 
 import { Injectable } from '@nestjs/common';
-import { Alert } from '../domain';
+import { Alert, type AlertEvent } from '../domain';
 import { AlertStatus, Prisma, ChannelType } from '@prisma/client';
 
 type PrismaAlert = {
@@ -22,10 +22,10 @@ export class AlertMapper {
   toDomain(prisma: PrismaAlert): Alert {
     return Alert.fromPersistence({
       id: prisma.id,
-      event: prisma.event,
+      event: prisma.event as AlertEvent,
       userId: prisma.userId,
       targetGroup: prisma.targetGroup,
-      payload: prisma.payload as Record<string, unknown>,
+      payload: prisma.payload as any,
       idempotencyKey: prisma.idempotencyKey,
       status: prisma.status,
       channels: prisma.channels,
@@ -48,10 +48,10 @@ export class AlertMapper {
     return {
       id: alert.id!,
       createdAt: alert.createdAt,
-      event: alert.event,
+      event: alert.event as string,
       userId: alert.userId,
       targetGroup: alert.targetGroup,
-      payload: alert.payload as Prisma.InputJsonValue,
+      payload: alert.payload as unknown as Prisma.InputJsonValue,
       idempotencyKey: alert.idempotencyKey,
       status: alert.status,
       channels: alert.channels,

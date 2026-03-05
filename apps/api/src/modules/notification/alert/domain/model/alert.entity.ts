@@ -3,24 +3,28 @@
 import type { ChannelType } from '@prisma/client';
 import { AlertStatus } from '@prisma/client';
 import { InvalidAlertStatusTransitionException } from '../alert.exception';
+import { NotificationPayloadMap } from '../../../common';
 
-interface CreateAlertParams {
+export type AlertEvent = keyof NotificationPayloadMap;
+export type AlertPayload<E extends AlertEvent> = NotificationPayloadMap[E];
+
+interface CreateAlertParams<E extends AlertEvent> {
   id: bigint;
   createdAt: Date;
-  event: string;
+  event: E;
   userId?: bigint | null;
   targetGroup?: string | null;
-  payload: Record<string, unknown>;
+  payload: AlertPayload<E>;
   idempotencyKey?: string | null;
   channels: ChannelType[];
 }
 
-interface FromPersistenceParams {
+interface FromPersistenceParams<E extends AlertEvent> {
   id: bigint;
-  event: string;
+  event: E;
   userId: bigint | null;
   targetGroup: string | null;
-  payload: Record<string, unknown>;
+  payload: AlertPayload<E>;
   idempotencyKey: string | null;
   status: AlertStatus;
   channels: ChannelType[];
@@ -36,13 +40,13 @@ interface FromPersistenceParams {
  * - 멱등성 키를 통한 중복 방지
  * - 팬아웃 상태 추적 (PENDING → PROCESSING → COMPLETED/FAILED)
  */
-export class Alert {
+export class Alert<E extends AlertEvent = AlertEvent> {
   private constructor(
     public readonly id: bigint | null,
-    public readonly event: string,
+    public readonly event: E,
     public readonly userId: bigint | null,
     public readonly targetGroup: string | null,
-    public readonly payload: Record<string, unknown>,
+    public readonly payload: AlertPayload<E>,
     public readonly idempotencyKey: string | null,
     private _status: AlertStatus,
     public readonly createdAt: Date,
@@ -53,11 +57,11 @@ export class Alert {
   /**
    * 새 Alert 생성
    */
-  static create(params: CreateAlertParams): Alert {
+  static create<E extends AlertEvent>(params: CreateAlertParams<E>): Alert<E> {
     const { id, createdAt, event, userId, targetGroup, payload, idempotencyKey, channels } =
       params;
 
-    return new Alert(
+    return new Alert<E>(
       id,
       event,
       userId ?? null,
@@ -74,8 +78,8 @@ export class Alert {
   /**
    * DB에서 조회한 데이터로부터 엔티티 생성
    */
-  static fromPersistence(data: FromPersistenceParams): Alert {
-    return new Alert(
+  static fromPersistence<E extends AlertEvent>(data: FromPersistenceParams<E>): Alert<E> {
+    return new Alert<E>(
       data.id,
       data.event,
       data.userId,
