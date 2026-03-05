@@ -33,6 +33,8 @@ export class AlertMapper {
   }
 
   toCreateInput(alert: Alert): {
+    id: bigint;
+    createdAt: Date;
     event: string;
     userId: bigint | null;
     targetGroup: string | null;
@@ -41,6 +43,8 @@ export class AlertMapper {
     status: AlertStatus;
   } {
     return {
+      id: alert.id!,
+      createdAt: alert.createdAt,
       event: alert.event,
       userId: alert.userId,
       targetGroup: alert.targetGroup,

@@ -39,4 +39,4 @@ import { NOTIFICATION_LOG_REPOSITORY } from './ports';
     NOTIFICATION_LOG_REPOSITORY,
   ],
 })
-export class InboxModule {}
+export class InboxModule { }

@@ -30,11 +30,10 @@ export interface AlertRepositoryPort {
   getById(createdAt: Date, id: bigint): Promise<Alert>;
 
   /**
-   * 멱등성 키로 조회
+   * 멱등성 키로 조회 (중복 방지용, 최근 3일 치 데이터 등 검색)
    */
   findByIdempotencyKey(
     idempotencyKey: string,
-    createdAt: Date,
   ): Promise<Alert | null>;
 
   /**

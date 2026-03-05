@@ -18,7 +18,7 @@ export class NotificationLogRepository implements NotificationLogRepositoryPort 
     @InjectTransaction()
     private readonly tx: Transaction<TransactionalAdapterPrisma>,
     private readonly mapper: NotificationLogMapper,
-  ) {}
+  ) { }
 
   async create(log: NotificationLog): Promise<NotificationLog> {
     const data = this.mapper.toCreateInput(log);

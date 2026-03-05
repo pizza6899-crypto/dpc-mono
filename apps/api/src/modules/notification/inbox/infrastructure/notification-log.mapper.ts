@@ -65,6 +65,8 @@ export class NotificationLogMapper {
   }
 
   toCreateInput(log: NotificationLog): {
+    id: bigint;
+    createdAt: Date;
     alertId: bigint;
     alertCreatedAt: Date;
     templateId: bigint | null;
@@ -82,6 +84,8 @@ export class NotificationLogMapper {
     metadata: Prisma.InputJsonValue | undefined;
   } {
     return {
+      id: log.id!,
+      createdAt: log.createdAt,
       alertId: log.alertId,
       alertCreatedAt: log.alertCreatedAt,
       templateId: log.templateId,

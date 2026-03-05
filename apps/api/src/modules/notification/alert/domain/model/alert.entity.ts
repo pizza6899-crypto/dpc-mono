@@ -5,6 +5,8 @@ import { AlertStatus } from '@prisma/client';
 import { InvalidAlertStatusTransitionException } from '../alert.exception';
 
 interface CreateAlertParams {
+  id: bigint;
+  createdAt: Date;
   event: string;
   userId?: bigint | null;
   targetGroup?: string | null;
@@ -45,25 +47,25 @@ export class Alert {
     public readonly createdAt: Date,
     private _updatedAt: Date,
     private _channels: ChannelType[],
-  ) {}
+  ) { }
 
   /**
    * 새 Alert 생성
    */
   static create(params: CreateAlertParams): Alert {
-    const { event, userId, targetGroup, payload, idempotencyKey, channels } =
+    const { id, createdAt, event, userId, targetGroup, payload, idempotencyKey, channels } =
       params;
 
     return new Alert(
-      null,
+      id,
       event,
       userId ?? null,
       targetGroup ?? null,
       payload,
       idempotencyKey ?? null,
       AlertStatus.PENDING,
-      new Date(),
-      new Date(),
+      createdAt,
+      createdAt,
       channels,
     );
   }

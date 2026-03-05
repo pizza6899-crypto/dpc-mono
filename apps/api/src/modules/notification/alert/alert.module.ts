@@ -7,9 +7,10 @@ import { AlertMapper } from './infrastructure/alert.mapper';
 import { AlertRepository } from './infrastructure/alert.repository';
 import { AlertAdminController } from './controllers/admin/alert-admin.controller';
 import { ALERT_REPOSITORY } from './ports';
+import { SnowflakeModule } from '../../../common/snowflake/snowflake.module';
 
 @Module({
-  imports: [NotificationQueueModule],
+  imports: [NotificationQueueModule, SnowflakeModule],
   controllers: [AlertAdminController],
   providers: [
     // Mapper

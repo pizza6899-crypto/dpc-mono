@@ -1,5 +1,5 @@
 model Alert {
-  id             BigInt            @default(autoincrement())
+  id             BigInt
   event          String
   userId         BigInt?           @map("user_id")
   targetGroup    String?           @map("target_group")
@@ -12,7 +12,7 @@ model Alert {
   user           User?             @relation(fields: [userId], references: [id])
 
   @@id([createdAt, id])
-  @@unique([idempotencyKey, createdAt])
+  @@index([idempotencyKey, createdAt(sort: Desc)])
   @@index([userId])
   @@index([createdAt])
   @@index([status, createdAt])
@@ -66,7 +66,7 @@ model NotificationTemplateTranslation {
 }
 
 model NotificationLog {
-  id             BigInt   @default(autoincrement())
+  id             BigInt
   alertId        BigInt   @map("alert_id")
   alertCreatedAt DateTime @map("alert_created_at")
 
@@ -131,4 +131,6 @@ enum ChannelType {
   EMAIL
   SMS
   IN_APP
+  WEBSOCKET
+  TELEGRAM
 }

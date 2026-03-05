@@ -17,6 +17,7 @@ import {
   type NotificationTemplateRepositoryPort,
 } from '../../template/ports';
 import { NotificationLog } from '../../inbox/domain';
+import { SnowflakeService } from '../../../../common/snowflake/snowflake.service';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
 import {
   getQueueConfig,
@@ -52,6 +53,7 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
     private readonly socketQueue: Queue,
     protected readonly cls: ClsService,
     private readonly getUserService: GetUserService,
+    private readonly snowflakeService: SnowflakeService,
   ) {
     super();
   }
@@ -110,8 +112,12 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
           variables,
         });
 
+        const { id, timestamp } = this.snowflakeService.generate();
+
         // Create NotificationLog
         const log = NotificationLog.create({
+          id,
+          createdAt: timestamp,
           alertId: alert.id!,
           alertCreatedAt: alert.createdAt,
           receiverId: userId,

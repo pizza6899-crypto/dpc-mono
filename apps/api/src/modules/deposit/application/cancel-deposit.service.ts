@@ -16,7 +16,7 @@ export class CancelDepositService {
     @Inject(DEPOSIT_DETAIL_REPOSITORY)
     private readonly depositRepository: DepositDetailRepositoryPort,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(params: CancelDepositParams): Promise<void> {

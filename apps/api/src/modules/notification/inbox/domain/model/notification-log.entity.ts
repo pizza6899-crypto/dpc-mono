@@ -8,6 +8,8 @@ import {
 } from '../inbox.exception';
 
 interface CreateNotificationLogParams {
+  id: bigint;
+  createdAt: Date;
   alertId: bigint;
   alertCreatedAt: Date;
   templateId?: bigint | null;
@@ -87,11 +89,11 @@ export class NotificationLog {
     public readonly metadata: Record<string, unknown> | null,
     public readonly createdAt: Date,
     private _updatedAt: Date,
-  ) {}
+  ) { }
 
   static create(params: CreateNotificationLogParams): NotificationLog {
     return new NotificationLog(
-      null,
+      params.id,
       params.alertId,
       params.alertCreatedAt,
       params.templateId ?? null,
@@ -114,8 +116,8 @@ export class NotificationLog {
       null,
       0,
       params.metadata ?? null,
-      new Date(),
-      new Date(),
+      params.createdAt,
+      params.createdAt,
     );
   }
 

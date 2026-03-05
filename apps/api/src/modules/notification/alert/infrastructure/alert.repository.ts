@@ -5,6 +5,7 @@ import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { Transaction } from '@nestjs-cls/transactional';
 import type { TransactionalAdapterPrisma } from '@nestjs-cls/transactional-adapter-prisma';
 import { AlertStatus } from '@prisma/client';
+import { subDays } from 'date-fns';
 import { Alert, AlertNotFoundException } from '../domain';
 import { AlertRepositoryPort, AlertListQuery } from '../ports';
 import { AlertMapper } from './alert.mapper';
@@ -15,11 +16,14 @@ export class AlertRepository implements AlertRepositoryPort {
     @InjectTransaction()
     private readonly tx: Transaction<TransactionalAdapterPrisma>,
     private readonly mapper: AlertMapper,
-  ) {}
+  ) { }
 
   async create(alert: Alert): Promise<Alert> {
     const data = this.mapper.toCreateInput(alert);
-    const result = await this.tx.alert.create({ data });
+
+    const result = await this.tx.alert.create({
+      data,
+    });
     return this.mapper.toDomain(result);
   }
 
@@ -42,11 +46,18 @@ export class AlertRepository implements AlertRepositoryPort {
 
   async findByIdempotencyKey(
     idempotencyKey: string,
-    createdAt: Date,
   ): Promise<Alert | null> {
-    const result = await this.tx.alert.findUnique({
+    // 파티셔닝 환경에서 전체 스캔을 방지하기 위해 최근 1일 내 데이터만 검색
+    // (멱등성 보장은 통상적인 재시도 윈도우 내에서만 유효하면 충분함)
+    const result = await this.tx.alert.findFirst({
       where: {
-        idempotencyKey_createdAt: { idempotencyKey, createdAt },
+        idempotencyKey,
+        createdAt: {
+          gte: subDays(new Date(), 1),
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
     return result ? this.mapper.toDomain(result) : null;

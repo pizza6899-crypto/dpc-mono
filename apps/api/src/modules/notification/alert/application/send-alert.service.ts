@@ -16,6 +16,7 @@ import {
   NOTIFICATION_EVENTS,
 } from '../../common';
 import { Language } from '@prisma/client';
+import { SnowflakeService } from '../../../../common/snowflake/snowflake.service';
 
 interface SendAlertParams<T extends keyof NotificationPayloadMap> {
   event: T;
@@ -34,6 +35,7 @@ export class SendAlertService {
     private readonly alertRepository: AlertRepositoryPort,
     @InjectQueue(NOTIFICATION_QUEUES.ALERT)
     private readonly alertQueue: Queue,
+    private readonly snowflakeService: SnowflakeService,
   ) { }
 
   @Transactional()
@@ -50,15 +52,19 @@ export class SendAlertService {
     if (idempotencyKey) {
       const existing = await this.alertRepository.findByIdempotencyKey(
         idempotencyKey,
-        new Date(),
       );
       if (existing) {
         throw new DuplicateAlertException(idempotencyKey);
       }
     }
 
-    // 2. Alert 생성
+    // 2. ID 생성
+    const { id, timestamp } = this.snowflakeService.generate();
+
+    // 3. Alert 생성
     const alert = Alert.create({
+      id,
+      createdAt: timestamp,
       event: event as string,
       userId,
       targetGroup,

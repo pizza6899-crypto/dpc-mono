@@ -21,6 +21,7 @@ import { SMSProcessor } from './processors/sms.processor';
 import { AlertProcessor } from './processors/alert.processor';
 import { EnvModule } from 'src/common/env/env.module';
 import { UserProfileModule } from 'src/modules/user/profile/user-profile.module';
+import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { UserProfileModule } from 'src/modules/user/profile/user-profile.module'
     TemplateModule,
     BullMqModule,
     NotificationQueueModule,
+    SnowflakeModule,
   ],
   providers: [
     // Providers
