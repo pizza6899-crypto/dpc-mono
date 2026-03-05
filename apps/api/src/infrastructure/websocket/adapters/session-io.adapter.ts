@@ -5,6 +5,8 @@ import { RequestHandler } from 'express';
 import { createAdapter } from '@socket.io/redis-adapter';
 import Redis from 'ioredis';
 import { ClsService } from 'nestjs-cls';
+import { ThrottleService } from 'src/common/throttle/throttle.service';
+import { Logger } from '@nestjs/common';
 
 export interface SessionMiddlewares {
     cookieParser: RequestHandler;
@@ -29,6 +31,8 @@ export interface RedisConfig {
 export class SessionIoAdapter extends IoAdapter {
     private adapterConstructor: ReturnType<typeof createAdapter>;
     private clsService: ClsService;
+    private throttleService: ThrottleService;
+    private readonly logger = new Logger(SessionIoAdapter.name);
 
     constructor(
         app: INestApplicationContext,
@@ -36,8 +40,9 @@ export class SessionIoAdapter extends IoAdapter {
         private readonly redisConfig?: RedisConfig,
     ) {
         super(app);
-        // NestJS 앱 컨테이너에서 ClsService를 직접 가져옵니다.
+        // NestJS 앱 컨테이너에서 필요한 서비스를 직접 가져옵니다.
         this.clsService = app.get(ClsService);
+        this.throttleService = app.get(ThrottleService);
     }
 
     async connectToRedis(): Promise<void> {
@@ -71,8 +76,29 @@ export class SessionIoAdapter extends IoAdapter {
             this.clsService.run(() => next());
         };
 
+        /**
+         * 웹소켓 핸드쉐이크 쓰로틀링 미들웨어
+         * IP 기반으로 단시간 내 과도한 연결 시도를 차단합니다.
+         */
+        const handshakeThrottleMiddleware = async (socket: Socket, next: (err?: Error) => void) => {
+            const ip = socket.handshake.address;
+            const key = `socket_handshake:${ip}`;
+
+            const result = await this.throttleService.checkAndIncrement(key, {
+                limit: 120, // 10초당 120회 연결 시도 허용 (단시간 과도한 시도 차단)
+                ttl: 10,
+            });
+
+            if (!result.allowed) {
+                this.logger.warn(`WebSocket connection throttled: IP ${ip}`);
+                return next(new Error('Too many connection attempts. Please try again later.'));
+            }
+            next();
+        };
+
         // 1. 일반 유저 네임스페이스 (기본 '/')
         const userNamespace = server.of('/');
+        userNamespace.use(handshakeThrottleMiddleware); // 쓰로틀링 (가장 먼저)
         userNamespace.use(wrap(this.middlewares.cookieParser));
         userNamespace.use(wrap(this.middlewares.userSession));
         userNamespace.use(wrap(this.middlewares.passportInit));
@@ -81,6 +107,7 @@ export class SessionIoAdapter extends IoAdapter {
 
         // 2. 관리자 네임스페이스 ('/admin')
         const adminNamespace = server.of('/admin');
+        adminNamespace.use(handshakeThrottleMiddleware); // 쓰로틀링 (가장 먼저)
         adminNamespace.use(wrap(this.middlewares.cookieParser));
         adminNamespace.use(wrap(this.middlewares.adminSession));
         adminNamespace.use(wrap(this.middlewares.passportInit));

@@ -211,10 +211,13 @@ async function bootstrap() {
   - 🇰🇷 브라우저 연결 시 \`withCredentials: true\` 옵션 활성화가 필수입니다.
   - 🇺🇸 Must enable \`withCredentials: true\` in socket.io-client configuration.
 - **Endpoints (네임스페이스)**
-  - 🇰🇷 **일반 유저/익명**: \`io(BASE_URL)\` (네임스페이스 생략 시 기본 \`/\` 연결)
+  - 🇰🇷 **일반 유저 및 익명**: \`io(BASE_URL)\` (네임스페이스 생략 시 기본 \`/\` 연결)
   - 🇺🇸 **General User/Guest**: \`io(BASE_URL)\` (Connects to \`/\` by default)
   - 🇰🇷 **관리자**: \`io(BASE_URL + "/admin")\` (주소 뒤에 \`/admin\` 네임스페이스 명시 필수)
   - 🇺🇸 **Admin**: \`io(BASE_URL + "/admin")\` (Must specify \`/admin\` in the connection URL)
+- **Connection Rate Limit (연결 제한)**
+  - 🇰🇷 보안 및 안정성을 위해 **IP당 10초당 최대 120회**의 연결 시도만 허용됩니다. (초과 시 거부)
+  - 🇺🇸 For security and stability, a maximum of **120 connection attempts per 10 seconds per IP** is allowed.
 - **Access Control (권한 제어)**
   - 🇰🇷 관리자 권한이 없는 세션이 \`/admin\`으로 연결을 시도할 경우 즉시 차단됩니다.
   - 🇺🇸 Sessions without admin privileges will be disconnected immediately from \`/admin\`.
