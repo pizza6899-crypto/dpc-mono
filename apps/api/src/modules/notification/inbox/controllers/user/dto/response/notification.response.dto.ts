@@ -9,14 +9,21 @@ export class NotificationResponseDto {
   @ApiProperty({ description: 'Created date', example: '2024-01-01T00:00:00Z' })
   createdAt: string;
 
-  @ApiProperty({ description: 'Notification title', example: 'Welcome!' })
-  title: string;
+  @ApiProperty({
+    description: 'Notification title',
+    example: 'Welcome!',
+    required: false,
+    nullable: true,
+  })
+  title: string | null;
 
   @ApiProperty({
     description: 'Notification body',
     example: 'Thank you for joining us.',
+    required: false,
+    nullable: true,
   })
-  body: string;
+  body: string | null;
 
   @ApiProperty({
     description: 'Action URI',

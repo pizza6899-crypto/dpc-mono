@@ -2,7 +2,7 @@
 
 import { Injectable } from '@nestjs/common';
 import { Alert } from '../domain';
-import { AlertStatus, Prisma } from '@prisma/client';
+import { AlertStatus, Prisma, ChannelType } from '@prisma/client';
 
 type PrismaAlert = {
   id: bigint;
@@ -12,6 +12,7 @@ type PrismaAlert = {
   payload: unknown;
   idempotencyKey: string | null;
   status: AlertStatus;
+  channels: ChannelType[];
   createdAt: Date;
   updatedAt: Date;
 };
@@ -27,6 +28,7 @@ export class AlertMapper {
       payload: prisma.payload as Record<string, unknown>,
       idempotencyKey: prisma.idempotencyKey,
       status: prisma.status,
+      channels: prisma.channels,
       createdAt: prisma.createdAt,
       updatedAt: prisma.updatedAt,
     });
@@ -41,6 +43,7 @@ export class AlertMapper {
     payload: Prisma.InputJsonValue;
     idempotencyKey: string | null;
     status: AlertStatus;
+    channels: ChannelType[];
   } {
     return {
       id: alert.id!,
@@ -51,6 +54,7 @@ export class AlertMapper {
       payload: alert.payload as Prisma.InputJsonValue,
       idempotencyKey: alert.idempotencyKey,
       status: alert.status,
+      channels: alert.channels,
     };
   }
 

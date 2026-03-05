@@ -30,7 +30,7 @@ export class SMSSender implements ChannelSender {
 
     const result = await this.provider.send({
       to: phoneNumber,
-      message: params.body,
+      message: params.body || '',
     });
 
     if (!result.success) {

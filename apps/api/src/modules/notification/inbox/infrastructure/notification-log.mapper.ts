@@ -14,8 +14,8 @@ type PrismaNotificationLog = {
   channel: ChannelType;
   receiverId: bigint;
   target: string | null;
-  title: string;
-  body: string;
+  title: string | null;
+  body: string | null;
   actionUri: string | null;
   isRead: boolean;
   readAt: Date | null;
@@ -75,8 +75,8 @@ export class NotificationLogMapper {
     channel: ChannelType;
     receiverId: bigint;
     target: string | null;
-    title: string;
-    body: string;
+    title: string | null;
+    body: string | null;
     actionUri: string | null;
     priority: number;
     scheduledAt: Date;
@@ -109,6 +109,8 @@ export class NotificationLogMapper {
     readAt: Date | null;
     isDeleted: boolean;
     deletedAt: Date | null;
+    title?: string | null;
+    body?: string | null;
     status: NotifyStatus;
     errorMessage: string | null;
     sentAt: Date | null;
@@ -119,6 +121,8 @@ export class NotificationLogMapper {
       readAt: log.readAt,
       isDeleted: log.isDeleted,
       deletedAt: log.deletedAt,
+      title: log.title,
+      body: log.body,
       status: log.status,
       errorMessage: log.errorMessage,
       sentAt: log.sentAt,

@@ -6,6 +6,7 @@ model Alert {
   payload        Json
   idempotencyKey String?           @map("idempotency_key")
   status         AlertStatus       @default(PENDING)
+  channels       ChannelType[]
   createdAt      DateTime          @default(now()) @map("created_at")
   updatedAt      DateTime          @updatedAt @map("updated_at")
   notifications  NotificationLog[]
@@ -80,8 +81,8 @@ model NotificationLog {
   target     String?
 
   // 렌더링된 최종 결과
-  title     String
-  body      String
+  title     String?
+  body      String?
   actionUri String? @map("action_uri")
 
   isRead    Boolean   @default(false) @map("is_read")

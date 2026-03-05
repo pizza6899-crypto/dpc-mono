@@ -4,6 +4,7 @@ import { Job } from 'bullmq';
 import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
 import { SocketSender } from '../channels/socket/socket.sender';
 import { ClsService } from 'nestjs-cls';
+import { Transactional } from '@nestjs-cls/transactional';
 import {
   NOTIFICATION_LOG_REPOSITORY,
   type NotificationLogRepositoryPort,
@@ -23,7 +24,8 @@ interface NotificationJobData {
 
 interface VolatileJobData {
   type: string;
-  userId: string;
+  userId?: string;
+  room?: string;
   data: unknown;
 }
 
@@ -44,6 +46,7 @@ export class SocketProcessor extends BaseProcessor<
     super();
   }
 
+  @Transactional()
   protected async processJob(
     job: Job<NotificationJobData | VolatileJobData>,
   ): Promise<void> {
@@ -73,8 +76,8 @@ export class SocketProcessor extends BaseProcessor<
         logCreatedAt: log.createdAt,
         receiverId: log.receiverId,
         target: log.target,
-        title: log.title,
-        body: log.body,
+        title: log.title || '',
+        body: log.body || '',
         actionUri: log.actionUri,
         metadata: log.metadata,
       });
@@ -93,8 +96,13 @@ export class SocketProcessor extends BaseProcessor<
   }
 
   private async processVolatile(data: VolatileJobData): Promise<void> {
-    const userId = BigInt(data.userId);
-    this.websocketService.sendToUser(userId, data.type, data.data);
-    this.logger.debug(`Sent volatile ${data.type} to user ${userId}`);
+    if (data.userId && data.userId !== '0') {
+      const userId = BigInt(data.userId);
+      this.websocketService.sendToUser(userId, data.type, data.data);
+      this.logger.debug(`Sent volatile ${data.type} to user ${userId}`);
+    } else if (data.room) {
+      this.websocketService.sendToRoom(data.room as any, data.type, data.data);
+      this.logger.debug(`Sent volatile ${data.type} to room ${data.room}`);
+    }
   }
 }

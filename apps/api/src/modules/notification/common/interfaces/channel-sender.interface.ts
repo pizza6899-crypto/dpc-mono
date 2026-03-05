@@ -24,8 +24,8 @@ export interface ChannelSendParams {
   logCreatedAt: Date;
   receiverId: bigint;
   target: string | null;
-  title: string;
-  body: string;
+  title: string | null;
+  body: string | null;
   actionUri: string | null;
   metadata: Record<string, unknown> | null;
 }

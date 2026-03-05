@@ -23,6 +23,7 @@ interface FromPersistenceParams {
   payload: Record<string, unknown>;
   idempotencyKey: string | null;
   status: AlertStatus;
+  channels: ChannelType[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -84,7 +85,7 @@ export class Alert {
       data.status,
       data.createdAt,
       data.updatedAt,
-      [], // channels는 payload에서 복원 또는 별도 조회
+      data.channels,
     );
   }
 

@@ -18,8 +18,8 @@ interface CreateNotificationLogParams {
   channel: ChannelType;
   receiverId: bigint;
   target?: string | null;
-  title: string;
-  body: string;
+  title?: string | null;
+  body?: string | null;
   actionUri?: string | null;
   priority?: number;
   scheduledAt?: Date;
@@ -36,8 +36,8 @@ interface FromPersistenceParams {
   channel: ChannelType;
   receiverId: bigint;
   target: string | null;
-  title: string;
-  body: string;
+  title: string | null;
+  body: string | null;
   actionUri: string | null;
   isRead: boolean;
   readAt: Date | null;
@@ -73,8 +73,8 @@ export class NotificationLog {
     public readonly channel: ChannelType,
     public readonly receiverId: bigint,
     public readonly target: string | null,
-    public readonly title: string,
-    public readonly body: string,
+    public readonly title: string | null,
+    public readonly body: string | null,
     public readonly actionUri: string | null,
     private _isRead: boolean,
     private _readAt: Date | null,
@@ -102,8 +102,8 @@ export class NotificationLog {
       params.channel,
       params.receiverId,
       params.target ?? null,
-      params.title,
-      params.body,
+      params.title ?? null,
+      params.body ?? null,
       params.actionUri ?? null,
       false,
       null,

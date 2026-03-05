@@ -47,7 +47,7 @@ export class InboxUserController {
     private readonly markAllAsReadService: MarkAllAsReadService,
     private readonly deleteNotificationService: DeleteNotificationService,
     private readonly sqidsService: SqidsService,
-  ) {}
+  ) { }
 
   @Get()
   @AuditLog({
@@ -79,9 +79,9 @@ export class InboxUserController {
       nextCursor:
         notifications.length > 0
           ? this.sqidsService.encode(
-              notifications[notifications.length - 1].id!,
-              SqidsPrefix.NOTIFICATION,
-            )
+            notifications[notifications.length - 1].id!,
+            SqidsPrefix.NOTIFICATION,
+          )
           : null,
     };
   }

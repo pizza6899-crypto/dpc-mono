@@ -28,14 +28,11 @@ import type { PromotionRepositoryPort } from '../../promotion/ports/out/promotio
 import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { SendAlertService } from '../../notification/alert/application/send-alert.service';
-import { SendRealtimeService } from '../../notification/alert/application/send-realtime.service';
 import {
   NOTIFICATION_EVENTS,
-  REALTIME_EVENTS,
   NOTIFICATION_TARGET_GROUPS,
 } from '../../notification/common';
 import { ChannelType } from '@prisma/client';
-import { SOCKET_ROOMS } from 'src/infrastructure/websocket/constants/websocket-rooms.constant';
 
 interface CreateFiatDepositParams {
   user: AuthenticatedUser;
@@ -62,7 +59,6 @@ export class CreateFiatDepositService {
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly depositRequirementPolicy: DepositRequirementPolicy,
     private readonly sendAlertService: SendAlertService,
-    private readonly sendRealtimeService: SendRealtimeService,
   ) { }
 
   @Transactional()
@@ -186,19 +182,12 @@ export class CreateFiatDepositService {
       requestedAt: deposit.createdAt.toISOString(),
     };
 
-    // 1. 실시간 소켓 알림 (어드민 패널 팝업용/휘발성)
-    await this.sendRealtimeService.execute({
-      room: SOCKET_ROOMS.ADMIN,
-      event: REALTIME_EVENTS.ADMIN_FIAT_DEPOSIT_REQUESTED,
-      payload,
-    });
-
-    // 2. 알림 로그 생성 및 발송 (DB 저장 + 추가 채널 확장 가능)
+    // 2. 알림 로그 생성 및 발송 (DB 저장 + 실시간 팝업 브로드캐스트)
     await this.sendAlertService.execute({
       event: NOTIFICATION_EVENTS.FIAT_DEPOSIT_REQUESTED,
       targetGroup: NOTIFICATION_TARGET_GROUPS.ADMIN,
       payload,
-      channels: [ChannelType.IN_APP], // 관리자 인박스 알림
+      channels: [ChannelType.IN_APP, ChannelType.WEBSOCKET, ChannelType.TELEGRAM], // 관리자 인박스 + 실시간 팝업
     });
   }
 }

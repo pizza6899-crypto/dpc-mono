@@ -30,8 +30,8 @@ export class EmailSender implements ChannelSender {
 
     const result = await this.provider.send({
       to: email,
-      subject: params.title,
-      html: params.body,
+      subject: params.title || '',
+      html: params.body || '',
     });
 
     if (!result.success) {

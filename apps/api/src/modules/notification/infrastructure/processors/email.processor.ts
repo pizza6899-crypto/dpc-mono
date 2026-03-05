@@ -6,6 +6,7 @@ import { Job } from 'bullmq';
 import { ChannelSendParams } from '../../common';
 import { EmailSender } from '../channels/email/email.sender';
 import { ClsService } from 'nestjs-cls';
+import { Transactional } from '@nestjs-cls/transactional';
 import {
   NOTIFICATION_LOG_REPOSITORY,
   type NotificationLogRepositoryPort,
@@ -36,6 +37,7 @@ export class EmailProcessor extends BaseProcessor<NotificationJobData, void> {
     super();
   }
 
+  @Transactional()
   protected async processJob(job: Job<NotificationJobData>): Promise<void> {
     const { data } = job;
     this.logger.debug(`Processing email job ${job.id} for log ${data.logId}`);
@@ -55,8 +57,8 @@ export class EmailProcessor extends BaseProcessor<NotificationJobData, void> {
       logCreatedAt: log.createdAt,
       receiverId: log.receiverId,
       target: log.target,
-      title: log.title,
-      body: log.body,
+      title: log.title || '',
+      body: log.body || '',
       actionUri: log.actionUri,
       metadata: log.metadata,
     };
