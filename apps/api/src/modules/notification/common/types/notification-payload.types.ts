@@ -58,28 +58,3 @@ export type NotificationPayloadMap = {
   [NOTIFICATION_EVENTS.PHONE_VERIFICATION_CODE]: VerificationPayload;
 
 };
-
-// --- 웹소켓 싱글 채널용 페이로드 정의 ---
-
-/**
- * [채널: notification:new] 영구 알림(Inbox) 수신 시 페이로드
- */
-export interface SocketNotificationNewPayload {
-  id: string;             // NotificationLog ID
-  createdAt: string;      // 생성 일시
-  title: string | null;   // 알림 제목
-  body: string | null;    // 알림 본문
-  actionUri: string | null; // 클릭 시 이동할 링크
-  metadata: Record<string, unknown> | null;
-}
-
-/**
- * [채널: notification:volatile] 휘발성 실시간 액션 이벤트 페이로드
- * 프론트엔드는 이 페이로드의 `type` 필드로 이벤트를 라우팅합니다.
- */
-export interface SocketNotificationVolatilePayload<
-  T extends keyof NotificationPayloadMap = keyof NotificationPayloadMap
-> {
-  type: T;                           // 비즈니스 이벤트명 (예: FIAT_DEPOSIT_REQUESTED)
-  data: NotificationPayloadMap[T] & { alertId?: string }; // 실제 데이터
-}

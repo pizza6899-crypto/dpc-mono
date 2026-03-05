@@ -5,14 +5,12 @@ import {
     OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { Logger, Injectable, UseFilters, UsePipes } from '@nestjs/common';
+import { Logger, Injectable } from '@nestjs/common';
 import { getSocketRoom, SOCKET_ROOMS } from '../constants/websocket-rooms.constant';
 import { UserRoleType } from '@prisma/client';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
-import { WebsocketExceptionFilter } from '../websocket-exception.filter';
-import { CustomValidationPipe } from 'src/common/http/pipes/validation.pipe';
 import { AsyncApiPub } from 'src/common/decorators/async-api.decorator';
-import { ExceptionResponseDto } from '../dtos/exception-response.dto';
+import { SocketEventDto } from '../dtos/socket-event.dto';
 import { corsConfig } from 'src/common/security/cors.config';
 import { Request } from 'express';
 import { CreateSessionService } from 'src/modules/auth/session/application/create-session.service';
@@ -34,8 +32,6 @@ interface AdminSocket extends Socket {
         credentials: true,
     },
 })
-@UsePipes(CustomValidationPipe)
-@UseFilters(WebsocketExceptionFilter)
 @Injectable()
 export class AdminWebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer()
@@ -117,20 +113,36 @@ export class AdminWebsocketGateway implements OnGatewayConnection, OnGatewayDisc
     }
 
     // ============================================
-    // AsyncAPI 문서화용 메서드 (서버 → 클라이언트 발송 이벤트)
+    // AsyncAPI 명세: 서버 → 클라이언트 단방향 푸시 (관리자 네임스페이스)
     // ============================================
 
     @AsyncApiPub({
-        channel: 'admin/exception',
-        summary: '관리자 예외 발생 알림 (Admin exception notification)',
-        description: '관리자 요청 처리 중 발생한 예외를 전송합니다. (Sends exceptions occurred during admin request processing.)',
+        channel: 'admin/event',
+        summary: '관리자 통합 이벤트 스트림 (Admin Single Event Stream)',
+        description: `
+관리자 대시보드를 위한 전용 푸시 채널입니다. (Dedicated push channel for the admin dashboard.)
+
+---
+
+### 🛡️ Admin Only (관리자 전용)
+| type | Description (🇰🇷) | Description (🇺🇸) |
+|---|---|---|
+| \`FIAT_DEPOSIT_REQUESTED\` | 신규 입금 요청 발생 | New deposit requested |
+| \`WITHDRAW_REQUESTED\` | 신규 출금 요청 발생 | New withdrawal requested |
+
+### � Personal Events (수신자 본인 이벤트)
+| type | Description (🇰🇷) | Description (🇺🇸) |
+|---|---|---|
+| \`INBOX_NEW\` | 관리자 본인의 알림 실시간 수신 | Receive admin's own notifications |
+        `,
         message: {
-            name: 'AdminExceptionResponse',
-            payload: ExceptionResponseDto,
+            name: 'AdminSocketEvent',
+            payload: SocketEventDto,
         },
     })
-    private _documentExceptionEvent(): void {
-        // 실제 전송은 WebsocketExceptionFilter에서 이루어집니다.
+    private _documentEventStream(): void {
+        // AsyncAPI 문서 자동 생성을 위한 빈(dummy) 메서드입니다.
+        // 실제 발송은 WebsocketService.sendToUser / sendToRoom에서 수행됩니다.
     }
 
     private extractUser(client: AdminSocket): AuthenticatedUser | null {

@@ -191,14 +191,40 @@ async function bootstrap() {
 
         const asyncApiOptions = new DynamicAsyncApiDocumentBuilder()
           .setTitle('DPC Backend WebSocket API')
-          .setDescription('DPC Backend WebSocket 이벤트 문서')
+          .setDescription(`
+실시간 이벤트 통신 시스템 가이드 (Real-time Event System Guide)
+---
+
+### 📢 Operational Policy (운영 정책)
+- **Server Push Only (일방향 푸시)**
+  - 🇰🇷 모든 채널은 서버에서 클라이언트로의 일방향 푸시 전용입니다. 요청은 REST API를 이용하세요.
+  - 🇺🇸 All channels are Server-to-Client only. Use REST API for all requests.
+- **Single Event Pattern (단일 이벤트 패턴)**
+  - 🇰🇷 모든 클라이언트(유저, 게스트, 관리자 공통)는 \`socket.on('event', ...)\` 리스너 하나만 등록하여 모든 실시간 데이터를 수신합니다.
+  - 🇺🇸 All clients (General, Guest, and Admin) should use a single listener: \`socket.on('event', ...)\` to receive all real-time data.
+
+### 🔐 Auth & Connection (인증 및 연결)
+- **Cookie-based Auth (쿠키 인증)**
+  - 🇰🇷 연결 시 HTTP 세션 쿠키를 통해 자동으로 인증이 수행됩니다.
+  - 🇺🇸 Handshake is authenticated automatically via HTTP session cookies.
+- **Client Config (클라이언트 설정)**
+  - 🇰🇷 브라우저 연결 시 \`withCredentials: true\` 옵션 활성화가 필수입니다.
+  - 🇺🇸 Must enable \`withCredentials: true\` in socket.io-client configuration.
+- **Endpoints (네임스페이스)**
+  - 🇰🇷 **일반 유저/익명**: \`io(BASE_URL)\` (네임스페이스 생략 시 기본 \`/\` 연결)
+  - 🇺🇸 **General User/Guest**: \`io(BASE_URL)\` (Connects to \`/\` by default)
+  - 🇰🇷 **관리자**: \`io(BASE_URL + "/admin")\` (주소 뒤에 \`/admin\` 네임스페이스 명시 필수)
+  - 🇺🇸 **Admin**: \`io(BASE_URL + "/admin")\` (Must specify \`/admin\` in the connection URL)
+- **Access Control (권한 제어)**
+  - 🇰🇷 관리자 권한이 없는 세션이 \`/admin\`으로 연결을 시도할 경우 즉시 차단됩니다.
+  - 🇺🇸 Sessions without admin privileges will be disconnected immediately from \`/admin\`.
+          `)
           .setVersion('1.0')
           .setDefaultContentType('application/json')
           .addServer('local', {
             url: `ws://localhost:${envService.app.port}`,
             protocol: 'socket.io',
             protocolVersion: '4',
-            description: 'DPC Backend WebSocket Server',
           })
           .build();
 

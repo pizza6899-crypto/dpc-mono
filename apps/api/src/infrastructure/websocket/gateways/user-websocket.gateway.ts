@@ -3,19 +3,14 @@ import {
   WebSocketServer,
   OnGatewayConnection,
   OnGatewayDisconnect,
-  SubscribeMessage,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { Logger, Injectable, UseFilters, UsePipes } from '@nestjs/common';
+import { Logger, Injectable } from '@nestjs/common';
 import { getSocketRoom, SOCKET_ROOMS } from '../constants/websocket-rooms.constant';
 import type { SocketRoomType } from '../constants/websocket-rooms.constant';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
-import { WebsocketExceptionFilter } from '../websocket-exception.filter';
-import { CustomValidationPipe } from 'src/common/http/pipes/validation.pipe';
-import { AsyncApiPub, AsyncApiSub } from 'src/common/decorators/async-api.decorator';
-import { ExceptionResponseDto } from '../dtos/exception-response.dto';
-import { RoomRequestDto } from '../dtos/room-request.dto';
-import { SocketResponseDto } from '../dtos/socket-response.dto';
+import { AsyncApiPub } from 'src/common/decorators/async-api.decorator';
+import { SocketEventDto } from '../dtos/socket-event.dto';
 import { Request } from 'express';
 import { CreateSessionService } from 'src/modules/auth/session/application/create-session.service';
 import { ExpireSessionService } from 'src/modules/auth/session/application/expire-session.service';
@@ -38,8 +33,6 @@ interface UserSocket extends Socket {
     credentials: true,
   },
 })
-@UsePipes(CustomValidationPipe)
-@UseFilters(WebsocketExceptionFilter)
 @Injectable()
 export class UserWebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
@@ -104,44 +97,7 @@ export class UserWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
     }
   }
 
-  /**
-   * 클라이언트를 특정 룸에 가입시킵니다.
-   * (추후 관리자 권한 검증 등 보안 로직 추가 예정)
-   */
-  @AsyncApiSub({
-    channel: 'room:join',
-    summary: '특정 룸 가입 (Join specific room)',
-    description: '클라이언트가 특정 소켓 룸에 가입합니다. (Client joins a specific socket room.)',
-    message: {
-      payload: RoomRequestDto,
-    },
-  })
-  @SubscribeMessage('room:join')
-  handleJoinRoom(client: Socket, dto: RoomRequestDto): SocketResponseDto {
-    client.join(dto.room as SocketRoomType);
-    this.logger.debug(`Client ${client.id} joined room: ${dto.room}`);
 
-    return SocketResponseDto.success(null, `Joined room ${dto.room}`);
-  }
-
-  /**
-   * 클라이언트를 특정 룸에서 퇴장시킵니다.
-   */
-  @AsyncApiSub({
-    channel: 'room:leave',
-    summary: '특정 룸 퇴장 (Leave specific room)',
-    description: '클라이언트가 가입했던 룸에서 퇴장합니다. (Client leaves a previously joined room.)',
-    message: {
-      payload: RoomRequestDto,
-    },
-  })
-  @SubscribeMessage('room:leave')
-  handleLeaveRoom(client: Socket, dto: RoomRequestDto): SocketResponseDto {
-    client.leave(dto.room as SocketRoomType);
-    this.logger.debug(`Client ${client.id} left room: ${dto.room}`);
-
-    return SocketResponseDto.success(null, `Left room ${dto.room}`);
-  }
 
   /**
    * 특정 사용자에게 이벤트를 전송합니다.
@@ -174,19 +130,38 @@ export class UserWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
   }
 
   // ============================================
-  // AsyncAPI 문서화용 메서드 (서버 → 클라이언트 발송 이벤트)
+  // AsyncAPI 명세: 서버 → 클라이언트 단방향 푸시 (유저 네임스페이스)
   // ============================================
 
   @AsyncApiPub({
-    channel: 'user/exception',
-    summary: '사용자 예외 발생 알림 (User exception notification)',
-    description: '사용자 요청 처리 중 발생한 예외를 전송합니다. (Sends exceptions occurred during user request processing.)',
+    channel: 'event',
+    summary: '유저 통합 이벤트 스트림 (User Single Event Stream)',
+    description: `
+일반 유저 및 게스트를 위한 통합 이벤트 푸시 채널입니다. (Event channel for general users and guests.)
+모든 이벤트는 \`type\` 필드로 구분됩니다. (All events are distinguished by the \`type\` field.)
+
+---
+
+### 🔐 Authenticated User (인증 유저)
+| type | Description (🇰🇷) | Description (🇺🇸) |
+|---|---|---|
+| \`INBOX_NEW\` | 새 받은편지함 알림 | New inbox item alert |
+| \`FIAT_DEPOSIT_REQUESTED\` | 입금 요청 처리 상태 | Fiat deposit status |
+| \`PROMOTION_APPLIED\` | 프로모션 적용 결과 | Promotion applied result |
+
+### 👤 Anonymous User (익명 게스트)
+| type | Description (🇰🇷) | Description (🇺🇸) |
+|---|---|---|
+| \`SYSTEM_NOTICE\` | 시스템 전체 공지 | Global system notice |
+    `,
     message: {
-      payload: ExceptionResponseDto,
+      name: 'SocketEvent',
+      payload: SocketEventDto,
     },
   })
-  private _documentExceptionEvent(): void {
-    // 실제 전송은 WebsocketExceptionFilter에서 이루어집니다. 문서화만을 위한 빈 메서드입니다.
+  private _documentEventStream(): void {
+    // AsyncAPI 문서 자동 생성을 위한 빈(dummy) 메서드입니다.
+    // 실제 발송은 WebsocketService.sendToUser / sendToRoom에서 수행됩니다.
   }
 
   private extractUser(client: UserSocket): AuthenticatedUser | null {
