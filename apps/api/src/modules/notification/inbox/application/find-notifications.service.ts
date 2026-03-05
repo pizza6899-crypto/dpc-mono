@@ -19,14 +19,14 @@ export class FindNotificationsService {
   constructor(
     @Inject(NOTIFICATION_LOG_REPOSITORY)
     private readonly repository: NotificationLogRepositoryPort,
-  ) {}
+  ) { }
 
   async execute(params: FindNotificationsParams): Promise<NotificationLog[]> {
     const { receiverId, channel, isRead, cursor, limit } = params;
 
     return this.repository.listByReceiverId({
       receiverId,
-      channel: channel ?? ChannelType.IN_APP,
+      channel: channel ?? ChannelType.INBOX,
       isRead,
       cursor,
       limit,

@@ -4,7 +4,7 @@ import type { ChannelType } from '@prisma/client';
 
 /**
  * 채널별 발송 인터페이스
- * 각 채널(IN_APP, EMAIL, SMS)은 이 인터페이스를 구현
+ * 각 채널(INBOX, EMAIL, SMS)은 이 인터페이스를 구현
  */
 export interface ChannelSender {
   /**

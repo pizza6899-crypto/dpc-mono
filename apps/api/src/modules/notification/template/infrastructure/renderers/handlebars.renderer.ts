@@ -42,7 +42,7 @@ export class HandlebarsRenderer implements TemplateRenderer {
   supports(channel: ChannelType): boolean {
     const supportedChannels: ChannelType[] = [
       ChannelType.SMS,
-      ChannelType.IN_APP,
+      ChannelType.INBOX,
     ];
     return supportedChannels.includes(channel);
   }

@@ -29,7 +29,7 @@ const templates = [
     {
         name: '프로모션 적용 알림',
         event: 'PROMOTION_APPLIED',
-        channel: ChannelType.IN_APP,
+        channel: ChannelType.INBOX,
         variables: ['promotionName', 'bonusAmount', 'currency'],
         translations: {
             create: [

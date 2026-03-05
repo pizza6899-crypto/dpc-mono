@@ -198,7 +198,7 @@ export class ApplyCouponPromotionService {
       await this.sendAlertService.execute({
         event: NOTIFICATION_EVENTS.PROMOTION_APPLIED,
         userId,
-        channels: [ChannelType.IN_APP],
+        channels: [ChannelType.INBOX],
         payload: {
           promotionName:
             promotion.getTranslation(user.language)?.name ||

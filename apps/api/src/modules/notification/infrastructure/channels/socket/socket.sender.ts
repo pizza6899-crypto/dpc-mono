@@ -8,7 +8,7 @@ export class SocketSender implements ChannelSender {
   constructor(private readonly websocketService: WebsocketService) { }
 
   getChannelType(): ChannelType {
-    return ChannelType.IN_APP;
+    return ChannelType.INBOX;
   }
 
   async send(params: ChannelSendParams): Promise<void> {

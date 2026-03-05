@@ -187,7 +187,7 @@ export class CreateFiatDepositService {
       event: NOTIFICATION_EVENTS.FIAT_DEPOSIT_REQUESTED,
       targetGroup: NOTIFICATION_TARGET_GROUPS.ADMIN,
       payload,
-      channels: [ChannelType.IN_APP, ChannelType.WEBSOCKET, ChannelType.TELEGRAM], // 관리자 인박스 + 실시간 팝업
+      channels: [ChannelType.INBOX, ChannelType.WEBSOCKET, ChannelType.TELEGRAM], // 관리자 인박스 + 실시간 팝업
     });
   }
 }
