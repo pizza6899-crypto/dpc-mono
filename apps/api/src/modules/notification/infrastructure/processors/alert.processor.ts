@@ -14,8 +14,6 @@ import { NotificationLog } from '../../inbox/domain';
 import { Alert } from '../../alert/domain';
 import { SnowflakeService } from '../../../../common/snowflake/snowflake.service';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
-import { NOTIFICATION_TARGET_GROUPS } from '../../common/constants/target-group.constants';
-import { SOCKET_ROOMS } from 'src/infrastructure/websocket/constants/websocket-rooms.constant';
 import {
   getQueueConfig,
   BULLMQ_QUEUES,
@@ -135,12 +133,8 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
           if (channel === ChannelType.WEBSOCKET) {
             // WEBSOCKET은 DB 로그를 남기지 않는 휘발성 알림
             await this.socketQueue.add('volatile', {
-              type: alert.event,
-              userId: userId.toString(),
-              data: {
-                ...variables,
-                alertId: alert.id?.toString(),
-              },
+              alertId: alert.id!.toString(),
+              alertCreatedAt: alert.createdAt.toISOString(),
             });
           } else {
             // EMAIL, SMS, INBOX (영구 알림): PENDING 상태의 껍데기 로그 생성
@@ -189,15 +183,9 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
         } else {
           // Group Alert (targetGroup): Only support broadcastable channels
           if (channel === ChannelType.WEBSOCKET) {
-            const targetRoom = this.mapTargetGroupToRoom(targetGroup);
             await this.socketQueue.add('volatile', {
-              type: alert.event,
-              userId: '0',
-              room: targetRoom,
-              data: {
-                ...variables,
-                alertId: alert.id?.toString(),
-              },
+              alertId: alert.id!.toString(),
+              alertCreatedAt: alert.createdAt.toISOString(),
             });
           } else {
             this.logger.warn(
@@ -245,12 +233,5 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
     }
 
     return undefined;
-  }
-
-  private mapTargetGroupToRoom(targetGroup: string | null): string {
-    if (targetGroup === NOTIFICATION_TARGET_GROUPS.ADMIN) {
-      return SOCKET_ROOMS.ADMIN;
-    }
-    return SOCKET_ROOMS.GLOBAL;
   }
 }

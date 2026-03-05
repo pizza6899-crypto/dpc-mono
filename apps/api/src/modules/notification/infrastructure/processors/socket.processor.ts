@@ -9,9 +9,15 @@ import {
   NOTIFICATION_LOG_REPOSITORY,
   type NotificationLogRepositoryPort,
 } from '../../inbox/ports';
+import {
+  ALERT_REPOSITORY,
+  type AlertRepositoryPort,
+} from '../../alert/ports';
 import { RenderTemplateService } from '../../template/application/render-template.service';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
 import { Language } from '@prisma/client';
+import { NOTIFICATION_TARGET_GROUPS } from '../../common/constants/target-group.constants';
+import { SOCKET_ROOMS } from 'src/infrastructure/websocket/constants/websocket-rooms.constant';
 import {
   BULLMQ_QUEUES,
   getQueueConfig,
@@ -25,10 +31,8 @@ interface NotificationJobData {
 }
 
 interface VolatileJobData {
-  type: string;
-  userId?: string;
-  room?: string;
-  data: unknown;
+  alertId: string;
+  alertCreatedAt: string;
 }
 
 @Processor(queueConfig.processorOptions, queueConfig.workerOptions)
@@ -41,6 +45,8 @@ export class SocketProcessor extends BaseProcessor<
   constructor(
     @Inject(NOTIFICATION_LOG_REPOSITORY)
     private readonly notificationLogRepository: NotificationLogRepositoryPort,
+    @Inject(ALERT_REPOSITORY)
+    private readonly alertRepository: AlertRepositoryPort,
     private readonly socketSender: SocketSender,
     private readonly websocketService: WebsocketService,
     private readonly renderTemplateService: RenderTemplateService,
@@ -119,13 +125,29 @@ export class SocketProcessor extends BaseProcessor<
   }
 
   private async processVolatile(data: VolatileJobData): Promise<void> {
-    if (data.userId && data.userId !== '0') {
-      const userId = BigInt(data.userId);
-      this.websocketService.sendToUser(userId, data.type, data.data);
-      this.logger.debug(`Sent volatile ${data.type} to user ${userId}`);
-    } else if (data.room) {
-      this.websocketService.sendToRoom(data.room as any, data.type, data.data);
-      this.logger.debug(`Sent volatile ${data.type} to room ${data.room}`);
+    const alert = await this.alertRepository.getById(
+      new Date(data.alertCreatedAt),
+      BigInt(data.alertId),
+    );
+
+    const { userId, targetGroup, event, payload } = alert;
+
+    const socketData = {
+      ...(payload as any),
+      alertId: alert.id?.toString(),
+    };
+
+    if (userId) {
+      this.websocketService.sendToUser(userId, event, socketData);
+      this.logger.debug(`Sent volatile ${event} to user ${userId}`);
+    } else if (targetGroup) {
+      let room: string = SOCKET_ROOMS.GLOBAL;
+      if (targetGroup === NOTIFICATION_TARGET_GROUPS.ADMIN) {
+        room = SOCKET_ROOMS.ADMIN;
+      }
+
+      this.websocketService.sendToRoom(room as any, event, socketData);
+      this.logger.debug(`Sent volatile ${event} to room ${room}`);
     }
   }
 }
