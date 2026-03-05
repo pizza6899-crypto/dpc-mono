@@ -42,3 +42,4 @@ export const NOTIFICATION_QUEUES = {
     workerOptions: { concurrency: 20 },
   },
 } as const satisfies Record<string, QueueConfig>;
+

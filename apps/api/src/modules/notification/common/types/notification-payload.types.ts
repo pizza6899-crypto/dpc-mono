@@ -43,11 +43,23 @@ export interface VerificationPayload {
   target?: string;
 }
 
+export interface InboxNewPayload {
+  id: string;             // NotificationLog ID
+  createdAt: string;      // 생성 일시
+  title: string | null;   // 알림 제목
+  body: string | null;    // 알림 본문
+  actionUri: string | null; // 클릭 시 이동할 링크
+  metadata: Record<string, unknown> | null;
+}
+
 /**
  * 이벤트별 페이로드 매핑
  * 새로운 이벤트 추가 시 여기에 타입을 매핑해야 합니다.
  */
 export type NotificationPayloadMap = {
+  // 알림함
+  [NOTIFICATION_EVENTS.INBOX_NEW]: InboxNewPayload;
+
   // 입금
   [NOTIFICATION_EVENTS.FIAT_DEPOSIT_REQUESTED]: FiatDepositRequestedPayload;
 

@@ -18,6 +18,7 @@ import {
   getQueueConfig,
   BULLMQ_QUEUES,
 } from 'src/infrastructure/bullmq/bullmq.constants';
+import { SOCKET_JOB_NAMES } from '../../common/constants/queue.constants';
 import { GetUserService } from 'src/modules/user/profile/application/get-user.service';
 
 const queueConfig = getQueueConfig(BULLMQ_QUEUES.NOTIFICATION.ALERT);
@@ -132,7 +133,7 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
           // Individual User Alert: Create NotificationLog and Dispatch
           if (channel === ChannelType.WEBSOCKET) {
             // WEBSOCKET은 DB 로그를 남기지 않는 휘발성 알림
-            await this.socketQueue.add('volatile', {
+            await this.socketQueue.add(SOCKET_JOB_NAMES.EVENT, {
               alertId: alert.id!.toString(),
               alertCreatedAt: alert.createdAt.toISOString(),
             });
@@ -175,7 +176,7 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
               );
             } else if (channel === ChannelType.INBOX) {
               await this.socketQueue.add(
-                BULLMQ_QUEUES.NOTIFICATION.SOCKET.name,
+                SOCKET_JOB_NAMES.INBOX,
                 jobData,
               );
             }
@@ -183,7 +184,7 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
         } else {
           // Group Alert (targetGroup): Only support broadcastable channels
           if (channel === ChannelType.WEBSOCKET) {
-            await this.socketQueue.add('volatile', {
+            await this.socketQueue.add(SOCKET_JOB_NAMES.EVENT, {
               alertId: alert.id!.toString(),
               alertCreatedAt: alert.createdAt.toISOString(),
             });

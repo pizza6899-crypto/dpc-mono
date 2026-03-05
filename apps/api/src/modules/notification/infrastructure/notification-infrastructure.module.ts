@@ -8,7 +8,6 @@ import { AlertModule } from '../alert/alert.module';
 import { TemplateModule } from '../template/template.module';
 
 // Channel Senders & Providers
-import { SocketSender } from './channels/socket/socket.sender';
 import { EmailSender } from './channels/email/email.sender';
 import { NodemailerAdapter } from './channels/email/providers/nodemailer.adapter';
 import { SMSSender } from './channels/sms/sms.sender';
@@ -40,7 +39,6 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
     NCloudAdapter,
 
     // Channel Senders
-    SocketSender,
     EmailSender,
     SMSSender,
 
@@ -50,6 +48,6 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
     SMSProcessor,
     AlertProcessor,
   ],
-  exports: [SocketSender, EmailSender, SMSSender],
+  exports: [EmailSender, SMSSender],
 })
 export class NotificationInfrastructureModule { }

@@ -11,6 +11,9 @@ export const NOTIFICATION_EVENTS = {
   // 프로모션
   PROMOTION_APPLIED: 'PROMOTION_APPLIED',
 
+  // 알림함 수신 전용 이벤트
+  INBOX_NEW: 'INBOX_NEW',
+
   // 시스템
   PHONE_VERIFICATION_CODE: 'PHONE_VERIFICATION_CODE',
 } as const;
