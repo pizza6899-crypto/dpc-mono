@@ -1,7 +1,6 @@
 import { Processor } from '@nestjs/bullmq';
 import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
-import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
 import { SocketSender } from '../channels/socket/socket.sender';
 import { ClsService } from 'nestjs-cls';
 import { Transactional } from '@nestjs-cls/transactional';
@@ -48,7 +47,6 @@ export class SocketProcessor extends BaseProcessor<
     @Inject(ALERT_REPOSITORY)
     private readonly alertRepository: AlertRepositoryPort,
     private readonly socketSender: SocketSender,
-    private readonly websocketService: WebsocketService,
     private readonly renderTemplateService: RenderTemplateService,
     protected readonly cls: ClsService,
   ) {
@@ -138,16 +136,16 @@ export class SocketProcessor extends BaseProcessor<
     };
 
     if (userId) {
-      this.websocketService.sendToUser(userId, event, socketData);
-      this.logger.debug(`Sent volatile ${event} to user ${userId}`);
+      await this.socketSender.sendVolatile(event as any, socketData, { userId });
+      this.logger.debug(`Sent volatile notification:volatile (type: ${event}) to user ${userId}`);
     } else if (targetGroup) {
       let room: string = SOCKET_ROOMS.GLOBAL;
       if (targetGroup === NOTIFICATION_TARGET_GROUPS.ADMIN) {
         room = SOCKET_ROOMS.ADMIN;
       }
 
-      this.websocketService.sendToRoom(room as any, event, socketData);
-      this.logger.debug(`Sent volatile ${event} to room ${room}`);
+      await this.socketSender.sendVolatile(event as any, socketData, { room: room as any });
+      this.logger.debug(`Sent volatile notification:volatile (type: ${event}) to room ${room}`);
     }
   }
 }
