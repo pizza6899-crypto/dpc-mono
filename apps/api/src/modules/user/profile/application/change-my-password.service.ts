@@ -3,7 +3,7 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { comparePassword, hashPassword } from 'src/utils/password.util';
 import { USER_REPOSITORY } from '../ports/out/user.repository.token';
 import type { UserRepositoryPort } from '../ports/out/user.repository.port';
-import { ChangePasswordRequestDto } from '../controllers/user/dto/request/change-password.request.dto';
+import { ProfileChangePasswordRequestDto } from '../controllers/user/dto/request/change-password.request.dto';
 import { GetUserConfigService } from 'src/modules/user/config/application/get-user-config.service';
 import {
     UserNotFoundException,
@@ -21,7 +21,7 @@ export class ChangeMyPasswordService {
     ) { }
 
     @Transactional()
-    async execute(userId: bigint, dto: ChangePasswordRequestDto): Promise<void> {
+    async execute(userId: bigint, dto: ProfileChangePasswordRequestDto): Promise<void> {
         const user = await this.userRepository.findById(userId);
 
         if (!user) {

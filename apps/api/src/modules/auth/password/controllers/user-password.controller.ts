@@ -21,8 +21,8 @@ import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
 import { ChangePasswordService } from '../application/change-password.service';
 import { RequestPasswordResetService } from '../application/request-password-reset.service';
 import { ResetPasswordService } from '../application/reset-password.service';
-import { ChangePasswordRequestDto } from './dto/change-password.request.dto';
-import { ChangePasswordResponseDto } from './dto/change-password.response.dto';
+import { AuthChangePasswordRequestDto } from './dto/change-password.request.dto';
+import { AuthChangePasswordResponseDto } from './dto/change-password.response.dto';
 import { RequestPasswordResetRequestDto } from './dto/request-password-reset.request.dto';
 import { RequestPasswordResetResponseDto } from './dto/request-password-reset.response.dto';
 import { ResetPasswordRequestDto } from './dto/reset-password.request.dto';
@@ -47,7 +47,7 @@ export class UserPasswordController {
         description:
             'Change the password while the logged-in user knows the current password. / 로그인한 사용자가 현재 비밀번호를 알고 있는 상태에서 비밀번호를 변경합니다.',
     })
-    @ApiStandardResponse(ChangePasswordResponseDto, {
+    @ApiStandardResponse(AuthChangePasswordResponseDto, {
         status: HttpStatus.OK,
         description: 'Password changed successfully / 비밀번호 변경 성공',
     })
@@ -65,9 +65,9 @@ export class UserPasswordController {
     })
     async changePassword(
         @CurrentUser() user: AuthenticatedUser,
-        @Body() dto: ChangePasswordRequestDto,
+        @Body() dto: AuthChangePasswordRequestDto,
         @RequestClientInfoParam() requestInfo: RequestClientInfo,
-    ): Promise<ChangePasswordResponseDto> {
+    ): Promise<AuthChangePasswordResponseDto> {
         await this.changePasswordService.execute({
             userId: user.id,
             currentPassword: dto.currentPassword,

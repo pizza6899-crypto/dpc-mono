@@ -17,7 +17,7 @@ import { MyProfileResponseDto } from './dto/response/my-profile.response.dto';
 import { UpdateMyProfileRequestDto } from './dto/request/update-my-profile.request.dto';
 import { UpdateNicknameRequestDto } from './dto/request/update-nickname.request.dto';
 import { UpdateMyAvatarRequestDto } from './dto/request/update-my-avatar.request.dto';
-import { ChangePasswordRequestDto } from './dto/request/change-password.request.dto';
+import { ProfileChangePasswordRequestDto } from './dto/request/change-password.request.dto';
 import { UpdateMyCurrencyRequestDto } from './dto/request/update-my-currency.request.dto';
 import { GetMyProfileService } from '../../application/get-my-profile.service';
 import { UpdateMyProfileService } from '../../application/update-my-profile.service';
@@ -144,7 +144,7 @@ export class UserProfileController {
     })
     async changePassword(
         @CurrentUser() user: AuthTypes.AuthenticatedUser,
-        @Body() dto: ChangePasswordRequestDto,
+        @Body() dto: ProfileChangePasswordRequestDto,
     ): Promise<void> {
         return this.changeMyPasswordService.execute(user.id, dto);
     }

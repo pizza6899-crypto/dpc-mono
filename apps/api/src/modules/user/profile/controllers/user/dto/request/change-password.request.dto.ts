@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class ChangePasswordRequestDto {
+export class ProfileChangePasswordRequestDto {
     @ApiProperty({
         description: 'Current password / 현재 비밀번호',
         example: 'currentPassword123!',
