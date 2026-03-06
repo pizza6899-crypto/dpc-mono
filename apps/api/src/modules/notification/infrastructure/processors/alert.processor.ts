@@ -158,21 +158,25 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
             await this.emailQueue.add(
               BULLMQ_QUEUES.NOTIFICATION.EMAIL.name,
               jobData,
+              { delay: 500 }, // 트랜잭션 커밋 완료 대기를 위한 지연
             );
           } else if (channel === ChannelType.SMS) {
             await this.smsQueue.add(
               BULLMQ_QUEUES.NOTIFICATION.SMS.name,
               jobData,
+              { delay: 500 },
             );
           } else if (channel === ChannelType.INBOX) {
             await this.inboxQueue.add(
               BULLMQ_QUEUES.NOTIFICATION.INBOX.name,
               jobData,
+              { delay: 500 },
             );
           } else if (channel === ChannelType.TELEGRAM) {
             await this.telegramQueue.add(
               BULLMQ_QUEUES.NOTIFICATION.TELEGRAM.name,
               jobData,
+              { delay: 500 },
             );
           }
         } else {

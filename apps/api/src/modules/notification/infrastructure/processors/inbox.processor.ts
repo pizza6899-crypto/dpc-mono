@@ -10,9 +10,6 @@ import {
   NOTIFICATION_LOG_REPOSITORY,
   type NotificationLogRepositoryPort,
 } from '../../inbox/ports';
-import {
-  ALERT_REPOSITORY,
-} from '../../alert/ports';
 import { RenderTemplateService } from '../../template/application/render-template.service';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
 import { Language } from '@prisma/client';
@@ -34,7 +31,6 @@ export class InboxProcessor extends BaseProcessor<
   constructor(
     @Inject(NOTIFICATION_LOG_REPOSITORY)
     private readonly notificationLogRepository: NotificationLogRepositoryPort,
-    @Inject(ALERT_REPOSITORY)
     private readonly websocketService: WebsocketService,
     private readonly renderTemplateService: RenderTemplateService,
     protected readonly cls: ClsService,
