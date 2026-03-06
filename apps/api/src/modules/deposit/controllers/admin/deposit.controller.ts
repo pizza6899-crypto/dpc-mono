@@ -82,8 +82,40 @@ export class AdminDepositController {
   @HttpCode(HttpStatus.OK)
   @Paginated()
   @ApiOperation({
-    summary: '입금 목록 조회 / Get deposit list',
-    description: '페이징 및 필터링을 지원하는 입금 내역 목록을 조회합니다. / Retrieve deposit history with pagination and filtering support.',
+    summary: 'Get deposit list / 입금 목록 조회',
+    description: `
+### [ English ]
+#### 1. Deposit Lifecycle
+- **Bank Transfer (Fiat/Manual)**: \`PENDING\` -> \`PROCESSING\` -> \`COMPLETED\` / \`REJECTED\`
+- **Crypto Wallet (Automatic)**: \`PENDING\` -> \`CONFIRMING\` -> \`COMPLETED\`
+
+#### 2. Status Definitions
+- **PENDING**: Initial state. Waiting for actual fund arrival.
+- **PROCESSING**: [Fiat Manual Only] Preempted by an admin to prevent duplicate work.
+- **CONFIRMING**: [Crypto Auto Only] Waiting for blockchain network confirmations.
+- **COMPLETED**: Final success. Funds credited to the user's wallet.
+- **FAILED**: Unexpected system/API failure during processing.
+- **CANCELED**: Canceled by the user (Only possible in PENDING).
+- **EXPIRED**: Auto-expired after the designated timeout period.
+- **REJECTED**: Admin rejected the request (e.g., name/amount mismatch).
+
+---
+
+### [ 한글 ]
+#### 1. 입금 처리 프로세스
+- **무통장 입금 (Fiat/수동)**: \`PENDING(대기 중)\` -> \`PROCESSING(처리 중)\` -> \`COMPLETED(완료)\` / \`REJECTED(거절)\`
+- **암호화폐 입금 (Crypto/자동)**: \`PENDING(대기 중)\` -> \`CONFIRMING(확인 중)\` -> \`COMPLETED(완료)\`
+
+#### 2. 상태값 상세 정의
+- **PENDING (대기 중)**: 최초 신청 상태. 실제 자금 입금 확인을 기다리는 중입니다.
+- **PROCESSING (처리 중)**: **[무통장 수동 전용]** 관리자가 내역 확인을 시작하여 중복 처리를 방지하기 위해 선점한 상태입니다.
+- **CONFIRMING (확인 중)**: **[크립토 자동 전용]** 블록체인 네트워크 컨퍼메이션을 대기 중인 상태입니다.
+- **COMPLETED (완료)**: 최종 성공. 유저의 자산(Wallet)에 금액이 반영되었습니다.
+- **FAILED (실패)**: 처리 중 시스템 오류 또는 외부 API 통신 장애 등으로 실패한 상태입니다.
+- **CANCELED (취소됨)**: 유저가 직접 신청을 철회한 상태입니다. (PENDING에서만 가능)
+- **EXPIRED (만료됨)**: 지정된 유효 시간 내에 입금이 확인되지 않아 자동 만료된 상태입니다.
+- **REJECTED (거절됨)**: 관리자가 확인 후 승인을 거부한 상태입니다. (성함 불일치, 금액 부족 등)
+    `,
   })
   @ApiPaginatedResponse(AdminDepositListItemDto, {
     status: 200,

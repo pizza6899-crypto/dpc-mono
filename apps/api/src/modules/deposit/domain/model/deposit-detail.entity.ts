@@ -1,6 +1,11 @@
 // src/modules/deposit/domain/model/deposit-detail.entity.ts
 import type { Prisma } from '@prisma/client';
-import type { ExchangeCurrencyCode, FeePaidByType } from '@prisma/client';
+import type {
+  ExchangeCurrencyCode,
+  FeePaidByType,
+  DepositMethodType,
+  PaymentProvider,
+} from '@prisma/client';
 import { DepositDetailStatus } from '@prisma/client';
 import { DepositMethod } from './value-objects/deposit-method.vo';
 import { DepositAmount } from './value-objects/deposit-amount.vo';
@@ -106,8 +111,8 @@ export class DepositDetail {
     userId: bigint;
     transactionId: bigint | null;
     status: DepositDetailStatus;
-    methodType: any;
-    provider: any;
+    methodType: DepositMethodType;
+    provider: PaymentProvider;
     requestedAmount: Prisma.Decimal;
     actuallyPaid: Prisma.Decimal | null;
     feeAmount: Prisma.Decimal | null;
@@ -179,8 +184,8 @@ export class DepositDetail {
     userId: bigint;
     transactionId: bigint | null;
     status: DepositDetailStatus;
-    methodType: any;
-    provider: any;
+    methodType: DepositMethodType;
+    provider: PaymentProvider;
     requestedAmount: Prisma.Decimal;
     actuallyPaid: Prisma.Decimal | null;
     feeAmount: Prisma.Decimal | null;
@@ -380,7 +385,7 @@ export class DepositDetail {
    * @param actuallyPaid - 실제 입금 금액
    * @param adminId - 처리한 관리자 ID
    * @param transactionHash - 트랜잭션 해시 (선택적)
-   * @param adminNote - 관리자 메모 (선택적)
+   * @param transactionId - 외부 트랜잭션 ID (선택적)
    * @throws {DepositAlreadyProcessedException} 이미 처리된 입금인 경우
    */
   approve(
