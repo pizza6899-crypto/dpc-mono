@@ -155,6 +155,7 @@ export class AdminDepositController {
         createdAt: item.deposit.createdAt,
         updatedAt: item.deposit.updatedAt,
         failureReason: item.deposit.failureReason || '',
+        memo: item.memo || '',
       })),
       page: result.page,
       limit: result.limit,
@@ -204,6 +205,7 @@ export class AdminDepositController {
       createdAt: result.deposit.createdAt,
       updatedAt: result.deposit.updatedAt,
       failureReason: result.deposit.failureReason || '',
+      memo: result.memo || '',
     };
   }
 
@@ -276,7 +278,6 @@ export class AdminDepositController {
     @Param('id') id: string,
     @Body() dto: RejectDepositDto,
     @CurrentUser() admin: AuthenticatedUser,
-    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<RejectDepositResponseDto> {
     return await this.rejectDepositService.execute({
       id: BigInt(id),

@@ -4,6 +4,7 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
 import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { CreateAdminMemoService } from '../../admin-memo/application/create-admin-memo.service';
 
 interface RejectDepositParams {
   id: bigint;
@@ -21,6 +22,7 @@ export class RejectDepositService {
     @Inject(DEPOSIT_DETAIL_REPOSITORY)
     private readonly depositRepository: DepositDetailRepositoryPort,
     private readonly advisoryLockService: AdvisoryLockService,
+    private readonly createAdminMemoService: CreateAdminMemoService,
   ) { }
 
   @Transactional()
@@ -44,6 +46,15 @@ export class RejectDepositService {
 
     // 3. DepositDetail 상태 업데이트
     await this.depositRepository.update(deposit);
+
+    // 4. 거절 사유를 관리자 메모로 저장 (트랜잭션 편입)
+    if (failureReason) {
+      await this.createAdminMemoService.execute({
+        adminId,
+        content: `[입금 거절 사유] ${failureReason}`,
+        target: { type: 'DEPOSIT', id },
+      });
+    }
 
     return {
       userId: deposit.userId.toString(),

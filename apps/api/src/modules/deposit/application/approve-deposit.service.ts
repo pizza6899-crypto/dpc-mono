@@ -21,6 +21,7 @@ import { ExchangeRateService } from 'src/modules/exchange/application/exchange-r
 import { CreateWageringRequirementService } from 'src/modules/wagering/requirement/application';
 import { GetWageringConfigService } from 'src/modules/wagering/config/application/get-wagering-config.service';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+import { CreateAdminMemoService } from '../../admin-memo/application/create-admin-memo.service';
 
 interface ApproveDepositParams {
   id: bigint;
@@ -51,6 +52,7 @@ export class ApproveDepositService {
     private readonly exchangeRateService: ExchangeRateService,
     private readonly wageringConfigService: GetWageringConfigService,
     private readonly snowflakeService: SnowflakeService,
+    private readonly createAdminMemoService: CreateAdminMemoService,
   ) { }
 
   @Transactional()
@@ -166,6 +168,15 @@ export class ApproveDepositService {
         realMoneyRatio: new Prisma.Decimal(1),
         isForfeitable: false,
         requestInfo: requestInfo,
+      });
+    }
+
+    // 10. 관리자 메모 저장 (트랜잭션 편입)
+    if (memo) {
+      await this.createAdminMemoService.execute({
+        adminId,
+        content: memo,
+        target: { type: 'DEPOSIT', id },
       });
     }
 

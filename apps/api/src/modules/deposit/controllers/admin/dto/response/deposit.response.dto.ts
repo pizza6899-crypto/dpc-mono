@@ -36,6 +36,9 @@ export class AdminDepositListItemDto {
 
   @ApiProperty({ description: '실패/거절 사유 / Failure/Rejection reason' })
   failureReason: string;
+
+  @ApiProperty({ description: '관리자 메모 / Admin memo' })
+  memo: string;
 }
 
 export class ApproveDepositResponseDto {
