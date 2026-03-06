@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AdminMemo as PrismaAdminMemo } from '@prisma/client';
+import { Prisma, AdminMemo as PrismaAdminMemo } from '@prisma/client';
 import { AdminMemo } from '../domain';
 
 @Injectable()
@@ -21,11 +21,13 @@ export class AdminMemoMapper {
     /**
      * Domain 엔티티 -> Prisma 생성 데이터 변환
      */
-    toPrismaCreate(domain: AdminMemo): any {
+    toPrismaCreate(domain: AdminMemo): Prisma.AdminMemoCreateInput {
         return {
-            adminId: domain.adminId,
+            admin: { connect: { id: domain.adminId } },
             content: domain.content,
-            depositId: domain.depositId,
+            deposit: domain.depositId
+                ? { connect: { id: domain.depositId } }
+                : undefined,
             createdAt: domain.createdAt,
         };
     }

@@ -23,9 +23,10 @@ export class AdminMemoContentEmptyException extends AdminMemoException {
     constructor() {
         super(
             'Admin memo content cannot be empty',
-            MessageCode.VALIDATION_ERROR, // 적절한 코드가 없을 경우 VALIDATION_ERROR 사용
+            MessageCode.ADMIN_MEMO_CONTENT_EMPTY,
             HttpStatus.BAD_REQUEST,
         );
         this.name = 'AdminMemoContentEmptyException';
     }
 }
+

@@ -27,12 +27,12 @@ export class PrismaAdminMemoRepository implements AdminMemoRepositoryPort {
     }
 
     async create(params: CreateAdminMemoParams): Promise<AdminMemo> {
+        // 엔티티를 통해 비즈니스 규칙 재검증 및 데이터 정제
+        const domain = AdminMemo.create(params);
+        const data = this.mapper.toPrismaCreate(domain);
+
         const record = await this.tx.adminMemo.create({
-            data: {
-                adminId: params.adminId,
-                content: params.content,
-                depositId: params.depositId,
-            },
+            data,
             include: this._includeAdmin,
         });
 

@@ -13,9 +13,9 @@ export class FindAdminMemoService {
     ) { }
 
     /**
-     * 특정 입금 ID에 연결된 메모를 조회합니다. (최신순, 최대 50개)
+     * 특정 입금 ID에 연결된 메모를 조회합니다. (최신순)
      */
-    async findByDepositId(depositId: bigint): Promise<AdminMemo[]> {
-        return this.adminMemoRepository.findByDepositId(depositId, 50);
+    async findByDepositId(depositId: bigint, limit = 50): Promise<AdminMemo[]> {
+        return this.adminMemoRepository.findByDepositId(depositId, limit);
     }
 }

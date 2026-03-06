@@ -42,6 +42,7 @@ import { RewardModule } from './modules/reward/reward.module';
 import { UserModule } from './modules/user/user.module';
 import { ModerationModule } from './modules/moderation/moderation.module';
 import { AccessControlModule } from './infrastructure/access-control/access-control.module';
+import { AdminMemoModule } from './modules/admin-memo/admin-memo.module';
 import { UserAnalyticsModule } from './modules/user-analytics/user-analytics.module';
 import { WebsocketModule } from './infrastructure/websocket/websocket.module';
 
@@ -79,6 +80,7 @@ import { WebsocketModule } from './infrastructure/websocket/websocket.module';
     RewardModule,
     AccessControlModule,
     UserAnalyticsModule,
+    AdminMemoModule,
   ],
   providers: [
     Reflector,
