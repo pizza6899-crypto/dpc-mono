@@ -19,7 +19,6 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
-import { MessageCode } from '@repo/shared';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
@@ -199,5 +198,4 @@ export class InboxUserController {
       metadata: log.metadata,
     };
   }
-
 }

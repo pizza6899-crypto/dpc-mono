@@ -5,9 +5,6 @@
  * Alert.event 필드에 사용되는 이벤트 키
  */
 export const NOTIFICATION_EVENTS = {
-  // 입금
-  FIAT_DEPOSIT_REQUESTED: 'FIAT_DEPOSIT_REQUESTED',
-
   // 프로모션
   PROMOTION_APPLIED: 'PROMOTION_APPLIED',
 

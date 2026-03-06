@@ -27,12 +27,12 @@ import { PROMOTION_REPOSITORY } from '../../promotion/ports/out';
 import type { PromotionRepositoryPort } from '../../promotion/ports/out/promotion.repository.port';
 import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
-import { CreateAlertService } from '../../notification/alert/application/create-alert.service';
+import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
+import { SOCKET_ROOMS } from 'src/infrastructure/websocket/constants/websocket-rooms.constant';
 import {
-  NOTIFICATION_EVENTS,
-  NOTIFICATION_TARGET_GROUPS,
-} from '../../notification/common';
-import { ChannelType } from '@prisma/client';
+  SOCKET_EVENT_TYPES,
+  SocketFiatDepositRequestedPayload,
+} from 'src/infrastructure/websocket/types/socket-payload.types';
 
 interface CreateFiatDepositParams {
   user: AuthenticatedUser;
@@ -58,7 +58,7 @@ export class CreateFiatDepositService {
     private readonly promotionsService: CheckEligiblePromotionsService,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly depositRequirementPolicy: DepositRequirementPolicy,
-    private readonly createAlertService: CreateAlertService,
+    private readonly websocketService: WebsocketService,
   ) { }
 
   @Transactional()
@@ -150,43 +150,24 @@ export class CreateFiatDepositService {
     // 5. 저장
     const savedDeposit = await this.depositRepository.create(depositDetail);
 
-    // 6. 어드민 알림 발송 (동기적 처리)
-    try {
-      await this.sendAdminNotifications(savedDeposit, user);
-    } catch (err) {
-      // 알림 실패가 입금 신청 자체에 영향을 주지 않도록 로깅만 수행
-      console.error('Failed to send admin notifications for deposit:', err);
-    }
+    // 6. 어드민 실시간 알림 발송 (Socket Only)
+    this.websocketService.sendToRoom(
+      SOCKET_ROOMS.ADMIN,
+      SOCKET_EVENT_TYPES.FIAT_DEPOSIT_REQUESTED,
+      {
+        id: savedDeposit.id!.toString(),
+        depositorName: savedDeposit.depositorName!,
+        amount: savedDeposit.getAmount().requestedAmount.toString(),
+        currency: savedDeposit.depositCurrency,
+        requestedAt: savedDeposit.createdAt.toISOString(),
+      },
+    );
+
+    // 나중에 텔레그램도 처리해야함.
 
     // 7. 도메인 엔티티 반환
     return {
       deposit: savedDeposit,
     };
-  }
-
-  /**
-   * 어드민에게 입금 신청 알림을 발송합니다.
-   */
-  private async sendAdminNotifications(
-    deposit: DepositDetail,
-    user: AuthenticatedUser,
-  ): Promise<void> {
-    const payload = {
-      id: deposit.id!.toString(),
-      amount: deposit.getAmount().requestedAmount.toString(),
-      currency: deposit.depositCurrency,
-      depositorName: deposit.depositorName || 'N/A',
-      userId: deposit.userId.toString(),
-      email: user.email || 'N/A',
-      nickname: user.nickname,
-      requestedAt: deposit.createdAt.toISOString(),
-    };
-
-    // 2. 알림 로그 생성 및 발송 (DB 저장 + 실시간 팝업 브로드캐스트)
-    await this.createAlertService.execute({
-      event: NOTIFICATION_EVENTS.FIAT_DEPOSIT_REQUESTED,
-      targetGroup: NOTIFICATION_TARGET_GROUPS.ADMIN,
-      payload,
-    });
   }
 }

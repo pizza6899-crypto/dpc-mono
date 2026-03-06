@@ -15,10 +15,6 @@ export class NotificationChannelPolicy {
                 return [ChannelType.SMS];
 
             // 2. 자산 및 기타 알림 (입출금/프로모션): 영구 기록(INBOX) 발송.
-            // 실시간 팝업 알림이 필요한 경우 각 서비스에서 WebsocketService를 직접 호출하여 발송합니다.
-            case NOTIFICATION_EVENTS.FIAT_DEPOSIT_REQUESTED:
-                return [ChannelType.INBOX];
-
             case NOTIFICATION_EVENTS.PROMOTION_APPLIED:
                 return [ChannelType.INBOX];
 

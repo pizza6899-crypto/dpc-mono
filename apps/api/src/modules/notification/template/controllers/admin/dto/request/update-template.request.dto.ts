@@ -58,7 +58,7 @@ export class UpdateTemplateRequestDto {
   @ApiProperty({
     description: 'Event name / 이벤트 이름',
     enum: NOTIFICATION_EVENTS,
-    example: NOTIFICATION_EVENTS.FIAT_DEPOSIT_REQUESTED,
+    example: NOTIFICATION_EVENTS.INBOX_NEW,
     required: false,
   })
   @IsOptional()

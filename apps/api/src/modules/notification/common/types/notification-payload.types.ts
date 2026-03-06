@@ -3,17 +3,6 @@ import type {
 } from '../constants/event.constants';
 import { ExchangeCurrencyCode } from '@prisma/client';
 
-/**
- * 입금 신청 시 (어드민 알림용)
- */
-export interface FiatDepositRequestedPayload {
-  id: string;               // 입금 신청 ID
-  userId: string;
-  amount: string;
-  currency: ExchangeCurrencyCode;
-  depositorName: string;    // 입금자명
-  requestedAt: string;      // 신청 일시
-}
 
 /**
  * 입금 처리 완료/거절 시 (유저 알림용)
@@ -63,9 +52,6 @@ export interface InboxNewPayload {
 export type NotificationPayloadMap = {
   // 알림함
   [NOTIFICATION_EVENTS.INBOX_NEW]: InboxNewPayload;
-
-  // 입금
-  [NOTIFICATION_EVENTS.FIAT_DEPOSIT_REQUESTED]: FiatDepositRequestedPayload;
 
   // 프로모션
   [NOTIFICATION_EVENTS.PROMOTION_APPLIED]: PromotionPayload;

@@ -11,21 +11,36 @@
  */
 
 // ============================================
-// 이벤트 타입 상수
+// 이벤트 타입 상수 (유저/어드민 분리)
 // ============================================
 
-export const SOCKET_EVENT_TYPES = {
+/** 일반 사용자 대상 이벤트 */
+export const USER_SOCKET_EVENT_TYPES = {
     /** 새 받은편지함 알림 도착 */
     INBOX_NEW: 'INBOX_NEW',
-
-    /** 입금 요청 접수 (관리자 대상) */
-    FIAT_DEPOSIT_REQUESTED: 'FIAT_DEPOSIT_REQUESTED',
-
     /** 프로모션 적용 결과 */
     PROMOTION_APPLIED: 'PROMOTION_APPLIED',
+} as const;
 
+/** 관리자 전용 이벤트 */
+export const ADMIN_SOCKET_EVENT_TYPES = {
+    /** 입금 요청 접수 (관리자 알림) */
+    FIAT_DEPOSIT_REQUESTED: 'FIAT_DEPOSIT_REQUESTED',
+    /** 출금 요청 접수 (관리자 알림) */
+    WITHDRAW_REQUESTED: 'WITHDRAW_REQUESTED',
+} as const;
+
+/** 공통/시스템 이벤트 */
+export const COMMON_SOCKET_EVENT_TYPES = {
     /** 시스템 전체 공지 */
     SYSTEM_NOTICE: 'SYSTEM_NOTICE',
+} as const;
+
+/** 통합 소켓 이벤트 타입 전역 상수 */
+export const SOCKET_EVENT_TYPES = {
+    ...USER_SOCKET_EVENT_TYPES,
+    ...ADMIN_SOCKET_EVENT_TYPES,
+    ...COMMON_SOCKET_EVENT_TYPES,
 } as const;
 
 export type SocketEventType =
@@ -47,14 +62,29 @@ export interface SocketInboxNewPayload {
     metadata: Record<string, any> | null;
 }
 
-/** FIAT_DEPOSIT_REQUESTED: 입금 요청 접수 시 관리자에게 전달되는 데이터 */
+/** 
+ * 관리자 실시간 알림 공용 페이로드
+ * (진행 중인 이벤트에 대한 최소 정보만 포함하여 Sound/Toast용으로 사용)
+ */
+/** 
+ * FIAT_DEPOSIT_REQUESTED: 입금 요청 실시간 알림 페이로드
+ */
 export interface SocketFiatDepositRequestedPayload {
-    alertId?: string;
-    id: string;
+    id: string;              // 입금 신청 ID
+    depositorName: string;
+    amount: string;
+    currency: string;
+    requestedAt: string;
+}
+
+/** 
+ * WITHDRAW_REQUESTED: 출금 요청 실시간 알림 페이로드
+ */
+export interface SocketWithdrawRequestedPayload {
+    id: string;              // 출금 신청 ID
     userId: string;
     amount: string;
     currency: string;
-    depositorName: string;
     requestedAt: string;
 }
 
@@ -93,6 +123,7 @@ export interface SocketSystemNoticePayload {
 export type SocketPayloadMap = {
     [SOCKET_EVENT_TYPES.INBOX_NEW]: SocketInboxNewPayload;
     [SOCKET_EVENT_TYPES.FIAT_DEPOSIT_REQUESTED]: SocketFiatDepositRequestedPayload;
+    [SOCKET_EVENT_TYPES.WITHDRAW_REQUESTED]: SocketWithdrawRequestedPayload;
     [SOCKET_EVENT_TYPES.PROMOTION_APPLIED]: SocketPromotionAppliedPayload;
     [SOCKET_EVENT_TYPES.SYSTEM_NOTICE]: SocketSystemNoticePayload;
 };

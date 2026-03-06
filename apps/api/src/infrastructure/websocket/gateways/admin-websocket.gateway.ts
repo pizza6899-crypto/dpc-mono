@@ -128,22 +128,36 @@ export class AdminWebsocketGateway implements OnGatewayConnection, OnGatewayDisc
 
     @AsyncApiPub({
         channel: 'admin/event',
-        summary: '관리자 통합 이벤트 스트림 (Admin Single Event Stream)',
+        summary: 'Admin Integrated Event Stream (관리자 통합 이벤트 스트림)',
         description: `
-관리자 대시보드를 위한 전용 푸시 채널입니다. (Dedicated push channel for the admin dashboard.)
+Dedicated push channel for the admin dashboard. (관리자 대시보드를 위한 전용 푸시 채널입니다.)
 
 ---
 
-### 🛡️ Admin Only (관리자 전용)
-| type | Description (🇰🇷) | Description (🇺🇸) |
-|---|---|---|
-| \`FIAT_DEPOSIT_REQUESTED\` | 신규 입금 요청 발생 | New deposit requested |
-| \`WITHDRAW_REQUESTED\` | 신규 출금 요청 발생 | New withdrawal requested |
+### 🛡️ Real-time Admin Notifications (관리자 전용 실시간 알림)
+Pure business data is transmitted to the admin, rather than pre-processed UI data. The frontend should handle tasks such as playing notification sounds and routing to the appropriate list based on the received \`id\`. (관리자에게는 UI 조립용 가공 데이터가 아닌, **순수 비즈니스 데이터**가 전송됩니다. 프론트엔드는 수신된 \`id\` 등을 바탕으로 알림음을 재생하고, 필요한 목록으로 이동(Routing) 처리를 수행해야 합니다.)
 
-### � Personal Events (수신자 본인 이벤트)
-| type | Description (🇰🇷) | Description (🇺🇸) |
+| type | Description (🇰🇷) / Payload Fields | Description (🇺🇸) |
 |---|---|---|
-| \`INBOX_NEW\` | 관리자 본인의 알림 실시간 수신 | Receive admin's own notifications |
+| \`FIAT_DEPOSIT_REQUESTED\` | **신규 입금 신청 발생** <br/> \`id\`, \`depositorName\`, \`amount\`, \`currency\`, \`requestedAt\` | New fiat deposit request |
+| \`WITHDRAW_REQUESTED\` | **신규 출금 신청 발생** <br/> \`id\`, \`userId\`, \`amount\`, \`currency\`, \`requestedAt\` | New withdrawal request |
+
+---
+
+#### 📝 Example Payload (입금 신청 예시)
+\`\`\`json
+{
+    "type": "FIAT_DEPOSIT_REQUESTED",
+    "payload": {
+        "id": "23282357591089152",
+        "depositorName": "John Doe",
+        "amount": "100000",
+        "currency": "KRW",
+        "requestedAt": "2026-03-06T07:18:54.018Z"
+    },
+    "timestamp": "2026-03-06T07:18:54.023Z"
+}
+\`\`\`
         `,
         message: {
             name: 'AdminSocketEvent',
