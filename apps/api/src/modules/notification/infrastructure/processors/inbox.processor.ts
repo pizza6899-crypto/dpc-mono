@@ -12,7 +12,6 @@ import {
 } from '../../inbox/ports';
 import {
   ALERT_REPOSITORY,
-  type AlertRepositoryPort,
 } from '../../alert/ports';
 import { RenderTemplateService } from '../../template/application/render-template.service';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
@@ -21,23 +20,21 @@ import {
   BULLMQ_QUEUES,
   getQueueConfig,
 } from 'src/infrastructure/bullmq/bullmq.constants';
-import { SOCKET_JOB_NAMES } from '../../common/constants/queue.constants';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 
-const queueConfig = getQueueConfig(BULLMQ_QUEUES.NOTIFICATION.SOCKET);
+const queueConfig = getQueueConfig(BULLMQ_QUEUES.NOTIFICATION.INBOX);
 
 @Processor(queueConfig.processorOptions, queueConfig.workerOptions)
-export class SocketProcessor extends BaseProcessor<
+export class InboxProcessor extends BaseProcessor<
   NotificationJobData,
   void
 > {
-  protected readonly logger = new Logger(SocketProcessor.name);
+  protected readonly logger = new Logger(InboxProcessor.name);
 
   constructor(
     @Inject(NOTIFICATION_LOG_REPOSITORY)
     private readonly notificationLogRepository: NotificationLogRepositoryPort,
     @Inject(ALERT_REPOSITORY)
-    private readonly alertRepository: AlertRepositoryPort,
     private readonly websocketService: WebsocketService,
     private readonly renderTemplateService: RenderTemplateService,
     protected readonly cls: ClsService,
@@ -49,11 +46,8 @@ export class SocketProcessor extends BaseProcessor<
   protected async processJob(
     job: Job<NotificationJobData>,
   ): Promise<void> {
-    const { name, data } = job;
-
-    if (name === SOCKET_JOB_NAMES.INBOX) {
-      await this.processNotification(data as NotificationJobData);
-    }
+    const { data } = job;
+    await this.processNotification(data);
   }
 
   /**

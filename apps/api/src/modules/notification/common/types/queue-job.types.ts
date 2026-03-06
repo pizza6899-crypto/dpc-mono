@@ -4,7 +4,7 @@
 
 /**
  * 알림 로그(NotificationLog) 처리를 위한 큐 잡 데이터
- * EMAIL, SMS, SOCKET 큐에서 사용됩니다.
+ * EMAIL, SMS, INBOX 큐에서 사용됩니다.
  */
 export interface NotificationJobData {
     logId: string;

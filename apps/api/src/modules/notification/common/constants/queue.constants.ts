@@ -4,14 +4,10 @@ import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
 
 export const NOTIFICATION_QUEUES = {
   ALERT: BULLMQ_QUEUES.NOTIFICATION.ALERT.name,
-  SOCKET: BULLMQ_QUEUES.NOTIFICATION.SOCKET.name,
   EMAIL: BULLMQ_QUEUES.NOTIFICATION.EMAIL.name,
   SMS: BULLMQ_QUEUES.NOTIFICATION.SMS.name,
+  INBOX: BULLMQ_QUEUES.NOTIFICATION.INBOX.name,
 } as const;
 
 export type NotificationQueueName =
   (typeof NOTIFICATION_QUEUES)[keyof typeof NOTIFICATION_QUEUES];
-
-export const SOCKET_JOB_NAMES = {
-  INBOX: 'socket-inbox-push',
-} as const;

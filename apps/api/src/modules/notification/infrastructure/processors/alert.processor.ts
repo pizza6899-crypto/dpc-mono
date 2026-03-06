@@ -18,7 +18,7 @@ import {
   getQueueConfig,
   BULLMQ_QUEUES,
 } from 'src/infrastructure/bullmq/bullmq.constants';
-import { SOCKET_JOB_NAMES, type AlertJobData, type NotificationEventType } from '../../common';
+import { type AlertJobData, type NotificationEventType } from '../../common';
 import { GetUserService } from 'src/modules/user/profile/application/get-user.service';
 
 const queueConfig = getQueueConfig(BULLMQ_QUEUES.NOTIFICATION.ALERT);
@@ -43,8 +43,8 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
     private readonly emailQueue: Queue,
     @InjectQueue(BULLMQ_QUEUES.NOTIFICATION.SMS.name)
     private readonly smsQueue: Queue,
-    @InjectQueue(BULLMQ_QUEUES.NOTIFICATION.SOCKET.name)
-    private readonly socketQueue: Queue,
+    @InjectQueue(BULLMQ_QUEUES.NOTIFICATION.INBOX.name)
+    private readonly inboxQueue: Queue,
     protected readonly cls: ClsService,
     private readonly getUserService: GetUserService,
     private readonly snowflakeService: SnowflakeService,
@@ -163,8 +163,8 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
               jobData,
             );
           } else if (channel === ChannelType.INBOX) {
-            await this.socketQueue.add(
-              SOCKET_JOB_NAMES.INBOX,
+            await this.inboxQueue.add(
+              BULLMQ_QUEUES.NOTIFICATION.INBOX.name,
               jobData,
             );
           }

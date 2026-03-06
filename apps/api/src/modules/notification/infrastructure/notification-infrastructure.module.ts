@@ -14,7 +14,7 @@ import { SMSSender } from './channels/sms/sms.sender';
 import { NCloudAdapter } from './channels/sms/providers/ncloud.adapter';
 
 // Processors
-import { SocketProcessor } from './processors/socket.processor';
+import { InboxProcessor } from './processors/inbox.processor';
 import { EmailProcessor } from './processors/email.processor';
 import { SMSProcessor } from './processors/sms.processor';
 import { AlertProcessor } from './processors/alert.processor';
@@ -43,7 +43,7 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
     SMSSender,
 
     // Processors
-    SocketProcessor,
+    InboxProcessor,
     EmailProcessor,
     SMSProcessor,
     AlertProcessor,

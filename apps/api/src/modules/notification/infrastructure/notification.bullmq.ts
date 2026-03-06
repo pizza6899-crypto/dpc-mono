@@ -31,8 +31,8 @@ export const NOTIFICATION_QUEUES = {
     },
     workerOptions: { concurrency: 10 },
   },
-  SOCKET: {
-    name: 'notification-channel-socket',
+  INBOX: {
+    name: 'notification-channel-inbox',
     defaultJobOptions: {
       attempts: 5,
       backoff: { type: 'exponential', delay: 1000 },

@@ -7,7 +7,7 @@ model Alert {
   idempotencyKey String?           @map("idempotency_key")
   status         AlertStatus       @default(PENDING)
   channels       ChannelType[]
-  createdAt      DateTime          @default(now()) @map("created_at")
+  createdAt      DateTime          @map("created_at")
   updatedAt      DateTime          @updatedAt @map("updated_at")
   notifications  NotificationLog[]
   user           User?             @relation(fields: [userId], references: [id])

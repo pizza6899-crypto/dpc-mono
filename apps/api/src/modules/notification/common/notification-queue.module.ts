@@ -6,11 +6,11 @@ import { NOTIFICATION_QUEUES } from '../infrastructure/notification.bullmq';
   imports: [
     BullModule.registerQueue(
       { ...NOTIFICATION_QUEUES.ALERT },
-      { ...NOTIFICATION_QUEUES.SOCKET },
+      { ...NOTIFICATION_QUEUES.INBOX },
       { ...NOTIFICATION_QUEUES.EMAIL },
       { ...NOTIFICATION_QUEUES.SMS },
     ),
   ],
   exports: [BullModule],
 })
-export class NotificationQueueModule {}
+export class NotificationQueueModule { }
