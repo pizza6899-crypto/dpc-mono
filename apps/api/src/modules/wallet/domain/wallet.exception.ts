@@ -22,7 +22,7 @@ export class WalletException extends DomainException {
 export class WalletNotFoundException extends WalletException {
   constructor(userId: bigint, currency: string) {
     super(
-      `Wallet not found: userId=${userId}, currency=${currency}`,
+      `Wallet not found for the requested currency: ${currency}`,
       MessageCode.USER_BALANCE_NOT_FOUND,
       HttpStatus.NOT_FOUND,
     );

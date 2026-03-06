@@ -59,3 +59,8 @@ export class RejectDepositResponseDto {
   @ApiProperty({ description: '대상 사용자 ID / Target User ID' })
   userId: string;
 }
+
+export class ProcessDepositResponseDto {
+  @ApiProperty({ description: '성공 여부 / Success status' })
+  success: boolean;
+}

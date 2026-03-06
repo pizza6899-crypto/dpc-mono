@@ -3,15 +3,15 @@ import type { Prisma } from '@prisma/client';
 import type {
   ExchangeCurrencyCode,
   FeePaidByType,
-  DepositMethodType,
   PaymentProvider,
 } from '@prisma/client';
-import { DepositDetailStatus } from '@prisma/client';
+import { DepositDetailStatus, DepositMethodType } from '@prisma/client';
 import { DepositMethod } from './value-objects/deposit-method.vo';
 import { DepositAmount } from './value-objects/deposit-amount.vo';
 import {
   DepositAlreadyProcessedException,
   DepositException,
+  DepositFiatNotInProcessingException,
 } from '../deposit.exception';
 
 /**
@@ -400,6 +400,11 @@ export class DepositDetail {
       throw new DepositAlreadyProcessedException(this._status);
     }
 
+    // 피아트 입금 단방향 제어: 반드시 PROCESSING 상태를 거쳐야 함
+    if (this.method.methodType === DepositMethodType.BANK_TRANSFER && this._status !== DepositDetailStatus.PROCESSING) {
+      throw new DepositFiatNotInProcessingException();
+    }
+
     if (transactionId) {
       this._transactionId = transactionId;
     }
@@ -430,6 +435,11 @@ export class DepositDetail {
       throw new DepositException('Entity must be persisted before rejection');
     if (!this.canBeProcessed()) {
       throw new DepositAlreadyProcessedException(this._status);
+    }
+
+    // 피아트 입금 단방향 제어: 반드시 PROCESSING 상태를 거쳐야 함
+    if (this.method.methodType === DepositMethodType.BANK_TRANSFER && this._status !== DepositDetailStatus.PROCESSING) {
+      throw new DepositFiatNotInProcessingException();
     }
 
     // 상태 변경

@@ -28,12 +28,14 @@ import {
   AdminDepositListItemDto,
   ApproveDepositResponseDto,
   RejectDepositResponseDto,
+  ProcessDepositResponseDto,
 } from './dto/response/deposit.response.dto';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 import { GetDepositStatsService } from '../../application/get-deposit-stats.service';
 import { GetDepositsService } from '../../application/get-deposits.service';
 import { GetDepositDetailService } from '../../application/get-deposit-detail.service';
+import { ProcessDepositService } from '../../application/process-deposit.service';
 import { ApproveDepositService } from '../../application/approve-deposit.service';
 import { RejectDepositService } from '../../application/reject-deposit.service';
 import { DepositStatsResponseDto } from './dto/response/deposit-stats.response.dto';
@@ -47,6 +49,7 @@ export class AdminDepositController {
     private readonly getDepositStatsService: GetDepositStatsService,
     private readonly getDepositsService: GetDepositsService,
     private readonly getDepositDetailService: GetDepositDetailService,
+    private readonly processDepositService: ProcessDepositService,
     private readonly approveDepositService: ApproveDepositService,
     private readonly rejectDepositService: RejectDepositService,
   ) { }
@@ -188,8 +191,6 @@ export class AdminDepositController {
   })
   async getDepositDetail(
     @Param('id') id: string,
-    @CurrentUser() admin: AuthenticatedUser,
-    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<AdminDepositListItemDto> {
     const result = await this.getDepositDetailService.execute({
       id: BigInt(id),
@@ -207,6 +208,40 @@ export class AdminDepositController {
       failureReason: result.deposit.failureReason || '',
       memo: result.memo || '',
     };
+  }
+
+  @Post(':id/process')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: '입금 처리 상태로 변경 (피아트 전용) / Mark deposit as processing',
+    description: '관리자가 입금을 확인 중비(처리 중) 상태로 변경하여 중복 처리를 방지합니다. / Mark a fiat deposit as processing to prevent duplicate admin actions.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: '입금 상세 ID / DepositDetail ID',
+    type: String,
+  })
+  @ApiStandardResponse(ProcessDepositResponseDto, {
+    status: 200,
+    description: '입금 처리 상태 변경 성공 / Deposit marked as processing successfully',
+  })
+  @AuditLog({
+    type: LogType.AUTH,
+    action: 'PROCESS_DEPOSIT',
+    category: 'DEPOSIT',
+    extractMetadata: (_, args) => ({
+      depositId: args[0]?.id || args[0],
+    }),
+  })
+  async processDeposit(
+    @Param('id') id: string,
+    @CurrentUser() admin: AuthenticatedUser,
+  ): Promise<ProcessDepositResponseDto> {
+    await this.processDepositService.execute({
+      id: BigInt(id),
+      adminId: admin.id,
+    });
+    return { success: true };
   }
 
   @Post(':id/approve')
@@ -286,3 +321,4 @@ export class AdminDepositController {
     });
   }
 }
+

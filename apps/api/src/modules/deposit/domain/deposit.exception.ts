@@ -221,3 +221,31 @@ export class IdentityNotVerifiedException extends DepositRequirementNotMetExcept
     this.name = 'IdentityNotVerifiedException';
   }
 }
+
+/**
+ * 승인되지 않은 입금 처리 액션일 때 발생하는 예외 (예: 일반 사용자가 수동 입금 처리를 시도할 때)
+ */
+export class DepositUnauthorizedActionException extends DepositException {
+  constructor() {
+    super(
+      'Unauthorized action on deposit processing',
+      MessageCode.DEPOSIT_UNAUTHORIZED_ACTION,
+      HttpStatus.FORBIDDEN,
+    );
+    this.name = 'DepositUnauthorizedActionException';
+  }
+}
+
+/**
+ * 피아트 입금이 승인/거절 전 PROCESSING 상태가 아닐 때 발생하는 예외
+ */
+export class DepositFiatNotInProcessingException extends DepositException {
+  constructor() {
+    super(
+      'Fiat deposits must be in PROCESSING state before approval or rejection',
+      MessageCode.DEPOSIT_FIAT_NOT_IN_PROCESSING,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'DepositFiatNotInProcessingException';
+  }
+}

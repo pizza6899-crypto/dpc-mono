@@ -1,9 +1,10 @@
 // src/modules/deposit/application/cancel-deposit.service.ts
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
 import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { DepositNotFoundException } from '../domain';
 
 interface CancelDepositParams {
   id: bigint;
@@ -34,7 +35,7 @@ export class CancelDepositService {
     // 2. DepositDetail 조회 (본인 것만)
     const deposit = await this.depositRepository.findByIdAndUserId(id, userId);
     if (!deposit) {
-      throw new NotFoundException('Deposit request not found');
+      throw new DepositNotFoundException();
     }
 
     // 3. 엔티티 비즈니스 로직 실행 (취소 처리)

@@ -15,6 +15,7 @@ import { AdminMemoModule } from '../admin-memo/admin-memo.module';
 import { GetDepositStatsService } from './application/get-deposit-stats.service';
 import { GetDepositsService } from './application/get-deposits.service';
 import { GetDepositDetailService } from './application/get-deposit-detail.service';
+import { ProcessDepositService } from './application/process-deposit.service';
 import { ApproveDepositService } from './application/approve-deposit.service';
 import { RejectDepositService } from './application/reject-deposit.service';
 import { CancelDepositService } from './application/cancel-deposit.service';
@@ -58,6 +59,7 @@ import { NotificationModule } from '../notification/notification.module';
     GetDepositStatsService,
     GetDepositsService,
     GetDepositDetailService,
+    ProcessDepositService,
     ApproveDepositService,
     RejectDepositService,
     CancelDepositService,
@@ -71,6 +73,7 @@ import { NotificationModule } from '../notification/notification.module';
     GetDepositStatsService,
     GetDepositsService,
     GetDepositDetailService,
+    ProcessDepositService,
     ApproveDepositService,
     RejectDepositService,
     CancelDepositService,

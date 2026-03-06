@@ -9,7 +9,7 @@ import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.re
 import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
-import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
+import { UpdateOperation, WalletActionName, WalletNotFoundException } from 'src/modules/wallet/domain';
 import {
   UserWalletBalanceType,
   UserWalletTransactionType,
@@ -85,7 +85,10 @@ export class ApproveDepositService {
     );
 
     if (!walletBefore) {
-      throw new Error('User wallet not found');
+      throw new WalletNotFoundException(
+        deposit.userId,
+        deposit.depositCurrency,
+      );
     }
 
     // 4. USD 환산 산정 (티어 실적 반영용)
