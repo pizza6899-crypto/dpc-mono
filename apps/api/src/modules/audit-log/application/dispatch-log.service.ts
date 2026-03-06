@@ -29,7 +29,7 @@ export class DispatchLogService {
     @InjectQueue(BULLMQ_QUEUES.AUDIT.HEAVY.name)
     private readonly heavyLogQueue: Queue<LogQueueJobData>,
     private readonly snowflakeService: SnowflakeService,
-  ) {}
+  ) { }
 
   /**
    * Cloudflare 정보를 로그 타입에 맞게 매핑
@@ -202,18 +202,12 @@ export class DispatchLogService {
           jobData,
           {
             jobId: `log_${id.toString()}`,
-            removeOnComplete: true,
-            attempts: 10,
-            backoff: { type: 'exponential', delay: 1000 },
           },
         );
       } else {
         // ACTIVITY, ERROR
         await this.heavyLogQueue.add(BULLMQ_QUEUES.AUDIT.HEAVY.name, jobData, {
           jobId: `log_${id.toString()}`,
-          removeOnComplete: true,
-          attempts: 3,
-          backoff: { type: 'exponential', delay: 1000 },
         });
       }
     } catch (error) {

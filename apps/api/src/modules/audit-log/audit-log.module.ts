@@ -60,12 +60,8 @@ import { AUDIT_QUEUES } from './infrastructure/audit-log.bullmq';
     PrismaModule,
     SnowflakeModule,
     BullMqModule,
-    BullModule.registerQueue({
-      name: AUDIT_QUEUES.CRITICAL.name,
-    }),
-    BullModule.registerQueue({
-      name: AUDIT_QUEUES.HEAVY.name,
-    }),
+    BullModule.registerQueue(AUDIT_QUEUES.CRITICAL),
+    BullModule.registerQueue(AUDIT_QUEUES.HEAVY),
   ],
   providers: [
     {
@@ -79,4 +75,4 @@ import { AUDIT_QUEUES } from './infrastructure/audit-log.bullmq';
   ],
   exports: [AUDIT_LOG_REPOSITORY, DispatchLogService, AuditLogInterceptor],
 })
-export class AuditLogModule {}
+export class AuditLogModule { }
