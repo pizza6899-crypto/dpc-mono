@@ -22,7 +22,6 @@ import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import * as AuthTypes from 'src/common/auth/types/auth.types';
 import type { PaginatedData } from 'src/common/http/types';
 import { ListUsersService } from '../../application/list-users.service';
-import { GetUserService } from '../../application/get-user.service';
 import { UpdateUserAdminService } from '../../application/update-user-admin.service';
 import { CloseUserAdminService } from '../../application/close-user-admin.service';
 import { RestoreUserAdminService } from '../../application/restore-user-admin.service';
@@ -46,7 +45,6 @@ import type { RequestClientInfo } from 'src/common/http/types/client-info.types'
 export class UserAdminController {
   constructor(
     private readonly listUsersService: ListUsersService,
-    private readonly getUserService: GetUserService,
     private readonly updateUserAdminService: UpdateUserAdminService,
     private readonly closeUserAdminService: CloseUserAdminService,
     private readonly restoreUserAdminService: RestoreUserAdminService,
@@ -54,35 +52,6 @@ export class UserAdminController {
     private readonly revokeUserGameSessionsService: RevokeUserGameSessionsService,
   ) { }
 
-  /**
-   * 사용자 상세 조회 (관리자용)
-   */
-  @Get(':id')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Get user details / 사용자 상세 조회 (관리자용)',
-  })
-  @ApiStandardResponse(UserAdminDetailResponseDto, {
-    status: 200,
-    description: 'Successfully retrieved user details / 사용자 상세 조회 성공',
-  })
-  async findOne(@Param('id') id: string): Promise<UserAdminDetailResponseDto> {
-    const user = await this.getUserService.getById(BigInt(id));
-    return {
-      id: user.id.toString(),
-      loginId: user.loginId,
-      nickname: user.nickname,
-      email: user.email,
-      role: user.role,
-      status: user.status,
-      country: user.getLocation().country,
-      timezone: user.getLocation().timezone,
-      primaryCurrency: user.getCurrency().primaryCurrency,
-      playCurrency: user.getCurrency().playCurrency,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-    };
-  }
 
   /**
    * 사용자 목록 조회 (관리자용)
@@ -128,6 +97,10 @@ export class UserAdminController {
         timezone: user.getLocation().timezone,
         primaryCurrency: user.getCurrency().primaryCurrency,
         playCurrency: user.getCurrency().playCurrency,
+        phoneNumber: user.phoneNumber,
+        isEmailVerified: user.getTrust().isEmailVerified,
+        isPhoneVerified: user.getTrust().isPhoneVerified,
+        registrationMethod: user.getAuthInfo().registrationMethod,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       })),
@@ -168,6 +141,8 @@ export class UserAdminController {
       role: dto.role,
       primaryCurrency: dto.primaryCurrency,
       playCurrency: dto.playCurrency,
+      phoneNumber: dto.phoneNumber,
+      isPhoneVerified: dto.isPhoneVerified,
     });
 
     return {
@@ -181,6 +156,10 @@ export class UserAdminController {
       timezone: user.getLocation().timezone,
       primaryCurrency: user.getCurrency().primaryCurrency,
       playCurrency: user.getCurrency().playCurrency,
+      phoneNumber: user.phoneNumber,
+      isEmailVerified: user.getTrust().isEmailVerified,
+      isPhoneVerified: user.getTrust().isPhoneVerified,
+      registrationMethod: user.getAuthInfo().registrationMethod,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };

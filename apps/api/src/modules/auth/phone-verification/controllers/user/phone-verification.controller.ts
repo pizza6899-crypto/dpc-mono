@@ -15,7 +15,7 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
 import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
 
-@ApiTags('User Auth')
+@ApiTags('User Phone Verification')
 @Controller('auth/phone')
 @ApiStandardErrors()
 @ApiCookieAuth()

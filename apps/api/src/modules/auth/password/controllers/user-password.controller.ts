@@ -30,8 +30,8 @@ import { ResetPasswordResponseDto } from './dto/reset-password.response.dto';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 
-@Controller('auth/password')
 @ApiTags('User Password Management')
+@Controller('auth/password')
 @ApiStandardErrors()
 export class UserPasswordController {
     constructor(

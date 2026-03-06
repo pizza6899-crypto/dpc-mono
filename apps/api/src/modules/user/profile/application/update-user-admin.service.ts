@@ -2,7 +2,7 @@ import { Injectable, Inject, Optional } from '@nestjs/common';
 import { SynchronizeUserSessionService } from 'src/modules/auth/session/application/synchronize-user-session.service';
 import { USER_REPOSITORY } from '../ports/out/user.repository.token';
 import type { UserRepositoryPort } from '../ports/out/user.repository.port';
-import { User, UserNotFoundException, DuplicateEmailException } from '../domain';
+import { User, UserNotFoundException, DuplicateEmailException, DuplicatePhoneNumberException } from '../domain';
 import { ExchangeCurrencyCode, UserStatus, UserRoleType } from '@prisma/client';
 
 export interface UpdateUserAdminParams {
@@ -13,6 +13,8 @@ export interface UpdateUserAdminParams {
     role?: UserRoleType;
     primaryCurrency?: ExchangeCurrencyCode;
     playCurrency?: ExchangeCurrencyCode;
+    phoneNumber?: string | null;
+    isPhoneVerified?: boolean;
 }
 
 @Injectable()
@@ -39,12 +41,23 @@ export class UpdateUserAdminService {
             }
         }
 
+        // 휴대폰 번호 변경을 원할 경우 중복 체크
+        if (params.phoneNumber && params.phoneNumber !== user.phoneNumber) {
+            const existingUser = await this.userRepository.findByPhoneNumber(params.phoneNumber);
+            if (existingUser) {
+                throw new DuplicatePhoneNumberException();
+            }
+        }
+
         const updatedUser = user.updateAdmin({
             email: params.email,
             nickname: params.nickname,
             status: params.status,
+            role: params.role,
             primaryCurrency: params.primaryCurrency,
             playCurrency: params.playCurrency,
+            phoneNumber: params.phoneNumber,
+            isPhoneVerified: params.isPhoneVerified,
         });
 
         const savedUser = await this.userRepository.save(updatedUser);

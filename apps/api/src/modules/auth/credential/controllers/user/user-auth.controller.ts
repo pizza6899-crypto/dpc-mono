@@ -53,12 +53,12 @@ export class UserAuthController {
     scope: ThrottleScope.IP,
   })
   @ApiOperation({
-    summary: 'Login (로그인)',
-    description: 'Email/Password 기반 로그인',
+    summary: 'Login / 로그인',
+    description: 'Login based on Email, Username, or Phone number. / 이메일, 사용자명 또는 휴대폰 번호 기반 로그인',
   })
   @ApiStandardResponse(UserLoginResponseDto, {
     status: HttpStatus.OK,
-    description: 'Login Success',
+    description: 'Successfully logged in / 로그인 성공',
   })
   @AuditLog({
     type: LogType.AUTH,
@@ -118,13 +118,13 @@ export class UserAuthController {
     scope: ThrottleScope.IP,
   })
   @ApiOperation({
-    summary: 'Logout (로그아웃)',
+    summary: 'Logout / 로그아웃',
     description:
-      '현재 세션 종료. 인증 상태와 관계없이 항상 성공 응답을 반환합니다.',
+      'Terminates the current session. Always returns success regardless of initial authentication status. / 현재 세션을 종료합니다. 인증 상태와 관계없이 항상 성공 응답을 반환합니다.',
   })
   @ApiStandardResponse(UserLogoutResponseDto, {
     status: HttpStatus.OK,
-    description: 'Logout Success',
+    description: 'Successfully logged out / 로그아웃 성공',
   })
   @AuditLog({
     type: LogType.AUTH,
@@ -179,11 +179,12 @@ export class UserAuthController {
     scope: ThrottleScope.IP,
   })
   @ApiOperation({
-    summary: 'Auth Status (인증 상태)',
-    description: '현재 로그인 세션 유효 여부 확인 (DB 검증 포함)',
+    summary: 'Auth Status / 인증 상태 조회',
+    description: 'Checks the validity of the current login session, including DB verification. / 현재 로그인 세션의 유효 여부를 확인합니다. (DB 검증 포함)',
   })
   @ApiStandardResponse(UserAuthStatusResponseDto, {
     status: HttpStatus.OK,
+    description: 'Successfully retrieved auth status / 인증 상태 조회 성공',
   })
   async getStatus(
     @Req() req: Request,

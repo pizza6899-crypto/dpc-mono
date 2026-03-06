@@ -52,12 +52,12 @@ export class AdminAuthController {
     scope: ThrottleScope.IP,
   })
   @ApiOperation({
-    summary: 'Admin Login (관리자 로그인)',
-    description: 'Email/Password 기반 관리자 로그인',
+    summary: 'Admin Login / 관리자 로그인',
+    description: 'Login for administrators based on Email/Password. / 이메일/비밀번호 기반 관리자 로그인',
   })
   @ApiStandardResponse(AdminLoginResponseDto, {
     status: HttpStatus.OK,
-    description: 'Login Success',
+    description: 'Successfully logged in / 로그인 성공',
   })
   @AuditLog({
     type: LogType.AUTH,
@@ -130,13 +130,13 @@ export class AdminAuthController {
     scope: ThrottleScope.IP,
   })
   @ApiOperation({
-    summary: 'Admin Logout (관리자 로그아웃)',
+    summary: 'Admin Logout / 관리자 로그아웃',
     description:
-      '현재 세션 종료. 인증 상태와 관계없이 항상 성공 응답을 반환합니다.',
+      'Terminates the current admin session. Always returns success regardless of initial authentication status. / 현재 관리자 세션을 종료합니다. 인증 상태와 관계없이 항상 성공 응답을 반환합니다.',
   })
   @ApiStandardResponse(AdminLogoutResponseDto, {
     status: HttpStatus.OK,
-    description: 'Logout Success',
+    description: 'Successfully logged out / 로그아웃 성공',
   })
   @AuditLog({
     type: LogType.AUTH,
@@ -229,11 +229,12 @@ export class AdminAuthController {
     scope: ThrottleScope.IP,
   })
   @ApiOperation({
-    summary: 'Admin Auth Status (관리자 인증 상태)',
-    description: '현재 관리자 로그인 세션 유효 여부 확인 (DB 검증 포함)',
+    summary: 'Admin Auth Status / 관리자 인증 상태 조회',
+    description: 'Checks the validity of the current admin login session, including DB verification. / 현재 관리자 로그인 세션의 유효 여부를 확인합니다. (DB 검증 포함)',
   })
   @ApiStandardResponse(AdminAuthStatusResponseDto, {
     status: HttpStatus.OK,
+    description: 'Successfully retrieved admin auth status / 관리자 인증 상태 조회 성공',
   })
   async getStatus(
     @Req() req: Request,

@@ -189,9 +189,11 @@ export class User {
     email?: string | null;
     nickname?: string;
     status?: UserStatus;
-    role?: UserRoleType; // 추가
+    role?: UserRoleType;
     primaryCurrency?: ExchangeCurrencyCode;
     playCurrency?: ExchangeCurrencyCode;
+    phoneNumber?: string | null;
+    isPhoneVerified?: boolean;
   }): User {
     let newAuthInfo = this.authInfo;
     if (updates.email !== undefined && updates.email !== this.authInfo.email) {
@@ -206,18 +208,26 @@ export class User {
       });
     }
 
+    let newTrust = this.trust;
+    if (updates.isPhoneVerified !== undefined && updates.isPhoneVerified !== this.trust.isPhoneVerified) {
+      newTrust = updates.isPhoneVerified ? this.trust.verifyPhone() : UserTrust.fromPersistence({
+        ...this.trust.toPersistence(),
+        isPhoneVerified: false,
+      });
+    }
+
     return new User(
       this.id,
       updates.nickname || this.nickname,
       newAuthInfo,
       this.location,
       newCurrency,
-      this.trust,
+      newTrust,
       updates.status || this.status,
-      updates.role || this.role, // 업데이트 반영
+      updates.role || this.role,
       this.language,
       this.birthDate,
-      this.phoneNumber,
+      updates.phoneNumber !== undefined ? updates.phoneNumber : this.phoneNumber,
       this.avatarUrl,
       this.createdAt,
       new Date(), // updatedAt

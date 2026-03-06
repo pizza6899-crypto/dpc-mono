@@ -54,4 +54,19 @@ export class UpdateUserAdminRequestDto {
     @IsOptional()
     @IsEnum(ExchangeCurrencyCode)
     playCurrency?: ExchangeCurrencyCode;
+
+    @ApiPropertyOptional({
+        description: 'Phone Number / 휴대폰 번호 변경 (Optional)',
+        example: '+821012345678',
+    })
+    @IsOptional()
+    @IsString()
+    phoneNumber?: string;
+
+    @ApiPropertyOptional({
+        description: 'Phone Verification Status / 휴대폰 인증 상태 변경 (Optional)',
+        example: true,
+    })
+    @IsOptional()
+    isPhoneVerified?: boolean;
 }
