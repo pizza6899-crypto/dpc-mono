@@ -3,7 +3,7 @@ import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
 import { SOCKET_EVENT_TYPES } from 'src/infrastructure/websocket/types/socket-payload.types';
-import type { SocketEventType } from 'src/infrastructure/websocket/types/socket-payload.types';
+import { type NotificationJobData } from '../../common';
 import { ClsService } from 'nestjs-cls';
 import { Transactional } from '@nestjs-cls/transactional';
 import {
@@ -17,8 +17,6 @@ import {
 import { RenderTemplateService } from '../../template/application/render-template.service';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
 import { Language } from '@prisma/client';
-import { NOTIFICATION_TARGET_GROUPS } from '../../common/constants/target-group.constants';
-import { SOCKET_ROOMS } from 'src/infrastructure/websocket/constants/websocket-rooms.constant';
 import {
   BULLMQ_QUEUES,
   getQueueConfig,
@@ -27,19 +25,9 @@ import { SOCKET_JOB_NAMES } from '../../common/constants/queue.constants';
 
 const queueConfig = getQueueConfig(BULLMQ_QUEUES.NOTIFICATION.SOCKET);
 
-interface NotificationJobData {
-  logId: string;
-  logCreatedAt: string;
-}
-
-interface EventJobData {
-  alertId: string;
-  alertCreatedAt: string;
-}
-
 @Processor(queueConfig.processorOptions, queueConfig.workerOptions)
 export class SocketProcessor extends BaseProcessor<
-  NotificationJobData | EventJobData,
+  NotificationJobData,
   void
 > {
   protected readonly logger = new Logger(SocketProcessor.name);
@@ -58,14 +46,12 @@ export class SocketProcessor extends BaseProcessor<
 
   @Transactional()
   protected async processJob(
-    job: Job<NotificationJobData | EventJobData>,
+    job: Job<NotificationJobData>,
   ): Promise<void> {
     const { name, data } = job;
 
     if (name === SOCKET_JOB_NAMES.INBOX) {
       await this.processNotification(data as NotificationJobData);
-    } else if (name === SOCKET_JOB_NAMES.EVENT) {
-      await this.processEvent(data as EventJobData);
     }
   }
 
@@ -124,38 +110,6 @@ export class SocketProcessor extends BaseProcessor<
       await this.notificationLogRepository.update(log);
 
       throw error;
-    }
-  }
-
-  /**
-   * 휘발성 이벤트 발송 처리
-   * Alert를 조회 → 대상(유저/룸)에 따라 소켓 이벤트 발송 (상태 추적 없음)
-   */
-  private async processEvent(data: EventJobData): Promise<void> {
-    const alert = await this.alertRepository.getById(
-      new Date(data.alertCreatedAt),
-      BigInt(data.alertId),
-    );
-
-    const { userId, targetGroup, event, payload } = alert;
-    const eventType = event as unknown as SocketEventType;
-
-    const eventPayload = {
-      ...(payload as any),
-      alertId: alert.id?.toString(),
-    };
-
-    if (userId) {
-      this.websocketService.sendToUser(userId, eventType, eventPayload as any);
-      this.logger.debug(`Sent event push (type: ${event}) → user ${userId}`);
-    } else if (targetGroup) {
-      let room: string = SOCKET_ROOMS.GLOBAL;
-      if (targetGroup === NOTIFICATION_TARGET_GROUPS.ADMIN) {
-        room = SOCKET_ROOMS.ADMIN;
-      }
-
-      this.websocketService.sendToRoom(room as any, eventType, eventPayload as any);
-      this.logger.debug(`Sent event push (type: ${event}) → room ${room}`);
     }
   }
 }

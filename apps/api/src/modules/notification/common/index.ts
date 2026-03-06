@@ -11,3 +11,4 @@ export * from './interfaces/provider-adapter.interface';
 
 // Types
 export * from './types/notification-payload.types';
+export * from './types/queue-job.types';

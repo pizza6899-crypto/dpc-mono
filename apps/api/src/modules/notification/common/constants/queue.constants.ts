@@ -14,5 +14,4 @@ export type NotificationQueueName =
 
 export const SOCKET_JOB_NAMES = {
   INBOX: 'socket-inbox-push',
-  EVENT: 'socket-event-push',
 } as const;

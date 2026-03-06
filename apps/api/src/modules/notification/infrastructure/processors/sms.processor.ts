@@ -3,7 +3,7 @@
 import { Processor } from '@nestjs/bullmq';
 import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
-import { ChannelSendParams } from '../../common';
+import { ChannelSendParams, type NotificationJobData } from '../../common';
 import { SMSSender } from '../channels/sms/sms.sender';
 import { ClsService } from 'nestjs-cls';
 import { Transactional } from '@nestjs-cls/transactional';
@@ -20,11 +20,6 @@ import {
 } from 'src/infrastructure/bullmq/bullmq.constants';
 
 const queueConfig = getQueueConfig(BULLMQ_QUEUES.NOTIFICATION.SMS);
-
-interface NotificationJobData {
-  logId: string;
-  logCreatedAt: string;
-}
 
 @Processor(queueConfig.processorOptions, queueConfig.workerOptions)
 export class SMSProcessor extends BaseProcessor<NotificationJobData, void> {

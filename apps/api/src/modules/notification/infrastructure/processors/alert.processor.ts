@@ -18,15 +18,10 @@ import {
   getQueueConfig,
   BULLMQ_QUEUES,
 } from 'src/infrastructure/bullmq/bullmq.constants';
-import { SOCKET_JOB_NAMES } from '../../common/constants/queue.constants';
+import { SOCKET_JOB_NAMES, type AlertJobData } from '../../common';
 import { GetUserService } from 'src/modules/user/profile/application/get-user.service';
 
 const queueConfig = getQueueConfig(BULLMQ_QUEUES.NOTIFICATION.ALERT);
-
-interface AlertJobData {
-  alertId: string;
-  alertCreatedAt: string;
-}
 
 interface UserMetadata {
   id: bigint;
@@ -131,68 +126,53 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
         // 4. Send or Log based on channel and target
         if (userId) {
           // Individual User Alert: Create NotificationLog and Dispatch
-          if (channel === ChannelType.WEBSOCKET) {
-            // WEBSOCKET은 DB 로그를 남기지 않는 휘발성 알림
-            await this.socketQueue.add(SOCKET_JOB_NAMES.EVENT, {
-              alertId: alert.id!.toString(),
-              alertCreatedAt: alert.createdAt.toISOString(),
-            });
-          } else {
-            // EMAIL, SMS, INBOX (영구 알림): PENDING 상태의 껍데기 로그 생성
-            const { id, timestamp } = this.snowflakeService.generate();
+          // EMAIL, SMS, INBOX (영구 알림): PENDING 상태의 껍데기 로그 생성
+          const { id, timestamp } = this.snowflakeService.generate();
 
-            const log = NotificationLog.create({
-              id,
-              createdAt: timestamp,
-              alertId: alert.id!,
-              alertCreatedAt: alert.createdAt,
-              receiverId: userId,
-              channel,
-              title: null, // 지연 렌더링
-              body: null, // 지연 렌더링
-              actionUri: null,
-              templateEvent: alert.event as string,
-              locale,
-              target: this.extractTarget(alert, channel, user),
-              metadata: variables,
-            });
+          const log = NotificationLog.create({
+            id,
+            createdAt: timestamp,
+            alertId: alert.id!,
+            alertCreatedAt: alert.createdAt,
+            receiverId: userId,
+            channel,
+            title: null, // 지연 렌더링
+            body: null, // 지연 렌더링
+            actionUri: null,
+            templateEvent: alert.event as string,
+            locale,
+            target: this.extractTarget(alert, channel, user),
+            metadata: variables,
+          });
 
-            const savedLog = await this.notificationLogRepository.create(log);
+          const savedLog = await this.notificationLogRepository.create(log);
 
-            const jobData = {
-              logId: savedLog.id!.toString(),
-              logCreatedAt: savedLog.createdAt.toISOString(),
-            };
+          const jobData = {
+            logId: savedLog.id!.toString(),
+            logCreatedAt: savedLog.createdAt.toISOString(),
+          };
 
-            if (channel === ChannelType.EMAIL) {
-              await this.emailQueue.add(
-                BULLMQ_QUEUES.NOTIFICATION.EMAIL.name,
-                jobData,
-              );
-            } else if (channel === ChannelType.SMS) {
-              await this.smsQueue.add(
-                BULLMQ_QUEUES.NOTIFICATION.SMS.name,
-                jobData,
-              );
-            } else if (channel === ChannelType.INBOX) {
-              await this.socketQueue.add(
-                SOCKET_JOB_NAMES.INBOX,
-                jobData,
-              );
-            }
-          }
-        } else {
-          // Group Alert (targetGroup): Only support broadcastable channels
-          if (channel === ChannelType.WEBSOCKET) {
-            await this.socketQueue.add(SOCKET_JOB_NAMES.EVENT, {
-              alertId: alert.id!.toString(),
-              alertCreatedAt: alert.createdAt.toISOString(),
-            });
-          } else {
-            this.logger.warn(
-              `Channel ${channel} not supported for group alerts yet. Skipping.`,
+          if (channel === ChannelType.EMAIL) {
+            await this.emailQueue.add(
+              BULLMQ_QUEUES.NOTIFICATION.EMAIL.name,
+              jobData,
+            );
+          } else if (channel === ChannelType.SMS) {
+            await this.smsQueue.add(
+              BULLMQ_QUEUES.NOTIFICATION.SMS.name,
+              jobData,
+            );
+          } else if (channel === ChannelType.INBOX) {
+            await this.socketQueue.add(
+              SOCKET_JOB_NAMES.INBOX,
+              jobData,
             );
           }
+        } else {
+          // Group Alert (targetGroup) - Not supported yet through Alert pipeline
+          this.logger.warn(
+            `Group alerts not supported through Alert pipeline yet. Use WebsocketService directly for broadcasts.`,
+          );
         }
       } catch (innerError) {
         this.logger.error(
