@@ -27,9 +27,7 @@ import { AUTH_QUEUES } from './infrastructure/session.bullmq';
     EnvModule, // ExpireSessionsScheduler가 EnvService 사용
     AuditLogModule, // Audit 로그 사용
     BullMqModule,
-    BullModule.registerQueue({
-      name: AUTH_QUEUES.SESSION_CLEANUP.name,
-    }),
+    BullModule.registerQueue(AUTH_QUEUES.SESSION_CLEANUP),
   ],
   controllers: [SessionAdminController],
   providers: [

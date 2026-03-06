@@ -19,10 +19,8 @@ import { TIER_QUEUES } from './infrastructure/tier-audit.bullmq';
   imports: [
     SnowflakeModule,
     BullMqModule,
-    BullModule.registerQueue(
-      { name: TIER_QUEUES.STATS_AGGREGATION.name },
-      { name: TIER_QUEUES.STATS_RECORD.name },
-    ),
+    BullModule.registerQueue(TIER_QUEUES.STATS_AGGREGATION),
+    BullModule.registerQueue(TIER_QUEUES.STATS_RECORD),
     forwardRef(() => TierProfileModule),
     TierConfigModule,
   ],
@@ -43,4 +41,4 @@ import { TIER_QUEUES } from './infrastructure/tier-audit.bullmq';
     HandleTierStatsService,
   ],
 })
-export class TierAuditModule {}
+export class TierAuditModule { }

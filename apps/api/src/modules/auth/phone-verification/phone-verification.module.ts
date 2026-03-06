@@ -17,9 +17,7 @@ import { PhoneVerificationRepository } from './infrastructure/persistence/phone-
         NotificationModule,
         SessionModule,
         BullMqModule,
-        BullModule.registerQueue({
-            name: BULLMQ_QUEUES.NOTIFICATION.ALERT.name,
-        }),
+        BullModule.registerQueue(BULLMQ_QUEUES.NOTIFICATION.ALERT),
     ],
     controllers: [PhoneVerificationController],
     providers: [

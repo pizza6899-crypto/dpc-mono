@@ -26,10 +26,8 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
     ConcurrencyModule,
     BullMqModule,
     SnowflakeModule,
-    BullModule.registerQueue(
-      { name: TIER_EVALUATOR_QUEUES.EVALUATION_TRIGGER.name },
-      { name: TIER_EVALUATOR_QUEUES.USER_EVALUATION.name },
-    ),
+    BullModule.registerQueue(TIER_EVALUATOR_QUEUES.EVALUATION_TRIGGER),
+    BullModule.registerQueue(TIER_EVALUATOR_QUEUES.USER_EVALUATION),
   ],
   providers: [
     PromotionPolicy,

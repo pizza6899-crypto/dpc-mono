@@ -23,9 +23,7 @@ import { EXCHANGE_QUEUES } from './infrastructure/exchange.bullmq';
     HttpModule,
     AuditLogModule,
     BullMqModule,
-    BullModule.registerQueue({
-      name: EXCHANGE_QUEUES.RATE_SYNC.name,
-    }),
+    BullModule.registerQueue(EXCHANGE_QUEUES.RATE_SYNC),
   ],
   providers: [
     ExchangeRateService,
@@ -36,4 +34,4 @@ import { EXCHANGE_QUEUES } from './infrastructure/exchange.bullmq';
   controllers: [ExchangeController, AdminExchangeController],
   exports: [ExchangeRateService],
 })
-export class ExchangeModule {}
+export class ExchangeModule { }

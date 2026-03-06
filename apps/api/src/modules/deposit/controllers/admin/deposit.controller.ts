@@ -128,8 +128,6 @@ export class AdminDepositController {
   })
   async getDeposits(
     @Query() query: GetDepositsQueryDto,
-    @CurrentUser() admin: AuthenticatedUser,
-    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<PaginatedData<AdminDepositListItemDto>> {
     const result = await this.getDepositsService.execute({
       query: {

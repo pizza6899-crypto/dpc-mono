@@ -7,7 +7,7 @@ import { DcsModule } from './providers/dcs/dcs.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { BullModule } from '@nestjs/bullmq';
 import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
-import { CasinoQueueNames } from './infrastructure/queue/casino-queue.types';
+import { CASINO_QUEUES } from './infrastructure/casino.bullmq';
 import { GamePostProcessProcessor } from './infrastructure/queue/processors/game-post-process.processor';
 import { GameResultFetchProcessor } from './infrastructure/queue/processors/game-result-fetch.processor';
 import { EnvModule } from 'src/common/env/env.module';
@@ -43,12 +43,8 @@ import { TierEvaluatorModule } from '../tier/evaluator/tier-evaluator.module';
     forwardRef(() => DcsModule),
     ConcurrencyModule,
     BullMqModule,
-    BullModule.registerQueue({
-      name: CasinoQueueNames.GAME_POST_PROCESS,
-    }),
-    BullModule.registerQueue({
-      name: CasinoQueueNames.GAME_RESULT_FETCH,
-    }),
+    BullModule.registerQueue(CASINO_QUEUES.GAME_POST_PROCESS),
+    BullModule.registerQueue(CASINO_QUEUES.GAME_RESULT_FETCH),
     EnvModule,
     ExchangeModule,
     AuditLogModule,

@@ -38,9 +38,7 @@ import { AFFILIATE_QUEUES } from './infrastructure/commission.bullmq';
     EnvModule,
     AffiliateReferralModule, // 레퍼럴 관계 조회를 위해 필요
     BullMqModule,
-    BullModule.registerQueue({
-      name: AFFILIATE_QUEUES.COMMISSION.name,
-    }),
+    BullModule.registerQueue(AFFILIATE_QUEUES.COMMISSION),
   ],
   providers: [
     // Domain Policy
@@ -80,4 +78,4 @@ import { AFFILIATE_QUEUES } from './infrastructure/commission.bullmq';
     GetWalletBalanceService,
   ],
 })
-export class AffiliateCommissionModule {}
+export class AffiliateCommissionModule { }
