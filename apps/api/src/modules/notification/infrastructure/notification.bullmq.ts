@@ -41,5 +41,15 @@ export const NOTIFICATION_QUEUES = {
     },
     workerOptions: { concurrency: 20 },
   },
+  TELEGRAM: {
+    name: 'notification-channel-telegram',
+    defaultJobOptions: {
+      attempts: 3,
+      backoff: { type: 'exponential', delay: 5000 },
+      removeOnComplete: BULLMQ_RETENTION.DEFAULT_COMPLETED,
+      removeOnFail: BULLMQ_RETENTION.LONG_TERM_FAILED,
+    },
+    workerOptions: { concurrency: 5 },
+  },
 } as const satisfies Record<string, QueueConfig>;
 

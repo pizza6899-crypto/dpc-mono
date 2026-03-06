@@ -45,6 +45,8 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
     private readonly smsQueue: Queue,
     @InjectQueue(BULLMQ_QUEUES.NOTIFICATION.INBOX.name)
     private readonly inboxQueue: Queue,
+    @InjectQueue(BULLMQ_QUEUES.NOTIFICATION.TELEGRAM.name)
+    private readonly telegramQueue: Queue,
     protected readonly cls: ClsService,
     private readonly getUserService: GetUserService,
     private readonly snowflakeService: SnowflakeService,
@@ -165,6 +167,11 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
           } else if (channel === ChannelType.INBOX) {
             await this.inboxQueue.add(
               BULLMQ_QUEUES.NOTIFICATION.INBOX.name,
+              jobData,
+            );
+          } else if (channel === ChannelType.TELEGRAM) {
+            await this.telegramQueue.add(
+              BULLMQ_QUEUES.NOTIFICATION.TELEGRAM.name,
               jobData,
             );
           }

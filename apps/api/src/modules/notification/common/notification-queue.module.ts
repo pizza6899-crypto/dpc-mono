@@ -9,6 +9,7 @@ import { NOTIFICATION_QUEUES } from '../infrastructure/notification.bullmq';
       { ...NOTIFICATION_QUEUES.INBOX },
       { ...NOTIFICATION_QUEUES.EMAIL },
       { ...NOTIFICATION_QUEUES.SMS },
+      { ...NOTIFICATION_QUEUES.TELEGRAM },
     ),
   ],
   exports: [BullModule],

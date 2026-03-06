@@ -17,6 +17,7 @@ import { NCloudAdapter } from './channels/sms/providers/ncloud.adapter';
 import { InboxProcessor } from './processors/inbox.processor';
 import { EmailProcessor } from './processors/email.processor';
 import { SMSProcessor } from './processors/sms.processor';
+import { TelegramProcessor } from './processors/telegram.processor';
 import { AlertProcessor } from './processors/alert.processor';
 import { EnvModule } from 'src/common/env/env.module';
 import { UserProfileModule } from 'src/modules/user/profile/user-profile.module';
@@ -46,6 +47,7 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
     InboxProcessor,
     EmailProcessor,
     SMSProcessor,
+    TelegramProcessor,
     AlertProcessor,
   ],
   exports: [EmailSender, SMSSender],
