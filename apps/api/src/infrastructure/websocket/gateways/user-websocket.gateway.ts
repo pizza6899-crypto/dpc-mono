@@ -60,18 +60,28 @@ export class UserWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
       const req = client.request;
       client.user = user; // 연결 해제 시 사용하기 위해 유저 정보 보관
 
-      await this.createSessionService.execute({
-        userId: user.id,
-        sessionId: client.id,
-        parentSessionId: req.sessionID,
-        type: SessionType.WEBSOCKET,
-        isAdmin: false,
-        deviceInfo: DeviceInfo.create({
-          ipAddress: client.handshake.address,
-          userAgent: client.handshake.headers['user-agent'],
-        }),
-        expiresAt: req.session?.cookie?.expires || new Date(Date.now() + 1000 * 60 * 60 * 24),
-      }).catch(err => this.logger.error(`Failed to create WS session: ${err.message}`));
+      try {
+        await this.createSessionService.execute({
+          userId: user.id,
+          sessionId: client.id,
+          parentSessionId: req.sessionID,
+          type: SessionType.WEBSOCKET,
+          isAdmin: false,
+          deviceInfo: DeviceInfo.create({
+            ipAddress: client.handshake.address,
+            userAgent: client.handshake.headers['user-agent'] as string,
+          }),
+          expiresAt:
+            req.session?.cookie?.expires ||
+            new Date(Date.now() + 1000 * 60 * 60 * 24),
+        });
+      } catch (err: any) {
+        this.logger.error(
+          `Failed to create WS session (userId: ${user.id}): ${err.message}`,
+        );
+        client.disconnect(true); // 세션 생성 실패 시 연결 강제 종료
+        return;
+      }
     } else {
       // 3. 익명(게스트) 유저: LOBBY 룸 등에 가입 (예: 채팅방 등)
       client.join(SOCKET_ROOMS.LOBBY);

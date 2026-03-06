@@ -35,14 +35,16 @@ export type SocketEventType =
 // 페이로드 인터페이스
 // ============================================
 
-/** INBOX_NEW: 새 알림 도착 시 프론트엔드에 전달되는 데이터 */
 export interface SocketInboxNewPayload {
-    id: string;
+    id: string;                 // Sqiddified ID
+    event: string | null;       // 템플릿 이벤트 명 (예: FIAT_DEPOSIT_COMPLETED)
     createdAt: string;
     title: string | null;
     body: string | null;
     actionUri: string | null;
-    metadata: Record<string, unknown> | null;
+    isRead: boolean;            // 항상 false (새 알림이므로)
+    readAt: string | null;      // 항상 null
+    metadata: Record<string, any> | null;
 }
 
 /** FIAT_DEPOSIT_REQUESTED: 입금 요청 접수 시 관리자에게 전달되는 데이터 */

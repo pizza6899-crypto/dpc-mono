@@ -132,6 +132,5 @@ enum ChannelType {
   EMAIL
   SMS
   INBOX
-  WEBSOCKET
   TELEGRAM
 }

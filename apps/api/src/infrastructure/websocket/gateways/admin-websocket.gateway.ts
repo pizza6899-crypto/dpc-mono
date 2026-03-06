@@ -57,18 +57,28 @@ export class AdminWebsocketGateway implements OnGatewayConnection, OnGatewayDisc
             const req = client.request;
             client.user = user;
 
-            await this.createSessionService.execute({
-                userId: user.id,
-                sessionId: client.id,
-                parentSessionId: req.sessionID,
-                type: SessionType.WEBSOCKET,
-                isAdmin: true, // 관리자 세션
-                deviceInfo: DeviceInfo.create({
-                    ipAddress: client.handshake.address,
-                    userAgent: client.handshake.headers['user-agent'],
-                }),
-                expiresAt: req.session?.cookie?.expires || new Date(Date.now() + 1000 * 60 * 60 * 24),
-            }).catch(err => this.logger.error(`Failed to create Admin WS session: ${err.message}`));
+            try {
+                await this.createSessionService.execute({
+                    userId: user.id,
+                    sessionId: client.id,
+                    parentSessionId: req.sessionID,
+                    type: SessionType.WEBSOCKET,
+                    isAdmin: true, // 관리자 세션
+                    deviceInfo: DeviceInfo.create({
+                        ipAddress: client.handshake.address,
+                        userAgent: client.handshake.headers['user-agent'] as string,
+                    }),
+                    expiresAt:
+                        req.session?.cookie?.expires ||
+                        new Date(Date.now() + 1000 * 60 * 60 * 24),
+                });
+            } catch (err: any) {
+                this.logger.error(
+                    `Failed to create Admin WS session (adminId: ${user.id}): ${err.message}`,
+                );
+                client.disconnect(true); // 세션 생성 실패 시 연결 강제 종료
+                return;
+            }
         } else {
             this.logger.warn(`Non-admin or unauthenticated client tried to connect to /admin: ${client.id}`);
             client.disconnect();

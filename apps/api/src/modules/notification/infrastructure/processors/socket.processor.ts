@@ -22,6 +22,7 @@ import {
   getQueueConfig,
 } from 'src/infrastructure/bullmq/bullmq.constants';
 import { SOCKET_JOB_NAMES } from '../../common/constants/queue.constants';
+import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 
 const queueConfig = getQueueConfig(BULLMQ_QUEUES.NOTIFICATION.SOCKET);
 
@@ -91,14 +92,22 @@ export class SocketProcessor extends BaseProcessor<
       }
 
       // WebSocket을 통해 INBOX_NEW 이벤트 발송
-      this.websocketService.sendToUser(log.receiverId, SOCKET_EVENT_TYPES.INBOX_NEW, {
-        id: log.id!.toString(),
-        createdAt: log.createdAt.toISOString(),
-        title: log.title || null,
-        body: log.body || null,
-        actionUri: log.actionUri || null,
-        metadata: log.metadata || null,
-      });
+      this.websocketService.sendToUser(
+        log.receiverId,
+        SOCKET_EVENT_TYPES.INBOX_NEW,
+        {
+          id: log.id!.toString(), // Raw ID (관리자용)
+          event: log.templateEvent,
+          createdAt: log.createdAt.toISOString(),
+          title: log.title || null,
+          body: log.body || null,
+          actionUri: log.actionUri || null,
+          isRead: false,
+          readAt: null,
+          metadata: log.metadata || null,
+        },
+        { sqidPrefix: SqidsPrefix.NOTIFICATION }, // 사용자용 인코딩 힌트
+      );
 
       // 성공 처리
       log.markAsSuccess();

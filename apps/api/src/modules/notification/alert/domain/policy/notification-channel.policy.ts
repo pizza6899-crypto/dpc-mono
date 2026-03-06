@@ -14,12 +14,13 @@ export class NotificationChannelPolicy {
             case NOTIFICATION_EVENTS.PHONE_VERIFICATION_CODE:
                 return [ChannelType.SMS, ChannelType.INBOX]; // INBOX는 이력용
 
-            // 2. 자산 및 기타 알림 (입출금/프로모션): 영구 기록(INBOX)과 실시간 알림(WEBSOCKET) 발송.
+            // 2. 자산 및 기타 알림 (입출금/프로모션): 영구 기록(INBOX) 발송.
+            // 실시간 팝업 알림이 필요한 경우 각 서비스에서 WebsocketService를 직접 호출하여 발송합니다.
             case NOTIFICATION_EVENTS.FIAT_DEPOSIT_REQUESTED:
-                return [ChannelType.INBOX, ChannelType.WEBSOCKET];
+                return [ChannelType.INBOX];
 
             case NOTIFICATION_EVENTS.PROMOTION_APPLIED:
-                return [ChannelType.INBOX, ChannelType.WEBSOCKET];
+                return [ChannelType.INBOX];
 
             // 기본값
             default:
