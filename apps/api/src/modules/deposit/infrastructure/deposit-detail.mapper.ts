@@ -34,11 +34,12 @@ export class DepositDetailMapper {
     walletAddressExtraId: string | null;
     depositNetwork: string | null;
     depositorName: string | null;
+    depositorBank: string | null;
+    depositorAccount: string | null;
     providerPaymentId: string | null;
     transactionHash: string | null;
     promotionId: bigint | null;
     processedBy: bigint | null;
-    adminNote: string | null;
     ipAddress: string | null;
     deviceFingerprint: string | null;
     failureReason: string | null;
@@ -65,11 +66,12 @@ export class DepositDetailMapper {
       walletAddressExtraId: prismaModel.walletAddressExtraId,
       depositNetwork: prismaModel.depositNetwork,
       depositorName: prismaModel.depositorName,
+      depositorBank: prismaModel.depositorBank,
+      depositorAccount: prismaModel.depositorAccount,
       providerPaymentId: prismaModel.providerPaymentId,
       transactionHash: prismaModel.transactionHash,
       promotionId: prismaModel.promotionId,
       processedBy: prismaModel.processedBy,
-      adminNote: prismaModel.adminNote,
       ipAddress: prismaModel.ipAddress,
       deviceFingerprint: prismaModel.deviceFingerprint,
       failureReason: prismaModel.failureReason,
@@ -90,7 +92,6 @@ export class DepositDetailMapper {
       status: persistence.status,
       actuallyPaid: persistence.actuallyPaid,
       transactionHash: persistence.transactionHash,
-      adminNote: persistence.adminNote,
       processedBy: persistence.processedBy,
       confirmedAt: persistence.confirmedAt,
       updatedAt: persistence.updatedAt,
@@ -121,11 +122,12 @@ export class DepositDetailMapper {
       walletAddressExtraId: persistence.walletAddressExtraId,
       depositNetwork: persistence.depositNetwork,
       depositorName: persistence.depositorName,
+      depositorBank: persistence.depositorBank,
+      depositorAccount: persistence.depositorAccount,
       providerPaymentId: persistence.providerPaymentId,
       transactionHash: persistence.transactionHash,
       promotionId: persistence.promotionId,
       processedBy: persistence.processedBy,
-      adminNote: persistence.adminNote,
       ipAddress: persistence.ipAddress,
       deviceFingerprint: persistence.deviceFingerprint,
       failureReason: persistence.failureReason,

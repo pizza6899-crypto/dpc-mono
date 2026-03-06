@@ -22,7 +22,7 @@ model DepositDetail {
   updatedAt            DateTime             @updatedAt @map("updated_at")
   status               DepositDetailStatus
   userId               BigInt               @map("user_id")
-  user                 User                 @relation(fields: [userId], references: [id])
+  user                 User                 @relation("UserDeposits", fields: [userId], references: [id])
   methodType           DepositMethodType    @map("method_type")
   provider             PaymentProvider
   providerPaymentId    String?              @unique @map("provider_payment_id")
@@ -30,30 +30,38 @@ model DepositDetail {
   depositNetwork       String?              @map("deposit_network")
   walletAddress        String?              @map("wallet_address")
   walletAddressExtraId String?              @map("wallet_address_extra_id")
-  depositorName        String?              @map("depositor_name")
-  transactionHash      String?              @map("transaction_hash")
+
+  // 뱅크 트랜스퍼(Fiat) 관련 정보
+  depositorName    String? @map("depositor_name")
+  depositorBank    String? @map("depositor_bank")
+  depositorAccount String? @map("depositor_account")
+
+  transactionHash String? @map("transaction_hash")
 
   // 1. 신청 금액과 실입금 금액의 분리
   requestedAmount Decimal  @map("requested_amount") @db.Decimal(32, 18)
   actuallyPaid    Decimal? @map("actually_paid") @db.Decimal(32, 18)
 
   // 2. 관리자 수동 처리 추적 (MANUAL 프로바이더용)
-  processedBy BigInt? @map("processed_by")
-  adminNote   String? @map("admin_note")
+  processedBy     BigInt?     @map("processed_by")
+  processedByUser User?       @relation("AdminProcessedDeposits", fields: [processedBy], references: [id])
+  adminMemos      AdminMemo[] @relation("DepositMemos")
 
-  // 3. 보안 및 어뷰징 방지
-  // 상세 보안 정보는 ActivityLog에 기록되며, 여기서는 최소한의 핵심 정보만 저장
-  // 어뷰징 체크 시 ActivityLog와 join하여 조회
+  // 3. 지갑 트랜잭션 연결 (입금 완료 시 생성되는 트랜잭션 ID)
+  transactionId BigInt? @map("transaction_id")
+
+  // 4. 보안 및 어뷰징 방지
   ipAddress         String? @map("ip_address") @db.Inet
   deviceFingerprint String? @map("device_fingerprint")
 
-  feeAmount        Decimal?       @map("fee_amount") @db.Decimal(32, 18)
-  feeCurrency      String?        @map("fee_currency")
-  feePaidBy        FeePaidByType? @map("fee_paid_by")
-  failureReason    String?        @map("failure_reason")
-  providerMetadata Json?          @default("{}") @map("provider_metadata")
-  promotionId      BigInt?        @map("promotion_id")
-  promotion        Promotion?     @relation(fields: [promotionId], references: [id])
+  feeAmount     Decimal?       @map("fee_amount") @db.Decimal(32, 18)
+  feeCurrency   String?        @map("fee_currency")
+  feePaidBy     FeePaidByType? @map("fee_paid_by")
+  failureReason String?        @map("failure_reason")
+
+  providerMetadata Json?      @default("{}") @map("provider_metadata")
+  promotionId      BigInt?    @map("promotion_id")
+  promotion        Promotion? @relation(fields: [promotionId], references: [id])
 
   @@index([provider, providerPaymentId])
   @@index([status, createdAt])
@@ -61,9 +69,8 @@ model DepositDetail {
   @@index([depositCurrency, status])
   @@index([createdAt])
   @@index([processedBy])
+  @@index([transactionId])
   @@index([ipAddress, deviceFingerprint])
-  @@index([ipAddress])
-  @@index([deviceFingerprint])
   @@map("deposit_details")
 }
 
@@ -83,19 +90,41 @@ enum DepositMethodType {
  * 입금 요청의 처리 상태
  */
 enum DepositDetailStatus {
-  /// 대기 중 - 입금 요청이 생성되어 처리 대기 중
+  /// 1. 대기 중 (PENDING)
+  /// - 사용자 입금 신청 직후 최초 상태
+  /// - Fiat(무통장): 입금 대기 상태
+  /// - Crypto: 외부 API(OWPAY) 등으로부터 입금 감지 대기
   PENDING
-  /// 확인 중 - 입금이 확인되는 중 (블록체인 확인 등)
+
+  /// 2. 처리 중 (PROCESSING)
+  /// - [Fiat 수동 전용] 관리자가 내역 확인을 시작함 (상태 선점)
+  /// - 중복 작업 방지 및 관리자 배정의 의미를 가짐
+  PROCESSING
+
+  /// 3. 확인 중 (CONFIRMING)
+  /// - [Crypto 자동 전용] 블록체인 네트워크 컨퍼메이션 진행 중
+  /// - 설정된 컨퍼메이션 수 충족 시 COMPLETED로 자동 전환
   CONFIRMING
-  /// 완료 - 입금이 성공적으로 완료됨
+
+  /// 4. 완료 (COMPLETED)
+  /// - 최종 성공 상태. 유저의 보유 자산(Wallet)에 입금액 반영됨
   COMPLETED
-  /// 실패 - 입금 처리 중 오류 발생
+
+  /// 5. 실패 (FAILED)
+  /// - 시스템 처리 중 예상치 못한 오류 발생 (e.g. PG사 API 통신 장애 등)
   FAILED
-  /// 취소됨 - 입금 요청이 취소됨
-  CANCELLED
-  /// 만료됨 - 입금 요청이 만료됨
+
+  /// 6. 취소됨 (CANCELED)
+  /// - [American English] 사용자가 직접 입금 신청을 철회함
+  /// - PENDING 상태에서만 가능하도록 처리 권장
+  CANCELED
+
+  /// 7. 만료됨 (EXPIRED)
+  /// - 지정된 유효 시간(e.g. 30분) 내에 입금이 확인되지 않아 자동 만료됨
   EXPIRED
-  /// 거부됨 - 관리자가 입금을 거부함
+
+  /// 8. 거절됨 (REJECTED)
+  /// - 관리자가 확인 후 승인을 거부함 (e.g. 입금자명 불일치, 입금액 부족 등)
   REJECTED
 }
 

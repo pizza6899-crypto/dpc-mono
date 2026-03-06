@@ -1,0 +1,25 @@
+/**
+ * 통합 관리자 메모 (Common Admin Memo)
+ * 현재는 [입금] 도메인에 우선 적용하며, 추후 필요 시 확장 가능한 구조로 설계되었습니다.
+ * - 수정 및 삭제 불가 (Append-only Audit Log)
+ */
+model AdminMemo {
+    id BigInt @id @default(autoincrement())
+
+    /// 메모를 작성한 관리자
+    adminId BigInt @map("admin_id")
+    admin   User   @relation("AdminMemosWritten", fields: [adminId], references: [id])
+
+    content   String   @db.Text
+    createdAt DateTime @default(now()) @map("created_at")
+
+    // --- 대상 관계 (Targets) ---
+
+    /// 입금 관련 메모 시 연결
+    depositId BigInt?        @map("deposit_id")
+    deposit   DepositDetail? @relation("DepositMemos", fields: [depositId], references: [id])
+
+    @@index([adminId])
+    @@index([depositId])
+    @@map("admin_memos")
+}

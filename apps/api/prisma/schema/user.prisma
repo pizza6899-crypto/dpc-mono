@@ -109,10 +109,14 @@ model User {
   subUserCommissions   AffiliateCommission[] @relation("SubUserCommissions")
   affiliateWallets     AffiliateWallet[]     @relation("AffiliateWallets")
 
-  gameSessions           CasinoGameSession[]
-  affiliateReferrals     Referral[]              @relation("AffiliateReferrals")
-  referredUsers          Referral[]              @relation("ReferredUsers")
-  depositDetails         DepositDetail[]
+  gameSessions       CasinoGameSession[]
+  affiliateReferrals Referral[]          @relation("AffiliateReferrals")
+  referredUsers      Referral[]          @relation("ReferredUsers")
+  depositDetails     DepositDetail[]     @relation("UserDeposits")
+  processedDeposits  DepositDetail[]     @relation("AdminProcessedDeposits")
+
+  // 관리자 메모 관련 (Centralized Memo System)
+  memosWritten           AdminMemo[]             @relation("AdminMemosWritten") // 관리자로서 작성한 메모
   withdrawalDetails      WithdrawalDetail[]
   userWallets            UserWallet[]
   userTotalStats         UserWalletTotalStats[]

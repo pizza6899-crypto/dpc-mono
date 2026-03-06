@@ -131,7 +131,6 @@ export class ApproveDepositService {
       adminId,
       transactionHash,
       memo,
-      txId.id,
     );
 
     // 9. DepositDetail 상태 업데이트 (엔티티의 변경사항 반영)

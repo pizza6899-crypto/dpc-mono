@@ -37,7 +37,8 @@ export class DepositDetail {
     private _transactionHash: string | null,
     public readonly promotionId: bigint | null,
     private _processedBy: bigint | null,
-    private _adminNote: string | null,
+    public readonly depositorBank: string | null,
+    public readonly depositorAccount: string | null,
     public readonly ipAddress: string | null,
     public readonly deviceFingerprint: string | null,
     private _failureReason: string | null,
@@ -61,6 +62,8 @@ export class DepositDetail {
     walletAddressExtraId?: string | null;
     depositNetwork?: string | null;
     depositorName?: string | null;
+    depositorBank?: string | null;
+    depositorAccount?: string | null;
     providerPaymentId?: string | null;
     ipAddress?: string | null;
     deviceFingerprint?: string | null;
@@ -82,7 +85,8 @@ export class DepositDetail {
       null,
       params.promotionId ?? null,
       null,
-      null,
+      params.depositorBank ?? null,
+      params.depositorAccount ?? null,
       params.ipAddress ?? null,
       params.deviceFingerprint ?? null,
       null,
@@ -114,11 +118,12 @@ export class DepositDetail {
     walletAddressExtraId: string | null;
     depositNetwork: string | null;
     depositorName: string | null;
+    depositorBank: string | null;
+    depositorAccount: string | null;
     providerPaymentId: string | null;
     transactionHash: string | null;
     promotionId: bigint | null;
     processedBy: bigint | null;
-    adminNote: string | null;
     ipAddress: string | null;
     deviceFingerprint: string | null;
     failureReason: string | null;
@@ -153,7 +158,8 @@ export class DepositDetail {
       data.transactionHash,
       data.promotionId,
       data.processedBy,
-      data.adminNote,
+      data.depositorBank,
+      data.depositorAccount,
       data.ipAddress,
       data.deviceFingerprint,
       data.failureReason,
@@ -185,11 +191,12 @@ export class DepositDetail {
     walletAddressExtraId: string | null;
     depositNetwork: string | null;
     depositorName: string | null;
+    depositorBank: string | null;
+    depositorAccount: string | null;
     providerPaymentId: string | null;
     transactionHash: string | null;
     promotionId: bigint | null;
     processedBy: bigint | null;
-    adminNote: string | null;
     ipAddress: string | null;
     deviceFingerprint: string | null;
     failureReason: string | null;
@@ -219,11 +226,12 @@ export class DepositDetail {
       walletAddressExtraId: this.walletAddressExtraId,
       depositNetwork: this.depositNetwork,
       depositorName: this.depositorName,
+      depositorBank: this.depositorBank,
+      depositorAccount: this.depositorAccount,
       providerPaymentId: this.providerPaymentId,
       transactionHash: this._transactionHash,
       promotionId: this.promotionId,
       processedBy: this._processedBy,
-      adminNote: this._adminNote,
       ipAddress: this.ipAddress,
       deviceFingerprint: this.deviceFingerprint,
       failureReason: this._failureReason,
@@ -256,8 +264,12 @@ export class DepositDetail {
     return this._status === DepositDetailStatus.FAILED;
   }
 
-  isCancelled(): boolean {
-    return this._status === DepositDetailStatus.CANCELLED;
+  isProcessing(): boolean {
+    return this._status === DepositDetailStatus.PROCESSING;
+  }
+
+  isCanceled(): boolean {
+    return this._status === DepositDetailStatus.CANCELED;
   }
 
   isExpired(): boolean {
@@ -274,6 +286,7 @@ export class DepositDetail {
   canBeProcessed(): boolean {
     return (
       this._status === DepositDetailStatus.PENDING ||
+      this._status === DepositDetailStatus.PROCESSING ||
       this._status === DepositDetailStatus.CONFIRMING
     );
   }
@@ -285,8 +298,9 @@ export class DepositDetail {
     return (
       this._status === DepositDetailStatus.COMPLETED ||
       this._status === DepositDetailStatus.FAILED ||
-      this._status === DepositDetailStatus.CANCELLED ||
-      this._status === DepositDetailStatus.REJECTED
+      this._status === DepositDetailStatus.CANCELED ||
+      this._status === DepositDetailStatus.REJECTED ||
+      this._status === DepositDetailStatus.EXPIRED
     );
   }
 
@@ -344,10 +358,6 @@ export class DepositDetail {
     return this._processedBy;
   }
 
-  get adminNote(): string | null {
-    return this._adminNote;
-  }
-
   get failureReason(): string | null {
     return this._failureReason;
   }
@@ -377,7 +387,6 @@ export class DepositDetail {
     actuallyPaid: Prisma.Decimal,
     adminId: bigint,
     transactionHash?: string | null,
-    adminNote?: string | null,
     transactionId?: bigint | null,
   ): void {
     if (!this.id)
@@ -399,9 +408,6 @@ export class DepositDetail {
     // 메타데이터 업데이트
     if (transactionHash !== undefined && transactionHash !== null) {
       this._transactionHash = transactionHash;
-    }
-    if (adminNote !== undefined && adminNote !== null) {
-      this._adminNote = adminNote;
     }
     this._processedBy = adminId;
     this._confirmedAt = new Date();
@@ -432,6 +438,24 @@ export class DepositDetail {
   }
 
   /**
+   * 관리자 확인 시작 (상태 선점)
+   * @param adminId - 처리 대기 중인 관리자 ID
+   */
+  startProcessing(adminId: bigint): void {
+    if (!this.id)
+      throw new DepositException(
+        'Entity must be persisted before starting process',
+      );
+    if (this._status !== DepositDetailStatus.PENDING) {
+      throw new DepositAlreadyProcessedException(this._status);
+    }
+
+    this._status = DepositDetailStatus.PROCESSING;
+    this._processedBy = adminId;
+    this._updatedAt = new Date();
+  }
+
+  /**
    * 입금 취소 처리 (사용자 직접 취소)
    * @throws {DepositAlreadyProcessedException} 이미 처리된 입금인 경우
    */
@@ -440,12 +464,13 @@ export class DepositDetail {
       throw new DepositException(
         'Entity must be persisted before cancellation',
       );
-    if (!this.canBeProcessed()) {
+    // 충돌 방지: PENDING 상태에서만 취소 가능 (관리자가 처리 중이거나 자동 확인 중이면 불가)
+    if (this._status !== DepositDetailStatus.PENDING) {
       throw new DepositAlreadyProcessedException(this._status);
     }
 
     // 상태 변경
-    this._status = DepositDetailStatus.CANCELLED;
+    this._status = DepositDetailStatus.CANCELED;
 
     // 메타데이터 업데이트
     this._updatedAt = new Date();

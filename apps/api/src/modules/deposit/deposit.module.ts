@@ -11,6 +11,7 @@ import { WageringModule } from '../wagering/wagering.module';
 import { TierEvaluatorModule } from '../tier/evaluator/tier-evaluator.module';
 import { ExchangeModule } from '../exchange/exchange.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { AdminMemoModule } from '../admin-memo/admin-memo.module';
 import { GetDepositStatsService } from './application/get-deposit-stats.service';
 import { GetDepositsService } from './application/get-deposits.service';
 import { GetDepositDetailService } from './application/get-deposit-detail.service';
@@ -42,6 +43,7 @@ import { NotificationModule } from '../notification/notification.module';
     ConcurrencyModule,
     SnowflakeModule,
     NotificationModule,
+    AdminMemoModule,
   ],
   providers: [
     // Infrastructure (Mapper)
