@@ -1,16 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-// apps/api/src/modules/notification/inbox/controllers/user/dto/response/notification.response.dto.ts
-
+/**
+ * Single Notification Response DTO / 단일 알림 응답 DTO
+ */
 export class NotificationResponseDto {
-  @ApiProperty({ description: 'Notification ID', example: '1234567890' })
+  @ApiProperty({
+    description: 'Notification ID (Encoded) / 알림 ID (난독화됨)',
+    example: 'n_abc123',
+  })
   id: string;
 
-  @ApiProperty({ description: 'Created date', example: '2024-01-01T00:00:00Z' })
+  @ApiProperty({
+    description: 'Created Date / 생성 일시',
+    example: '2024-01-01T00:00:00Z',
+  })
   createdAt: string;
 
   @ApiProperty({
-    description: 'Notification title',
+    description: 'Notification Title / 알림 제목',
     example: 'Welcome!',
     required: false,
     nullable: true,
@@ -18,7 +25,7 @@ export class NotificationResponseDto {
   title: string | null;
 
   @ApiProperty({
-    description: 'Notification body',
+    description: 'Notification Body / 알림 본문',
     example: 'Thank you for joining us.',
     required: false,
     nullable: true,
@@ -26,18 +33,21 @@ export class NotificationResponseDto {
   body: string | null;
 
   @ApiProperty({
-    description: 'Action URI',
+    description: 'Action URI / 클릭 시 이동할 경로',
     example: '/profile',
     required: false,
     nullable: true,
   })
   actionUri: string | null;
 
-  @ApiProperty({ description: 'Read status', example: false })
+  @ApiProperty({
+    description: 'Read Status / 읽음 상태',
+    example: false,
+  })
   isRead: boolean;
 
   @ApiProperty({
-    description: 'Read date',
+    description: 'Read Date / 읽은 일시',
     example: '2024-01-01T00:00:00Z',
     required: false,
     nullable: true,
@@ -45,33 +55,10 @@ export class NotificationResponseDto {
   readAt: string | null;
 
   @ApiProperty({
-    description: 'Metadata',
+    description: 'Metadata / 메타데이터',
     example: { type: 'welcome' },
     required: false,
     nullable: true,
   })
   metadata: Record<string, unknown> | null;
-}
-
-export class NotificationListResponseDto {
-  @ApiProperty({ type: [NotificationResponseDto] })
-  items: NotificationResponseDto[];
-
-  @ApiProperty({
-    description: 'Cursor for next page',
-    example: '1234567890',
-    required: false,
-    nullable: true,
-  })
-  nextCursor: string | null;
-}
-
-export class UnreadCountResponseDto {
-  @ApiProperty({ description: 'Number of unread notifications', example: 5 })
-  count: number;
-}
-
-export class MarkAllAsReadResponseDto {
-  @ApiProperty({ description: 'Number of notifications updated', example: 10 })
-  updatedCount: number;
 }

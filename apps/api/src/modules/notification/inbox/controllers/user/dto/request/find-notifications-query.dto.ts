@@ -6,7 +6,7 @@ import { Type, Transform } from 'class-transformer';
 
 export class FindNotificationsQueryDto {
   @ApiProperty({
-    description: 'Filter by read status',
+    description: 'Filter by read status / 읽음 상태 필터',
     example: false,
     required: false,
   })
@@ -16,8 +16,7 @@ export class FindNotificationsQueryDto {
   isRead?: boolean;
 
   @ApiProperty({
-    description: 'Cursor for pagination',
-    example: '1234567890',
+    description: 'Cursor for pagination (Encoded ID) / 페이지네이션용 커서 (난독화된 ID)',
     required: false,
   })
   @IsOptional()
@@ -25,9 +24,10 @@ export class FindNotificationsQueryDto {
   cursor?: string;
 
   @ApiProperty({
-    description: 'Maximum number of items to return',
+    description: 'Maximum number of items to return / 조회할 최대 항목 수',
     example: 20,
     required: false,
+    default: 20,
   })
   @IsOptional()
   @Type(() => Number)

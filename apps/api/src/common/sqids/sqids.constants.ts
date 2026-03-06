@@ -41,7 +41,7 @@ export const SqidsPrefix = {
   COMMISSION: 'com',
   COM_WALLET: 'cw',
   COM_TRANSACTION: 'ctx',
-  NOTIFICATION: 'n',
+  INBOX: 'i',
   FILE: 'f',
   USER_TIER_HISTORY: 'uth',
   TIER_REWARD: 'tr',

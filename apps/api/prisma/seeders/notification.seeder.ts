@@ -1,106 +1,10 @@
-import { PrismaClient, ChannelType, Language } from '@prisma/client';
-import {
-    NOTIFICATION_EVENTS,
-    type NotificationEventType,
-} from '../../src/modules/notification/common';
-
-interface TemplateSeed {
-    name: string;
-    event: NotificationEventType;
-    channel: ChannelType;
-    variables: string[];
-    translations: {
-        create: {
-            locale: Language;
-            titleTemplate: string;
-            bodyTemplate: string;
-            actionUriTemplate?: string;
-        }[];
-    };
-}
-
-const templates: TemplateSeed[] = [
-    {
-        name: '회원가입 축하 알림',
-        event: NOTIFICATION_EVENTS.USER_REGISTERED,
-        channel: ChannelType.EMAIL,
-        variables: ['email'],
-        translations: {
-            create: [
-                {
-                    locale: Language.KO,
-                    titleTemplate: '환영합니다, {{email}}님!',
-                    bodyTemplate: '회원가입을 진심으로 축하드립니다. 다양한 서비스를 이용해 보세요.',
-                },
-                {
-                    locale: Language.EN,
-                    titleTemplate: 'Welcome, {{email}}!',
-                    bodyTemplate: 'Thank you for joining us. Enjoy our services.',
-                },
-                {
-                    locale: Language.JA,
-                    titleTemplate: 'こんにちは、{{email}}さん!',
-                    bodyTemplate: '会員登録を心からお慶び申し上げます。様々なサービスをご活用ください。',
-                },
-            ],
-        },
-    },
-    {
-        name: '프로모션 적용 알림',
-        event: NOTIFICATION_EVENTS.PROMOTION_APPLIED,
-        channel: ChannelType.INBOX,
-        variables: ['promotionName', 'bonusAmount', 'currency'],
-        translations: {
-            create: [
-                {
-                    locale: Language.KO,
-                    titleTemplate: '프로모션 보너스 지급',
-                    bodyTemplate: '[{{promotionName}}] 프로모션이 적용되어 {{bonusAmount}} {{currency}} 보너스가 지급되었습니다.',
-                },
-                {
-                    locale: Language.EN,
-                    titleTemplate: 'Promotion Bonus Granted',
-                    bodyTemplate: '[{{promotionName}}] promotion has been applied, and you received {{bonusAmount}} {{currency}} bonus.',
-                },
-                {
-                    locale: Language.JA,
-                    titleTemplate: 'プロモーションボーナス支給',
-                    bodyTemplate: '[{{promotionName}}] プロモーションが適用され、{{bonusAmount}} {{currency}} ボーナスが支給されました。',
-                },
-            ],
-        },
-    },
-    {
-        name: '휴대폰 번호 인증',
-        event: NOTIFICATION_EVENTS.PHONE_VERIFICATION_CODE,
-        channel: ChannelType.SMS,
-        variables: ['code'],
-        translations: {
-            create: [
-                {
-                    locale: Language.KO,
-                    titleTemplate: '휴대폰 인증번호',
-                    bodyTemplate: '인증번호 [{{code}}]를 입력해 주세요.',
-                },
-                {
-                    locale: Language.EN,
-                    titleTemplate: 'Phone Verification',
-                    bodyTemplate: 'Please enter your verification code: [{{code}}]',
-                },
-                {
-                    locale: Language.JA,
-                    titleTemplate: '携帯電話番号認証',
-                    bodyTemplate: '認証番号 [{{code}}] を入力してください。',
-                },
-            ],
-        },
-    },
-];
+import { PrismaClient } from '@prisma/client';
+import { notificationTemplates } from './notification/data';
 
 export async function seedNotificationTemplates(prisma: PrismaClient) {
     console.log('  - 알림 템플릿 시딩 중...');
 
-    for (const template of templates) {
+    for (const template of notificationTemplates) {
         const { translations, ...data } = template;
 
         // 템플릿 존재 여부 확인 (event, channel 기반)
@@ -137,7 +41,7 @@ export async function seedNotificationTemplates(prisma: PrismaClient) {
                 data: {
                     ...data,
                     channel: data.channel,
-                    variables: data.variables,
+                    variables: data.variables as any,
                     translations,
                 },
             });

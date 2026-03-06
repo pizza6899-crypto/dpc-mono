@@ -22,6 +22,7 @@ import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { MessageCode } from '@repo/shared';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { FindNotificationsService } from '../../application/find-notifications.service';
 import { GetUnreadCountService } from '../../application/get-unread-count.service';
 import { MarkAsReadService } from '../../application/mark-as-read.service';
@@ -29,14 +30,15 @@ import { MarkAllAsReadService } from '../../application/mark-all-as-read.service
 import { DeleteNotificationService } from '../../application/delete-notification.service';
 import { NotificationLog, InboxException } from '../../domain';
 import { FindNotificationsQueryDto } from './dto/request/find-notifications-query.dto';
+import { NotificationParamDto } from './dto/request/notification-param.dto';
 import {
   NotificationResponseDto,
-  NotificationListResponseDto,
-  UnreadCountResponseDto,
-  MarkAllAsReadResponseDto,
 } from './dto/response/notification.response.dto';
+import { NotificationListResponseDto } from './dto/response/notification-list.response.dto';
+import { UnreadCountResponseDto } from './dto/response/unread-count.response.dto';
+import { MarkAllAsReadResponseDto } from './dto/response/mark-all-as-read.response.dto';
 
-@ApiTags('User Notification')
+@ApiTags('User Inbox')
 @Controller('user/inbox')
 @ApiStandardErrors()
 export class InboxUserController {
@@ -47,6 +49,7 @@ export class InboxUserController {
     private readonly markAllAsReadService: MarkAllAsReadService,
     private readonly deleteNotificationService: DeleteNotificationService,
     private readonly sqidsService: SqidsService,
+    private readonly snowflakeService: SnowflakeService,
   ) { }
 
   @Get()
@@ -59,7 +62,7 @@ export class InboxUserController {
       count: result?.items?.length ?? 0,
     }),
   })
-  @ApiOperation({ summary: 'List user notifications' })
+  @ApiOperation({ summary: 'List user notifications / 사용자 알림 목록 조회' })
   @ApiStandardResponse(NotificationListResponseDto)
   async listNotifications(
     @CurrentUser() user: AuthenticatedUser,
@@ -69,7 +72,7 @@ export class InboxUserController {
       receiverId: user.id,
       isRead: query.isRead,
       cursor: query.cursor
-        ? this.sqidsService.decode(query.cursor, SqidsPrefix.NOTIFICATION)
+        ? this.sqidsService.decode(query.cursor, SqidsPrefix.INBOX)
         : undefined,
       limit: query.limit,
     });
@@ -80,7 +83,7 @@ export class InboxUserController {
         notifications.length > 0
           ? this.sqidsService.encode(
             notifications[notifications.length - 1].id!,
-            SqidsPrefix.NOTIFICATION,
+            SqidsPrefix.INBOX,
           )
           : null,
     };
@@ -92,7 +95,7 @@ export class InboxUserController {
     category: 'NOTIFICATION',
     action: 'NOTIFICATION_INBOX_UNREAD_COUNT',
   })
-  @ApiOperation({ summary: 'Get unread notification count' })
+  @ApiOperation({ summary: 'Get unread notification count / 읽지 않은 알림 수 조회' })
   @ApiStandardResponse(UnreadCountResponseDto)
   async getUnreadCount(
     @CurrentUser() user: AuthenticatedUser,
@@ -104,7 +107,7 @@ export class InboxUserController {
     return { count };
   }
 
-  @Patch(':createdAt/:id/read')
+  @Patch(':id/read')
   @HttpCode(HttpStatus.OK)
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -115,17 +118,19 @@ export class InboxUserController {
       createdAt: args[1],
     }),
   })
-  @ApiOperation({ summary: 'Mark notification as read' })
+  @ApiOperation({ summary: 'Mark notification as read / 알림 읽음 표시' })
   @ApiStandardResponse(NotificationResponseDto)
   async markAsRead(
     @CurrentUser() user: AuthenticatedUser,
-    @Param('createdAt') createdAt: string,
-    @Param('id') id: string,
+    @Param() params: NotificationParamDto,
   ): Promise<NotificationResponseDto> {
+    const decodedId = this.sqidsService.decode(params.id, SqidsPrefix.INBOX);
+    const { date: createdAt } = this.snowflakeService.parse(decodedId);
+
     const notification = await this.markAsReadService.execute({
       receiverId: user.id,
-      notificationId: this.sqidsService.decode(id, SqidsPrefix.NOTIFICATION),
-      notificationCreatedAt: this.parseDateOrThrow(createdAt),
+      notificationId: decodedId,
+      notificationCreatedAt: createdAt,
     });
 
     return this.toResponseDto(notification);
@@ -138,7 +143,7 @@ export class InboxUserController {
     category: 'NOTIFICATION',
     action: 'NOTIFICATION_INBOX_READ_ALL',
   })
-  @ApiOperation({ summary: 'Mark all notifications as read' })
+  @ApiOperation({ summary: 'Mark all notifications as read / 모든 알림 읽음 표시' })
   @ApiStandardResponse(MarkAllAsReadResponseDto)
   async markAllAsRead(
     @CurrentUser() user: AuthenticatedUser,
@@ -150,7 +155,7 @@ export class InboxUserController {
     return { updatedCount: count };
   }
 
-  @Delete(':createdAt/:id')
+  @Delete(':id')
   @HttpCode(HttpStatus.OK)
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -161,17 +166,19 @@ export class InboxUserController {
       createdAt: args[1],
     }),
   })
-  @ApiOperation({ summary: 'Delete notification' })
+  @ApiOperation({ summary: 'Delete notification / 알림 삭제' })
   @ApiStandardResponse(NotificationResponseDto)
   async deleteNotification(
     @CurrentUser() user: AuthenticatedUser,
-    @Param('createdAt') createdAt: string,
-    @Param('id') id: string,
+    @Param() params: NotificationParamDto,
   ): Promise<NotificationResponseDto> {
+    const decodedId = this.sqidsService.decode(params.id, SqidsPrefix.INBOX);
+    const { date: createdAt } = this.snowflakeService.parse(decodedId);
+
     const notification = await this.deleteNotificationService.execute({
       receiverId: user.id,
-      notificationId: this.sqidsService.decode(id, SqidsPrefix.NOTIFICATION),
-      notificationCreatedAt: this.parseDateOrThrow(createdAt),
+      notificationId: decodedId,
+      notificationCreatedAt: createdAt,
     });
 
     return this.toResponseDto(notification);
@@ -180,7 +187,7 @@ export class InboxUserController {
   private toResponseDto(log: NotificationLog): NotificationResponseDto {
     return {
       id: log.id
-        ? this.sqidsService.encode(log.id, SqidsPrefix.NOTIFICATION)
+        ? this.sqidsService.encode(log.id, SqidsPrefix.INBOX)
         : '',
       createdAt: log.createdAt.toISOString(),
       title: log.title,

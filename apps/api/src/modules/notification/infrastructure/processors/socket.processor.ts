@@ -106,7 +106,7 @@ export class SocketProcessor extends BaseProcessor<
           readAt: null,
           metadata: log.metadata || null,
         },
-        { sqidPrefix: SqidsPrefix.NOTIFICATION }, // 사용자용 인코딩 힌트
+        { sqidPrefix: SqidsPrefix.INBOX }, // 사용자용 인코딩 힌트
       );
 
       // 성공 처리

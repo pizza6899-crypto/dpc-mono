@@ -12,7 +12,7 @@ export class NotificationChannelPolicy {
         switch (event) {
             // 1. 인증: 주로 휴대폰 번호로 인증 코드가 발송되므로 SMS 필수
             case NOTIFICATION_EVENTS.PHONE_VERIFICATION_CODE:
-                return [ChannelType.SMS, ChannelType.INBOX]; // INBOX는 이력용
+                return [ChannelType.SMS];
 
             // 2. 자산 및 기타 알림 (입출금/프로모션): 영구 기록(INBOX) 발송.
             // 실시간 팝업 알림이 필요한 경우 각 서비스에서 WebsocketService를 직접 호출하여 발송합니다.
