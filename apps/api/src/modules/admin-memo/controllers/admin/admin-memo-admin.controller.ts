@@ -9,8 +9,6 @@ import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 import { CreateAdminMemoService } from '../../application/create-admin-memo.service';
 import { FindAdminMemoService } from '../../application/find-admin-memo.service';
-import { AdminMemo } from '../../domain';
-import type { AdminMemoTargetType } from '../../domain';
 import { CreateAdminMemoDto } from './dto/request/create-admin-memo.dto';
 import { FindAdminMemosQueryDto } from './dto/request/find-admin-memos.dto';
 import { AdminMemoResponseDto } from './dto/response/admin-memo.response.dto';

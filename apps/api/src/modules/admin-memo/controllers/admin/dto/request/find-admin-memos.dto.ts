@@ -18,7 +18,6 @@ export class FindAdminMemosQueryDto {
 
     @ApiProperty({
         description: 'Target ID / 메모 대상 ID',
-        example: '123456789',
     })
     @IsNotEmpty()
     @IsString()
@@ -26,7 +25,6 @@ export class FindAdminMemosQueryDto {
 
     @ApiProperty({
         description: 'Limit / 조회 개수',
-        example: 50,
         required: false,
         default: 50,
     })
