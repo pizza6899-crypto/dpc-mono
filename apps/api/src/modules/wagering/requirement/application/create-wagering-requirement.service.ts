@@ -52,7 +52,7 @@ export class CreateWageringRequirementService {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly dispatchLogService: DispatchLogService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(

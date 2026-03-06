@@ -14,7 +14,7 @@ export class FindWageringRequirementsService {
   constructor(
     @Inject(WAGERING_REQUIREMENT_REPOSITORY)
     private readonly repository: WageringRequirementRepositoryPort,
-  ) {}
+  ) { }
 
   async findByUserId(
     userId: bigint,
