@@ -1,9 +1,28 @@
 import { PrismaClient, ChannelType, Language } from '@prisma/client';
+import {
+    NOTIFICATION_EVENTS,
+    type NotificationEventType,
+} from '../../src/modules/notification/common';
 
-const templates = [
+interface TemplateSeed {
+    name: string;
+    event: NotificationEventType;
+    channel: ChannelType;
+    variables: string[];
+    translations: {
+        create: {
+            locale: Language;
+            titleTemplate: string;
+            bodyTemplate: string;
+            actionUriTemplate?: string;
+        }[];
+    };
+}
+
+const templates: TemplateSeed[] = [
     {
         name: '회원가입 축하 알림',
-        event: 'USER_REGISTERED',
+        event: NOTIFICATION_EVENTS.USER_REGISTERED,
         channel: ChannelType.EMAIL,
         variables: ['email'],
         translations: {
@@ -28,7 +47,7 @@ const templates = [
     },
     {
         name: '프로모션 적용 알림',
-        event: 'PROMOTION_APPLIED',
+        event: NOTIFICATION_EVENTS.PROMOTION_APPLIED,
         channel: ChannelType.INBOX,
         variables: ['promotionName', 'bonusAmount', 'currency'],
         translations: {
@@ -53,7 +72,7 @@ const templates = [
     },
     {
         name: '휴대폰 번호 인증',
-        event: 'PHONE_VERIFICATION_CODE',
+        event: NOTIFICATION_EVENTS.PHONE_VERIFICATION_CODE,
         channel: ChannelType.SMS,
         variables: ['code'],
         translations: {
@@ -89,7 +108,7 @@ export async function seedNotificationTemplates(prisma: PrismaClient) {
             where: {
                 event_channel: {
                     event: data.event,
-                    channel: data.channel as any,
+                    channel: data.channel,
                 },
             },
             include: { translations: true },
@@ -117,8 +136,8 @@ export async function seedNotificationTemplates(prisma: PrismaClient) {
             await prisma.notificationTemplate.create({
                 data: {
                     ...data,
-                    channel: data.channel as any,
-                    variables: data.variables as any,
+                    channel: data.channel,
+                    variables: data.variables,
                     translations,
                 },
             });

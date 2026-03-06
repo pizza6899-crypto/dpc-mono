@@ -58,7 +58,7 @@ export class EmailProcessor extends BaseProcessor<NotificationJobData, void> {
       const renderResult = await this.renderTemplateService.execute({
         event: log.templateEvent,
         channel: log.channel,
-        locale: log.locale || Language.KO,
+        locale: log.locale || Language.EN,
         variables: log.metadata || {},
       });
 

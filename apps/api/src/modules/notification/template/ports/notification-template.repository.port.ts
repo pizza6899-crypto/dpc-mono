@@ -2,6 +2,7 @@
 
 import type { ChannelType } from '@prisma/client';
 import type { NotificationTemplate } from '../domain';
+import { type NotificationEventType } from '../../common';
 
 export interface NotificationTemplateRepositoryPort {
   /**
@@ -18,14 +19,14 @@ export interface NotificationTemplateRepositoryPort {
    * 이벤트와 채널로 조회 (유니크)
    */
   findByEventAndChannel(
-    event: string,
+    event: NotificationEventType,
     channel: ChannelType,
   ): Promise<NotificationTemplate | null>;
 
   /**
    * 이벤트로 템플릿 목록 조회 (모든 채널)
    */
-  findByEvent(event: string): Promise<NotificationTemplate[]>;
+  findByEvent(event: NotificationEventType): Promise<NotificationTemplate[]>;
 
   /**
    * 템플릿 업데이트

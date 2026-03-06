@@ -11,6 +11,9 @@ export const NOTIFICATION_EVENTS = {
   // 프로모션
   PROMOTION_APPLIED: 'PROMOTION_APPLIED',
 
+  // 유저
+  USER_REGISTERED: 'USER_REGISTERED',
+
   // 알림함 수신 전용 이벤트
   INBOX_NEW: 'INBOX_NEW',
 

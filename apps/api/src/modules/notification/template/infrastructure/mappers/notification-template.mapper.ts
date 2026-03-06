@@ -10,6 +10,7 @@ import {
   NotificationTemplate,
   NotificationTemplateTranslation,
 } from '../../domain';
+import { type NotificationEventType } from '../../../common';
 
 type TemplateWithTranslations = PrismaTemplate & {
   translations?: PrismaTranslation[];
@@ -35,7 +36,7 @@ export class NotificationTemplateMapper {
       id: model.id,
       name: model.name,
       description: model.description,
-      event: model.event,
+      event: model.event as NotificationEventType,
       channel: model.channel,
       variables: model.variables as string[],
       createdAt: model.createdAt,

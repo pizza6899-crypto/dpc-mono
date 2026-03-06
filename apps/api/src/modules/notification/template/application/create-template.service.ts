@@ -7,11 +7,12 @@ import {
   NotificationTemplateTranslation,
 } from '../domain';
 import { DuplicateTemplateException } from '../domain/template.exception';
+import { NotificationEventType } from '../../common';
 
 interface CreateTemplateParams {
   name: string;
   description?: string;
-  event: string;
+  event: NotificationEventType;
   channel: ChannelType;
   variables: string[];
   translations?: {
@@ -27,7 +28,7 @@ export class CreateTemplateService {
   constructor(
     @Inject(NOTIFICATION_TEMPLATE_REPOSITORY)
     private readonly repository: NotificationTemplateRepositoryPort,
-  ) {}
+  ) { }
 
   async execute(params: CreateTemplateParams): Promise<NotificationTemplate> {
     const existing = await this.repository.findByEventAndChannel(

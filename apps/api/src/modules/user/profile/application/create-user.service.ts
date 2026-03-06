@@ -16,6 +16,8 @@ import {
 } from '../ports/out/user.repository.port';
 import { RegistrationMethod, UserRoleType, OAuthProvider, ExchangeCurrencyCode, LoginIdType } from '@prisma/client';
 import { GetUserConfigService } from '../../config/application/get-user-config.service';
+import { CreateAlertService } from 'src/modules/notification/alert/application/create-alert.service';
+import { NOTIFICATION_EVENTS } from 'src/modules/notification/common';
 
 interface CreateUserServiceParams {
   loginId: string;
@@ -53,6 +55,7 @@ export class CreateUserService {
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
     private readonly getUserConfigService: GetUserConfigService,
+    private readonly createAlertService: CreateAlertService,
   ) { }
 
   @Transactional()
@@ -131,6 +134,14 @@ export class CreateUserService {
     });
 
     this.logger.log(`새로운 사용자 생성됨: ${user.loginId} (ID: ${user.id})`);
+
+    // 알림 발송
+    await this.createAlertService.execute({
+      event: NOTIFICATION_EVENTS.USER_REGISTERED,
+      userId: user.id,
+      payload: {},
+      idempotencyKey: `user-register-${user.id}`,
+    });
 
     return {
       user,

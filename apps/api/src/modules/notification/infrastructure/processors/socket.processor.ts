@@ -80,7 +80,7 @@ export class SocketProcessor extends BaseProcessor<
         const renderResult = await this.renderTemplateService.execute({
           event: log.templateEvent,
           channel: log.channel,
-          locale: log.locale || Language.KO,
+          locale: log.locale || Language.EN,
           variables: log.metadata || {},
         });
 

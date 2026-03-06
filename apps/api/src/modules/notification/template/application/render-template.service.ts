@@ -9,9 +9,10 @@ import {
   TemplateNotFoundException,
   TemplateTranslationNotFoundException,
 } from '../domain/template.exception';
+import { type NotificationEventType } from '../../common';
 
 interface RenderTemplateParams {
-  event: string;
+  event: NotificationEventType;
   channel: ChannelType;
   locale: Language;
   variables: Record<string, unknown>;
@@ -23,7 +24,7 @@ export class RenderTemplateService {
     @Inject(NOTIFICATION_TEMPLATE_REPOSITORY)
     private readonly repository: NotificationTemplateRepositoryPort,
     private readonly rendererFactory: RendererFactory,
-  ) {}
+  ) { }
 
   async execute(params: RenderTemplateParams): Promise<RenderResult> {
     const { event, channel, locale, variables } = params;

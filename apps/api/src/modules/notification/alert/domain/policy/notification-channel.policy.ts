@@ -22,6 +22,9 @@ export class NotificationChannelPolicy {
             case NOTIFICATION_EVENTS.PROMOTION_APPLIED:
                 return [ChannelType.INBOX];
 
+            case NOTIFICATION_EVENTS.USER_REGISTERED:
+                return [ChannelType.INBOX];
+
             // 기본값
             default:
                 return [ChannelType.INBOX]; // 알 수 없는 이벤트는 최소한 INBOX에만 남김

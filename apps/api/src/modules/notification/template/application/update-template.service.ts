@@ -10,12 +10,13 @@ import {
   TemplateNotFoundException,
   DuplicateTemplateException,
 } from '../domain/template.exception';
+import { type NotificationEventType } from '../../common';
 
 interface UpdateTemplateParams {
   id: bigint;
   name?: string;
   description?: string;
-  event?: string;
+  event?: NotificationEventType;
   channel?: ChannelType;
   variables?: string[];
   translations?: {
@@ -31,10 +32,11 @@ export class UpdateTemplateService {
   constructor(
     @Inject(NOTIFICATION_TEMPLATE_REPOSITORY)
     private readonly repository: NotificationTemplateRepositoryPort,
-  ) {}
+  ) { }
 
   async execute({
     id,
+    translations,
     ...params
   }: UpdateTemplateParams): Promise<NotificationTemplate> {
     const template = await this.repository.findById(id);
@@ -62,9 +64,9 @@ export class UpdateTemplateService {
     // Apply changes
     template.update(params);
 
-    if (params.translations) {
+    if (translations) {
       template.clearTranslations();
-      for (const t of params.translations) {
+      for (const t of translations) {
         template.addTranslation(
           NotificationTemplateTranslation.create({
             locale: t.locale,

@@ -18,7 +18,7 @@ import {
   getQueueConfig,
   BULLMQ_QUEUES,
 } from 'src/infrastructure/bullmq/bullmq.constants';
-import { SOCKET_JOB_NAMES, type AlertJobData } from '../../common';
+import { SOCKET_JOB_NAMES, type AlertJobData, type NotificationEventType } from '../../common';
 import { GetUserService } from 'src/modules/user/profile/application/get-user.service';
 
 const queueConfig = getQueueConfig(BULLMQ_QUEUES.NOTIFICATION.ALERT);
@@ -116,7 +116,7 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
     } = (alert.payload || {}) as Record<string, any>;
 
     const locale =
-      (localeFromPayload as Language) || user?.language || Language.KO;
+      (localeFromPayload as Language) || user?.language || Language.EN;
 
     let hasError = false;
 
@@ -139,7 +139,7 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
             title: null, // 지연 렌더링
             body: null, // 지연 렌더링
             actionUri: null,
-            templateEvent: alert.event as string,
+            templateEvent: alert.event as NotificationEventType,
             locale,
             target: this.extractTarget(alert, channel, user),
             metadata: variables,

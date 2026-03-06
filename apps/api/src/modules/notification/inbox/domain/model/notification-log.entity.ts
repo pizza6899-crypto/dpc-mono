@@ -6,6 +6,7 @@ import {
   NotificationAlreadyReadException,
   NotificationAlreadyDeletedException,
 } from '../inbox.exception';
+import { type NotificationEventType } from '../../../common';
 
 interface CreateNotificationLogParams {
   id: bigint;
@@ -13,7 +14,7 @@ interface CreateNotificationLogParams {
   alertId: bigint;
   alertCreatedAt: Date;
   templateId?: bigint | null;
-  templateEvent?: string | null;
+  templateEvent?: NotificationEventType | null;
   locale?: Language | null;
   channel: ChannelType;
   receiverId: bigint;
@@ -31,7 +32,7 @@ interface FromPersistenceParams {
   alertId: bigint;
   alertCreatedAt: Date;
   templateId: bigint | null;
-  templateEvent: string | null;
+  templateEvent: NotificationEventType | null;
   locale: Language | null;
   channel: ChannelType;
   receiverId: bigint;
@@ -68,7 +69,7 @@ export class NotificationLog {
     public readonly alertId: bigint,
     public readonly alertCreatedAt: Date,
     public readonly templateId: bigint | null,
-    public readonly templateEvent: string | null,
+    public readonly templateEvent: NotificationEventType | null,
     public readonly locale: Language | null,
     public readonly channel: ChannelType,
     public readonly receiverId: bigint,

@@ -29,6 +29,10 @@ export interface FiatDepositProcessedPayload {
   nickname?: string;
 }
 
+// --- 유저 ---
+export interface UserRegisteredPayload {
+}
+
 // --- 프로모션 ---
 export interface PromotionPayload {
   promotionName: string;
@@ -65,6 +69,9 @@ export type NotificationPayloadMap = {
 
   // 프로모션
   [NOTIFICATION_EVENTS.PROMOTION_APPLIED]: PromotionPayload;
+
+  // 유저
+  [NOTIFICATION_EVENTS.USER_REGISTERED]: UserRegisteredPayload;
 
   // 시스템
   [NOTIFICATION_EVENTS.PHONE_VERIFICATION_CODE]: VerificationPayload;

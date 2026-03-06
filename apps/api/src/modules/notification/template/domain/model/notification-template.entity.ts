@@ -3,11 +3,12 @@
 import type { ChannelType } from '@prisma/client';
 import { Language } from '@prisma/client';
 import type { NotificationTemplateTranslation } from './notification-template-translation.entity';
+import { type NotificationEventType } from '../../../common';
 
 interface CreateTemplateParams {
   name: string;
   description?: string;
-  event: string;
+  event: NotificationEventType;
   channel: ChannelType;
   variables: string[];
 }
@@ -16,7 +17,7 @@ interface FromPersistenceParams {
   id: bigint;
   name: string;
   description: string | null;
-  event: string;
+  event: NotificationEventType;
   channel: ChannelType;
   variables: string[]; // JSON array in DB, parsed to string[] here
   createdAt: Date;
@@ -36,13 +37,13 @@ export class NotificationTemplate {
     public readonly id: bigint | null,
     public readonly name: string,
     public readonly description: string | null,
-    public readonly event: string,
+    public readonly event: NotificationEventType,
     public readonly channel: ChannelType,
     public readonly variables: string[],
     public readonly createdAt: Date,
     private _updatedAt: Date,
     private _translations: NotificationTemplateTranslation[],
-  ) {}
+  ) { }
 
   static create(params: CreateTemplateParams): NotificationTemplate {
     return new NotificationTemplate(

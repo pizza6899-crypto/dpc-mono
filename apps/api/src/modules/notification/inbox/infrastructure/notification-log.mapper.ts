@@ -3,6 +3,7 @@
 import { Injectable } from '@nestjs/common';
 import { NotificationLog } from '../domain';
 import { ChannelType, NotifyStatus, Language, Prisma } from '@prisma/client';
+import { type NotificationEventType } from '../../common';
 
 type PrismaNotificationLog = {
   id: bigint;
@@ -40,7 +41,7 @@ export class NotificationLogMapper {
       alertId: prisma.alertId,
       alertCreatedAt: prisma.alertCreatedAt,
       templateId: prisma.templateId,
-      templateEvent: prisma.templateEvent,
+      templateEvent: prisma.templateEvent as NotificationEventType | null,
       locale: prisma.locale,
       channel: prisma.channel,
       receiverId: prisma.receiverId,
@@ -70,7 +71,7 @@ export class NotificationLogMapper {
     alertId: bigint;
     alertCreatedAt: Date;
     templateId: bigint | null;
-    templateEvent: string | null;
+    templateEvent: NotificationEventType | null;
     locale: Language | null;
     channel: ChannelType;
     receiverId: bigint;

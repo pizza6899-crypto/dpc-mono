@@ -4,6 +4,7 @@ import { SessionModule } from 'src/modules/auth/session/session.module';
 import { UserConfigModule } from '../config/user-config.module';
 import { FileModule } from 'src/modules/file/file.module';
 import { CasinoSessionModule } from 'src/modules/casino-session/game-session.module';
+import { AlertModule } from 'src/modules/notification/alert/alert.module';
 import { CreateUserService } from './application/create-user.service';
 import { ListUsersService } from './application/list-users.service';
 import { GetUserService } from './application/get-user.service';
@@ -25,7 +26,7 @@ import { UserProfileController } from './controllers/user/user-profile.controlle
 import { EnvModule } from 'src/common/env/env.module';
 
 @Module({
-    imports: [SessionModule, UserConfigModule, FileModule, EnvModule, CasinoSessionModule],
+    imports: [SessionModule, UserConfigModule, FileModule, EnvModule, CasinoSessionModule, AlertModule],
     providers: [
         CreateUserService,
         ListUsersService,
