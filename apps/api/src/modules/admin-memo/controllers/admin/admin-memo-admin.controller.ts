@@ -9,8 +9,10 @@ import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 import { CreateAdminMemoService } from '../../application/create-admin-memo.service';
 import { FindAdminMemoService } from '../../application/find-admin-memo.service';
+import { AdminMemo } from '../../domain';
 import type { AdminMemoTargetType } from '../../domain';
 import { CreateAdminMemoDto } from './dto/request/create-admin-memo.dto';
+import { FindAdminMemosQueryDto } from './dto/request/find-admin-memos.dto';
 import { AdminMemoResponseDto } from './dto/response/admin-memo.response.dto';
 
 @Controller('admin/memos')
@@ -70,26 +72,19 @@ export class AdminMemoAdminController {
         summary: 'Find admin memos / 관리자 메모 조회',
         description: 'Find memos associated with a specific domain target. / 특정 도메인 대상에 연결된 메모 목록을 조회합니다.',
     })
-    @ApiQuery({
-        name: 'targetType',
-        enum: ['USER', 'DEPOSIT'],
-        required: true,
-    })
-    @ApiQuery({
-        name: 'targetId',
-        type: String,
-        required: true,
-    })
     @ApiStandardResponse(AdminMemoResponseDto, {
         status: 200,
         description: 'Memos retrieved successfully / 메모 목록 조회 성공',
         isArray: true,
     })
     async getMemos(
-        @Query('targetType') targetType: AdminMemoTargetType,
-        @Query('targetId') targetId: string,
+        @Query() query: FindAdminMemosQueryDto,
     ): Promise<AdminMemoResponseDto[]> {
-        const memos = await this.findAdminMemoService.findByTarget(targetType, BigInt(targetId));
+        const memos = await this.findAdminMemoService.findByTarget(
+            query.targetType,
+            BigInt(query.targetId),
+            query.limit,
+        );
 
         return memos.map(memo => ({
             id: memo.id.toString(),
