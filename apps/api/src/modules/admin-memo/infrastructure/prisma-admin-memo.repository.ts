@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { AdminMemo } from '../domain';
+import { AdminMemo, AdminMemoTargetType } from '../domain';
 import {
     AdminMemoRepositoryPort,
     type CreateAdminMemoParams,
@@ -39,9 +39,13 @@ export class PrismaAdminMemoRepository implements AdminMemoRepositoryPort {
         return this.mapper.toDomain(record as any);
     }
 
-    async findByDepositId(depositId: bigint, limit = 50): Promise<AdminMemo[]> {
+    async findByTarget(type: AdminMemoTargetType, targetId: bigint, limit = 50): Promise<AdminMemo[]> {
+        const where: any = {};
+        if (type === 'DEPOSIT') where.depositId = targetId;
+        else if (type === 'USER') where.userId = targetId;
+
         const records = await this.tx.adminMemo.findMany({
-            where: { depositId },
+            where,
             take: limit,
             orderBy: { createdAt: 'desc' },
             include: this._includeAdmin,

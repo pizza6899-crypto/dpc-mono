@@ -6,11 +6,12 @@ import { AdminMemoMapper } from './infrastructure/admin-memo.mapper';
 import { PrismaAdminMemoRepository } from './infrastructure/prisma-admin-memo.repository';
 import {
     ADMIN_MEMO_REPOSITORY,
-    type AdminMemoRepositoryPort,
 } from './ports/out';
+import { AdminMemoAdminController } from './controllers/admin/admin-memo-admin.controller';
 
 @Module({
     imports: [PrismaModule],
+    controllers: [AdminMemoAdminController],
     providers: [
         CreateAdminMemoService,
         FindAdminMemoService,

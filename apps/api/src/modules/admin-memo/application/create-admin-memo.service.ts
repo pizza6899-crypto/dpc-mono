@@ -18,14 +18,14 @@ export class CreateAdminMemoService {
         const memo = AdminMemo.create({
             adminId: params.adminId,
             content: params.content,
-            depositId: params.depositId,
+            target: params.target,
         });
 
         // 2. 저장 (Repository에 위임)
         return await this.adminMemoRepository.create({
             adminId: memo.adminId,
             content: memo.content,
-            depositId: memo.depositId ?? undefined,
+            target: memo.target,
         });
     }
 }

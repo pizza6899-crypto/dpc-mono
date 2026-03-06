@@ -1,15 +1,14 @@
-// src/modules/admin-memo/ports/out/admin-memo.repository.port.ts
-import { AdminMemo } from '../../domain';
+import { AdminMemo, AdminMemoTarget, AdminMemoTargetType } from '../../domain';
 
 export interface CreateAdminMemoParams {
     adminId: bigint;
     content: string;
-    depositId?: bigint;
+    target: AdminMemoTarget;
 }
 
 export interface AdminMemoRepositoryPort {
     create(params: CreateAdminMemoParams): Promise<AdminMemo>;
-    findByDepositId(depositId: bigint, limit?: number): Promise<AdminMemo[]>;
+    findByTarget(type: AdminMemoTargetType, targetId: bigint, limit?: number): Promise<AdminMemo[]>;
 }
 
 export const ADMIN_MEMO_REPOSITORY = Symbol('ADMIN_MEMO_REPOSITORY');

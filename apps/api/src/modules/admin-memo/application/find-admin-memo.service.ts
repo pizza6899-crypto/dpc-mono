@@ -3,7 +3,7 @@ import {
     ADMIN_MEMO_REPOSITORY,
     type AdminMemoRepositoryPort,
 } from '../ports/out';
-import { AdminMemo } from '../domain';
+import { AdminMemo, AdminMemoTargetType } from '../domain';
 
 @Injectable()
 export class FindAdminMemoService {
@@ -13,9 +13,9 @@ export class FindAdminMemoService {
     ) { }
 
     /**
-     * 특정 입금 ID에 연결된 메모를 조회합니다. (최신순)
+     * 특정 대상(Target)에 연결된 메모를 조회합니다. (최신순)
      */
-    async findByDepositId(depositId: bigint, limit = 50): Promise<AdminMemo[]> {
-        return this.adminMemoRepository.findByDepositId(depositId, limit);
+    async findByTarget(type: AdminMemoTargetType, targetId: bigint, limit = 50): Promise<AdminMemo[]> {
+        return this.adminMemoRepository.findByTarget(type, targetId, limit);
     }
 }

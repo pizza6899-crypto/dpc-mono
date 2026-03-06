@@ -19,7 +19,12 @@ model AdminMemo {
     depositId BigInt?        @map("deposit_id")
     deposit   DepositDetail? @relation("DepositMemos", fields: [depositId], references: [id])
 
+    /// 유저 관련 메모 시 연결 (유저 상세 등)
+    userId BigInt? @map("user_id")
+    user   User?   @relation("UserMemos", fields: [userId], references: [id])
+
     @@index([adminId])
     @@index([depositId])
+    @@index([userId])
     @@map("admin_memos")
 }

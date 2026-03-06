@@ -1,9 +1,22 @@
 import { AdminMemoContentEmptyException } from './admin-memo.exception';
 
 /**
+ * 관리자 메모 대상 타입
+ */
+export type AdminMemoTargetType = 'USER' | 'DEPOSIT';
+
+/**
+ * 관리자 메모 대상 정보
+ */
+export interface AdminMemoTarget {
+    type: AdminMemoTargetType;
+    id: bigint;
+}
+
+/**
  * AdminMemo 도메인 엔티티
  * 
- * 관리자가 특정 도메인(예: 입금)에 대해 작성한 메모를 표현합니다.
+ * 관리자가 특정 도메인(예: 입금, 유저)에 대해 작성한 메모를 표현합니다.
  * 이 엔티티는 Audit Log 성격으로, 수정 및 삭제가 불가능한 Append-only 구조를 지향합니다.
  */
 export class AdminMemo {
@@ -12,7 +25,7 @@ export class AdminMemo {
         private readonly _adminId: bigint,
         private readonly _content: string,
         private readonly _createdAt: Date,
-        private readonly _depositId: bigint | null,
+        private readonly _target: AdminMemoTarget,
         // UI 편의를 위해 작성자 닉네임을 포함할 수 있음 (Entity Enrichment)
         private readonly _adminNickname?: string,
     ) { }
@@ -23,7 +36,7 @@ export class AdminMemo {
     static create(params: {
         adminId: bigint;
         content: string;
-        depositId?: bigint;
+        target: AdminMemoTarget;
     }): AdminMemo {
         const trimmedContent = params.content?.trim();
 
@@ -36,7 +49,7 @@ export class AdminMemo {
             params.adminId,
             trimmedContent,
             new Date(),
-            params.depositId ?? null,
+            params.target,
         );
     }
 
@@ -48,7 +61,7 @@ export class AdminMemo {
         adminId: bigint;
         content: string;
         createdAt: Date;
-        depositId?: bigint | null;
+        target: AdminMemoTarget;
         adminNickname?: string;
     }): AdminMemo {
         return new AdminMemo(
@@ -56,7 +69,7 @@ export class AdminMemo {
             data.adminId,
             data.content,
             data.createdAt,
-            data.depositId ?? null,
+            data.target,
             data.adminNickname,
         );
     }
@@ -67,6 +80,6 @@ export class AdminMemo {
     get adminId(): bigint { return this._adminId; }
     get content(): string { return this._content; }
     get createdAt(): Date { return this._createdAt; }
-    get depositId(): bigint | null { return this._depositId; }
+    get target(): AdminMemoTarget { return this._target; }
     get adminNickname(): string | undefined { return this._adminNickname; }
 }
