@@ -1,7 +1,7 @@
 // apps/api/src/modules/notification/inbox/controllers/user/dto/request/find-notifications-query.dto.ts
 
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsBoolean, IsString } from 'class-validator';
+import { IsOptional, IsBoolean, IsString, IsInt, Min, Max } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 
 export class FindNotificationsQueryDto {
@@ -24,12 +24,17 @@ export class FindNotificationsQueryDto {
   cursor?: string;
 
   @ApiProperty({
-    description: 'Maximum number of items to return / 조회할 최대 항목 수',
+    description: 'Maximum number of items to return (1-50) / 조회할 최대 항목 수 (최소 1, 최대 50)',
     example: 20,
     required: false,
     default: 20,
+    minimum: 1,
+    maximum: 50,
   })
   @IsOptional()
   @Type(() => Number)
-  limit?: number;
+  @IsInt()
+  @Min(1)
+  @Max(50)
+  limit: number = 20;
 }

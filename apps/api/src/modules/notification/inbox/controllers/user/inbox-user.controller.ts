@@ -114,26 +114,25 @@ export class InboxUserController {
     category: 'NOTIFICATION',
     action: 'NOTIFICATION_INBOX_READ',
     extractMetadata: (_, args) => ({
-      id: args[2],
-      createdAt: args[1],
+      id: args[1].id,
     }),
   })
   @ApiOperation({ summary: 'Mark notification as read / 알림 읽음 표시' })
-  @ApiStandardResponse(NotificationResponseDto)
+  @ApiStandardResponse(Object, { description: 'Notification marked as read / 알림 읽음 처리 완료' })
   async markAsRead(
     @CurrentUser() user: AuthenticatedUser,
     @Param() params: NotificationParamDto,
-  ): Promise<NotificationResponseDto> {
+  ): Promise<object> {
     const decodedId = this.sqidsService.decode(params.id, SqidsPrefix.INBOX);
     const { date: createdAt } = this.snowflakeService.parse(decodedId);
 
-    const notification = await this.markAsReadService.execute({
+    await this.markAsReadService.execute({
       receiverId: user.id,
       notificationId: decodedId,
       notificationCreatedAt: createdAt,
     });
 
-    return this.toResponseDto(notification);
+    return {};
   }
 
   @Patch('read-all')
@@ -142,6 +141,9 @@ export class InboxUserController {
     type: LogType.ACTIVITY,
     category: 'NOTIFICATION',
     action: 'NOTIFICATION_INBOX_READ_ALL',
+    extractMetadata: (_, __, result) => ({
+      updatedCount: result?.updatedCount ?? 0,
+    }),
   })
   @ApiOperation({ summary: 'Mark all notifications as read / 모든 알림 읽음 표시' })
   @ApiStandardResponse(MarkAllAsReadResponseDto)
@@ -162,26 +164,25 @@ export class InboxUserController {
     category: 'NOTIFICATION',
     action: 'NOTIFICATION_INBOX_DELETE',
     extractMetadata: (_, args) => ({
-      id: args[2],
-      createdAt: args[1],
+      id: args[1].id,
     }),
   })
   @ApiOperation({ summary: 'Delete notification / 알림 삭제' })
-  @ApiStandardResponse(NotificationResponseDto)
+  @ApiStandardResponse(Object, { description: 'Notification deleted / 알림 삭제 완료' })
   async deleteNotification(
     @CurrentUser() user: AuthenticatedUser,
     @Param() params: NotificationParamDto,
-  ): Promise<NotificationResponseDto> {
+  ): Promise<object> {
     const decodedId = this.sqidsService.decode(params.id, SqidsPrefix.INBOX);
     const { date: createdAt } = this.snowflakeService.parse(decodedId);
 
-    const notification = await this.deleteNotificationService.execute({
+    await this.deleteNotificationService.execute({
       receiverId: user.id,
       notificationId: decodedId,
       notificationCreatedAt: createdAt,
     });
 
-    return this.toResponseDto(notification);
+    return {};
   }
 
   private toResponseDto(log: NotificationLog): NotificationResponseDto {
@@ -199,15 +200,4 @@ export class InboxUserController {
     };
   }
 
-  private parseDateOrThrow(dateString: string): Date {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) {
-      throw new InboxException(
-        `Invalid date format: ${dateString}`,
-        MessageCode.VALIDATION_ERROR,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-    return date;
-  }
 }
