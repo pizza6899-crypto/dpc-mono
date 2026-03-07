@@ -11,8 +11,6 @@ import {
 import type { UserPromotion } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports/out';
 import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
-import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
-import { UpdateOperation, WalletActionName } from '../../wallet/domain';
 import {
   UserWalletBalanceType,
   UserWalletTransactionType,
@@ -34,7 +32,7 @@ interface GrantPromotionBonusParams {
 interface GrantPromotionBonusResult {
   userPromotion: UserPromotion;
   bonusAmount: Prisma.Decimal;
-  rollingCreated: boolean;
+  rollingMultiplier: Prisma.Decimal;
 }
 
 @Injectable()
@@ -45,8 +43,6 @@ export class GrantPromotionBonusService {
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
     private readonly policy: PromotionPolicy,
-    private readonly createWageringRequirementService: CreateWageringRequirementService,
-    private readonly updateUserBalanceService: UpdateUserBalanceService,
     private readonly advisoryLockService: AdvisoryLockService,
   ) { }
 
@@ -152,55 +148,14 @@ export class GrantPromotionBonusService {
       expiresAt,
     });
 
-    // 2. 지갑에 보너스 지급 (Wallet Update)
-    if (bonusAmount.gt(0)) {
-      await this.updateUserBalanceService.updateBalance(
-        {
-          userId,
-          currency,
-          amount: bonusAmount,
-          operation: UpdateOperation.ADD,
-          balanceType: UserWalletBalanceType.BONUS,
-          transactionType: UserWalletTransactionType.BONUS_IN,
-          referenceId: userPromotion.id,
-        },
-        {
-          internalNote: `Promotion bonus granted: ${promotion.managementName}`,
-          actionName: WalletActionName.GRANT_PROMOTION_BONUS,
-        },
-      );
-    }
-
-    // 롤링 생성 (보너스 금액에만 롤링 적용)
-    let rollingCreated = false;
-    if (targetRollingAmount.gt(0)) {
-      const initialFundAmount = depositAmount.add(bonusAmount);
-      await this.createWageringRequirementService.execute({
-        userId,
-        currency,
-        sourceType: 'PROMOTION_BONUS',
-        targetType: 'AMOUNT',
-        principalAmount: bonusAmount,
-        multiplier: new Prisma.Decimal(rollingMultiplier),
-        bonusAmount: bonusAmount,
-        initialFundAmount: initialFundAmount,
-        realMoneyRatio: initialFundAmount.isZero() ? new Prisma.Decimal(0) : depositAmount.div(initialFundAmount),
-        isForfeitable: true,
-        sourceId: BigInt(userPromotion.id),
-        appliedConfig: { depositId: depositDetailId?.toString() },
-        requestInfo,
-      });
-      rollingCreated = true;
-    }
-
     this.logger.log(
-      `Promotion bonus granted: userId=${userId}, promotionId=${promotionId}, bonusAmount=${bonusAmount.toString()}`,
+      `Promotion participation recorded: userId=${userId}, promotionId=${promotionId}, bonusAmount=${bonusAmount.toString()}`,
     );
 
     return {
       userPromotion,
       bonusAmount,
-      rollingCreated,
+      rollingMultiplier,
     };
   }
 }

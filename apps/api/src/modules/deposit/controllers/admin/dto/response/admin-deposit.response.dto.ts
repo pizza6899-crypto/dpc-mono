@@ -39,9 +39,6 @@ export class AdminDepositListItemDto {
 }
 
 export class ApproveDepositResponseDto {
-  @ApiProperty({ description: '거래 ID / Transaction ID' })
-  transactionId: string;
-
   @ApiProperty({ description: '실제 입금액 / Actually paid amount' })
   actuallyPaid: string;
 

@@ -106,9 +106,19 @@ export interface WithdrawalMetadata extends BaseMetadata {
 }
 
 /**
+ * 입금 처리 메타데이터
+ */
+export interface DepositMetadata extends BaseMetadata {
+  depositId: string;
+  promotionId?: string;
+  bonusAmount?: string;
+  multiplier?: string;
+}
+
+/**
  * 기타 일반 메타데이터
  */
-export interface DefaultMetadata extends BaseMetadata {}
+export interface DefaultMetadata extends BaseMetadata { }
 
 /**
  * 모든 지갑 트랜잭션 메타데이터의 유니온 타입
@@ -122,4 +132,5 @@ export type AnyWalletTransactionMetadata =
   | PromotionMetadata
   | VaultOperationMetadata
   | WithdrawalMetadata
+  | DepositMetadata
   | DefaultMetadata;
