@@ -34,7 +34,7 @@ export interface ProcessVaultOperationParams {
  */
 @Injectable()
 export class ProcessVaultOperationService {
-  constructor(private readonly userBalanceService: UpdateUserBalanceService) {}
+  constructor(private readonly userBalanceService: UpdateUserBalanceService) { }
 
   @Transactional()
   async execute({
@@ -80,7 +80,7 @@ export class ProcessVaultOperationService {
     );
 
     // 2. Destination Balance Processing (돈이 들어오는 쪽)
-    return this.userBalanceService.updateBalance(
+    const { wallet } = await this.userBalanceService.updateBalance(
       {
         userId,
         currency,
@@ -99,5 +99,7 @@ export class ProcessVaultOperationService {
         },
       },
     );
+
+    return wallet;
   }
 }

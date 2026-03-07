@@ -29,11 +29,11 @@ export interface AdjustUserBalanceParams {
  */
 @Injectable()
 export class AdjustUserBalanceService {
-  constructor(private readonly userBalanceService: UpdateUserBalanceService) {}
+  constructor(private readonly userBalanceService: UpdateUserBalanceService) { }
 
   @Transactional()
   async execute(params: AdjustUserBalanceParams): Promise<UserWallet> {
-    return this.userBalanceService.updateBalance(
+    const { wallet } = await this.userBalanceService.updateBalance(
       {
         userId: params.userId,
         currency: params.currency,
@@ -49,5 +49,6 @@ export class AdjustUserBalanceService {
         actionName: WalletActionName.ADMIN_MANUAL_ADJUSTMENT,
       },
     );
+    return wallet;
   }
 }

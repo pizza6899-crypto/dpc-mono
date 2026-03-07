@@ -49,7 +49,6 @@ export class ApproveDepositService {
     private readonly createWageringRequirementService: CreateWageringRequirementService,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly wageringConfigService: GetWageringConfigService,
-    private readonly snowflakeService: SnowflakeService,
     private readonly createAdminMemoService: CreateAdminMemoService,
   ) { }
 
@@ -80,11 +79,8 @@ export class ApproveDepositService {
 
     const depositCurrency = deposit.depositCurrency;
 
-    // 5. Transaction ID 생성 (Snowflake) - Wallet과 Deposit이 동일한 ID 공유
-    const txId = this.snowflakeService.generate();
-
-    // 6. 잔액 업데이트
-    const updatedWallet = await this.updateUserBalanceService.updateBalance(
+    // 6. 잔액 업데이트 (txId는 Wallet 서비스에서 생성됨)
+    const { wallet: updatedWallet, txId } = await this.updateUserBalanceService.updateBalance(
       {
         userId: deposit.userId,
         currency: depositCurrency,
@@ -92,7 +88,6 @@ export class ApproveDepositService {
         operation: UpdateOperation.ADD,
         balanceType: UserWalletBalanceType.BONUS,
         transactionType: UserWalletTransactionType.DEPOSIT,
-        txId: txId.id, // 동기화된 ID 주입
         referenceId: deposit.id!,
       },
       {
@@ -157,7 +152,7 @@ export class ApproveDepositService {
     }
 
     return {
-      transactionId: txId.id.toString(),
+      transactionId: txId.toString(),
       actuallyPaid: actuallyPaid.toString(),
       bonusAmount: bonusAmount.toString(),
       userId: deposit.userId.toString(),

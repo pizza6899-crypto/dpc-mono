@@ -161,9 +161,6 @@ export class ProcessCasinoBetService {
 
     // 5-1. 현금(Cash) 차감
     if (cashDeduction.gt(0)) {
-      const { id } = this.snowflakeService.generate(betTime);
-      newCashTxId = id;
-
       // USD 환산 금액 계산 (Session 스냅샷 환율 기준)
       const cashDeductionUsd =
         session.walletCurrency === 'USD'
@@ -172,7 +169,7 @@ export class ProcessCasinoBetService {
             ? cashDeduction.mul(session.usdExchangeRate)
             : undefined;
 
-      updatedWallet = await this.updateUserBalanceService.updateBalance(
+      const result = await this.updateUserBalanceService.updateBalance(
         {
           userId: session.userId,
           currency: session.walletCurrency,
@@ -189,19 +186,18 @@ export class ProcessCasinoBetService {
             roundId: String(round.id),
             gameId: String(gameId),
             aggregatorTxId: transactionId,
-            gameTransactionId: String(newCashTxId),
             description,
             provider,
             splitType: 'CASH',
           },
         },
       );
+      updatedWallet = result.wallet;
+      newCashTxId = result.txId;
     }
 
     // 5-2. 보너스(Bonus) 차감
     if (bonusDeduction.gt(0)) {
-      const { id } = this.snowflakeService.generate(betTime);
-      newBonusTxId = id;
       const bonusDeductionUsd =
         session.walletCurrency === 'USD'
           ? bonusDeduction
@@ -209,7 +205,7 @@ export class ProcessCasinoBetService {
             ? bonusDeduction.mul(session.usdExchangeRate)
             : undefined;
 
-      updatedWallet = await this.updateUserBalanceService.updateBalance(
+      const result = await this.updateUserBalanceService.updateBalance(
         {
           userId: session.userId,
           currency: session.walletCurrency,
@@ -226,13 +222,14 @@ export class ProcessCasinoBetService {
             roundId: String(round.id),
             gameId: String(gameId),
             aggregatorTxId: transactionId,
-            gameTransactionId: String(newBonusTxId),
             description,
             provider,
             splitType: 'BONUS',
           },
         },
       );
+      updatedWallet = result.wallet;
+      newBonusTxId = result.txId;
     }
 
     // 6. 카지노 엔티티 영속화 (GameTransaction & 라운드 통계)

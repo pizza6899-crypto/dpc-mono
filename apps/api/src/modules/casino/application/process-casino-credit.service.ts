@@ -183,7 +183,7 @@ export class ProcessCasinoCreditService {
 
     // 4. 지급 처리 (현금 잔액으로 지급)
     const walletAmount = finalRefundAmount.div(session.exchangeRate);
-    const { id: newTxId } = this.snowflakeService.generate(winTime);
+    let newTxId: bigint = BigInt(0);
 
     let actionName: WalletActionName = WalletActionName.CASINO_WIN;
     let walletTxType: UserWalletTransactionType = UserWalletTransactionType.WIN;
@@ -217,7 +217,7 @@ export class ProcessCasinoCreditService {
             ? walletAmount.div(session.usdExchangeRate)
             : undefined;
 
-      updatedWallet = await this.updateUserBalanceService.updateBalance(
+      const result = await this.updateUserBalanceService.updateBalance(
         {
           userId: session.userId,
           currency: session.walletCurrency,
@@ -234,13 +234,14 @@ export class ProcessCasinoCreditService {
             roundId: String(round.id),
             gameId: String(gameId),
             aggregatorTxId: transactionId,
-            gameTransactionId: String(newTxId),
             description,
             provider,
             isOrphaned: round.isOrphaned,
           } as CasinoWinMetadata,
         },
       );
+      updatedWallet = result.wallet;
+      newTxId = result.txId;
     }
 
     // 5. 카지노 엔티티 영속화

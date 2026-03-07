@@ -54,7 +54,6 @@ export interface BalanceUpdateParams {
   operation: UpdateOperation;
   balanceType: UserWalletBalanceType;
   transactionType: UserWalletTransactionType;
-  txId?: bigint; // 상위 모듈에서 생성한 ID 주입 (양방향 참조 시)
   referenceId?: bigint;
   /**
    * USD 환산 금액 (선택 사항)
@@ -91,7 +90,7 @@ export class UpdateUserBalanceService {
   async updateBalance(
     params: BalanceUpdateParams,
     context: BalanceUpdateContext = {},
-  ): Promise<UserWallet> {
+  ): Promise<{ wallet: UserWallet; txId: bigint }> {
     const {
       userId,
       currency,
@@ -174,10 +173,8 @@ export class UpdateUserBalanceService {
       balanceType,
     });
 
-    // Generate Snowflake ID & Timestamp exactly here (Or use injected)
-    const injected = params.txId ? { id: params.txId, timestamp: this.snowflakeService.parse(params.txId).date } : null;
-    const { id: txId, timestamp: txCreatedAt } =
-      injected ?? this.snowflakeService.generate();
+    // Generate Snowflake ID & Timestamp exactly here
+    const { id: txId, timestamp: txCreatedAt } = this.snowflakeService.generate();
 
     const transaction = UserWalletTransaction.create({
       id: txId,
@@ -221,7 +218,7 @@ export class UpdateUserBalanceService {
       });
     }
 
-    return savedWallet;
+    return { wallet: savedWallet, txId };
   }
 
   private buildMetadata(
