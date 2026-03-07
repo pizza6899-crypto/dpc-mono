@@ -81,7 +81,6 @@ export class DepositController {
   async getMyDeposits(
     @Query() query: GetDepositsQueryDto,
     @CurrentUser() user: AuthenticatedUser,
-    @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<PaginatedData<UserDepositResponseDto>> {
     const result = await this.getMyDepositsService.execute({
       query: {

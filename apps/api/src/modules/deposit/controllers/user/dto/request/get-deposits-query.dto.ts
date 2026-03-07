@@ -4,11 +4,9 @@ import {
   DepositMethodType,
   ExchangeCurrencyCode,
 } from '@prisma/client';
-import { Transform } from 'class-transformer';
 import {
   IsDateString,
   IsEnum,
-  IsNumberString,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -44,14 +42,6 @@ export class GetDepositsQueryDto extends createPaginationQueryDto<DepositSortFie
   @IsOptional()
   @IsEnum(DepositMethodType)
   methodType?: DepositMethodType;
-
-  @ApiPropertyOptional({
-    description: '사용자 ID 필터 / User ID filter',
-  })
-  @IsOptional()
-  @IsNumberString()
-  @Transform(({ value }) => (value ? BigInt(value) : value))
-  userId?: bigint;
 
   @ApiPropertyOptional({
     description: '통화 필터 / Currency filter',
