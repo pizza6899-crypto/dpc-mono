@@ -46,7 +46,6 @@ export class DepositDetail {
     public readonly depositorAccount: string | null,
     public readonly ipAddress: string | null,
     public readonly deviceFingerprint: string | null,
-    private _failureReason: string | null,
     public readonly providerMetadata: Record<string, any> | null,
     public readonly createdAt: Date,
     private _updatedAt: Date,
@@ -94,7 +93,6 @@ export class DepositDetail {
       params.depositorAccount ?? null,
       params.ipAddress ?? null,
       params.deviceFingerprint ?? null,
-      null,
       params.providerMetadata ?? null,
       new Date(),
       new Date(),
@@ -131,7 +129,6 @@ export class DepositDetail {
     processedBy: bigint | null;
     ipAddress: string | null;
     deviceFingerprint: string | null;
-    failureReason: string | null;
     providerMetadata: Record<string, any> | null;
     createdAt: Date;
     updatedAt: Date;
@@ -167,7 +164,6 @@ export class DepositDetail {
       data.depositorAccount,
       data.ipAddress,
       data.deviceFingerprint,
-      data.failureReason,
       data.providerMetadata,
       data.createdAt,
       data.updatedAt,
@@ -204,7 +200,6 @@ export class DepositDetail {
     processedBy: bigint | null;
     ipAddress: string | null;
     deviceFingerprint: string | null;
-    failureReason: string | null;
     providerMetadata: Record<string, any> | null;
     createdAt: Date;
     updatedAt: Date;
@@ -239,7 +234,6 @@ export class DepositDetail {
       processedBy: this._processedBy,
       ipAddress: this.ipAddress,
       deviceFingerprint: this.deviceFingerprint,
-      failureReason: this._failureReason,
       providerMetadata: this.providerMetadata,
       createdAt: this.createdAt,
       updatedAt: this._updatedAt,
@@ -343,13 +337,6 @@ export class DepositDetail {
     return this.processedBy !== null;
   }
 
-  /**
-   * 실패 사유가 있는지 확인
-   */
-  hasFailureReason(): boolean {
-    return this._failureReason !== null && this._failureReason.length > 0;
-  }
-
   // Getters for mutable fields
   get transactionHash(): string | null {
     return this._transactionHash;
@@ -361,10 +348,6 @@ export class DepositDetail {
 
   get processedBy(): bigint | null {
     return this._processedBy;
-  }
-
-  get failureReason(): string | null {
-    return this._failureReason;
   }
 
   get updatedAt(): Date {
@@ -446,7 +429,6 @@ export class DepositDetail {
     this._status = DepositDetailStatus.REJECTED;
 
     // 메타데이터 업데이트
-    this._failureReason = failureReason;
     this._processedBy = adminId;
     this._failedAt = new Date();
     this._updatedAt = new Date();

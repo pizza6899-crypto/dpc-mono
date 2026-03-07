@@ -29,20 +29,16 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     private readonly mapper: DepositDetailMapper,
   ) { }
 
-  async findById(id: bigint): Promise<DepositDetail | null> {
-    const result = await this.tx.depositDetail.findUnique({
-      where: { id },
+  async findById(id: bigint, options?: { userId?: bigint }): Promise<DepositDetail | null> {
+    const { userId } = options ?? {};
+    const result = await this.tx.depositDetail.findFirst({
+      where: {
+        id,
+        ...(userId && { userId }),
+      },
     });
 
     return result ? this.mapper.toDomain(result) : null;
-  }
-
-  async getById(id: bigint): Promise<DepositDetail> {
-    const deposit = await this.findById(id);
-    if (!deposit) {
-      throw new DepositNotFoundException();
-    }
-    return deposit;
   }
 
   async update(deposit: DepositDetail): Promise<DepositDetail> {
@@ -164,20 +160,6 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     };
   }
 
-  async getByIdWithUser(id: bigint): Promise<DepositWithUser> {
-    const result = await this.tx.depositDetail.findUnique({
-      where: { id },
-    });
-
-    if (!result) {
-      throw new DepositNotFoundException();
-    }
-
-    return {
-      deposit: this.mapper.toDomain(result),
-      userEmail: null, // TODO: User 테이블에서 직접 조회하도록 변경 필요
-    };
-  }
 
   async getStats(): Promise<DepositStats> {
     const today = new Date();
@@ -236,26 +218,19 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     };
   }
 
-  async findByIdAndUserId(
-    id: bigint,
-    userId: bigint,
-  ): Promise<DepositDetail | null> {
-    const result = await this.tx.depositDetail.findFirst({
-      where: {
-        id,
-        userId,
-      },
-    });
-
-    return result ? this.mapper.toDomain(result) : null;
-  }
-
-  async existsPendingByUserId(userId: bigint): Promise<boolean> {
+  async hasInProgressByUserId(userId: bigint): Promise<boolean> {
     const count = await this.tx.depositDetail.count({
       where: {
         userId,
         status: {
-          in: ['PENDING', 'CONFIRMING'],
+          // 최종 처리가 완료되지 않은 모든 상태를 '진행 중'으로 간주합니다.
+          notIn: [
+            DepositDetailStatus.COMPLETED,
+            DepositDetailStatus.FAILED,
+            DepositDetailStatus.CANCELED,
+            DepositDetailStatus.REJECTED,
+            DepositDetailStatus.EXPIRED,
+          ],
         },
       },
     });

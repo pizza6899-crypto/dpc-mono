@@ -42,7 +42,6 @@ export class DepositDetailMapper {
     processedBy: bigint | null;
     ipAddress: string | null;
     deviceFingerprint: string | null;
-    failureReason: string | null;
     providerMetadata: any;
     createdAt: Date;
     updatedAt: Date;
@@ -74,7 +73,6 @@ export class DepositDetailMapper {
       processedBy: prismaModel.processedBy,
       ipAddress: prismaModel.ipAddress,
       deviceFingerprint: prismaModel.deviceFingerprint,
-      failureReason: prismaModel.failureReason,
       providerMetadata: prismaModel.providerMetadata,
       createdAt: prismaModel.createdAt,
       updatedAt: prismaModel.updatedAt,
@@ -95,7 +93,6 @@ export class DepositDetailMapper {
       processedBy: persistence.processedBy,
       confirmedAt: persistence.confirmedAt,
       updatedAt: persistence.updatedAt,
-      failureReason: persistence.failureReason,
       failedAt: persistence.failedAt,
       walletAddress: persistence.walletAddress,
       walletAddressExtraId: persistence.walletAddressExtraId,
@@ -130,7 +127,6 @@ export class DepositDetailMapper {
       processedBy: persistence.processedBy,
       ipAddress: persistence.ipAddress,
       deviceFingerprint: persistence.deviceFingerprint,
-      failureReason: persistence.failureReason,
       userId: persistence.userId,
       providerMetadata: persistence.providerMetadata ?? {},
       createdAt: persistence.createdAt,

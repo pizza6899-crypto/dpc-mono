@@ -7,7 +7,7 @@ import {
   Min,
 } from 'class-validator';
 
-export class ApproveFiatDepositDto {
+export class ApproveFiatDepositRequestDto {
   @ApiProperty({
     description: '실제 입금된 금액 / Actually paid amount',
     example: 100000,

@@ -1,6 +1,6 @@
 // src/modules/deposit/deposit.module.ts
 import { Module } from '@nestjs/common';
-import { DepositController } from './controllers/user/deposit.controller';
+import { UserDepositController } from './controllers/user/deposit.controller';
 import { AdminDepositController } from './controllers/admin/deposit.controller';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
@@ -68,7 +68,7 @@ import { NotificationModule } from '../notification/notification.module';
     CreateFiatDepositService,
     GetMyDepositsService,
   ],
-  controllers: [DepositController, AdminDepositController],
+  controllers: [UserDepositController, AdminDepositController],
   exports: [
     GetDepositStatsService,
     GetDepositsService,

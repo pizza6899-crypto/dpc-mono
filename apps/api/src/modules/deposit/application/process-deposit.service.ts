@@ -5,7 +5,7 @@ import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
 import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { DepositMethodType } from '@prisma/client';
-import { DepositUnauthorizedActionException } from '../domain';
+import { DepositUnauthorizedActionException, DepositNotFoundException } from '../domain';
 
 interface ProcessDepositParams {
     id: bigint;
@@ -34,7 +34,10 @@ export class ProcessDepositService {
         );
 
         // 1. DepositDetail 조회
-        const deposit = await this.depositRepository.getById(id);
+        const deposit = await this.depositRepository.findById(id);
+        if (!deposit) {
+            throw new DepositNotFoundException();
+        }
 
         // 2. 피아트(무통장 입금)인지 확인
         if (deposit.getMethod().methodType !== DepositMethodType.BANK_TRANSFER) {

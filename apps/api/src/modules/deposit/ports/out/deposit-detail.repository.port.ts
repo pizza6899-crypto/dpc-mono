@@ -31,12 +31,11 @@ export interface DepositStats {
 
 export interface DepositWithUser {
   deposit: DepositDetail;
-  userEmail: string | null;
+  userEmail?: string | null;
 }
 
 export interface DepositDetailRepositoryPort {
-  findById(id: bigint): Promise<DepositDetail | null>;
-  getById(id: bigint): Promise<DepositDetail>;
+  findById(id: bigint, options?: { userId?: bigint }): Promise<DepositDetail | null>;
   update(deposit: DepositDetail): Promise<DepositDetail>;
   create(deposit: DepositDetail): Promise<DepositDetail>;
   // User queries
@@ -44,13 +43,11 @@ export interface DepositDetailRepositoryPort {
     userId: bigint,
     query: DepositListQuery,
   ): Promise<{ items: DepositDetail[]; total: number }>;
-  findByIdAndUserId(id: bigint, userId: bigint): Promise<DepositDetail | null>;
-  existsPendingByUserId(userId: bigint): Promise<boolean>;
+  hasInProgressByUserId(userId: bigint): Promise<boolean>;
 
   // Admin queries
   list(
     query: DepositListQuery,
   ): Promise<{ items: DepositWithUser[]; total: number }>;
-  getByIdWithUser(id: bigint): Promise<DepositWithUser>;
   getStats(): Promise<DepositStats>;
 }

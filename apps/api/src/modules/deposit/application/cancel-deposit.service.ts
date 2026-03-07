@@ -33,7 +33,7 @@ export class CancelDepositService {
     );
 
     // 2. DepositDetail 조회 (본인 것만)
-    const deposit = await this.depositRepository.findByIdAndUserId(id, userId);
+    const deposit = await this.depositRepository.findById(id, { userId });
     if (!deposit) {
       throw new DepositNotFoundException();
     }

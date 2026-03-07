@@ -86,15 +86,14 @@ export class CreateFiatDepositService {
       },
     );
 
-    // 0. 유저 상태 및 요구조건 검증 (Policy 적용 - 세션 정보 활용)
-    this.depositRequirementPolicy.validateFiatRequirements(user);
-
-    // 1. 중복 입금 신청 확인 (Pending 상태인 입금이 있으면 차단)
+    // 0. 유저 상태 및 요구조건 검증 (Policy 적용)
     const hasPendingDeposit =
-      await this.depositRepository.existsPendingByUserId(userId);
-    if (hasPendingDeposit) {
-      throw new PendingDepositExistsException();
-    }
+      await this.depositRepository.hasInProgressByUserId(userId);
+
+    this.depositRequirementPolicy.validateFiatRequirements({
+      ...user,
+      hasPendingDeposit,
+    });
 
     let promotionId: bigint | null = null;
 

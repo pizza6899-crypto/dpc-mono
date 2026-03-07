@@ -22,6 +22,7 @@ import { CreateWageringRequirementService } from 'src/modules/wagering/requireme
 import { GetWageringConfigService } from 'src/modules/wagering/config/application/get-wagering-config.service';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { CreateAdminMemoService } from '../../admin-memo/application/create-admin-memo.service';
+import { DepositNotFoundException } from '../domain';
 
 interface ApproveDepositParams {
   id: bigint;
@@ -69,8 +70,11 @@ export class ApproveDepositService {
       },
     );
 
-    // 1. DepositDetail 조회 (transaction 포함)
-    const deposit = await this.depositRepository.getById(id);
+    // 1. DepositDetail 조회
+    const deposit = await this.depositRepository.findById(id);
+    if (!deposit) {
+      throw new DepositNotFoundException();
+    }
 
     // 2. 엔티티 비즈니스 로직 실행 전 검증 (이미 처리된 경우 등)
     if (!deposit.canBeProcessed()) {

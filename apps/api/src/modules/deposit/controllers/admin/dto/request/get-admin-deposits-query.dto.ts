@@ -20,7 +20,7 @@ type DepositSortFields =
   | 'actuallyPaid'
   | 'confirmedAt';
 
-export class GetDepositsQueryDto extends createPaginationQueryDto<DepositSortFields>(
+export class GetAdminDepositsQueryDto extends createPaginationQueryDto<DepositSortFields>(
   {
     defaultLimit: 20,
     maxLimit: 100,

@@ -8,7 +8,6 @@ import {
   IsDateString,
   IsEnum,
   IsOptional,
-  IsString,
 } from 'class-validator';
 import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
 
@@ -18,7 +17,7 @@ type DepositSortFields =
   | 'actuallyPaid'
   | 'confirmedAt';
 
-export class GetDepositsQueryDto extends createPaginationQueryDto<DepositSortFields>(
+export class GetUserDepositsQueryDto extends createPaginationQueryDto<DepositSortFields>(
   {
     defaultLimit: 20,
     maxLimit: 100,

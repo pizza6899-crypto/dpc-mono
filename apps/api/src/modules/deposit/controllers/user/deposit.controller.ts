@@ -35,11 +35,9 @@ import { CreateCryptoDepositService } from '../../application/create-crypto-depo
 import { CreateFiatDepositService } from '../../application/create-fiat-deposit.service';
 import { GetMyDepositsService } from '../../application/get-my-deposits.service';
 import { CancelDepositService } from '../../application/cancel-deposit.service';
-import {
-  UserDepositResponseDto,
-  CancelDepositResponseDto,
-} from './dto/response/deposit.response.dto';
-import { GetDepositsQueryDto } from './dto/request/get-deposits-query.dto';
+import { UserDepositResponseDto } from './dto/response/user-deposit.response.dto';
+import { GetUserDepositsQueryDto } from './dto/request/get-user-deposits-query.dto';
+import { CancelDepositResponseDto } from './dto/response/cancel-deposit-response.dto';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { DepositDetail } from '../../domain';
@@ -48,7 +46,7 @@ import { DepositDetail } from '../../domain';
 @Controller('deposits')
 @ApiCookieAuth()
 @ApiStandardErrors()
-export class DepositController {
+export class UserDepositController {
   constructor(
     private readonly createCryptoDepositService: CreateCryptoDepositService,
     private readonly createFiatDepositService: CreateFiatDepositService,
@@ -79,7 +77,7 @@ export class DepositController {
     category: 'DEPOSIT',
   })
   async getMyDeposits(
-    @Query() query: GetDepositsQueryDto,
+    @Query() query: GetUserDepositsQueryDto,
     @CurrentUser() user: AuthenticatedUser,
   ): Promise<PaginatedData<UserDepositResponseDto>> {
     const result = await this.getMyDepositsService.execute({
@@ -232,17 +230,12 @@ export class DepositController {
       id: this.sqidsService.encode(deposit.id!, SqidsPrefix.DEPOSIT),
       status: deposit.status,
       methodType: deposit.getMethod().methodType,
-      provider: deposit.getMethod().provider as any,
       requestedAmount: amount.requestedAmount.toString(),
-      actuallyPaid: amount.actuallyPaid?.toString() ?? null,
-      feeAmount: amount.feeAmount?.toString() ?? null,
       depositCurrency: deposit.depositCurrency,
       walletAddress: deposit.walletAddress,
       depositNetwork: deposit.depositNetwork,
       createdAt: deposit.createdAt,
       confirmedAt: deposit.confirmedAt ?? null,
-      failedAt: deposit.failedAt ?? null,
-      failureReason: deposit.failureReason ?? null,
     };
   }
 }

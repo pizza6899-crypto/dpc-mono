@@ -21,15 +21,15 @@ import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import type { PaginatedData, RequestClientInfo } from 'src/common/http/types';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
-import { GetDepositsQueryDto } from './dto/request/get-deposits-query.dto';
-import { ApproveFiatDepositDto } from './dto/request/approve-fiat-deposit.dto';
-import { RejectDepositDto } from './dto/request/reject-deposit.dto';
+import { GetAdminDepositsQueryDto } from './dto/request/get-admin-deposits-query.dto';
+import { ApproveFiatDepositRequestDto } from './dto/request/approve-fiat-deposit-request.dto';
+import { RejectDepositRequestDto } from './dto/request/reject-deposit-request.dto';
 import {
   AdminDepositListItemDto,
   ApproveDepositResponseDto,
   RejectDepositResponseDto,
   ProcessDepositResponseDto,
-} from './dto/response/deposit.response.dto';
+} from './dto/response/admin-deposit.response.dto';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 import { GetDepositStatsService } from '../../application/get-deposit-stats.service';
@@ -130,7 +130,7 @@ export class AdminDepositController {
     category: 'DEPOSIT',
   })
   async getDeposits(
-    @Query() query: GetDepositsQueryDto,
+    @Query() query: GetAdminDepositsQueryDto,
   ): Promise<PaginatedData<AdminDepositListItemDto>> {
     const result = await this.getDepositsService.execute({
       query: {
@@ -157,7 +157,6 @@ export class AdminDepositController {
         depositCurrency: item.deposit.depositCurrency,
         createdAt: item.deposit.createdAt,
         updatedAt: item.deposit.updatedAt,
-        failureReason: item.deposit.failureReason || '',
         memo: item.memo || '',
       })),
       page: result.page,
@@ -205,7 +204,6 @@ export class AdminDepositController {
       depositCurrency: result.deposit.depositCurrency,
       createdAt: result.deposit.createdAt,
       updatedAt: result.deposit.updatedAt,
-      failureReason: result.deposit.failureReason || '',
       memo: result.memo || '',
     };
   }
@@ -271,7 +269,7 @@ export class AdminDepositController {
   })
   async approveDeposit(
     @Param('id') id: string,
-    @Body() dto: ApproveFiatDepositDto,
+    @Body() dto: ApproveFiatDepositRequestDto,
     @CurrentUser() admin: AuthenticatedUser,
     @RequestClientInfoParam() requestInfo: RequestClientInfo,
   ): Promise<ApproveDepositResponseDto> {
@@ -311,12 +309,12 @@ export class AdminDepositController {
   })
   async rejectDeposit(
     @Param('id') id: string,
-    @Body() dto: RejectDepositDto,
+    @Body() dto: RejectDepositRequestDto,
     @CurrentUser() admin: AuthenticatedUser,
   ): Promise<RejectDepositResponseDto> {
     return await this.rejectDepositService.execute({
       id: BigInt(id),
-      failureReason: dto.failureReason,
+      memo: dto.memo,
       adminId: admin.id,
     });
   }

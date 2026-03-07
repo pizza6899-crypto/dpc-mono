@@ -4,6 +4,7 @@ import {
     UserStatusNotActiveException,
     PhoneNotVerifiedException,
     IdentityNotVerifiedException,
+    PendingDepositExistsException,
 } from '../deposit.exception';
 
 /**
@@ -16,6 +17,7 @@ export interface DepositUserContext {
     isPhoneVerified: boolean;
     isIdentityVerified: boolean;
     isKycMandatory: boolean;
+    hasPendingDeposit: boolean;
 }
 
 /**
@@ -34,11 +36,23 @@ export class DepositRequirementPolicy {
     }
 
     /**
+     * 중복 입금 신청 제한 정책
+     */
+    private validateNoPendingDeposit(hasPending: boolean): void {
+        if (hasPending) {
+            throw new PendingDepositExistsException();
+        }
+    }
+
+    /**
      * 피아트(Fiat/무통장) 입금 요구조건 검증
      */
     validateFiatRequirements(user: DepositUserContext): void {
         // 1. 공통 상태 체크
         this.validateActiveStatus(user);
+
+        // 2. 중복 입금 신청 체크
+        this.validateNoPendingDeposit(user.hasPendingDeposit);
 
         // 2. 피아트 특화 조건: 휴대폰 인증 필수
         if (!user.isPhoneVerified) {
@@ -57,6 +71,9 @@ export class DepositRequirementPolicy {
     validateCryptoRequirements(user: DepositUserContext): void {
         // 1. 공통 상태 체크
         this.validateActiveStatus(user);
+
+        // 2. 중복 입금 신청 체크
+        this.validateNoPendingDeposit(user.hasPendingDeposit);
 
         // 2. 크립토는 현재 별도의 추가 인증 없이 허용 (모든 조건 허용)
     }
