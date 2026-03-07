@@ -35,12 +35,6 @@ export class CreateDepositResponseDto {
   transactionId?: string;
 
   @ApiPropertyOptional({
-    description: '중복 요청 여부 / Is duplicate request',
-    example: false,
-  })
-  isDuplicate?: boolean;
-
-  @ApiPropertyOptional({
     description: '입금 기록 ID / Deposit Record ID',
   })
   id?: string;

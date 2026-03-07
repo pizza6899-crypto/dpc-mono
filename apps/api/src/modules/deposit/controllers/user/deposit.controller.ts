@@ -141,7 +141,6 @@ export class UserDepositController {
       payNetwork: deposit.depositNetwork ?? undefined,
       payAddressExtraId: deposit.walletAddressExtraId,
       transactionId: deposit.transactionId?.toString(),
-      isDuplicate: false,
     };
   }
 
@@ -181,7 +180,6 @@ export class UserDepositController {
       id: this.sqidsService.encode(result.deposit.id!, SqidsPrefix.DEPOSIT),
       payCurrency: result.deposit.depositCurrency,
       transactionId: result.deposit.transactionId?.toString(),
-      isDuplicate: false,
     };
   }
 
