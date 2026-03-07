@@ -1,0 +1,42 @@
+import { Injectable } from '@nestjs/common';
+import { InjectTransaction } from '@nestjs-cls/transactional';
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
+import { ChatConfig } from '../domain/chat-config.entity';
+import { ChatConfigRepositoryPort } from '../ports/chat-config.repository.port';
+
+@Injectable()
+export class ChatConfigRepository implements ChatConfigRepositoryPort {
+    constructor(
+        @InjectTransaction()
+        private readonly tx: PrismaTransaction,
+    ) { }
+
+    async find(): Promise<ChatConfig | null> {
+        const record = await this.tx.chatConfig.findUnique({
+            where: { id: ChatConfig.SINGLETON_ID },
+        });
+
+        return record ? ChatConfig.fromPersistence(record) : null;
+    }
+
+    async save(config: ChatConfig): Promise<void> {
+        await this.tx.chatConfig.upsert({
+            where: { id: ChatConfig.SINGLETON_ID },
+            update: {
+                isGlobalChatEnabled: config.isGlobalChatEnabled,
+                maxMessageLength: config.maxMessageLength,
+                defaultSlowModeSeconds: config.defaultSlowModeSeconds,
+                minChatTierLevel: config.minChatTierLevel,
+                blockDuplicateMessages: config.blockDuplicateMessages,
+            },
+            create: {
+                id: ChatConfig.SINGLETON_ID,
+                isGlobalChatEnabled: config.isGlobalChatEnabled,
+                maxMessageLength: config.maxMessageLength,
+                defaultSlowModeSeconds: config.defaultSlowModeSeconds,
+                minChatTierLevel: config.minChatTierLevel,
+                blockDuplicateMessages: config.blockDuplicateMessages,
+            },
+        });
+    }
+}
