@@ -15,7 +15,6 @@ import { FindWalletStatisticsService } from './application/find-wallet-statistic
 import { USER_WALLET_REPOSITORY } from './ports/out/user-wallet.repository.token';
 import { WalletController } from './controllers/user/wallet.controller';
 import { WalletAdminController } from './controllers/admin/wallet-admin.controller';
-import { UserProfileModule } from '../user/profile/user-profile.module';
 import { USER_WALLET_TRANSACTION_REPOSITORY } from './ports/out/user-wallet-transaction.repository.token';
 import { UserWalletTransactionRepository } from './infrastructure/wallet-transaction.repository';
 import { UpdateUserBalanceService } from './application/update-user-balance.service';
@@ -52,7 +51,6 @@ import { USER_ANALYTICS_QUEUES } from '../user-analytics/infrastructure/queue/us
  */
 @Module({
   imports: [
-    UserProfileModule,
     SqidsModule,
     ConcurrencyModule,
     ExchangeModule,

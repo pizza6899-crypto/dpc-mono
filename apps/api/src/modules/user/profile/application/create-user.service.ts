@@ -18,6 +18,8 @@ import { RegistrationMethod, UserRoleType, OAuthProvider, ExchangeCurrencyCode, 
 import { GetUserConfigService } from '../../config/application/get-user-config.service';
 import { CreateAlertService } from 'src/modules/notification/alert/application/create-alert.service';
 import { NOTIFICATION_EVENTS } from 'src/modules/notification/common';
+import { InitializeUserTierService } from 'src/modules/tier/profile/application/initialize-user-tier.service';
+import { InitializeUserWalletsService } from 'src/modules/wallet/application/initialize-user-wallets.service';
 
 interface CreateUserServiceParams {
   loginId: string;
@@ -56,6 +58,8 @@ export class CreateUserService {
     private readonly userRepository: UserRepositoryPort,
     private readonly getUserConfigService: GetUserConfigService,
     private readonly createAlertService: CreateAlertService,
+    private readonly initializeUserTierService: InitializeUserTierService,
+    private readonly initializeUserWalletsService: InitializeUserWalletsService,
   ) { }
 
   @Transactional()
@@ -134,6 +138,12 @@ export class CreateUserService {
     });
 
     this.logger.log(`새로운 사용자 생성됨: ${user.loginId} (ID: ${user.id})`);
+
+    // 6. 티어 초기화
+    await this.initializeUserTierService.execute(user.id);
+
+    // 7. 지갑 초기화
+    await this.initializeUserWalletsService.execute(user.id);
 
     // 알림 발송
     await this.createAlertService.execute({
