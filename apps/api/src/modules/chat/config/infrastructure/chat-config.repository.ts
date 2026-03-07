@@ -28,17 +28,9 @@ export class ChatConfigRepository implements ChatConfigRepositoryPort {
     }
 
     async save(config: ChatConfig): Promise<void> {
-        await this.tx.chatConfig.upsert({
+        await this.tx.chatConfig.update({
             where: { id: ChatConfig.SINGLETON_ID },
-            update: {
-                isGlobalChatEnabled: config.isGlobalChatEnabled,
-                maxMessageLength: config.maxMessageLength,
-                defaultSlowModeSeconds: config.defaultSlowModeSeconds,
-                minChatTierLevel: config.minChatTierLevel,
-                blockDuplicateMessages: config.blockDuplicateMessages,
-            },
-            create: {
-                id: ChatConfig.SINGLETON_ID,
+            data: {
                 isGlobalChatEnabled: config.isGlobalChatEnabled,
                 maxMessageLength: config.maxMessageLength,
                 defaultSlowModeSeconds: config.defaultSlowModeSeconds,
