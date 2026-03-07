@@ -30,13 +30,13 @@ export class CreateCategoryService {
     private readonly repository: CategoryRepositoryPort,
     private readonly attachFileService: AttachFileService,
     private readonly envService: EnvService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(params: CreateCategoryParams): Promise<CasinoGameCategory> {
     const existing = await this.repository.findByCode(params.code);
     if (existing) {
-      throw new CategoryAlreadyExistsException(params.code);
+      throw new CategoryAlreadyExistsException();
     }
 
     // 1. Create category without URLs first to get ID

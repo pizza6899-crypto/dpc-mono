@@ -35,6 +35,35 @@ export const CACHE_CONFIG = {
       ttlSeconds: 86400, // 24시간
       store: CacheStore.REDIS,
     }),
+    AGGREGATOR: {
+      BY_ID: (id: bigint) => ({
+        key: `casino:aggregator:id:${id}`,
+        ttlSeconds: 60,
+        store: CacheStore.MEMORY,
+      }),
+      BY_CODE: (code: string) => ({
+        key: `casino:aggregator:code:${code}`,
+        ttlSeconds: 60,
+        store: CacheStore.MEMORY,
+      }),
+    },
+    PROVIDER: {
+      BY_ID: (id: bigint) => ({
+        key: `casino:provider:id:${id}`,
+        ttlSeconds: 60,
+        store: CacheStore.MEMORY,
+      }),
+      BY_CODE: (aggregatorId: bigint, code: string) => ({
+        key: `casino:provider:code:${aggregatorId}:${code}`,
+        ttlSeconds: 60,
+        store: CacheStore.MEMORY,
+      }),
+      BY_EXTERNAL_ID: (aggregatorId: bigint, externalId: string) => ({
+        key: `casino:provider:ext:${aggregatorId}:${externalId}`,
+        ttlSeconds: 60,
+        store: CacheStore.MEMORY,
+      }),
+    },
   },
   /**
    * 웨이저링 관련

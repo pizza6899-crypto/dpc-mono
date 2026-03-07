@@ -5,55 +5,26 @@ import { CasinoAggregatorRepositoryPort } from '../ports/casino-aggregator.repos
 import { CasinoAggregator, CasinoAggregatorNotFoundException } from '../domain';
 import { CasinoAggregatorMapper } from './casino-aggregator.mapper';
 import { AggregatorStatus } from '@prisma/client';
+import { CacheService } from 'src/common/cache/cache.service';
+import { CACHE_CONFIG } from 'src/common/cache/cache.constants';
 
 @Injectable()
 export class CasinoAggregatorRepository implements CasinoAggregatorRepositoryPort {
-  private readonly cacheById = new Map<
-    bigint,
-    { data: CasinoAggregator; timestamp: number }
-  >();
-  private readonly cacheByCode = new Map<
-    string,
-    { data: CasinoAggregator; timestamp: number }
-  >();
-  private readonly CACHE_TTL = 60 * 1000; // 1분 캐시
-
   constructor(
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: CasinoAggregatorMapper,
+    private readonly cacheService: CacheService,
   ) { }
 
   async findById(id: bigint): Promise<CasinoAggregator | null> {
-    const cached = this.cacheById.get(id);
-    const now = Date.now();
-
-    if (cached && now - cached.timestamp < this.CACHE_TTL) {
-      return cached.data;
-    }
-
-    const result = await this.tx.casinoAggregator.findUnique({ where: { id } });
-    if (result) {
-      const domain = this.mapper.toDomain(result);
-      this.updateCache(domain);
-      return domain;
-    }
-    return null;
-  }
-
-  private updateCache(aggregator: CasinoAggregator): void {
-    const now = Date.now();
-    if (aggregator.id) {
-      this.cacheById.set(aggregator.id, { data: aggregator, timestamp: now });
-    }
-    this.cacheByCode.set(aggregator.code, { data: aggregator, timestamp: now });
-  }
-
-  private clearCache(aggregator: CasinoAggregator): void {
-    if (aggregator.id) {
-      this.cacheById.delete(aggregator.id);
-    }
-    this.cacheByCode.delete(aggregator.code);
+    return this.cacheService.getOrSet(
+      CACHE_CONFIG.CASINO.AGGREGATOR.BY_ID(id),
+      async () => {
+        const result = await this.tx.casinoAggregator.findUnique({ where: { id } });
+        return result ? this.mapper.toDomain(result) : null;
+      },
+    );
   }
 
   async getById(id: bigint): Promise<CasinoAggregator> {
@@ -63,22 +34,15 @@ export class CasinoAggregatorRepository implements CasinoAggregatorRepositoryPor
   }
 
   async findByCode(code: string): Promise<CasinoAggregator | null> {
-    const cached = this.cacheByCode.get(code);
-    const now = Date.now();
-
-    if (cached && now - cached.timestamp < this.CACHE_TTL) {
-      return cached.data;
-    }
-
-    const result = await this.tx.casinoAggregator.findUnique({
-      where: { code },
-    });
-    if (result) {
-      const domain = this.mapper.toDomain(result);
-      this.updateCache(domain);
-      return domain;
-    }
-    return null;
+    return this.cacheService.getOrSet(
+      CACHE_CONFIG.CASINO.AGGREGATOR.BY_CODE(code),
+      async () => {
+        const result = await this.tx.casinoAggregator.findUnique({
+          where: { code },
+        });
+        return result ? this.mapper.toDomain(result) : null;
+      },
+    );
   }
 
   async getByCode(code: string): Promise<CasinoAggregator> {
@@ -113,8 +77,11 @@ export class CasinoAggregatorRepository implements CasinoAggregatorRepositoryPor
     });
     const domain = this.mapper.toDomain(result);
 
-    // 캐시 무효화: 다음 조회 시 DB에서 최신 데이터를 읽어오도록 함
-    this.clearCache(domain);
+    // 캐시 무효화: ID와 Code 둘 다 삭제
+    await Promise.all([
+      this.cacheService.del(CACHE_CONFIG.CASINO.AGGREGATOR.BY_ID(domain.id!)),
+      this.cacheService.del(CACHE_CONFIG.CASINO.AGGREGATOR.BY_CODE(domain.code)),
+    ]);
 
     return domain;
   }

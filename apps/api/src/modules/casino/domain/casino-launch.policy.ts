@@ -58,14 +58,14 @@ export class CasinoLaunchPolicy {
     // 3. 어그리게이터 상태 체크
     if (!aggregator.isActive()) {
       if (aggregator.isMaintenance()) {
-        throw new CasinoAggregatorMaintenanceException(aggregator.code);
+        throw new CasinoAggregatorMaintenanceException();
       }
-      throw new CasinoAggregatorInactiveException(aggregator.code);
+      throw new CasinoAggregatorInactiveException();
     }
 
     // 4. API 통신 가능 여부 체크
     if (!aggregator.apiEnabled) {
-      throw new CasinoAggregatorMaintenanceException(aggregator.code);
+      throw new CasinoAggregatorMaintenanceException();
     }
 
     // 5. 유저 상태 체크 (필요한 경우 추가)

@@ -86,7 +86,6 @@ export class ApproveDepositService {
 
     if (!walletBefore) {
       throw new WalletNotFoundException(
-        deposit.userId,
         deposit.depositCurrency,
       );
     }

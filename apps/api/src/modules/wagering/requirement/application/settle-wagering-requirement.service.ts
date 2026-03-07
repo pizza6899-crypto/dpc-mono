@@ -28,7 +28,7 @@ export class SettleWageringRequirementService {
     private readonly repository: WageringRequirementRepositoryPort,
     private readonly updateBalanceService: UpdateUserBalanceService,
     private readonly findWalletService: FindUserWalletService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(command: SettleWageringRequirementCommand): Promise<void> {
@@ -62,7 +62,7 @@ export class SettleWageringRequirementService {
     // 4. 유저 지갑 상태 조회
     const wallet = await this.findWalletService.findWallet(userId, currency);
     if (!wallet) {
-      throw new WalletNotFoundException(userId, currency);
+      throw new WalletNotFoundException(currency);
     }
 
     const currentBonus = wallet.bonus ?? new Prisma.Decimal(0);
