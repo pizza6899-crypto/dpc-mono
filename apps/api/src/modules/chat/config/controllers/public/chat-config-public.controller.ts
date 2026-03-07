@@ -1,6 +1,7 @@
 import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiStandardResponse, ApiStandardErrors } from 'src/common/http/decorators/api-response.decorator';
+import { Public } from 'src/common/auth/decorators/roles.decorator';
 import { GetChatConfigService } from '../../application/get-chat-config.service';
 import { ChatConfigPublicResponseDto } from './dto/response/chat-config-public.response.dto';
 
@@ -11,6 +12,7 @@ export class ChatConfigPublicController {
     constructor(private readonly getChatConfigService: GetChatConfigService) { }
 
     @Get()
+    @Public()
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
         summary: 'Get global chat configuration / 글로벌 채팅 설정 조회',
