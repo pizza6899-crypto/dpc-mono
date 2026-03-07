@@ -2,7 +2,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma, AdjustmentReasonCode } from '@prisma/client';
-
 import type { RequestClientInfo } from 'src/common/http/types';
 import { DepositAlreadyProcessedException } from '../domain';
 import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
@@ -50,7 +49,6 @@ export class ApproveDepositService {
     private readonly grantPromotionBonusService: GrantPromotionBonusService,
     private readonly createWageringRequirementService: CreateWageringRequirementService,
     private readonly advisoryLockService: AdvisoryLockService,
-    private readonly exchangeRateService: ExchangeRateService,
     private readonly wageringConfigService: GetWageringConfigService,
     private readonly snowflakeService: SnowflakeService,
     private readonly createAdminMemoService: CreateAdminMemoService,
@@ -88,22 +86,12 @@ export class ApproveDepositService {
       true,
     );
 
+    const depositCurrency = deposit.depositCurrency;
+
     if (!walletBefore) {
       throw new WalletNotFoundException(
         deposit.depositCurrency,
       );
-    }
-
-    // 4. USD 환산 산정 (티어 실적 반영용)
-    const depositCurrency =
-      deposit.depositCurrency as unknown as ExchangeCurrencyCode;
-    let amountUsd = actuallyPaid;
-    if (depositCurrency !== ExchangeCurrencyCode.USD) {
-      const rate = await this.exchangeRateService.getRate({
-        fromCurrency: depositCurrency,
-        toCurrency: ExchangeCurrencyCode.USD,
-      });
-      amountUsd = actuallyPaid.mul(rate);
     }
 
     // 5. Transaction ID 생성 (Snowflake) - Wallet과 Deposit이 동일한 ID 공유
@@ -120,7 +108,6 @@ export class ApproveDepositService {
         transactionType: UserWalletTransactionType.DEPOSIT,
         txId: txId.id, // 동기화된 ID 주입
         referenceId: deposit.id!,
-        amountUsd, // 산정된 USD 금액 전달
       },
       {
         adminUserId: adminId,

@@ -76,4 +76,4 @@ import { WalletModule } from '../../wallet/wallet.module';
     WAGERING_CONTRIBUTION_LOG_REPOSITORY,
   ],
 })
-export class RequirementModule {}
+export class RequirementModule { }
