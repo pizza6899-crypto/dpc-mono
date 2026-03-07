@@ -19,7 +19,7 @@ import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
 import { GameTransaction } from '../domain/model/game-transaction.entity';
 import { CheckCasinoBalanceService } from './check-casino-balance.service';
 import { BettingPolicy } from '../domain/service/betting-policy.service';
-import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
+import { GetUserWalletService } from 'src/modules/wallet/application/get-user-wallet.service';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 export interface ProcessCasinoBetCommand {
@@ -50,7 +50,7 @@ export class ProcessCasinoBetService {
     private readonly gameTransactionRepository: GameTransactionRepositoryPort,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
     private readonly checkCasinoBalanceService: CheckCasinoBalanceService,
-    private readonly findUserWalletService: FindUserWalletService,
+    private readonly getUserWalletService: GetUserWalletService,
     private readonly advisoryLockService: AdvisoryLockService,
   ) { }
 
@@ -140,16 +140,11 @@ export class ProcessCasinoBetService {
     }
 
     // 4. 차감 금액 계산 (믹스벳 정책 적용)
-    const userWallet = await this.findUserWalletService.findWallet(
+    const userWallet = await this.getUserWalletService.getWallet(
       session.userId,
       session.walletCurrency,
       false,
     );
-    if (!userWallet) {
-      throw new Error(
-        `User wallet not found: ${session.userId}, ${session.walletCurrency}`,
-      );
-    }
 
     const walletAmount = amount.div(session.exchangeRate);
     const { cashDeduction, bonusDeduction, cashGameAmount, bonusGameAmount } =

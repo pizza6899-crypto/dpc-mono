@@ -9,7 +9,7 @@ import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
-import { FindUserWalletService } from '../../application/find-user-wallet.service';
+import { GetUserWalletService } from '../../application/get-user-wallet.service';
 import { FindWalletTransactionHistoryService } from '../../application/find-wallet-transaction-history.service';
 import { UserWalletListResponseDto } from './dto/response/user-wallet.response.dto';
 import { GetUserBalanceQueryDto } from './dto/request/get-user-balance-query.dto';
@@ -28,7 +28,7 @@ import { PaginatedData } from 'src/common/http/types/pagination.types';
 @ApiStandardErrors()
 export class WalletController {
   constructor(
-    private readonly findUserWalletService: FindUserWalletService,
+    private readonly getUserWalletService: GetUserWalletService,
     private readonly findWalletTransactionHistoryService: FindWalletTransactionHistoryService,
     private readonly sqidsService: SqidsService,
   ) { }
@@ -83,16 +83,13 @@ export class WalletController {
     let wallets: UserWallet[] = [];
 
     if (query.currency) {
-      const wallet = await this.findUserWalletService.findWallet(
+      const wallet = await this.getUserWalletService.getWallet(
         userId,
         query.currency,
       );
-      if (!wallet) {
-        throw new WalletNotFoundException(query.currency);
-      }
       wallets.push(wallet);
     } else {
-      wallets = await this.findUserWalletService.findWallets(userId);
+      wallets = await this.getUserWalletService.getWallets(userId);
     }
 
     return {

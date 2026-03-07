@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
-import { FindUserWalletService } from '../../wallet/application/find-user-wallet.service';
+import { GetUserWalletService } from '../../wallet/application/get-user-wallet.service';
 import { CheckWageringRequirementService } from '../../wagering/requirement/application/check-wagering-requirement.service';
 import { WithdrawalEligibilityResponseDto } from '../controllers/user/dto/response/withdrawal-eligibility.response.dto';
 
@@ -12,7 +12,7 @@ export interface GetWithdrawalEligibilityParams {
 @Injectable()
 export class GetWithdrawalEligibilityService {
     constructor(
-        private readonly findUserWalletService: FindUserWalletService,
+        private readonly getUserWalletService: GetUserWalletService,
         private readonly checkWageringService: CheckWageringRequirementService,
     ) { }
 
@@ -26,11 +26,8 @@ export class GetWithdrawalEligibilityService {
         const { userId, currency } = params;
 
         // 1. 유저 보유 지갑의 '캐시' 스냅샷 가져오기
-        let cashBalance = new Prisma.Decimal(0);
-        const wallet = await this.findUserWalletService.findWallet(userId, currency);
-        if (wallet) {
-            cashBalance = wallet.cash; // 본 현금
-        }
+        const wallet = await this.getUserWalletService.getWallet(userId, currency);
+        const cashBalance = wallet.cash; // 본 현금
 
         // 2. 롤링(Wagering) 및 출금 제재 상태 확인
         const wageringSummary = await this.checkWageringService.getSummary(

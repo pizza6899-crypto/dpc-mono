@@ -1,26 +1,27 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { USER_WALLET_REPOSITORY } from '../ports/out/user-wallet.repository.token';
 import type { UserWalletRepositoryPort } from '../ports/out/user-wallet.repository.port';
-import { UserWallet } from '../domain';
+import { UserWallet, WalletNotFoundException } from '../domain';
 import { ExchangeCurrencyCode } from '@prisma/client';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 
 @Injectable()
-export class FindUserWalletService {
+export class GetUserWalletService {
   constructor(
     @Inject(USER_WALLET_REPOSITORY)
     private readonly repository: UserWalletRepositoryPort,
-  ) {}
+  ) { }
 
   /**
-   * 단일 통화 지갑 조회
-   * @param autoCreate 존재하지 않을 경우 생성 여부
+   * 단일 통화 지갑 가져오기 (없으면 생성하거나 예외 발생)
+   * @param autoCreate 존재하지 않을 경우 생성 여부 (false일 경우 없으면 예외 발생)
+   * @throws {WalletNotFoundException} 지갑을 찾을 수 없고 생성이 불가능할 때
    */
-  async findWallet(
+  async getWallet(
     userId: bigint,
     currency: ExchangeCurrencyCode,
     autoCreate: boolean = true,
-  ): Promise<UserWallet | null> {
+  ): Promise<UserWallet> {
     let wallet = await this.repository.findByUserIdAndCurrency(
       userId,
       currency,
@@ -34,14 +35,18 @@ export class FindUserWalletService {
       wallet = await this.repository.create(newWallet);
     }
 
+    if (!wallet) {
+      throw new WalletNotFoundException(currency);
+    }
+
     return wallet;
   }
 
   /**
-   * 전체 통화 지갑 조회
+   * 전체 통화 지갑 가져오기 (없으면 생성)
    * @param autoCreate 존재하지 않는 통화의 지갑 자동 생성 여부
    */
-  async findWallets(
+  async getWallets(
     userId: bigint,
     autoCreate: boolean = true,
   ): Promise<UserWallet[]> {

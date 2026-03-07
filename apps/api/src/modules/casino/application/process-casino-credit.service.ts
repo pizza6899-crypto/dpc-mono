@@ -14,7 +14,7 @@ import type { GameRoundRepositoryPort } from '../ports/out/game-round.repository
 import { GAME_TRANSACTION_REPOSITORY_TOKEN } from '../ports/out/game-transaction.repository.token';
 import type { GameTransactionRepositoryPort } from '../ports/out/game-transaction.repository.port';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
-import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
+import { GetUserWalletService } from 'src/modules/wallet/application/get-user-wallet.service';
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
 import { GameTransaction } from '../domain/model/game-transaction.entity';
 import { CheckCasinoBalanceService } from './check-casino-balance.service';
@@ -64,7 +64,7 @@ export class ProcessCasinoCreditService {
     @InjectQueue(CasinoQueueNames.GAME_RESULT_FETCH)
     private readonly gameResultFetchQueue: Queue,
     private readonly advisoryLockService: AdvisoryLockService,
-    private readonly findUserWalletService: FindUserWalletService, // [Inject] Added
+    private readonly getUserWalletService: GetUserWalletService, // [Inject] Added
   ) { }
 
   @Transactional()
@@ -203,18 +203,11 @@ export class ProcessCasinoCreditService {
 
     // [OPTIMIZATION] 0원일 경우 Lock/Update을 스킵하고 단순 잔액 조회만 수행
     if (walletAmount.isZero()) {
-      updatedWallet = await this.findUserWalletService.findWallet(
+      updatedWallet = await this.getUserWalletService.getWallet(
         session.userId,
         session.walletCurrency,
         false,
       );
-      if (!updatedWallet) {
-        // 지갑이 없으면 에러 (정상적인 상황에선 발생 안함)
-        throw new UserBalanceNotFoundException(
-          session.userId,
-          session.walletCurrency,
-        );
-      }
     } else {
       // USD 환산 금액 계산 (Session 스냅샷 환율 기준)
       const walletAmountUsd =

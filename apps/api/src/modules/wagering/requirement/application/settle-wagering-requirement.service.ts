@@ -3,11 +3,10 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { WAGERING_REQUIREMENT_REPOSITORY } from '../ports/wagering-requirement.repository.port';
 import type { WageringRequirementRepositoryPort } from '../ports/wagering-requirement.repository.port';
 import { UpdateUserBalanceService } from '../../../wallet/application/update-user-balance.service';
-import { FindUserWalletService } from '../../../wallet/application/find-user-wallet.service';
+import { GetUserWalletService } from '../../../wallet/application/get-user-wallet.service';
 import {
   UserWalletBalanceType,
   UserWalletTransactionType,
-  ExchangeCurrencyCode,
 } from '@prisma/client';
 import { UpdateOperation } from '../../../wallet/domain';
 import { WageringRequirementNotFoundException } from '../domain/wagering-requirement.exception';
@@ -27,7 +26,7 @@ export class SettleWageringRequirementService {
     @Inject(WAGERING_REQUIREMENT_REPOSITORY)
     private readonly repository: WageringRequirementRepositoryPort,
     private readonly updateBalanceService: UpdateUserBalanceService,
-    private readonly findWalletService: FindUserWalletService,
+    private readonly getUserWalletService: GetUserWalletService,
   ) { }
 
   @Transactional()
@@ -60,10 +59,7 @@ export class SettleWageringRequirementService {
     const currency = requirement.currency;
 
     // 4. 유저 지갑 상태 조회
-    const wallet = await this.findWalletService.findWallet(userId, currency);
-    if (!wallet) {
-      throw new WalletNotFoundException(currency);
-    }
+    const wallet = await this.getUserWalletService.getWallet(userId, currency);
 
     const currentBonus = wallet.bonus ?? new Prisma.Decimal(0);
 

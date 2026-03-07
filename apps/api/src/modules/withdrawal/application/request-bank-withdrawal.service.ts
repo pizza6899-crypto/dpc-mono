@@ -3,7 +3,7 @@ import { Prisma, ExchangeCurrencyCode } from '@prisma/client';
 import { Transactional } from '@nestjs-cls/transactional';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
-import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
+import { GetUserWalletService } from 'src/modules/wallet/application/get-user-wallet.service';
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
 import {
   UserWalletBalanceType,
@@ -48,10 +48,10 @@ export class RequestBankWithdrawalService {
     private readonly policy: WithdrawalPolicy,
     private readonly snowflakeService: SnowflakeService,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
-    private readonly findUserWalletService: FindUserWalletService,
+    private readonly getUserWalletService: GetUserWalletService,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly checkWageringService: CheckWageringRequirementService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(
@@ -98,17 +98,16 @@ export class RequestBankWithdrawalService {
     this.policy.validateBankAmount(requestedAmount, config);
 
     // 4. 잔액 검증
-    const wallet = await this.findUserWalletService.findWallet(
+    const wallet = await this.getUserWalletService.getWallet(
       userId,
       currency,
       false,
     );
-    if (wallet) {
-      this.policy.validateBalance(requestedAmount, {
-        mainBalance: wallet.cash,
-        bonusBalance: wallet.bonus,
-      });
-    }
+
+    this.policy.validateBalance(requestedAmount, {
+      mainBalance: wallet.cash,
+      bonusBalance: wallet.bonus,
+    });
 
     // 5. 수수료 계산
     const { feeAmount, netAmount } = this.policy.calculateFee(

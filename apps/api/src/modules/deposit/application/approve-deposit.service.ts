@@ -7,7 +7,7 @@ import { DepositAlreadyProcessedException } from '../domain';
 import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
 import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
-import { FindUserWalletService } from 'src/modules/wallet/application/find-user-wallet.service';
+import { GetUserWalletService } from 'src/modules/wallet/application/get-user-wallet.service';
 import { UpdateOperation, WalletActionName, WalletNotFoundException } from 'src/modules/wallet/domain';
 import {
   UserWalletBalanceType,
@@ -16,7 +16,6 @@ import {
 } from '@prisma/client';
 import { GrantPromotionBonusService } from '../../promotion/application/grant-promotion-bonus.service';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
-import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';
 import { CreateWageringRequirementService } from 'src/modules/wagering/requirement/application';
 import { GetWageringConfigService } from 'src/modules/wagering/config/application/get-wagering-config.service';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
@@ -44,7 +43,7 @@ export class ApproveDepositService {
   constructor(
     @Inject(DEPOSIT_DETAIL_REPOSITORY)
     private readonly depositRepository: DepositDetailRepositoryPort,
-    private readonly findUserWalletService: FindUserWalletService,
+    private readonly getUserWalletService: GetUserWalletService,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
     private readonly grantPromotionBonusService: GrantPromotionBonusService,
     private readonly createWageringRequirementService: CreateWageringRequirementService,
@@ -79,20 +78,7 @@ export class ApproveDepositService {
       throw new DepositAlreadyProcessedException(deposit.status);
     }
 
-    // 3. Get Initial Wallet State for Recording
-    const walletBefore = await this.findUserWalletService.findWallet(
-      deposit.userId,
-      deposit.depositCurrency as unknown as ExchangeCurrencyCode,
-      true,
-    );
-
     const depositCurrency = deposit.depositCurrency;
-
-    if (!walletBefore) {
-      throw new WalletNotFoundException(
-        deposit.depositCurrency,
-      );
-    }
 
     // 5. Transaction ID 생성 (Snowflake) - Wallet과 Deposit이 동일한 ID 공유
     const txId = this.snowflakeService.generate();

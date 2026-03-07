@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
-import { FindUserWalletService } from './application/find-user-wallet.service';
+import { GetUserWalletService } from './application/get-user-wallet.service';
 import { FindWalletTransactionHistoryService } from './application/find-wallet-transaction-history.service';
 import { UserWalletRepository } from './infrastructure/user-wallet.repository';
 import { UserWalletMapper } from './infrastructure/user-wallet.mapper';
@@ -70,7 +70,7 @@ import { USER_ANALYTICS_QUEUES } from '../user-analytics/infrastructure/queue/us
       provide: USER_WALLET_STATS_REPOSITORY,
       useClass: UserWalletStatsRepository,
     },
-    FindUserWalletService,
+    GetUserWalletService,
     UpdateUserBalanceService,
     UpdateWalletStatusService,
     InitializeUserWalletsService,
@@ -92,7 +92,7 @@ import { USER_ANALYTICS_QUEUES } from '../user-analytics/infrastructure/queue/us
     InitializeUserWalletsService,
     AdjustUserBalanceService,
     FindWalletTransactionHistoryService,
-    FindUserWalletService,
+    GetUserWalletService,
     FindUserWalletsService,
     FindWalletStatisticsService,
     UserWalletStatsMapper,

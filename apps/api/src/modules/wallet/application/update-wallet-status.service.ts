@@ -10,6 +10,7 @@ import { USER_WALLET_REPOSITORY } from '../ports/out/user-wallet.repository.toke
 import type { UserWalletRepositoryPort } from '../ports/out/user-wallet.repository.port';
 import { USER_WALLET_TRANSACTION_REPOSITORY } from '../ports/out/user-wallet-transaction.repository.token';
 import type { UserWalletTransactionRepositoryPort } from '../ports/out/user-wallet-transaction.repository.port';
+import { GetUserWalletService } from './get-user-wallet.service';
 import {
   UserWallet,
   UserWalletTransaction,
@@ -41,6 +42,7 @@ export class UpdateWalletStatusService {
     private readonly walletRepository: UserWalletRepositoryPort,
     @Inject(USER_WALLET_TRANSACTION_REPOSITORY)
     private readonly transactionRepository: UserWalletTransactionRepositoryPort,
+    private readonly getUserWalletService: GetUserWalletService,
     private readonly walletPolicy: UserWalletPolicy,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly snowflakeService: SnowflakeService,
@@ -62,13 +64,11 @@ export class UpdateWalletStatusService {
         throwThrottleError: true,
       },
     );
-    const wallet = await this.walletRepository.findByUserIdAndCurrency(
+    const wallet = await this.getUserWalletService.getWallet(
       userId,
       currency,
+      false,
     );
-    if (!wallet) {
-      throw new WalletNotFoundException(currency);
-    }
 
     const prevStatus = wallet.status;
     if (prevStatus === newStatus) return wallet;
