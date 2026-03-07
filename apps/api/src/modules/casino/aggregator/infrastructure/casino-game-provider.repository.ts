@@ -34,7 +34,7 @@ export class CasinoGameProviderRepository implements CasinoGameProviderRepositor
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: CasinoGameProviderMapper,
-  ) {}
+  ) { }
 
   private getCacheKey(aggregatorId: bigint, code: string): string {
     return `${aggregatorId}:${code}`;
@@ -112,7 +112,7 @@ export class CasinoGameProviderRepository implements CasinoGameProviderRepositor
   async getById(id: bigint): Promise<CasinoGameProvider> {
     const provider = await this.findById(id);
     if (!provider) {
-      throw new CasinoGameProviderNotFoundException(id);
+      throw new CasinoGameProviderNotFoundException();
     }
     return provider;
   }
