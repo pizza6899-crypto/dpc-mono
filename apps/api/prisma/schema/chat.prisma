@@ -1,0 +1,175 @@
+/**
+ * rest api + socket.io로 처리.
+ * 구현해야하는 기능
+ * 1. 고객응대 (SUPPORT 1:1)
+ * 2. 글로벌챗팅 (PUBLIC)
+ * 3. 챗팅방 기준 챗팅 (언어별, 국가별, 게임카테고리별 등 metadata 활용)
+ * [특이사항]
+ * - 히스토리: REST API
+ * - 송신: REST API
+ * - 수신: Socket.io
+ * - 게이트웨이 분리: Admin(상담원), User/Guest(고객)
+ */
+
+/// 채팅 시스템 글로벌 설정
+model ChatConfig {
+    id Int @id @default(1)
+
+    /// 글로벌 채팅 활성화 여부
+    isGlobalChatEnabled Boolean @default(true) @map("is_global_chat_enabled")
+
+    /// 채팅 메시지 최대 길이
+    maxMessageLength Int @default(500) @map("max_message_length")
+
+    /// 도배 방지 쿨다운 (초)
+    defaultSlowModeSeconds Int @default(3) @map("default_slow_mode_seconds")
+
+    /// 채팅 참여를 위한 최소 티어 레벨
+    minChatTierLevel Int @default(0) @map("min_chat_tier_level")
+
+    /// 중복 메시지 차단 여부
+    blockDuplicateMessages Boolean @default(true) @map("block_duplicate_messages")
+
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("chat_configs")
+}
+
+model ChatRoom {
+    id   BigInt       @id @default(autoincrement())
+    slug String?      @unique // e.g., "global:all", "category:casino", "support:1"
+    type ChatRoomType @default(PUBLIC)
+
+    isActive Boolean @default(true) @map("is_active")
+
+    // [Criteria] 언어, 국가, 게임 카테고리 등 동적 기준 저장
+    // { "language": "ko", "country": "KR", "category": "CASINO" }
+    metadata Json @default("{}")
+
+    // [Policies]
+    slowModeSeconds Int @default(0) @map("slow_mode_seconds")
+    minTierLevel    Int @default(0) @map("min_tier_level")
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    /// 마지막 메시지 시각 (목록 정렬 성능 최적화)
+    lastMessageAt DateTime? @map("last_message_at")
+
+    messages       ChatMessage[]
+    members        ChatRoomMember[]
+    supportTickets SupportTicket[] // 1:N 상담 세션 관리 (한 방에서 여러 번의 상담 발생 가능)
+
+    @@index([type, isActive])
+    @@map("chat_rooms")
+}
+
+model ChatRoomMember {
+    id     BigInt @id @default(autoincrement())
+    roomId BigInt @map("room_id")
+    userId BigInt @map("user_id")
+
+    role ChatMemberRole @default(MEMBER)
+
+    // 마지막으로 읽은 시점 (안 읽은 메시지 계산용)
+    lastReadAt DateTime? @map("last_read_at")
+
+    room ChatRoom @relation(fields: [roomId], references: [id])
+    user User     @relation(fields: [userId], references: [id])
+
+    createdAt DateTime @default(now()) @map("created_at")
+
+    @@unique([roomId, userId])
+    @@map("chat_room_members")
+}
+
+model ChatMessage {
+    /// Snowflake ID (Application Generated)
+    id       BigInt
+    roomId   BigInt  @map("room_id")
+    senderId BigInt? @map("sender_id") // null일 경우 시스템 메시지
+    ticketId BigInt? @map("ticket_id") // 특정 상담 세션에 귀속된 메시지인 경우
+
+    content String          @db.Text
+    type    ChatMessageType @default(TEXT)
+
+    // 이모지, 멘션, 이미지 URL 또는 커스텀 스타일
+    metadata Json?
+
+    isPinned  Boolean @default(false) @map("is_pinned")
+    isDeleted Boolean @default(false) @map("is_deleted")
+
+    createdAt DateTime @default(now()) @map("created_at")
+
+    room   ChatRoom       @relation(fields: [roomId], references: [id])
+    sender User?          @relation("UserMessages", fields: [senderId], references: [id])
+    ticket SupportTicket? @relation(fields: [ticketId], references: [id])
+
+    /// 파티셔닝을 위해 PK에 created_at 포함
+    @@id([id, createdAt])
+    @@index([roomId, createdAt])
+    @@index([createdAt])
+    @@index([ticketId])
+    @@map("chat_messages")
+}
+
+/// 고객 문의 티켓 (상담 비즈니스 로직)
+model SupportTicket {
+    id      BigInt  @id @default(autoincrement())
+    userId  BigInt  @map("user_id")
+    adminId BigInt? @map("admin_id") // 담당 상담원
+
+    // N:1 연결: 하나의 채팅방에서 여러 번의 상담 세션(티켓)이 발생함
+    roomId BigInt @map("room_id")
+
+    category String? // 문의 카테고리 (계정, 입금, 게임 등)
+    subject  String? // 문의 제목/요약
+    status   SupportStatus   @default(OPEN)
+    priority SupportPriority @default(NORMAL)
+
+    user     User          @relation("UserSupportTickets", fields: [userId], references: [id])
+    admin    User?         @relation("AdminAssignedTickets", fields: [adminId], references: [id])
+    room     ChatRoom      @relation(fields: [roomId], references: [id])
+    messages ChatMessage[] // 이 상담 세션에서 오간 메시지들
+
+    closedAt  DateTime? @map("closed_at")
+    createdAt DateTime  @default(now()) @map("created_at")
+    updatedAt DateTime  @updatedAt @map("updated_at")
+
+    @@index([userId, status])
+    @@index([adminId, status])
+    @@index([roomId])
+    @@map("support_tickets")
+}
+
+enum ChatRoomType {
+    PUBLIC // 누구나 참여 가능한 공개방 (Global)
+    SUPPORT // 고객응대 1:1 (Admin <-> User)
+}
+
+enum SupportStatus {
+    OPEN // 유저 문의 발생 (관리자 답변 대기)
+    IN_PROGRESS // 상담원이 답변 및 대화 중
+    PENDING // 유저의 추가 답변이나 외부 처리를 기다리는 중
+    CLOSED // 상담 종료
+}
+
+enum SupportPriority {
+    LOW
+    NORMAL
+    HIGH
+    URGENT
+}
+
+enum ChatMemberRole {
+    MEMBER
+    ADMIN
+}
+
+enum ChatMessageType {
+    TEXT
+    IMAGE
+    EMOJI
+    SYSTEM // 유저 입장/퇴장 등
+    ANNOUNCEMENT // 공지사항
+}

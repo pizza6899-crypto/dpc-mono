@@ -144,6 +144,14 @@ model User {
   userExpLogs            UserExpLog[]
   tierHistoriesChangedBy TierHistory[]           @relation("TierHistoryChangedBy")
 
+  // [Chat System]
+  chatMessages    ChatMessage[]    @relation("UserMessages")
+  chatRoomMembers ChatRoomMember[]
+
+  // [Support System]
+  supportTickets  SupportTicket[] @relation("UserSupportTickets")
+  assignedTickets SupportTicket[] @relation("AdminAssignedTickets")
+
   globalTotalStats  UserGlobalTotalStats?
   globalHourlyStats UserGlobalHourlyStats[]
 
