@@ -22,7 +22,7 @@ export class CasinoAggregatorRepository implements CasinoAggregatorRepositoryPor
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: CasinoAggregatorMapper,
-  ) {}
+  ) { }
 
   async findById(id: bigint): Promise<CasinoAggregator | null> {
     const cached = this.cacheById.get(id);
@@ -58,7 +58,7 @@ export class CasinoAggregatorRepository implements CasinoAggregatorRepositoryPor
 
   async getById(id: bigint): Promise<CasinoAggregator> {
     const aggregator = await this.findById(id);
-    if (!aggregator) throw new CasinoAggregatorNotFoundException(id);
+    if (!aggregator) throw new CasinoAggregatorNotFoundException();
     return aggregator;
   }
 
@@ -83,7 +83,7 @@ export class CasinoAggregatorRepository implements CasinoAggregatorRepositoryPor
 
   async getByCode(code: string): Promise<CasinoAggregator> {
     const aggregator = await this.findByCode(code);
-    if (!aggregator) throw new CasinoAggregatorNotFoundException(code);
+    if (!aggregator) throw new CasinoAggregatorNotFoundException();
     return aggregator;
   }
 
