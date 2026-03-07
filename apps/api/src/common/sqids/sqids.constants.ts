@@ -46,6 +46,7 @@ export const SqidsPrefix = {
   USER_TIER_HISTORY: 'uth',
   TIER_REWARD: 'tr',
   REWARD: 'r',
+  CHAT_ROOM: 'cr',
   // 필요에 따라 추가 (기존 값 수정 금지)
 } as const;
 
