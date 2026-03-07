@@ -87,4 +87,14 @@ export const CACHE_CONFIG = {
       store: CacheStore.MEMORY,
     },
   },
+  /**
+   * 채팅 설정 관련 (ChatConfig)
+   */
+  CHAT_CONFIG: {
+    GLOBAL: {
+      key: 'chat:config:global',
+      ttlSeconds: 60, // 1분 L1 캐시
+      store: CacheStore.MEMORY,
+    },
+  },
 } as const;

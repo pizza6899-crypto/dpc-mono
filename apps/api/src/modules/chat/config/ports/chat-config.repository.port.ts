@@ -1,4 +1,4 @@
-import { ChatConfig } from '../../domain/chat-config.entity';
+import { ChatConfig } from '../domain/chat-config.entity';
 
 export const CHAT_CONFIG_REPOSITORY_PORT = Symbol('CHAT_CONFIG_REPOSITORY_PORT');
 

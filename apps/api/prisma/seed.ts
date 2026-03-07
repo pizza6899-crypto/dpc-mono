@@ -1,5 +1,6 @@
 import { seedUsers } from './seeders/user.seeder';
 import { seedUserConfig } from './seeders/user-config.seeder';
+import { seedChatConfig } from './seeders/chat-config.seeder';
 import { seedTiers } from './seeders/tier.seeder';
 import { seedNotificationTemplates } from './seeders/notification.seeder';
 import { seedAggregators } from './seeders/aggregator.seeder';
@@ -26,6 +27,10 @@ async function main() {
     // UserConfig 설정 시딩 처리
     await seedUserConfig(prisma);
     console.log('✅ 전역 사용자 설정 시딩이 완료되었습니다.');
+
+    // ChatConfig 설정 시딩 처리
+    await seedChatConfig(prisma);
+    console.log('✅ 전역 채팅 설정 시딩이 완료되었습니다.');
 
     // 유저 시딩 처리
     await seedUsers(prisma);
