@@ -90,7 +90,7 @@ export class ApproveDepositService {
         currency: depositCurrency,
         amount: actuallyPaid,
         operation: UpdateOperation.ADD,
-        balanceType: UserWalletBalanceType.CASH,
+        balanceType: UserWalletBalanceType.BONUS,
         transactionType: UserWalletTransactionType.DEPOSIT,
         txId: txId.id, // 동기화된 ID 주입
         referenceId: deposit.id!,
@@ -102,9 +102,6 @@ export class ApproveDepositService {
         actionName: WalletActionName.APPROVE_DEPOSIT,
       },
     );
-
-    // 6. Tier Stats or XP Accumulation (Skip deposit-based XP if not used)
-    // Deprecated: accumulateUserDepositService call removed.
 
     // 8. 엔티티 승인 처리 (상태 변경 및 트랜잭션 링크)
     deposit.approve(
