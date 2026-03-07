@@ -13,9 +13,9 @@ export class CasinoAggregatorNotFoundException extends DomainException {
 }
 
 export class CasinoAggregatorInactiveException extends DomainException {
-  constructor(code: string) {
+  constructor() {
     super(
-      `Casino aggregator is inactive: ${code}`,
+      'Casino aggregator is inactive',
       MessageCode.CASINO_AGGREGATOR_INACTIVE,
       HttpStatus.FORBIDDEN,
     );
@@ -23,9 +23,9 @@ export class CasinoAggregatorInactiveException extends DomainException {
 }
 
 export class CasinoAggregatorMaintenanceException extends DomainException {
-  constructor(code: string) {
+  constructor() {
     super(
-      `Casino aggregator is under maintenance: ${code}`,
+      'Casino aggregator is under maintenance',
       MessageCode.CASINO_AGGREGATOR_MAINTENANCE,
       HttpStatus.SERVICE_UNAVAILABLE,
     );

@@ -24,7 +24,7 @@ export class AggregatorRegistryService implements OnModuleInit {
     @Inject(CASINO_AGGREGATOR_REPOSITORY)
     private readonly repository: CasinoAggregatorRepositoryPort,
     private readonly envService: EnvService,
-  ) {}
+  ) { }
 
   async onModuleInit(): Promise<void> {
     await this.reload();
@@ -45,7 +45,7 @@ export class AggregatorRegistryService implements OnModuleInit {
   get(code: string): CasinoAggregator {
     const aggregator = this.aggregators.get(code);
     if (!aggregator) {
-      throw new CasinoAggregatorNotFoundException(code);
+      throw new CasinoAggregatorNotFoundException();
     }
     return aggregator;
   }
@@ -57,9 +57,9 @@ export class AggregatorRegistryService implements OnModuleInit {
     const aggregator = this.get(code);
     if (!aggregator.isActive()) {
       if (aggregator.isMaintenance()) {
-        throw new CasinoAggregatorMaintenanceException(code);
+        throw new CasinoAggregatorMaintenanceException();
       }
-      throw new CasinoAggregatorInactiveException(code);
+      throw new CasinoAggregatorInactiveException();
     }
     return aggregator;
   }
@@ -73,7 +73,7 @@ export class AggregatorRegistryService implements OnModuleInit {
       (agg) => agg.id === id,
     );
     if (!aggregator) {
-      throw new CasinoAggregatorNotFoundException(id.toString());
+      throw new CasinoAggregatorNotFoundException();
     }
     return aggregator;
   }
@@ -90,7 +90,7 @@ export class AggregatorRegistryService implements OnModuleInit {
     const aggregator = this.getOrThrowIfUnavailable(CasinoAggregator.CODE_DC);
 
     if (!aggregator.apiEnabled) {
-      throw new CasinoAggregatorInactiveException(CasinoAggregator.CODE_DC);
+      throw new CasinoAggregatorInactiveException();
     }
 
     return createDcsAggregatorConfig(
@@ -114,7 +114,7 @@ export class AggregatorRegistryService implements OnModuleInit {
     const aggregator = this.getOrThrowIfUnavailable(CasinoAggregator.CODE_WC);
 
     if (!aggregator.apiEnabled) {
-      throw new CasinoAggregatorInactiveException(CasinoAggregator.CODE_WC);
+      throw new CasinoAggregatorInactiveException();
     }
 
     // 모든 Env 설정을 통합 객체로 먼저 변환 (매핑 로직 적용을 위해)
@@ -153,7 +153,7 @@ export class AggregatorRegistryService implements OnModuleInit {
     const aggregator = this.getOrThrowIfUnavailable(CasinoAggregator.CODE_WC);
 
     if (!aggregator.apiEnabled) {
-      throw new CasinoAggregatorInactiveException(CasinoAggregator.CODE_WC);
+      throw new CasinoAggregatorInactiveException();
     }
 
     return this.envService.whitecliff.map((envConfig) =>
