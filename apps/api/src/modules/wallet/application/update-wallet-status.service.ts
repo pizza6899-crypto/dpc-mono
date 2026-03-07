@@ -44,7 +44,7 @@ export class UpdateWalletStatusService {
     private readonly walletPolicy: UserWalletPolicy,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly snowflakeService: SnowflakeService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute({
@@ -67,7 +67,7 @@ export class UpdateWalletStatusService {
       currency,
     );
     if (!wallet) {
-      throw new WalletNotFoundException(userId, currency);
+      throw new WalletNotFoundException(currency);
     }
 
     const prevStatus = wallet.status;

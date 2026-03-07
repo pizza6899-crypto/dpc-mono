@@ -31,7 +31,7 @@ export class WalletController {
     private readonly findUserWalletService: FindUserWalletService,
     private readonly findWalletTransactionHistoryService: FindWalletTransactionHistoryService,
     private readonly sqidsService: SqidsService,
-  ) {}
+  ) { }
 
   /**
    * 지원하는 통화 목록 조회
@@ -88,7 +88,7 @@ export class WalletController {
         query.currency,
       );
       if (!wallet) {
-        throw new WalletNotFoundException(userId, query.currency);
+        throw new WalletNotFoundException(query.currency);
       }
       wallets.push(wallet);
     } else {

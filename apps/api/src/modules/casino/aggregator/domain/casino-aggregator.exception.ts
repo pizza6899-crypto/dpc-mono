@@ -3,9 +3,9 @@ import { MessageCode } from '@repo/shared';
 import { DomainException } from 'src/common/exception/domain.exception';
 
 export class CasinoAggregatorNotFoundException extends DomainException {
-  constructor(identifier: string | bigint) {
+  constructor() {
     super(
-      `Casino aggregator not found: ${identifier}`,
+      'Casino aggregator not found',
       MessageCode.CASINO_AGGREGATOR_NOT_FOUND,
       HttpStatus.NOT_FOUND,
     );
@@ -33,9 +33,9 @@ export class CasinoAggregatorMaintenanceException extends DomainException {
 }
 
 export class CasinoGameProviderNotFoundException extends DomainException {
-  constructor(identifier: string | bigint) {
+  constructor() {
     super(
-      `Casino game provider not found: ${identifier}`,
+      'Casino game provider not found',
       MessageCode.CASINO_GAME_PROVIDER_NOT_FOUND,
       HttpStatus.NOT_FOUND,
     );
@@ -43,9 +43,9 @@ export class CasinoGameProviderNotFoundException extends DomainException {
 }
 
 export class CasinoAggregatorUnsupportedException extends DomainException {
-  constructor(code: string) {
+  constructor() {
     super(
-      `Unsupported aggregator type: ${code}`,
+      'Unsupported aggregator type',
       MessageCode.CASINO_AGGREGATOR_NOT_FOUND,
       HttpStatus.BAD_REQUEST,
     );

@@ -13,9 +13,9 @@ export class CatalogException extends DomainException {
 }
 
 export class CategoryNotFoundException extends CatalogException {
-  constructor(identifier: string | bigint) {
+  constructor() {
     super(
-      `Category not found: ${identifier}`,
+      'Category not found',
       MessageCode.CASINO_CATEGORY_NOT_FOUND,
       HttpStatus.NOT_FOUND,
     );
@@ -23,9 +23,9 @@ export class CategoryNotFoundException extends CatalogException {
 }
 
 export class GameNotFoundException extends CatalogException {
-  constructor(identifier: string | bigint) {
+  constructor() {
     super(
-      `Game not found: ${identifier}`,
+      'Game not found',
       MessageCode.GAME_NOT_FOUND,
       HttpStatus.NOT_FOUND,
     );
@@ -33,9 +33,9 @@ export class GameNotFoundException extends CatalogException {
 }
 
 export class CategoryAlreadyExistsException extends CatalogException {
-  constructor(code: string) {
+  constructor() {
     super(
-      `Category with code already exists: ${code}`,
+      'Category with code already exists',
       MessageCode.CASINO_CATEGORY_ALREADY_EXISTS,
       HttpStatus.CONFLICT,
     );

@@ -82,7 +82,7 @@ export class WhitecliffGameService {
 
     if (!user) throw new UserNotFoundException();
     if (!userBalance)
-      throw new WalletNotFoundException(authUser.id, walletCurrency);
+      throw new WalletNotFoundException(walletCurrency);
 
     const balance = exchangeRate
       .mul(userBalance.cash.add(userBalance.bonus))
@@ -99,7 +99,7 @@ export class WhitecliffGameService {
       );
 
     if (!wcProviderId) {
-      throw new CasinoGameProviderNotFoundException(provider.code);
+      throw new CasinoGameProviderNotFoundException();
     }
 
     // 3. Whitecliff Identity 확보 (지연된 온보딩 지원)
@@ -155,7 +155,7 @@ export class WhitecliffGameService {
         userId: user.id,
         gameId: game.id,
       });
-      throw new GameNotFoundException(game.id!);
+      throw new GameNotFoundException();
     }
 
     const result = apiResponse as WhitecliffGameLaunchResponse;

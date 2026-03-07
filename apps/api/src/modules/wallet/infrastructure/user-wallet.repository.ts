@@ -19,7 +19,7 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: UserWalletMapper,
-  ) {}
+  ) { }
 
   async findByUserIdAndCurrency(
     userId: bigint,
@@ -67,7 +67,7 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
   ): Promise<UserWallet> {
     const wallet = await this.findByUserIdAndCurrency(userId, currency);
     if (!wallet) {
-      throw new WalletNotFoundException(userId, currency);
+      throw new WalletNotFoundException(currency);
     }
     return wallet;
   }

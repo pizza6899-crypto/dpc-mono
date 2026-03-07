@@ -11,7 +11,7 @@ export class GameRepository implements GameRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: GameMapper,
-  ) {}
+  ) { }
 
   async findById(id: bigint): Promise<CasinoGame | null> {
     const result = await this.tx.casinoGame.findUnique({
@@ -23,7 +23,7 @@ export class GameRepository implements GameRepositoryPort {
 
   async getById(id: bigint): Promise<CasinoGame> {
     const game = await this.findById(id);
-    if (!game) throw new GameNotFoundException(id);
+    if (!game) throw new GameNotFoundException();
     return game;
   }
 
@@ -48,8 +48,7 @@ export class GameRepository implements GameRepositoryPort {
     externalGameId: string,
   ): Promise<CasinoGame> {
     const game = await this.findByExternalId(providerId, externalGameId);
-    if (!game)
-      throw new GameNotFoundException(`${providerId}:${externalGameId}`);
+    if (!game) throw new GameNotFoundException();
     return game;
   }
 

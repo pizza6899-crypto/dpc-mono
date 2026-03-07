@@ -15,7 +15,7 @@ export class CategoryRepository implements CategoryRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: CategoryMapper,
-  ) {}
+  ) { }
 
   async findById(id: bigint): Promise<CasinoGameCategory | null> {
     const result = await this.tx.casinoGameCategory.findUnique({
@@ -27,7 +27,7 @@ export class CategoryRepository implements CategoryRepositoryPort {
 
   async getById(id: bigint): Promise<CasinoGameCategory> {
     const category = await this.findById(id);
-    if (!category) throw new CategoryNotFoundException(id);
+    if (!category) throw new CategoryNotFoundException();
     return category;
   }
 
@@ -41,7 +41,7 @@ export class CategoryRepository implements CategoryRepositoryPort {
 
   async getByCode(code: string): Promise<CasinoGameCategory> {
     const category = await this.findByCode(code);
-    if (!category) throw new CategoryNotFoundException(code);
+    if (!category) throw new CategoryNotFoundException();
     return category;
   }
 

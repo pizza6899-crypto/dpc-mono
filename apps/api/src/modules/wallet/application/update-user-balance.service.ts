@@ -142,7 +142,7 @@ export class UpdateUserBalanceService {
       false,
     );
     if (!wallet) {
-      throw new WalletNotFoundException(userId, currency);
+      throw new WalletNotFoundException(currency);
     }
 
     // Snapshot before update
