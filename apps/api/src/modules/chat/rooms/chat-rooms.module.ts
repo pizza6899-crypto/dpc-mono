@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
-import { CHAT_ROOM_REPOSITORY_PORT } from './ports/chat-room.repository.port';
-import { ChatRoomRepository } from './infrastructure/chat-room.repository';
-import { CHAT_ROOM_MEMBER_REPOSITORY_PORT } from './ports/chat-room-member.repository.port';
-import { ChatRoomMemberRepository } from './infrastructure/chat-room-member.repository';
 import { GetChatRoomService } from './application/get-chat-room.service';
 import { ListChatRoomsService } from './application/list-chat-rooms.service';
 import { JoinChatRoomService } from './application/join-chat-room.service';
 import { LeaveChatRoomService } from './application/leave-chat-room.service';
+import { CHAT_ROOM_REPOSITORY_PORT } from './ports/chat-room.repository.port';
+import { ChatRoomRepository } from './infrastructure/chat-room.repository';
+import { CHAT_ROOM_MEMBER_REPOSITORY_PORT } from './ports/chat-room-member.repository.port';
+import { ChatRoomMemberRepository } from './infrastructure/chat-room-member.repository';
+import { CHAT_MESSAGE_REPOSITORY_PORT } from './ports/chat-message.repository.port';
+import { ChatMessageRepository } from './infrastructure/chat-message.repository';
+
 import { ChatRoomAdminController } from './controllers/admin/chat-room-admin.controller';
 
 
@@ -14,14 +17,17 @@ import { ChatRoomUserController } from './controllers/user/chat-room-user.contro
 import { SqidsModule } from 'src/common/sqids/sqids.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { TierModule } from '../../tier/tier.module';
-
+import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { SendChatMessageService } from './application/send-chat-message.service';
 
 @Module({
     imports: [
         SqidsModule,
         ConcurrencyModule,
         TierModule,
+        SnowflakeModule,
     ],
+
 
     controllers: [
         ChatRoomAdminController,
@@ -36,19 +42,27 @@ import { TierModule } from '../../tier/tier.module';
             provide: CHAT_ROOM_MEMBER_REPOSITORY_PORT,
             useClass: ChatRoomMemberRepository,
         },
+        {
+            provide: CHAT_MESSAGE_REPOSITORY_PORT,
+            useClass: ChatMessageRepository,
+        },
         GetChatRoomService,
         ListChatRoomsService,
         JoinChatRoomService,
         LeaveChatRoomService,
+        SendChatMessageService,
     ],
     exports: [
         GetChatRoomService,
         ListChatRoomsService,
         JoinChatRoomService,
         LeaveChatRoomService,
+        SendChatMessageService,
         CHAT_ROOM_REPOSITORY_PORT,
         CHAT_ROOM_MEMBER_REPOSITORY_PORT,
+        CHAT_MESSAGE_REPOSITORY_PORT,
     ],
+
 })
 
 

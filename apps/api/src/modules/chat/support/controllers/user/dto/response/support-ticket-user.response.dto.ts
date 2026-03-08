@@ -22,8 +22,5 @@ export class SupportTicketUserResponseDto {
 
     @ApiProperty({ description: 'Created At / 생성일' })
     createdAt: Date;
-
-    constructor(partial: Partial<SupportTicketUserResponseDto>) {
-        Object.assign(this, partial);
-    }
 }
+

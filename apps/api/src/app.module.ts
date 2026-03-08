@@ -45,6 +45,7 @@ import { AccessControlModule } from './infrastructure/access-control/access-cont
 import { AdminMemoModule } from './modules/admin-memo/admin-memo.module';
 import { UserAnalyticsModule } from './modules/user-analytics/user-analytics.module';
 import { WebsocketModule } from './infrastructure/websocket/websocket.module';
+import { ChatModule } from './modules/chat/chat.module';
 
 @Module({
   imports: [
@@ -81,6 +82,7 @@ import { WebsocketModule } from './infrastructure/websocket/websocket.module';
     AccessControlModule,
     UserAnalyticsModule,
     AdminMemoModule,
+    ChatModule,
   ],
   providers: [
     Reflector,

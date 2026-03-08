@@ -3,11 +3,12 @@ import { type SocketRoomType, getSocketRoom } from './constants/websocket-rooms.
 import { UserWebsocketGateway } from './gateways/user-websocket.gateway';
 import { AdminWebsocketGateway } from './gateways/admin-websocket.gateway';
 import { SocketEventDto } from './dtos/socket-event.dto';
-import type { SocketPayloadMap } from './types/socket-payload.types';
+import { type SocketPayloadMap } from './types/socket-payload.types';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import {
   type SqidsPrefixType,
 } from 'src/common/sqids/sqids.constants';
+import { ChatRoomType } from '@prisma/client';
 
 @Injectable()
 export class WebsocketService {
@@ -70,44 +71,33 @@ export class WebsocketService {
   }
 
   /**
-   * 사용자의 모든 소켓 세션을 특정 채팅방 소켓 룸에 가입시킵니다.
+   * 사용자의 모든 소켓 세션을 특정 채팅방/고객응대 룸에 가입시킵니다.
    */
-  joinChatRoom(userId: bigint, roomId: bigint): void {
-    const encodedId = this.sqidsService.encode(roomId, 'cr'); // CHAT_ROOM ('cr')
-    const chatRoom = getSocketRoom.chatRoom(encodedId);
+  joinChatRoom(userId: bigint, roomId: bigint, roomType: ChatRoomType): void {
+    const isSupport = roomType === ChatRoomType.SUPPORT;
+    const prefix = isSupport ? 'sr' : 'cr';
+    const encodedId = this.sqidsService.encode(roomId, prefix as any);
+    const roomName = isSupport ? getSocketRoom.supportRoom(encodedId) : getSocketRoom.chatRoom(encodedId);
+
     const userRoom = getSocketRoom.user(userId);
-    this.gateway.server.in(userRoom).socketsJoin(chatRoom);
+    this.gateway.server.in(userRoom).socketsJoin(roomName);
   }
 
   /**
-   * 사용자의 모든 소켓 세션을 특정 채팅방 소켓 룸에서 탈퇴시킵니다.
+   * 사용자의 모든 소켓 세션을 특정 채팅방/고객응대 룸에서 탈퇴시킵니다.
    */
-  leaveChatRoom(userId: bigint, roomId: bigint): void {
-    const encodedId = this.sqidsService.encode(roomId, 'cr');
-    const chatRoom = getSocketRoom.chatRoom(encodedId);
+  leaveChatRoom(userId: bigint, roomId: bigint, roomType: ChatRoomType): void {
+    const isSupport = roomType === ChatRoomType.SUPPORT;
+    const prefix = isSupport ? 'sr' : 'cr';
+    const encodedId = this.sqidsService.encode(roomId, prefix as any);
+    const roomName = isSupport ? getSocketRoom.supportRoom(encodedId) : getSocketRoom.chatRoom(encodedId);
+
     const userRoom = getSocketRoom.user(userId);
-    this.gateway.server.in(userRoom).socketsLeave(chatRoom);
+    this.gateway.server.in(userRoom).socketsLeave(roomName);
   }
 
-  /**
-   * 사용자의 모든 소켓 세션을 특정 고객응대 소켓 룸에 가입시킵니다.
-   */
-  joinSupportRoom(userId: bigint, roomId: bigint): void {
-    const encodedId = this.sqidsService.encode(roomId, 'sr'); // SUPPORT_ROOM ('sr')
-    const supportRoom = getSocketRoom.supportRoom(encodedId);
-    const userRoom = getSocketRoom.user(userId);
-    this.gateway.server.in(userRoom).socketsJoin(supportRoom);
-  }
 
-  /**
-   * 사용자의 모든 소켓 세션을 특정 고객응대 소켓 룸에서 탈퇴시킵니다.
-   */
-  leaveSupportRoom(userId: bigint, roomId: bigint): void {
-    const encodedId = this.sqidsService.encode(roomId, 'sr');
-    const supportRoom = getSocketRoom.supportRoom(encodedId);
-    const userRoom = getSocketRoom.user(userId);
-    this.gateway.server.in(userRoom).socketsLeave(supportRoom);
-  }
+
 
 
 

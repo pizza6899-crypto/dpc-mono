@@ -20,6 +20,8 @@ export const USER_SOCKET_EVENT_TYPES = {
     INBOX_NEW: 'INBOX_NEW',
     /** 프로모션 적용 결과 */
     PROMOTION_APPLIED: 'PROMOTION_APPLIED',
+    /** 새 채팅 메시지 도착 */
+    CHAT_MESSAGE_NEW: 'CHAT_MESSAGE_NEW',
 } as const;
 
 /** 관리자 전용 이벤트 */
@@ -103,6 +105,17 @@ export interface SocketSystemNoticePayload {
     body: string;
 }
 
+/** CHAT_MESSAGE_NEW: 새 채팅 메시지 실시간 스트림 페이로드 */
+export interface SocketChatMessageNewPayload {
+    id: string;              // Encoded Message ID
+    roomId: string;          // Encoded Room ID
+    senderId: string | null; // Encoded Sender ID (null일 경우 시스템 메시지)
+    content: string;
+    type: string;            // ChatMessageType (TEXT, IMAGE, etc)
+    metadata: any | null;
+    createdAt: string;       // ISO format
+}
+
 // ============================================
 // 이벤트 → 페이로드 매핑 (Single Source of Truth)
 // ============================================
@@ -126,4 +139,5 @@ export type SocketPayloadMap = {
     [SOCKET_EVENT_TYPES.WITHDRAW_REQUESTED]: SocketWithdrawRequestedPayload;
     [SOCKET_EVENT_TYPES.PROMOTION_APPLIED]: SocketPromotionAppliedPayload;
     [SOCKET_EVENT_TYPES.SYSTEM_NOTICE]: SocketSystemNoticePayload;
+    [SOCKET_EVENT_TYPES.CHAT_MESSAGE_NEW]: SocketChatMessageNewPayload;
 };

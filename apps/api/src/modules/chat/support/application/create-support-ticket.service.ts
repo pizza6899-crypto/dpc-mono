@@ -2,9 +2,12 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { SUPPORT_TICKET_REPOSITORY_PORT, type SupportTicketRepositoryPort } from '../ports/support-ticket.repository.port';
 import { CHAT_ROOM_REPOSITORY_PORT, type ChatRoomRepositoryPort } from '../../rooms/ports/chat-room.repository.port';
+import { CHAT_ROOM_MEMBER_REPOSITORY_PORT, type ChatRoomMemberRepositoryPort } from '../../rooms/ports/chat-room-member.repository.port';
 import { SupportTicket } from '../domain/entities/support-ticket.entity';
 import { ChatRoom } from '../../rooms/domain/chat-room.entity';
-import { ChatRoomType, SupportPriority } from '@prisma/client';
+import { ChatRoomMember } from '../../rooms/domain/chat-room-member.entity';
+import { ChatRoomType, SupportPriority, ChatMemberRole } from '@prisma/client';
+
 import { SupportException } from '../domain/support.exception';
 import { MessageCode } from '@repo/shared';
 
@@ -22,15 +25,19 @@ export class CreateSupportTicketService {
         private readonly ticketRepository: SupportTicketRepositoryPort,
         @Inject(CHAT_ROOM_REPOSITORY_PORT)
         private readonly roomRepository: ChatRoomRepositoryPort,
+        @Inject(CHAT_ROOM_MEMBER_REPOSITORY_PORT)
+        private readonly memberRepository: ChatRoomMemberRepositoryPort,
     ) { }
+
 
     @Transactional()
     async execute(params: CreateSupportTicketParams): Promise<SupportTicket> {
         // 1. Check if an active ticket already exists
         const activeTicket = await this.ticketRepository.findActiveTicketByUserId(params.userId);
         if (activeTicket) {
-            throw new SupportException('You already have an active support ticket', MessageCode.VALIDATION_ERROR);
+            return activeTicket;
         }
+
 
         // 2. Find or create a support chat room for the user
         const slug = `support:${params.userId}`;
@@ -61,6 +68,23 @@ export class CreateSupportTicketService {
             priority: params.priority,
         });
 
-        return await this.ticketRepository.save(ticket);
+        const savedTicket = await this.ticketRepository.save(ticket);
+
+        // 4. Ensure the user is a member of the room
+        const existingMember = await this.memberRepository.findByRoomIdAndUserId(room.id, params.userId);
+        if (!existingMember) {
+            const newMember = new ChatRoomMember(
+                0n,
+                room.id,
+                params.userId,
+                ChatMemberRole.MEMBER,
+                null,
+                new Date(),
+            );
+            await this.memberRepository.save(newMember);
+        }
+
+        return savedTicket;
+
     }
 }

@@ -16,12 +16,4 @@ export class ChatRoomUserResponseDto {
 
     @ApiProperty({ description: 'Slow Mode Seconds / 도배 방지 쿨다운', example: 3 })
     slowModeSeconds: number;
-
-    constructor(data: { id: string, slug: string | null, type: ChatRoomType, metadata: any, slowModeSeconds: number }) {
-        this.id = data.id;
-        this.slug = data.slug;
-        this.type = data.type;
-        this.metadata = data.metadata;
-        this.slowModeSeconds = data.slowModeSeconds;
-    }
 }
