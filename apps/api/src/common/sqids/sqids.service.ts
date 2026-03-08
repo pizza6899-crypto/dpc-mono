@@ -60,16 +60,14 @@ export class SqidsService {
    * @param prefix SqidsPrefix 상수에 정의된 접두사 라벨
    * @throws InvalidSqidIdException ID가 음수이거나 0인 경우
    */
-  encode(id: number | bigint, prefix?: SqidsPrefixType): string {
-    const bigIntId = BigInt(id);
-
+  encode(id: bigint, prefix?: SqidsPrefixType): string {
     // ID 유효성 검증
-    if (bigIntId <= 0n) {
+    if (id <= 0n) {
       throw new InvalidSqidIdException(id);
     }
 
     // 1. Knuth's Multiplicative Hash 적용 (난독화)
-    const scrambledId = (bigIntId * KNUTH_PRIME) & KNUTH_MASK;
+    const scrambledId = (id * KNUTH_PRIME) & KNUTH_MASK;
 
     // 2. 64비트를 상하위 32비트로 분할
     const high = Number(scrambledId >> 32n);

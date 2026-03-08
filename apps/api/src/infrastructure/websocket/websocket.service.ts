@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { SocketRoomType } from './constants/websocket-rooms.constant';
+import { type SocketRoomType, getSocketRoom } from './constants/websocket-rooms.constant';
 import { UserWebsocketGateway } from './gateways/user-websocket.gateway';
 import { AdminWebsocketGateway } from './gateways/admin-websocket.gateway';
 import { SocketEventDto } from './dtos/socket-event.dto';
@@ -70,6 +70,48 @@ export class WebsocketService {
   }
 
   /**
+   * 사용자의 모든 소켓 세션을 특정 채팅방 소켓 룸에 가입시킵니다.
+   */
+  joinChatRoom(userId: bigint, roomId: bigint): void {
+    const encodedId = this.sqidsService.encode(roomId, 'cr'); // CHAT_ROOM ('cr')
+    const chatRoom = getSocketRoom.chatRoom(encodedId);
+    const userRoom = getSocketRoom.user(userId);
+    this.gateway.server.in(userRoom).socketsJoin(chatRoom);
+  }
+
+  /**
+   * 사용자의 모든 소켓 세션을 특정 채팅방 소켓 룸에서 탈퇴시킵니다.
+   */
+  leaveChatRoom(userId: bigint, roomId: bigint): void {
+    const encodedId = this.sqidsService.encode(roomId, 'cr');
+    const chatRoom = getSocketRoom.chatRoom(encodedId);
+    const userRoom = getSocketRoom.user(userId);
+    this.gateway.server.in(userRoom).socketsLeave(chatRoom);
+  }
+
+  /**
+   * 사용자의 모든 소켓 세션을 특정 고객응대 소켓 룸에 가입시킵니다.
+   */
+  joinSupportRoom(userId: bigint, roomId: bigint): void {
+    const encodedId = this.sqidsService.encode(roomId, 'sr'); // SUPPORT_ROOM ('sr')
+    const supportRoom = getSocketRoom.supportRoom(encodedId);
+    const userRoom = getSocketRoom.user(userId);
+    this.gateway.server.in(userRoom).socketsJoin(supportRoom);
+  }
+
+  /**
+   * 사용자의 모든 소켓 세션을 특정 고객응대 소켓 룸에서 탈퇴시킵니다.
+   */
+  leaveSupportRoom(userId: bigint, roomId: bigint): void {
+    const encodedId = this.sqidsService.encode(roomId, 'sr');
+    const supportRoom = getSocketRoom.supportRoom(encodedId);
+    const userRoom = getSocketRoom.user(userId);
+    this.gateway.server.in(userRoom).socketsLeave(supportRoom);
+  }
+
+
+
+  /**
    * 사용자용 페이로드 준비 (필요 시 ID 인코딩)
    */
   private prepareUserPayload(payload: any, prefix?: SqidsPrefixType): any {
@@ -94,6 +136,4 @@ export class WebsocketService {
 
     return payload;
   }
-
 }
-

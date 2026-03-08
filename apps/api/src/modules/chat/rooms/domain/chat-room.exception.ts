@@ -34,3 +34,26 @@ export class ChatRoomUnauthorizedException extends ChatRoomException {
         this.name = 'ChatRoomUnauthorizedException';
     }
 }
+
+export class ChatRoomInactiveException extends ChatRoomException {
+    constructor() {
+        super(
+            'Chat room is inactive',
+            MessageCode.CHAT_ROOM_LOCKED,
+            HttpStatus.BAD_REQUEST,
+        );
+        this.name = 'ChatRoomInactiveException';
+    }
+}
+
+export class ChatRoomInsufficientTierException extends ChatRoomException {
+    constructor(minTier: number) {
+        super(
+            `Minimum tier level ${minTier} is required to join this chat room`,
+            MessageCode.CHAT_INSUFFICIENT_TIER,
+            HttpStatus.FORBIDDEN,
+        );
+        this.name = 'ChatRoomInsufficientTierException';
+    }
+}
+
