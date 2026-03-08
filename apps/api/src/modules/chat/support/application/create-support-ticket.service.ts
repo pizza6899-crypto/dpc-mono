@@ -7,9 +7,7 @@ import { SupportTicket } from '../domain/entities/support-ticket.entity';
 import { ChatRoom } from '../../rooms/domain/chat-room.entity';
 import { ChatRoomMember } from '../../rooms/domain/chat-room-member.entity';
 import { ChatRoomType, SupportPriority, ChatMemberRole } from '@prisma/client';
-
-import { SupportException } from '../domain/support.exception';
-import { MessageCode } from '@repo/shared';
+import { getSocketRoom } from 'src/infrastructure/websocket/constants/websocket-rooms.constant';
 
 export interface CreateSupportTicketParams {
     userId: bigint;
@@ -40,8 +38,9 @@ export class CreateSupportTicketService {
 
 
         // 2. Find or create a support chat room for the user
-        const slug = `support:${params.userId}`;
+        const slug = getSocketRoom.supportRoom(`u:${params.userId}`);
         let room = await this.roomRepository.findBySlug(slug);
+
 
         if (!room) {
             room = new ChatRoom(
