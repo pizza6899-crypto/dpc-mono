@@ -29,7 +29,7 @@ export class UpdateChatConfigService {
             params.defaultSlowModeSeconds,
             params.minChatTierLevel,
             params.blockDuplicateMessages,
-            new Date(), // Updated at will be set by DB or Mapper, but domain entity needs it.
+            new Date(),
         );
 
         await this.repository.save(config);

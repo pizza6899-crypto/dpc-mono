@@ -47,6 +47,7 @@ export const SqidsPrefix = {
   TIER_REWARD: 'tr',
   REWARD: 'r',
   CHAT_ROOM: 'cr',
+  CHAT_TICKET: 'ct',
   // 필요에 따라 추가 (기존 값 수정 금지)
 } as const;
 

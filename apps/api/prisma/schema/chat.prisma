@@ -90,8 +90,8 @@ model ChatMessage {
     senderId BigInt? @map("sender_id") // null일 경우 시스템 메시지
     ticketId BigInt? @map("ticket_id") // 특정 상담 세션에 귀속된 메시지인 경우
 
-    content String          @db.Text
-    type    ChatMessageType @default(TEXT)
+    content String
+    type    ChatMessageType
 
     // 이모지, 멘션, 이미지 URL 또는 커스텀 스타일
     metadata Json?
