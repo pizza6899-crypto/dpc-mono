@@ -10,12 +10,12 @@ import { SendSupportMessageService } from '../../application/send-support-messag
 import { GetChatMessagesService } from '../../../rooms/application/get-chat-messages.service';
 import { StartSupportInquiryUserRequestDto } from './dto/request/start-support-inquiry-user.request.dto';
 import { SendSupportMessageUserRequestDto } from './dto/request/send-support-message-user.request.dto';
-import { SendMessageResponseDto } from '../../../rooms/controllers/user/dto/response/send-message.response.dto';
 import { SupportMessageHistoryUserRequestDto } from './dto/request/support-message-history-user.request.dto';
-import { ChatRoomUserResponseDto } from '../../../rooms/controllers/user/dto/response/chat-room-user.response.dto';
+import { MarkSupportChatReadUserRequestDto } from './dto/request/mark-support-chat-read-user.request.dto';
+import { SupportInquiryUserResponseDto } from './dto/response/support-inquiry-user.response.dto';
 import { SupportMessageUserResponseDto } from './dto/response/support-message-user.response.dto';
+import { SendSupportMessageUserResponseDto } from './dto/response/send-support-message-user.response.dto';
 import { ReadChatMessagesService } from '../../../rooms/application/read-chat-messages.service';
-import { MarkChatReadRequestDto } from '../../../rooms/controllers/user/dto/request/mark-chat-read.request.dto';
 import { ChatRoomUnauthorizedException } from '../../../rooms/domain/chat-room.exception';
 import { CHAT_ROOM_MEMBER_REPOSITORY_PORT, type ChatRoomMemberRepositoryPort } from '../../../rooms/ports/chat-room-member.repository.port';
 import { Inject } from '@nestjs/common';
@@ -89,7 +89,7 @@ export class SupportUserController {
 
     @Post('inquire')
     @ApiOperation({ summary: 'Start Support Inquiry / 고객 상담 문의 시작' })
-    @ApiStandardResponse(ChatRoomUserResponseDto)
+    @ApiStandardResponse(SupportInquiryUserResponseDto)
     @AuditLog({
         type: LogType.ACTIVITY,
         category: 'CHAT',
@@ -101,7 +101,7 @@ export class SupportUserController {
     async inquire(
         @CurrentUser() user: AuthenticatedUser,
         @Body() body: StartSupportInquiryUserRequestDto,
-    ): Promise<ChatRoomUserResponseDto> {
+    ): Promise<SupportInquiryUserResponseDto> {
         const room = await this.startInquiryService.execute({
             userId: user.id,
             category: body.category,
@@ -114,7 +114,7 @@ export class SupportUserController {
 
     @Post(':roomId/messages')
     @ApiOperation({ summary: 'Send Support Chat Message / 상담 채팅 메시지 전송' })
-    @ApiStandardResponse(SendMessageResponseDto)
+    @ApiStandardResponse(SendSupportMessageUserResponseDto)
     @AuditLog({
         type: LogType.ACTIVITY,
         category: 'CHAT',
@@ -127,7 +127,7 @@ export class SupportUserController {
         @CurrentUser() user: AuthenticatedUser,
         @Param('roomId') roomIdEncoded: string,
         @Body() body: SendSupportMessageUserRequestDto,
-    ): Promise<SendMessageResponseDto> {
+    ): Promise<SendSupportMessageUserResponseDto> {
         const { id: roomId } = this.sqidsService.decodeAuto(roomIdEncoded);
 
 
@@ -163,7 +163,7 @@ export class SupportUserController {
     async markAsRead(
         @CurrentUser() user: AuthenticatedUser,
         @Param('roomId') roomIdEncoded: string,
-        @Body() body: MarkChatReadRequestDto,
+        @Body() body: MarkSupportChatReadUserRequestDto,
     ): Promise<boolean> {
         const { id: roomId } = this.sqidsService.decodeAuto(roomIdEncoded);
         const { id: lastReadMessageId } = this.sqidsService.decodeAuto(body.lastReadMessageId);

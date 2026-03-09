@@ -10,14 +10,14 @@ import { ListSupportInquiriesService } from '../../application/list-support-inqu
 import { GetChatMessagesService } from '../../../rooms/application/get-chat-messages.service';
 import { ListSupportInquiriesAdminRequestDto } from './dto/request/list-support-inquiries-admin.request.dto';
 import { SupportInquiryAdminResponseDto } from './dto/response/support-inquiry-admin.response.dto';
-import { SendSupportMessageUserRequestDto } from '../user/dto/request/send-support-message-user.request.dto';
-import { SendMessageResponseDto } from '../../../rooms/controllers/user/dto/response/send-message.response.dto';
-import { SupportMessageHistoryUserRequestDto } from '../user/dto/request/support-message-history-user.request.dto';
+import { SendSupportMessageAdminRequestDto } from './dto/request/send-support-message-admin.request.dto';
+import { SendSupportMessageAdminResponseDto } from './dto/response/send-support-message-admin.response.dto';
+import { SupportMessageHistoryAdminRequestDto } from './dto/request/support-message-history-admin.request.dto';
 import { SupportMessageAdminResponseDto } from './dto/response/support-message-admin.response.dto';
 import { ChatRoom } from '../../../rooms/domain/chat-room.entity';
 import { ReadChatMessagesService } from '../../../rooms/application/read-chat-messages.service';
 import { CHAT_ROOM_MEMBER_REPOSITORY_PORT, type ChatRoomMemberRepositoryPort } from '../../../rooms/ports/chat-room-member.repository.port';
-import { MarkChatReadRequestDto } from '../../../rooms/controllers/user/dto/request/mark-chat-read.request.dto';
+import { MarkSupportChatReadAdminRequestDto } from './dto/request/mark-support-chat-read-admin.request.dto';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 
@@ -92,7 +92,7 @@ export class SupportAdminController {
     async listMessages(
         @CurrentUser() admin: AuthenticatedUser,
         @Param('roomId') roomIdRaw: string,
-        @Query() query: SupportMessageHistoryUserRequestDto,
+        @Query() query: SupportMessageHistoryAdminRequestDto,
     ): Promise<SupportMessageAdminResponseDto[]> {
         const roomId = BigInt(roomIdRaw);
 
@@ -125,7 +125,7 @@ export class SupportAdminController {
 
     @Post('rooms/:roomId/messages')
     @ApiOperation({ summary: 'Send Support Reply (Admin) / 상담 답장 전송 (관리자)' })
-    @ApiStandardResponse(SendMessageResponseDto)
+    @ApiStandardResponse(SendSupportMessageAdminResponseDto)
     @AuditLog({
         type: LogType.ACTIVITY,
         category: 'ADMIN',
@@ -137,8 +137,8 @@ export class SupportAdminController {
     async sendReply(
         @CurrentUser() admin: AuthenticatedUser,
         @Param('roomId') roomIdRaw: string,
-        @Body() body: SendSupportMessageUserRequestDto,
-    ): Promise<SendMessageResponseDto> {
+        @Body() body: SendSupportMessageAdminRequestDto,
+    ): Promise<SendSupportMessageAdminResponseDto> {
         const roomId = BigInt(roomIdRaw);
 
         let imageIds: bigint[] | undefined;
@@ -173,7 +173,7 @@ export class SupportAdminController {
     async markAsRead(
         @CurrentUser() admin: AuthenticatedUser,
         @Param('roomId') roomIdRaw: string,
-        @Body() body: MarkChatReadRequestDto,
+        @Body() body: MarkSupportChatReadAdminRequestDto,
     ): Promise<boolean> {
         const roomId = BigInt(roomIdRaw);
         const lastReadMessageId = BigInt(body.lastReadMessageId);
