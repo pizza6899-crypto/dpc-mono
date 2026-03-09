@@ -16,6 +16,9 @@ import { SendChatMessageUserRequestDto } from '../../../rooms/controllers/user/d
 import { ChatMessageHistoryRequestDto } from '../../../rooms/controllers/user/dto/request/chat-message-history.request.dto';
 import { ChatMessageUserResponseDto } from '../../../rooms/controllers/user/dto/response/chat-message-user.response.dto';
 import { ChatRoom } from '../../../rooms/domain/chat-room.entity';
+import { ReadChatMessagesService } from '../../../rooms/application/read-chat-messages.service';
+import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
+import { LogType } from 'src/modules/audit-log/domain';
 
 @Controller('admin/chat/support')
 @ApiTags('Admin Chat Support')
@@ -28,12 +31,21 @@ export class SupportAdminController {
         private readonly sendSupportMessageService: SendSupportMessageService,
         private readonly listInquiriesService: ListSupportInquiriesService,
         private readonly getMessagesService: GetChatMessagesService,
+        private readonly readMessagesService: ReadChatMessagesService,
         private readonly sqidsService: SqidsService,
     ) { }
 
     @Get('rooms')
     @ApiOperation({ summary: 'List Support Inquiries (Admin) / 상담 목록 조회 (관리자)' })
     @ApiStandardResponse(ChatRoomAdminResponseDto, { isArray: true })
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'ADMIN',
+        action: 'LIST_SUPPORT_INQUIRIES',
+        extractMetadata: (req, args) => ({
+            ...args[0],
+        }),
+    })
     async list(
         @Query() query: ListSupportInquiriesAdminRequestDto,
     ): Promise<ChatRoomAdminResponseDto[]> {
@@ -70,6 +82,14 @@ export class SupportAdminController {
     @Get('rooms/:roomId/messages')
     @ApiOperation({ summary: 'Get Support Chat History (Admin) / 상담 채팅 내역 조회 (관리자)' })
     @ApiStandardResponse(ChatMessageUserResponseDto, { isArray: true })
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'ADMIN',
+        action: 'VIEW_SUPPORT_MESSAGES',
+        extractMetadata: (req, args) => ({
+            roomId: args[0],
+        }),
+    })
     async listMessages(
         @Param('roomId') roomIdEncoded: string,
         @Query() query: ChatMessageHistoryRequestDto,
@@ -101,6 +121,15 @@ export class SupportAdminController {
     @Post('rooms/:roomId/messages')
     @ApiOperation({ summary: 'Send Support Reply (Admin) / 상담 답장 전송 (관리자)' })
     @ApiStandardResponse(ChatMessageUserResponseDto)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'ADMIN',
+        action: 'SEND_SUPPORT_REPLY',
+        extractMetadata: (req, args) => ({
+            roomId: args[1],
+            type: args[2]?.type,
+        }),
+    })
     async sendReply(
         @CurrentUser() admin: AuthenticatedUser,
         @Param('roomId') roomIdEncoded: string,
@@ -127,4 +156,28 @@ export class SupportAdminController {
         };
     }
 
+    @Post('rooms/:roomId/read')
+    @ApiOperation({ summary: 'Mark Support Chat Messages as Read (Admin) / 상담 채팅 메시지 읽음 처리 (관리자)' })
+    @ApiStandardResponse(Boolean)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'ADMIN',
+        action: 'MARK_SUPPORT_READ',
+        extractMetadata: (req, args) => ({
+            roomId: args[1],
+        }),
+    })
+    async markAsRead(
+        @CurrentUser() admin: AuthenticatedUser,
+        @Param('roomId') roomIdEncoded: string,
+    ): Promise<boolean> {
+        const { id: roomId } = this.sqidsService.decodeAuto(roomIdEncoded);
+
+        await this.readMessagesService.execute({
+            roomId,
+            userId: admin.id,
+        });
+
+        return true;
+    }
 }

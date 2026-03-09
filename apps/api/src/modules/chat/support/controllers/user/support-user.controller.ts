@@ -13,9 +13,12 @@ import { SendChatMessageUserRequestDto } from '../../../rooms/controllers/user/d
 import { ChatMessageHistoryRequestDto } from '../../../rooms/controllers/user/dto/request/chat-message-history.request.dto';
 import { ChatRoomUserResponseDto } from '../../../rooms/controllers/user/dto/response/chat-room-user.response.dto';
 import { ChatMessageUserResponseDto } from '../../../rooms/controllers/user/dto/response/chat-message-user.response.dto';
-import { ChatRoomUnauthorizedException, ChatRoomNotFoundException } from '../../../rooms/domain/chat-room.exception';
+import { ReadChatMessagesService } from '../../../rooms/application/read-chat-messages.service';
+import { ChatRoomUnauthorizedException } from '../../../rooms/domain/chat-room.exception';
 import { CHAT_ROOM_MEMBER_REPOSITORY_PORT, type ChatRoomMemberRepositoryPort } from '../../../rooms/ports/chat-room-member.repository.port';
 import { Inject } from '@nestjs/common';
+import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
+import { LogType } from 'src/modules/audit-log/domain';
 
 @Controller('chat/support')
 @ApiTags('User Chat Support')
@@ -28,12 +31,21 @@ export class SupportUserController {
         private readonly getMessagesService: GetChatMessagesService,
         @Inject(CHAT_ROOM_MEMBER_REPOSITORY_PORT)
         private readonly memberRepository: ChatRoomMemberRepositoryPort,
+        private readonly readMessagesService: ReadChatMessagesService,
         private readonly sqidsService: SqidsService,
     ) { }
 
     @Get(':roomId/messages')
     @ApiOperation({ summary: 'Get Support Chat History / 상담 채팅 내역 조회' })
     @ApiStandardResponse(ChatMessageUserResponseDto, { isArray: true })
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'CHAT',
+        action: 'VIEW_MESSAGES',
+        extractMetadata: (req, args) => ({
+            roomId: args[1],
+        }),
+    })
     async listMessages(
         @CurrentUser() user: AuthenticatedUser,
         @Param('roomId') roomIdEncoded: string,
@@ -72,6 +84,14 @@ export class SupportUserController {
     @Post('inquire')
     @ApiOperation({ summary: 'Start Support Inquiry / 고객 상담 문의 시작' })
     @ApiStandardResponse(ChatRoomUserResponseDto)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'CHAT',
+        action: 'START_INQUIRY',
+        extractMetadata: (req, args) => ({
+            category: args[1]?.category,
+        }),
+    })
     async inquire(
         @CurrentUser() user: AuthenticatedUser,
         @Body() body: StartSupportInquiryUserRequestDto,
@@ -96,6 +116,15 @@ export class SupportUserController {
     @Post(':roomId/messages')
     @ApiOperation({ summary: 'Send Support Chat Message / 상담 채팅 메시지 전송' })
     @ApiStandardResponse(ChatMessageUserResponseDto)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'CHAT',
+        action: 'SEND_MESSAGE',
+        extractMetadata: (req, args) => ({
+            roomId: args[1],
+            type: args[2]?.type,
+        }),
+    })
     async send(
         @CurrentUser() user: AuthenticatedUser,
         @Param('roomId') roomIdEncoded: string,
@@ -120,6 +149,31 @@ export class SupportUserController {
             metadata: message.metadata,
             createdAt: message.createdAt,
         };
+    }
+
+    @Post(':roomId/read')
+    @ApiOperation({ summary: 'Mark Support Chat Messages as Read / 상담 채팅 메시지 읽음 처리' })
+    @ApiStandardResponse(Boolean)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'CHAT',
+        action: 'MARK_AS_READ',
+        extractMetadata: (req, args) => ({
+            roomId: args[1],
+        }),
+    })
+    async markAsRead(
+        @CurrentUser() user: AuthenticatedUser,
+        @Param('roomId') roomIdEncoded: string,
+    ): Promise<boolean> {
+        const { id: roomId } = this.sqidsService.decodeAuto(roomIdEncoded);
+
+        await this.readMessagesService.execute({
+            roomId,
+            userId: user.id,
+        });
+
+        return true;
     }
 }
 
