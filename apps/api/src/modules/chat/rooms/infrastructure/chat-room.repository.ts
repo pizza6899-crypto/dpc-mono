@@ -37,6 +37,27 @@ export class ChatRoomRepository implements ChatRoomRepositoryPort {
         return records.map((record) => ChatRoomMapper.toDomain(record));
     }
 
+    async listSupportRooms(filters: {
+        status?: any;
+        priority?: any;
+        category?: string;
+        adminId?: bigint;
+    }): Promise<ChatRoom[]> {
+        const records = await this.tx.chatRoom.findMany({
+            where: {
+                type: 'SUPPORT',
+                supportStatus: filters.status,
+                supportPriority: filters.priority,
+                supportCategory: filters.category,
+                supportAdminId: filters.adminId,
+            },
+            orderBy: { updatedAt: 'desc' },
+        });
+
+        return records.map((record) => ChatRoomMapper.toDomain(record));
+    }
+
+
     async save(room: ChatRoom): Promise<ChatRoom> {
         const data = {
             slug: room.slug,

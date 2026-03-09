@@ -14,8 +14,7 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { TierModule } from '../../tier/tier.module';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { SendChatMessageService } from './application/send-chat-message.service';
-import { StartSupportInquiryService } from './application/start-support-inquiry.service';
-
+import { GetChatMessagesService } from './application/get-chat-messages.service';
 
 @Module({
     imports: [
@@ -46,23 +45,20 @@ import { StartSupportInquiryService } from './application/start-support-inquiry.
         GetChatRoomService,
         ListChatRoomsService,
         SendChatMessageService,
-        StartSupportInquiryService,
-
+        GetChatMessagesService,
     ],
+
 
     exports: [
         GetChatRoomService,
         ListChatRoomsService,
         SendChatMessageService,
-        StartSupportInquiryService,
-
+        GetChatMessagesService,
         CHAT_ROOM_REPOSITORY_PORT,
 
         CHAT_ROOM_MEMBER_REPOSITORY_PORT,
         CHAT_MESSAGE_REPOSITORY_PORT,
     ],
-
 })
-
 
 export class ChatRoomsModule { }

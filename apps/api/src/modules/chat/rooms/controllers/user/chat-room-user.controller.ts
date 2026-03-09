@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Param, Req, Body } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, Query } from '@nestjs/common';
+
 import { ApiOperation, ApiTags, ApiCookieAuth } from '@nestjs/swagger';
 import { ApiStandardResponse, ApiStandardErrors } from 'src/common/http/decorators/api-response.decorator';
 import { SqidsService } from 'src/common/sqids/sqids.service';
@@ -7,12 +8,11 @@ import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { ListChatRoomsService } from '../../application/list-chat-rooms.service';
 import { SendChatMessageService } from '../../application/send-chat-message.service';
-import { StartSupportInquiryService } from '../../application/start-support-inquiry.service';
+import { GetChatMessagesService } from '../../application/get-chat-messages.service';
 import { ChatRoomUserResponseDto } from './dto/response/chat-room-user.response.dto';
 import { SendChatMessageUserRequestDto } from './dto/request/send-chat-message-user.request.dto';
-import { StartSupportInquiryUserRequestDto } from './dto/request/start-support-inquiry-user.request.dto';
+import { ChatMessageHistoryRequestDto } from './dto/request/chat-message-history.request.dto';
 import { ChatMessageUserResponseDto } from './dto/response/chat-message-user.response.dto';
-
 
 @Controller('chat/rooms')
 @ApiTags('User Chat Rooms')
@@ -22,7 +22,7 @@ export class ChatRoomUserController {
     constructor(
         private readonly listRoomService: ListChatRoomsService,
         private readonly sendMessageService: SendChatMessageService,
-        private readonly startInquiryService: StartSupportInquiryService,
+        private readonly getMessagesService: GetChatMessagesService,
         private readonly sqidsService: SqidsService,
     ) { }
 
@@ -45,34 +45,39 @@ export class ChatRoomUserController {
         }));
     }
 
-    @Post('support/inquire')
-    @ApiOperation({ summary: 'Start Support Inquiry / 고객 상담 문의 시작' })
-    @ApiStandardResponse(ChatRoomUserResponseDto)
-    async inquire(
-        @CurrentUser() user: AuthenticatedUser,
-        @Body() body: StartSupportInquiryUserRequestDto,
-    ): Promise<ChatRoomUserResponseDto> {
-        const room = await this.startInquiryService.execute({
-            userId: user.id,
-            category: body.category,
-            subject: body.subject,
-            priority: body.priority,
+    @Get(':id/messages')
+    @ApiOperation({ summary: 'Get Chat History / 채팅 내역 조회' })
+    @ApiStandardResponse(ChatMessageUserResponseDto, { isArray: true })
+    async listMessages(
+        @Param('id') id: string,
+        @Query() query: ChatMessageHistoryRequestDto,
+    ): Promise<ChatMessageUserResponseDto[]> {
+        const { id: roomId } = this.sqidsService.decodeAuto(id);
+
+        let lastMessageId: bigint | undefined;
+        if (query.lastMessageId) {
+            lastMessageId = this.sqidsService.decodeAuto(query.lastMessageId).id;
+        }
+
+        const messages = await this.getMessagesService.execute({
+            roomId,
+            limit: query.limit,
+            lastMessageId,
         });
 
-        return {
-            id: this.sqidsService.encode(room.id, SqidsPrefix.CHAT_ROOM),
-            slug: room.slug,
-            type: room.type,
-            metadata: room.metadata,
-            slowModeSeconds: room.slowModeSeconds,
-            supportStatus: room.supportStatus || undefined,
-            supportPriority: room.supportPriority || undefined,
-            supportCategory: room.supportCategory,
-            supportSubject: room.supportSubject,
-        };
+        return messages.map((m) => ({
+            id: this.sqidsService.encode(m.id, SqidsPrefix.CHAT_MESSAGE),
+            roomId: this.sqidsService.encode(m.roomId, SqidsPrefix.CHAT_ROOM),
+            senderId: m.senderId ? this.sqidsService.encode(m.senderId, SqidsPrefix.USER) : null,
+            content: m.content,
+            type: m.type,
+            metadata: m.metadata,
+            createdAt: m.createdAt,
+        }));
     }
 
     @Post(':id/messages')
+
     @ApiOperation({ summary: 'Send Chat Message / 채팅 메시지 전송' })
     @ApiStandardResponse(ChatMessageUserResponseDto)
     async send(
@@ -100,7 +105,3 @@ export class ChatRoomUserController {
         };
     }
 }
-
-
-
-

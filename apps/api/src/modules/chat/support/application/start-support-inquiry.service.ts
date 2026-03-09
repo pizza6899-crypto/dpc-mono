@@ -1,9 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { CHAT_ROOM_REPOSITORY_PORT, type ChatRoomRepositoryPort } from '../ports/chat-room.repository.port';
-import { CHAT_ROOM_MEMBER_REPOSITORY_PORT, type ChatRoomMemberRepositoryPort } from '../ports/chat-room-member.repository.port';
-import { ChatRoom } from '../domain/chat-room.entity';
-import { ChatRoomMember } from '../domain/chat-room-member.entity';
+import { CHAT_ROOM_REPOSITORY_PORT, type ChatRoomRepositoryPort } from '../../rooms/ports/chat-room.repository.port';
+import { CHAT_ROOM_MEMBER_REPOSITORY_PORT, type ChatRoomMemberRepositoryPort } from '../../rooms/ports/chat-room-member.repository.port';
+import { ChatRoom } from '../../rooms/domain/chat-room.entity';
+import { ChatRoomMember } from '../../rooms/domain/chat-room-member.entity';
+
 import { ChatRoomType, SupportStatus, SupportPriority, ChatMemberRole } from '@prisma/client';
 import { getSocketRoom } from 'src/infrastructure/websocket/constants/websocket-rooms.constant';
 

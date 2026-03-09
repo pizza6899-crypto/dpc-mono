@@ -6,6 +6,13 @@ export interface ChatRoomRepositoryPort {
     findById(id: bigint): Promise<ChatRoom | null>;
     findBySlug(slug: string): Promise<ChatRoom | null>;
     listActiveRooms(): Promise<ChatRoom[]>;
+    listSupportRooms(filters: {
+        status?: string;
+        priority?: string;
+        category?: string;
+        adminId?: bigint;
+    }): Promise<ChatRoom[]>;
 
     save(room: ChatRoom): Promise<ChatRoom>;
+
 }
