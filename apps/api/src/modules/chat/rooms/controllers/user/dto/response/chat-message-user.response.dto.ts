@@ -5,9 +5,6 @@ export class ChatMessageUserResponseDto {
     @ApiProperty({ description: 'Message ID (Encoded) / 메시지 ID', example: 'cm_123' })
     id: string;
 
-    @ApiProperty({ description: 'Room ID (Encoded) / 채팅방 ID', example: 'cr_123' })
-    roomId: string;
-
     @ApiPropertyOptional({ description: 'Sender ID (Encoded) / 발신자 ID (null일 경우 시스템)', example: 'u_123' })
     senderId: string | null;
 

@@ -72,7 +72,6 @@ export class SupportUserController {
 
         return messages.map((m) => ({
             id: this.sqidsService.encode(m.id, SqidsPrefix.CHAT_MESSAGE),
-            roomId: this.sqidsService.encode(m.roomId, SqidsPrefix.CHAT_ROOM),
             senderId: m.senderId ? this.sqidsService.encode(m.senderId, SqidsPrefix.USER) : null,
             content: m.content,
             type: m.type,
@@ -135,7 +134,6 @@ export class SupportUserController {
 
         return {
             id: this.sqidsService.encode(message.id, SqidsPrefix.CHAT_MESSAGE),
-            roomId: this.sqidsService.encode(message.roomId, SqidsPrefix.CHAT_ROOM),
             senderId: message.senderId ? this.sqidsService.encode(message.senderId, SqidsPrefix.USER) : null,
             content: message.content,
             type: message.type,
