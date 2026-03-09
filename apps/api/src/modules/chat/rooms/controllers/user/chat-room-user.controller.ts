@@ -77,17 +77,16 @@ export class ChatRoomUserController {
     ): Promise<ChatMessageUserResponseDto> {
         const { id: roomId } = this.sqidsService.decodeAuto(id);
 
-        let fileId: bigint | undefined;
-        if (body.fileId) {
-            fileId = this.sqidsService.decodeAuto(body.fileId).id;
+        let imageIds: bigint[] | undefined;
+        if (body.imageIds && body.imageIds.length > 0) {
+            imageIds = body.imageIds.map(id => this.sqidsService.decodeAuto(id).id);
         }
 
         const message = await this.sendMessageService.execute({
             roomId,
             senderId: user.id,
             content: body.content,
-            type: body.type,
-            fileId,
+            imageIds,
         });
 
         return {

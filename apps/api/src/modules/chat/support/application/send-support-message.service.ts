@@ -11,9 +11,8 @@ export interface SendSupportMessageParams {
     roomId: bigint;
     senderId: bigint;
     content: string;
-    type?: ChatMessageType;
     isAdmin: boolean;
-    fileId?: bigint;
+    imageIds?: bigint[];
 }
 
 @Injectable()
@@ -37,8 +36,7 @@ export class SendSupportMessageService {
             roomId: params.roomId,
             senderId: params.senderId,
             content: params.content,
-            type: params.type,
-            fileId: params.fileId,
+            imageIds: params.imageIds,
         });
 
         // 3. 상담 상태 자동 업데이트 (Side-effects)

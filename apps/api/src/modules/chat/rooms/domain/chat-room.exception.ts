@@ -57,3 +57,14 @@ export class ChatRoomInsufficientTierException extends ChatRoomException {
     }
 }
 
+export class ChatRoomInvalidFileTypeException extends ChatRoomException {
+    constructor() {
+        super(
+            'Only image files are allowed in chat',
+            MessageCode.CHAT_INVALID_FILE_TYPE,
+            HttpStatus.BAD_REQUEST,
+        );
+        this.name = 'ChatRoomInvalidFileTypeException';
+    }
+}
+

@@ -13,6 +13,7 @@ import { SqidsModule } from 'src/common/sqids/sqids.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { TierModule } from '../../tier/tier.module';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { FileModule } from '../../file/file.module';
 import { SendChatMessageService } from './application/send-chat-message.service';
 import { GetChatMessagesService } from './application/get-chat-messages.service';
 import { ReadChatMessagesService } from './application/read-chat-messages.service';
@@ -23,6 +24,7 @@ import { ReadChatMessagesService } from './application/read-chat-messages.servic
         ConcurrencyModule,
         TierModule,
         SnowflakeModule,
+        FileModule,
     ],
 
 

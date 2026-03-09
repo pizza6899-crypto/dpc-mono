@@ -137,7 +137,6 @@ export class SupportAdminController {
         action: 'SEND_SUPPORT_REPLY',
         extractMetadata: (req, args) => ({
             roomId: args[1],
-            type: args[2]?.type,
         }),
     })
     async sendReply(
@@ -147,18 +146,17 @@ export class SupportAdminController {
     ): Promise<ChatMessageUserResponseDto> {
         const { id: roomId } = this.sqidsService.decodeAuto(roomIdEncoded);
 
-        let fileId: bigint | undefined;
-        if (body.fileId) {
-            fileId = this.sqidsService.decodeAuto(body.fileId).id;
+        let imageIds: bigint[] | undefined;
+        if (body.imageIds && body.imageIds.length > 0) {
+            imageIds = body.imageIds.map(id => this.sqidsService.decodeAuto(id).id);
         }
 
         const message = await this.sendSupportMessageService.execute({
             roomId,
             senderId: admin.id,
             content: body.content,
-            type: body.type,
             isAdmin: true,
-            fileId,
+            imageIds,
         });
 
         return {

@@ -1,5 +1,5 @@
 import { type PersistenceOf, Cast } from '../../../../infrastructure/persistence/persistence.util';
-import { ChatMessage, type ChatMessageRawPayload } from '../domain/chat-message.entity';
+import { ChatMessage, type ChatMessageRawPayload, type ChatMessageMetadata } from '../domain/chat-message.entity';
 
 export class ChatMessageMapper {
     public static toDomain(data: PersistenceOf<ChatMessageRawPayload>): ChatMessage {
@@ -9,7 +9,7 @@ export class ChatMessageMapper {
             data.content,
             data.type,
             data.senderId ? Cast.bigint(data.senderId) : null,
-            data.metadata,
+            data.metadata as ChatMessageMetadata | null,
             data.isPinned,
             data.isDeleted,
             Cast.date(data.createdAt),
