@@ -122,7 +122,7 @@ export interface SocketChatMessageNewPayload {
 export interface SocketChatMessagesReadPayload {
     roomId: string;          // Encoded Room ID
     userId: string;          // Encoded User ID (누가 읽었는지)
-    readAt: string;          // ISO format
+    lastReadMessageId: string; // Encoded Message ID (어디까지 읽었는지)
 }
 
 // ============================================

@@ -33,6 +33,14 @@ export class ChatRoomMemberRepository implements ChatRoomMemberRepositoryPort {
         return records.map((record) => ChatRoomMemberMapper.toDomain(record));
     }
 
+    async listByRoomId(roomId: bigint): Promise<ChatRoomMember[]> {
+        const records = await this.tx.chatRoomMember.findMany({
+            where: { roomId },
+        });
+
+        return records.map((record) => ChatRoomMemberMapper.toDomain(record));
+    }
+
     async save(member: ChatRoomMember): Promise<ChatRoomMember> {
         const record = await this.tx.chatRoomMember.upsert({
             where: {
@@ -43,13 +51,13 @@ export class ChatRoomMemberRepository implements ChatRoomMemberRepositoryPort {
             },
             update: {
                 role: member.role,
-                lastReadAt: member.lastReadAt,
+                lastReadMessageId: member.lastReadMessageId,
             },
             create: {
                 roomId: member.roomId,
                 userId: member.userId,
                 role: member.role,
-                lastReadAt: member.lastReadAt,
+                lastReadMessageId: member.lastReadMessageId,
             },
         });
 

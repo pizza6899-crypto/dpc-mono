@@ -13,6 +13,7 @@ import { ChatRoomMember } from '../domain/chat-room-member.entity';
 export interface ReadChatMessagesParams {
     roomId: bigint;
     userId: bigint;
+    lastReadMessageId: bigint;
 }
 
 @Injectable()
@@ -37,25 +38,25 @@ export class ReadChatMessagesService {
             throw new ChatRoomNotFoundException();
         }
 
-        const now = new Date();
         const updatedMember = new ChatRoomMember(
             member.id,
             member.roomId,
             member.userId,
             member.role,
-            now,
+            params.lastReadMessageId,
             member.createdAt,
         );
 
         await this.memberRepository.save(updatedMember);
 
         // 실시간 알림 (상대방에게 읽었임을 알림)
-        this.broadcastReadStatus(params.roomId, params.userId, now, room.type);
+        this.broadcastReadStatus(params.roomId, params.userId, params.lastReadMessageId, room.type);
     }
 
-    private broadcastReadStatus(roomId: bigint, userId: bigint, readAt: Date, roomType: ChatRoomType): void {
+    private broadcastReadStatus(roomId: bigint, userId: bigint, lastReadMessageId: bigint, roomType: ChatRoomType): void {
         const encodedRoomId = this.sqidsService.encode(roomId, SqidsPrefix.CHAT_ROOM);
         const encodedUserId = this.sqidsService.encode(userId, SqidsPrefix.USER);
+        const encodedMessageId = this.sqidsService.encode(lastReadMessageId, SqidsPrefix.CHAT_MESSAGE);
 
         const socketRoom = roomType === ChatRoomType.SUPPORT
             ? getSocketRoom.supportRoom(this.sqidsService.encode(roomId, SqidsPrefix.SUPPORT_ROOM))
@@ -64,7 +65,7 @@ export class ReadChatMessagesService {
         const payload: SocketChatMessagesReadPayload = {
             roomId: encodedRoomId,
             userId: encodedUserId,
-            readAt: readAt.toISOString(),
+            lastReadMessageId: encodedMessageId,
         };
 
         this.websocketService.sendToRoom(socketRoom as any, SOCKET_EVENT_TYPES.CHAT_MESSAGES_READ, payload);

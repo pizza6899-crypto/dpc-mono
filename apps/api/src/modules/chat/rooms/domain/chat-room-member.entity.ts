@@ -8,7 +8,7 @@ export class ChatRoomMember {
         public readonly roomId: bigint,
         public readonly userId: bigint,
         public readonly role: ChatMemberRole,
-        public readonly lastReadAt: Date | null,
+        public readonly lastReadMessageId: bigint | null,
         public readonly createdAt: Date,
     ) { }
 }

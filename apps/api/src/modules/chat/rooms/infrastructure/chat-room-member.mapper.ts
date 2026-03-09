@@ -9,7 +9,7 @@ export class ChatRoomMemberMapper {
             Cast.bigint(data.roomId),
             Cast.bigint(data.userId),
             data.role,
-            data.lastReadAt ? Cast.date(data.lastReadAt) : null,
+            data.lastReadMessageId ? Cast.bigint(data.lastReadMessageId) : null,
             Cast.date(data.createdAt),
         );
     }

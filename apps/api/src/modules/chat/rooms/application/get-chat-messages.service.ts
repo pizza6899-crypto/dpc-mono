@@ -18,7 +18,7 @@ export class GetChatMessagesService {
     async execute(params: GetChatMessagesParams): Promise<ChatMessage[]> {
         return this.messageRepository.findByRoomId(
             params.roomId,
-            params.limit ?? 50,
+            params.limit ?? 30,
             params.lastMessageId,
         );
     }

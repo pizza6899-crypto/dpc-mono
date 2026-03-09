@@ -77,8 +77,8 @@ model ChatRoomMember {
 
     role ChatMemberRole @default(MEMBER)
 
-    // 마지막으로 읽은 시점 (안 읽은 메시지 계산용)
-    lastReadAt DateTime? @map("last_read_at")
+    // 마지막으로 읽은 메시지의 ID (안 읽은 메시지 계산용)
+    lastReadMessageId BigInt? @map("last_read_message_id")
 
     room ChatRoom @relation(fields: [roomId], references: [id])
     user User     @relation(fields: [userId], references: [id])

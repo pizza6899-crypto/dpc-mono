@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param, Get, Query } from '@nestjs/common';
+import { Controller, Post, Body, Param, Get, Query, Inject } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiBearerAuth, ApiCookieAuth } from '@nestjs/swagger';
 import { UserRoleType } from '@prisma/client';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
@@ -17,6 +17,8 @@ import { ChatMessageHistoryRequestDto } from '../../../rooms/controllers/user/dt
 import { ChatMessageUserResponseDto } from '../../../rooms/controllers/user/dto/response/chat-message-user.response.dto';
 import { ChatRoom } from '../../../rooms/domain/chat-room.entity';
 import { ReadChatMessagesService } from '../../../rooms/application/read-chat-messages.service';
+import { CHAT_ROOM_MEMBER_REPOSITORY_PORT, type ChatRoomMemberRepositoryPort } from '../../../rooms/ports/chat-room-member.repository.port';
+import { MarkChatReadRequestDto } from '../../../rooms/controllers/user/dto/request/mark-chat-read.request.dto';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 
@@ -31,6 +33,8 @@ export class SupportAdminController {
         private readonly sendSupportMessageService: SendSupportMessageService,
         private readonly listInquiriesService: ListSupportInquiriesService,
         private readonly getMessagesService: GetChatMessagesService,
+        @Inject(CHAT_ROOM_MEMBER_REPOSITORY_PORT)
+        private readonly memberRepository: ChatRoomMemberRepositoryPort,
         private readonly readMessagesService: ReadChatMessagesService,
         private readonly sqidsService: SqidsService,
     ) { }
@@ -91,6 +95,7 @@ export class SupportAdminController {
         }),
     })
     async listMessages(
+        @CurrentUser() admin: AuthenticatedUser,
         @Param('roomId') roomIdEncoded: string,
         @Query() query: ChatMessageHistoryRequestDto,
     ): Promise<ChatMessageUserResponseDto[]> {
@@ -107,6 +112,10 @@ export class SupportAdminController {
             lastMessageId,
         });
 
+        // 상대방(사용자)의 마지막 읽은 메시지 ID 확인 (1:1 상담 기준)
+        const members = await this.memberRepository.listByRoomId(roomId);
+        const counterpart = members.find((m) => m.userId !== admin.id);
+
         return messages.map((m) => ({
             id: this.sqidsService.encode(m.id, SqidsPrefix.CHAT_MESSAGE),
             roomId: this.sqidsService.encode(m.roomId, SqidsPrefix.CHAT_ROOM),
@@ -115,6 +124,7 @@ export class SupportAdminController {
             type: m.type,
             metadata: m.metadata,
             createdAt: m.createdAt,
+            isRead: counterpart?.lastReadMessageId ? m.id <= counterpart.lastReadMessageId : false,
         }));
     }
 
@@ -147,7 +157,6 @@ export class SupportAdminController {
 
         return {
             id: this.sqidsService.encode(message.id, SqidsPrefix.CHAT_MESSAGE),
-            roomId: this.sqidsService.encode(message.roomId, SqidsPrefix.CHAT_ROOM),
             senderId: message.senderId ? this.sqidsService.encode(message.senderId, SqidsPrefix.USER) : null,
             content: message.content,
             type: message.type,
@@ -170,12 +179,15 @@ export class SupportAdminController {
     async markAsRead(
         @CurrentUser() admin: AuthenticatedUser,
         @Param('roomId') roomIdEncoded: string,
+        @Body() body: MarkChatReadRequestDto,
     ): Promise<boolean> {
         const { id: roomId } = this.sqidsService.decodeAuto(roomIdEncoded);
+        const { id: lastReadMessageId } = this.sqidsService.decodeAuto(body.lastReadMessageId);
 
         await this.readMessagesService.execute({
             roomId,
             userId: admin.id,
+            lastReadMessageId,
         });
 
         return true;

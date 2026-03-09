@@ -19,4 +19,7 @@ export class ChatMessageUserResponseDto {
 
     @ApiProperty({ description: 'Created At / 생성 시각', example: '2024-03-08T00:00:00Z' })
     createdAt: Date;
+
+    @ApiPropertyOptional({ description: 'Is Read / 읽음 여부 (1:1 등에서 상대방이 읽었는지 여부)', example: true })
+    isRead?: boolean;
 }

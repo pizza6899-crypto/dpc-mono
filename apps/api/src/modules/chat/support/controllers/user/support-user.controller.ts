@@ -14,6 +14,7 @@ import { ChatMessageHistoryRequestDto } from '../../../rooms/controllers/user/dt
 import { ChatRoomUserResponseDto } from '../../../rooms/controllers/user/dto/response/chat-room-user.response.dto';
 import { ChatMessageUserResponseDto } from '../../../rooms/controllers/user/dto/response/chat-message-user.response.dto';
 import { ReadChatMessagesService } from '../../../rooms/application/read-chat-messages.service';
+import { MarkChatReadRequestDto } from '../../../rooms/controllers/user/dto/request/mark-chat-read.request.dto';
 import { ChatRoomUnauthorizedException } from '../../../rooms/domain/chat-room.exception';
 import { CHAT_ROOM_MEMBER_REPOSITORY_PORT, type ChatRoomMemberRepositoryPort } from '../../../rooms/ports/chat-room-member.repository.port';
 import { Inject } from '@nestjs/common';
@@ -70,6 +71,10 @@ export class SupportUserController {
             lastMessageId,
         });
 
+        // 상대방(관리자)의 마지막 읽은 메시지 ID 확인 (1:1 상담 기준)
+        const members = await this.memberRepository.listByRoomId(roomId);
+        const counterpart = members.find((m) => m.userId !== user.id);
+
         return messages.map((m) => ({
             id: this.sqidsService.encode(m.id, SqidsPrefix.CHAT_MESSAGE),
             senderId: m.senderId ? this.sqidsService.encode(m.senderId, SqidsPrefix.USER) : null,
@@ -77,6 +82,7 @@ export class SupportUserController {
             type: m.type,
             metadata: m.metadata,
             createdAt: m.createdAt,
+            isRead: counterpart?.lastReadMessageId ? m.id <= counterpart.lastReadMessageId : false,
         }));
     }
 
@@ -156,12 +162,15 @@ export class SupportUserController {
     async markAsRead(
         @CurrentUser() user: AuthenticatedUser,
         @Param('roomId') roomIdEncoded: string,
+        @Body() body: MarkChatReadRequestDto,
     ): Promise<boolean> {
         const { id: roomId } = this.sqidsService.decodeAuto(roomIdEncoded);
+        const { id: lastReadMessageId } = this.sqidsService.decodeAuto(body.lastReadMessageId);
 
         await this.readMessagesService.execute({
             roomId,
             userId: user.id,
+            lastReadMessageId,
         });
 
         return true;
