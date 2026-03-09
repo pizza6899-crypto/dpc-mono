@@ -54,8 +54,15 @@ export class SendSupportMessageService {
                 nextStatus = SupportStatus.IN_PROGRESS;
             }
         } else {
-            // 유저가 메시지를 보내면 '대기 중(OPEN)'으로 변경 (상담 완료 상태였다면 재오픈)
-            if (room.supportStatus === SupportStatus.CLOSED) {
+            // 유저가 메시지를 보내면:
+            // 1. 처음 입장(ENTERED) 상태이면 -> OPEN (관리자 리스트 노출 시작)
+            // 2. 상담 종료(CLOSED) 상태였으면 -> OPEN (재오픈)
+            // 3. 펜딩(PENDING) 상태였으면 -> OPEN (알림 대응)
+            if (
+                room.supportStatus === SupportStatus.ENTERED ||
+                room.supportStatus === SupportStatus.CLOSED ||
+                room.supportStatus === SupportStatus.PENDING
+            ) {
                 nextStatus = SupportStatus.OPEN;
             }
         }

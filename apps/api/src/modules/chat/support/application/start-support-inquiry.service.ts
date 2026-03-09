@@ -38,7 +38,7 @@ export class StartSupportInquiryService {
                 new Date(),
                 new Date(),
                 null,
-                SupportStatus.OPEN,
+                SupportStatus.ENTERED,
                 SupportPriority.NORMAL,
                 params.category ?? SupportCategory.ETC,
                 null, // subject는 추후 시스템 생성 로직 적용 예정

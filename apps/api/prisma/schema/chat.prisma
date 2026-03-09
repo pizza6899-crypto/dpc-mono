@@ -122,9 +122,10 @@ enum ChatRoomType {
 }
 
 enum SupportStatus {
+    ENTERED // 상담방 생성 및 입장 직후 (유저의 첫 메시지 대기)
     OPEN // 유저 문의 발생 (관리자 답변 대기)
     IN_PROGRESS // 상담원이 답변 및 대화 중
-    PENDING // 유저의 추가 답변이나 외부 처리를 기다리는 중
+    PENDING // 유저의 추가 답변이나 외부 처리를 기다리는 중 (펜딩 상태에서 유저가 메시지 보내면 알람 처리)
     CLOSED // 상담 종료
 }
 

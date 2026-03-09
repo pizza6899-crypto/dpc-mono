@@ -40,7 +40,13 @@ export class ChatRoomRepository implements ChatRoomRepositoryPort {
         const records = await this.tx.chatRoom.findMany({
             where: {
                 type: 'SUPPORT',
-                supportStatus: filters.status,
+                supportStatus: filters.status ?? {
+                    in: [
+                        SupportStatus.OPEN,
+                        SupportStatus.IN_PROGRESS,
+                        SupportStatus.PENDING,
+                    ],
+                },
                 supportPriority: filters.priority,
                 supportCategory: filters.category,
                 supportAdminId: filters.adminId,
