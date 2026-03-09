@@ -1,6 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsOptional, IsEnum, IsIn } from 'class-validator';
-import { ChatMessageType } from '@prisma/client';
+import { IsNotEmpty, IsString, IsOptional } from 'class-validator';
 
 export class SendChatMessageUserRequestDto {
     @ApiProperty({ description: 'Message Content / 메시지 내용', example: 'Hello, world!' })
