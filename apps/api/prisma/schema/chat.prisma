@@ -37,7 +37,10 @@ model ChatConfig {
 
 model ChatRoom {
     id   BigInt       @id @default(autoincrement())
-    slug String?      @unique // e.g., "global:all", "category:casino", "support:u:1"
+    /// 고유 식별 슬러그 (e.g., "global:all", "category:casino")
+    /// [주의] PUBLIC 방과 같이 잘 알려진(Well-known) 방을 식별할 때 사용하며, 
+    /// 1:1 상담(SUPPORT) 등 동적인 방은 null을 허용하고 멤버십으로 관리합니다.
+    slug String?      @unique
     type ChatRoomType @default(PUBLIC)
 
     isActive Boolean @default(true) @map("is_active")
@@ -53,7 +56,7 @@ model ChatRoom {
     // [Support Specific Fields] - SUPPORT 타입인 경우 사용
     supportStatus   SupportStatus?   @map("support_status")
     supportPriority SupportPriority? @map("support_priority")
-    supportCategory String?          @map("support_category")
+    supportCategory SupportCategory? @map("support_category")
     supportSubject  String?          @map("support_subject")
     supportAdminId  BigInt?          @map("support_admin_id") // 담당 상담원
 
@@ -139,6 +142,15 @@ enum SupportPriority {
 enum ChatMemberRole {
     MEMBER
     ADMIN
+}
+
+enum SupportCategory {
+    ACCOUNT
+    DEPOSIT
+    WITHDRAWAL
+    GAME
+    PROMOTION
+    ETC
 }
 
 enum ChatMessageType {

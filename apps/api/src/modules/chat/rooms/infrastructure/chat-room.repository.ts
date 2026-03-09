@@ -4,6 +4,7 @@ import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module'
 import { ChatRoom } from '../domain/chat-room.entity';
 import { type ChatRoomRepositoryPort } from '../ports/chat-room.repository.port';
 import { ChatRoomMapper } from './chat-room.mapper';
+import { SupportStatus, SupportPriority, SupportCategory } from '@prisma/client';
 
 @Injectable()
 export class ChatRoomRepository implements ChatRoomRepositoryPort {
@@ -38,9 +39,9 @@ export class ChatRoomRepository implements ChatRoomRepositoryPort {
     }
 
     async listSupportRooms(filters: {
-        status?: any;
-        priority?: any;
-        category?: string;
+        status?: SupportStatus;
+        priority?: SupportPriority;
+        category?: SupportCategory;
         adminId?: bigint;
     }): Promise<ChatRoom[]> {
         const records = await this.tx.chatRoom.findMany({
@@ -55,6 +56,20 @@ export class ChatRoomRepository implements ChatRoomRepositoryPort {
         });
 
         return records.map((record) => ChatRoomMapper.toDomain(record));
+    }
+
+
+    async findActiveSupportRoomByUserId(userId: bigint): Promise<ChatRoom | null> {
+        const record = await this.tx.chatRoom.findFirst({
+            where: {
+                type: 'SUPPORT',
+                supportStatus: { not: 'CLOSED' },
+                members: { some: { userId } },
+            },
+            orderBy: { createdAt: 'desc' },
+        });
+
+        return record ? ChatRoomMapper.toDomain(record) : null;
     }
 
 

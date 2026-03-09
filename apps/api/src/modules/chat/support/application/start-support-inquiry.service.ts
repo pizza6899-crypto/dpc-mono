@@ -4,16 +4,13 @@ import { CHAT_ROOM_REPOSITORY_PORT, type ChatRoomRepositoryPort } from '../../ro
 import { CHAT_ROOM_MEMBER_REPOSITORY_PORT, type ChatRoomMemberRepositoryPort } from '../../rooms/ports/chat-room-member.repository.port';
 import { ChatRoom } from '../../rooms/domain/chat-room.entity';
 import { ChatRoomMember } from '../../rooms/domain/chat-room-member.entity';
-
-import { ChatRoomType, SupportStatus, SupportPriority, ChatMemberRole } from '@prisma/client';
-import { getSocketRoom } from 'src/infrastructure/websocket/constants/websocket-rooms.constant';
+import { ChatRoomType, SupportStatus, SupportPriority, ChatMemberRole, SupportCategory } from '@prisma/client';
 
 export interface StartSupportInquiryParams {
     userId: bigint;
-    category?: string;
-    subject?: string;
-    priority?: SupportPriority;
+    category?: SupportCategory;
 }
+
 
 @Injectable()
 export class StartSupportInquiryService {
@@ -26,14 +23,14 @@ export class StartSupportInquiryService {
 
     @Transactional()
     async execute(params: StartSupportInquiryParams): Promise<ChatRoom> {
-        const slug = getSocketRoom.supportRoom(`u:${params.userId}`);
-        let room = await this.roomRepository.findBySlug(slug);
+        // 유저 ID 기반으로 활성화된(CLOSED가 아닌) 상담방 조회
+        let room = await this.roomRepository.findActiveSupportRoomByUserId(params.userId);
 
         if (!room) {
-            // 방이 없으면 신규 생성
+            // 활성 상담방이 없으면 신규 생성 (slug는 null)
             room = new ChatRoom(
                 0n,
-                slug,
+                null,
                 ChatRoomType.SUPPORT,
                 true,
                 {}, // metadata
@@ -43,31 +40,18 @@ export class StartSupportInquiryService {
                 new Date(),
                 null,
                 SupportStatus.OPEN,
-                params.priority ?? SupportPriority.NORMAL,
-                params.category ?? null,
-                params.subject ?? null,
+                SupportPriority.NORMAL,
+                params.category ?? SupportCategory.ETC,
+                null, // subject는 추후 시스템 생성 로직 적용 예정
                 null, // adminId
             );
+
         } else {
-            // 방이 있으면 상태를 OPEN으로 변경하고 상담 정보 업데이트
-            room = new ChatRoom(
-                room.id,
-                room.slug,
-                room.type,
-                true, // isActive
-                room.metadata,
-                room.slowModeSeconds,
-                room.minTierLevel,
-                room.createdAt,
-                new Date(),
-                room.lastMessageAt,
-                SupportStatus.OPEN,
-                params.priority ?? room.supportPriority ?? SupportPriority.NORMAL,
-                params.category ?? room.supportCategory,
-                params.subject ?? room.supportSubject,
-                null, // 새로운 문의이므로 담당자 초기화 (상황에 따라 유지할 수도 있음)
-            );
+            // 방이 이미 존재한다면 (findActiveSupportRoomByUserId에서 이미 필터링됨)
+            // 필요한 경우 여기서 추가적인 상태 업데이트를 할 수 있으나, 현재는 기존 방 반환
+            return room;
         }
+
 
         const savedRoom = await this.roomRepository.save(room);
 

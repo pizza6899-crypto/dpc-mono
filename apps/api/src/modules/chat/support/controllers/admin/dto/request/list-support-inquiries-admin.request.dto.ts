@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsEnum, IsString } from 'class-validator';
-import { SupportStatus, SupportPriority } from '@prisma/client';
+import { SupportStatus, SupportPriority, SupportCategory } from '@prisma/client';
 
 export class ListSupportInquiriesAdminRequestDto {
     @ApiPropertyOptional({ enum: SupportStatus, description: 'Support Status / 상담 상태' })
@@ -13,10 +13,10 @@ export class ListSupportInquiriesAdminRequestDto {
     @IsEnum(SupportPriority)
     priority?: SupportPriority;
 
-    @ApiPropertyOptional({ description: 'Category / 카테고리' })
+    @ApiPropertyOptional({ enum: SupportCategory, description: 'Category / 카테고리' })
     @IsOptional()
-    @IsString()
-    category?: string;
+    @IsEnum(SupportCategory)
+    category?: SupportCategory;
 
     @ApiPropertyOptional({ description: 'Assigned Admin ID (Encoded) / 배정된 관리자 ID' })
     @IsOptional()
