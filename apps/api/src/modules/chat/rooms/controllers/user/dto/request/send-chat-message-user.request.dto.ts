@@ -12,6 +12,4 @@ export class SendChatMessageUserRequestDto {
     @IsOptional()
     @IsEnum(ChatMessageType)
     type?: ChatMessageType;
-
 }
-

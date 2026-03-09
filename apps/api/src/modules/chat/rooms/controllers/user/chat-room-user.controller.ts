@@ -34,13 +34,6 @@ export class ChatRoomUserController {
 
         return rooms.map((room) => ({
             id: this.sqidsService.encode(room.id, SqidsPrefix.CHAT_ROOM),
-            type: room.type,
-            metadata: room.metadata,
-            slowModeSeconds: room.slowModeSeconds,
-            supportStatus: room.supportStatus || undefined,
-            supportPriority: room.supportPriority || undefined,
-            supportCategory: room.supportCategory,
-            supportSubject: room.supportSubject,
         }));
     }
 
@@ -76,7 +69,6 @@ export class ChatRoomUserController {
     }
 
     @Post(':id/messages')
-
     @ApiOperation({ summary: 'Send Chat Message / 채팅 메시지 전송' })
     @ApiStandardResponse(ChatMessageUserResponseDto)
     async send(

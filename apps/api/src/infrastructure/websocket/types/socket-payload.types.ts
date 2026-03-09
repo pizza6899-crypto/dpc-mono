@@ -22,6 +22,8 @@ export const USER_SOCKET_EVENT_TYPES = {
     PROMOTION_APPLIED: 'PROMOTION_APPLIED',
     /** 새 채팅 메시지 도착 */
     CHAT_MESSAGE_NEW: 'CHAT_MESSAGE_NEW',
+    /** 채팅 메시지 읽음 처리 알림 */
+    CHAT_MESSAGES_READ: 'CHAT_MESSAGES_READ',
 } as const;
 
 /** 관리자 전용 이벤트 */
@@ -116,6 +118,13 @@ export interface SocketChatMessageNewPayload {
     createdAt: string;       // ISO format
 }
 
+/** CHAT_MESSAGES_READ: 채팅 메시지 읽음 처리 실시간 알림 페이로드 */
+export interface SocketChatMessagesReadPayload {
+    roomId: string;          // Encoded Room ID
+    userId: string;          // Encoded User ID (누가 읽었는지)
+    readAt: string;          // ISO format
+}
+
 // ============================================
 // 이벤트 → 페이로드 매핑 (Single Source of Truth)
 // ============================================
@@ -140,4 +149,5 @@ export type SocketPayloadMap = {
     [SOCKET_EVENT_TYPES.PROMOTION_APPLIED]: SocketPromotionAppliedPayload;
     [SOCKET_EVENT_TYPES.SYSTEM_NOTICE]: SocketSystemNoticePayload;
     [SOCKET_EVENT_TYPES.CHAT_MESSAGE_NEW]: SocketChatMessageNewPayload;
+    [SOCKET_EVENT_TYPES.CHAT_MESSAGES_READ]: SocketChatMessagesReadPayload;
 };

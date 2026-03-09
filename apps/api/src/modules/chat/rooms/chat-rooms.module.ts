@@ -15,6 +15,7 @@ import { TierModule } from '../../tier/tier.module';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { SendChatMessageService } from './application/send-chat-message.service';
 import { GetChatMessagesService } from './application/get-chat-messages.service';
+import { ReadChatMessagesService } from './application/read-chat-messages.service';
 
 @Module({
     imports: [
@@ -46,6 +47,7 @@ import { GetChatMessagesService } from './application/get-chat-messages.service'
         ListChatRoomsService,
         SendChatMessageService,
         GetChatMessagesService,
+        ReadChatMessagesService,
     ],
 
 
@@ -54,6 +56,7 @@ import { GetChatMessagesService } from './application/get-chat-messages.service'
         ListChatRoomsService,
         SendChatMessageService,
         GetChatMessagesService,
+        ReadChatMessagesService,
         CHAT_ROOM_REPOSITORY_PORT,
 
         CHAT_ROOM_MEMBER_REPOSITORY_PORT,
