@@ -10,10 +10,10 @@ import { ListSupportInquiriesService } from '../../application/list-support-inqu
 import { GetChatMessagesService } from '../../../rooms/application/get-chat-messages.service';
 import { ListSupportInquiriesAdminRequestDto } from './dto/request/list-support-inquiries-admin.request.dto';
 import { SupportInquiryAdminResponseDto } from './dto/response/support-inquiry-admin.response.dto';
-import { SendChatMessageUserRequestDto } from '../../../rooms/controllers/user/dto/request/send-chat-message-user.request.dto';
+import { SendSupportMessageUserRequestDto } from '../user/dto/request/send-support-message-user.request.dto';
 import { SendMessageResponseDto } from '../../../rooms/controllers/user/dto/response/send-message.response.dto';
-import { ChatMessageHistoryRequestDto } from '../../../rooms/controllers/user/dto/request/chat-message-history.request.dto';
-import { ChatMessageAdminResponseDto } from '../../../rooms/controllers/admin/dto/response/chat-message-admin.response.dto';
+import { SupportMessageHistoryUserRequestDto } from '../user/dto/request/support-message-history-user.request.dto';
+import { SupportMessageAdminResponseDto } from './dto/response/support-message-admin.response.dto';
 import { ChatRoom } from '../../../rooms/domain/chat-room.entity';
 import { ReadChatMessagesService } from '../../../rooms/application/read-chat-messages.service';
 import { CHAT_ROOM_MEMBER_REPOSITORY_PORT, type ChatRoomMemberRepositoryPort } from '../../../rooms/ports/chat-room-member.repository.port';
@@ -80,7 +80,7 @@ export class SupportAdminController {
 
     @Get('rooms/:roomId/messages')
     @ApiOperation({ summary: 'Get Support Chat History (Admin) / 상담 채팅 내역 조회 (관리자)' })
-    @ApiStandardResponse(ChatMessageAdminResponseDto, { isArray: true })
+    @ApiStandardResponse(SupportMessageAdminResponseDto, { isArray: true })
     @AuditLog({
         type: LogType.ACTIVITY,
         category: 'ADMIN',
@@ -92,8 +92,8 @@ export class SupportAdminController {
     async listMessages(
         @CurrentUser() admin: AuthenticatedUser,
         @Param('roomId') roomIdRaw: string,
-        @Query() query: ChatMessageHistoryRequestDto,
-    ): Promise<ChatMessageAdminResponseDto[]> {
+        @Query() query: SupportMessageHistoryUserRequestDto,
+    ): Promise<SupportMessageAdminResponseDto[]> {
         const roomId = BigInt(roomIdRaw);
 
         let lastMessageId: bigint | undefined;
@@ -137,7 +137,7 @@ export class SupportAdminController {
     async sendReply(
         @CurrentUser() admin: AuthenticatedUser,
         @Param('roomId') roomIdRaw: string,
-        @Body() body: SendChatMessageUserRequestDto,
+        @Body() body: SendSupportMessageUserRequestDto,
     ): Promise<SendMessageResponseDto> {
         const roomId = BigInt(roomIdRaw);
 

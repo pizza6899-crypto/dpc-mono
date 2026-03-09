@@ -9,11 +9,11 @@ import { StartSupportInquiryService } from '../../application/start-support-inqu
 import { SendSupportMessageService } from '../../application/send-support-message.service';
 import { GetChatMessagesService } from '../../../rooms/application/get-chat-messages.service';
 import { StartSupportInquiryUserRequestDto } from './dto/request/start-support-inquiry-user.request.dto';
-import { SendChatMessageUserRequestDto } from '../../../rooms/controllers/user/dto/request/send-chat-message-user.request.dto';
+import { SendSupportMessageUserRequestDto } from './dto/request/send-support-message-user.request.dto';
 import { SendMessageResponseDto } from '../../../rooms/controllers/user/dto/response/send-message.response.dto';
-import { ChatMessageHistoryRequestDto } from '../../../rooms/controllers/user/dto/request/chat-message-history.request.dto';
+import { SupportMessageHistoryUserRequestDto } from './dto/request/support-message-history-user.request.dto';
 import { ChatRoomUserResponseDto } from '../../../rooms/controllers/user/dto/response/chat-room-user.response.dto';
-import { ChatMessageUserResponseDto } from '../../../rooms/controllers/user/dto/response/chat-message-user.response.dto';
+import { SupportMessageUserResponseDto } from './dto/response/support-message-user.response.dto';
 import { ReadChatMessagesService } from '../../../rooms/application/read-chat-messages.service';
 import { MarkChatReadRequestDto } from '../../../rooms/controllers/user/dto/request/mark-chat-read.request.dto';
 import { ChatRoomUnauthorizedException } from '../../../rooms/domain/chat-room.exception';
@@ -39,7 +39,7 @@ export class SupportUserController {
 
     @Get(':roomId/messages')
     @ApiOperation({ summary: 'Get Support Chat History / 상담 채팅 내역 조회' })
-    @ApiStandardResponse(ChatMessageUserResponseDto, { isArray: true })
+    @ApiStandardResponse(SupportMessageUserResponseDto, { isArray: true })
     @AuditLog({
         type: LogType.ACTIVITY,
         category: 'CHAT',
@@ -51,8 +51,8 @@ export class SupportUserController {
     async listMessages(
         @CurrentUser() user: AuthenticatedUser,
         @Param('roomId') roomIdEncoded: string,
-        @Query() query: ChatMessageHistoryRequestDto,
-    ): Promise<ChatMessageUserResponseDto[]> {
+        @Query() query: SupportMessageHistoryUserRequestDto,
+    ): Promise<SupportMessageUserResponseDto[]> {
         const { id: roomId } = this.sqidsService.decodeAuto(roomIdEncoded);
 
         // 본인의 상담방인지 확인
@@ -126,7 +126,7 @@ export class SupportUserController {
     async send(
         @CurrentUser() user: AuthenticatedUser,
         @Param('roomId') roomIdEncoded: string,
-        @Body() body: SendChatMessageUserRequestDto,
+        @Body() body: SendSupportMessageUserRequestDto,
     ): Promise<SendMessageResponseDto> {
         const { id: roomId } = this.sqidsService.decodeAuto(roomIdEncoded);
 
