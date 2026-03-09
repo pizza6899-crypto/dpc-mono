@@ -29,7 +29,6 @@ export class ChatRoomAdminController {
     private mapToResponse(room: ChatRoom): ChatRoomAdminResponseDto {
         return {
             id: room.id.toString(),
-            slug: room.slug,
             type: room.type,
             isActive: room.isActive,
             metadata: room.metadata,

@@ -50,7 +50,6 @@ export class SupportAdminController {
     private mapToResponse(room: ChatRoom): ChatRoomAdminResponseDto {
         return {
             id: this.sqidsService.encode(room.id, SqidsPrefix.CHAT_ROOM),
-            slug: room.slug,
             type: room.type,
             isActive: room.isActive,
             metadata: room.metadata,

@@ -27,10 +27,9 @@ export class StartSupportInquiryService {
         let room = await this.roomRepository.findActiveSupportRoomByUserId(params.userId);
 
         if (!room) {
-            // 활성 상담방이 없으면 신규 생성 (slug는 null)
+            // 활성 상담방이 없으면 신규 생성
             room = new ChatRoom(
                 0n,
-                null,
                 ChatRoomType.SUPPORT,
                 true,
                 {}, // metadata

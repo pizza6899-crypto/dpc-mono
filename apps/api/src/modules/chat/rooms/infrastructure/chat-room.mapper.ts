@@ -6,7 +6,6 @@ export class ChatRoomMapper {
     public static toDomain(data: PersistenceOf<ChatRoomRawPayload>): ChatRoom {
         return new ChatRoom(
             Cast.bigint(data.id),
-            data.slug,
             data.type,
             data.isActive,
             data.metadata,

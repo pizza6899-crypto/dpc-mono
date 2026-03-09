@@ -5,9 +5,6 @@ export class ChatRoomAdminResponseDto {
     @ApiProperty({ description: 'Internal Chat Room ID / 내부 채팅방 ID', example: '1234567890' })
     id: string;
 
-    @ApiPropertyOptional({ description: 'Slug / 슬러그', example: 'global:ko' })
-    slug: string | null;
-
     @ApiProperty({ description: 'Type / 타입', enum: ChatRoomType, example: ChatRoomType.PUBLIC })
     type: ChatRoomType;
 

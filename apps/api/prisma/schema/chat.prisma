@@ -37,10 +37,6 @@ model ChatConfig {
 
 model ChatRoom {
     id   BigInt       @id @default(autoincrement())
-    /// 고유 식별 슬러그 (e.g., "global:all", "category:casino")
-    /// [주의] PUBLIC 방과 같이 잘 알려진(Well-known) 방을 식별할 때 사용하며, 
-    /// 1:1 상담(SUPPORT) 등 동적인 방은 null을 허용하고 멤버십으로 관리합니다.
-    slug String?      @unique
     type ChatRoomType @default(PUBLIC)
 
     isActive Boolean @default(true) @map("is_active")

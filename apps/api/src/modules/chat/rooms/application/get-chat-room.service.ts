@@ -4,8 +4,7 @@ import { ChatRoomNotFoundException } from '../domain/chat-room.exception';
 import type { ChatRoom } from '../domain/chat-room.entity';
 
 export interface GetChatRoomParams {
-    id?: bigint;
-    slug?: string;
+    id: bigint;
 }
 
 @Injectable()
@@ -16,13 +15,7 @@ export class GetChatRoomService {
     ) { }
 
     async execute(params: GetChatRoomParams): Promise<ChatRoom> {
-        let room: ChatRoom | null = null;
-
-        if (params.id) {
-            room = await this.roomRepository.findById(params.id);
-        } else if (params.slug) {
-            room = await this.roomRepository.findBySlug(params.slug);
-        }
+        const room = await this.roomRepository.findById(params.id);
 
         if (!room) {
             throw new ChatRoomNotFoundException();

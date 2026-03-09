@@ -5,12 +5,9 @@ import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
-
 import { StartSupportInquiryService } from '../../application/start-support-inquiry.service';
 import { SendSupportMessageService } from '../../application/send-support-message.service';
 import { GetChatMessagesService } from '../../../rooms/application/get-chat-messages.service';
-import { GetMySupportInquiryService } from '../../application/get-my-support-inquiry.service';
-
 import { StartSupportInquiryUserRequestDto } from './dto/request/start-support-inquiry-user.request.dto';
 import { SendChatMessageUserRequestDto } from '../../../rooms/controllers/user/dto/request/send-chat-message-user.request.dto';
 import { ChatMessageHistoryRequestDto } from '../../../rooms/controllers/user/dto/request/chat-message-history.request.dto';
@@ -29,35 +26,10 @@ export class SupportUserController {
         private readonly startInquiryService: StartSupportInquiryService,
         private readonly sendSupportMessageService: SendSupportMessageService,
         private readonly getMessagesService: GetChatMessagesService,
-        private readonly getMyInquiryService: GetMySupportInquiryService,
         @Inject(CHAT_ROOM_MEMBER_REPOSITORY_PORT)
         private readonly memberRepository: ChatRoomMemberRepositoryPort,
         private readonly sqidsService: SqidsService,
     ) { }
-
-    @Get('me')
-    @ApiOperation({ summary: 'Get My Support Inquiry Info / 내 상담 정보 조회' })
-    @ApiStandardResponse(ChatRoomUserResponseDto)
-    async getMyInquiry(
-        @CurrentUser() user: AuthenticatedUser,
-    ): Promise<ChatRoomUserResponseDto> {
-        const room = await this.getMyInquiryService.execute(user.id);
-        if (!room) {
-            throw new ChatRoomNotFoundException();
-        }
-
-        return {
-            id: this.sqidsService.encode(room.id, SqidsPrefix.CHAT_ROOM),
-            slug: room.slug,
-            type: room.type,
-            metadata: room.metadata,
-            slowModeSeconds: room.slowModeSeconds,
-            supportStatus: room.supportStatus || undefined,
-            supportPriority: room.supportPriority || undefined,
-            supportCategory: room.supportCategory,
-            supportSubject: room.supportSubject,
-        };
-    }
 
     @Get(':roomId/messages')
     @ApiOperation({ summary: 'Get Support Chat History / 상담 채팅 내역 조회' })
@@ -107,13 +79,10 @@ export class SupportUserController {
         const room = await this.startInquiryService.execute({
             userId: user.id,
             category: body.category,
-            subject: body.subject,
-            priority: body.priority,
         });
 
         return {
             id: this.sqidsService.encode(room.id, SqidsPrefix.CHAT_ROOM),
-            slug: room.slug,
             type: room.type,
             metadata: room.metadata,
             slowModeSeconds: room.slowModeSeconds,

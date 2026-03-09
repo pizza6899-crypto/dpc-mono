@@ -21,13 +21,6 @@ export class ChatRoomRepository implements ChatRoomRepositoryPort {
         return record ? ChatRoomMapper.toDomain(record) : null;
     }
 
-    async findBySlug(slug: string): Promise<ChatRoom | null> {
-        const record = await this.tx.chatRoom.findUnique({
-            where: { slug },
-        });
-
-        return record ? ChatRoomMapper.toDomain(record) : null;
-    }
 
     async listActiveRooms(): Promise<ChatRoom[]> {
         const records = await this.tx.chatRoom.findMany({
@@ -75,7 +68,6 @@ export class ChatRoomRepository implements ChatRoomRepositoryPort {
 
     async save(room: ChatRoom): Promise<ChatRoom> {
         const data = {
-            slug: room.slug,
             type: room.type,
             isActive: room.isActive,
             metadata: room.metadata as any,

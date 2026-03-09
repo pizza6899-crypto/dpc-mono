@@ -5,7 +5,6 @@ export const CHAT_ROOM_REPOSITORY_PORT = Symbol('CHAT_ROOM_REPOSITORY_PORT');
 
 export interface ChatRoomRepositoryPort {
     findById(id: bigint): Promise<ChatRoom | null>;
-    findBySlug(slug: string): Promise<ChatRoom | null>;
     listActiveRooms(): Promise<ChatRoom[]>;
     listSupportRooms(filters: {
         status?: SupportStatus;

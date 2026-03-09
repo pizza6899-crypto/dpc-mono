@@ -75,15 +75,10 @@ export class SendChatMessageService {
     private broadcastMessage(message: ChatMessage, room: ChatRoom): void {
         const encodedRoomId = this.sqidsService.encode(room.id, SqidsPrefix.CHAT_ROOM);
 
-        // 룸 이름 결정 (슬러그가 있으면 최우선으로 사용)
-        let socketRoom: string;
-        if (room.slug) {
-            socketRoom = room.slug;
-        } else {
-            socketRoom = room.type === ChatRoomType.SUPPORT
-                ? getSocketRoom.supportRoom(this.sqidsService.encode(room.id, SqidsPrefix.SUPPORT_ROOM))
-                : getSocketRoom.chatRoom(encodedRoomId);
-        }
+        // 룸 타입에 따른 소켓 룸 이름 결정
+        const socketRoom = room.type === ChatRoomType.SUPPORT
+            ? getSocketRoom.supportRoom(this.sqidsService.encode(room.id, SqidsPrefix.SUPPORT_ROOM))
+            : getSocketRoom.chatRoom(encodedRoomId);
 
 
         // 페이로드 준비

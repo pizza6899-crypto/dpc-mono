@@ -63,7 +63,6 @@ export class SendSupportMessageService {
         if (nextStatus) {
             const updatedRoom = new ChatRoom(
                 room.id,
-                room.slug,
                 room.type,
                 room.isActive,
                 room.metadata,

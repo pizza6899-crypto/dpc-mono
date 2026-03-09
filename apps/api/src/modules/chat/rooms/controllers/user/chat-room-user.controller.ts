@@ -34,7 +34,6 @@ export class ChatRoomUserController {
 
         return rooms.map((room) => ({
             id: this.sqidsService.encode(room.id, SqidsPrefix.CHAT_ROOM),
-            slug: room.slug,
             type: room.type,
             metadata: room.metadata,
             slowModeSeconds: room.slowModeSeconds,
