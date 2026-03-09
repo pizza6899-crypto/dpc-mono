@@ -17,6 +17,7 @@ import { CreateFileService } from '../application/create-file.service';
 import {
   FileEntity,
   FileValidationException,
+  FileRequiredException,
   FileAccessType,
   FileConstants,
 } from '../domain';
@@ -32,6 +33,7 @@ import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 import { FileSizeExceptionFilter } from '../filters/file-size.filter';
+import { MessageCode } from '@repo/shared';
 
 @Controller('file')
 @ApiTags('User File')
@@ -41,7 +43,7 @@ export class FileController {
     private readonly createFileService: CreateFileService,
     private readonly envService: EnvService,
     private readonly sqidsService: SqidsService,
-  ) {}
+  ) { }
 
   @Post('upload')
   @UseGuards(SessionAuthGuard)
@@ -60,6 +62,7 @@ export class FileController {
           return callback(
             new FileValidationException(
               'Invalid file type. Only image files are allowed. / 허용되지 않는 파일 형식입니다. 이미지만 업로드 가능합니다.',
+              MessageCode.FILE_EXTENSION_NOT_ALLOWED,
             ),
             false,
           );
@@ -73,12 +76,12 @@ export class FileController {
     description: `
 ### 📝 파일 업로드 사용법 (File Upload Usage)
 
-1. **파일 업로드**: 이 API (**POST /file/upload**)로 파일을 업로드합니다.
-2. **파일 ID 보관**: 응답의 **\`id\`** (예: \`f_abc123\`)를 프론트엔드에서 보관합니다.
-3. **비즈니스 API 호출**: 해당 파일 ID를 비즈니스 API (예: 카테고리 생성, 프로필 수정)에 전달합니다.
-4. **자동 연결**: 비즈니스 로직에서 파일이 자동으로 연결되고 영구 저장됩니다.
+1. **파일 업로드 (Upload File)**: 이 API (**POST /file/upload**)로 파일을 업로드합니다. (Upload the file using this API.)
+2. **파일 ID 보관 (Save File ID)**: 응답의 **\`id\`** (예: \`f_abc123\`)를 프론트엔드에서 보관합니다. (Store the returned **id** on the frontend.)
+3. **비즈니스 API 호출 (Call Business API)**: 해당 파일 ID를 비즈니스 API (예: 카테고리 생성, 프로필 수정)에 전달합니다. (Pass the file ID to business APIs like profile updates.)
+4. **자동 연결 (Automatic Link)**: 비즈니스 로직에서 파일이 자동으로 연결되고 영구 저장됩니다. (Files are automatically linked and persist in the business logic.)
 
-**주의:** 연결되지 않은 파일은 일정 시간 후 자동 삭제될 수 있습니다.
+**주의 (Note):** 연결되지 않은 파일은 일정 시간 후 자동 삭제될 수 있습니다. (Unlinked files may be deleted automatically after some time.)
         `,
   })
   @ApiConsumes('multipart/form-data')
@@ -108,7 +111,7 @@ export class FileController {
     @CurrentUser() user: AuthenticatedUser,
   ): Promise<FileResponseDto> {
     if (!file) {
-      throw new FileValidationException('File is required.');
+      throw new FileRequiredException();
     }
 
     const createdFile = await this.createFileService.execute({

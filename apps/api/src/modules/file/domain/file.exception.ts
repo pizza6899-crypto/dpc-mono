@@ -10,7 +10,7 @@ import { DomainException } from 'src/common/exception/domain.exception';
 export class FileException extends DomainException {
   constructor(
     message: string,
-    errorCode: MessageCode = MessageCode.VALIDATION_ERROR,
+    errorCode: MessageCode = MessageCode.FILE_POLICY_VIOLATION,
     httpStatus: HttpStatus = HttpStatus.BAD_REQUEST,
   ) {
     super(message, errorCode, httpStatus);
@@ -25,11 +25,9 @@ export class FileException extends DomainException {
  * @httpStatus 404
  */
 export class FileNotFoundException extends FileException {
-  constructor(identifier: string | bigint) {
-    const id =
-      typeof identifier === 'bigint' ? identifier.toString() : identifier;
+  constructor() {
     super(
-      `File not found: ${id}`,
+      'File not found.',
       MessageCode.FILE_NOT_FOUND,
       HttpStatus.NOT_FOUND,
     );
@@ -64,10 +62,23 @@ export class FileUploadFailedException extends FileException {
 export class FileValidationException extends FileException {
   constructor(
     message: string,
-    errorCode: MessageCode = MessageCode.VALIDATION_ERROR,
+    errorCode: MessageCode = MessageCode.FILE_INVALID_FORMAT,
   ) {
     super(message, errorCode, HttpStatus.BAD_REQUEST);
     this.name = 'FileValidationException';
+  }
+}
+
+/**
+ * 필수 파일이 누락되었을 때 발생하는 예외
+ *
+ * @errorCode MessageCode.FILE_REQUIRED
+ * @httpStatus 400
+ */
+export class FileRequiredException extends FileException {
+  constructor(message: string = 'File is required.') {
+    super(message, MessageCode.FILE_REQUIRED, HttpStatus.BAD_REQUEST);
+    this.name = 'FileRequiredException';
   }
 }
 

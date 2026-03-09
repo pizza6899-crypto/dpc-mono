@@ -30,6 +30,14 @@ export const FILE_USAGE_CONFIGS: Record<FileUsageType, FileUsageConfig> = {
     accessType: FileAccessType.PUBLIC,
     sqidsPrefix: SqidsPrefix.TIER,
   },
+  [FileUsageType.CHAT_MESSAGE]: {
+    accessType: FileAccessType.PUBLIC,
+    sqidsPrefix: SqidsPrefix.CHAT_MESSAGE,
+  },
+  [FileUsageType.SUPPORT_CHAT_MESSAGE]: {
+    accessType: FileAccessType.PRIVATE,
+    sqidsPrefix: SqidsPrefix.CHAT_MESSAGE,
+  },
 };
 
 export function getFileUsageConfig(type: FileUsageType): FileUsageConfig {

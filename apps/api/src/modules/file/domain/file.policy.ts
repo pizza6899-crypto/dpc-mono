@@ -73,6 +73,18 @@ export class FilePolicy {
       accessType: FileAccessType.PUBLIC,
       uploadRoles: ['ADMIN', 'SUPER_ADMIN'],
     },
+    [FileUsageType.CHAT_MESSAGE]: {
+      folder: 'chat/message',
+      accessType: FileAccessType.PUBLIC,
+      uploadRoles: ['USER', 'ADMIN', 'SUPER_ADMIN'],
+      maxSize: 5 * 1024 * 1024, // 5MB
+    },
+    [FileUsageType.SUPPORT_CHAT_MESSAGE]: {
+      folder: 'support/message',
+      accessType: FileAccessType.PRIVATE,
+      uploadRoles: ['USER', 'ADMIN', 'SUPER_ADMIN'],
+      maxSize: 10 * 1024 * 1024, // 10MB
+    },
   };
 
   static getConfig(usageType: FileUsageType): FilePolicyConfig {
