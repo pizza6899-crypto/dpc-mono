@@ -58,11 +58,10 @@ export class ChatRoomRepository implements ChatRoomRepositoryPort {
     }
 
 
-    async findActiveSupportRoomByUserId(userId: bigint): Promise<ChatRoom | null> {
+    async findSupportRoomByUserId(userId: bigint): Promise<ChatRoom | null> {
         const record = await this.tx.chatRoom.findFirst({
             where: {
                 type: 'SUPPORT',
-                supportStatus: { not: 'CLOSED' },
                 members: { some: { userId } },
             },
             orderBy: { createdAt: 'desc' },

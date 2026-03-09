@@ -24,14 +24,14 @@ export class StartSupportInquiryService {
 
     @Transactional()
     async execute(params: StartSupportInquiryParams): Promise<ChatRoom> {
-        // 0. 동일 유저에 대한 중복 상담방 생성 방지를 위한 Advisory Lock 획득
-        await this.advisoryLockService.acquireLock(LockNamespace.CHAT_ROOM, params.userId.toString());
+        // 0. 동일 유저에 대한 중복 상담방 생성 방지를 위한 Advisory Lock 획득 (유저 단위)
+        await this.advisoryLockService.acquireLock(LockNamespace.USER_CHAT_SUPPORT, params.userId.toString());
 
-        // 유저 ID 기반으로 활성화된(CLOSED가 아닌) 상담방 조회
-        let room = await this.roomRepository.findActiveSupportRoomByUserId(params.userId);
+        // 유저 ID 기반으로 상담방 조회 (과거 종료 내역 포함 유일한 방)
+        let room = await this.roomRepository.findSupportRoomByUserId(params.userId);
 
         if (!room) {
-            // 활성 상담방이 없으면 신규 생성
+            // 상담방이 아예 없으면 신규 생성
             room = new ChatRoom(
                 0n,
                 ChatRoomType.SUPPORT,
@@ -50,8 +50,27 @@ export class StartSupportInquiryService {
             );
 
         } else {
-            // 방이 이미 존재한다면 (findActiveSupportRoomByUserId에서 이미 필터링됨)
-            // 필요한 경우 여기서 추가적인 상태 업데이트를 할 수 있으나, 현재는 기존 방 반환
+            // 방이 이미 존재하는데 종료(CLOSED) 상태라면 다시 ENTERED로 전환 (재오픈 대기)
+            if (room.supportStatus === SupportStatus.CLOSED) {
+                const reopenedRoom = new ChatRoom(
+                    room.id,
+                    room.type,
+                    room.isActive,
+                    room.metadata,
+                    room.slowModeSeconds,
+                    room.minTierLevel,
+                    room.createdAt,
+                    new Date(),
+                    room.lastMessageAt,
+                    SupportStatus.ENTERED,
+                    room.supportPriority,
+                    room.supportCategory,
+                    room.supportSubject,
+                    room.supportAdminId,
+                );
+                return this.roomRepository.save(reopenedRoom);
+            }
+            // 그 외 활성 상태(ENTERED, OPEN, ...)라면 그대로 반환
             return room;
         }
 

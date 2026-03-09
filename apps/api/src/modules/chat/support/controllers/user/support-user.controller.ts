@@ -8,7 +8,6 @@ import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { StartSupportInquiryService } from '../../application/start-support-inquiry.service';
 import { SendSupportMessageService } from '../../application/send-support-message.service';
 import { GetChatMessagesService } from '../../../rooms/application/get-chat-messages.service';
-import { StartSupportInquiryUserRequestDto } from './dto/request/start-support-inquiry-user.request.dto';
 import { SendSupportMessageUserRequestDto } from './dto/request/send-support-message-user.request.dto';
 import { SupportMessageHistoryUserRequestDto } from './dto/request/support-message-history-user.request.dto';
 import { MarkSupportChatReadUserRequestDto } from './dto/request/mark-support-chat-read-user.request.dto';
@@ -97,7 +96,6 @@ export class SupportUserController {
     })
     async inquire(
         @CurrentUser() user: AuthenticatedUser,
-        @Body() body: StartSupportInquiryUserRequestDto,
     ): Promise<SupportInquiryUserResponseDto> {
         const room = await this.startInquiryService.execute({
             userId: user.id,

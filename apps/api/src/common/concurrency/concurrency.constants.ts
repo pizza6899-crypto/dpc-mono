@@ -24,7 +24,8 @@ export enum LockNamespace {
   // 향후 추가될 네임스페이스들
   USER_CONFIG = 1013,
   CHAT_ROOM = 1014,
-  TIER_REWARD = 1012,
+  TIER_REWARD = 1015,
+  USER_CHAT_SUPPORT = 1016,
 }
 
 export const CONCURRENCY_CONSTANTS = {

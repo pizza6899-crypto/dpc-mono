@@ -13,7 +13,7 @@ export interface ChatRoomRepositoryPort {
         adminId?: bigint;
     }): Promise<ChatRoom[]>;
 
-    findActiveSupportRoomByUserId(userId: bigint): Promise<ChatRoom | null>;
+    findSupportRoomByUserId(userId: bigint): Promise<ChatRoom | null>;
 
     save(room: ChatRoom): Promise<ChatRoom>;
 
