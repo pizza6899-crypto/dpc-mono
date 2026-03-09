@@ -11,6 +11,7 @@ import { SendChatMessageService } from '../../application/send-chat-message.serv
 import { GetChatMessagesService } from '../../application/get-chat-messages.service';
 import { ChatRoomUserResponseDto } from './dto/response/chat-room-user.response.dto';
 import { SendChatMessageUserRequestDto } from './dto/request/send-chat-message-user.request.dto';
+import { SendMessageResponseDto } from './dto/response/send-message.response.dto';
 import { ChatMessageHistoryRequestDto } from './dto/request/chat-message-history.request.dto';
 import { ChatMessageUserResponseDto } from './dto/response/chat-message-user.response.dto';
 
@@ -69,12 +70,12 @@ export class ChatRoomUserController {
 
     @Post(':id/messages')
     @ApiOperation({ summary: 'Send Chat Message / 채팅 메시지 전송' })
-    @ApiStandardResponse(ChatMessageUserResponseDto)
+    @ApiStandardResponse(SendMessageResponseDto)
     async send(
         @CurrentUser() user: AuthenticatedUser,
         @Param('id') id: string,
         @Body() body: SendChatMessageUserRequestDto,
-    ): Promise<ChatMessageUserResponseDto> {
+    ): Promise<SendMessageResponseDto> {
         const { id: roomId } = this.sqidsService.decodeAuto(id);
 
         let imageIds: bigint[] | undefined;
@@ -91,11 +92,6 @@ export class ChatRoomUserController {
 
         return {
             id: this.sqidsService.encode(message.id, SqidsPrefix.CHAT_MESSAGE),
-            senderId: message.senderId ? this.sqidsService.encode(message.senderId, SqidsPrefix.USER) : null,
-            content: message.content,
-            type: message.type,
-            metadata: message.metadata,
-            createdAt: message.createdAt,
         };
     }
 }

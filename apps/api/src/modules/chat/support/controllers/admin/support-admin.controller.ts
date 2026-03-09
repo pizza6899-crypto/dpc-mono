@@ -13,6 +13,7 @@ import { GetChatMessagesService } from '../../../rooms/application/get-chat-mess
 import { ListSupportInquiriesAdminRequestDto } from './dto/request/list-support-inquiries-admin.request.dto';
 import { ChatRoomAdminResponseDto } from '../../../rooms/controllers/admin/dto/response/chat-room-admin.response.dto';
 import { SendChatMessageUserRequestDto } from '../../../rooms/controllers/user/dto/request/send-chat-message-user.request.dto';
+import { SendMessageResponseDto } from '../../../rooms/controllers/user/dto/response/send-message.response.dto';
 import { ChatMessageHistoryRequestDto } from '../../../rooms/controllers/user/dto/request/chat-message-history.request.dto';
 import { ChatMessageUserResponseDto } from '../../../rooms/controllers/user/dto/response/chat-message-user.response.dto';
 import { ChatRoom } from '../../../rooms/domain/chat-room.entity';
@@ -130,7 +131,7 @@ export class SupportAdminController {
 
     @Post('rooms/:roomId/messages')
     @ApiOperation({ summary: 'Send Support Reply (Admin) / 상담 답장 전송 (관리자)' })
-    @ApiStandardResponse(ChatMessageUserResponseDto)
+    @ApiStandardResponse(SendMessageResponseDto)
     @AuditLog({
         type: LogType.ACTIVITY,
         category: 'ADMIN',
@@ -143,7 +144,7 @@ export class SupportAdminController {
         @CurrentUser() admin: AuthenticatedUser,
         @Param('roomId') roomIdEncoded: string,
         @Body() body: SendChatMessageUserRequestDto,
-    ): Promise<ChatMessageUserResponseDto> {
+    ): Promise<SendMessageResponseDto> {
         const { id: roomId } = this.sqidsService.decodeAuto(roomIdEncoded);
 
         let imageIds: bigint[] | undefined;
@@ -161,11 +162,6 @@ export class SupportAdminController {
 
         return {
             id: this.sqidsService.encode(message.id, SqidsPrefix.CHAT_MESSAGE),
-            senderId: message.senderId ? this.sqidsService.encode(message.senderId, SqidsPrefix.USER) : null,
-            content: message.content,
-            type: message.type,
-            metadata: message.metadata,
-            createdAt: message.createdAt,
         };
     }
 
