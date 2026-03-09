@@ -3,6 +3,7 @@ import { EnvModule } from 'src/common/env/env.module';
 import { FileController } from './controllers/file.controller';
 import { CreateFileService } from './application/create-file.service';
 import { AttachFileService } from './application/attach-file.service';
+import { FileUrlService } from './application/file-url.service';
 import { FileRepository } from './infrastructure/file.repository';
 import { FileUsageRepository } from './infrastructure/file-usage.repository';
 import { FileMapper } from './infrastructure/file.mapper';
@@ -16,6 +17,7 @@ import { FILE_USAGE_REPOSITORY } from './ports/file-usage.repository.token';
   providers: [
     CreateFileService,
     AttachFileService,
+    FileUrlService,
     FileMapper,
     FileUsageMapper,
     {
@@ -27,6 +29,6 @@ import { FILE_USAGE_REPOSITORY } from './ports/file-usage.repository.token';
       useClass: FileUsageRepository,
     },
   ],
-  exports: [CreateFileService, AttachFileService],
+  exports: [CreateFileService, AttachFileService, FileUrlService],
 })
-export class FileModule {}
+export class FileModule { }

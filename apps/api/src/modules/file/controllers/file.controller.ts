@@ -14,6 +14,7 @@ import { UploadFileRequestDto } from './dto/request/upload-file.request.dto';
 import { FileResponseDto } from './dto/response/file.response.dto';
 import { EnvService } from 'src/common/env/env.service';
 import { CreateFileService } from '../application/create-file.service';
+import { FileUrlService } from '../application/file-url.service';
 import {
   FileEntity,
   FileValidationException,
@@ -41,7 +42,7 @@ import { MessageCode } from '@repo/shared';
 export class FileController {
   constructor(
     private readonly createFileService: CreateFileService,
-    private readonly envService: EnvService,
+    private readonly fileUrlService: FileUrlService,
     private readonly sqidsService: SqidsService,
   ) { }
 
@@ -120,13 +121,13 @@ export class FileController {
       accessType: dto.accessType || FileAccessType.PRIVATE,
     });
 
-    return this.toResponseDto(createdFile);
+    return await this.toResponseDto(createdFile);
   }
 
-  private toResponseDto(file: FileEntity): FileResponseDto {
+  private async toResponseDto(file: FileEntity): Promise<FileResponseDto> {
     return {
       id: this.sqidsService.encode(file.id!, SqidsPrefix.FILE),
-      url: file.publicUrl(this.envService.app.cdnUrl) ?? undefined,
+      url: (await this.fileUrlService.getUrl(file)) ?? undefined,
     };
   }
 }
