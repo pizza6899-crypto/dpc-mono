@@ -149,8 +149,7 @@ model User {
   chatRoomMembers ChatRoomMember[]
 
   // [Support System]
-  supportTickets  SupportTicket[] @relation("UserSupportTickets")
-  assignedTickets SupportTicket[] @relation("AdminAssignedTickets")
+  assignedRooms ChatRoom[] @relation("AdminAssignedRooms")
 
   globalTotalStats  UserGlobalTotalStats?
   globalHourlyStats UserGlobalHourlyStats[]

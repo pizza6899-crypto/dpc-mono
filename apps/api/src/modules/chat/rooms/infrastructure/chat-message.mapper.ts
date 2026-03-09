@@ -9,7 +9,6 @@ export class ChatMessageMapper {
             data.content,
             data.type,
             data.senderId ? Cast.bigint(data.senderId) : null,
-            data.ticketId ? Cast.bigint(data.ticketId) : null,
             data.metadata,
             data.isPinned,
             data.isDeleted,

@@ -46,7 +46,13 @@ export class ChatRoomRepository implements ChatRoomRepositoryPort {
             slowModeSeconds: room.slowModeSeconds,
             minTierLevel: room.minTierLevel,
             lastMessageAt: room.lastMessageAt,
+            supportStatus: room.supportStatus,
+            supportPriority: room.supportPriority,
+            supportCategory: room.supportCategory,
+            supportSubject: room.supportSubject,
+            supportAdminId: room.supportAdminId,
         };
+
 
         let record;
         if (room.id === 0n) {

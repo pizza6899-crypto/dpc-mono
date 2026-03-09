@@ -15,6 +15,12 @@ export class ChatRoomMapper {
             Cast.date(data.createdAt),
             Cast.date(data.updatedAt),
             data.lastMessageAt ? Cast.date(data.lastMessageAt) : null,
+            data.supportStatus,
+            data.supportPriority,
+            data.supportCategory,
+            data.supportSubject,
+            data.supportAdminId ? Cast.bigint(data.supportAdminId) : null,
         );
+
     }
 }

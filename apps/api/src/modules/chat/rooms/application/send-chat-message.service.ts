@@ -20,8 +20,8 @@ export interface SendChatMessageParams {
     senderId: bigint | null;
     content: string;
     type?: ChatMessageType;
-    ticketId?: bigint | null;
 }
+
 
 @Injectable()
 export class SendChatMessageService {
@@ -60,9 +60,9 @@ export class SendChatMessageService {
             roomId: params.roomId,
             content: params.content,
             senderId: params.senderId,
-            ticketId: params.ticketId,
             type: params.type,
         });
+
 
         const saved = await this.messageRepository.save(message);
 

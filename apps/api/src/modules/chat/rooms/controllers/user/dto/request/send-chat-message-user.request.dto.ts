@@ -13,8 +13,5 @@ export class SendChatMessageUserRequestDto {
     @IsEnum(ChatMessageType)
     type?: ChatMessageType;
 
-    @ApiPropertyOptional({ description: 'Ticket ID (Encoded) / 상담 티켓 ID (상담 중인 경우)', example: 'ct_123' })
-    @IsOptional()
-    @IsString()
-    ticketId?: string;
 }
+

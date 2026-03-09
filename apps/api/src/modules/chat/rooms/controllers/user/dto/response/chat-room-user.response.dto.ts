@@ -16,4 +16,16 @@ export class ChatRoomUserResponseDto {
 
     @ApiProperty({ description: 'Slow Mode Seconds / 도배 방지 쿨다운', example: 3 })
     slowModeSeconds: number;
+
+    @ApiPropertyOptional({ description: 'Support Status / 상담 상태' })
+    supportStatus?: string;
+
+    @ApiPropertyOptional({ description: 'Support Priority / 상담 우선순위' })
+    supportPriority?: string;
+
+    @ApiPropertyOptional({ description: 'Support Category / 상담 카테고리' })
+    supportCategory?: string | null;
+
+    @ApiPropertyOptional({ description: 'Support Subject / 상담 제목' })
+    supportSubject?: string | null;
 }

@@ -7,8 +7,10 @@ import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { ListChatRoomsService } from '../../application/list-chat-rooms.service';
 import { SendChatMessageService } from '../../application/send-chat-message.service';
+import { StartSupportInquiryService } from '../../application/start-support-inquiry.service';
 import { ChatRoomUserResponseDto } from './dto/response/chat-room-user.response.dto';
 import { SendChatMessageUserRequestDto } from './dto/request/send-chat-message-user.request.dto';
+import { StartSupportInquiryUserRequestDto } from './dto/request/start-support-inquiry-user.request.dto';
 import { ChatMessageUserResponseDto } from './dto/response/chat-message-user.response.dto';
 
 
@@ -20,6 +22,7 @@ export class ChatRoomUserController {
     constructor(
         private readonly listRoomService: ListChatRoomsService,
         private readonly sendMessageService: SendChatMessageService,
+        private readonly startInquiryService: StartSupportInquiryService,
         private readonly sqidsService: SqidsService,
     ) { }
 
@@ -35,7 +38,38 @@ export class ChatRoomUserController {
             type: room.type,
             metadata: room.metadata,
             slowModeSeconds: room.slowModeSeconds,
+            supportStatus: room.supportStatus || undefined,
+            supportPriority: room.supportPriority || undefined,
+            supportCategory: room.supportCategory,
+            supportSubject: room.supportSubject,
         }));
+    }
+
+    @Post('support/inquire')
+    @ApiOperation({ summary: 'Start Support Inquiry / 고객 상담 문의 시작' })
+    @ApiStandardResponse(ChatRoomUserResponseDto)
+    async inquire(
+        @CurrentUser() user: AuthenticatedUser,
+        @Body() body: StartSupportInquiryUserRequestDto,
+    ): Promise<ChatRoomUserResponseDto> {
+        const room = await this.startInquiryService.execute({
+            userId: user.id,
+            category: body.category,
+            subject: body.subject,
+            priority: body.priority,
+        });
+
+        return {
+            id: this.sqidsService.encode(room.id, SqidsPrefix.CHAT_ROOM),
+            slug: room.slug,
+            type: room.type,
+            metadata: room.metadata,
+            slowModeSeconds: room.slowModeSeconds,
+            supportStatus: room.supportStatus || undefined,
+            supportPriority: room.supportPriority || undefined,
+            supportCategory: room.supportCategory,
+            supportSubject: room.supportSubject,
+        };
     }
 
     @Post(':id/messages')
@@ -48,19 +82,11 @@ export class ChatRoomUserController {
     ): Promise<ChatMessageUserResponseDto> {
         const { id: roomId } = this.sqidsService.decodeAuto(id);
 
-        let ticketId: bigint | null = null;
-        if (body.ticketId) {
-            const { id: decodedTicketId } = this.sqidsService.decodeAuto(body.ticketId);
-            ticketId = decodedTicketId;
-        }
-
-
         const message = await this.sendMessageService.execute({
             roomId,
             senderId: user.id,
             content: body.content,
             type: body.type,
-            ticketId,
         });
 
         return {
@@ -74,6 +100,7 @@ export class ChatRoomUserController {
         };
     }
 }
+
 
 
 

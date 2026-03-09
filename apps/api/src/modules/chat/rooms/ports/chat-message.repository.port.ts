@@ -12,9 +12,5 @@ export interface ChatMessageRepositoryPort {
      * 특정 룸의 메세지 목록을 조회합니다.
      */
     findByRoomId(roomId: bigint, limit?: number, lastMessageId?: bigint): Promise<ChatMessage[]>;
-
-    /**
-     * 특정 티켓에 달린 메시지 목록을 조회합니다.
-     */
-    findByTicketId(ticketId: bigint): Promise<ChatMessage[]>;
 }
+

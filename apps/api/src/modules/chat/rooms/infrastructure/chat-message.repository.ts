@@ -20,7 +20,7 @@ export class ChatMessageRepository implements ChatMessageRepositoryPort {
                 content: message.content,
                 type: message.type,
                 senderId: message.senderId,
-                ticketId: message.ticketId,
+
                 metadata: message.metadata ?? undefined,
                 isPinned: message.isPinned,
                 isDeleted: message.isDeleted,
@@ -43,14 +43,6 @@ export class ChatMessageRepository implements ChatMessageRepositoryPort {
 
         return messages.map(ChatMessageMapper.toDomain);
     }
-
-    async findByTicketId(ticketId: bigint): Promise<ChatMessage[]> {
-        const messages = await this.tx.chatMessage.findMany({
-            where: { ticketId },
-            orderBy: { id: 'asc' },
-        });
-
-        return messages.map(ChatMessageMapper.toDomain);
-    }
 }
+
 
