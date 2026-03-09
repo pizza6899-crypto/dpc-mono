@@ -18,7 +18,7 @@ export class ListSupportInquiriesAdminRequestDto {
     @IsEnum(SupportCategory)
     category?: SupportCategory;
 
-    @ApiPropertyOptional({ description: 'Assigned Admin ID (Encoded) / 배정된 관리자 ID' })
+    @ApiPropertyOptional({ description: 'Assigned Admin ID / 배정된 관리자 ID' })
     @IsOptional()
     @IsString()
     adminId?: string;

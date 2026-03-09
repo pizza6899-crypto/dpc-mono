@@ -5,8 +5,6 @@ import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { ApiStandardResponse, ApiStandardErrors } from 'src/common/http/decorators/api-response.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { SendSupportMessageService } from '../../application/send-support-message.service';
 import { ListSupportInquiriesService } from '../../application/list-support-inquiries.service';
 import { GetChatMessagesService } from '../../../rooms/application/get-chat-messages.service';
@@ -15,7 +13,7 @@ import { SupportInquiryAdminResponseDto } from './dto/response/support-inquiry-a
 import { SendChatMessageUserRequestDto } from '../../../rooms/controllers/user/dto/request/send-chat-message-user.request.dto';
 import { SendMessageResponseDto } from '../../../rooms/controllers/user/dto/response/send-message.response.dto';
 import { ChatMessageHistoryRequestDto } from '../../../rooms/controllers/user/dto/request/chat-message-history.request.dto';
-import { ChatMessageUserResponseDto } from '../../../rooms/controllers/user/dto/response/chat-message-user.response.dto';
+import { ChatMessageAdminResponseDto } from '../../../rooms/controllers/admin/dto/response/chat-message-admin.response.dto';
 import { ChatRoom } from '../../../rooms/domain/chat-room.entity';
 import { ReadChatMessagesService } from '../../../rooms/application/read-chat-messages.service';
 import { CHAT_ROOM_MEMBER_REPOSITORY_PORT, type ChatRoomMemberRepositoryPort } from '../../../rooms/ports/chat-room-member.repository.port';
@@ -37,7 +35,6 @@ export class SupportAdminController {
         @Inject(CHAT_ROOM_MEMBER_REPOSITORY_PORT)
         private readonly memberRepository: ChatRoomMemberRepositoryPort,
         private readonly readMessagesService: ReadChatMessagesService,
-        private readonly sqidsService: SqidsService,
     ) { }
 
     @Get('rooms')
@@ -58,7 +55,7 @@ export class SupportAdminController {
             status: query.status,
             priority: query.priority,
             category: query.category,
-            adminId: query.adminId ? this.sqidsService.decodeAuto(query.adminId).id : undefined,
+            adminId: query.adminId ? BigInt(query.adminId) : undefined,
         });
 
         return rooms.map((room) => this.mapToResponse(room));
@@ -83,25 +80,25 @@ export class SupportAdminController {
 
     @Get('rooms/:roomId/messages')
     @ApiOperation({ summary: 'Get Support Chat History (Admin) / 상담 채팅 내역 조회 (관리자)' })
-    @ApiStandardResponse(ChatMessageUserResponseDto, { isArray: true })
+    @ApiStandardResponse(ChatMessageAdminResponseDto, { isArray: true })
     @AuditLog({
         type: LogType.ACTIVITY,
         category: 'ADMIN',
         action: 'VIEW_SUPPORT_MESSAGES',
         extractMetadata: (req, args) => ({
-            roomId: args[0],
+            roomId: args[1],
         }),
     })
     async listMessages(
         @CurrentUser() admin: AuthenticatedUser,
-        @Param('roomId') roomIdEncoded: string,
+        @Param('roomId') roomIdRaw: string,
         @Query() query: ChatMessageHistoryRequestDto,
-    ): Promise<ChatMessageUserResponseDto[]> {
-        const { id: roomId } = this.sqidsService.decodeAuto(roomIdEncoded);
+    ): Promise<ChatMessageAdminResponseDto[]> {
+        const roomId = BigInt(roomIdRaw);
 
         let lastMessageId: bigint | undefined;
         if (query.lastMessageId) {
-            lastMessageId = this.sqidsService.decodeAuto(query.lastMessageId).id;
+            lastMessageId = BigInt(query.lastMessageId);
         }
 
         const messages = await this.getMessagesService.execute({
@@ -115,9 +112,9 @@ export class SupportAdminController {
         const counterpart = members.find((m) => m.userId !== admin.id);
 
         return messages.map((m) => ({
-            id: this.sqidsService.encode(m.id, SqidsPrefix.CHAT_MESSAGE),
-            roomId: this.sqidsService.encode(m.roomId, SqidsPrefix.CHAT_ROOM),
-            senderId: m.senderId ? this.sqidsService.encode(m.senderId, SqidsPrefix.USER) : null,
+            id: m.id.toString(),
+            roomId: m.roomId.toString(),
+            senderId: m.senderId ? m.senderId.toString() : null,
             content: m.content,
             type: m.type,
             metadata: m.metadata,
@@ -139,14 +136,14 @@ export class SupportAdminController {
     })
     async sendReply(
         @CurrentUser() admin: AuthenticatedUser,
-        @Param('roomId') roomIdEncoded: string,
+        @Param('roomId') roomIdRaw: string,
         @Body() body: SendChatMessageUserRequestDto,
     ): Promise<SendMessageResponseDto> {
-        const { id: roomId } = this.sqidsService.decodeAuto(roomIdEncoded);
+        const roomId = BigInt(roomIdRaw);
 
         let imageIds: bigint[] | undefined;
         if (body.imageIds && body.imageIds.length > 0) {
-            imageIds = body.imageIds.map(id => this.sqidsService.decodeAuto(id).id);
+            imageIds = body.imageIds.map(id => BigInt(id));
         }
 
         const message = await this.sendSupportMessageService.execute({
@@ -158,7 +155,7 @@ export class SupportAdminController {
         });
 
         return {
-            id: this.sqidsService.encode(message.id, SqidsPrefix.CHAT_MESSAGE),
+            id: message.id.toString(),
         };
     }
 
@@ -175,11 +172,11 @@ export class SupportAdminController {
     })
     async markAsRead(
         @CurrentUser() admin: AuthenticatedUser,
-        @Param('roomId') roomIdEncoded: string,
+        @Param('roomId') roomIdRaw: string,
         @Body() body: MarkChatReadRequestDto,
     ): Promise<boolean> {
-        const { id: roomId } = this.sqidsService.decodeAuto(roomIdEncoded);
-        const { id: lastReadMessageId } = this.sqidsService.decodeAuto(body.lastReadMessageId);
+        const roomId = BigInt(roomIdRaw);
+        const lastReadMessageId = BigInt(body.lastReadMessageId);
 
         await this.readMessagesService.execute({
             roomId,
