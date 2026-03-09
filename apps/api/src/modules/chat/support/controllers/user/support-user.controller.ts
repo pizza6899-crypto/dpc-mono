@@ -94,9 +94,6 @@ export class SupportUserController {
         type: LogType.ACTIVITY,
         category: 'CHAT',
         action: 'START_INQUIRY',
-        extractMetadata: (req, args) => ({
-            category: args[1]?.category,
-        }),
     })
     async inquire(
         @CurrentUser() user: AuthenticatedUser,
@@ -104,7 +101,6 @@ export class SupportUserController {
     ): Promise<SupportInquiryUserResponseDto> {
         const room = await this.startInquiryService.execute({
             userId: user.id,
-            category: body.category,
         });
 
         return {

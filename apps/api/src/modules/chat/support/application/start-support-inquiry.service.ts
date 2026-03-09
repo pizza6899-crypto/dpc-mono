@@ -8,7 +8,6 @@ import { ChatRoomType, SupportStatus, SupportPriority, ChatMemberRole, SupportCa
 
 export interface StartSupportInquiryParams {
     userId: bigint;
-    category?: SupportCategory;
 }
 
 
@@ -40,7 +39,7 @@ export class StartSupportInquiryService {
                 null,
                 SupportStatus.ENTERED,
                 SupportPriority.NORMAL,
-                params.category ?? SupportCategory.ETC,
+                null,
                 null, // subject는 추후 시스템 생성 로직 적용 예정
                 null, // adminId
             );
