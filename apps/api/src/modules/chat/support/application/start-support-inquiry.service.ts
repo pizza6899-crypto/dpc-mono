@@ -5,6 +5,7 @@ import { CHAT_ROOM_MEMBER_REPOSITORY_PORT, type ChatRoomMemberRepositoryPort } f
 import { ChatRoom } from '../../rooms/domain/chat-room.entity';
 import { ChatRoomMember } from '../../rooms/domain/chat-room-member.entity';
 import { ChatRoomType, SupportStatus, SupportPriority, ChatMemberRole, SupportCategory } from '@prisma/client';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 export interface StartSupportInquiryParams {
     userId: bigint;
@@ -18,10 +19,14 @@ export class StartSupportInquiryService {
         private readonly roomRepository: ChatRoomRepositoryPort,
         @Inject(CHAT_ROOM_MEMBER_REPOSITORY_PORT)
         private readonly memberRepository: ChatRoomMemberRepositoryPort,
+        private readonly advisoryLockService: AdvisoryLockService,
     ) { }
 
     @Transactional()
     async execute(params: StartSupportInquiryParams): Promise<ChatRoom> {
+        // 0. 동일 유저에 대한 중복 상담방 생성 방지를 위한 Advisory Lock 획득
+        await this.advisoryLockService.acquireLock(LockNamespace.CHAT_ROOM, params.userId.toString());
+
         // 유저 ID 기반으로 활성화된(CLOSED가 아닌) 상담방 조회
         let room = await this.roomRepository.findActiveSupportRoomByUserId(params.userId);
 

@@ -9,11 +9,13 @@ import { ChatRoomsModule } from '../rooms/chat-rooms.module';
 
 
 import { SqidsModule } from 'src/common/sqids/sqids.module';
+import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 
 @Module({
     imports: [
         ChatRoomsModule,
         SqidsModule,
+        ConcurrencyModule,
     ],
     controllers: [
         SupportUserController,
