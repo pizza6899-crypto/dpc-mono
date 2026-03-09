@@ -11,7 +11,7 @@ import { SendSupportMessageService } from '../../application/send-support-messag
 import { ListSupportInquiriesService } from '../../application/list-support-inquiries.service';
 import { GetChatMessagesService } from '../../../rooms/application/get-chat-messages.service';
 import { ListSupportInquiriesAdminRequestDto } from './dto/request/list-support-inquiries-admin.request.dto';
-import { ChatRoomAdminResponseDto } from '../../../rooms/controllers/admin/dto/response/chat-room-admin.response.dto';
+import { SupportInquiryAdminResponseDto } from './dto/response/support-inquiry-admin.response.dto';
 import { SendChatMessageUserRequestDto } from '../../../rooms/controllers/user/dto/request/send-chat-message-user.request.dto';
 import { SendMessageResponseDto } from '../../../rooms/controllers/user/dto/response/send-message.response.dto';
 import { ChatMessageHistoryRequestDto } from '../../../rooms/controllers/user/dto/request/chat-message-history.request.dto';
@@ -42,7 +42,7 @@ export class SupportAdminController {
 
     @Get('rooms')
     @ApiOperation({ summary: 'List Support Inquiries (Admin) / 상담 목록 조회 (관리자)' })
-    @ApiStandardResponse(ChatRoomAdminResponseDto, { isArray: true })
+    @ApiStandardResponse(SupportInquiryAdminResponseDto, { isArray: true })
     @AuditLog({
         type: LogType.ACTIVITY,
         category: 'ADMIN',
@@ -53,7 +53,7 @@ export class SupportAdminController {
     })
     async list(
         @Query() query: ListSupportInquiriesAdminRequestDto,
-    ): Promise<ChatRoomAdminResponseDto[]> {
+    ): Promise<SupportInquiryAdminResponseDto[]> {
         const rooms = await this.listInquiriesService.execute({
             status: query.status,
             priority: query.priority,
@@ -64,22 +64,19 @@ export class SupportAdminController {
         return rooms.map((room) => this.mapToResponse(room));
     }
 
-    private mapToResponse(room: ChatRoom): ChatRoomAdminResponseDto {
+    private mapToResponse(room: ChatRoom): SupportInquiryAdminResponseDto {
         return {
-            id: this.sqidsService.encode(room.id, SqidsPrefix.CHAT_ROOM),
-            type: room.type,
+            id: room.id.toString(),
             isActive: room.isActive,
             metadata: room.metadata,
-            slowModeSeconds: room.slowModeSeconds,
-            minTierLevel: room.minTierLevel,
             createdAt: room.createdAt,
             updatedAt: room.updatedAt,
             lastMessageAt: room.lastMessageAt,
-            supportStatus: room.supportStatus || undefined,
-            supportPriority: room.supportPriority || undefined,
-            supportCategory: room.supportCategory,
-            supportSubject: room.supportSubject,
-            supportAdminId: room.supportAdminId ? this.sqidsService.encode(room.supportAdminId, SqidsPrefix.USER) : null,
+            supportStatus: room.supportStatus!,
+            supportPriority: room.supportPriority!,
+            supportCategory: room.supportCategory!,
+            supportSubject: room.supportSubject!,
+            supportAdminId: room.supportAdminId?.toString() || null,
         };
     }
 
