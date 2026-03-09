@@ -130,12 +130,19 @@ export class SupportUserController {
     ): Promise<ChatMessageUserResponseDto> {
         const { id: roomId } = this.sqidsService.decodeAuto(roomIdEncoded);
 
+
+        let fileId: bigint | undefined;
+        if (body.fileId) {
+            fileId = this.sqidsService.decodeAuto(body.fileId).id;
+        }
+
         const message = await this.sendSupportMessageService.execute({
             roomId,
             senderId: user.id,
             content: body.content,
             type: body.type,
             isAdmin: false,
+            fileId,
         });
 
         return {

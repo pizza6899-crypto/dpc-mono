@@ -20,6 +20,7 @@ export interface SendChatMessageParams {
     senderId: bigint | null;
     content: string;
     type?: ChatMessageType;
+    fileId?: bigint;
 }
 
 
@@ -61,6 +62,7 @@ export class SendChatMessageService {
             content: params.content,
             senderId: params.senderId,
             type: params.type,
+            metadata: params.fileId ? { fileId: params.fileId.toString() } : null,
         });
 
 

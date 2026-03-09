@@ -13,6 +13,7 @@ export interface SendSupportMessageParams {
     content: string;
     type?: ChatMessageType;
     isAdmin: boolean;
+    fileId?: bigint;
 }
 
 @Injectable()
@@ -37,6 +38,7 @@ export class SendSupportMessageService {
             senderId: params.senderId,
             content: params.content,
             type: params.type,
+            fileId: params.fileId,
         });
 
         // 3. 상담 상태 자동 업데이트 (Side-effects)

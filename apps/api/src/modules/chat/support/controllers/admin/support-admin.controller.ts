@@ -147,12 +147,18 @@ export class SupportAdminController {
     ): Promise<ChatMessageUserResponseDto> {
         const { id: roomId } = this.sqidsService.decodeAuto(roomIdEncoded);
 
+        let fileId: bigint | undefined;
+        if (body.fileId) {
+            fileId = this.sqidsService.decodeAuto(body.fileId).id;
+        }
+
         const message = await this.sendSupportMessageService.execute({
             roomId,
             senderId: admin.id,
             content: body.content,
             type: body.type,
             isAdmin: true,
+            fileId,
         });
 
         return {
