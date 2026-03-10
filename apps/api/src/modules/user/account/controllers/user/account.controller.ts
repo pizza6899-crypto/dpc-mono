@@ -126,9 +126,6 @@ export class UserAccountController {
         return {
             id: this.sqidsService.encode(result.id, SqidsPrefix.USER),
             loginId: result.loginId,
-            nickname: result.nickname,
-            email: result.email,
-            referralCode: result.referralCode,
         };
     }
 
@@ -166,8 +163,6 @@ export class UserAccountController {
         return {
             id: this.sqidsService.encode(result.id, SqidsPrefix.USER),
             loginId: result.loginId,
-            nickname: result.nickname,
-            email: result.email,
         };
     }
 }

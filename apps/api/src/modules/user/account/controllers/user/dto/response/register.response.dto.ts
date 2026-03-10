@@ -1,18 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class RegisterResponseDto {
-  @ApiProperty({ description: 'User ID / 사용자 ID' })
+  @ApiProperty({
+    description: 'Obfuscated User ID / 난독화된 사용자 ID',
+    example: 'ad83k2msh',
+  })
   id: string;
 
-  @ApiProperty({ description: 'Login ID / 로그인 아이디' })
+  @ApiProperty({
+    description: 'Login ID / 로그인 아이디',
+    example: 'user123',
+    nullable: true,
+  })
   loginId: string | null;
-
-  @ApiProperty({ description: 'Nickname / 닉네임' })
-  nickname: string;
-
-  @ApiProperty({ description: 'Email / 이메일' })
-  email: string | null;
-
-  @ApiProperty({ description: 'Referral Code / 추천 코드', required: false })
-  referralCode?: string;
 }
