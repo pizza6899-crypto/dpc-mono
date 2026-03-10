@@ -17,4 +17,8 @@ export class UpdateSupportInquiryAdminRequestDto {
     @IsEnum(SupportCategory)
     @IsOptional()
     category?: SupportCategory;
+
+    @ApiProperty({ description: 'Assign Admin ID / 담당 관리자 ID', required: false })
+    @IsOptional()
+    adminId?: string;
 }

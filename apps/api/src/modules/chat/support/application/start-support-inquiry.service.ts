@@ -7,11 +7,11 @@ import { ChatRoomMember } from '../../rooms/domain/chat-room-member.entity';
 import { ChatRoomType, SupportStatus, SupportPriority, ChatMemberRole, SupportCategory } from '@prisma/client';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { SupportInquiryPolicy } from '../domain/support-inquiry.policy';
+import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
 
 export interface StartSupportInquiryParams {
     userId: bigint;
 }
-
 
 @Injectable()
 export class StartSupportInquiryService {
@@ -22,6 +22,7 @@ export class StartSupportInquiryService {
         private readonly memberRepository: ChatRoomMemberRepositoryPort,
         private readonly advisoryLockService: AdvisoryLockService,
         private readonly policy: SupportInquiryPolicy,
+        private readonly websocketService: WebsocketService,
     ) { }
 
     @Transactional()
@@ -69,7 +70,10 @@ export class StartSupportInquiryService {
                     room.lastMessageAt,
                     room.supportInfo ? { ...room.supportInfo, status: nextStatus } : null,
                 );
-                return this.roomRepository.save(reopenedRoom);
+                const saved = await this.roomRepository.save(reopenedRoom);
+                // 소켓 룸 가입
+                await this.websocketService.joinChatRoom(params.userId, saved.id, saved.type);
+                return saved;
             }
             // 그 외 활성 상태(ENTERED, OPEN, ...)라면 그대로 반환
             return room;
@@ -91,6 +95,9 @@ export class StartSupportInquiryService {
             );
             await this.memberRepository.save(newMember);
         }
+
+        // 소켓 룸 가입 (기존에 가입되어 있더라도 중복 가입은 안전함)
+        await this.websocketService.joinChatRoom(params.userId, savedRoom.id, savedRoom.type);
 
         return savedRoom;
     }

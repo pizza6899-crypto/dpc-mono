@@ -109,6 +109,7 @@ export class SupportAdminController {
             status: body.status,
             priority: body.priority,
             category: body.category,
+            adminId: body.adminId ? this.parseId(body.adminId) : undefined,
         });
 
         return {

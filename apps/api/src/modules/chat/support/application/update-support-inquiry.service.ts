@@ -5,12 +5,14 @@ import { ChatRoom } from '../../rooms/domain/chat-room.entity';
 import { ChatRoomNotFoundException } from '../../rooms/domain/chat-room.exception';
 import { SupportStatus, SupportPriority, SupportCategory, ChatRoomType } from '@prisma/client';
 import { SupportInquiryStatusUpdateRestrictedException } from '../domain/support-inquiry.exception';
+import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
 
 export interface UpdateSupportInquiryParams {
     roomId: bigint;
     status?: SupportStatus;
     priority?: SupportPriority;
     category?: SupportCategory;
+    adminId?: bigint;
 }
 
 @Injectable()
@@ -18,6 +20,7 @@ export class UpdateSupportInquiryService {
     constructor(
         @Inject(CHAT_ROOM_REPOSITORY_PORT)
         private readonly roomRepository: ChatRoomRepositoryPort,
+        private readonly websocketService: WebsocketService,
     ) { }
 
     @Transactional()
@@ -56,10 +59,17 @@ export class UpdateSupportInquiryService {
                 priority: params.priority ?? currentInfo.priority,
                 category: params.category ?? currentInfo.category,
                 subject: currentInfo.subject,
-                adminId: currentInfo.adminId,
+                adminId: params.adminId ?? currentInfo.adminId,
             }
         );
 
-        return this.roomRepository.save(updatedRoom);
+        const saved = await this.roomRepository.save(updatedRoom);
+
+        // 관리자가 새로 할당되거나 변경된 경우 해당 관리자를 소켓 룸에 가입시킴
+        if (params.adminId) {
+            await this.websocketService.joinChatRoom(params.adminId, saved.id, saved.type);
+        }
+
+        return saved;
     }
 }

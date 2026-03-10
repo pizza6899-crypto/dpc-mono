@@ -4,10 +4,6 @@ import { UserWebsocketGateway } from './gateways/user-websocket.gateway';
 import { AdminWebsocketGateway } from './gateways/admin-websocket.gateway';
 import { SocketEventDto } from './dtos/socket-event.dto';
 import { type SocketPayloadMap } from './types/socket-payload.types';
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import {
-  type SqidsPrefixType,
-} from 'src/common/sqids/sqids.constants';
 import { ChatRoomType } from '@prisma/client';
 import { OnWebsocketConnectHook } from './interfaces/connection-hook.interface';
 import { Socket } from 'socket.io';
@@ -21,7 +17,6 @@ export class WebsocketService {
     private readonly gateway: UserWebsocketGateway,
     @Inject(forwardRef(() => AdminWebsocketGateway))
     private readonly adminGateway: AdminWebsocketGateway,
-    private readonly sqidsService: SqidsService,
   ) { }
 
   /**
@@ -47,22 +42,19 @@ export class WebsocketService {
    * @param userId 수신자 사용자 ID
    * @param type 이벤트 타입 (SOCKET_EVENT_TYPES 상수 사용)
    * @param payload 해당 타입에 대응하는 페이로드 객체
-   * @param options 변환 옵션
    */
   sendToUser<T extends keyof SocketPayloadMap>(
     userId: bigint,
     type: T,
     payload: SocketPayloadMap[T],
-    options?: { sqidPrefix?: SqidsPrefixType },
   ): void {
-    // 1. 관리자에게는 원본(Raw) 전송
-    const adminMessage = SocketEventDto.create(type as string, payload);
-    this.adminGateway.emitToAdmin(userId, this.EVENT_NAME, adminMessage);
+    const message = SocketEventDto.create(type as string, payload);
 
-    // 2. 사용자에게는 필요 시 인코딩하여 전송
-    const userPayload = this.prepareUserPayload(payload, options?.sqidPrefix);
-    const userMessage = SocketEventDto.create(type as string, userPayload);
-    this.gateway.emitToUser(userId, this.EVENT_NAME, userMessage);
+    // 1. 관리자에게 전송
+    this.adminGateway.emitToAdmin(userId, this.EVENT_NAME, message);
+
+    // 2. 사용자에게 전송
+    this.gateway.emitToUser(userId, this.EVENT_NAME, message);
   }
 
   /**
@@ -72,69 +64,40 @@ export class WebsocketService {
    * @param room 대상 룸 이름
    * @param type 이벤트 타입 (SOCKET_EVENT_TYPES 상수 사용)
    * @param payload 해당 타입에 대응하는 페이로드 객체
-   * @param options 변환 옵션
    */
   sendToRoom<T extends keyof SocketPayloadMap>(
     room: SocketRoomType,
     type: T,
     payload: SocketPayloadMap[T],
-    options?: { sqidPrefix?: SqidsPrefixType },
   ): void {
-    // 1. 관리자 룸에는 원본 전송
-    const adminMessage = SocketEventDto.create(type as string, payload);
-    this.adminGateway.emitToRoom(room, this.EVENT_NAME, adminMessage);
+    const message = SocketEventDto.create(type as string, payload);
 
-    // 2. 사용자 룸에는 필요 시 인코딩하여 전송
-    const userPayload = this.prepareUserPayload(payload, options?.sqidPrefix);
-    const userMessage = SocketEventDto.create(type as string, userPayload);
-    this.gateway.emitToRoom(room, this.EVENT_NAME, userMessage);
+    // 1. 관리자 룸에 전송
+    this.adminGateway.emitToRoom(room, this.EVENT_NAME, message);
+
+    // 2. 사용자 룸에 전송
+    this.gateway.emitToRoom(room, this.EVENT_NAME, message);
   }
 
   /**
    * 사용자의 모든 소켓 세션을 특정 채팅방/고객응대 룸에 가입시킵니다.
    */
-  joinChatRoom(userId: bigint, roomId: bigint, roomType: ChatRoomType): void {
+  async joinChatRoom(userId: bigint, roomId: bigint, roomType: ChatRoomType): Promise<void> {
     const isSupport = roomType === ChatRoomType.SUPPORT;
     const roomName = isSupport ? getSocketRoom.support(roomId) : getSocketRoom.chat(roomId);
 
     const userRoom = getSocketRoom.user(userId);
-    this.gateway.server.in(userRoom).socketsJoin(roomName);
+    await this.gateway.server.in(userRoom).socketsJoin(roomName);
   }
 
   /**
    * 사용자의 모든 소켓 세션을 특정 채팅방/고객응대 룸에서 탈퇴시킵니다.
    */
-  leaveChatRoom(userId: bigint, roomId: bigint, roomType: ChatRoomType): void {
+  async leaveChatRoom(userId: bigint, roomId: bigint, roomType: ChatRoomType): Promise<void> {
     const isSupport = roomType === ChatRoomType.SUPPORT;
     const roomName = isSupport ? getSocketRoom.support(roomId) : getSocketRoom.chat(roomId);
 
     const userRoom = getSocketRoom.user(userId);
-    this.gateway.server.in(userRoom).socketsLeave(roomName);
-  }
-
-  /**
-   * 사용자용 페이로드 준비 (필요 시 ID 인코딩)
-   */
-  private prepareUserPayload(payload: any, prefix?: SqidsPrefixType): any {
-    if (!prefix || !payload || typeof payload !== 'object') {
-      return payload;
-    }
-
-    // 페이로드에 id 필드가 있고 prefix가 지정된 경우 인코딩 처리
-    if ('id' in payload && payload.id) {
-      try {
-        const rawId =
-          typeof payload.id === 'string' ? BigInt(payload.id) : payload.id;
-        return {
-          ...payload,
-          id: this.sqidsService.encode(rawId, prefix),
-        };
-      } catch (e) {
-        // 변환 실패 시 원본 반환
-        return payload;
-      }
-    }
-
-    return payload;
+    await this.gateway.server.in(userRoom).socketsLeave(roomName);
   }
 }

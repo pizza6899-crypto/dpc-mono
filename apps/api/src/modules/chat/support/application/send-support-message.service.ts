@@ -47,7 +47,7 @@ export class SendSupportMessageService {
             throw new ChatRoomNotFoundException();
         }
 
-        // 2. 채팅 메시지 전송 (기본 코어 로직 재사용)
+        // 3. 채팅 메시지 전송 (기본 코어 로직 재사용)
         const message = await this.sendChatMessageService.execute({
             roomId: params.roomId,
             senderId: params.senderId,
@@ -55,7 +55,7 @@ export class SendSupportMessageService {
             imageIds: params.imageIds,
         });
 
-        // 3. 상담 상태 자동 업데이트 및 알림 (Side-effects)
+        // 4. 상담 상태 자동 업데이트 및 알림 (Side-effects)
         await this.handleStatusUpdate(room, params.isAdmin, message);
 
         return message;
@@ -86,6 +86,11 @@ export class SendSupportMessageService {
                 } : null,
             );
             await this.roomRepository.save(updatedRoom);
+
+            // 상담사가 자동 할당된 경우, 해당 상담사 세션을 즉시 소켓 룸에 가입시킴
+            if (shouldAssignAdmin) {
+                await this.websocketService.joinChatRoom(message.senderId!, room.id, room.type);
+            }
         }
 
         // 신규 상담 문의 발생 시 관리자 알림 발송

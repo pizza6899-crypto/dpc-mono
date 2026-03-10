@@ -4,6 +4,7 @@ import { Job } from 'bullmq';
 import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
 import { SOCKET_EVENT_TYPES } from 'src/infrastructure/websocket/types/socket-payload.types';
 import { type NotificationJobData } from '../../common';
+import { SqidsService } from 'src/common/sqids/sqids.service';
 import { ClsService } from 'nestjs-cls';
 import { Transactional } from '@nestjs-cls/transactional';
 import {
@@ -33,6 +34,7 @@ export class InboxProcessor extends BaseProcessor<
     private readonly notificationLogRepository: NotificationLogRepositoryPort,
     private readonly websocketService: WebsocketService,
     private readonly renderTemplateService: RenderTemplateService,
+    private readonly sqidsService: SqidsService,
     protected readonly cls: ClsService,
   ) {
     super();
@@ -86,7 +88,7 @@ export class InboxProcessor extends BaseProcessor<
         log.receiverId,
         SOCKET_EVENT_TYPES.INBOX_NEW,
         {
-          id: log.id!.toString(), // Raw ID (관리자용)
+          id: this.sqidsService.encode(log.id!, SqidsPrefix.INBOX), // 사용자용 인코딩 미리 처리
           event: log.templateEvent,
           createdAt: log.createdAt.toISOString(),
           title: log.title || null,
@@ -96,7 +98,6 @@ export class InboxProcessor extends BaseProcessor<
           readAt: null,
           metadata: log.metadata || null,
         },
-        { sqidPrefix: SqidsPrefix.INBOX }, // 사용자용 인코딩 힌트
       );
 
       // 성공 처리
