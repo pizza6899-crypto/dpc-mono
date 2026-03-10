@@ -14,39 +14,54 @@
 // 이벤트 타입 상수 (유저/어드민 분리)
 // ============================================
 
-/** 일반 사용자 대상 이벤트 */
+/** 
+ * 1. 유저 전용 이벤트 (Private Notifications) 
+ * - 로그인한 유저 본인에게만 전송되는 개인 알림입니다.
+ */
 export const USER_SOCKET_EVENT_TYPES = {
     /** 새 받은편지함 알림 도착 */
     INBOX_NEW: 'INBOX_NEW',
     /** 프로모션 적용 결과 */
     PROMOTION_APPLIED: 'PROMOTION_APPLIED',
-    /** 새 채팅 메시지 도착 */
-    CHAT_MESSAGE_NEW: 'CHAT_MESSAGE_NEW',
-    /** 채팅 메시지 읽음 처리 알림 */
-    CHAT_MESSAGES_READ: 'CHAT_MESSAGES_READ',
 } as const;
 
-/** 관리자 전용 이벤트 */
+/** 
+ * 2. 공용 이벤트 (Common / Room-based Chat)
+ * - 특정 '방(Room)'에 참여 중인 유저와 관리자 모두가 수신합니다.
+ * - 익명 유저: 일반 채팅방(Community) 참여 시 수신 가능.
+ */
+export const CHAT_SOCKET_EVENT_TYPES = {
+    // ---- 일반 채팅 (Community) ----
+    /** 새 채팅 메시지 도착 (유저 & 관리자) */
+    CHAT_MESSAGE_NEW: 'CHAT_MESSAGE_NEW',
+    /** 채팅 메시지 읽음 처리 알림 (유저 & 관리자) */
+    CHAT_MESSAGES_READ: 'CHAT_MESSAGES_READ',
+
+    // ---- 고객 상담 (Support) ----
+    /** 새 상담 채팅 메시지 도착 (유저 & 관리자) */
+    SUPPORT_CHAT_MESSAGE_NEW: 'SUPPORT_CHAT_MESSAGE_NEW',
+    /** 상담 채팅 메시지 읽음 처리 알림 (유저 & 관리자) */
+    SUPPORT_CHAT_MESSAGES_READ: 'SUPPORT_CHAT_MESSAGES_READ',
+} as const;
+
+/** 
+ * 3. 관리자 전용 이벤트 (Admin Alerts)
+ * - 관리자 권한이 있는 세션에만 전송되는 업무용 알림입니다.
+ */
 export const ADMIN_SOCKET_EVENT_TYPES = {
     /** 입금 요청 접수 (관리자 알림) */
     FIAT_DEPOSIT_REQUESTED: 'FIAT_DEPOSIT_REQUESTED',
     /** 출금 요청 접수 (관리자 알림) */
     WITHDRAW_REQUESTED: 'WITHDRAW_REQUESTED',
-    /** 상담 문의 접수 (관리자 알림) */
+    /** 상담 문의 최초 접수 알림 (관리자 대시보드용) */
     SUPPORT_INQUIRY_RECEIVED: 'SUPPORT_INQUIRY_RECEIVED',
-} as const;
-
-/** 공통/시스템 이벤트 */
-export const COMMON_SOCKET_EVENT_TYPES = {
-    /** 시스템 전체 공지 */
-    SYSTEM_NOTICE: 'SYSTEM_NOTICE',
 } as const;
 
 /** 통합 소켓 이벤트 타입 전역 상수 */
 export const SOCKET_EVENT_TYPES = {
     ...USER_SOCKET_EVENT_TYPES,
+    ...CHAT_SOCKET_EVENT_TYPES,
     ...ADMIN_SOCKET_EVENT_TYPES,
-    ...COMMON_SOCKET_EVENT_TYPES,
 } as const;
 
 export type SocketEventType =
@@ -114,12 +129,6 @@ export interface SocketPromotionAppliedPayload {
     expiryDate?: string;
 }
 
-/** SYSTEM_NOTICE: 시스템 공지사항 (전체 대상) */
-export interface SocketSystemNoticePayload {
-    title: string;
-    body: string;
-}
-
 /** CHAT_MESSAGE_NEW: 새 채팅 메시지 실시간 스트림 페이로드 */
 export interface SocketChatMessageNewPayload {
     id: string;              // Encoded Message ID
@@ -131,12 +140,17 @@ export interface SocketChatMessageNewPayload {
     createdAt: string;       // ISO format
 }
 
-/** CHAT_MESSAGES_READ: 채팅 메시지 읽음 처리 실시간 알림 페이로드 */
 export interface SocketChatMessagesReadPayload {
     roomId: string;          // Encoded Room ID
     userId: string;          // Encoded User ID (누가 읽었는지)
     lastReadMessageId: string; // Encoded Message ID (어디까지 읽었는지)
 }
+
+/** SUPPORT_CHAT_MESSAGE_NEW: 새 상담 메시지 실시간 스트림 (일반 채팅과 동일 구조) */
+export interface SocketSupportChatMessageNewPayload extends SocketChatMessageNewPayload { }
+
+/** SUPPORT_CHAT_MESSAGES_READ: 상담 메시지 읽음 처리 (일반 채팅과 동일 구조) */
+export interface SocketSupportChatMessagesReadPayload extends SocketChatMessagesReadPayload { }
 
 // ============================================
 // 이벤트 → 페이로드 매핑 (Single Source of Truth)
@@ -156,12 +170,18 @@ export interface SocketChatMessagesReadPayload {
  * websocketService.sendToUser(userId, SOCKET_EVENT_TYPES.INBOX_NEW, { wrongField: true });
  */
 export type SocketPayloadMap = {
+    // ---- [1. User Private Events] ----
     [SOCKET_EVENT_TYPES.INBOX_NEW]: SocketInboxNewPayload;
-    [SOCKET_EVENT_TYPES.FIAT_DEPOSIT_REQUESTED]: SocketFiatDepositRequestedPayload;
-    [SOCKET_EVENT_TYPES.WITHDRAW_REQUESTED]: SocketWithdrawRequestedPayload;
     [SOCKET_EVENT_TYPES.PROMOTION_APPLIED]: SocketPromotionAppliedPayload;
-    [SOCKET_EVENT_TYPES.SYSTEM_NOTICE]: SocketSystemNoticePayload;
+
+    // ---- [2. Common Chat Events (User & Admin)] ----
     [SOCKET_EVENT_TYPES.CHAT_MESSAGE_NEW]: SocketChatMessageNewPayload;
     [SOCKET_EVENT_TYPES.CHAT_MESSAGES_READ]: SocketChatMessagesReadPayload;
+    [SOCKET_EVENT_TYPES.SUPPORT_CHAT_MESSAGE_NEW]: SocketSupportChatMessageNewPayload;
+    [SOCKET_EVENT_TYPES.SUPPORT_CHAT_MESSAGES_READ]: SocketSupportChatMessagesReadPayload;
+
+    // ---- [3. Admin Alert Events] ----
+    [SOCKET_EVENT_TYPES.FIAT_DEPOSIT_REQUESTED]: SocketFiatDepositRequestedPayload;
+    [SOCKET_EVENT_TYPES.WITHDRAW_REQUESTED]: SocketWithdrawRequestedPayload;
     [SOCKET_EVENT_TYPES.SUPPORT_INQUIRY_RECEIVED]: SocketSupportInquiryReceivedPayload;
 };
