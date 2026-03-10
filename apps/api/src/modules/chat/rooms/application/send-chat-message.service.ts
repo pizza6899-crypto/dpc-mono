@@ -86,7 +86,7 @@ export class SendChatMessageService {
 
                 metadata = {
                     attachments: await Promise.all(files.map(async (file) => ({
-                        fileId: file.id?.toString() || '',
+                        fileId: '',
                         url: await this.fileUrlService.getUrl(file) || undefined,
                         type: 'IMAGE',
                         width: file.width,
