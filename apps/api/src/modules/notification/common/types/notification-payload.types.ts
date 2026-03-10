@@ -45,6 +45,13 @@ export interface InboxNewPayload {
   metadata: Record<string, unknown> | null;
 }
 
+export interface SupportInquiryReceivedPayload {
+  roomId: string;      // Room ID
+  userNickname: string; // 유저 닉네임
+  content: string;     // 메시지 내용
+  category?: string;   // 상담 카테고리 (있을 경우)
+}
+
 /**
  * 이벤트별 페이로드 매핑
  * 새로운 이벤트 추가 시 여기에 타입을 매핑해야 합니다.
@@ -61,5 +68,8 @@ export type NotificationPayloadMap = {
 
   // 시스템
   [NOTIFICATION_EVENTS.PHONE_VERIFICATION_CODE]: VerificationPayload;
+
+  // 고객센터 (Admin 알림)
+  [NOTIFICATION_EVENTS.SUPPORT_INQUIRY_RECEIVED]: SupportInquiryReceivedPayload;
 
 };

@@ -10,18 +10,24 @@ import { ChatRoomsModule } from '../rooms/chat-rooms.module';
 
 import { SqidsModule } from 'src/common/sqids/sqids.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { UserProfileModule } from '../../user/profile/user-profile.module';
+import { AlertModule } from 'src/modules/notification/alert/alert.module';
+import { SupportInquiryPolicy } from './domain/support-inquiry.policy';
 
 @Module({
     imports: [
         ChatRoomsModule,
         SqidsModule,
         ConcurrencyModule,
+        UserProfileModule,
+        AlertModule,
     ],
     controllers: [
         SupportUserController,
         SupportAdminController,
     ],
     providers: [
+        SupportInquiryPolicy,
         StartSupportInquiryService,
         SendSupportMessageService,
         ListSupportInquiriesService,

@@ -32,6 +32,8 @@ export const ADMIN_SOCKET_EVENT_TYPES = {
     FIAT_DEPOSIT_REQUESTED: 'FIAT_DEPOSIT_REQUESTED',
     /** 출금 요청 접수 (관리자 알림) */
     WITHDRAW_REQUESTED: 'WITHDRAW_REQUESTED',
+    /** 상담 문의 접수 (관리자 알림) */
+    SUPPORT_INQUIRY_RECEIVED: 'SUPPORT_INQUIRY_RECEIVED',
 } as const;
 
 /** 공통/시스템 이벤트 */
@@ -89,6 +91,17 @@ export interface SocketWithdrawRequestedPayload {
     userId: string;
     amount: string;
     currency: string;
+    requestedAt: string;
+}
+
+/** 
+ * SUPPORT_INQUIRY_RECEIVED: 상담 문의 접수 실시간 알림 페이로드
+ */
+export interface SocketSupportInquiryReceivedPayload {
+    roomId: string;          // Encoded Support Room ID
+    userId: string;          // Encoded User ID
+    userNickname: string;
+    content: string;         // 첫 메시지 내용
     requestedAt: string;
 }
 
@@ -150,4 +163,5 @@ export type SocketPayloadMap = {
     [SOCKET_EVENT_TYPES.SYSTEM_NOTICE]: SocketSystemNoticePayload;
     [SOCKET_EVENT_TYPES.CHAT_MESSAGE_NEW]: SocketChatMessageNewPayload;
     [SOCKET_EVENT_TYPES.CHAT_MESSAGES_READ]: SocketChatMessagesReadPayload;
+    [SOCKET_EVENT_TYPES.SUPPORT_INQUIRY_RECEIVED]: SocketSupportInquiryReceivedPayload;
 };

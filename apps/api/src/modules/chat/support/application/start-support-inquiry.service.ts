@@ -6,6 +6,7 @@ import { ChatRoom } from '../../rooms/domain/chat-room.entity';
 import { ChatRoomMember } from '../../rooms/domain/chat-room-member.entity';
 import { ChatRoomType, SupportStatus, SupportPriority, ChatMemberRole, SupportCategory } from '@prisma/client';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { SupportInquiryPolicy } from '../domain/support-inquiry.policy';
 
 export interface StartSupportInquiryParams {
     userId: bigint;
@@ -20,6 +21,7 @@ export class StartSupportInquiryService {
         @Inject(CHAT_ROOM_MEMBER_REPOSITORY_PORT)
         private readonly memberRepository: ChatRoomMemberRepositoryPort,
         private readonly advisoryLockService: AdvisoryLockService,
+        private readonly policy: SupportInquiryPolicy,
     ) { }
 
     @Transactional()
@@ -50,8 +52,9 @@ export class StartSupportInquiryService {
             );
 
         } else {
-            // 방이 이미 존재하는데 종료(CLOSED) 상태라면 다시 ENTERED로 전환 (재오픈 대기)
-            if (room.supportStatus === SupportStatus.CLOSED) {
+            // 방이 이미 존재하는데 특정 상태라면 초기화(예: CLOSED -> ENTERED) 판단을 policy에 위임
+            const nextStatus = this.policy.getStatusForReopening(room.supportStatus);
+            if (nextStatus !== null) {
                 const reopenedRoom = new ChatRoom(
                     room.id,
                     room.type,
@@ -62,7 +65,7 @@ export class StartSupportInquiryService {
                     room.createdAt,
                     new Date(),
                     room.lastMessageAt,
-                    SupportStatus.ENTERED,
+                    nextStatus,
                     room.supportPriority,
                     room.supportCategory,
                     room.supportSubject,

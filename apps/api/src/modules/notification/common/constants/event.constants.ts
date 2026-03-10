@@ -16,6 +16,9 @@ export const NOTIFICATION_EVENTS = {
 
   // 시스템
   PHONE_VERIFICATION_CODE: 'PHONE_VERIFICATION_CODE',
+
+  // 고객센터 (Admin 알림용)
+  SUPPORT_INQUIRY_RECEIVED: 'SUPPORT_INQUIRY_RECEIVED',
 } as const;
 
 export type NotificationEventType =

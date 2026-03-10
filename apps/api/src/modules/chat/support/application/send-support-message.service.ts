@@ -4,8 +4,18 @@ import { CHAT_ROOM_REPOSITORY_PORT, type ChatRoomRepositoryPort } from '../../ro
 import { SendChatMessageService } from '../../rooms/application/send-chat-message.service';
 import { ChatMessage } from '../../rooms/domain/chat-message.entity';
 import { ChatRoomNotFoundException } from '../../rooms/domain/chat-room.exception';
-import { ChatRoomType, SupportStatus, ChatMessageType } from '@prisma/client';
+import { ChatRoomType, SupportStatus } from '@prisma/client';
 import { ChatRoom } from '../../rooms/domain/chat-room.entity';
+import { USER_REPOSITORY } from 'src/modules/user/profile/ports/out/user.repository.token';
+import type { UserRepositoryPort } from 'src/modules/user/profile/ports/out/user.repository.port';
+import { CreateAlertService } from 'src/modules/notification/alert/application/create-alert.service';
+import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
+import { SOCKET_EVENT_TYPES } from 'src/infrastructure/websocket/types/socket-payload.types';
+import { SOCKET_ROOMS } from 'src/infrastructure/websocket/constants/websocket-rooms.constant';
+import { SqidsService } from 'src/common/sqids/sqids.service';
+import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { NOTIFICATION_EVENTS } from 'src/modules/notification/common';
+import { SupportInquiryPolicy } from '../domain/support-inquiry.policy';
 
 export interface SendSupportMessageParams {
     roomId: bigint;
@@ -21,6 +31,12 @@ export class SendSupportMessageService {
         @Inject(CHAT_ROOM_REPOSITORY_PORT)
         private readonly roomRepository: ChatRoomRepositoryPort,
         private readonly sendChatMessageService: SendChatMessageService,
+        @Inject(USER_REPOSITORY)
+        private readonly userRepository: UserRepositoryPort,
+        private readonly createAlertService: CreateAlertService,
+        private readonly websocketService: WebsocketService,
+        private readonly sqidsService: SqidsService,
+        private readonly policy: SupportInquiryPolicy,
     ) { }
 
     @Transactional()
@@ -39,35 +55,17 @@ export class SendSupportMessageService {
             imageIds: params.imageIds,
         });
 
-        // 3. 상담 상태 자동 업데이트 (Side-effects)
-        await this.handleStatusUpdate(room, params.isAdmin);
+        // 3. 상담 상태 자동 업데이트 및 알림 (Side-effects)
+        await this.handleStatusUpdate(room, params.isAdmin, message);
 
         return message;
     }
 
-    private async handleStatusUpdate(room: ChatRoom, isAdmin: boolean): Promise<void> {
-        let nextStatus: SupportStatus | null = null;
+    private async handleStatusUpdate(room: ChatRoom, isAdmin: boolean, message: ChatMessage): Promise<void> {
+        const nextStatus = this.policy.calculateStatusOnMessage(room.supportStatus, isAdmin);
+        const isNewInquiry = this.policy.shouldNotifyAdmin(room.supportStatus, isAdmin);
 
-        if (isAdmin) {
-            // 관리자가 답장하면 '상담 중'으로 변경 (OPEN인 경우)
-            if (room.supportStatus === SupportStatus.OPEN) {
-                nextStatus = SupportStatus.IN_PROGRESS;
-            }
-        } else {
-            // 유저가 메시지를 보내면:
-            // 1. 처음 입장(ENTERED) 상태이면 -> OPEN (관리자 리스트 노출 시작)
-            // 2. 상담 종료(CLOSED) 상태였으면 -> OPEN (재오픈)
-            // 3. 펜딩(PENDING) 상태였으면 -> OPEN (알림 대응)
-            if (
-                room.supportStatus === SupportStatus.ENTERED ||
-                room.supportStatus === SupportStatus.CLOSED ||
-                room.supportStatus === SupportStatus.PENDING
-            ) {
-                nextStatus = SupportStatus.OPEN;
-            }
-        }
-
-        if (nextStatus) {
+        if (nextStatus !== null) {
             const updatedRoom = new ChatRoom(
                 room.id,
                 room.type,
@@ -86,5 +84,44 @@ export class SendSupportMessageService {
             );
             await this.roomRepository.save(updatedRoom);
         }
+
+        // 신규 상담 문의 발생 시 관리자 알림 발송
+        if (isNewInquiry && !isAdmin) {
+            await this.notifyAdminNewInquiry(room, message);
+        }
+    }
+
+    private async notifyAdminNewInquiry(room: ChatRoom, message: ChatMessage): Promise<void> {
+        if (!message.senderId) return;
+
+        const sender = await this.userRepository.findById(message.senderId);
+        const encodedRoomId = this.sqidsService.encode(room.id, SqidsPrefix.SUPPORT_ROOM);
+        const encodedUserId = this.sqidsService.encode(message.senderId, SqidsPrefix.USER);
+
+        // 1. WebSocket 알림 (Admin Room 전체)
+        this.websocketService.sendToRoom(
+            SOCKET_ROOMS.ADMIN,
+            SOCKET_EVENT_TYPES.SUPPORT_INQUIRY_RECEIVED,
+            {
+                roomId: encodedRoomId,
+                userId: encodedUserId,
+                userNickname: sender?.nickname || 'Unknown',
+                content: message.content,
+                requestedAt: message.createdAt.toISOString(),
+            },
+        );
+
+        // 2. 외부 알림 (Telegram 등 Alert 시스템 활용)
+        await this.createAlertService.execute({
+            event: NOTIFICATION_EVENTS.SUPPORT_INQUIRY_RECEIVED,
+            payload: {
+                roomId: encodedRoomId,
+                userNickname: sender?.nickname || 'Unknown',
+                content: message.content,
+                category: room.supportCategory || undefined,
+            },
+            // 동일 방에서 짧은 시간 내 중복 알림 방지를 위한 멱등성 키 (선택 사항)
+            idempotencyKey: `support-alert:${room.id}:${message.createdAt.getTime()}`,
+        });
     }
 }
