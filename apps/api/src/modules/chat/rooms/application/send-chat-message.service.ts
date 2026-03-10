@@ -133,8 +133,8 @@ export class SendChatMessageService {
 
         // 룸 타입에 따른 소켓 룸 이름 결정
         const socketRoom = room.type === ChatRoomType.SUPPORT
-            ? getSocketRoom.supportRoom(this.sqidsService.encode(room.id, SqidsPrefix.SUPPORT_ROOM))
-            : getSocketRoom.chatRoom(encodedRoomId);
+            ? getSocketRoom.support(room.id)
+            : getSocketRoom.chat(room.id);
 
         // 페이로드 준비
         const payload: SocketChatMessageNewPayload = {

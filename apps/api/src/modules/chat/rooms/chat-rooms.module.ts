@@ -20,6 +20,9 @@ import { ReadChatMessagesService } from './application/read-chat-messages.servic
 import { UpdateChatMessageService } from './application/update-chat-message.service';
 import { DeleteChatMessageService } from './application/delete-chat-message.service';
 import { ChatMessagePolicy } from './domain/chat-message.policy';
+import { ChatRoomMembershipHookService } from './application/chat-room-membership-hook.service';
+import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
+import { OnModuleInit } from '@nestjs/common';
 
 @Module({
     imports: [
@@ -48,6 +51,7 @@ import { ChatMessagePolicy } from './domain/chat-message.policy';
             provide: CHAT_MESSAGE_REPOSITORY_PORT,
             useClass: ChatMessageRepository,
         },
+        ChatRoomMembershipHookService,
         GetChatRoomService,
         ListChatRoomsService,
         SendChatMessageService,
@@ -75,4 +79,13 @@ import { ChatMessagePolicy } from './domain/chat-message.policy';
     ],
 })
 
-export class ChatRoomsModule { }
+export class ChatRoomsModule implements OnModuleInit {
+    constructor(
+        private readonly websocketService: WebsocketService,
+        private readonly hook: ChatRoomMembershipHookService,
+    ) { }
+
+    onModuleInit() {
+        this.websocketService.registerHook(this.hook);
+    }
+}

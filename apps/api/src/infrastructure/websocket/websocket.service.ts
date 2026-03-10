@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, forwardRef, Inject } from '@nestjs/common';
 import { type SocketRoomType, getSocketRoom } from './constants/websocket-rooms.constant';
 import { UserWebsocketGateway } from './gateways/user-websocket.gateway';
 import { AdminWebsocketGateway } from './gateways/admin-websocket.gateway';
@@ -9,14 +9,34 @@ import {
   type SqidsPrefixType,
 } from 'src/common/sqids/sqids.constants';
 import { ChatRoomType } from '@prisma/client';
+import { OnWebsocketConnectHook } from './interfaces/connection-hook.interface';
+import { Socket } from 'socket.io';
 
 @Injectable()
 export class WebsocketService {
+  private readonly hooks: OnWebsocketConnectHook[] = [];
+
   constructor(
+    @Inject(forwardRef(() => UserWebsocketGateway))
     private readonly gateway: UserWebsocketGateway,
+    @Inject(forwardRef(() => AdminWebsocketGateway))
     private readonly adminGateway: AdminWebsocketGateway,
     private readonly sqidsService: SqidsService,
   ) { }
+
+  /**
+   * 외부 모듈에서 연결 시 실행할 훅을 등록합니다.
+   */
+  registerHook(hook: OnWebsocketConnectHook): void {
+    this.hooks.push(hook);
+  }
+
+  /**
+   * 등록된 모든 훅을 실행합니다.
+   */
+  async executeConnectHooks(client: Socket, userId: bigint, isAdmin: boolean): Promise<void> {
+    await Promise.all(this.hooks.map(hook => hook.onConnect(client, userId, isAdmin)));
+  }
 
   /** 단일 이벤트 채널 이름 (프론트엔드는 이 이벤트 하나만 리슨) */
   private readonly EVENT_NAME = 'events';
@@ -75,9 +95,7 @@ export class WebsocketService {
    */
   joinChatRoom(userId: bigint, roomId: bigint, roomType: ChatRoomType): void {
     const isSupport = roomType === ChatRoomType.SUPPORT;
-    const prefix = isSupport ? 'sr' : 'cr';
-    const encodedId = this.sqidsService.encode(roomId, prefix as any);
-    const roomName = isSupport ? getSocketRoom.supportRoom(encodedId) : getSocketRoom.chatRoom(encodedId);
+    const roomName = isSupport ? getSocketRoom.support(roomId) : getSocketRoom.chat(roomId);
 
     const userRoom = getSocketRoom.user(userId);
     this.gateway.server.in(userRoom).socketsJoin(roomName);
@@ -88,18 +106,11 @@ export class WebsocketService {
    */
   leaveChatRoom(userId: bigint, roomId: bigint, roomType: ChatRoomType): void {
     const isSupport = roomType === ChatRoomType.SUPPORT;
-    const prefix = isSupport ? 'sr' : 'cr';
-    const encodedId = this.sqidsService.encode(roomId, prefix as any);
-    const roomName = isSupport ? getSocketRoom.supportRoom(encodedId) : getSocketRoom.chatRoom(encodedId);
+    const roomName = isSupport ? getSocketRoom.support(roomId) : getSocketRoom.chat(roomId);
 
     const userRoom = getSocketRoom.user(userId);
     this.gateway.server.in(userRoom).socketsLeave(roomName);
   }
-
-
-
-
-
 
   /**
    * 사용자용 페이로드 준비 (필요 시 ID 인코딩)

@@ -59,8 +59,8 @@ export class ReadChatMessagesService {
         const encodedMessageId = this.sqidsService.encode(lastReadMessageId, SqidsPrefix.CHAT_MESSAGE);
 
         const socketRoom = roomType === ChatRoomType.SUPPORT
-            ? getSocketRoom.supportRoom(this.sqidsService.encode(roomId, SqidsPrefix.SUPPORT_ROOM))
-            : getSocketRoom.chatRoom(encodedRoomId);
+            ? getSocketRoom.support(roomId)
+            : getSocketRoom.chat(roomId);
 
         const payload: SocketChatMessagesReadPayload = {
             roomId: encodedRoomId,

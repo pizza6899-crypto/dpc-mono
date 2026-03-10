@@ -43,6 +43,19 @@ export class ChatRoomRepository implements ChatRoomRepositoryPort {
         return record ? ChatRoomMapper.toDomain(record) : null;
     }
 
+    async findActiveRoomsByAdminId(adminId: bigint): Promise<ChatRoom[]> {
+        const records = await this.tx.chatRoom.findMany({
+            where: {
+                supportAdminId: adminId,
+                isActive: true,
+                supportStatus: { not: 'CLOSED' },
+            },
+            orderBy: { lastMessageAt: 'desc' },
+        });
+
+        return records.map((record) => ChatRoomMapper.toDomain(record));
+    }
+
 
     async save(room: ChatRoom): Promise<ChatRoom> {
         const data = {

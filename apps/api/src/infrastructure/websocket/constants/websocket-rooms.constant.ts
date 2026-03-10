@@ -11,8 +11,8 @@ export type SocketRoomType =
     | (typeof SOCKET_ROOMS)[keyof typeof SOCKET_ROOMS]
     | `user:${string}`
     | `admin:${string}`
-    | `chat:room:${string}`
-    | `support:room:${string}`
+    | `chat:${string}`
+    | `support:${string}`
 
 export const getSocketRoom = {
     /** 유저 개인 룸 (1:1 알림용) */
@@ -21,9 +21,9 @@ export const getSocketRoom = {
     /** 어드민 개인 룸 (1:1 알림용) */
     admin: (adminId: bigint) => `admin:${adminId.toString()}`,
 
-    /** 채팅방 룸 (글로벌/공개 채팅용) - 슬러그 또는 인코딩된 ID 사용 */
-    chatRoom: (identifier: string) => `chat:room:${identifier}`,
+    /** 일반 채팅방 룸 (PUBLIC, 그룹 등) */
+    chat: (roomId: bigint) => `chat:${roomId.toString()}`,
 
-    /** 고객응대 룸 (1:1 상담용) - 인코딩된 방 ID(Sqid) 사용 */
-    supportRoom: (encodedRoomId: string) => `support:room:${encodedRoomId}`,
+    /** 고객응대 상담 룸 (1:1 상담 전용) */
+    support: (roomId: bigint) => `support:${roomId.toString()}`,
 };

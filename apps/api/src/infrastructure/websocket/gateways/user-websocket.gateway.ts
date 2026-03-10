@@ -15,6 +15,8 @@ import { Request } from 'express';
 import { CreateSessionService } from 'src/modules/auth/session/application/create-session.service';
 import { ExpireSessionService } from 'src/modules/auth/session/application/expire-session.service';
 import { SessionType, DeviceInfo } from 'src/modules/auth/session/domain';
+import { forwardRef, Inject } from '@nestjs/common';
+import { WebsocketService } from '../websocket.service';
 
 import { corsConfig } from 'src/common/security/cors.config';
 
@@ -43,6 +45,8 @@ export class UserWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
   constructor(
     private readonly createSessionService: CreateSessionService,
     private readonly expireSessionService: ExpireSessionService,
+    @Inject(forwardRef(() => WebsocketService))
+    private readonly websocketService: WebsocketService,
   ) { }
 
   async handleConnection(client: UserSocket) {
@@ -75,6 +79,9 @@ export class UserWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
             req.session?.cookie?.expires ||
             new Date(Date.now() + 1000 * 60 * 60 * 24),
         });
+
+        // 비즈니스 훅 실행 (방 자동 조인 등)
+        await this.websocketService.executeConnectHooks(client, user.id, false);
       } catch (err: any) {
         this.logger.error(
           `Failed to create WS session (userId: ${user.id}): ${err.message}`,
