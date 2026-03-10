@@ -42,14 +42,31 @@ export class SupportInquirySummaryRepository implements SupportInquirySummaryRep
                         id: 'desc'
                     },
                     take: 1
-                },
-                _count: {
-                    select: { messages: true }
                 }
             },
             orderBy: { updatedAt: 'desc' },
         });
 
-        return records.map((record) => SupportInquiryMapper.toSummary(record));
+        const summaries = await Promise.all(records.map(async (record) => {
+            // 해당 상담방의 유저(관리자가 아닌 멤버) 찾기
+            const userMember = record.members.find(m => m.role === 'MEMBER');
+
+            // 관리자 공용 읽음 포인터 이후에 유저가 보낸 메시지 수 계산
+            const unreadCount = await this.tx.chatMessage.count({
+                where: {
+                    roomId: record.id,
+                    id: { gt: record.supportAdminLastReadId ?? 0n },
+                    senderId: userMember ? userMember.userId : { not: record.supportAdminId ?? -1n },
+                    isDeleted: false,
+                }
+            });
+
+            return SupportInquiryMapper.toSummary({
+                ...record,
+                unreadCount
+            });
+        }));
+
+        return summaries;
     }
 }

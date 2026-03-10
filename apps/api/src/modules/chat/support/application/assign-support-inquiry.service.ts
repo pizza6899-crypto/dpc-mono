@@ -65,6 +65,7 @@ export class AssignSupportInquiryService {
                 ...room.supportInfo,
                 adminId: params.adminId,
                 status: SupportStatus.IN_PROGRESS,
+                adminLastReadId: room.supportInfo.adminLastReadId, // 명시적 보존
             } : null,
         );
 

@@ -23,7 +23,7 @@ export class SupportInquiryMapper {
             userMember?.loginId || '',
             userMember?.avatarUrl || null,
             lastMessage?.content || null,
-            data._count?.messages ?? 0,
+            data.unreadCount ?? 0,
         );
     }
 }

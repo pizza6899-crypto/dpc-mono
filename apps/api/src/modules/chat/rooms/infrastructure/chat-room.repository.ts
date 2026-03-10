@@ -73,6 +73,7 @@ export class ChatRoomRepository implements ChatRoomRepositoryPort {
             supportCategory: room.supportInfo?.category || null,
             supportSubject: room.supportInfo?.subject || null,
             supportAdminId: room.supportInfo?.adminId || null,
+            supportAdminLastReadId: room.supportInfo?.adminLastReadId || null,
         };
 
 

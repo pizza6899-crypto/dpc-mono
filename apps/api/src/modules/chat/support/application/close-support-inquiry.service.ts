@@ -41,6 +41,7 @@ export class CloseSupportInquiryService {
             room.supportInfo ? {
                 ...room.supportInfo,
                 status: SupportStatus.CLOSED,
+                adminLastReadId: room.supportInfo.adminLastReadId,
             } : null
         );
 

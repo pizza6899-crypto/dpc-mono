@@ -51,6 +51,7 @@ export class StartSupportInquiryService {
                     category: null,
                     subject: null,
                     adminId: null,
+                    adminLastReadId: null,
                 }
             );
 

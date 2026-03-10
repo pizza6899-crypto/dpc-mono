@@ -6,6 +6,7 @@ export interface SupportInquiryInfo {
     category: SupportCategory | null;
     subject: string | null;
     adminId: bigint | null;
+    adminLastReadId: bigint | null;
 }
 
 export type ChatRoomRawPayload = Prisma.ChatRoomGetPayload<object>;

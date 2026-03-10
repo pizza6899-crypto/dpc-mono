@@ -10,6 +10,7 @@ export class ChatRoomMapper {
             category: data.supportCategory!,
             subject: data.supportSubject!,
             adminId: data.supportAdminId ? Cast.bigint(data.supportAdminId) : null,
+            adminLastReadId: data.supportAdminLastReadId ? Cast.bigint(data.supportAdminLastReadId) : null,
         } : null;
 
         return new ChatRoom(

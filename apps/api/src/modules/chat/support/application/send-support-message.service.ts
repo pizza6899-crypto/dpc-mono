@@ -79,6 +79,7 @@ export class SendSupportMessageService {
                 room.supportInfo ? {
                     ...room.supportInfo,
                     status: nextStatus,
+                    adminLastReadId: room.supportInfo.adminLastReadId,
                 } : null,
             );
             await this.roomRepository.save(updatedRoom);

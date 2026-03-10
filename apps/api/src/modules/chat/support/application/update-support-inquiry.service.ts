@@ -51,6 +51,7 @@ export class UpdateSupportInquiryService {
                 category: params.category ?? currentInfo.category,
                 subject: currentInfo.subject,
                 adminId: currentInfo.adminId, // 담당자 변경은 AssignService를 통해서만 가능
+                adminLastReadId: currentInfo.adminLastReadId,
             }
         );
 

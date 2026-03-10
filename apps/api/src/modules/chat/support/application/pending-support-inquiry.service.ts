@@ -36,6 +36,7 @@ export class PendingSupportInquiryService {
             room.supportInfo ? {
                 ...room.supportInfo,
                 status: SupportStatus.PENDING,
+                adminLastReadId: room.supportInfo.adminLastReadId,
             } : null,
         );
 

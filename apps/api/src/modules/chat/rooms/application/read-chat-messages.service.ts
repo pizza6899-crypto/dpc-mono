@@ -8,6 +8,7 @@ import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { CHAT_ROOM_REPOSITORY_PORT, type ChatRoomRepositoryPort } from '../ports/chat-room.repository.port';
 import { ChatRoomType } from '@prisma/client';
+import { ChatRoom } from '../domain/chat-room.entity';
 import { ChatRoomMember } from '../domain/chat-room-member.entity';
 
 export interface ReadChatMessagesParams {
@@ -48,6 +49,26 @@ export class ReadChatMessagesService {
         );
 
         await this.memberRepository.save(updatedMember);
+
+        // 만약 상담방(SUPPORT)이고 관리자(ADMIN)가 읽은 경우, 공용 관리자 읽음 포인터 업데이트
+        if (room.type === ChatRoomType.SUPPORT && member.role === 'ADMIN') {
+            const updatedRoom = new ChatRoom(
+                room.id,
+                room.type,
+                room.isActive,
+                room.metadata,
+                room.slowModeSeconds,
+                room.minTierLevel,
+                room.createdAt,
+                new Date(),
+                room.lastMessageAt,
+                {
+                    ...room.supportInfo!,
+                    adminLastReadId: params.lastReadMessageId,
+                }
+            );
+            await this.roomRepository.save(updatedRoom);
+        }
 
         // 실시간 알림 (상대방에게 읽었임을 알림)
         this.broadcastReadStatus(params.roomId, params.userId, params.lastReadMessageId, room.type);

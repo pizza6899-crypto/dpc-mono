@@ -50,11 +50,12 @@ model ChatRoom {
     minTierLevel    Int @default(0) @map("min_tier_level")
 
     // [Support Specific Fields] - SUPPORT 타입인 경우 사용
-    supportStatus   SupportStatus?   @map("support_status")
-    supportPriority SupportPriority? @map("support_priority")
-    supportCategory SupportCategory? @map("support_category")
-    supportSubject  String?          @map("support_subject")
-    supportAdminId  BigInt?          @map("support_admin_id") // 담당 상담원
+    supportStatus          SupportStatus?   @map("support_status")
+    supportPriority        SupportPriority? @map("support_priority")
+    supportCategory        SupportCategory? @map("support_category")
+    supportSubject         String?          @map("support_subject")
+    supportAdminId         BigInt?          @map("support_admin_id") // 담당 상담원
+    supportAdminLastReadId BigInt?          @map("support_admin_last_read_id") // 관리자 전체 공용 마지막 읽음 메시지 ID
 
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
