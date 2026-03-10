@@ -13,10 +13,9 @@ export interface ChatMessageMetadata {
 
 export interface ChatMessageAttachment {
     fileId: string;
+    /** 클라이언트 전송용 실시간 접근 URL (CDN 또는 Presigned URL) */
+    url?: string;
     type: 'IMAGE' | 'VIDEO' | 'AUDIO' | 'FILE';
-    filename: string;
-    mimetype: string;
-    size: string;
     width?: number | null;
     height?: number | null;
     duration?: number | null; // 영상/음성 재생 시간 (초)

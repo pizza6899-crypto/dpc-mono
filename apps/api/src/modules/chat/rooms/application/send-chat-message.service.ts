@@ -16,6 +16,7 @@ import { ChatRoomType, ChatMessageType } from '@prisma/client';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { FileUsageType } from 'src/modules/file/domain';
 import { AttachFileService } from 'src/modules/file/application/attach-file.service';
+import { FileUrlService } from 'src/modules/file/application/file-url.service';
 import { ReadChatMessagesService } from './read-chat-messages.service';
 
 import { Transactional } from '@nestjs-cls/transactional';
@@ -40,6 +41,7 @@ export class SendChatMessageService {
         private readonly websocketService: WebsocketService,
         private readonly sqidsService: SqidsService,
         private readonly attachFileService: AttachFileService,
+        private readonly fileUrlService: FileUrlService,
         private readonly readChatMessagesService: ReadChatMessagesService,
     ) { }
 
@@ -83,15 +85,13 @@ export class SendChatMessageService {
                 }
 
                 metadata = {
-                    attachments: files.map(file => ({
+                    attachments: await Promise.all(files.map(async (file) => ({
                         fileId: file.id?.toString() || '',
+                        url: await this.fileUrlService.getUrl(file) || undefined,
                         type: 'IMAGE',
-                        filename: file.filename,
-                        mimetype: file.mimetype,
-                        size: file.size.toString(),
                         width: file.width,
                         height: file.height,
-                    })),
+                    }))),
                 };
 
                 // 이미지가 포함된 경우 메시지 타입을 IMAGE로 설정

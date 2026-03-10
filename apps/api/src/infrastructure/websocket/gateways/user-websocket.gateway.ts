@@ -202,9 +202,8 @@ Private notifications sent only to the authenticated user. (인증된 해당 유
             "attachments": [{
                 "fileId": "file_sqid",
                 "type": "IMAGE",
-                "filename": "sample.jpg",
-                "mimetype": "image/jpeg",
-                "size": "102400"
+                "width": 800,
+                "height": 600
             }]
         },
         "createdAt": "2026-03-10T07:25:00.000Z"

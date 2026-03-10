@@ -97,4 +97,19 @@ export const CACHE_CONFIG = {
       store: CacheStore.MEMORY,
     },
   },
+  /**
+   * 파일 관련 (File)
+   */
+  FILE: {
+    URL: (fileId: string | bigint) => ({
+      key: `file:url:${fileId}`,
+      ttlSeconds: 86400, // 24시간 (PUBLIC 기준)
+      store: CacheStore.REDIS,
+    }),
+    PRIVATE_URL: (fileId: string | bigint) => ({
+      key: `file:url:private:${fileId}`,
+      ttlSeconds: 1800, // 30분 (Presigned URL 만료시간보다 짧게 설정)
+      store: CacheStore.REDIS,
+    }),
+  },
 } as const;
