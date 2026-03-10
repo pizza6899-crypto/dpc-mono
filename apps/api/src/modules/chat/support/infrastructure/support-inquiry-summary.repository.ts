@@ -24,13 +24,7 @@ export class SupportInquirySummaryRepository implements SupportInquirySummaryRep
         const records = await this.tx.chatRoom.findMany({
             where: {
                 type: 'SUPPORT',
-                supportStatus: filters.status ?? {
-                    in: [
-                        SupportStatus.OPEN,
-                        SupportStatus.IN_PROGRESS,
-                        SupportStatus.PENDING,
-                    ],
-                },
+                supportStatus: filters.status,
                 supportPriority: filters.priority,
                 supportCategory: filters.category,
                 supportAdminId: filters.adminId,

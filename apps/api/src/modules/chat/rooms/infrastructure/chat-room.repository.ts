@@ -23,7 +23,10 @@ export class ChatRoomRepository implements ChatRoomRepositoryPort {
 
     async listActiveRooms(): Promise<ChatRoom[]> {
         const records = await this.tx.chatRoom.findMany({
-            where: { isActive: true },
+            where: {
+                isActive: true,
+                type: { not: 'SUPPORT' },
+            },
             orderBy: { createdAt: 'desc' },
         });
 
