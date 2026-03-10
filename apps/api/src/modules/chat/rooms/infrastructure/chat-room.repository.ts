@@ -78,4 +78,14 @@ export class ChatRoomRepository implements ChatRoomRepositoryPort {
 
         return ChatRoomMapper.toDomain(record);
     }
+
+    async updateLastMessageAt(roomId: bigint, lastMessageAt: Date): Promise<void> {
+        await this.tx.chatRoom.update({
+            where: { id: roomId },
+            data: {
+                lastMessageAt,
+                updatedAt: new Date(),
+            },
+        });
+    }
 }

@@ -10,5 +10,5 @@ export interface ChatRoomRepositoryPort {
     findSupportRoomByUserId(userId: bigint): Promise<ChatRoom | null>;
 
     save(room: ChatRoom): Promise<ChatRoom>;
-
+    updateLastMessageAt(roomId: bigint, lastMessageAt: Date): Promise<void>;
 }

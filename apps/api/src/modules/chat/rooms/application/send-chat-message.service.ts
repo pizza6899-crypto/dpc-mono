@@ -110,6 +110,9 @@ export class SendChatMessageService {
 
         const saved = await this.messageRepository.save(message);
 
+        // 룸의 마지막 메시지 시간 업데이트 (정렬 및 요약을 위해)
+        await this.roomRepository.updateLastMessageAt(params.roomId, saved.createdAt);
+
         // 실시간 브로드캐스트
         this.broadcastMessage(saved, room);
 
@@ -144,6 +147,11 @@ export class SendChatMessageService {
             createdAt: message.createdAt.toISOString(),
         };
 
-        this.websocketService.sendToRoom(socketRoom as any, SOCKET_EVENT_TYPES.CHAT_MESSAGE_NEW, payload);
+        // 룸 타입에 따른 이벤트 타입 결정
+        const eventType = room.type === ChatRoomType.SUPPORT
+            ? SOCKET_EVENT_TYPES.SUPPORT_CHAT_MESSAGE_NEW
+            : SOCKET_EVENT_TYPES.CHAT_MESSAGE_NEW;
+
+        this.websocketService.sendToRoom(socketRoom as any, eventType, payload);
     }
 }
