@@ -12,7 +12,6 @@ export interface UpdateSupportInquiryParams {
     status?: SupportStatus;
     priority?: SupportPriority;
     category?: SupportCategory;
-    adminId?: bigint;
 }
 
 @Injectable()
@@ -20,7 +19,6 @@ export class UpdateSupportInquiryService {
     constructor(
         @Inject(CHAT_ROOM_REPOSITORY_PORT)
         private readonly roomRepository: ChatRoomRepositoryPort,
-        private readonly websocketService: WebsocketService,
     ) { }
 
     @Transactional()
@@ -35,14 +33,7 @@ export class UpdateSupportInquiryService {
             throw new ChatRoomNotFoundException();
         }
 
-        // 기존 supportInfo가 없으면 초기화 (보안상 SUPPORT 타입이면 반드시 있어야 함)
-        const currentInfo = room.supportInfo || {
-            status: SupportStatus.OPEN,
-            priority: SupportPriority.NORMAL,
-            category: null,
-            subject: null,
-            adminId: null,
-        };
+        const currentInfo = room.supportInfo!;
 
         const updatedRoom = new ChatRoom(
             room.id,
@@ -59,17 +50,10 @@ export class UpdateSupportInquiryService {
                 priority: params.priority ?? currentInfo.priority,
                 category: params.category ?? currentInfo.category,
                 subject: currentInfo.subject,
-                adminId: params.adminId ?? currentInfo.adminId,
+                adminId: currentInfo.adminId, // 담당자 변경은 AssignService를 통해서만 가능
             }
         );
 
-        const saved = await this.roomRepository.save(updatedRoom);
-
-        // 관리자가 새로 할당되거나 변경된 경우 해당 관리자를 소켓 룸에 가입시킴
-        if (params.adminId) {
-            await this.websocketService.joinChatRoom(params.adminId, saved.id, saved.type);
-        }
-
-        return saved;
+        return this.roomRepository.save(updatedRoom);
     }
 }

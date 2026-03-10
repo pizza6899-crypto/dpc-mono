@@ -23,3 +23,13 @@ export class SupportInquiryStatusUpdateRestrictedException extends SupportInquir
         this.name = 'SupportInquiryStatusUpdateRestrictedException';
     }
 }
+export class SupportInquiryAssignToClosedException extends SupportInquiryException {
+    constructor() {
+        super(
+            'Cannot assign an administrator to a closed support inquiry.',
+            MessageCode.CHAT_SUPPORT_INVALID_ACTION,
+            HttpStatus.BAD_REQUEST,
+        );
+        this.name = 'SupportInquiryAssignToClosedException';
+    }
+}

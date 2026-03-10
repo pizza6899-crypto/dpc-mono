@@ -65,10 +65,7 @@ export class SendSupportMessageService {
         const nextStatus = this.policy.calculateStatusOnMessage(room.supportInfo?.status || null, isAdmin);
         const isNewInquiry = this.policy.shouldNotifyAdmin(room.supportInfo?.status || null, isAdmin);
 
-        // 관리자가 메시지를 보냈는데 담당자가 지정되지 않은 경우 자동 할당
-        const shouldAssignAdmin = isAdmin && room.supportInfo && !room.supportInfo.adminId;
-
-        if (nextStatus !== null || shouldAssignAdmin) {
+        if (nextStatus !== null) {
             const updatedRoom = new ChatRoom(
                 room.id,
                 room.type,
@@ -81,16 +78,10 @@ export class SendSupportMessageService {
                 room.lastMessageAt,
                 room.supportInfo ? {
                     ...room.supportInfo,
-                    status: nextStatus ?? room.supportInfo.status,
-                    adminId: shouldAssignAdmin ? message.senderId : room.supportInfo.adminId
+                    status: nextStatus,
                 } : null,
             );
             await this.roomRepository.save(updatedRoom);
-
-            // 상담사가 자동 할당된 경우, 해당 상담사 세션을 즉시 소켓 룸에 가입시킴
-            if (shouldAssignAdmin) {
-                await this.websocketService.joinChatRoom(message.senderId!, room.id, room.type);
-            }
         }
 
         // 신규 상담 문의 발생 시 관리자 알림 발송

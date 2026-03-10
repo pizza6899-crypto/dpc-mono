@@ -9,6 +9,8 @@ import { SendSupportMessageService } from '../../application/send-support-messag
 import { ListSupportInquiriesService } from '../../application/list-support-inquiries.service';
 import { UpdateSupportInquiryService } from '../../application/update-support-inquiry.service';
 import { CloseSupportInquiryService } from '../../application/close-support-inquiry.service';
+import { AssignSupportInquiryService } from '../../application/assign-support-inquiry.service';
+import { PendingSupportInquiryService } from '../../application/pending-support-inquiry.service';
 import { GetChatMessagesService } from '../../../rooms/application/get-chat-messages.service';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
@@ -43,6 +45,8 @@ export class SupportAdminController {
         private readonly listInquiriesService: ListSupportInquiriesService,
         private readonly updateInquiryService: UpdateSupportInquiryService,
         private readonly closeInquiryService: CloseSupportInquiryService,
+        private readonly assignInquiryService: AssignSupportInquiryService,
+        private readonly pendingInquiryService: PendingSupportInquiryService,
         private readonly getMessagesService: GetChatMessagesService,
         @Inject(CHAT_ROOM_MEMBER_REPOSITORY_PORT)
         private readonly memberRepository: ChatRoomMemberRepositoryPort,
@@ -60,7 +64,10 @@ export class SupportAdminController {
     }
 
     @Get('rooms')
-    @ApiOperation({ summary: 'List Support Inquiries (Admin) / 상담 목록 조회 (관리자)' })
+    @ApiOperation({
+        summary: 'List Support Inquiries (Admin) / 상담 목록 조회 (관리자)',
+        description: 'Retrieve a list of support inquiries with filtering options. / 필터링 옵션과 함께 상담 문의 목록을 조회합니다.',
+    })
     @ApiStandardResponse(SupportInquiryAdminResponseDto, { isArray: true })
     @AuditLog({
         type: LogType.ACTIVITY,
@@ -87,7 +94,10 @@ export class SupportAdminController {
     }
 
     @Patch('rooms/:roomId')
-    @ApiOperation({ summary: 'Update Support Inquiry Status/Category (Admin) / 상담 상태 및 카테고리 업데이트 (관리자)' })
+    @ApiOperation({
+        summary: 'Update Support Inquiry Attributes (Admin) / 상담 속성 수정 (관리자)',
+        description: 'Update status, priority, or category of a support inquiry. / 상담 문의의 상태, 우선순위 또는 카테고리를 수정합니다.',
+    })
     @ApiStandardResponse(UpdateSupportInquiryAdminResponseDto)
     @AuditLog({
         type: LogType.ACTIVITY,
@@ -109,7 +119,6 @@ export class SupportAdminController {
             status: body.status,
             priority: body.priority,
             category: body.category,
-            adminId: body.adminId ? this.parseId(body.adminId) : undefined,
         });
 
         return {
@@ -124,7 +133,10 @@ export class SupportAdminController {
 
     @Post('rooms/:roomId/close')
     @HttpCode(HttpStatus.OK)
-    @ApiOperation({ summary: 'Close Support Inquiry (Admin) / 상담 종료 (관리자)' })
+    @ApiOperation({
+        summary: 'Close Support Inquiry (Admin) / 상담 종료 (관리자)',
+        description: 'Mark a support inquiry as closed. / 상담 문의를 종료 상태로 변경합니다.',
+    })
     @ApiStandardResponse(UpdateSupportInquiryAdminResponseDto)
     @AuditLog({
         type: LogType.ACTIVITY,
@@ -139,6 +151,73 @@ export class SupportAdminController {
     ): Promise<UpdateSupportInquiryAdminResponseDto> {
         const roomId = this.parseId(roomIdRaw);
         const room = await this.closeInquiryService.execute({ roomId });
+
+        return {
+            id: room.id.toString(),
+            sid: this.sqidsService.encode(room.id, SqidsPrefix.SUPPORT_ROOM),
+            status: room.supportInfo!.status,
+            priority: room.supportInfo!.priority,
+            category: room.supportInfo!.category,
+            updatedAt: room.updatedAt,
+        };
+    }
+
+    @Post('rooms/:roomId/pending')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({
+        summary: 'Pending Support Inquiry (Admin) / 상담 보류 (관리자)',
+        description: 'Mark a support inquiry as pending. / 상담 문의를 보류 상태로 변경합니다.',
+    })
+    @ApiStandardResponse(UpdateSupportInquiryAdminResponseDto)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'ADMIN',
+        action: 'PENDING_SUPPORT_INQUIRY',
+        extractMetadata: (req, args) => ({
+            roomId: args[0],
+        }),
+    })
+    async pending(
+        @Param('roomId') roomIdRaw: string,
+    ): Promise<UpdateSupportInquiryAdminResponseDto> {
+        const roomId = this.parseId(roomIdRaw);
+        const room = await this.pendingInquiryService.execute({ roomId });
+
+        return {
+            id: room.id.toString(),
+            sid: this.sqidsService.encode(room.id, SqidsPrefix.SUPPORT_ROOM),
+            status: room.supportInfo!.status,
+            priority: room.supportInfo!.priority,
+            category: room.supportInfo!.category,
+            updatedAt: room.updatedAt,
+        };
+    }
+
+    @Post('rooms/:roomId/assign')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({
+        summary: 'Assign Admin to Support Inquiry (Admin) / 상담사 지정/가져오기 (관리자)',
+        description: 'Assign a specific administrator to the support inquiry. If "adminId" is not provided in the request body, the current logged-in administrator will be assigned. / 상담 문의에 담당 상담사를 배정합니다. 요청 바디에 "adminId"를 전달하지 않으면 현재 로그인한 관리자 본인에게 배정됩니다.',
+    })
+    @ApiStandardResponse(UpdateSupportInquiryAdminResponseDto)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'ADMIN',
+        action: 'ASSIGN_SUPPORT_INQUIRY',
+        extractMetadata: (req, args) => ({
+            roomId: args[1],
+            adminId: args[2],
+        }),
+    })
+    async assign(
+        @CurrentUser() admin: AuthenticatedUser,
+        @Param('roomId') roomIdRaw: string,
+        @Body('adminId') targetAdminIdEncoded?: string,
+    ): Promise<UpdateSupportInquiryAdminResponseDto> {
+        const roomId = this.parseId(roomIdRaw);
+        const adminId = targetAdminIdEncoded ? this.parseId(targetAdminIdEncoded) : admin.id;
+
+        const room = await this.assignInquiryService.execute({ roomId, adminId });
 
         return {
             id: room.id.toString(),
@@ -174,7 +253,10 @@ export class SupportAdminController {
 
 
     @Get('rooms/:roomId/messages')
-    @ApiOperation({ summary: 'Get Support Chat History (Admin) / 상담 채팅 내역 조회 (관리자)' })
+    @ApiOperation({
+        summary: 'Get Support Chat History (Admin) / 상담 채팅 내역 조회 (관리자)',
+        description: 'Retrieve chat message history for a specific support room. / 특정 상담방의 채팅 메시지 내역을 조회합니다.',
+    })
     @ApiStandardResponse(SupportMessageAdminResponseDto, { isArray: true })
     @AuditLog({
         type: LogType.ACTIVITY,
@@ -219,7 +301,10 @@ export class SupportAdminController {
     }
 
     @Patch('rooms/:roomId/messages/:messageId')
-    @ApiOperation({ summary: 'Update Support Message Content (Admin) / 상담 메시지 내용 수정 (관리자)' })
+    @ApiOperation({
+        summary: 'Update Support Message (Admin) / 상담 메시지 수정 (관리자)',
+        description: 'Modify the content of an existing support message sent by an admin. / 관리자가 보낸 기존 상담 메시지의 내용을 수정합니다.',
+    })
     @ApiStandardResponse(SupportMessageAdminResponseDto)
     @AuditLog({
         type: LogType.ACTIVITY,
@@ -263,7 +348,10 @@ export class SupportAdminController {
     }
 
     @Delete('rooms/:roomId/messages/:messageId')
-    @ApiOperation({ summary: 'Delete Support Message (Admin) / 상담 메시지 삭제 (관리자)' })
+    @ApiOperation({
+        summary: 'Delete Support Message (Admin) / 상담 메시지 삭제 (관리자)',
+        description: 'Remove a specific support message from the room. / 상담방에서 특정 메시지를 삭제합니다.',
+    })
     @ApiStandardResponse(SupportMessageAdminResponseDto)
     @AuditLog({
         type: LogType.ACTIVITY,
@@ -304,7 +392,10 @@ export class SupportAdminController {
     }
 
     @Post('rooms/:roomId/messages')
-    @ApiOperation({ summary: 'Send Support Reply (Admin) / 상담 답장 전송 (관리자)' })
+    @ApiOperation({
+        summary: 'Send Support Reply (Admin) / 상담 답장 전송 (관리자)',
+        description: 'Send a reply message to the customer in the support inquiry room. / 상담 문의 방에서 고객에게 답장 메시지를 전송합니다.',
+    })
     @ApiStandardResponse(SendSupportMessageAdminResponseDto)
     @AuditLog({
         type: LogType.ACTIVITY,
@@ -340,7 +431,11 @@ export class SupportAdminController {
     }
 
     @Post('rooms/:roomId/read')
-    @ApiOperation({ summary: 'Mark Support Chat Messages as Read (Admin) / 상담 채팅 메시지 읽음 처리 (관리자)' })
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({
+        summary: 'Mark Support Messages as Read (Admin) / 상담 메시지 읽음 처리 (관리자)',
+        description: 'Update the last read message pointer for the admin in the support room. / 상담방에서 관리자의 마지막 읽은 메시지 위치를 업데이트합니다.',
+    })
     @ApiStandardResponse(Boolean)
     @AuditLog({
         type: LogType.ACTIVITY,

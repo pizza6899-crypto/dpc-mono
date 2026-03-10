@@ -8,25 +8,26 @@ export class SupportInquiryPolicy {
      */
     calculateStatusOnMessage(currentStatus: SupportStatus | null, isAdmin: boolean): SupportStatus | null {
         if (isAdmin) {
-            // 관리자가 답장하면 '상담 중'으로 변경 (현재 OPEN인 경우에만)
-            if (currentStatus === SupportStatus.OPEN) {
+            // 관리자가 답장하면 현재 상태가 종료(CLOSED)가 아닌 경우 모두 '진행 중'으로 변경
+            if (currentStatus !== SupportStatus.CLOSED && currentStatus !== SupportStatus.IN_PROGRESS) {
                 return SupportStatus.IN_PROGRESS;
             }
             return null;
         }
 
         // 유저가 메시지를 보낼 때:
-        // 1. 처음 입장(ENTERED) 상태이면 -> OPEN
-        // 2. 상담 종료(CLOSED) 상태였으면 -> OPEN (재오픈)
-        // 3. 펜딩(PENDING) 상태였으면 -> OPEN (알림 대응)
+        // 1. 단순 입장(ENTERED) 후에 첫 질문을 함 -> OPEN
+        // 2. 관리자가 펜딩(PENDING) 처리했는데 추가 질문을 함 -> OPEN
+        // 3. 종료(CLOSED)된 상담인데 다시 질문을 함 -> OPEN
         if (
             currentStatus === SupportStatus.ENTERED ||
-            currentStatus === SupportStatus.CLOSED ||
-            currentStatus === SupportStatus.PENDING
+            currentStatus === SupportStatus.PENDING ||
+            currentStatus === SupportStatus.CLOSED
         ) {
             return SupportStatus.OPEN;
         }
 
+        // 이미 상담사가 배정되어 진행 중(IN_PROGRESS)인 상태에서는 유저가 보내도 상태 유지
         return null;
     }
 

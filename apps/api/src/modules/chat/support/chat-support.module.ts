@@ -6,6 +6,8 @@ import { SendSupportMessageService } from './application/send-support-message.se
 import { ListSupportInquiriesService } from './application/list-support-inquiries.service';
 import { UpdateSupportInquiryService } from './application/update-support-inquiry.service';
 import { CloseSupportInquiryService } from './application/close-support-inquiry.service';
+import { AssignSupportInquiryService } from './application/assign-support-inquiry.service';
+import { PendingSupportInquiryService } from './application/pending-support-inquiry.service';
 
 import { ChatRoomsModule } from '../rooms/chat-rooms.module';
 
@@ -39,6 +41,8 @@ import { SupportRoomAssignmentHookService } from './application/support-room-ass
         ListSupportInquiriesService,
         UpdateSupportInquiryService,
         CloseSupportInquiryService,
+        AssignSupportInquiryService,
+        PendingSupportInquiryService,
         {
             provide: SUPPORT_INQUIRY_SUMMARY_REPOSITORY_PORT,
             useClass: SupportInquirySummaryRepository,
@@ -50,6 +54,8 @@ import { SupportRoomAssignmentHookService } from './application/support-room-ass
         ListSupportInquiriesService,
         UpdateSupportInquiryService,
         CloseSupportInquiryService,
+        AssignSupportInquiryService,
+        PendingSupportInquiryService,
     ],
 })
 

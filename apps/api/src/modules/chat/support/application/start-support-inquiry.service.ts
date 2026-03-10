@@ -49,7 +49,7 @@ export class StartSupportInquiryService {
                     status: SupportStatus.ENTERED,
                     priority: SupportPriority.NORMAL,
                     category: null,
-                    subject: null, // subject는 추후 시스템 생성 로직 적용 예정
+                    subject: null,
                     adminId: null,
                 }
             );
