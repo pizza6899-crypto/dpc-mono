@@ -17,6 +17,9 @@ import { FileModule } from '../../file/file.module';
 import { SendChatMessageService } from './application/send-chat-message.service';
 import { GetChatMessagesService } from './application/get-chat-messages.service';
 import { ReadChatMessagesService } from './application/read-chat-messages.service';
+import { UpdateChatMessageService } from './application/update-chat-message.service';
+import { DeleteChatMessageService } from './application/delete-chat-message.service';
+import { ChatMessagePolicy } from './domain/chat-message.policy';
 
 @Module({
     imports: [
@@ -50,6 +53,9 @@ import { ReadChatMessagesService } from './application/read-chat-messages.servic
         SendChatMessageService,
         GetChatMessagesService,
         ReadChatMessagesService,
+        UpdateChatMessageService,
+        DeleteChatMessageService,
+        ChatMessagePolicy,
     ],
 
 
@@ -59,6 +65,9 @@ import { ReadChatMessagesService } from './application/read-chat-messages.servic
         SendChatMessageService,
         GetChatMessagesService,
         ReadChatMessagesService,
+        UpdateChatMessageService,
+        DeleteChatMessageService,
+        ChatMessagePolicy,
         CHAT_ROOM_REPOSITORY_PORT,
 
         CHAT_ROOM_MEMBER_REPOSITORY_PORT,

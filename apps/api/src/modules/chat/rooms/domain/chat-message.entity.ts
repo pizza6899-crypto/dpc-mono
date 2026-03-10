@@ -62,16 +62,30 @@ export class ChatMessage {
 
     }
 
-    updateMetadata(metadata: ChatMessageMetadata): ChatMessage {
+    updateContent(content: string): ChatMessage {
+        return new ChatMessage(
+            this.id,
+            this.roomId,
+            content,
+            this.type,
+            this.senderId,
+            this.metadata,
+            this.isPinned,
+            this.isDeleted,
+            this.createdAt,
+        );
+    }
+
+    delete(): ChatMessage {
         return new ChatMessage(
             this.id,
             this.roomId,
             this.content,
             this.type,
             this.senderId,
-            metadata,
+            this.metadata,
             this.isPinned,
-            this.isDeleted,
+            true, // isDeleted
             this.createdAt,
         );
     }

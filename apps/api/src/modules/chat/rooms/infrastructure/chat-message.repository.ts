@@ -12,6 +12,32 @@ export class ChatMessageRepository implements ChatMessageRepositoryPort {
         private readonly tx: PrismaTransaction,
     ) { }
 
+    async findById(messageId: bigint): Promise<ChatMessage | null> {
+        const record = await this.tx.chatMessage.findFirst({
+            where: { id: messageId },
+        });
+
+        return record ? ChatMessageMapper.toDomain(record) : null;
+    }
+
+    async update(message: ChatMessage): Promise<ChatMessage> {
+        const updated = await this.tx.chatMessage.update({
+            where: {
+                id_createdAt: {
+                    id: message.id,
+                    createdAt: message.createdAt,
+                },
+            },
+            data: {
+                content: message.content,
+                isDeleted: message.isDeleted,
+                metadata: message.metadata ?? undefined,
+            },
+        });
+
+        return ChatMessageMapper.toDomain(updated);
+    }
+
     async save(message: ChatMessage): Promise<ChatMessage> {
         const saved = await this.tx.chatMessage.create({
             data: {
@@ -35,6 +61,7 @@ export class ChatMessageRepository implements ChatMessageRepositoryPort {
         const messages = await this.tx.chatMessage.findMany({
             where: {
                 roomId,
+                isDeleted: false,
                 ...(lastMessageId ? { id: { lt: lastMessageId } } : {}),
             },
             orderBy: { id: 'desc' },

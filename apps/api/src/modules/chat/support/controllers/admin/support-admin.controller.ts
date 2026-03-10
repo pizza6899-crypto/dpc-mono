@@ -24,9 +24,12 @@ import { SupportInquirySummary } from '../../domain/support-inquiry-summary';
 import { ReadChatMessagesService } from '../../../rooms/application/read-chat-messages.service';
 import { CHAT_ROOM_MEMBER_REPOSITORY_PORT, type ChatRoomMemberRepositoryPort } from '../../../rooms/ports/chat-room-member.repository.port';
 import { MarkSupportChatReadAdminRequestDto } from './dto/request/mark-support-chat-read-admin.request.dto';
+import { UpdateSupportMessageAdminRequestDto } from './dto/request/update-support-message-admin.request.dto';
+import { UpdateChatMessageService } from '../../../rooms/application/update-chat-message.service';
+import { DeleteChatMessageService } from '../../../rooms/application/delete-chat-message.service';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
-import { Patch, HttpCode, HttpStatus } from '@nestjs/common';
+import { Patch, Delete, HttpCode, HttpStatus } from '@nestjs/common';
 
 @Controller('admin/chat/support')
 @ApiTags('Admin Chat Support')
@@ -44,6 +47,8 @@ export class SupportAdminController {
         @Inject(CHAT_ROOM_MEMBER_REPOSITORY_PORT)
         private readonly memberRepository: ChatRoomMemberRepositoryPort,
         private readonly readMessagesService: ReadChatMessagesService,
+        private readonly updateMessageService: UpdateChatMessageService,
+        private readonly deleteMessageService: DeleteChatMessageService,
         private readonly sqidsService: SqidsService,
     ) { }
 
@@ -210,6 +215,91 @@ export class SupportAdminController {
             createdAt: m.createdAt,
             isRead: counterpart?.lastReadMessageId ? m.id <= counterpart.lastReadMessageId : false,
         }));
+    }
+
+    @Patch('rooms/:roomId/messages/:messageId')
+    @ApiOperation({ summary: 'Update Support Message Content (Admin) / 상담 메시지 내용 수정 (관리자)' })
+    @ApiStandardResponse(SupportMessageAdminResponseDto)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'ADMIN',
+        action: 'UPDATE_SUPPORT_MESSAGE',
+        extractMetadata: (req, args) => ({
+            roomId: args[1],
+            messageId: args[2],
+        }),
+    })
+    async updateMessage(
+        @CurrentUser() admin: AuthenticatedUser,
+        @Param('roomId') roomIdRaw: string,
+        @Param('messageId') messageIdRaw: string,
+        @Body() body: UpdateSupportMessageAdminRequestDto,
+    ): Promise<SupportMessageAdminResponseDto> {
+        const roomId = this.parseId(roomIdRaw);
+        const messageId = BigInt(messageIdRaw);
+
+        const updated = await this.updateMessageService.execute({
+            messageId,
+            content: body.content,
+            updaterId: admin.id,
+            isAdmin: true,
+        });
+
+        // 상대방(사용자)의 마지막 읽은 메시지 ID 확인 (전체 읽음 여부 판단용)
+        const members = await this.memberRepository.listByRoomId(roomId);
+        const counterpart = members.find((m) => m.userId !== admin.id);
+
+        return {
+            id: updated.id.toString(),
+            roomId: updated.roomId.toString(),
+            senderId: updated.senderId ? updated.senderId.toString() : null,
+            content: updated.content,
+            type: updated.type,
+            metadata: updated.metadata,
+            createdAt: updated.createdAt,
+            isRead: counterpart?.lastReadMessageId ? updated.id <= counterpart.lastReadMessageId : false,
+        };
+    }
+
+    @Delete('rooms/:roomId/messages/:messageId')
+    @ApiOperation({ summary: 'Delete Support Message (Admin) / 상담 메시지 삭제 (관리자)' })
+    @ApiStandardResponse(SupportMessageAdminResponseDto)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'ADMIN',
+        action: 'DELETE_SUPPORT_MESSAGE',
+        extractMetadata: (req, args) => ({
+            roomId: args[1],
+            messageId: args[2],
+        }),
+    })
+    async deleteMessage(
+        @CurrentUser() admin: AuthenticatedUser,
+        @Param('roomId') roomIdRaw: string,
+        @Param('messageId') messageIdRaw: string,
+    ): Promise<SupportMessageAdminResponseDto> {
+        const roomId = this.parseId(roomIdRaw);
+        const messageId = BigInt(messageIdRaw);
+
+        const deleted = await this.deleteMessageService.execute({
+            messageId,
+            deleterId: admin.id,
+            isAdmin: true,
+        });
+
+        const members = await this.memberRepository.listByRoomId(roomId);
+        const counterpart = members.find((m) => m.userId !== admin.id);
+
+        return {
+            id: deleted.id.toString(),
+            roomId: deleted.roomId.toString(),
+            senderId: deleted.senderId ? deleted.senderId.toString() : null,
+            content: deleted.content,
+            type: deleted.type,
+            metadata: deleted.metadata,
+            createdAt: deleted.createdAt,
+            isRead: counterpart?.lastReadMessageId ? deleted.id <= counterpart.lastReadMessageId : false,
+        };
     }
 
     @Post('rooms/:roomId/messages')

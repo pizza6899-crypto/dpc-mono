@@ -43,6 +43,7 @@ export class SupportInquirySummaryRepository implements SupportInquirySummaryRep
                     }
                 },
                 messages: {
+                    where: { isDeleted: false },
                     orderBy: {
                         id: 'desc'
                     },
