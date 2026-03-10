@@ -106,7 +106,6 @@ export class SendSupportMessageService {
                 roomId: encodedRoomId,
                 userId: encodedUserId,
                 userNickname: sender?.nickname || 'Unknown',
-                content: message.content,
                 requestedAt: message.createdAt.toISOString(),
             },
         );

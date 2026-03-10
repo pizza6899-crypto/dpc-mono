@@ -9,6 +9,7 @@
  * 2. 해당 이벤트의 페이로드 인터페이스를 정의합니다.
  * 3. SocketPayloadMap에 매핑을 추가합니다.
  */
+import { ChatMessageMetadata } from '../../../modules/chat/rooms/domain/chat-message.entity';
 
 // ============================================
 // 이벤트 타입 상수 (유저/어드민 분리)
@@ -21,8 +22,6 @@
 export const USER_SOCKET_EVENT_TYPES = {
     /** 새 받은편지함 알림 도착 */
     INBOX_NEW: 'INBOX_NEW',
-    /** 프로모션 적용 결과 */
-    PROMOTION_APPLIED: 'PROMOTION_APPLIED',
 } as const;
 
 /** 
@@ -116,18 +115,9 @@ export interface SocketSupportInquiryReceivedPayload {
     roomId: string;          // Encoded Support Room ID
     userId: string;          // Encoded User ID
     userNickname: string;
-    content: string;         // 첫 메시지 내용
     requestedAt: string;
 }
 
-/** PROMOTION_APPLIED: 프로모션 적용 시 유저에게 전달되는 데이터 */
-export interface SocketPromotionAppliedPayload {
-    alertId?: string;
-    promotionName: string;
-    bonusAmount?: string;
-    currency?: string;
-    expiryDate?: string;
-}
 
 /** CHAT_MESSAGE_NEW: 새 채팅 메시지 실시간 스트림 페이로드 */
 export interface SocketChatMessageNewPayload {
@@ -136,7 +126,7 @@ export interface SocketChatMessageNewPayload {
     senderId: string | null; // Encoded Sender ID (null일 경우 시스템 메시지)
     content: string;
     type: string;            // ChatMessageType (TEXT, IMAGE, etc)
-    metadata: any | null;
+    metadata: ChatMessageMetadata | null;
     createdAt: string;       // ISO format
 }
 
@@ -172,7 +162,6 @@ export interface SocketSupportChatMessagesReadPayload extends SocketChatMessages
 export type SocketPayloadMap = {
     // ---- [1. User Private Events] ----
     [SOCKET_EVENT_TYPES.INBOX_NEW]: SocketInboxNewPayload;
-    [SOCKET_EVENT_TYPES.PROMOTION_APPLIED]: SocketPromotionAppliedPayload;
 
     // ---- [2. Common Chat Events (User & Admin)] ----
     [SOCKET_EVENT_TYPES.CHAT_MESSAGE_NEW]: SocketChatMessageNewPayload;
@@ -181,7 +170,7 @@ export type SocketPayloadMap = {
     [SOCKET_EVENT_TYPES.SUPPORT_CHAT_MESSAGES_READ]: SocketSupportChatMessagesReadPayload;
 
     // ---- [3. Admin Alert Events] ----
+    [SOCKET_EVENT_TYPES.SUPPORT_INQUIRY_RECEIVED]: SocketSupportInquiryReceivedPayload;
     [SOCKET_EVENT_TYPES.FIAT_DEPOSIT_REQUESTED]: SocketFiatDepositRequestedPayload;
     [SOCKET_EVENT_TYPES.WITHDRAW_REQUESTED]: SocketWithdrawRequestedPayload;
-    [SOCKET_EVENT_TYPES.SUPPORT_INQUIRY_RECEIVED]: SocketSupportInquiryReceivedPayload;
 };

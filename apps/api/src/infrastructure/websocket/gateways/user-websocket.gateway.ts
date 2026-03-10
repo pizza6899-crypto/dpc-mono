@@ -154,22 +154,77 @@ export class UserWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
     channel: 'event',
     summary: '유저 통합 이벤트 스트림 (User Single Event Stream)',
     description: `
-일반 유저 및 게스트를 위한 통합 이벤트 푸시 채널입니다. (Event channel for general users and guests.)
-모든 이벤트는 \`type\` 필드로 구분됩니다. (All events are distinguished by the \`type\` field.)
+Integrated event push channel for general users. (일반 유저를 위한 통합 이벤트 푸시 채널입니다.)
 
 ---
 
-### 🔐 Authenticated User (인증 유저)
-| type | Description (🇰🇷) | Description (🇺🇸) |
-|---|---|---|
-| \`INBOX_NEW\` | 새 받은편지함 알림 | New inbox item alert |
-| \`FIAT_DEPOSIT_REQUESTED\` | 입금 요청 처리 상태 | Fiat deposit status |
-| \`PROMOTION_APPLIED\` | 프로모션 적용 결과 | Promotion applied result |
+### 💬 Chat & Support Events (채팅 및 상담 실시간 스트림)
+Events delivered in real-time to users joined in a specific room. (특정 방에 참여 중인 유저에게 전달되는 실시간 이벤트입니다.)
 
-### 👤 Anonymous User (익명 게스트)
-| type | Description (🇰🇷) | Description (🇺🇸) |
+| Event Type (type) | Description (🇰🇷) / Payload Fields | Description (🇺🇸) |
 |---|---|---|
-| \`SYSTEM_NOTICE\` | 시스템 전체 공지 | Global system notice |
+| \`CHAT_MESSAGE_NEW\` | **커뮤니티 새 메시지** <br/> \`id\`, \`roomId\`, \`senderId\`, \`content\`, \`type\`, \`metadata\`, \`createdAt\` | New message in public chat |
+| \`SUPPORT_CHAT_MESSAGE_NEW\` | **상담 새 메시지** <br/> \`id\`, \`roomId\`, \`senderId\`, \`content\`, \`type\`, \`metadata\`, \`createdAt\` | New message in support chat |
+| \`CHAT_MESSAGES_READ\` | **메시지 읽음 확인** <br/> \`roomId\`, \`userId\`, \`lastReadMessageId\` | Message read acknowledgement |
+| \`SUPPORT_CHAT_MESSAGES_READ\` | **상담 읽음 확인** <br/> \`roomId\`, \`userId\`, \`lastReadMessageId\` | Support read acknowledgement |
+
+---
+
+### 🔔 User Private Notifications (유저 전용 개인 알림)
+Private notifications sent only to the authenticated user. (인증된 해당 유저에게만 전송되는 개인 알림입니다.)
+
+| Event Type (type) | Description (🇰🇷) / Payload Fields | Description (🇺🇸) |
+|---|---|---|
+| \`INBOX_NEW\` | **새 알림 도착** <br/> \`id\`, \`event\`, \`title\`, \`body\`, \`actionUri\`, \`createdAt\` | New inbox/notification item |
+
+---
+
+### 📖 Schema Details (주요 필드 상세 설명)
+- **id / roomId / senderId**: All IDs are provided as **Sqids** (obfuscated strings). (모든 ID는 난독화된 문자열인 Sqids 형태로 제공됩니다.)
+- **type (Message)**: Indicates the type of message (\`TEXT\`, \`IMAGE\`, etc.). (메시지의 종류를 나타냅니다.)
+- **metadata**: Contains additional info like image attachments or reply targets. (이미지 첨부 정보나 답장 대상 등 부가 정보를 포함합니다.)
+
+---
+
+#### 📝 Example Payloads (이벤트 예시 데이터)
+
+**1. New Chat Message (새 채팅 메시지)**
+\`\`\`json
+{
+    "type": "CHAT_MESSAGE_NEW",
+    "payload": {
+        "id": "msg_sqid",
+        "roomId": "room_sqid",
+        "senderId": "user_sqid",
+        "content": "이미지 확인 부탁드립니다.",
+        "type": "IMAGE",
+        "metadata": {
+            "attachments": [{
+                "fileId": "file_sqid",
+                "type": "IMAGE",
+                "filename": "sample.jpg",
+                "mimetype": "image/jpeg",
+                "size": "102400"
+            }]
+        },
+        "createdAt": "2026-03-10T07:25:00.000Z"
+    },
+    "timestamp": "2026-03-10T07:25:00.005Z"
+}
+\`\`\`
+
+**2. Support Message Read (상담 읽음 확인)**
+\`\`\`json
+{
+    "type": "SUPPORT_CHAT_MESSAGES_READ",
+    "payload": {
+        "roomId": "room_sqid",
+        "userId": "admin_sqid",
+        "lastReadMessageId": "msg_sqid"
+    },
+    "timestamp": "2026-03-10T07:20:00.000Z"
+}
+\`\`\`
     `,
     message: {
       name: 'SocketEvent',
