@@ -16,6 +16,7 @@ import { ChatRoomType, ChatMessageType } from '@prisma/client';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { FileUsageType } from 'src/modules/file/domain';
 import { AttachFileService } from 'src/modules/file/application/attach-file.service';
+import { ReadChatMessagesService } from './read-chat-messages.service';
 
 import { Transactional } from '@nestjs-cls/transactional';
 
@@ -39,6 +40,7 @@ export class SendChatMessageService {
         private readonly websocketService: WebsocketService,
         private readonly sqidsService: SqidsService,
         private readonly attachFileService: AttachFileService,
+        private readonly readChatMessagesService: ReadChatMessagesService,
     ) { }
 
     @Transactional()
@@ -111,6 +113,15 @@ export class SendChatMessageService {
         // 실시간 브로드캐스트
         this.broadcastMessage(saved, room);
 
+        // 작성자 본인의 읽음 세션 갱신 (송신 즉시 해당 메시지까지 읽은 것으로 간주)
+        if (params.senderId) {
+            await this.readChatMessagesService.execute({
+                roomId: params.roomId,
+                userId: params.senderId,
+                lastReadMessageId: saved.id,
+            });
+        }
+
         return saved;
     }
 
@@ -121,7 +132,6 @@ export class SendChatMessageService {
         const socketRoom = room.type === ChatRoomType.SUPPORT
             ? getSocketRoom.supportRoom(this.sqidsService.encode(room.id, SqidsPrefix.SUPPORT_ROOM))
             : getSocketRoom.chatRoom(encodedRoomId);
-
 
         // 페이로드 준비
         const payload: SocketChatMessageNewPayload = {

@@ -5,6 +5,9 @@ export class SupportInquiryAdminResponseDto {
     @ApiProperty({ description: 'Room ID / 방 ID', example: '23984723984723' })
     id: string;
 
+    @ApiProperty({ description: 'Sqids ID (Encoded) / 인코딩된 ID', example: 'sr_abc123' })
+    sid: string;
+
     @ApiProperty({ description: 'Is Active / 활성화 상태', example: true })
     isActive: boolean;
 

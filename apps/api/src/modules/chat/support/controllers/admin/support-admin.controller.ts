@@ -8,6 +8,8 @@ import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { SendSupportMessageService } from '../../application/send-support-message.service';
 import { ListSupportInquiriesService } from '../../application/list-support-inquiries.service';
 import { GetChatMessagesService } from '../../../rooms/application/get-chat-messages.service';
+import { SqidsService } from 'src/common/sqids/sqids.service';
+import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { ListSupportInquiriesAdminRequestDto } from './dto/request/list-support-inquiries-admin.request.dto';
 import { SupportInquiryAdminResponseDto } from './dto/response/support-inquiry-admin.response.dto';
 import { SendSupportMessageAdminRequestDto } from './dto/request/send-support-message-admin.request.dto';
@@ -35,6 +37,7 @@ export class SupportAdminController {
         @Inject(CHAT_ROOM_MEMBER_REPOSITORY_PORT)
         private readonly memberRepository: ChatRoomMemberRepositoryPort,
         private readonly readMessagesService: ReadChatMessagesService,
+        private readonly sqidsService: SqidsService,
     ) { }
 
     @Get('rooms')
@@ -64,6 +67,7 @@ export class SupportAdminController {
     private mapToResponse(room: ChatRoom): SupportInquiryAdminResponseDto {
         return {
             id: room.id.toString(),
+            sid: this.sqidsService.encode(room.id, SqidsPrefix.SUPPORT_ROOM),
             isActive: room.isActive,
             metadata: room.metadata,
             createdAt: room.createdAt,

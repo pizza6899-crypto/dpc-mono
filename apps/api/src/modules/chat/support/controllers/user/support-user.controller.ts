@@ -102,7 +102,7 @@ export class SupportUserController {
         });
 
         return {
-            id: this.sqidsService.encode(room.id, SqidsPrefix.CHAT_ROOM),
+            id: this.sqidsService.encode(room.id, SqidsPrefix.SUPPORT_ROOM),
         };
     }
 
