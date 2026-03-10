@@ -44,16 +44,18 @@ export class StartSupportInquiryService {
                 new Date(),
                 new Date(),
                 null,
-                SupportStatus.ENTERED,
-                SupportPriority.NORMAL,
-                null,
-                null, // subject는 추후 시스템 생성 로직 적용 예정
-                null, // adminId
+                {
+                    status: SupportStatus.ENTERED,
+                    priority: SupportPriority.NORMAL,
+                    category: null,
+                    subject: null, // subject는 추후 시스템 생성 로직 적용 예정
+                    adminId: null,
+                }
             );
 
         } else {
             // 방이 이미 존재하는데 특정 상태라면 초기화(예: CLOSED -> ENTERED) 판단을 policy에 위임
-            const nextStatus = this.policy.getStatusForReopening(room.supportStatus);
+            const nextStatus = this.policy.getStatusForReopening(room.supportInfo?.status || null);
             if (nextStatus !== null) {
                 const reopenedRoom = new ChatRoom(
                     room.id,
@@ -65,11 +67,7 @@ export class StartSupportInquiryService {
                     room.createdAt,
                     new Date(),
                     room.lastMessageAt,
-                    nextStatus,
-                    room.supportPriority,
-                    room.supportCategory,
-                    room.supportSubject,
-                    room.supportAdminId,
+                    room.supportInfo ? { ...room.supportInfo, status: nextStatus } : null,
                 );
                 return this.roomRepository.save(reopenedRoom);
             }

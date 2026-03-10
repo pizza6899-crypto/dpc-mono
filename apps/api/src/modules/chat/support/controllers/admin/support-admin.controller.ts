@@ -1,27 +1,32 @@
 import { Controller, Post, Body, Param, Get, Query, Inject } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiBearerAuth, ApiCookieAuth } from '@nestjs/swagger';
-import { UserRoleType } from '@prisma/client';
+import { UserRoleType, ChatRoomType } from '@prisma/client';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { ApiStandardResponse, ApiStandardErrors } from 'src/common/http/decorators/api-response.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { SendSupportMessageService } from '../../application/send-support-message.service';
 import { ListSupportInquiriesService } from '../../application/list-support-inquiries.service';
+import { UpdateSupportInquiryService } from '../../application/update-support-inquiry.service';
+import { CloseSupportInquiryService } from '../../application/close-support-inquiry.service';
 import { GetChatMessagesService } from '../../../rooms/application/get-chat-messages.service';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { ListSupportInquiriesAdminRequestDto } from './dto/request/list-support-inquiries-admin.request.dto';
 import { SupportInquiryAdminResponseDto } from './dto/response/support-inquiry-admin.response.dto';
+import { UpdateSupportInquiryAdminRequestDto } from './dto/request/update-support-inquiry-admin.request.dto';
+import { UpdateSupportInquiryAdminResponseDto } from './dto/response/update-support-inquiry-admin.response.dto';
 import { SendSupportMessageAdminRequestDto } from './dto/request/send-support-message-admin.request.dto';
 import { SendSupportMessageAdminResponseDto } from './dto/response/send-support-message-admin.response.dto';
 import { SupportMessageHistoryAdminRequestDto } from './dto/request/support-message-history-admin.request.dto';
 import { SupportMessageAdminResponseDto } from './dto/response/support-message-admin.response.dto';
-import { ChatRoom } from '../../../rooms/domain/chat-room.entity';
+import { SupportInquirySummary } from '../../domain/support-inquiry-summary';
 import { ReadChatMessagesService } from '../../../rooms/application/read-chat-messages.service';
 import { CHAT_ROOM_MEMBER_REPOSITORY_PORT, type ChatRoomMemberRepositoryPort } from '../../../rooms/ports/chat-room-member.repository.port';
 import { MarkSupportChatReadAdminRequestDto } from './dto/request/mark-support-chat-read-admin.request.dto';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
+import { Patch, HttpCode, HttpStatus } from '@nestjs/common';
 
 @Controller('admin/chat/support')
 @ApiTags('Admin Chat Support')
@@ -33,12 +38,21 @@ export class SupportAdminController {
     constructor(
         private readonly sendSupportMessageService: SendSupportMessageService,
         private readonly listInquiriesService: ListSupportInquiriesService,
+        private readonly updateInquiryService: UpdateSupportInquiryService,
+        private readonly closeInquiryService: CloseSupportInquiryService,
         private readonly getMessagesService: GetChatMessagesService,
         @Inject(CHAT_ROOM_MEMBER_REPOSITORY_PORT)
         private readonly memberRepository: ChatRoomMemberRepositoryPort,
         private readonly readMessagesService: ReadChatMessagesService,
         private readonly sqidsService: SqidsService,
     ) { }
+
+    private parseId(id: string): bigint {
+        if (/^\d+$/.test(id)) {
+            return BigInt(id);
+        }
+        return this.sqidsService.decodeAuto(id).id;
+    }
 
     @Get('rooms')
     @ApiOperation({ summary: 'List Support Inquiries (Admin) / 상담 목록 조회 (관리자)' })
@@ -52,32 +66,103 @@ export class SupportAdminController {
         }),
     })
     async list(
+        @CurrentUser() admin: AuthenticatedUser,
         @Query() query: ListSupportInquiriesAdminRequestDto,
     ): Promise<SupportInquiryAdminResponseDto[]> {
         const rooms = await this.listInquiriesService.execute({
             status: query.status,
             priority: query.priority,
             category: query.category,
-            adminId: query.adminId ? BigInt(query.adminId) : undefined,
+            adminId: query.adminId ? this.parseId(query.adminId) : undefined,
+            roomId: query.roomId ? this.parseId(query.roomId) : undefined,
+            currentAdminId: admin.id,
         });
 
         return rooms.map((room) => this.mapToResponse(room));
     }
 
-    private mapToResponse(room: ChatRoom): SupportInquiryAdminResponseDto {
+    @Patch('rooms/:roomId')
+    @ApiOperation({ summary: 'Update Support Inquiry Status/Category (Admin) / 상담 상태 및 카테고리 업데이트 (관리자)' })
+    @ApiStandardResponse(UpdateSupportInquiryAdminResponseDto)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'ADMIN',
+        action: 'UPDATE_SUPPORT_INQUIRY',
+        extractMetadata: (req, args) => ({
+            roomId: args[1],
+            ...args[2],
+        }),
+    })
+    async updateRoom(
+        @Param('roomId') roomIdRaw: string,
+        @Body() body: UpdateSupportInquiryAdminRequestDto,
+    ): Promise<UpdateSupportInquiryAdminResponseDto> {
+        const roomId = this.parseId(roomIdRaw);
+
+        const room = await this.updateInquiryService.execute({
+            roomId,
+            status: body.status,
+            priority: body.priority,
+            category: body.category,
+        });
+
         return {
             id: room.id.toString(),
             sid: this.sqidsService.encode(room.id, SqidsPrefix.SUPPORT_ROOM),
+            status: room.supportInfo!.status,
+            priority: room.supportInfo!.priority,
+            category: room.supportInfo!.category,
+            updatedAt: room.updatedAt,
+        };
+    }
+
+    @Post('rooms/:roomId/close')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: 'Close Support Inquiry (Admin) / 상담 종료 (관리자)' })
+    @ApiStandardResponse(UpdateSupportInquiryAdminResponseDto)
+    @AuditLog({
+        type: LogType.ACTIVITY,
+        category: 'ADMIN',
+        action: 'CLOSE_SUPPORT_INQUIRY',
+        extractMetadata: (req, args) => ({
+            roomId: args[0],
+        }),
+    })
+    async close(
+        @Param('roomId') roomIdRaw: string,
+    ): Promise<UpdateSupportInquiryAdminResponseDto> {
+        const roomId = this.parseId(roomIdRaw);
+        const room = await this.closeInquiryService.execute({ roomId });
+
+        return {
+            id: room.id.toString(),
+            sid: this.sqidsService.encode(room.id, SqidsPrefix.SUPPORT_ROOM),
+            status: room.supportInfo!.status,
+            priority: room.supportInfo!.priority,
+            category: room.supportInfo!.category,
+            updatedAt: room.updatedAt,
+        };
+    }
+
+    private mapToResponse(room: SupportInquirySummary): SupportInquiryAdminResponseDto {
+        return {
+            id: room.roomId.toString(),
+            sid: this.sqidsService.encode(room.roomId, SqidsPrefix.SUPPORT_ROOM),
             isActive: room.isActive,
             metadata: room.metadata,
             createdAt: room.createdAt,
             updatedAt: room.updatedAt,
             lastMessageAt: room.lastMessageAt,
-            supportStatus: room.supportStatus!,
-            supportPriority: room.supportPriority!,
-            supportCategory: room.supportCategory!,
-            supportSubject: room.supportSubject!,
-            supportAdminId: room.supportAdminId?.toString() || null,
+            supportStatus: room.status,
+            supportPriority: room.priority,
+            supportCategory: room.category,
+            supportSubject: room.subject,
+            supportAdminId: room.adminId?.toString() || null,
+            userNickname: room.userNickname,
+            userLoginId: room.userLoginId,
+            userAvatarUrl: room.userAvatarUrl,
+            lastMessageContent: room.lastMessageContent,
+            unreadCount: room.unreadCount,
         };
     }
 
@@ -98,7 +183,7 @@ export class SupportAdminController {
         @Param('roomId') roomIdRaw: string,
         @Query() query: SupportMessageHistoryAdminRequestDto,
     ): Promise<SupportMessageAdminResponseDto[]> {
-        const roomId = BigInt(roomIdRaw);
+        const roomId = this.parseId(roomIdRaw);
 
         let lastMessageId: bigint | undefined;
         if (query.lastMessageId) {
@@ -143,7 +228,7 @@ export class SupportAdminController {
         @Param('roomId') roomIdRaw: string,
         @Body() body: SendSupportMessageAdminRequestDto,
     ): Promise<SendSupportMessageAdminResponseDto> {
-        const roomId = BigInt(roomIdRaw);
+        const roomId = this.parseId(roomIdRaw);
 
         let imageIds: bigint[] | undefined;
         if (body.imageIds && body.imageIds.length > 0) {
@@ -179,7 +264,7 @@ export class SupportAdminController {
         @Param('roomId') roomIdRaw: string,
         @Body() body: MarkSupportChatReadAdminRequestDto,
     ): Promise<boolean> {
-        const roomId = BigInt(roomIdRaw);
+        const roomId = this.parseId(roomIdRaw);
         const lastReadMessageId = BigInt(body.lastReadMessageId);
 
         await this.readMessagesService.execute({

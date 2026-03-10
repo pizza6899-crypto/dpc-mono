@@ -1,5 +1,13 @@
 import { type Prisma, ChatRoomType, SupportStatus, SupportPriority, SupportCategory } from '@prisma/client';
 
+export interface SupportInquiryInfo {
+    status: SupportStatus;
+    priority: SupportPriority;
+    category: SupportCategory | null;
+    subject: string | null;
+    adminId: bigint | null;
+}
+
 export type ChatRoomRawPayload = Prisma.ChatRoomGetPayload<object>;
 
 export class ChatRoom {
@@ -13,13 +21,6 @@ export class ChatRoom {
         public readonly createdAt: Date,
         public readonly updatedAt: Date,
         public readonly lastMessageAt: Date | null,
-        // Support Specific Fields
-        public readonly supportStatus: SupportStatus | null,
-        public readonly supportPriority: SupportPriority | null,
-        public readonly supportCategory: SupportCategory | null,
-        public readonly supportSubject: string | null,
-        public readonly supportAdminId: bigint | null,
+        public readonly supportInfo: SupportInquiryInfo | null,
     ) { }
 }
-
-

@@ -62,10 +62,13 @@ export class SendSupportMessageService {
     }
 
     private async handleStatusUpdate(room: ChatRoom, isAdmin: boolean, message: ChatMessage): Promise<void> {
-        const nextStatus = this.policy.calculateStatusOnMessage(room.supportStatus, isAdmin);
-        const isNewInquiry = this.policy.shouldNotifyAdmin(room.supportStatus, isAdmin);
+        const nextStatus = this.policy.calculateStatusOnMessage(room.supportInfo?.status || null, isAdmin);
+        const isNewInquiry = this.policy.shouldNotifyAdmin(room.supportInfo?.status || null, isAdmin);
 
-        if (nextStatus !== null) {
+        // 관리자가 메시지를 보냈는데 담당자가 지정되지 않은 경우 자동 할당
+        const shouldAssignAdmin = isAdmin && room.supportInfo && !room.supportInfo.adminId;
+
+        if (nextStatus !== null || shouldAssignAdmin) {
             const updatedRoom = new ChatRoom(
                 room.id,
                 room.type,
@@ -76,11 +79,11 @@ export class SendSupportMessageService {
                 room.createdAt,
                 new Date(),
                 room.lastMessageAt,
-                nextStatus,
-                room.supportPriority,
-                room.supportCategory,
-                room.supportSubject,
-                room.supportAdminId,
+                room.supportInfo ? {
+                    ...room.supportInfo,
+                    status: nextStatus ?? room.supportInfo.status,
+                    adminId: shouldAssignAdmin ? message.senderId : room.supportInfo.adminId
+                } : null,
             );
             await this.roomRepository.save(updatedRoom);
         }
@@ -118,7 +121,7 @@ export class SendSupportMessageService {
                 roomId: encodedRoomId,
                 userNickname: sender?.nickname || 'Unknown',
                 content: message.content,
-                category: room.supportCategory || undefined,
+                category: room.supportInfo?.category || undefined,
             },
             // 동일 방에서 짧은 시간 내 중복 알림 방지를 위한 멱등성 키 (선택 사항)
             idempotencyKey: `support-alert:${room.id}:${message.createdAt.getTime()}`,

@@ -4,7 +4,6 @@ import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module'
 import { ChatRoom } from '../domain/chat-room.entity';
 import { type ChatRoomRepositoryPort } from '../ports/chat-room.repository.port';
 import { ChatRoomMapper } from './chat-room.mapper';
-import { SupportStatus, SupportPriority, SupportCategory } from '@prisma/client';
 
 @Injectable()
 export class ChatRoomRepository implements ChatRoomRepositoryPort {
@@ -26,32 +25,6 @@ export class ChatRoomRepository implements ChatRoomRepositoryPort {
         const records = await this.tx.chatRoom.findMany({
             where: { isActive: true },
             orderBy: { createdAt: 'desc' },
-        });
-
-        return records.map((record) => ChatRoomMapper.toDomain(record));
-    }
-
-    async listSupportRooms(filters: {
-        status?: SupportStatus;
-        priority?: SupportPriority;
-        category?: SupportCategory;
-        adminId?: bigint;
-    }): Promise<ChatRoom[]> {
-        const records = await this.tx.chatRoom.findMany({
-            where: {
-                type: 'SUPPORT',
-                supportStatus: filters.status ?? {
-                    in: [
-                        SupportStatus.OPEN,
-                        SupportStatus.IN_PROGRESS,
-                        SupportStatus.PENDING,
-                    ],
-                },
-                supportPriority: filters.priority,
-                supportCategory: filters.category,
-                supportAdminId: filters.adminId,
-            },
-            orderBy: { updatedAt: 'desc' },
         });
 
         return records.map((record) => ChatRoomMapper.toDomain(record));
@@ -79,11 +52,11 @@ export class ChatRoomRepository implements ChatRoomRepositoryPort {
             slowModeSeconds: room.slowModeSeconds,
             minTierLevel: room.minTierLevel,
             lastMessageAt: room.lastMessageAt,
-            supportStatus: room.supportStatus,
-            supportPriority: room.supportPriority,
-            supportCategory: room.supportCategory,
-            supportSubject: room.supportSubject,
-            supportAdminId: room.supportAdminId,
+            supportStatus: room.supportInfo?.status || null,
+            supportPriority: room.supportInfo?.priority || null,
+            supportCategory: room.supportInfo?.category || null,
+            supportSubject: room.supportInfo?.subject || null,
+            supportAdminId: room.supportInfo?.adminId || null,
         };
 
 

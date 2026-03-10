@@ -8,6 +8,11 @@ export class ListSupportInquiriesAdminRequestDto {
     @IsEnum(SupportStatus)
     status?: SupportStatus;
 
+    @ApiPropertyOptional({ description: 'Specific Room ID / 특정 상담방 ID' })
+    @IsOptional()
+    @IsString()
+    roomId?: string;
+
     @ApiPropertyOptional({ enum: SupportPriority, description: 'Support Priority / 상담 우선순위' })
     @IsOptional()
     @IsEnum(SupportPriority)

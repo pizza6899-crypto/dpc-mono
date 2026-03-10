@@ -4,6 +4,8 @@ import { SupportAdminController } from './controllers/admin/support-admin.contro
 import { StartSupportInquiryService } from './application/start-support-inquiry.service';
 import { SendSupportMessageService } from './application/send-support-message.service';
 import { ListSupportInquiriesService } from './application/list-support-inquiries.service';
+import { UpdateSupportInquiryService } from './application/update-support-inquiry.service';
+import { CloseSupportInquiryService } from './application/close-support-inquiry.service';
 
 import { ChatRoomsModule } from '../rooms/chat-rooms.module';
 
@@ -13,6 +15,8 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { UserProfileModule } from '../../user/profile/user-profile.module';
 import { AlertModule } from 'src/modules/notification/alert/alert.module';
 import { SupportInquiryPolicy } from './domain/support-inquiry.policy';
+import { SUPPORT_INQUIRY_SUMMARY_REPOSITORY_PORT } from './ports/support-inquiry-summary.repository.port';
+import { SupportInquirySummaryRepository } from './infrastructure/support-inquiry-summary.repository';
 
 @Module({
     imports: [
@@ -31,6 +35,12 @@ import { SupportInquiryPolicy } from './domain/support-inquiry.policy';
         StartSupportInquiryService,
         SendSupportMessageService,
         ListSupportInquiriesService,
+        UpdateSupportInquiryService,
+        CloseSupportInquiryService,
+        {
+            provide: SUPPORT_INQUIRY_SUMMARY_REPOSITORY_PORT,
+            useClass: SupportInquirySummaryRepository,
+        }
     ],
 
 
@@ -39,6 +49,8 @@ import { SupportInquiryPolicy } from './domain/support-inquiry.policy';
         StartSupportInquiryService,
         SendSupportMessageService,
         ListSupportInquiriesService,
+        UpdateSupportInquiryService,
+        CloseSupportInquiryService,
     ],
 
 

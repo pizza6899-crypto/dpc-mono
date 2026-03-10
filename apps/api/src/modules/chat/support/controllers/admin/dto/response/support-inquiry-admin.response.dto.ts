@@ -37,4 +37,19 @@ export class SupportInquiryAdminResponseDto {
 
     @ApiPropertyOptional({ description: 'Assigned Admin ID / 배정된 관리자 ID', example: 'u_123' })
     supportAdminId: string | null;
+
+    @ApiProperty({ description: 'User Nickname / 사용자 닉네임', example: 'Jack' })
+    userNickname: string;
+
+    @ApiProperty({ description: 'User Login ID / 사용자 아이디', example: 'user01' })
+    userLoginId: string;
+
+    @ApiPropertyOptional({ description: 'User Avatar URL / 사용자 아바타 URL', example: 'https://example.com/avatar.png' })
+    userAvatarUrl: string | null;
+
+    @ApiPropertyOptional({ description: 'Last Message Content / 마지막 메시지 내용', example: 'Hello, I have a question.' })
+    lastMessageContent: string | null;
+
+    @ApiProperty({ description: 'Unread Message Count / 미확입 메시지 수', example: 3 })
+    unreadCount: number;
 }
