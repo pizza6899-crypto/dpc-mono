@@ -8,6 +8,7 @@ import { seedGameProviders } from './seeders/game-provider.seeder';
 import { seedGameCategories } from './seeders/game-category.seeder';
 import { seedCompConfig } from './seeders/comp-config.seeder';
 import { seedWageringConfig } from './seeders/wagering.seeder';
+import { seedChatRooms } from './seeders/chat-room.seeder';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
 
@@ -63,6 +64,10 @@ async function main() {
     // 웨이저링 설정 시딩 처리
     await seedWageringConfig(prisma);
     console.log('✅ 웨이저링 설정 시딩이 완료되었습니다.');
+
+    // 기본 채팅방 시딩 처리
+    await seedChatRooms(prisma);
+    console.log('✅ 기본 채팅방 시딩이 완료되었습니다.');
 
   } catch (error) {
     console.error('❌ 시딩 중 오류가 발생했습니다:', error);

@@ -17,7 +17,7 @@ export class ChatRoomMapper {
             Cast.bigint(data.id),
             data.type,
             data.isActive,
-            data.metadata,
+            (data.metadata ?? {}) as any,
             data.slowModeSeconds,
             data.minTierLevel,
             Cast.date(data.createdAt),
