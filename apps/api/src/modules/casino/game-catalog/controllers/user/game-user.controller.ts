@@ -43,7 +43,7 @@ export class GameUserController {
     private readonly getCategoryByCodeService: GetCategoryByCodeService,
     private readonly launchGameService: LaunchGameService,
     private readonly sqidsService: SqidsService,
-  ) {}
+  ) { }
 
   @Get()
   @Public()
@@ -122,9 +122,10 @@ export class GameUserController {
     action: 'LAUNCH_GAME',
     extractMetadata: (_, args) => ({
       id: args[1]?.gameId,
-      walletCurrency: args[1]?.walletCurrency,
-      gameCurrency: args[1]?.gameCurrency,
       isMobile: args[1]?.isMobile,
+      walletCurrency: args[0]?.primaryCurrency,
+      gameCurrency: args[0]?.playCurrency,
+      language: args[0]?.language,
     }),
   })
   @ApiOperation({ summary: 'Launch Game (게임 실행)' })
@@ -147,9 +148,9 @@ export class GameUserController {
       {
         gameId: BigInt(decodedId),
         isMobile: dto.isMobile,
-        walletCurrency: dto.walletCurrency,
-        gameCurrency: dto.gameCurrency,
-        language: dto.language,
+        walletCurrency: user.primaryCurrency as any,
+        gameCurrency: user.playCurrency as any,
+        language: user.language,
       },
       request,
     );
