@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { GameTransaction } from '../domain/model/game-transaction.entity';
-import { GameTransactionRepositoryPort } from '../ports/out/game-transaction.repository.port';
+import { GameTransactionRepositoryPort } from '../ports/game-transaction.repository.port';
 import { GameTransactionMapper } from './game-transaction.mapper';
 import { CasinoGameTransactionType } from '@prisma/client';
 import { EXTENDED_PRISMA_CLIENT } from 'src/infrastructure/prisma/prisma.module';

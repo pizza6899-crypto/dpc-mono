@@ -11,10 +11,10 @@ import {
 import { CasinoErrorCode } from '../constants/casino-error-codes';
 import { CasinoGameRoundException } from '../domain/casino.exception';
 import { GameResultMeta } from '../domain/model/game-round.entity';
-import { GAME_ROUND_REPOSITORY_TOKEN } from '../ports/out/game-round.repository.token';
-import type { GameRoundRepositoryPort } from '../ports/out/game-round.repository.port';
-import { GAME_TRANSACTION_REPOSITORY_TOKEN } from '../ports/out/game-transaction.repository.token';
-import type { GameTransactionRepositoryPort } from '../ports/out/game-transaction.repository.port';
+import { GAME_ROUND_REPOSITORY_TOKEN } from '../ports/game-round.repository.token';
+import type { GameRoundRepositoryPort } from '../ports/game-round.repository.port';
+import { GAME_TRANSACTION_REPOSITORY_TOKEN } from '../ports/game-transaction.repository.token';
+import type { GameTransactionRepositoryPort } from '../ports/game-transaction.repository.port';
 import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
 import { UpdateOperation } from '../../wallet/domain';
 import { CasinoRefundMetadata } from '../../wallet/domain/model/user-wallet-transaction-metadata';

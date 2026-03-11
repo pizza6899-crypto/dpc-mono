@@ -3,7 +3,7 @@ import { GameRound, GameResultMeta } from '../domain/model/game-round.entity';
 import {
   GameRoundRepositoryPort,
   GameRoundPostProcessContext,
-} from '../ports/out/game-round.repository.port';
+} from '../ports/game-round.repository.port';
 import { GameRoundMapper } from './game-round.mapper';
 import { GameAggregatorType, Prisma } from '@prisma/client';
 import { EXTENDED_PRISMA_CLIENT } from 'src/infrastructure/prisma/prisma.module';

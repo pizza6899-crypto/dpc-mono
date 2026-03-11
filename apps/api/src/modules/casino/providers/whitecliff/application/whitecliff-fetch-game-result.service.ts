@@ -1,6 +1,6 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
-import { type GameRoundRepositoryPort } from '../../../ports/out/game-round.repository.port';
-import { GAME_ROUND_REPOSITORY_TOKEN } from '../../../ports/out/game-round.repository.token';
+import { type GameRoundRepositoryPort } from '../../../ports/game-round.repository.port';
+import { GAME_ROUND_REPOSITORY_TOKEN } from '../../../ports/game-round.repository.token';
 import { WhitecliffApiService } from '../infrastructure/whitecliff-api.service';
 import { GameAggregatorType } from '@prisma/client';
 import { GameResultMeta } from '../../../domain/model/game-round.entity';

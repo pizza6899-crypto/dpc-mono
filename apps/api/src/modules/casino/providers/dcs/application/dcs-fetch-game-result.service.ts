@@ -1,6 +1,6 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
-import { type GameRoundRepositoryPort } from 'src/modules/casino/ports/out/game-round.repository.port';
-import { GAME_ROUND_REPOSITORY_TOKEN } from 'src/modules/casino/ports/out/game-round.repository.token';
+import { type GameRoundRepositoryPort } from 'src/modules/casino/ports/game-round.repository.port';
+import { GAME_ROUND_REPOSITORY_TOKEN } from 'src/modules/casino/ports/game-round.repository.token';
 import { DcsApiService } from '../infrastructure/dcs-api.service';
 import { GameAggregatorType, Prisma } from '@prisma/client';
 import { GameResultMeta } from 'src/modules/casino/domain/model/game-round.entity';

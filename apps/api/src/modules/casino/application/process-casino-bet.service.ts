@@ -9,10 +9,10 @@ import {
 import { CasinoGameSession } from 'src/modules/casino-session/domain';
 import { Transactional } from '@nestjs-cls/transactional';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
-import { GAME_ROUND_REPOSITORY_TOKEN } from '../ports/out/game-round.repository.token';
-import type { GameRoundRepositoryPort } from '../ports/out/game-round.repository.port';
-import { GAME_TRANSACTION_REPOSITORY_TOKEN } from '../ports/out/game-transaction.repository.token';
-import type { GameTransactionRepositoryPort } from '../ports/out/game-transaction.repository.port';
+import { GAME_ROUND_REPOSITORY_TOKEN } from '../ports/game-round.repository.token';
+import type { GameRoundRepositoryPort } from '../ports/game-round.repository.port';
+import { GAME_TRANSACTION_REPOSITORY_TOKEN } from '../ports/game-transaction.repository.token';
+import type { GameTransactionRepositoryPort } from '../ports/game-transaction.repository.port';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { GameRound } from '../domain/model/game-round.entity';
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
