@@ -18,6 +18,7 @@ export class WageringRequirementMapper {
       currency: prismaModel.currency,
       sourceType: prismaModel.sourceType,
       sourceId: prismaModel.sourceId,
+      calculationMethod: prismaModel.calculationMethod,
       targetType: prismaModel.targetType,
 
       requiredAmount: prismaModel.requiredAmount,
@@ -72,6 +73,7 @@ export class WageringRequirementMapper {
       currency: domain.currency,
       sourceType: domain.sourceType,
       sourceId: domain.sourceId,
+      calculationMethod: domain.calculationMethod,
       targetType: domain.targetType,
 
       requiredAmount: domain.requiredAmount,

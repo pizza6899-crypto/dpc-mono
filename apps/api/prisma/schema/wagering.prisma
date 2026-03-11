@@ -21,10 +21,15 @@ model WageringConfig {
 }
 
 model WageringRequirement {
-  id         BigInt               @id // Snowflake ID (Application Generated)
-  userId     BigInt               @map("user_id")
-  currency   ExchangeCurrencyCode
-  sourceType WageringSourceType   @default(DEPOSIT) @map("source_type")
+  id                BigInt                    @id // Snowflake ID (Application Generated)
+  userId            BigInt                    @map("user_id")
+  currency          ExchangeCurrencyCode
+  sourceType        WageringSourceType        @default(DEPOSIT) @map("source_type")
+  // [계산 방식 설정]
+  // FULL: 게임 종류에 상관없이 실제 베팅 금액을 100% 인정 (입금 롤링, 쿠폰 등)
+  // WEIGHTED: 게임별 기여 가중치(Weight) 적용 (보너스, 이벤트 등)
+  calculationMethod WageringCalculationMethod @default(WEIGHTED) @map("calculation_method")
+
 
   // [목표 타입 설정]
   targetType WageringTargetType @default(AMOUNT) @map("target_type") // 롤링을 평가할 기준 (금액 vs 횟수)
@@ -129,7 +134,14 @@ enum WageringSourceType {
   DEPOSIT
   PROMOTION_BONUS
   TIER_BONUS
+  COUPON // 쿠폰 지급을 통한 롤링 발생
 }
+
+enum WageringCalculationMethod {
+  FULL     // 베팅 금액 100% 전액 인정 (입금 롤링 등)
+  WEIGHTED // 게임별 기여 가중치(Weight) 적용 (보너스 등)
+}
+
 
 enum WageringTargetType {
   AMOUNT // 베팅 금액(wageredAmount) 누적 기준

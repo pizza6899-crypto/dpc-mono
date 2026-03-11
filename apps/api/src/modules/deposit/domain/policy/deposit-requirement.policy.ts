@@ -54,15 +54,15 @@ export class DepositRequirementPolicy {
         // 2. 중복 입금 신청 체크
         this.validateNoPendingDeposit(user.hasPendingDeposit);
 
-        // 2. 피아트 특화 조건: 휴대폰 인증 필수
-        if (!user.isPhoneVerified) {
-            throw new PhoneNotVerifiedException();
-        }
+        // // 2. 피아트 특화 조건: 휴대폰 인증 필수
+        // if (!user.isPhoneVerified) {
+        //     throw new PhoneNotVerifiedException();
+        // }
 
-        // 3. KYC 강제 대상인 경우 인증 여부 체크
-        if (user.isKycMandatory && !user.isIdentityVerified) {
-            throw new IdentityNotVerifiedException();
-        }
+        // // 3. KYC 강제 대상인 경우 인증 여부 체크
+        // if (user.isKycMandatory && !user.isIdentityVerified) {
+        //     throw new IdentityNotVerifiedException();
+        // }
     }
 
     /**

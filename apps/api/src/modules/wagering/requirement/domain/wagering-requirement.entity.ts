@@ -5,6 +5,7 @@ import type {
   WageringStatus,
   WageringCancellationReason,
   WageringTargetType,
+  WageringCalculationMethod,
 } from '@prisma/client';
 import type { WageringAppliedConfig } from './wagering-applied-config';
 
@@ -15,6 +16,7 @@ export class WageringRequirement {
     public readonly currency: ExchangeCurrencyCode,
     public readonly sourceType: WageringSourceType,
     public readonly sourceId: bigint,
+    public readonly calculationMethod: WageringCalculationMethod,
 
     public readonly targetType: WageringTargetType,
     private _requiredAmount: Prisma.Decimal,
@@ -308,6 +310,7 @@ export class WageringRequirement {
     currency: ExchangeCurrencyCode;
     sourceType: WageringSourceType;
     sourceId: bigint;
+    calculationMethod?: WageringCalculationMethod;
     targetType: WageringTargetType;
 
     requiredAmount?: Prisma.Decimal;
@@ -334,6 +337,7 @@ export class WageringRequirement {
       params.currency,
       params.sourceType,
       params.sourceId,
+      params.calculationMethod ?? 'WEIGHTED',
       params.targetType,
       params.requiredAmount ?? new Prisma.Decimal(0),
       new Prisma.Decimal(0), // initial wageredAmount
@@ -381,6 +385,7 @@ export class WageringRequirement {
     currency: ExchangeCurrencyCode;
     sourceType: WageringSourceType;
     sourceId: bigint;
+    calculationMethod: WageringCalculationMethod;
     targetType: WageringTargetType;
 
     requiredAmount: Prisma.Decimal;
@@ -427,6 +432,7 @@ export class WageringRequirement {
       data.currency,
       data.sourceType,
       data.sourceId,
+      data.calculationMethod,
       data.targetType,
       data.requiredAmount,
       data.wageredAmount,
