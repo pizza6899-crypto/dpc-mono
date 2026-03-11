@@ -41,7 +41,7 @@ export class ProcessWageringContributionService {
     private readonly dispatchLogService: DispatchLogService,
     private readonly getConfigService: GetWageringConfigService,
     private readonly settleService: SettleWageringRequirementService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(command: ProcessWageringContributionCommand): Promise<void> {
@@ -73,7 +73,7 @@ export class ProcessWageringContributionService {
     // 실제 베팅액이 설정된 maxBetLimit보다 크면 한도까지만 기여액으로 산정
     const effectiveBetForContribution =
       !setting.maxBetAmount.isZero() &&
-      betAmount.greaterThan(setting.maxBetAmount)
+        betAmount.greaterThan(setting.maxBetAmount)
         ? setting.maxBetAmount
         : betAmount;
 
@@ -85,51 +85,65 @@ export class ProcessWageringContributionService {
       return;
     }
 
-    // 2. 실제 반영될 금액 계산 (게임별 기여도 적용)
-    // 예: 10,000원 베팅(한도 5,000원 적용 시) * 50% = 2,500원 반영
-    let remainingContribution = this.policy.calculateContribution(
+    // 2. 가중치가 적용된 기본 기여액 계산 (WEIGHTED 방식용)
+    const weightedContribution = this.policy.calculateContribution(
       effectiveBetForContribution,
       gameContributionRate,
     );
 
-    // 원래 요청된 금액 (로그용)
-    const totalRequestAmount = betAmount;
+    // 잔여 기여 가능액 추적 (동일 유저의 여러 WEIGHTED 조건을 순차 차감할 때 사용)
+    let remainingWeightedContribution = weightedContribution;
 
     this.logger.debug(
-      `Processing wagering contribution for user ${userId}: Bet ${betAmount}, Rate ${gameContributionRate}, Effective ${remainingContribution}`,
+      `Processing wagering contribution for user ${userId}: Bet ${betAmount}, Rate ${gameContributionRate}, Effective(Capped) ${effectiveBetForContribution}, Weighted ${weightedContribution}`,
     );
 
     // 3. 순차적으로 차감
     for (const requirement of activeRequirements) {
-      if (requirement.targetType === 'AMOUNT' && remainingContribution.lte(0))
-        continue;
-
-      let contributedForThis = new Prisma.Decimal(0);
+      let contributionForThis = new Prisma.Decimal(0);
       let incrementedCount = 0;
 
+      // 3.1 계산 방식에 따른 기여액 결정
       if (requirement.targetType === 'AMOUNT') {
-        contributedForThis = requirement.contributeAmount(
-          remainingContribution,
+        const amountToContribute =
+          requirement.calculationMethod === 'FULL'
+            ? effectiveBetForContribution // FULL 방식은 100% 인정
+            : remainingWeightedContribution; // WEIGHTED 방식은 가중치 적용 및 잔액 추적
+
+        if (amountToContribute.lte(0)) continue;
+
+        contributionForThis = requirement.contributeAmount(
+          amountToContribute,
           betAmount,
         );
-        if (contributedForThis.gt(0)) {
-          remainingContribution = remainingContribution.sub(contributedForThis);
+
+        // WEIGHTED 방식인 경우 사용한 만큼 잔액에서 차감
+        if (
+          requirement.calculationMethod === 'WEIGHTED' &&
+          contributionForThis.gt(0)
+        ) {
+          remainingWeightedContribution = remainingWeightedContribution.sub(
+            contributionForThis,
+          );
         }
       } else if (requirement.targetType === 'ROUND_COUNT') {
         incrementedCount = requirement.contributeRound(betAmount);
       }
 
-      if (contributedForThis.gt(0) || incrementedCount > 0) {
+      if (contributionForThis.gt(0) || incrementedCount > 0) {
         // 1. 변경된 롤링 조건 엔티티 상태 저장
         await this.repository.save(requirement);
 
-        // 2. 기여 상세 로그 생성 (별도 메서드로 분리)
+        // 2. 기여 상세 로그 생성
         await this.logRepository.create({
           wageringRequirementId: requirement.id,
           gameRoundId,
-          requestAmount: totalRequestAmount,
-          contributionRate: new Prisma.Decimal(gameContributionRate),
-          wageredAmount: contributedForThis, // COUNT 방식일 경우 0이 기록됨
+          requestAmount: betAmount,
+          contributionRate:
+            requirement.calculationMethod === 'FULL'
+              ? new Prisma.Decimal(1) // FULL 방식은 기여도 100%로 기록
+              : new Prisma.Decimal(gameContributionRate),
+          wageredAmount: contributionForThis,
         });
 
         if (requirement.isFulfilled) {
@@ -167,7 +181,7 @@ export class ProcessWageringContributionService {
         }
 
         this.logger.log(
-          `Wagering requirement ${requirement.id} contributed: ${requirement.targetType === 'AMOUNT' ? contributedForThis : incrementedCount + ' rounds'} (Remaining to contribute: ${remainingContribution})`,
+          `Wagering requirement ${requirement.id} contributed: ${requirement.targetType === 'AMOUNT' ? contributionForThis : incrementedCount + ' rounds'} (Remaining Weighted: ${remainingWeightedContribution})`,
         );
       }
     }
