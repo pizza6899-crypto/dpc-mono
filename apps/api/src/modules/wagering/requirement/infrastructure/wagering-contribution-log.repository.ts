@@ -14,7 +14,7 @@ export class WageringContributionLogRepository implements WageringContributionLo
     private readonly tx: PrismaTransaction,
     private readonly mapper: WageringRequirementMapper,
     private readonly snowflakeService: SnowflakeService,
-  ) {}
+  ) { }
 
   async create(data: {
     wageringRequirementId: bigint;
@@ -23,10 +23,12 @@ export class WageringContributionLogRepository implements WageringContributionLo
     contributionRate: Prisma.Decimal;
     wageredAmount: Prisma.Decimal;
   }): Promise<void> {
-    const { id: logId } = this.snowflakeService.generate();
+    const { id: logId, timestamp } = this.snowflakeService.generate();
+
     await this.tx.wageringContributionLog.create({
       data: {
         id: logId,
+        createdAt: timestamp,
         ...data,
       },
     });

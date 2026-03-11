@@ -30,7 +30,6 @@ model WageringRequirement {
   // WEIGHTED: 게임별 기여 가중치(Weight) 적용 (보너스, 이벤트 등)
   calculationMethod WageringCalculationMethod @default(WEIGHTED) @map("calculation_method")
 
-
   // [목표 타입 설정]
   targetType WageringTargetType @default(AMOUNT) @map("target_type") // 롤링을 평가할 기준 (금액 vs 횟수)
 
@@ -118,7 +117,7 @@ model WageringContributionLog {
   contributionRate Decimal @map("contribution_rate") @db.Decimal(8, 4) // 당시 기여도
   wageredAmount    Decimal @map("wagered_amount") @db.Decimal(32, 18) // 실제 차감(기여)된 롤링 금액
 
-  createdAt DateTime @default(now()) @map("created_at")
+  createdAt DateTime @map("created_at")
 
   wageringRequirement WageringRequirement @relation(fields: [wageringRequirementId], references: [id])
 
@@ -138,10 +137,9 @@ enum WageringSourceType {
 }
 
 enum WageringCalculationMethod {
-  FULL     // 베팅 금액 100% 전액 인정 (입금 롤링 등)
+  FULL // 베팅 금액 100% 전액 인정 (입금 롤링 등)
   WEIGHTED // 게임별 기여 가중치(Weight) 적용 (보너스 등)
 }
-
 
 enum WageringTargetType {
   AMOUNT // 베팅 금액(wageredAmount) 누적 기준
