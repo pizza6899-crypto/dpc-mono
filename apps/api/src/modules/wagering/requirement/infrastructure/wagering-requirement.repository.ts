@@ -6,18 +6,14 @@ import {
   WageringRequirement,
   WageringRequirementException,
   WageringRequirementNotFoundException,
-  WageringContributionLog,
 } from '../domain';
 import { WageringRequirementMapper } from './wagering-requirement.mapper';
 import {
-  Prisma,
   type ExchangeCurrencyCode,
   type WageringStatus,
   type WageringSourceType,
 } from '@prisma/client';
 import type { PaginatedData } from 'src/common/http/types/pagination.types';
-
-import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 
 @Injectable()
 export class WageringRequirementRepository implements WageringRequirementRepositoryPort {
@@ -25,15 +21,20 @@ export class WageringRequirementRepository implements WageringRequirementReposit
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: WageringRequirementMapper,
-    private readonly snowflakeService: SnowflakeService,
-  ) {}
+  ) { }
 
   async create(
     wageringRequirement: WageringRequirement,
   ): Promise<WageringRequirement> {
-    const data = this.mapper.toPrisma(wageringRequirement);
+    const data = this.mapper.toPrisma(wageringRequirement) as any;
+
+    // ID가 0n인 경우에만 DB autoincrement를 사용하기 위해 ID 필드 제거
+    if (wageringRequirement.id === 0n) {
+      delete data.id;
+    }
+
     const result = await this.tx.wageringRequirement.create({
-      data: data as any,
+      data,
     });
     return this.mapper.toDomain(result);
   }

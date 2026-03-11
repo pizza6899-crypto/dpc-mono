@@ -21,7 +21,7 @@ model WageringConfig {
 }
 
 model WageringRequirement {
-  id                BigInt                    @id // Snowflake ID (Application Generated)
+  id                BigInt                    @id @default(autoincrement()) // Auto Increment ID
   userId            BigInt                    @map("user_id")
   currency          ExchangeCurrencyCode
   sourceType        WageringSourceType        @default(DEPOSIT) @map("source_type")

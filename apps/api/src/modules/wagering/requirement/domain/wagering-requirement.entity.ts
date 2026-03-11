@@ -305,7 +305,7 @@ export class WageringRequirement {
   }
 
   static create(params: {
-    id: bigint;
+    id?: bigint;
     userId: bigint;
     currency: ExchangeCurrencyCode;
     sourceType: WageringSourceType;
@@ -332,7 +332,7 @@ export class WageringRequirement {
     expiresAt?: Date | null;
   }): WageringRequirement {
     return new WageringRequirement(
-      params.id,
+      params.id ?? 0n,
       params.userId,
       params.currency,
       params.sourceType,

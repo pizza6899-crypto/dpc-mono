@@ -9,11 +9,8 @@ import type {
   WageringTargetType,
   WageringCalculationMethod,
 } from '@prisma/client';
-import { InjectTransaction } from '@nestjs-cls/transactional';
-import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LogType } from 'src/modules/audit-log/domain';
-import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import type { RequestClientInfo } from 'src/common/http/types';
 import { GetWageringConfigService } from '../../config/application/get-wagering-config.service';
 import { DateTime } from 'luxon';
@@ -49,10 +46,7 @@ export class CreateWageringRequirementService {
     @Inject(WAGERING_REQUIREMENT_REPOSITORY)
     private readonly repository: WageringRequirementRepositoryPort,
     private readonly policy: WageringPolicy,
-    private readonly snowflakeService: SnowflakeService,
     private readonly getConfigService: GetWageringConfigService,
-    @InjectTransaction()
-    private readonly tx: PrismaTransaction,
     private readonly dispatchLogService: DispatchLogService,
   ) { }
 
@@ -113,12 +107,8 @@ export class CreateWageringRequirementService {
       `Creating wagering requirement for user ${userId}, targetType ${targetType}, principal ${principalAmount} (x${multiplier}), bonus ${bonusAmount}`,
     );
 
-    // Snowflake ID 생성
-    const { id } = this.snowflakeService.generate();
-
     // Create using factory method
     const wageringRequirement = WageringRequirement.create({
-      id,
       userId,
       currency,
       sourceType,
