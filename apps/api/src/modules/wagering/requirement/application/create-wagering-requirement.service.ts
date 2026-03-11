@@ -7,6 +7,7 @@ import type {
   ExchangeCurrencyCode,
   WageringSourceType,
   WageringTargetType,
+  WageringCalculationMethod,
 } from '@prisma/client';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
@@ -24,6 +25,7 @@ interface CreateWageringRequirementCommand {
   currency: ExchangeCurrencyCode;
   sourceType: WageringSourceType;
   sourceId: bigint;
+  calculationMethod?: WageringCalculationMethod;
   targetType: WageringTargetType;
   principalAmount: Prisma.Decimal;
   multiplier: Prisma.Decimal;
@@ -63,6 +65,7 @@ export class CreateWageringRequirementService {
       currency,
       sourceType,
       sourceId,
+      calculationMethod,
       targetType,
       principalAmount,
       multiplier,
@@ -120,6 +123,7 @@ export class CreateWageringRequirementService {
       currency,
       sourceType,
       sourceId,
+      calculationMethod,
       targetType,
       requiredAmount,
       requiredCount,

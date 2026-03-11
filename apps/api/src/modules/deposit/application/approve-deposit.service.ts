@@ -115,11 +115,13 @@ export class ApproveDepositService {
 
     // 8. 통합 롤링(Wagering Requirement) 생성
     // 정책: 입금액+보너스 전체에 대해 하나의 롤링 조건을 부여
+    // 프로모션이 있으면 기중치 기반(WEIGHTED), 없으면 전액 인정(FULL)
     await this.createWageringRequirementService.execute({
       userId: deposit.userId,
       currency: depositCurrency,
       sourceType: sourceType as any,
       sourceId: sourceId,
+      calculationMethod: deposit.promotionId ? 'WEIGHTED' : 'FULL',
       targetType: 'AMOUNT',
       principalAmount: actuallyPaid,
       multiplier: multiplier,
