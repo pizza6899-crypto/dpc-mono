@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { GameAggregatorType } from '@prisma/client';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { CasinoGameSessionRepositoryPort } from '../../ports/casino-game-session.repository.port';
@@ -16,6 +15,12 @@ export class CasinoGameSessionRepository implements CasinoGameSessionRepositoryP
 
   async create(session: CasinoGameSession): Promise<CasinoGameSession> {
     const data = this.mapper.toPersistence(session);
+
+    // ID가 0n인 경우 DB의 autoincrement를 사용하기 위해 필드 제거
+    if (session.id === 0n) {
+      delete data.id;
+    }
+
     const created = await this.tx.casinoGameSession.create({ data });
     return this.mapper.toDomain(created);
   }

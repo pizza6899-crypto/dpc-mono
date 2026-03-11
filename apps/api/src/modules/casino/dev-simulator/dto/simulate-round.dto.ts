@@ -1,8 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { GamingCurrencyCode } from 'src/utils/currency.util';
 
 export class SimulateRoundRequestDto {
-  @ApiProperty({ description: '테스트할 사용자 ID', example: '1000' })
+  @ApiProperty({ description: '테스트할 사용자 ID', example: '2' })
   userId: string;
 
   @ApiProperty({

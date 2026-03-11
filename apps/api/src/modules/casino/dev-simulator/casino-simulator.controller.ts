@@ -8,7 +8,7 @@ import { Public } from 'src/common/auth/decorators/roles.decorator';
 @Controller('casino/dev/simulate')
 @Public() // 개발용이므로 Public (보안 주의)
 export class CasinoSimulatorController {
-  constructor(private readonly simulatorService: CasinoSimulatorService) {}
+  constructor(private readonly simulatorService: CasinoSimulatorService) { }
 
   @Post('round')
   @ApiOperation({

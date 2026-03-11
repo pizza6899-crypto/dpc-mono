@@ -29,7 +29,6 @@ export class CasinoGameSessionMapper {
   // DB 저장을 위한 데이터 변환 (Create 시 주로 사용)
   toPersistence(entity: CasinoGameSession): any {
     return {
-      // id는 자동 생성이므로 제외 (또는 존재할 경우 포함)
       id: entity.id,
       userId: entity.userId,
       playerName: entity.playerName,
@@ -42,7 +41,6 @@ export class CasinoGameSessionMapper {
       usdExchangeRate: entity.usdExchangeRate,
       compRate: entity.compRate,
       gameId: entity.gameId,
-      // createdAt, updatedAt은 DB 기본값 사용 또는 엔티티 값 사용
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
       lastAccessedAt: entity.lastAccessedAt,
