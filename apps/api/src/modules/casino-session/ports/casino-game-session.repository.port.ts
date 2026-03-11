@@ -12,5 +12,9 @@ export interface CasinoGameSessionRepositoryPort {
     playerName: string,
     aggregatorType: string,
   ): Promise<CasinoGameSession | null>;
-  revokeByUserId(userId: bigint, revokedBy: bigint): Promise<number>;
+  revokeByUserId(
+    userId: bigint,
+    revokedBy: bigint,
+    aggregatorType?: string,
+  ): Promise<number>;
 }

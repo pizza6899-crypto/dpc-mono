@@ -1,8 +1,8 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { GameAggregatorType } from '@prisma/client';
 import { CASINO_GAME_SESSION_REPOSITORY } from '../ports/casino-game-session.repository.token';
 import type { CasinoGameSessionRepositoryPort } from '../ports/casino-game-session.repository.port';
-import { CasinoGameSession } from '../domain';
+import { CasinoGameSession, CasinoGameSessionNotFoundException } from '../domain';
 
 @Injectable()
 export class FindCasinoGameSessionService {
@@ -18,9 +18,7 @@ export class FindCasinoGameSessionService {
   async getByToken(token: string): Promise<CasinoGameSession> {
     const session = await this.repository.findByToken(token);
     if (!session) {
-      throw new NotFoundException(
-        `Casino Game Session not found for token: ${token}`,
-      );
+      throw new CasinoGameSessionNotFoundException(token);
     }
     return session;
   }

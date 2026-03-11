@@ -20,6 +20,7 @@ export enum LockNamespace {
 
   // Casino
   GAME_ROUND = 2002,
+  CASINO_SESSION = 2003,
 
   // 향후 추가될 네임스페이스들
   USER_CONFIG = 1013,

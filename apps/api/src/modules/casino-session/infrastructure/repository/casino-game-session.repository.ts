@@ -61,10 +61,15 @@ export class CasinoGameSessionRepository implements CasinoGameSessionRepositoryP
     return found ? this.mapper.toDomain(found) : null;
   }
 
-  async revokeByUserId(userId: bigint, revokedBy: bigint): Promise<number> {
+  async revokeByUserId(
+    userId: bigint,
+    revokedBy: bigint,
+    aggregatorType?: string,
+  ): Promise<number> {
     const { count } = await this.tx.casinoGameSession.updateMany({
       where: {
         userId,
+        aggregatorType: aggregatorType as any,
         revokedAt: null, // 아직 파기되지 않은 세션만 대상
       },
       data: {
