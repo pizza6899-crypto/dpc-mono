@@ -17,7 +17,6 @@ import {
   DepositDetail,
   DepositMethod,
   DepositAmount,
-  PendingDepositExistsException,
   InvalidPromotionSelectionException,
 } from '../domain';
 import { DepositRequirementPolicy } from '../domain/policy/deposit-requirement.policy';
