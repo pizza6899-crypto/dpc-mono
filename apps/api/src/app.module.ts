@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './modules/auth/auth.module';
-import { BullModule } from '@nestjs/bullmq';
 import { EnvModule } from './common/env/env.module';
-import { EnvService } from './common/env/env.service';
 import {
   APP_FILTER,
   APP_GUARD,
@@ -25,7 +23,6 @@ import { CommonLoggerModule } from './common/logger/logger.module';
 import { AuditLogModule } from './modules/audit-log/audit-log.module';
 import { AuditLogInterceptor } from './modules/audit-log/infrastructure/audit-log.interceptor';
 import { RequestInfoInterceptor } from './common/http/interceptors/request-info.interceptor';
-import { PromotionModule } from './modules/promotion/promotion.module';
 import { WageringModule } from './modules/wagering/wagering.module';
 import { CompModule } from './modules/comp/comp.module';
 import { NodeIdentityModule } from './common/node-identity/node-identity.module';
@@ -45,6 +42,7 @@ import { AdminMemoModule } from './modules/admin-memo/admin-memo.module';
 import { UserAnalyticsModule } from './modules/user-analytics/user-analytics.module';
 import { WebsocketModule } from './infrastructure/websocket/websocket.module';
 import { ChatModule } from './modules/chat/chat.module';
+import { QuestModule } from './modules/quest/quest.module';
 
 @Module({
   imports: [
@@ -69,7 +67,6 @@ import { ChatModule } from './modules/chat/chat.module';
     ExchangeModule,
     AffiliateModule,
     WalletModule,
-    PromotionModule,
     WageringModule,
     CompModule,
     NotificationModule,
@@ -81,6 +78,7 @@ import { ChatModule } from './modules/chat/chat.module';
     UserAnalyticsModule,
     AdminMemoModule,
     ChatModule,
+    QuestModule,
   ],
   providers: [
     Reflector,
