@@ -1,8 +1,8 @@
 // src/modules/promotion/application/get-my-promotions-for-user.service.ts
 import { Inject, Injectable } from '@nestjs/common';
 import { UserPromotion } from '../domain';
-import { PROMOTION_REPOSITORY } from '../ports/out';
-import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
+import { PROMOTION_REPOSITORY } from '../ports';
+import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
 
 interface GetMyPromotionsForUserParams {
   userId: bigint;
@@ -18,7 +18,7 @@ export class GetMyPromotionsForUserService {
   constructor(
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) {}
+  ) { }
 
   async execute(params: GetMyPromotionsForUserParams): Promise<{
     userPromotions: UserPromotion[];

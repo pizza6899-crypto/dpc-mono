@@ -42,8 +42,8 @@ import { UpsertTranslationRequestDto } from './dto/request/upsert-translation.re
 import { AddPromotionNoteRequestDto } from './dto/request/add-promotion-note.request.dto';
 import { PromotionParticipantResponseDto } from './dto/response/promotion-participant.response.dto';
 import { PromotionStatisticsResponseDto } from './dto/response/promotion-statistics.response.dto';
-import { PROMOTION_REPOSITORY } from '../../ports/out';
-import type { PromotionRepositoryPort } from '../../ports/out/promotion.repository.port';
+import { PROMOTION_REPOSITORY } from '../../ports';
+import type { PromotionRepositoryPort } from '../../ports/promotion.repository.port';
 import {
   Promotion,
   PromotionNotFoundException,
@@ -68,7 +68,7 @@ export class PromotionAdminController {
     private readonly policy: PromotionPolicy,
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) {}
+  ) { }
 
   /**
    * 관리자용 프로모션 목록 조회

@@ -6,8 +6,8 @@ import {
   PromotionTranslation,
 } from '../domain/model/promotion.entity';
 import { PromotionCurrency } from '../domain/model/promotion-currency.entity';
-import { PROMOTION_REPOSITORY } from '../ports/out';
-import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
+import { PROMOTION_REPOSITORY } from '../ports';
+import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
 import type { PaginatedData } from 'src/common/http/types/pagination.types';
 
 interface GetActivePromotionsForUserParams {
@@ -30,7 +30,7 @@ export class GetActivePromotionsForUserService {
   constructor(
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) {}
+  ) { }
 
   async execute(
     params: GetActivePromotionsForUserParams & { userId?: bigint },

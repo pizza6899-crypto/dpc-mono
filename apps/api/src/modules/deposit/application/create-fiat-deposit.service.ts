@@ -23,8 +23,6 @@ import {
 import { DepositRequirementPolicy } from '../domain/policy/deposit-requirement.policy';
 import { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { CheckEligiblePromotionsService } from '../../promotion/application/check-eligible-promotions.service';
-import { PROMOTION_REPOSITORY } from '../../promotion/ports/out';
-import type { PromotionRepositoryPort } from '../../promotion/ports/out/promotion.repository.port';
 import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
@@ -53,8 +51,6 @@ export class CreateFiatDepositService {
   constructor(
     @Inject(DEPOSIT_DETAIL_REPOSITORY)
     private readonly depositRepository: DepositDetailRepositoryPort,
-    @Inject(PROMOTION_REPOSITORY)
-    private readonly promotionRepository: PromotionRepositoryPort,
     private readonly promotionsService: CheckEligiblePromotionsService,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly depositRequirementPolicy: DepositRequirementPolicy,
@@ -99,26 +95,20 @@ export class CreateFiatDepositService {
 
     // 1. 프로모션 유효성 검사
     if (depositPromotionCode) {
-      // 코드로 프로모션 조회
-      const promotion =
-        await this.promotionRepository.findByCode(depositPromotionCode);
-      if (!promotion) {
-        throw new InvalidPromotionSelectionException();
-      }
-
       const eligiblePromotions = await this.promotionsService.execute({
         userId,
         depositAmount: new Prisma.Decimal(amount),
         currency: payCurrency as ExchangeCurrencyCode,
       });
 
-      const isEligible = eligiblePromotions.some(
+      const selectedPromotion = eligiblePromotions.find(
         (p) => p.code === depositPromotionCode,
       );
-      if (!isEligible) {
+
+      if (!selectedPromotion) {
         throw new InvalidPromotionSelectionException();
       }
-      promotionId = promotion.id;
+      promotionId = selectedPromotion.id;
     }
 
     const decimalAmount = new Prisma.Decimal(amount);

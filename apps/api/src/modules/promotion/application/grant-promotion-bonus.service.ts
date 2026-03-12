@@ -9,15 +9,10 @@ import {
   PromotionUsageLimitExceededException,
 } from '../domain';
 import type { UserPromotion } from '../domain';
-import { PROMOTION_REPOSITORY } from '../ports/out';
-import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
-import {
-  UserWalletBalanceType,
-  UserWalletTransactionType,
-} from '@prisma/client';
+import { PROMOTION_REPOSITORY } from '../ports';
+import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
 import type { RequestClientInfo } from 'src/common/http/types';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
-import { CreateWageringRequirementService } from 'src/modules/wagering/requirement/application';
 
 interface GrantPromotionBonusParams {
   userId: bigint;

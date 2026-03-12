@@ -9,8 +9,8 @@ import {
   PromotionUsageLimitExceededException,
 } from '../domain';
 import type { UserPromotion } from '../domain';
-import { PROMOTION_REPOSITORY } from '../ports/out';
-import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
+import { PROMOTION_REPOSITORY } from '../ports';
+import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
 import type { RequestClientInfo } from 'src/common/http/types';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
@@ -21,9 +21,7 @@ import {
 } from '@prisma/client';
 import { CreateAlertService } from '../../notification/alert/application/create-alert.service';
 import { NOTIFICATION_EVENTS } from '../../notification/common';
-import { ChannelType } from '@prisma/client';
 import { PromotionMetadata } from '../../wallet/domain/model/user-wallet-transaction-metadata';
-
 import { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { CreateWageringRequirementService } from 'src/modules/wagering/requirement/application';
 

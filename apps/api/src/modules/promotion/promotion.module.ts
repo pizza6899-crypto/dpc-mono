@@ -19,7 +19,7 @@ import { GetMyPromotionsForUserService } from './application/get-my-promotions-f
 import { ApplyCouponPromotionService } from './application/apply-coupon-promotion.service';
 import { PromotionRepository } from './infrastructure/promotion.repository';
 import { PromotionMapper } from './infrastructure/promotion.mapper';
-import { PROMOTION_REPOSITORY } from './ports/out';
+import { PROMOTION_REPOSITORY } from './ports';
 import { PromotionUserController } from './controllers/user/promotion-user.controller';
 import { PromotionAdminController } from './controllers/admin/promotion-admin.controller';
 import { WageringModule } from '../wagering/wagering.module';
@@ -64,4 +64,4 @@ import { NotificationModule } from '../notification/notification.module';
     PROMOTION_REPOSITORY,
   ],
 })
-export class PromotionModule {}
+export class PromotionModule { }

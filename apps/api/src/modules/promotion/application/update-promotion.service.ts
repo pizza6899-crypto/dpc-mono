@@ -12,8 +12,8 @@ import {
   PromotionNotFoundException,
   PromotionCodeAlreadyExistsException,
 } from '../domain';
-import { PROMOTION_REPOSITORY } from '../ports/out';
-import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
+import { PROMOTION_REPOSITORY } from '../ports';
+import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
 
 interface UpdatePromotionParams {
   id: bigint;
@@ -40,7 +40,7 @@ export class UpdatePromotionService {
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
     private readonly policy: PromotionPolicy,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(params: UpdatePromotionParams): Promise<Promotion> {

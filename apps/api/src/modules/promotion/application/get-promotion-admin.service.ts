@@ -1,15 +1,15 @@
 // src/modules/promotion/application/get-promotion-admin.service.ts
 import { Inject, Injectable } from '@nestjs/common';
 import { Promotion, PromotionNotFoundException } from '../domain';
-import { PROMOTION_REPOSITORY } from '../ports/out';
-import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
+import { PROMOTION_REPOSITORY } from '../ports';
+import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
 
 @Injectable()
 export class GetPromotionAdminService {
   constructor(
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) {}
+  ) { }
 
   async execute(id: bigint): Promise<{
     promotion: Promotion;

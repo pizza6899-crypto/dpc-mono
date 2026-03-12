@@ -1,7 +1,7 @@
 // src/modules/promotion/application/find-promotion-participants.service.ts
 import { Inject, Injectable } from '@nestjs/common';
-import { PROMOTION_REPOSITORY } from '../ports/out';
-import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
+import { PROMOTION_REPOSITORY } from '../ports';
+import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
 
 interface FindPromotionParticipantsParams {
   promotionId: bigint;
@@ -18,7 +18,7 @@ export class FindPromotionParticipantsService {
   constructor(
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) {}
+  ) { }
 
   async execute(params: FindPromotionParticipantsParams) {
     return await this.repository.findUserPromotionsByPromotionId(params);

@@ -1,6 +1,6 @@
 // src/modules/promotion/ports/out/promotion.repository.port.ts
-import type { Promotion, UserPromotion, PromotionCurrency } from '../../domain';
-import type { PromotionTranslation } from '../../domain/model/promotion.entity';
+import type { Promotion, UserPromotion, PromotionCurrency } from '../domain';
+import type { PromotionTranslation } from '../domain/model/promotion.entity';
 import type { Prisma, ExchangeCurrencyCode, Language } from '@prisma/client';
 
 export interface PromotionRepositoryPort {

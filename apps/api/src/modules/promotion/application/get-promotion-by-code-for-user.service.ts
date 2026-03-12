@@ -5,8 +5,8 @@ import {
   Promotion,
   PromotionTranslation,
 } from '../domain';
-import { PROMOTION_REPOSITORY } from '../ports/out';
-import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
+import { PROMOTION_REPOSITORY } from '../ports';
+import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
 import { PromotionCurrency } from '../domain/model/promotion-currency.entity';
 
 interface GetPromotionByCodeForUserParams {
@@ -26,7 +26,7 @@ export class GetPromotionByCodeForUserService {
   constructor(
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) {}
+  ) { }
 
   async execute(
     params: GetPromotionByCodeForUserParams,

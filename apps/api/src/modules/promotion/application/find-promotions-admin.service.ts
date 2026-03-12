@@ -1,8 +1,8 @@
 // src/modules/promotion/application/find-promotions-admin.service.ts
 import { Inject, Injectable } from '@nestjs/common';
 import type { Promotion } from '../domain';
-import { PROMOTION_REPOSITORY } from '../ports/out';
-import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
+import { PROMOTION_REPOSITORY } from '../ports';
+import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
 
 interface FindPromotionsAdminParams {
   page?: number;
@@ -20,7 +20,7 @@ export class FindPromotionsAdminService {
   constructor(
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) {}
+  ) { }
 
   async execute(params: FindPromotionsAdminParams = {}): Promise<{
     promotions: Array<{

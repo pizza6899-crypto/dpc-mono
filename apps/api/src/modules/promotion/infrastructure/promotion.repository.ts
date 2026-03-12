@@ -5,7 +5,7 @@ import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module'
 import { Prisma, ExchangeCurrencyCode, Language } from '@prisma/client';
 import { Promotion, UserPromotion, PromotionCurrency } from '../domain';
 import type { PromotionTranslation } from '../domain/model/promotion.entity';
-import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
+import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
 import { PromotionMapper } from './promotion.mapper';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class PromotionRepository implements PromotionRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: PromotionMapper,
-  ) {}
+  ) { }
 
   async findActivePromotions(now: Date = new Date()): Promise<Promotion[]> {
     const results = await this.tx.promotion.findMany({
@@ -379,11 +379,11 @@ export class PromotionRepository implements PromotionRepositoryPort {
       ...(targetType && { targetType: targetType as any }),
       ...(startDate &&
         endDate && {
-          createdAt: {
-            gte: startDate,
-            lte: endDate,
-          },
-        }),
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      }),
     };
 
     const orderBy: Prisma.PromotionOrderByWithRelationInput = {

@@ -7,8 +7,8 @@ import {
   PromotionPolicy,
   PromotionCodeAlreadyExistsException,
 } from '../domain';
-import { PROMOTION_REPOSITORY } from '../ports/out';
-import type { PromotionRepositoryPort } from '../ports/out/promotion.repository.port';
+import { PROMOTION_REPOSITORY } from '../ports';
+import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
 
 interface CreatePromotionParams {
   managementName: string;
