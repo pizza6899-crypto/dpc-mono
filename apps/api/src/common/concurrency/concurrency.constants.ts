@@ -28,6 +28,7 @@ export enum LockNamespace {
   TIER_REWARD = 1015,
   USER_CHAT_SUPPORT = 1016,
   QUEST_CONFIG = 1017,
+  QUEST_MASTER = 1018,
 }
 
 export const CONCURRENCY_CONSTANTS = {

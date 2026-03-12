@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { Transactional } from '@nestjs-cls/transactional';
 import { QUEST_MASTER_REPOSITORY_TOKEN } from '../../core/ports/quest-master.repository.token';
 import type { QuestMasterRepository } from '../../core/ports/quest-master.repository.port';
 import { CreateQuestAdminDto } from '../controllers/dto/request/create-quest-admin.dto';
@@ -13,6 +14,7 @@ export class CreateQuestAdminService {
     private readonly getFileService: GetFileService,
   ) { }
 
+  @Transactional()
   async execute(dto: CreateQuestAdminDto, adminId: bigint): Promise<bigint> {
     // 0. 파일 유효성 검사
     if (dto.metadata?.iconFileId) {

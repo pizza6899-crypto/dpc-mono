@@ -1,10 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { Transactional } from '@nestjs-cls/transactional';
 import { QUEST_MASTER_REPOSITORY_TOKEN } from '../../core/ports/quest-master.repository.token';
 import type { QuestMasterRepository } from '../../core/ports/quest-master.repository.port';
 import { UpdateQuestAdminDto } from '../controllers/dto/request/update-quest-admin.dto';
 import { QuestMaster, QuestGoal, QuestReward, QuestTranslation } from '../../core/domain/models';
 import { QuestNotFoundException } from '../../core/domain/quest-core.exception';
 import { GetFileService } from '../../../file/application/get-file.service';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 @Injectable()
 export class UpdateQuestAdminService {
@@ -12,10 +14,15 @@ export class UpdateQuestAdminService {
     @Inject(QUEST_MASTER_REPOSITORY_TOKEN)
     private readonly questMasterRepository: QuestMasterRepository,
     private readonly getFileService: GetFileService,
+    private readonly advisoryLockService: AdvisoryLockService,
   ) { }
 
+  @Transactional()
   async execute(id: bigint, dto: UpdateQuestAdminDto, adminId: bigint): Promise<void> {
-    // 0. 파일 유효성 검사
+    // 0. 동시성 제어 (동일 퀘스트에 대한 어드민 중복 수정 방지)
+    await this.advisoryLockService.acquireLock(LockNamespace.QUEST_MASTER, id.toString());
+
+    // 1. 파일 유효성 검사
     if (dto.metadata?.iconFileId) {
       const iconFileId = BigInt(dto.metadata.iconFileId);
       await this.getFileService.getById(iconFileId);
