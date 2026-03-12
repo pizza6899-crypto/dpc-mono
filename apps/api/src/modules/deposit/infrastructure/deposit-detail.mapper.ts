@@ -38,7 +38,6 @@ export class DepositDetailMapper {
     depositorAccount: string | null;
     providerPaymentId: string | null;
     transactionHash: string | null;
-    promotionId: bigint | null;
     processedBy: bigint | null;
     ipAddress: string | null;
     deviceFingerprint: string | null;
@@ -69,7 +68,6 @@ export class DepositDetailMapper {
       depositorAccount: prismaModel.depositorAccount,
       providerPaymentId: prismaModel.providerPaymentId,
       transactionHash: prismaModel.transactionHash,
-      promotionId: prismaModel.promotionId,
       processedBy: prismaModel.processedBy,
       ipAddress: prismaModel.ipAddress,
       deviceFingerprint: prismaModel.deviceFingerprint,
@@ -123,7 +121,6 @@ export class DepositDetailMapper {
       depositorAccount: persistence.depositorAccount,
       providerPaymentId: persistence.providerPaymentId,
       transactionHash: persistence.transactionHash,
-      promotionId: persistence.promotionId,
       processedBy: persistence.processedBy,
       ipAddress: persistence.ipAddress,
       deviceFingerprint: persistence.deviceFingerprint,

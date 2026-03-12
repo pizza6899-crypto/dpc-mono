@@ -40,7 +40,6 @@ export class DepositDetail {
     public readonly depositorName: string | null,
     public readonly providerPaymentId: string | null,
     private _transactionHash: string | null,
-    public readonly promotionId: bigint | null,
     private _processedBy: bigint | null,
     public readonly depositorBank: string | null,
     public readonly depositorAccount: string | null,
@@ -61,7 +60,6 @@ export class DepositDetail {
     depositCurrency: ExchangeCurrencyCode;
     method: DepositMethod;
     amount: DepositAmount;
-    promotionId?: bigint | null;
     walletAddress?: string | null;
     walletAddressExtraId?: string | null;
     depositNetwork?: string | null;
@@ -87,7 +85,6 @@ export class DepositDetail {
       params.depositorName ?? null,
       params.providerPaymentId ?? null,
       null,
-      params.promotionId ?? null,
       null,
       params.depositorBank ?? null,
       params.depositorAccount ?? null,
@@ -125,7 +122,6 @@ export class DepositDetail {
     depositorAccount: string | null;
     providerPaymentId: string | null;
     transactionHash: string | null;
-    promotionId: bigint | null;
     processedBy: bigint | null;
     ipAddress: string | null;
     deviceFingerprint: string | null;
@@ -158,7 +154,6 @@ export class DepositDetail {
       data.depositorName,
       data.providerPaymentId,
       data.transactionHash,
-      data.promotionId,
       data.processedBy,
       data.depositorBank,
       data.depositorAccount,
@@ -196,7 +191,6 @@ export class DepositDetail {
     depositorAccount: string | null;
     providerPaymentId: string | null;
     transactionHash: string | null;
-    promotionId: bigint | null;
     processedBy: bigint | null;
     ipAddress: string | null;
     deviceFingerprint: string | null;
@@ -230,7 +224,6 @@ export class DepositDetail {
       depositorAccount: this.depositorAccount,
       providerPaymentId: this.providerPaymentId,
       transactionHash: this._transactionHash,
-      promotionId: this.promotionId,
       processedBy: this._processedBy,
       ipAddress: this.ipAddress,
       deviceFingerprint: this.deviceFingerprint,

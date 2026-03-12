@@ -6,7 +6,6 @@ import {
   ExchangeCurrencyCode,
   PaymentProvider,
 } from '@prisma/client';
-
 import {
   DEPOSIT_DETAIL_REPOSITORY,
 } from '../ports/out';
@@ -17,12 +16,9 @@ import {
   DepositDetail,
   DepositMethod,
   DepositAmount,
-  PendingDepositExistsException,
-  InvalidPromotionSelectionException,
 } from '../domain';
 import { DepositRequirementPolicy } from '../domain/policy/deposit-requirement.policy';
 import { AuthenticatedUser } from 'src/common/auth/types/auth.types';
-import { CheckEligiblePromotionsService } from '../../promotion/application/check-eligible-promotions.service';
 import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
@@ -41,7 +37,6 @@ export class CreateCryptoDepositService {
   constructor(
     @Inject(DEPOSIT_DETAIL_REPOSITORY)
     private readonly depositRepository: DepositDetailRepositoryPort,
-    private readonly checkEligiblePromotionsService: CheckEligiblePromotionsService,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly depositRequirementPolicy: DepositRequirementPolicy,
   ) { }
@@ -78,29 +73,6 @@ export class CreateCryptoDepositService {
       hasPendingDeposit,
     });
 
-    let promotionId: bigint | null = null;
-
-    // 1. 프로모션 유효성 검사
-    if (depositPromotionCode) {
-      const eligiblePromotions =
-        await this.checkEligiblePromotionsService.execute({
-          userId,
-          depositAmount: amount
-            ? new Prisma.Decimal(amount)
-            : new Prisma.Decimal(0),
-          currency: payCurrency as ExchangeCurrencyCode,
-        });
-
-      const selectedPromotion = eligiblePromotions.find(
-        (p) => p.code === depositPromotionCode,
-      );
-
-      if (!selectedPromotion) {
-        throw new InvalidPromotionSelectionException();
-      }
-      promotionId = selectedPromotion.id;
-    }
-
     // TODO: 주소 생성 로직 (Wallet Module 연동 필요)
     const walletAddress: string | undefined = undefined;
 
@@ -123,7 +95,6 @@ export class CreateCryptoDepositService {
       depositCurrency: payCurrency as ExchangeCurrencyCode,
       method: depositMethod,
       amount: depositAmount,
-      promotionId,
       walletAddress,
       depositNetwork: payNetwork,
       ipAddress,

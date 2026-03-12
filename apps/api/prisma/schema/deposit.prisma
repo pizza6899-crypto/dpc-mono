@@ -58,9 +58,7 @@ model DepositDetail {
   feeCurrency String?        @map("fee_currency")
   feePaidBy   FeePaidByType? @map("fee_paid_by")
 
-  providerMetadata Json?      @default("{}") @map("provider_metadata")
-  promotionId      BigInt?    @map("promotion_id")
-  promotion        Promotion? @relation(fields: [promotionId], references: [id])
+  providerMetadata Json? @default("{}") @map("provider_metadata")
 
   @@index([provider, providerPaymentId])
   @@index([status, createdAt])

@@ -122,7 +122,6 @@ model User {
   userWallets            UserWallet[]
   userTotalStats         UserWalletTotalStats[]
   userHourlyStats        UserWalletHourlyStats[]
-  userPromotions         UserPromotion[]
   userSessions           UserSession[]           @relation("UserSessions")
   revokedSessions        UserSession[]           @relation("RevokedSessions")
   revokedGameSessions    CasinoGameSession[]     @relation("RevokedGameSessions")
