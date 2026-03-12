@@ -34,7 +34,7 @@ export class AttachFileService {
     private readonly fileRepository: FileRepositoryPort,
     private readonly storageService: StorageService,
     private readonly sqidsService: SqidsService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(
@@ -58,11 +58,14 @@ export class AttachFileService {
     const accessType = command.accessType || this.resolveAccessType(usageType);
     const folder = accessType === FileAccessType.PUBLIC ? 'public' : 'private';
 
+    // 1.1 Resolve path ID (Use standard FILE prefix for all storage folder obfuscation)
+    const pathId = this.sqidsService.encode(usageId, SqidsPrefix.FILE);
+
     // 2. Move Files & Update Entities
     const updatedFiles = await Promise.all(
       files.map(async (file) => {
         const fileName = path.basename(file.key);
-        const newPath = `${folder}/${usageType.toLowerCase()}/${usageId}`;
+        const newPath = `${folder}/${usageType.toLowerCase()}/${pathId}`;
         const newKey = `${newPath}/${fileName}`;
 
         // Check if needs moving (different key)
