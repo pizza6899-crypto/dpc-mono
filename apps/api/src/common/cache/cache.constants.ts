@@ -112,4 +112,14 @@ export const CACHE_CONFIG = {
       store: CacheStore.REDIS,
     }),
   },
+  /**
+   * 퀘스트 설정 관련 (QuestConfig)
+   */
+  QUEST_CONFIG: {
+    GLOBAL: {
+      key: 'quest:config:global',
+      ttlSeconds: 60, // 1분 L1 캐시
+      store: CacheStore.MEMORY,
+    },
+  },
 } as const;

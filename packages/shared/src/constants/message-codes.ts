@@ -245,5 +245,12 @@ export enum MessageCode {
     CHAT_INVALID_FILE_TYPE = 'CHAT_INVALID_FILE_TYPE',
     CHAT_SUPPORT_INVALID_ACTION = 'CHAT_SUPPORT_INVALID_ACTION',
     CHAT_MESSAGE_NOT_FOUND = 'CHAT_MESSAGE_NOT_FOUND',
+
+    // --- 퀘스트 관련 (Quest) ---
+    QUEST_CONFIG_NOT_FOUND = 'QUEST_CONFIG_NOT_FOUND', // 퀘스트 설정을 찾을 수 없을 때
+    QUEST_NOT_FOUND = 'QUEST_NOT_FOUND', // 퀘스트를 찾을 수 없을 때
+    USER_QUEST_NOT_FOUND = 'USER_QUEST_NOT_FOUND', // 유저 퀘스트 내역을 찾을 수 없을 때
+    QUEST_ALREADY_CLAIMED = 'QUEST_ALREADY_CLAIMED', // 이미 보상을 수령한 퀘스트일 때
+    QUEST_NOT_COMPLETED = 'QUEST_NOT_COMPLETED', // 퀘스트가 완료되지 않았을 때
 }
 
