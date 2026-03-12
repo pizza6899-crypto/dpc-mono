@@ -5,6 +5,7 @@ export interface QuestMetadata {
   isHot?: boolean;
   isNew?: boolean;
   iconFileId?: bigint;     // 아이콘 파일 ID (File 모듈 참조)
+  iconUrl?: string;        // 아이콘 접근 URL
   displayOrder?: number;
 }
 

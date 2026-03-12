@@ -19,6 +19,11 @@ export class QuestMetadataDto {
   @IsOptional()
   iconFileId?: string;
 
+  @ApiProperty({ description: 'Icon URL / 아이콘 URL', required: false })
+  @IsString()
+  @IsOptional()
+  iconUrl?: string;
+
   @ApiProperty({ description: 'Display order / 정렬 순서', required: false })
   @IsNumber()
   @IsOptional()

@@ -5,6 +5,9 @@ import type { QuestMasterRepository } from '../../core/ports/quest-master.reposi
 import { CreateQuestAdminDto } from '../controllers/dto/request/create-quest-admin.dto';
 import { QuestMaster, QuestGoal, QuestReward, QuestTranslation } from '../../core/domain/models';
 import { GetFileService } from '../../../file/application/get-file.service';
+import { AttachFileService } from '../../../file/application/attach-file.service';
+import { FileUsageType } from '../../../file/domain';
+import { EnvService } from 'src/common/env/env.service';
 
 @Injectable()
 export class CreateQuestAdminService {
@@ -12,11 +15,14 @@ export class CreateQuestAdminService {
     @Inject(QUEST_MASTER_REPOSITORY_TOKEN)
     private readonly questMasterRepository: QuestMasterRepository,
     private readonly getFileService: GetFileService,
+    private readonly attachFileService: AttachFileService,
+    private readonly envService: EnvService,
   ) { }
 
   @Transactional()
   async execute(dto: CreateQuestAdminDto, adminId: bigint): Promise<bigint> {
     // 0. 파일 유효성 검사
+    let iconUrl: string | undefined;
     if (dto.metadata?.iconFileId) {
       const iconFileId = BigInt(dto.metadata.iconFileId);
       await this.getFileService.getById(iconFileId);
@@ -66,6 +72,28 @@ export class CreateQuestAdminService {
     });
 
     // 3. Repository에 위임 (내부에서 tx 및 중첩 생성 처리)
-    return await this.questMasterRepository.save(questMaster);
+    const questId = await this.questMasterRepository.save(questMaster);
+
+    // 4. 아이콘 파일 확정 및 URL 업데이트 (필요 시)
+    if (dto.metadata?.iconFileId) {
+      const { files } = await this.attachFileService.execute({
+        fileIds: [dto.metadata.iconFileId],
+        usageType: FileUsageType.QUEST_ICON,
+        usageId: questId,
+      });
+
+      const publicIconUrl = files[0].publicUrl(this.envService.app.cdnUrl) ?? undefined;
+
+      // 퀘스트 메타데이터 다시 업데이트
+      questMaster.update({
+        metadata: {
+          ...questMaster.metadata,
+          iconUrl: publicIconUrl,
+        },
+      });
+      await this.questMasterRepository.save(questMaster);
+    }
+
+    return questId;
   }
 }

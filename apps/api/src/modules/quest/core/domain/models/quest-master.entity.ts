@@ -108,6 +108,29 @@ export class QuestMaster {
   }
 
   /**
+   * 퀘스트 정보를 업데이트합니다.
+   */
+  update(params: Partial<{
+    type: QuestType;
+    category: QuestCategory;
+    resetCycle: ResetCycle;
+    maxAttempts: number | null;
+    isActive: boolean;
+    parentId: bigint | null;
+    precedingId: bigint | null;
+    metadata: QuestMetadata;
+    entryRule: QuestEntryRule;
+    startTime: Date | null;
+    endTime: Date | null;
+    updatedBy: bigint | null;
+  }>): void {
+    Object.assign(this.props, {
+      ...params,
+      updatedAt: new Date(),
+    });
+  }
+
+  /**
    * 해당 통화에 대한 목표 설정을 조회합니다.
    * 통화별 전용 목표가 없으면 공통 목표(currency=null)를 반환합니다.
    */

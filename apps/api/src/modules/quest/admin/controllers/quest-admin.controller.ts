@@ -110,6 +110,7 @@ export class QuestAdminController {
         isHot: quest.metadata.isHot ?? null,
         isNew: quest.metadata.isNew ?? null,
         iconFileId: quest.metadata.iconFileId?.toString() ?? null,
+        iconUrl: quest.metadata.iconUrl ?? null,
         displayOrder: quest.metadata.displayOrder ?? null,
       },
       entryRule: {

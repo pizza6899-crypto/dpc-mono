@@ -11,6 +11,9 @@ export class QuestMetadataResponseDto {
   @ApiProperty({ description: 'Icon file ID', nullable: true })
   iconFileId: string | null;
 
+  @ApiProperty({ description: 'Icon URL', nullable: true })
+  iconUrl: string | null;
+
   @ApiProperty({ description: 'Display order', nullable: true })
   displayOrder: number | null;
 }

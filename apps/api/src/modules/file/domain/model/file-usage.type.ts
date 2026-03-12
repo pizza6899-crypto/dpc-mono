@@ -6,6 +6,7 @@ export enum FileUsageType {
   TIER_IMAGE = 'TIER_IMAGE',
   CHAT_MESSAGE = 'CHAT_MESSAGE',
   SUPPORT_CHAT_MESSAGE = 'SUPPORT_CHAT_MESSAGE',
+  QUEST_ICON = 'QUEST_ICON',
   // Add more types here as needed
   // BANNER = 'BANNER',
   // POST_IMAGE = 'POST_IMAGE',
