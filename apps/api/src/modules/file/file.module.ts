@@ -4,6 +4,7 @@ import { FileController } from './controllers/file.controller';
 import { CreateFileService } from './application/create-file.service';
 import { AttachFileService } from './application/attach-file.service';
 import { FileUrlService } from './application/file-url.service';
+import { GetFileService } from './application/get-file.service';
 import { FileRepository } from './infrastructure/file.repository';
 import { FileUsageRepository } from './infrastructure/file-usage.repository';
 import { FileMapper } from './infrastructure/file.mapper';
@@ -18,6 +19,7 @@ import { FILE_USAGE_REPOSITORY } from './ports/file-usage.repository.token';
     CreateFileService,
     AttachFileService,
     FileUrlService,
+    GetFileService,
     FileMapper,
     FileUsageMapper,
     {
@@ -29,6 +31,6 @@ import { FILE_USAGE_REPOSITORY } from './ports/file-usage.repository.token';
       useClass: FileUsageRepository,
     },
   ],
-  exports: [CreateFileService, AttachFileService, FileUrlService, FILE_REPOSITORY],
+  exports: [CreateFileService, AttachFileService, FileUrlService, GetFileService],
 })
 export class FileModule { }

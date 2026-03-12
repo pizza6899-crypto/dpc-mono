@@ -3,6 +3,61 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsEnum, IsOptional, IsString, IsBoolean, IsNumber, IsArray, ValidateNested, IsDateString } from 'class-validator';
 
+export class QuestMetadataDto {
+  @ApiProperty({ description: 'Is hot quest / 인기 퀘스트 여부', required: false })
+  @IsBoolean()
+  @IsOptional()
+  isHot?: boolean;
+
+  @ApiProperty({ description: 'Is new quest / 신규 퀘스트 여부', required: false })
+  @IsBoolean()
+  @IsOptional()
+  isNew?: boolean;
+
+  @ApiProperty({ description: 'Icon file ID / 아이콘 파일 ID', required: false })
+  @IsString()
+  @IsOptional()
+  iconFileId?: string;
+
+  @ApiProperty({ description: 'Display order / 정렬 순서', required: false })
+  @IsNumber()
+  @IsOptional()
+  displayOrder?: number;
+}
+
+export class QuestEntryRuleDto {
+  @ApiProperty({ description: 'Require no withdrawal history / 출금 내역 없어야 함', required: false })
+  @IsBoolean()
+  @IsOptional()
+  requireNoWithdrawal?: boolean;
+}
+
+export class QuestMatchRuleDto {
+  // 현재 정의된 필드 없음. 필요 시 추가.
+}
+
+export class QuestRewardValueDto {
+  @ApiProperty({ description: 'Reward amount / 보상 금액', required: false })
+  @IsNumber()
+  @IsOptional()
+  amount?: number;
+
+  @ApiProperty({ description: 'Reward point / 지급 포인트', required: false })
+  @IsNumber()
+  @IsOptional()
+  point?: number;
+
+  @ApiProperty({ description: 'Badge ID / 배지 ID', required: false })
+  @IsString()
+  @IsOptional()
+  badgeId?: string;
+
+  @ApiProperty({ description: 'Coupon ID / 쿠폰 ID', required: false })
+  @IsString()
+  @IsOptional()
+  couponId?: string;
+}
+
 export class QuestGoalDto {
   @ApiProperty({
     description: 'Currency code / 통화 코드',
@@ -30,11 +85,14 @@ export class QuestGoalDto {
   targetCount?: number;
 
   @ApiProperty({
-    description: 'Match rule settings / 실적 판칙 규칙 설정 (JSON)',
+    description: 'Match rule settings / 실적 판칙 규칙 설정',
+    type: QuestMatchRuleDto,
     required: false,
   })
+  @ValidateNested()
+  @Type(() => QuestMatchRuleDto)
   @IsOptional()
-  matchRule?: any;
+  matchRule?: QuestMatchRuleDto;
 }
 
 export class QuestRewardDto {
@@ -55,11 +113,14 @@ export class QuestRewardDto {
   currency?: ExchangeCurrencyCode;
 
   @ApiProperty({
-    description: 'Reward value/settings / 보상 가치/설정 (JSON)',
+    description: 'Reward value/settings / 보상 가치/설정',
+    type: QuestRewardValueDto,
     required: false,
   })
+  @ValidateNested()
+  @Type(() => QuestRewardValueDto)
   @IsOptional()
-  value?: any;
+  value?: QuestRewardValueDto;
 
   @ApiProperty({
     description: 'Expiration days / 보상 유효 기간 (일)',
@@ -159,18 +220,24 @@ export class CreateQuestAdminDto {
   precedingId?: string;
 
   @ApiProperty({
-    description: 'Quest metadata/styling / 퀘스트 메타데이터 (JSON)',
+    description: 'Quest metadata/styling / 퀘스트 메타데이터',
+    type: QuestMetadataDto,
     required: false,
   })
+  @ValidateNested()
+  @Type(() => QuestMetadataDto)
   @IsOptional()
-  metadata?: any;
+  metadata?: QuestMetadataDto;
 
   @ApiProperty({
-    description: 'Entry rule settings / 참여 자격 규칙 (JSON)',
+    description: 'Entry rule settings / 참여 자격 규칙',
+    type: QuestEntryRuleDto,
     required: false,
   })
+  @ValidateNested()
+  @Type(() => QuestEntryRuleDto)
   @IsOptional()
-  entryRule?: any;
+  entryRule?: QuestEntryRuleDto;
 
   @ApiProperty({
     description: 'Quest start time / 시작 일시',

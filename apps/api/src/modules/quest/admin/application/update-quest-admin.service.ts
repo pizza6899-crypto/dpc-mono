@@ -4,15 +4,22 @@ import type { QuestMasterRepository } from '../../core/ports/quest-master.reposi
 import { UpdateQuestAdminDto } from '../controllers/dto/request/update-quest-admin.dto';
 import { QuestMaster, QuestGoal, QuestReward, QuestTranslation } from '../../core/domain/models';
 import { QuestNotFoundException } from '../../core/domain/quest-core.exception';
+import { GetFileService } from '../../../file/application/get-file.service';
 
 @Injectable()
 export class UpdateQuestAdminService {
   constructor(
     @Inject(QUEST_MASTER_REPOSITORY_TOKEN)
     private readonly questMasterRepository: QuestMasterRepository,
+    private readonly getFileService: GetFileService,
   ) { }
 
   async execute(id: bigint, dto: UpdateQuestAdminDto, adminId: bigint): Promise<void> {
+    // 0. 파일 유효성 검사
+    if (dto.metadata?.iconFileId) {
+      const iconFileId = BigInt(dto.metadata.iconFileId);
+      await this.getFileService.getById(iconFileId);
+    }
     // 1. 기존 퀘스트 존재 여부 확인
     const existing = await this.questMasterRepository.findById(id);
     if (!existing) {
@@ -47,9 +54,7 @@ export class UpdateQuestAdminService {
       }))
       : existing.rewards;
 
-    // 3. 도메인 엔티티 업데이트 (기존 엔티티의 Props를 기반으로 새로운 상태 생성)
-    // 여기서는 간단하게 fromPersistence를 사용하여 새로운 상태를 만들거나 
-    // Domain 모델에 update 메서드를 추가할 수 있습니다.
+    // 3. 도메인 엔티티 업데이트
     const updatedQuest = QuestMaster.fromPersistence({
       id: existing.id,
       type: dto.type ?? existing.type,
@@ -59,7 +64,10 @@ export class UpdateQuestAdminService {
       isActive: dto.isActive !== undefined ? dto.isActive : existing.isActive,
       parentId: dto.parentId !== undefined ? (dto.parentId ? BigInt(dto.parentId) : null) : existing.parentId,
       precedingId: dto.precedingId !== undefined ? (dto.precedingId ? BigInt(dto.precedingId) : null) : existing.precedingId,
-      metadata: dto.metadata ?? existing.metadata,
+      metadata: dto.metadata ? {
+        ...dto.metadata,
+        iconFileId: dto.metadata.iconFileId ? BigInt(dto.metadata.iconFileId) : undefined,
+      } : existing.metadata,
       entryRule: dto.entryRule ?? existing.entryRule,
       updatedBy: adminId,
       startTime: dto.startTime ? new Date(dto.startTime) : existing.startTime,

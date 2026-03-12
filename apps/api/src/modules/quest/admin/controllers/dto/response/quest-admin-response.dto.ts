@@ -1,6 +1,43 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { QuestType, QuestCategory, ResetCycle, RewardType, ExchangeCurrencyCode, Language } from '@prisma/client';
 
+export class QuestMetadataResponseDto {
+  @ApiProperty({ description: 'Is hot quest', nullable: true })
+  isHot: boolean | null;
+
+  @ApiProperty({ description: 'Is new quest', nullable: true })
+  isNew: boolean | null;
+
+  @ApiProperty({ description: 'Icon file ID', nullable: true })
+  iconFileId: string | null;
+
+  @ApiProperty({ description: 'Display order', nullable: true })
+  displayOrder: number | null;
+}
+
+export class QuestEntryRuleResponseDto {
+  @ApiProperty({ description: 'Require no withdrawal history', nullable: true })
+  requireNoWithdrawal: boolean | null;
+}
+
+export class QuestMatchRuleResponseDto {
+  // 정의된 필드 없음
+}
+
+export class QuestRewardValueResponseDto {
+  @ApiProperty({ description: 'Reward amount', nullable: true })
+  amount: number | null;
+
+  @ApiProperty({ description: 'Reward point', nullable: true })
+  point: number | null;
+
+  @ApiProperty({ description: 'Badge ID', nullable: true })
+  badgeId: string | null;
+
+  @ApiProperty({ description: 'Coupon ID', nullable: true })
+  couponId: string | null;
+}
+
 export class QuestGoalResponseDto {
   @ApiProperty({ description: 'Goal ID' })
   id: string;
@@ -17,8 +54,8 @@ export class QuestGoalResponseDto {
   @ApiProperty({ description: 'Target count', nullable: true })
   targetCount: number | null;
 
-  @ApiProperty({ description: 'Match rule settings (JSON)' })
-  matchRule: any;
+  @ApiProperty({ description: 'Match rule settings', type: QuestMatchRuleResponseDto })
+  matchRule: QuestMatchRuleResponseDto;
 }
 
 export class QuestRewardResponseDto {
@@ -34,8 +71,8 @@ export class QuestRewardResponseDto {
   @ApiProperty({ description: 'Currency code', enum: ExchangeCurrencyCode, nullable: true })
   currency: ExchangeCurrencyCode | null;
 
-  @ApiProperty({ description: 'Reward value/settings (JSON)' })
-  value: any;
+  @ApiProperty({ description: 'Reward value/settings', type: QuestRewardValueResponseDto })
+  value: QuestRewardValueResponseDto;
 
   @ApiProperty({ description: 'Expiration days', nullable: true })
   expireDays: number | null;
@@ -86,11 +123,11 @@ export class QuestAdminResponseDto {
   @ApiProperty({ description: 'Preceding quest ID', nullable: true })
   precedingId: string | null;
 
-  @ApiProperty({ description: 'Quest metadata/styling (JSON)' })
-  metadata: any;
+  @ApiProperty({ description: 'Quest metadata/styling', type: QuestMetadataResponseDto })
+  metadata: QuestMetadataResponseDto;
 
-  @ApiProperty({ description: 'Entry rule settings (JSON)' })
-  entryRule: any;
+  @ApiProperty({ description: 'Entry rule settings', type: QuestEntryRuleResponseDto })
+  entryRule: QuestEntryRuleResponseDto;
 
   @ApiProperty({ description: 'Quest updated by user ID', nullable: true })
   updatedBy: string | null;
