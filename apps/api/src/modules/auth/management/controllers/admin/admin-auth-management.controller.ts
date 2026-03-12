@@ -32,7 +32,7 @@ import { UserRoleType } from '@prisma/client';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 
-@ApiTags('Admin / Auth Management')
+@ApiTags('Admin Auth Management')
 @Controller('admin/auth/management')
 export class AdminAuthManagementController {
     constructor(

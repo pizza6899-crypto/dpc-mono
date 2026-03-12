@@ -1,17 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { QUEST_MASTER_REPOSITORY_TOKEN } from '../../core/ports/quest-master.repository.token';
 import type { QuestMasterRepository } from '../../core/ports/quest-master.repository.port';
-import { CreateQuestDto } from '../controllers/dto/create-quest.dto';
+import { CreateQuestAdminDto } from '../controllers/dto/request/create-quest-admin.dto';
 import { QuestMaster, QuestGoal, QuestReward, QuestTranslation } from '../../core/domain/models';
 
 @Injectable()
-export class CreateQuestService {
+export class CreateQuestAdminService {
   constructor(
     @Inject(QUEST_MASTER_REPOSITORY_TOKEN)
     private readonly questMasterRepository: QuestMasterRepository,
   ) { }
 
-  async execute(dto: CreateQuestDto, adminId: bigint): Promise<bigint> {
+  async execute(dto: CreateQuestAdminDto, adminId: bigint): Promise<bigint> {
     // 1. 하위 도메인 엔티티 생성
     const translations = dto.translations.map(t => QuestTranslation.create({
       language: t.language,
@@ -39,6 +39,10 @@ export class CreateQuestService {
       type: dto.type,
       category: dto.category,
       resetCycle: dto.resetCycle,
+      maxAttempts: dto.maxAttempts,
+      isActive: dto.isActive,
+      parentId: dto.parentId ? BigInt(dto.parentId) : null,
+      precedingId: dto.precedingId ? BigInt(dto.precedingId) : null,
       metadata: dto.metadata,
       entryRule: dto.entryRule,
       startTime: dto.startTime ? new Date(dto.startTime) : null,

@@ -86,6 +86,38 @@ export class QuestCoreMapper {
     };
   }
 
+  /**
+   * QuestMaster: Domain -> Persistence (Update with relations)
+   */
+  static toQuestMasterFullUpdatePersistence(entity: QuestMaster): Prisma.QuestMasterUpdateInput {
+    return {
+      type: entity.type,
+      category: entity.category,
+      resetCycle: entity.resetCycle,
+      maxAttempts: entity.maxAttempts,
+      isActive: entity.isActive,
+      metadata: this.json(entity.metadata),
+      entryRule: this.json(entity.entryRule),
+      updatedByUser: entity.updatedBy ? { connect: { id: entity.updatedBy } } : undefined,
+      startTime: entity.startTime,
+      endTime: entity.endTime,
+      parent: entity.parentId ? { connect: { id: entity.parentId } } : undefined,
+      precedingId: entity.precedingId,
+      goals: {
+        deleteMany: {},
+        create: entity.goals.map((g) => this.toQuestGoalPersistence(g)),
+      },
+      rewards: {
+        deleteMany: {},
+        create: entity.rewards.map((r) => this.toQuestRewardPersistence(r)),
+      },
+      translations: {
+        deleteMany: {},
+        create: entity.translations.map((t) => this.toQuestTranslationPersistence(t)),
+      },
+    };
+  }
+
   private static toQuestGoalPersistence(entity: QuestGoal): Prisma.QuestGoalCreateWithoutQuestMasterInput {
     return {
       currency: entity.currency,

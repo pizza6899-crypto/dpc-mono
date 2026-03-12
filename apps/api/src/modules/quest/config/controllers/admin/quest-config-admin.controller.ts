@@ -20,7 +20,7 @@ import { UpdateQuestConfigAdminDto } from './dto/request/update-quest-config-adm
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 
-@Controller('admin/quest-config')
+@Controller('admin/quests/config')
 @ApiTags('Admin Quest Config')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 @ApiStandardErrors()

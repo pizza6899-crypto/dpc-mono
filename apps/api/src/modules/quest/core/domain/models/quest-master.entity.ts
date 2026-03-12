@@ -41,6 +41,10 @@ export class QuestMaster {
     type: QuestType;
     category: QuestCategory;
     resetCycle?: ResetCycle;
+    maxAttempts?: number | null;
+    isActive?: boolean;
+    parentId?: bigint | null;
+    precedingId?: bigint | null;
     metadata?: QuestMetadata;
     entryRule?: QuestEntryRule;
     startTime?: Date | null;
@@ -55,10 +59,10 @@ export class QuestMaster {
       type: params.type,
       category: params.category,
       resetCycle: params.resetCycle ?? 'NONE',
-      maxAttempts: null,
-      isActive: true,
-      parentId: null,
-      precedingId: null,
+      maxAttempts: params.maxAttempts ?? null,
+      isActive: params.isActive ?? true,
+      parentId: params.parentId ?? null,
+      precedingId: params.precedingId ?? null,
       metadata: params.metadata ?? {},
       entryRule: params.entryRule ?? {},
       updatedBy: params.updatedBy ?? null,
@@ -89,6 +93,8 @@ export class QuestMaster {
   get goals(): QuestGoal[] { return this.props.goals ?? []; }
   get rewards(): QuestReward[] { return this.props.rewards ?? []; }
   get translations(): QuestTranslation[] { return this.props.translations ?? []; }
+  get createdAt(): Date { return this.props.createdAt; }
+  get updatedAt(): Date { return this.props.updatedAt; }
 
   // --- Business Logic ---
   /**
