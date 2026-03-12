@@ -143,6 +143,11 @@ model User {
   userExpLogs            UserExpLog[]
   tierHistoriesChangedBy TierHistory[]           @relation("TierHistoryChangedBy")
 
+  // [Quest System]
+  questsUpdated          QuestMaster[]       @relation("QuestUpdatedBy")
+  userQuests             UserQuest[]         @relation("UserQuests")
+  userQuestRewardHistory UserRewardHistory[] @relation("UserQuestRewardHistories")
+
   // [Chat System]
   chatMessages    ChatMessage[]    @relation("UserMessages")
   chatRoomMembers ChatRoomMember[]

@@ -1,0 +1,195 @@
+// apps/api/prisma/schema/quest.prisma
+
+model QuestSystemConfig {
+  id              BigInt   @id @default(1)
+  isSystemEnabled Boolean  @default(true)
+  updatedAt       DateTime @updatedAt
+
+  @@map("quest_system_configs")
+}
+
+model QuestMaster {
+  id          BigInt        @id @default(autoincrement())
+  type        QuestType // DEPOSIT, CHAT, ATTENDANCE, GAME_PLAY
+  category    QuestCategory
+  resetCycle  ResetCycle    @default(NONE)
+  maxAttempts Int?          @map("max_attempts") // 최대 참여(반복) 가능 횟수 (null: 무제한)
+  isActive    Boolean       @default(true)
+
+  // [계층 및 선행 관계]
+  parentId    BigInt? @map("parent_id")
+  precedingId BigInt? @map("preceding_id") // 선행 퀘스트 ID
+
+  // 운영 및 기타 설정 (JSON)
+  // { "isHot": true, "iconUrl": "...", "autoClaim": false }
+  metadata Json @default("{}")
+
+  // 참여 자격 규칙 (입구 컷 설정: JSON)
+  // { "requireNoWithdrawal": true, "maxWithdrawalCount": 0, "isFirstDepositOnly": true }
+  entryRule Json @default("{}") @map("entry_rule")
+
+  // 관리자 추적 필드
+  updatedBy     BigInt? @map("updated_by")
+  updatedByUser User?   @relation("QuestUpdatedBy", fields: [updatedBy], references: [id])
+
+  // 스케줄링
+  startTime DateTime? @map("start_time")
+  endTime   DateTime? @map("end_time")
+
+  // 관계 설정
+  translations QuestTranslation[]
+  goals        QuestGoal[]
+  rewards      QuestReward[]
+  userQuests   UserQuest[]
+
+  parent   QuestMaster?  @relation("QuestHierarchy", fields: [parentId], references: [id])
+  children QuestMaster[] @relation("QuestHierarchy")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("quest_masters")
+}
+
+enum QuestType {
+  DEPOSIT
+  CHAT
+  ATTENDANCE
+  GAME_PLAY
+  CHAT_RAIN
+}
+
+enum RewardType {
+  BONUS_MONEY // 보너스 머니 (입금 프로모션 등)
+  XP // 경험치
+  BADGE // 배지/업적
+  COUPON // 쿠폰 아이템
+  POINT // 포인트/기타 재화
+}
+
+enum QuestCategory {
+  WELCOME // 신규 유입 및 정착 (신규 가입, 신규 첫충 등)
+  RELOAD // 입금 활성화 (매충, 무한 매충 등)
+  ACTIVITY // 사이트 활동 (출석체크, 채팅, 게임 플레이 등)
+  SPECIAL // 기간/시간 한정 이벤트 (돌발, 해피아워, 주말 이벤트)
+  LOYALTY // 등급/충성도 (VIP 전용, 티어 달성 보상 등)
+}
+
+enum ResetCycle {
+  NONE // 일회성
+  DAILY // 매일
+  WEEKLY // 매주
+  MONTHLY // 매월
+}
+
+model QuestTranslation {
+  id            BigInt      @id @default(autoincrement())
+  questMasterId BigInt      @map("quest_master_id")
+  language      Language
+  title         String
+  description   String?
+  questMaster   QuestMaster @relation(fields: [questMasterId], references: [id])
+
+  @@unique([questMasterId, language])
+  @@map("quest_translations")
+}
+
+model QuestGoal {
+  id            BigInt                @id @default(autoincrement())
+  questMasterId BigInt                @map("quest_master_id")
+  currency      ExchangeCurrencyCode? // null이면 모든 통화 공통 (단, 계산 로직 필요)
+
+  // 목표치 분리: JSON 전체보다는 명시적 필드가 쿼리에 유리
+  targetAmount Decimal? @db.Decimal(32, 18)
+  targetCount  Int?     @default(1)
+
+  // 실적 판정 규칙 (무엇을 실적으로 인정할 것인가: JSON)
+  // { "method": "CRYPTO", "gameCategory": "SLOT" }
+  matchRule Json @default("{}") @map("match_rule")
+
+  questMaster QuestMaster @relation(fields: [questMasterId], references: [id])
+
+  @@unique([questMasterId, currency])
+  @@map("quest_goals")
+}
+
+/// 퀘스트 완료 보상 정의
+model QuestReward {
+  id            BigInt     @id @default(autoincrement())
+  questMasterId BigInt     @map("quest_master_id")
+  type          RewardType // BONUS_MONEY, XP, COUPON 등
+
+  // 특정 통화 전용 보상일 경우 지정 (null이면 모든 통화 공통 보상)
+  currency ExchangeCurrencyCode?
+
+  // 보상 상세 설정 (JSON)
+  // { "amount": 5000, "usage": { "allowedCategories": ["SLOT"] } }
+  // { "badgeId": "WELCOME_HERO" }
+  value Json @default("{}")
+
+  // 보상의 유효 기간 (null이면 무제한)
+  expireDays Int? @map("expire_days")
+
+  // 보너스일 경우 롤링 배수
+  wageringMultiplier Decimal @default(0) @db.Decimal(10, 2)
+
+  questMaster QuestMaster @relation(fields: [questMasterId], references: [id])
+
+  @@map("quest_rewards")
+}
+
+model UserQuest {
+  id            BigInt @id @default(autoincrement())
+  userId        BigInt @map("user_id")
+  user          User   @relation("UserQuests", fields: [userId], references: [id])
+  questMasterId BigInt @map("quest_master_id")
+
+  // 이 퀘스트 참여를 유발한 원천 ID (예: 입금 ID)
+  sourceId BigInt? @map("source_id")
+
+  // 사이클 관리: DAILY일 경우 "20260312", NONE일 경우 "SINGLE" 또는 입금ID
+  cycleId String @default("SINGLE") @map("cycle_id")
+
+  // 참여 통화: 유저가 퀘스트 참여 시점의 통화를 기록
+  currency ExchangeCurrencyCode
+
+  status          UserQuestStatus     @default(IN_PROGRESS)
+  progressData    Json                @default("{}") // { "currentCount": 3, "currentAmount": 50000 }
+  completedAt     DateTime?
+  claimedAt       DateTime? // 보상 수령 시점 분리
+  questMaster     QuestMaster         @relation(fields: [questMasterId], references: [id])
+  rewardHistories UserRewardHistory[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, questMasterId, cycleId])
+  @@index([sourceId])
+  @@map("user_quests")
+}
+
+enum UserQuestStatus {
+  IN_PROGRESS
+  COMPLETED
+  CLAIMED
+  EXPIRED
+  FAILED // 롤링 조건을 채우지 못하고 오링(더스트)된 상태
+}
+
+model UserRewardHistory {
+  id          BigInt @id @default(autoincrement())
+  userQuestId BigInt @map("user_quest_id")
+  userId      BigInt @map("user_id")
+  user        User   @relation("UserQuestRewardHistories", fields: [userId], references: [id])
+
+  type     RewardType // BONUS_MONEY, XP, BADGE...
+  amount   Decimal?              @db.Decimal(32, 18)
+  currency ExchangeCurrencyCode?
+  detail   Json? // 지급 당시의 정보 스냅샷
+
+  wageringId BigInt? @map("wagering_id") // 웨이저링 테이블 연결
+
+  userQuest UserQuest @relation(fields: [userQuestId], references: [id])
+
+  @@map("user_reward_histories")
+}
