@@ -3,64 +3,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsEnum, IsOptional, IsString, IsBoolean, IsNumber, IsArray, ValidateNested, IsDateString } from 'class-validator';
 
-export class QuestMetadataDto {
-  @ApiProperty({ description: 'Is hot quest / 인기 퀘스트 여부', required: false })
-  @IsBoolean()
-  @IsOptional()
-  isHot?: boolean;
-
-  @ApiProperty({ description: 'Is new quest / 신규 퀘스트 여부', required: false })
-  @IsBoolean()
-  @IsOptional()
-  isNew?: boolean;
-
-  @ApiProperty({ description: 'Icon file ID / 아이콘 파일 ID', required: false })
-  @IsString()
-  @IsOptional()
-  iconFileId?: string;
-
-  @ApiProperty({ description: 'Icon URL / 아이콘 URL', required: false })
-  @IsString()
-  @IsOptional()
-  iconUrl?: string;
-
-  @ApiProperty({ description: 'Display order / 정렬 순서', required: false })
-  @IsNumber()
-  @IsOptional()
-  displayOrder?: number;
-}
-
-export class QuestEntryRuleDto {
-  @ApiProperty({ description: 'Require no withdrawal history / 출금 내역 없어야 함', required: false })
-  @IsBoolean()
-  @IsOptional()
-  requireNoWithdrawal?: boolean;
-}
-
 export class QuestMatchRuleDto {
   // 현재 정의된 필드 없음. 필요 시 추가.
-}
-
-export class QuestRewardValueDto {
-  @ApiProperty({ description: 'Reward amount / 보상 금액', required: false })
-  @IsNumber()
-  @IsOptional()
-  amount?: number;
-
-  @ApiProperty({ description: 'Reward point / 지급 포인트', required: false })
-  @IsNumber()
-  @IsOptional()
-  point?: number;
-
-  @ApiProperty({ description: 'Badge ID / 배지 ID', required: false })
-  @IsString()
-  @IsOptional()
-  badgeId?: string;
-
-  @ApiProperty({ description: 'Coupon ID / 쿠폰 ID', required: false })
-  @IsString()
-  @IsOptional()
-  couponId?: string;
 }
 
 export class QuestGoalDto {
@@ -117,15 +61,35 @@ export class QuestRewardDto {
   @IsOptional()
   currency?: ExchangeCurrencyCode;
 
-  @ApiProperty({
-    description: 'Reward value/settings / 보상 가치/설정',
-    type: QuestRewardValueDto,
-    required: false,
-  })
-  @ValidateNested()
-  @Type(() => QuestRewardValueDto)
+  @ApiProperty({ description: 'Reward amount / 보상 금액', required: false })
+  @IsNumber()
   @IsOptional()
-  value?: QuestRewardValueDto;
+  amount?: number;
+
+  @ApiProperty({ description: 'Bonus rate (e.g. 0.1 for 10%) / 지급 배율', required: false })
+  @IsNumber()
+  @IsOptional()
+  bonusRate?: number;
+
+  @ApiProperty({ description: 'Max reward amount limit / 최대 보상 한도', required: false })
+  @IsNumber()
+  @IsOptional()
+  maxAmount?: number;
+
+  @ApiProperty({ description: 'Reward point / 지급 포인트', required: false })
+  @IsNumber()
+  @IsOptional()
+  point?: number;
+
+  @ApiProperty({ description: 'Badge ID / 배지 ID', required: false })
+  @IsString()
+  @IsOptional()
+  badgeId?: string;
+
+  @ApiProperty({ description: 'Coupon ID / 쿠폰 ID', required: false })
+  @IsString()
+  @IsOptional()
+  couponId?: string;
 
   @ApiProperty({
     description: 'Expiration days / 보상 유효 기간 (일)',
@@ -224,25 +188,42 @@ export class CreateQuestAdminDto {
   @IsOptional()
   precedingId?: string;
 
-  @ApiProperty({
-    description: 'Quest metadata/styling / 퀘스트 메타데이터',
-    type: QuestMetadataDto,
-    required: false,
-  })
-  @ValidateNested()
-  @Type(() => QuestMetadataDto)
+  // --- Flattened Metadata ---
+  @ApiProperty({ description: 'Is hot quest / 인기 퀘스트 여부', required: false })
+  @IsBoolean()
   @IsOptional()
-  metadata?: QuestMetadataDto;
+  isHot?: boolean;
 
-  @ApiProperty({
-    description: 'Entry rule settings / 참여 자격 규칙',
-    type: QuestEntryRuleDto,
-    required: false,
-  })
-  @ValidateNested()
-  @Type(() => QuestEntryRuleDto)
+  @ApiProperty({ description: 'Is new quest / 신규 퀘스트 여부', required: false })
+  @IsBoolean()
   @IsOptional()
-  entryRule?: QuestEntryRuleDto;
+  isNew?: boolean;
+
+  @ApiProperty({ description: 'Icon file ID / 아이콘 파일 ID', required: false })
+  @IsString()
+  @IsOptional()
+  iconFileId?: string;
+
+  @ApiProperty({ description: 'Display order / 정렬 순서', required: false })
+  @IsNumber()
+  @IsOptional()
+  displayOrder?: number;
+
+  // --- Flattened Entry Rules ---
+  @ApiProperty({ description: 'Require no withdrawal history / 출금 내역 없어야 함', required: false })
+  @IsBoolean()
+  @IsOptional()
+  requireNoWithdrawal?: boolean;
+
+  @ApiProperty({ description: 'Max withdrawal count limit / 최대 출금 횟수 제한', required: false })
+  @IsNumber()
+  @IsOptional()
+  maxWithdrawalCount?: number;
+
+  @ApiProperty({ description: 'Is first deposit only / 첫 입금 한정 여부', required: false })
+  @IsBoolean()
+  @IsOptional()
+  isFirstDepositOnly?: boolean;
 
   @ApiProperty({
     description: 'Quest start time / 시작 일시',

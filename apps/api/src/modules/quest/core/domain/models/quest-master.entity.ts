@@ -1,19 +1,23 @@
-import { QuestType, QuestCategory, ResetCycle, ExchangeCurrencyCode, RewardType, Prisma } from '@prisma/client';
-import { QuestMetadata, QuestEntryRule, QuestMatchRule, QuestRewardValue } from './quest.interface';
+import { QuestType, QuestCategory, ResetCycle, ExchangeCurrencyCode } from '@prisma/client';
+import { QuestEntryRule } from './quest.interface';
 import { QuestGoal } from './quest-goal.entity';
 import { QuestReward } from './quest-reward.entity';
 import { QuestTranslation } from './quest-translation.entity';
 
 export interface QuestMasterProps {
   id: bigint;
+  displayOrder: number;
   type: QuestType;
   category: QuestCategory;
   resetCycle: ResetCycle;
   maxAttempts: number | null;
   isActive: boolean;
+  isHot: boolean;
+  isNew: boolean;
+  iconFileId: bigint | null;
+  iconUrl: string | null;
   parentId: bigint | null;
   precedingId: bigint | null;
-  metadata: QuestMetadata;
   entryRule: QuestEntryRule;
   updatedBy: bigint | null;
   startTime: Date | null;
@@ -38,14 +42,18 @@ export class QuestMaster {
   }
 
   static create(params: {
+    displayOrder?: number;
     type: QuestType;
     category: QuestCategory;
     resetCycle?: ResetCycle;
     maxAttempts?: number | null;
     isActive?: boolean;
+    isHot?: boolean;
+    isNew?: boolean;
+    iconFileId?: bigint | null;
+    iconUrl?: string | null;
     parentId?: bigint | null;
     precedingId?: bigint | null;
-    metadata?: QuestMetadata;
     entryRule?: QuestEntryRule;
     startTime?: Date | null;
     endTime?: Date | null;
@@ -56,14 +64,18 @@ export class QuestMaster {
   }): QuestMaster {
     return new QuestMaster({
       id: 0n,
+      displayOrder: params.displayOrder ?? 0,
       type: params.type,
       category: params.category,
       resetCycle: params.resetCycle ?? 'NONE',
       maxAttempts: params.maxAttempts ?? null,
       isActive: params.isActive ?? true,
+      isHot: params.isHot ?? false,
+      isNew: params.isNew ?? false,
+      iconFileId: params.iconFileId ?? null,
+      iconUrl: params.iconUrl ?? null,
       parentId: params.parentId ?? null,
       precedingId: params.precedingId ?? null,
-      metadata: params.metadata ?? {},
       entryRule: params.entryRule ?? {},
       updatedBy: params.updatedBy ?? null,
       startTime: params.startTime ?? null,
@@ -78,14 +90,18 @@ export class QuestMaster {
 
   // --- Getters ---
   get id(): bigint { return this.props.id; }
+  get displayOrder(): number { return this.props.displayOrder; }
   get type(): QuestType { return this.props.type; }
   get category(): QuestCategory { return this.props.category; }
   get resetCycle(): ResetCycle { return this.props.resetCycle; }
   get maxAttempts(): number | null { return this.props.maxAttempts; }
   get isActive(): boolean { return this.props.isActive; }
+  get isHot(): boolean { return this.props.isHot; }
+  get isNew(): boolean { return this.props.isNew; }
+  get iconFileId(): bigint | null { return this.props.iconFileId; }
+  get iconUrl(): string | null { return this.props.iconUrl; }
   get parentId(): bigint | null { return this.props.parentId; }
   get precedingId(): bigint | null { return this.props.precedingId; }
-  get metadata(): QuestMetadata { return this.props.metadata; }
   get entryRule(): QuestEntryRule { return this.props.entryRule; }
   get updatedBy(): bigint | null { return this.props.updatedBy; }
   get startTime(): Date | null { return this.props.startTime; }
@@ -111,18 +127,25 @@ export class QuestMaster {
    * 퀘스트 정보를 업데이트합니다.
    */
   update(params: Partial<{
+    displayOrder: number;
     type: QuestType;
     category: QuestCategory;
     resetCycle: ResetCycle;
     maxAttempts: number | null;
     isActive: boolean;
+    isHot: boolean;
+    isNew: boolean;
+    iconFileId: bigint | null;
+    iconUrl: string | null;
     parentId: bigint | null;
     precedingId: bigint | null;
-    metadata: QuestMetadata;
     entryRule: QuestEntryRule;
     startTime: Date | null;
     endTime: Date | null;
     updatedBy: bigint | null;
+    goals: QuestGoal[];
+    rewards: QuestReward[];
+    translations: QuestTranslation[];
   }>): void {
     Object.assign(this.props, {
       ...params,

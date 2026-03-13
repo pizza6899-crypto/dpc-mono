@@ -16,6 +16,8 @@ import { ApiStandardErrors, ApiStandardResponse, ApiPaginatedResponse } from 'sr
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 import { QuestMaster } from '../../core/domain/models';
+import { SqidsService } from 'src/common/sqids/sqids.service';
+import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { PaginatedData } from 'src/common/http/types';
 
 @Controller('admin/quests')
@@ -27,6 +29,7 @@ export class QuestAdminController {
     private readonly createQuestService: CreateQuestAdminService,
     private readonly updateQuestService: UpdateQuestAdminService,
     private readonly getQuestsService: FindQuestsAdminService,
+    private readonly sqidsService: SqidsService,
   ) { }
 
   @Get()
@@ -67,7 +70,13 @@ export class QuestAdminController {
     @Body() dto: CreateQuestAdminDto,
     @CurrentUser() admin: User,
   ): Promise<CreateQuestAdminResponseDto> {
-    const id = await this.createQuestService.execute(dto, admin.id);
+    // 파일 ID만 디코딩 (파일 모듈만 Sqids 사용)
+    const decodedDto = {
+      ...dto,
+      iconFileId: dto.iconFileId ? this.sqidsService.decode(dto.iconFileId, SqidsPrefix.FILE) : undefined,
+    };
+
+    const id = await this.createQuestService.execute(decodedDto as any, admin.id);
     return { id: id.toString() };
   }
 
@@ -92,7 +101,13 @@ export class QuestAdminController {
     @Body() dto: UpdateQuestAdminDto,
     @CurrentUser() admin: User,
   ) {
-    await this.updateQuestService.execute(BigInt(id), dto, admin.id);
+    // 파일 ID만 디코딩
+    const decodedDto = {
+      ...dto,
+      iconFileId: dto.iconFileId ? this.sqidsService.decode(dto.iconFileId, SqidsPrefix.FILE) : undefined,
+    };
+
+    await this.updateQuestService.execute(BigInt(id), decodedDto as any, admin.id);
     return { success: true };
   }
 
@@ -107,14 +122,15 @@ export class QuestAdminController {
       parentId: quest.parentId?.toString() ?? null,
       precedingId: quest.precedingId?.toString() ?? null,
       metadata: {
-        isHot: quest.metadata.isHot ?? null,
-        isNew: quest.metadata.isNew ?? null,
-        iconFileId: quest.metadata.iconFileId?.toString() ?? null,
-        iconUrl: quest.metadata.iconUrl ?? null,
-        displayOrder: quest.metadata.displayOrder ?? null,
+        isHot: quest.isHot,
+        isNew: quest.isNew,
+        iconUrl: quest.iconUrl,
+        displayOrder: quest.displayOrder,
       },
       entryRule: {
         requireNoWithdrawal: quest.entryRule.requireNoWithdrawal ?? null,
+        maxWithdrawalCount: quest.entryRule.maxWithdrawalCount ?? null,
+        isFirstDepositOnly: quest.entryRule.isFirstDepositOnly ?? null,
       },
       updatedBy: quest.updatedBy?.toString() ?? null,
       startTime: quest.startTime,

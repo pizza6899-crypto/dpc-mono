@@ -8,9 +8,6 @@ export class QuestMetadataResponseDto {
   @ApiProperty({ description: 'Is new quest', nullable: true })
   isNew: boolean | null;
 
-  @ApiProperty({ description: 'Icon file ID', nullable: true })
-  iconFileId: string | null;
-
   @ApiProperty({ description: 'Icon URL', nullable: true })
   iconUrl: string | null;
 
@@ -21,6 +18,12 @@ export class QuestMetadataResponseDto {
 export class QuestEntryRuleResponseDto {
   @ApiProperty({ description: 'Require no withdrawal history', nullable: true })
   requireNoWithdrawal: boolean | null;
+
+  @ApiProperty({ description: 'Max withdrawal count limit', nullable: true })
+  maxWithdrawalCount: number | null;
+
+  @ApiProperty({ description: 'Is first deposit only', nullable: true })
+  isFirstDepositOnly: boolean | null;
 }
 
 export class QuestMatchRuleResponseDto {

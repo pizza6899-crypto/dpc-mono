@@ -61,9 +61,9 @@ export class UserQuestNotFoundException extends QuestCoreException {
  * 퀘스트 정보를 찾을 수 없을 때 발생하는 예외
  */
 export class QuestNotFoundException extends QuestCoreException {
-  constructor(id?: bigint) {
+  constructor() {
     super(
-      `Quest not found${id ? `: ${id}` : ''}`,
+      'Quest not found',
       MessageCode.QUEST_NOT_FOUND,
       HttpStatus.NOT_FOUND,
     );

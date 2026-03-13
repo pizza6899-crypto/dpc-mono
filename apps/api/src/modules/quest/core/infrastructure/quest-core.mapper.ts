@@ -15,7 +15,6 @@ import {
   QuestGoal,
   QuestReward,
   QuestTranslation,
-  QuestMetadata,
   QuestEntryRule,
   UserQuestProgressData,
   UserRewardHistoryDetail,
@@ -38,16 +37,15 @@ export class QuestCoreMapper {
     return this.serializeJson(val) as Prisma.InputJsonValue;
   }
 
-  private static parseMetadata(json: any): QuestMetadata {
+  private static parseProgressData(json: any): UserQuestProgressData {
     const data = json as any;
     if (!data) return {};
     return {
       ...data,
-      iconFileId: data.iconFileId ? Cast.bigint(data.iconFileId) : undefined,
     };
   }
 
-  private static parseProgressData(json: any): UserQuestProgressData {
+  private static parseRewardValue(json: any): QuestRewardValue {
     const data = json as any;
     if (!data) return {};
     return {
@@ -62,12 +60,16 @@ export class QuestCoreMapper {
    */
   static toQuestMasterFullCreatePersistence(entity: QuestMaster): Prisma.QuestMasterCreateInput {
     return {
+      displayOrder: entity.displayOrder,
       type: entity.type,
       category: entity.category,
       resetCycle: entity.resetCycle,
       maxAttempts: entity.maxAttempts,
       isActive: entity.isActive,
-      metadata: this.json(entity.metadata),
+      isHot: entity.isHot,
+      isNew: entity.isNew,
+      iconFileId: entity.iconFileId,
+      iconUrl: entity.iconUrl,
       entryRule: this.json(entity.entryRule),
       updatedByUser: entity.updatedBy ? { connect: { id: entity.updatedBy } } : undefined,
       startTime: entity.startTime,
@@ -91,12 +93,16 @@ export class QuestCoreMapper {
    */
   static toQuestMasterFullUpdatePersistence(entity: QuestMaster): Prisma.QuestMasterUpdateInput {
     return {
+      displayOrder: entity.displayOrder,
       type: entity.type,
       category: entity.category,
       resetCycle: entity.resetCycle,
       maxAttempts: entity.maxAttempts,
       isActive: entity.isActive,
-      metadata: this.json(entity.metadata),
+      isHot: entity.isHot,
+      isNew: entity.isNew,
+      iconFileId: entity.iconFileId,
+      iconUrl: entity.iconUrl,
       entryRule: this.json(entity.entryRule),
       updatedByUser: entity.updatedBy ? { connect: { id: entity.updatedBy } } : undefined,
       startTime: entity.startTime,
@@ -133,7 +139,7 @@ export class QuestCoreMapper {
       currency: entity.currency,
       value: this.json(entity.value),
       expireDays: entity.expireDays,
-      wageringMultiplier: entity.wageringMultiplier,
+      wageringMultiplier: entity.wageringMultiplier.toNumber(),
     };
   }
 
@@ -193,14 +199,18 @@ export class QuestCoreMapper {
   }): QuestMaster {
     return QuestMaster.fromPersistence({
       id: Cast.bigint(record.id),
+      displayOrder: record.displayOrder ?? 0,
       type: record.type as any,
       category: record.category as any,
       resetCycle: record.resetCycle as any,
       maxAttempts: record.maxAttempts,
       isActive: record.isActive,
+      isHot: (record as any).isHot ?? false,
+      isNew: (record as any).isNew ?? false,
+      iconFileId: (record as any).iconFileId ? Cast.bigint((record as any).iconFileId) : null,
+      iconUrl: (record as any).iconUrl ?? null,
       parentId: Cast.bigint(record.parentId),
       precedingId: Cast.bigint(record.precedingId),
-      metadata: this.parseMetadata(record.metadata),
       entryRule: record.entryRule as unknown as QuestEntryRule,
       updatedBy: Cast.bigint(record.updatedBy),
       startTime: Cast.date(record.startTime),
@@ -230,7 +240,7 @@ export class QuestCoreMapper {
       questMasterId: Cast.bigint(record.questMasterId),
       type: record.type as any,
       currency: record.currency as any,
-      value: record.value as unknown as QuestRewardValue,
+      value: this.parseRewardValue(record.value),
       expireDays: record.expireDays,
       wageringMultiplier: Cast.decimal(record.wageringMultiplier),
     });

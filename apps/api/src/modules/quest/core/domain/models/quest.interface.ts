@@ -1,19 +1,10 @@
 /**
- * 퀘스트 운영 및 전시용 메타데이터
- */
-export interface QuestMetadata {
-  isHot?: boolean;
-  isNew?: boolean;
-  iconFileId?: bigint;     // 아이콘 파일 ID (File 모듈 참조)
-  iconUrl?: string;        // 아이콘 접근 URL
-  displayOrder?: number;
-}
-
-/**
  * 퀘스트 참여 자격 규칙 (입구 컷)
  */
 export interface QuestEntryRule {
   requireNoWithdrawal?: boolean;   // 출금 내역 없어야 함
+  maxWithdrawalCount?: number;     // 최대 출금 횟수 제한
+  isFirstDepositOnly?: boolean;    // 첫 입금 한정 여부
 }
 
 /**
@@ -30,6 +21,8 @@ export interface QuestMatchRule {
  */
 export interface QuestRewardValue {
   amount?: number;         // 보상 금액
+  bonusRate?: number;      // 지급 배율 (입금액 대비 등)
+  maxAmount?: number;      // 최대 지급 한도
   point?: number;          // 지급 포인트
   badgeId?: string;        // 배지 ID
   couponId?: string;       // 쿠폰 ID

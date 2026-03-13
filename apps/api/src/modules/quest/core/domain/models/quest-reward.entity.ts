@@ -15,7 +15,7 @@ export interface QuestRewardProps {
  * 퀘스트 완료 시 지급될 보상을 정의하는 엔티티입니다.
  */
 export class QuestReward {
-  private constructor(private readonly props: QuestRewardProps) {}
+  private constructor(private readonly props: QuestRewardProps) { }
 
   static fromPersistence(props: QuestRewardProps): QuestReward {
     return new QuestReward(props);

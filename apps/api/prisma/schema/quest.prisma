@@ -16,16 +16,18 @@ model QuestMaster {
   maxAttempts Int?          @map("max_attempts") // 최대 참여(반복) 가능 횟수 (null: 무제한)
   isActive    Boolean       @default(true)
 
+  // [전시 설정]
+  displayOrder Int     @default(0) @map("display_order")
+  isHot        Boolean @default(false) @map("is_hot")
+  isNew        Boolean @default(false) @map("is_new")
+  iconFileId   BigInt? @map("icon_file_id")
+  iconUrl      String? @map("icon_url")
+
   // [계층 및 선행 관계]
   parentId    BigInt? @map("parent_id")
   precedingId BigInt? @map("preceding_id") // 선행 퀘스트 ID
 
-  // 운영 및 기타 설정 (JSON)
-  // { "isHot": true, "iconUrl": "...", "autoClaim": false }
-  metadata Json @default("{}")
-
-  // 참여 자격 규칙 (입구 컷 설정: JSON)
-  // { "requireNoWithdrawal": true, "maxWithdrawalCount": 0, "isFirstDepositOnly": true }
+  // [참여 자격 규칙 (입구 컷)]
   entryRule Json @default("{}") @map("entry_rule")
 
   // 관리자 추적 필드
@@ -122,16 +124,14 @@ model QuestReward {
   // 특정 통화 전용 보상일 경우 지정 (null이면 모든 통화 공통 보상)
   currency ExchangeCurrencyCode?
 
-  // 보상 상세 설정 (JSON)
-  // { "amount": 5000, "usage": { "allowedCategories": ["SLOT"] } }
-  // { "badgeId": "WELCOME_HERO" }
+  // 보상 상세 설정 (JSON: amount, point, badgeId, couponId 등 포함)
   value Json @default("{}")
 
   // 보상의 유효 기간 (null이면 무제한)
   expireDays Int? @map("expire_days")
 
   // 보너스일 경우 롤링 배수
-  wageringMultiplier Decimal @default(0) @db.Decimal(10, 2)
+  wageringMultiplier Float @default(0) @map("wagering_multiplier")
 
   questMaster QuestMaster @relation(fields: [questMasterId], references: [id])
 

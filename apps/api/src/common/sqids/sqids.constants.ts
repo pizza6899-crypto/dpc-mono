@@ -50,6 +50,7 @@ export const SqidsPrefix = {
   CHAT_TICKET: 'ct',
   CHAT_MESSAGE: 'cm',
   SUPPORT_ROOM: 'sr',
+  QUEST: 'q',
   // 필요에 따라 추가 (기존 값 수정 금지)
 } as const;
 

@@ -3,23 +3,21 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { QUEST_MASTER_REPOSITORY_TOKEN } from '../../core/ports/quest-master.repository.token';
 import type { QuestMasterRepository } from '../../core/ports/quest-master.repository.port';
 import { UpdateQuestAdminDto } from '../controllers/dto/request/update-quest-admin.dto';
-import { QuestMaster, QuestGoal, QuestReward, QuestTranslation } from '../../core/domain/models';
-import { QuestNotFoundException } from '../../core/domain/quest-core.exception';
-import { GetFileService } from '../../../file/application/get-file.service';
+import { QuestGoal, QuestReward, QuestTranslation } from '../../core/domain/models';
+import { AdminQuestNotFoundException } from '../domain/quest-admin.exception';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { AttachFileService } from '../../../file/application/attach-file.service';
 import { FileUsageType } from '../../../file/domain';
-import { EnvService } from 'src/common/env/env.service';
+import { FileUrlService } from '../../../file/application/file-url.service';
 
 @Injectable()
 export class UpdateQuestAdminService {
   constructor(
     @Inject(QUEST_MASTER_REPOSITORY_TOKEN)
     private readonly questMasterRepository: QuestMasterRepository,
-    private readonly getFileService: GetFileService,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly attachFileService: AttachFileService,
-    private readonly envService: EnvService,
+    private readonly fileUrlService: FileUrlService,
   ) { }
 
   @Transactional()
@@ -27,23 +25,10 @@ export class UpdateQuestAdminService {
     // 0. 동시성 제어 (동일 퀘스트에 대한 어드민 중복 수정 방지)
     await this.advisoryLockService.acquireLock(LockNamespace.QUEST_MASTER, id.toString());
 
-    // 1. 파일 유효성 검사 및 확정
-    let iconUrl: string | undefined;
-    if (dto.metadata?.iconFileId) {
-      const iconFileId = BigInt(dto.metadata.iconFileId);
-      await this.getFileService.getById(iconFileId);
-
-      const { files } = await this.attachFileService.execute({
-        fileIds: [dto.metadata.iconFileId],
-        usageType: FileUsageType.QUEST_ICON,
-        usageId: id,
-      });
-      iconUrl = files[0].publicUrl(this.envService.app.cdnUrl) ?? undefined;
-    }
     // 1. 기존 퀘스트 존재 여부 확인
     const existing = await this.questMasterRepository.findById(id);
     if (!existing) {
-      throw new QuestNotFoundException(id);
+      throw new AdminQuestNotFoundException();
     }
 
     // 2. 하위 도메인 엔티티 재생성 (UpdateDto의 값을 기반으로 교체하거나 기존값 유지)
@@ -68,40 +53,59 @@ export class UpdateQuestAdminService {
       ? dto.rewards.map(r => QuestReward.create({
         type: r.type,
         currency: r.currency,
-        value: r.value,
+        value: {
+          amount: r.amount,
+          bonusRate: r.bonusRate,
+          maxAmount: r.maxAmount,
+          point: r.point,
+          badgeId: r.badgeId,
+          couponId: r.couponId,
+        },
         expireDays: r.expireDays,
-        wageringMultiplier: r.wageringMultiplier,
+        wageringMultiplier: r.wageringMultiplier ?? 0,
       }))
       : existing.rewards;
 
     // 3. 도메인 엔티티 업데이트
-    const updatedQuest = QuestMaster.fromPersistence({
-      id: existing.id,
-      type: dto.type ?? existing.type,
-      category: dto.category ?? existing.category,
-      resetCycle: dto.resetCycle ?? existing.resetCycle,
-      maxAttempts: dto.maxAttempts !== undefined ? dto.maxAttempts : existing.maxAttempts,
-      isActive: dto.isActive !== undefined ? dto.isActive : existing.isActive,
-      parentId: dto.parentId !== undefined ? (dto.parentId ? BigInt(dto.parentId) : null) : existing.parentId,
-      precedingId: dto.precedingId !== undefined ? (dto.precedingId ? BigInt(dto.precedingId) : null) : existing.precedingId,
-      metadata: dto.metadata ? {
-        ...existing.metadata,
-        ...dto.metadata,
-        iconFileId: dto.metadata.iconFileId ? BigInt(dto.metadata.iconFileId) : existing.metadata.iconFileId,
-        iconUrl: iconUrl ?? existing.metadata.iconUrl,
-      } : existing.metadata,
-      entryRule: dto.entryRule ?? existing.entryRule,
+    existing.update({
+      type: dto.type,
+      category: dto.category,
+      resetCycle: dto.resetCycle,
+      maxAttempts: dto.maxAttempts,
+      isActive: dto.isActive,
+      isHot: dto.isHot !== undefined ? dto.isHot : existing.isHot,
+      isNew: dto.isNew !== undefined ? dto.isNew : existing.isNew,
+      iconFileId: dto.iconFileId !== undefined ? (dto.iconFileId ? BigInt(dto.iconFileId) : null) : existing.iconFileId,
+      displayOrder: dto.displayOrder !== undefined ? dto.displayOrder : existing.displayOrder,
+      parentId: dto.parentId !== undefined ? (dto.parentId ? BigInt(dto.parentId) : null) : undefined,
+      precedingId: dto.precedingId !== undefined ? (dto.precedingId ? BigInt(dto.precedingId) : null) : undefined,
+      entryRule: {
+        ...existing.entryRule,
+        requireNoWithdrawal: dto.requireNoWithdrawal ?? existing.entryRule.requireNoWithdrawal,
+        maxWithdrawalCount: dto.maxWithdrawalCount ?? existing.entryRule.maxWithdrawalCount,
+        isFirstDepositOnly: dto.isFirstDepositOnly ?? existing.entryRule.isFirstDepositOnly,
+      },
       updatedBy: adminId,
-      startTime: dto.startTime ? new Date(dto.startTime) : existing.startTime,
-      endTime: dto.endTime ? new Date(dto.endTime) : existing.endTime,
-      createdAt: existing.createdAt,
-      updatedAt: new Date(),
+      startTime: dto.startTime ? new Date(dto.startTime) : undefined,
+      endTime: dto.endTime ? new Date(dto.endTime) : undefined,
       translations,
       goals,
       rewards,
     });
 
-    // 4. 저장 (Repository 내부에서 교체 로직 수행)
-    await this.questMasterRepository.save(updatedQuest);
+    // 4. 아이콘 파일 확정 및 URL 업데이트
+    if (dto.iconFileId && BigInt(dto.iconFileId) !== (existing.iconFileId ?? 0n)) {
+      const { files } = await this.attachFileService.execute({
+        fileIds: [BigInt(dto.iconFileId)],
+        usageType: FileUsageType.QUEST_ICON,
+        usageId: id,
+      });
+
+      const publicIconUrl = await this.fileUrlService.getUrl(files[0]);
+      existing.update({ iconUrl: publicIconUrl ?? null });
+    }
+
+    // 5. 저장 (Repository 내부에서 교체 로직 수행)
+    await this.questMasterRepository.save(existing);
   }
 }

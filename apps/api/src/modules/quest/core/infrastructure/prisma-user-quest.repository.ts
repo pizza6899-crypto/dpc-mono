@@ -56,4 +56,14 @@ export class PrismaUserQuestRepository implements UserQuestRepository {
     });
     return records.map(QuestCoreMapper.toUserQuestDomain);
   }
+
+  async findByUserIdAndQuestMasterIds(userId: bigint, masterIds: bigint[]): Promise<UserQuest[]> {
+    const records = await this.tx.userQuest.findMany({
+      where: {
+        userId,
+        questMasterId: { in: masterIds },
+      },
+    });
+    return records.map(QuestCoreMapper.toUserQuestDomain);
+  }
 }
