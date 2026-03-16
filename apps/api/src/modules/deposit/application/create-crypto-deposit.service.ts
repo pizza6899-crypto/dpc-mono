@@ -1,5 +1,5 @@
 // src/modules/deposit/application/create-crypto-deposit.service.ts
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, BadRequestException } from '@nestjs/common';
 import {
   Prisma,
   DepositMethodType,
@@ -21,13 +21,15 @@ import { DepositRequirementPolicy } from '../domain/policy/deposit-requirement.p
 import { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { QUEST_ENGINE_PORT } from '../ports/out/quest-engine.port';
+import type { QuestEnginePort } from '../ports/out/quest-engine.port';
 
 interface CreateCryptoDepositParams {
   user: AuthenticatedUser;
   payCurrency: string;
   payNetwork: string;
   amount?: string | number;
-  depositPromotionCode?: string;
+  depositPromotionCode?: string; // Match DTO
   ipAddress?: string;
   deviceFingerprint?: string;
 }
@@ -39,6 +41,8 @@ export class CreateCryptoDepositService {
     private readonly depositRepository: DepositDetailRepositoryPort,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly depositRequirementPolicy: DepositRequirementPolicy,
+    @Inject(QUEST_ENGINE_PORT)
+    private readonly questEnginePort: QuestEnginePort,
   ) { }
 
   @Transactional()
@@ -52,6 +56,8 @@ export class CreateCryptoDepositService {
       ipAddress,
       deviceFingerprint,
     } = params;
+
+    const appliedQuestId = depositPromotionCode;
 
     const userId = user.id;
 
@@ -73,6 +79,24 @@ export class CreateCryptoDepositService {
       hasPendingDeposit,
     });
 
+    const decimalAmount = amount
+      ? new Prisma.Decimal(amount)
+      : new Prisma.Decimal(0);
+
+    // --- (New) 퀘스트 유효성 검증 ---
+    if (appliedQuestId) {
+      const isEligible = await this.questEnginePort.validateQuestEligibility({
+        userId,
+        questId: BigInt(appliedQuestId),
+        currency: payCurrency as ExchangeCurrencyCode,
+        amount: decimalAmount.isZero() ? undefined : decimalAmount,
+      });
+
+      if (!isEligible) {
+        throw new BadRequestException('INVALID_QUEST_OR_NOT_ELIGIBLE');
+      }
+    }
+
     // TODO: 주소 생성 로직 (Wallet Module 연동 필요)
     const walletAddress: string | undefined = undefined;
 
@@ -84,9 +108,7 @@ export class CreateCryptoDepositService {
 
     // 3. DepositAmount 생성
     const depositAmount = DepositAmount.create({
-      requestedAmount: amount
-        ? new Prisma.Decimal(amount)
-        : new Prisma.Decimal(0),
+      requestedAmount: decimalAmount,
     });
 
     // 4. DepositDetail 생성
@@ -99,6 +121,7 @@ export class CreateCryptoDepositService {
       depositNetwork: payNetwork,
       ipAddress,
       deviceFingerprint,
+      providerMetadata: appliedQuestId ? { appliedQuestId } : null,
     });
 
     // 5. 저장 및 반환

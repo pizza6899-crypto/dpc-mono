@@ -1,12 +1,11 @@
 // src/modules/deposit/application/create-fiat-deposit.service.ts
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, BadRequestException } from '@nestjs/common';
 import {
   Prisma,
   DepositMethodType,
   ExchangeCurrencyCode,
   PaymentProvider,
 } from '@prisma/client';
-
 import {
   DEPOSIT_DETAIL_REPOSITORY,
 } from '../ports/out';
@@ -26,15 +25,17 @@ import { WebsocketService } from 'src/infrastructure/websocket/websocket.service
 import { SOCKET_ROOMS } from 'src/infrastructure/websocket/constants/websocket-rooms.constant';
 import {
   SOCKET_EVENT_TYPES,
-  SocketFiatDepositRequestedPayload,
 } from 'src/infrastructure/websocket/types/socket-payload.types';
+
+import { QUEST_ENGINE_PORT } from '../ports/out/quest-engine.port';
+import type { QuestEnginePort } from '../ports/out/quest-engine.port';
 
 interface CreateFiatDepositParams {
   user: AuthenticatedUser;
   payCurrency: string;
   amount: string | number;
   depositorName?: string;
-  depositPromotionCode?: string;
+  depositPromotionCode?: string; // Match DTO
   ipAddress?: string;
   deviceFingerprint?: string;
 }
@@ -51,6 +52,8 @@ export class CreateFiatDepositService {
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly depositRequirementPolicy: DepositRequirementPolicy,
     private readonly websocketService: WebsocketService,
+    @Inject(QUEST_ENGINE_PORT)
+    private readonly questEnginePort: QuestEnginePort,
   ) { }
 
   @Transactional()
@@ -66,6 +69,8 @@ export class CreateFiatDepositService {
       ipAddress,
       deviceFingerprint,
     } = params;
+
+    const appliedQuestId = depositPromotionCode;
 
     const userId = user.id;
 
@@ -89,6 +94,20 @@ export class CreateFiatDepositService {
 
     const decimalAmount = new Prisma.Decimal(amount);
 
+    // --- (New) 퀘스트 유효성 검증 ---
+    if (appliedQuestId) {
+      const isEligible = await this.questEnginePort.validateQuestEligibility({
+        userId,
+        questId: BigInt(appliedQuestId),
+        currency: payCurrency as ExchangeCurrencyCode,
+        amount: decimalAmount,
+      });
+
+      if (!isEligible) {
+        throw new BadRequestException('INVALID_QUEST_OR_NOT_ELIGIBLE');
+      }
+    }
+
     // 2. DepositMethod 생성
     const depositMethod = DepositMethod.create(
       DepositMethodType.BANK_TRANSFER,
@@ -109,6 +128,7 @@ export class CreateFiatDepositService {
       depositorName,
       ipAddress,
       deviceFingerprint,
+      providerMetadata: appliedQuestId ? { appliedQuestId } : null,
     });
 
     // 5. 저장

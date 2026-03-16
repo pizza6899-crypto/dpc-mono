@@ -9,7 +9,11 @@ import type { UserQuestContextPort } from '../../core/ports/user-quest-context.p
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { Prisma } from '@prisma/client';
 import { UserQuest } from '../../core/domain/models/user-quest.entity';
-import type { ProcessDepositQuestCommand, QuestProcessResult } from 'src/modules/deposit/ports/out/quest-engine.port';
+import type { 
+  ProcessDepositQuestCommand, 
+  QuestProcessResult, 
+  ValidateQuestEligibilityCommand
+} from 'src/modules/deposit/ports/out/quest-engine.port';
 
 @Injectable()
 export class ProcessDepositQuestService {
@@ -107,5 +111,28 @@ export class ProcessDepositQuestService {
       rewardAmount: rewardAmount,
       wageringMultiplier: reward.wageringMultiplier,
     };
+  }
+
+  async validateQuestEligibility(command: ValidateQuestEligibilityCommand): Promise<boolean> {
+    const { userId, questId, currency, amount } = command;
+
+    const quest = await this.questMasterRepository.findById(questId);
+    if (!quest || !quest.isAvailable()) {
+      return false;
+    }
+
+    const userContext = await this.userQuestContextPort.getEntryContext(userId);
+    if (!quest.canEntry(userContext)) {
+      return false;
+    }
+
+    if (amount) {
+      const goal = quest.getGoal(currency);
+      if (goal && !goal.isSatisfied(1, amount.toNumber())) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }
