@@ -103,7 +103,8 @@ export class CreateFiatDepositService {
 
     const decimalAmount = new Prisma.Decimal(amount);
 
-    // --- (New) 퀘스트 유효성 검증 ---
+    // --- (New) 퀘스트 유효성 검증 및 스냅샷 생성 ---
+    let promotionSnapshot: any | null = null;
     if (appliedQuestId) {
       const isEligible = await this.questEnginePort.validateQuestEligibility({
         userId,
@@ -115,6 +116,9 @@ export class CreateFiatDepositService {
       if (!isEligible) {
         throw new InvalidPromotionSelectionException();
       }
+
+      // 스냅샷 획득
+      promotionSnapshot = await this.questEnginePort.getQuestSnapshot(appliedQuestId);
     }
 
     // 2. DepositMethod 생성
@@ -135,9 +139,9 @@ export class CreateFiatDepositService {
       method: depositMethod,
       amount: depositAmount,
       depositorName,
-      ipAddress,
-      deviceFingerprint,
-      providerMetadata: appliedQuestId ? { appliedQuestId: appliedQuestId.toString() } : null,
+      appliedQuestId: appliedQuestId ?? null,
+      promotionSnapshot,
+      providerMetadata: null,
     });
 
     // 5. 저장
@@ -148,7 +152,7 @@ export class CreateFiatDepositService {
       SOCKET_ROOMS.ADMIN,
       SOCKET_EVENT_TYPES.FIAT_DEPOSIT_REQUESTED,
       {
-        id: savedDeposit.id!.toString(),
+        id: savedDeposit.id.toString(),
         depositorName: savedDeposit.depositorName!,
         amount: savedDeposit.getAmount().requestedAmount.toString(),
         currency: savedDeposit.depositCurrency,

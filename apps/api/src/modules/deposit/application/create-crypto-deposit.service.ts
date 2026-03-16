@@ -92,7 +92,8 @@ export class CreateCryptoDepositService {
       ? new Prisma.Decimal(amount)
       : new Prisma.Decimal(0);
 
-    // --- (New) 퀘스트 유효성 검증 ---
+    // --- (New) 퀘스트 유효성 검증 및 스냅샷 생성 ---
+    let promotionSnapshot: any | null = null;
     if (appliedQuestId) {
       const isEligible = await this.questEnginePort.validateQuestEligibility({
         userId,
@@ -104,6 +105,9 @@ export class CreateCryptoDepositService {
       if (!isEligible) {
         throw new InvalidPromotionSelectionException();
       }
+
+      // 스냅샷 획득
+      promotionSnapshot = await this.questEnginePort.getQuestSnapshot(appliedQuestId);
     }
 
     // TODO: 주소 생성 로직 (Wallet Module 연동 필요)
@@ -128,9 +132,9 @@ export class CreateCryptoDepositService {
       amount: depositAmount,
       walletAddress,
       depositNetwork: payNetwork,
-      ipAddress,
-      deviceFingerprint,
-      providerMetadata: appliedQuestId ? { appliedQuestId: appliedQuestId.toString() } : null,
+      appliedQuestId: appliedQuestId ?? null,
+      promotionSnapshot,
+      providerMetadata: null,
     });
 
     // 5. 저장 및 반환

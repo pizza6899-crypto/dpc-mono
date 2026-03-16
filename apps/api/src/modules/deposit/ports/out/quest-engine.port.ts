@@ -41,4 +41,9 @@ export interface QuestEnginePort {
    * @returns 유효 여부 (true: 자격 있음, false: 자격 없음)
    */
   validateQuestEligibility(command: ValidateQuestEligibilityCommand): Promise<boolean>;
+
+  /**
+   * 퀘스트의 현재 설정 정보를 스냅샷(JSON) 형태로 가져옵니다.
+   */
+  getQuestSnapshot(questId: bigint): Promise<any | null>;
 }

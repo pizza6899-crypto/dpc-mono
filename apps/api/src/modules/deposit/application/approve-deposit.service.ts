@@ -149,7 +149,7 @@ export class ApproveDepositService {
           internalNote: memo,
           actionName: WalletActionName.QUEST_REWARD,
           metadata: {
-            questId: appliedQuestId.toString(),
+            questId: appliedQuestId?.toString() || '',
             depositId: deposit.id!.toString(),
             actuallyPaid: actuallyPaid.toString(),
             rewardAmount: rewardAmount.toString(),

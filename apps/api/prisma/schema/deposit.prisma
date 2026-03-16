@@ -58,6 +58,9 @@ model DepositDetail {
   feeCurrency String?        @map("fee_currency")
   feePaidBy   FeePaidByType? @map("fee_paid_by")
 
+  appliedQuestId    BigInt? @map("applied_quest_id")
+  promotionSnapshot Json?   @default("{}") @map("promotion_snapshot")
+
   providerMetadata Json? @default("{}") @map("provider_metadata")
 
   @@index([provider, providerPaymentId])

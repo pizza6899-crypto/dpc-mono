@@ -1,5 +1,5 @@
 import { QuestType, ResetCycle, ExchangeCurrencyCode } from '@prisma/client';
-import { QuestEntryRule } from './quest.interface';
+import { QuestEntryRule, QuestMasterSnapshot } from './quest.interface';
 import { QuestGoal } from './quest-goal.entity';
 import { QuestReward } from './quest-reward.entity';
 import { QuestTranslation } from './quest-translation.entity';
@@ -187,5 +187,38 @@ export class QuestMaster {
       this.goals.find((g) => g.currency === currency) ??
       this.goals.find((g) => g.currency === null)
     );
+  }
+
+  /**
+   * 입금 시점의 핵심 규칙과 보상 정보만 추출하여 스냅샷 객체로 반환합니다.
+   */
+  toSnapshot(): QuestMasterSnapshot {
+    return {
+      id: this.id,
+      type: this.type,
+      resetCycle: this.resetCycle,
+      entryRule: this.entryRule,
+      startTime: this.startTime,
+      endTime: this.endTime,
+      goals: this.goals.map((g) => ({
+        id: g.id,
+        currency: g.currency,
+        targetCount: g.targetCount,
+        targetAmount: g.targetAmount,
+        matchRule: g.matchRule,
+      })),
+      rewards: this.rewards.map((r) => ({
+        id: r.id,
+        type: r.type,
+        value: r.value,
+        currency: r.currency,
+        wageringMultiplier: r.wageringMultiplier,
+      })),
+      translations: this.translations.map((t) => ({
+        language: t.language,
+        title: t.title,
+        description: t.description,
+      })),
+    };
   }
 }

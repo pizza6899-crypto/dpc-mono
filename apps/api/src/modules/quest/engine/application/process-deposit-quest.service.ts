@@ -9,6 +9,7 @@ import type { UserQuestContextPort } from '../../core/ports/user-quest-context.p
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { Prisma } from '@prisma/client';
 import { UserQuest } from '../../core/domain/models/user-quest.entity';
+import { QuestMasterSnapshot } from '../../core/domain/models/quest.interface';
 import type {
   ProcessDepositQuestCommand,
   QuestProcessResult,
@@ -147,5 +148,18 @@ export class ProcessDepositQuestService {
     }
 
     return true;
+  }
+
+  /**
+   * 퀘스트의 현재 설정 정보를 스냅샷 형태로 가져옵니다.
+   */
+  async getQuestSnapshot(questId: bigint): Promise<QuestMasterSnapshot | null> {
+    const quest = await this.questMasterRepository.findById(questId);
+    if (!quest) {
+      return null;
+    }
+
+    // 도메인 엔티티를 입금 시점용 가벼운 스냅샷 데이터로 변환
+    return quest.toSnapshot();
   }
 }

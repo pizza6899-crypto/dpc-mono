@@ -47,3 +47,34 @@ export interface UserRewardHistoryDetail {
   note?: string;           // 지급 관련 비고
   source?: any;            // 원천 데이터 스냅샷
 }
+
+/**
+ * 입금 시점에 저장되는 퀘스트 정의 스냅샷
+ */
+export interface QuestMasterSnapshot {
+  id: bigint | string;
+  type: string;
+  resetCycle: string;
+  entryRule: QuestEntryRule;
+  startTime: Date | string | null;
+  endTime: Date | string | null;
+  goals: Array<{
+    id: bigint | string;
+    currency: string | null;
+    targetCount: number | null;
+    targetAmount: number | string | any | null;
+    matchRule: QuestMatchRule;
+  }>;
+  rewards: Array<{
+    id: bigint | string;
+    type: string;
+    value: QuestRewardValue;
+    currency: string | null;
+    wageringMultiplier: number | string | any | null;
+  }>;
+  translations: Array<{
+    language: string;
+    title: string;
+    description: string | null;
+  }>;
+}

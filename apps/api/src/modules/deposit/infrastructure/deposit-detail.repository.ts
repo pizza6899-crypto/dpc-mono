@@ -2,7 +2,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { DepositDetail, DepositNotFoundException } from '../domain';
+import {
+  DepositDetail,
+  DepositNotFoundException,
+  DepositAlreadyPersistedException,
+} from '../domain';
 import type {
   DepositDetailRepositoryPort,
   DepositListQuery,
@@ -42,10 +46,13 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
   }
 
   async update(deposit: DepositDetail): Promise<DepositDetail> {
+    if (deposit.id === 0n) {
+      throw new DepositNotFoundException();
+    }
     const updateData = this.mapper.toPrismaUpdate(deposit);
 
     const result = await this.tx.depositDetail.update({
-      where: { id: deposit.id! },
+      where: { id: deposit.id },
       data: updateData,
     });
 
@@ -53,6 +60,9 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
   }
 
   async create(deposit: DepositDetail): Promise<DepositDetail> {
+    if (deposit.id !== 0n) {
+      throw new DepositAlreadyPersistedException();
+    }
     const data = this.mapper.toPrismaCreate(deposit);
     const result = await this.tx.depositDetail.create({
       data,

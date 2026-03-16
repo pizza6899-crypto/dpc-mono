@@ -266,3 +266,32 @@ export class DepositFiatNotInProcessingException extends DepositException {
     this.name = 'DepositFiatNotInProcessingException';
   }
 }
+
+/**
+ * 엔티티가 아직 저장(영속화)되지 않았을 때 발생하는 예외
+ * (ID가 0n인 상태에서 비즈니스 로직 수행 시)
+ */
+export class DepositNotPersistedException extends DepositException {
+  constructor(action: string) {
+    super(
+      `Cannot perform action '${action}': Deposit entity must be persisted first.`,
+      MessageCode.DEPOSIT_ENTITY_NOT_PERSISTED,
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
+    this.name = 'DepositNotPersistedException';
+  }
+}
+
+/**
+ * 엔티티가 이미 저장(영속화)되어 있어 생성이 불가능할 때 발생하는 예외
+ */
+export class DepositAlreadyPersistedException extends DepositException {
+  constructor() {
+    super(
+      'Cannot create deposit: Entity is already persisted.',
+      MessageCode.DEPOSIT_ENTITY_ALREADY_PERSISTED,
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
+    this.name = 'DepositAlreadyPersistedException';
+  }
+}

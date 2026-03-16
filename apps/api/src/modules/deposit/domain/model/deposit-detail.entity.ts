@@ -1,18 +1,28 @@
-// src/modules/deposit/domain/model/deposit-detail.entity.ts
-import type { Prisma } from '@prisma/client';
-import type {
+import {
+  Prisma,
+  DepositDetailStatus,
+  DepositMethodType,
+  QuestType,
+  ResetCycle,
   ExchangeCurrencyCode,
-  FeePaidByType,
   PaymentProvider,
+  FeePaidByType,
 } from '@prisma/client';
-import { DepositDetailStatus, DepositMethodType } from '@prisma/client';
+import { QuestMasterSnapshot } from 'src/modules/quest/core/domain/models/quest.interface';
 import { DepositMethod } from './value-objects/deposit-method.vo';
 import { DepositAmount } from './value-objects/deposit-amount.vo';
 import {
   DepositAlreadyProcessedException,
-  DepositException,
+  DepositNotPersistedException,
   DepositFiatNotInProcessingException,
 } from '../deposit.exception';
+
+/**
+ * 입금 프로바이더별 추가 메타데이터
+ */
+export interface DepositProviderMetadata {
+  [key: string]: any;      // 기타 확장성 확보 (PG사 응답 데이터 등)
+}
 
 /**
  * DepositDetail 도메인 엔티티
@@ -27,7 +37,7 @@ import {
  */
 export class DepositDetail {
   private constructor(
-    public readonly id: bigint | null,
+    public readonly id: bigint,
     public readonly userId: bigint,
     private _transactionId: bigint | null,
     private _status: DepositDetailStatus,
@@ -45,7 +55,9 @@ export class DepositDetail {
     public readonly depositorAccount: string | null,
     public readonly ipAddress: string | null,
     public readonly deviceFingerprint: string | null,
-    public readonly providerMetadata: Record<string, any> | null,
+    public readonly appliedQuestId: bigint | null,
+    public readonly promotionSnapshot: QuestMasterSnapshot | null,
+    public readonly providerMetadata: DepositProviderMetadata | null,
     public readonly createdAt: Date,
     private _updatedAt: Date,
     private _confirmedAt: Date | null,
@@ -69,10 +81,12 @@ export class DepositDetail {
     providerPaymentId?: string | null;
     ipAddress?: string | null;
     deviceFingerprint?: string | null;
-    providerMetadata?: Record<string, any> | null;
+    appliedQuestId?: bigint | null;
+    promotionSnapshot?: QuestMasterSnapshot | null;
+    providerMetadata?: DepositProviderMetadata | null;
   }): DepositDetail {
     return new DepositDetail(
-      null,
+      0n,
       params.userId,
       null,
       DepositDetailStatus.PENDING,
@@ -90,6 +104,8 @@ export class DepositDetail {
       params.depositorAccount ?? null,
       params.ipAddress ?? null,
       params.deviceFingerprint ?? null,
+      params.appliedQuestId ?? null,
+      params.promotionSnapshot ?? null,
       params.providerMetadata ?? null,
       new Date(),
       new Date(),
@@ -125,7 +141,9 @@ export class DepositDetail {
     processedBy: bigint | null;
     ipAddress: string | null;
     deviceFingerprint: string | null;
-    providerMetadata: Record<string, any> | null;
+    appliedQuestId: bigint | null;
+    promotionSnapshot: any | null;
+    providerMetadata: DepositProviderMetadata | null;
     createdAt: Date;
     updatedAt: Date;
     confirmedAt: Date | null;
@@ -159,6 +177,8 @@ export class DepositDetail {
       data.depositorAccount,
       data.ipAddress,
       data.deviceFingerprint,
+      data.appliedQuestId,
+      data.promotionSnapshot,
       data.providerMetadata,
       data.createdAt,
       data.updatedAt,
@@ -171,7 +191,7 @@ export class DepositDetail {
    * Domain 엔티티를 Persistence 레이어로 변환
    */
   toPersistence(): {
-    id: bigint | null;
+    id: bigint;
     userId: bigint;
     transactionId: bigint | null;
     status: DepositDetailStatus;
@@ -194,7 +214,9 @@ export class DepositDetail {
     processedBy: bigint | null;
     ipAddress: string | null;
     deviceFingerprint: string | null;
-    providerMetadata: Record<string, any> | null;
+    appliedQuestId: bigint | null;
+    promotionSnapshot: any | null;
+    providerMetadata: DepositProviderMetadata | null;
     createdAt: Date;
     updatedAt: Date;
     confirmedAt: Date | null;
@@ -227,6 +249,8 @@ export class DepositDetail {
       processedBy: this._processedBy,
       ipAddress: this.ipAddress,
       deviceFingerprint: this.deviceFingerprint,
+      appliedQuestId: this.appliedQuestId,
+      promotionSnapshot: this.promotionSnapshot,
       providerMetadata: this.providerMetadata,
       createdAt: this.createdAt,
       updatedAt: this._updatedAt,
@@ -370,8 +394,8 @@ export class DepositDetail {
     transactionHash?: string | null,
     transactionId?: bigint | null,
   ): void {
-    if (!this.id)
-      throw new DepositException('Entity must be persisted before approval');
+    if (this.id === 0n)
+      throw new DepositNotPersistedException('approve');
     if (!this.canBeProcessed()) {
       throw new DepositAlreadyProcessedException(this._status);
     }
@@ -407,8 +431,8 @@ export class DepositDetail {
    * @throws {DepositAlreadyProcessedException} 이미 처리된 입금인 경우
    */
   reject(failureReason: string, adminId: bigint): void {
-    if (!this.id)
-      throw new DepositException('Entity must be persisted before rejection');
+    if (this.id === 0n)
+      throw new DepositNotPersistedException('reject');
     if (!this.canBeProcessed()) {
       throw new DepositAlreadyProcessedException(this._status);
     }
@@ -432,10 +456,8 @@ export class DepositDetail {
    * @param adminId - 처리 대기 중인 관리자 ID
    */
   startProcessing(adminId: bigint): void {
-    if (!this.id)
-      throw new DepositException(
-        'Entity must be persisted before starting process',
-      );
+    if (this.id === 0n)
+      throw new DepositNotPersistedException('startProcessing');
     if (this._status !== DepositDetailStatus.PENDING) {
       throw new DepositAlreadyProcessedException(this._status);
     }
@@ -450,10 +472,8 @@ export class DepositDetail {
    * @throws {DepositAlreadyProcessedException} 이미 처리된 입금인 경우
    */
   cancel(): void {
-    if (!this.id)
-      throw new DepositException(
-        'Entity must be persisted before cancellation',
-      );
+    if (this.id === 0n)
+      throw new DepositNotPersistedException('cancel');
     // 충돌 방지: PENDING 상태에서만 취소 가능 (관리자가 처리 중이거나 자동 확인 중이면 불가)
     if (this._status !== DepositDetailStatus.PENDING) {
       throw new DepositAlreadyProcessedException(this._status);
