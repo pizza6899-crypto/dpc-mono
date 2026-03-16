@@ -54,7 +54,7 @@ export class PrismaUserQuestRepository implements UserQuestRepository {
         status: 'IN_PROGRESS',
       },
     });
-    return records.map(QuestCoreMapper.toUserQuestDomain);
+    return records.map((record) => QuestCoreMapper.toUserQuestDomain(record));
   }
 
   async findByUserIdAndQuestMasterIds(userId: bigint, masterIds: bigint[]): Promise<UserQuest[]> {
@@ -64,7 +64,7 @@ export class PrismaUserQuestRepository implements UserQuestRepository {
         questMasterId: { in: masterIds },
       },
     });
-    return records.map(QuestCoreMapper.toUserQuestDomain);
+    return records.map((record) => QuestCoreMapper.toUserQuestDomain(record));
   }
 
   async findBySourceId(sourceId: bigint): Promise<UserQuest | null> {
