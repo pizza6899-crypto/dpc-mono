@@ -18,7 +18,7 @@ export class CheckWageringRequirementService {
   constructor(
     @Inject(WAGERING_REQUIREMENT_REPOSITORY)
     private readonly repository: WageringRequirementRepositoryPort,
-  ) {}
+  ) { }
 
   /**
    * 유저의 출금 가능 여부 및 롤링 요약 정보를 확인합니다.

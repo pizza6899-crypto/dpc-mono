@@ -71,6 +71,23 @@ export class PendingDepositExistsException extends DepositException {
 }
 
 /**
+ * 진행 중인 웨이저링(롤링)이 있어 입금 신청이 불가능할 때 발생하는 예외
+ *
+ * @errorCode MessageCode.VALIDATION_ERROR
+ * @httpStatus 400
+ */
+export class OngoingWageringRequirementException extends DepositException {
+  constructor() {
+    super(
+      'You have an ongoing wagering requirement. Please complete or cancel it before making a new deposit.',
+      MessageCode.VALIDATION_ERROR,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'OngoingWageringRequirementException';
+  }
+}
+
+/**
  * Deposit 상태가 유효하지 않을 때 발생하는 예외
  *
  * @errorCode MessageCode.DEPOSIT_INVALID_STATUS

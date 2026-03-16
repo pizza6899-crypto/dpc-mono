@@ -13,6 +13,7 @@ import {
 import type {
   DepositDetailRepositoryPort,
 } from '../ports/out';
+import { CheckWageringRequirementService } from 'src/modules/wagering/requirement/application/check-wagering-requirement.service';
 import {
   DepositDetail,
   DepositMethod,
@@ -55,6 +56,7 @@ export class CreateFiatDepositService {
     private readonly websocketService: WebsocketService,
     @Inject(QUEST_ENGINE_PORT)
     private readonly questEnginePort: QuestEnginePort,
+    private readonly checkWageringService: CheckWageringRequirementService,
   ) { }
 
   @Transactional()
@@ -88,9 +90,15 @@ export class CreateFiatDepositService {
     const hasPendingDeposit =
       await this.depositRepository.hasInProgressByUserId(userId);
 
+    const wageringSummary = await this.checkWageringService.getSummary(
+      userId,
+      payCurrency as ExchangeCurrencyCode,
+    );
+
     this.depositRequirementPolicy.validateFiatRequirements({
       ...user,
       hasPendingDeposit,
+      hasOngoingWagering: wageringSummary.activeCount > 0,
     });
 
     const decimalAmount = new Prisma.Decimal(amount);

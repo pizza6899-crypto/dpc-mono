@@ -13,6 +13,7 @@ import {
 import type {
   DepositDetailRepositoryPort,
 } from '../ports/out';
+import { CheckWageringRequirementService } from 'src/modules/wagering/requirement/application/check-wagering-requirement.service';
 import {
   DepositDetail,
   DepositMethod,
@@ -44,6 +45,7 @@ export class CreateCryptoDepositService {
     private readonly depositRequirementPolicy: DepositRequirementPolicy,
     @Inject(QUEST_ENGINE_PORT)
     private readonly questEnginePort: QuestEnginePort,
+    private readonly checkWageringService: CheckWageringRequirementService,
   ) { }
 
   @Transactional()
@@ -75,9 +77,15 @@ export class CreateCryptoDepositService {
     const hasPendingDeposit =
       await this.depositRepository.hasInProgressByUserId(userId);
 
+    const wageringSummary = await this.checkWageringService.getSummary(
+      userId,
+      payCurrency as ExchangeCurrencyCode,
+    );
+
     this.depositRequirementPolicy.validateCryptoRequirements({
       ...user,
       hasPendingDeposit,
+      hasOngoingWagering: wageringSummary.activeCount > 0,
     });
 
     const decimalAmount = amount
