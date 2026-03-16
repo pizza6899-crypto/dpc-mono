@@ -116,6 +116,17 @@ export interface DepositMetadata extends BaseMetadata {
 }
 
 /**
+ * 퀘스트 완료 보상 메타데이터
+ */
+export interface QuestMetadata extends BaseMetadata {
+  questId: string;
+  depositId?: string;
+  rewardId?: string;
+  actuallyPaid?: string;
+  rewardAmount?: string;
+}
+
+/**
  * 기타 일반 메타데이터
  */
 export interface DefaultMetadata extends BaseMetadata { }
@@ -133,4 +144,5 @@ export type AnyWalletTransactionMetadata =
   | VaultOperationMetadata
   | WithdrawalMetadata
   | DepositMetadata
+  | QuestMetadata
   | DefaultMetadata;

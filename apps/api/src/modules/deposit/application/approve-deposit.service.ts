@@ -1,5 +1,5 @@
 // src/modules/deposit/application/approve-deposit.service.ts
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma, AdjustmentReasonCode } from '@prisma/client';
 import type { RequestClientInfo } from 'src/common/http/types';
@@ -17,6 +17,8 @@ import { CreateWageringRequirementService } from 'src/modules/wagering/requireme
 import { GetWageringConfigService } from 'src/modules/wagering/config/application/get-wagering-config.service';
 import { CreateAdminMemoService } from '../../admin-memo/application/create-admin-memo.service';
 import { DepositNotFoundException } from '../domain';
+import { QUEST_ENGINE_PORT } from '../ports/out/quest-engine.port';
+import type { QuestEnginePort, QuestProcessResult } from '../ports/out/quest-engine.port';
 
 interface ApproveDepositParams {
   id: bigint;
@@ -35,6 +37,8 @@ interface ApproveDepositResult {
 
 @Injectable()
 export class ApproveDepositService {
+  private readonly logger = new Logger(ApproveDepositService.name);
+
   constructor(
     @Inject(DEPOSIT_DETAIL_REPOSITORY)
     private readonly depositRepository: DepositDetailRepositoryPort,
@@ -43,6 +47,8 @@ export class ApproveDepositService {
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly wageringConfigService: GetWageringConfigService,
     private readonly createAdminMemoService: CreateAdminMemoService,
+    @Inject(QUEST_ENGINE_PORT)
+    private readonly questEnginePort: QuestEnginePort,
   ) { }
 
   @Transactional()
@@ -82,54 +88,127 @@ export class ApproveDepositService {
     // 6. DepositDetail 상태 업데이트 (엔티티의 변경사항 반영)
     await this.depositRepository.update(deposit);
 
-    // --- 통합 입금 및 롤링 처리 시작 ---
-    const wageringConfig = await this.wageringConfigService.execute();
-    const multiplier = wageringConfig.defaultDepositMultiplier;
-    const bonusAmount = new Prisma.Decimal(0);
-    const totalAmount = actuallyPaid.add(bonusAmount);
+    let isQuestProcessed = false;
+    const appliedQuestId = deposit.providerMetadata?.appliedQuestId;
 
-    // 8. 통합 롤링(Wagering Requirement) 생성
-    await this.createWageringRequirementService.execute({
-      userId: deposit.userId,
-      currency: depositCurrency,
-      sourceType: 'DEPOSIT',
-      sourceId: deposit.id!,
-      calculationMethod: 'FULL',
-      targetType: 'AMOUNT',
-      principalAmount: actuallyPaid,
-      multiplier: multiplier,
-      bonusAmount: bonusAmount,
-      initialFundAmount: totalAmount,
-      realMoneyRatio: totalAmount.isZero()
-        ? new Prisma.Decimal(0)
-        : actuallyPaid.div(totalAmount),
-      isForfeitable: false,
-      requestInfo: requestInfo,
-    });
+    // --- (New) 퀘스트 엔진 동기 처리 시도 ---
+    let questResult: QuestProcessResult = { isSatisfied: false };
+    if (appliedQuestId) {
+      try {
+        questResult = await this.questEnginePort.processDepositQuest({
+          userId: deposit.userId,
+          depositId: deposit.id!,
+          questId: BigInt(appliedQuestId),
+          actuallyPaid,
+          currency: depositCurrency,
+        });
+      } catch (error) {
+        this.logger.error(`Failed to evaluate quest synchronously: ${appliedQuestId} for deposit ${deposit.id}`, error);
+      }
+    }
 
-    // 9. 통합 잔액 업데이트 (입금액 + 보너스 합산 지급)
-    await this.updateUserBalanceService.updateBalance(
-      {
+    // 퀘스트가 처리된 경우: 퀘스트 결과에 따른 보상 및 웨이저링 지급
+    if (questResult.isSatisfied && questResult.rewardAmount) {
+      const rewardAmount = questResult.rewardAmount;
+      const totalAmount = actuallyPaid.add(rewardAmount);
+      const multiplier = questResult.wageringMultiplier || new Prisma.Decimal(0);
+
+      // 1. 통합 롤링(Wagering Requirement) 생성 (QUEST 원천)
+      if (multiplier.gt(0)) {
+        await this.createWageringRequirementService.execute({
+          userId: deposit.userId,
+          currency: depositCurrency,
+          sourceType: 'QUEST',
+          sourceId: questResult.userQuestId!,
+          calculationMethod: 'FULL',
+          targetType: 'AMOUNT',
+          principalAmount: totalAmount,
+          multiplier: multiplier,
+          bonusAmount: rewardAmount,
+          initialFundAmount: totalAmount,
+          realMoneyRatio: actuallyPaid.div(totalAmount),
+          isForfeitable: true,
+          requestInfo: requestInfo,
+        });
+      }
+
+      // 2. 통합 잔액 업데이트 (입금액 + 퀘스트 보너스 합산 지급)
+      await this.updateUserBalanceService.updateBalance(
+        {
+          userId: deposit.userId,
+          currency: depositCurrency,
+          amount: totalAmount,
+          operation: UpdateOperation.ADD,
+          balanceType: UserWalletBalanceType.BONUS, // 프로모션이므로 보너스 잔액으로 취급
+          transactionType: UserWalletTransactionType.DEPOSIT,
+          referenceId: deposit.id!,
+        },
+        {
+          adminUserId: adminId,
+          reasonCode: AdjustmentReasonCode.PROMOTION_REWARD,
+          internalNote: memo,
+          actionName: WalletActionName.QUEST_REWARD,
+          metadata: {
+            questId: appliedQuestId.toString(),
+            depositId: deposit.id!.toString(),
+            actuallyPaid: actuallyPaid.toString(),
+            rewardAmount: rewardAmount.toString(),
+            multiplier: multiplier.toString(),
+          },
+        },
+      );
+    }
+    // 퀘스트가 적용되지 않은 경우: 기존 입금 로직 (기본 롤링 및 현금 지급)
+    else {
+      // --- 통합 입금 및 롤링 처리 시작 ---
+      const wageringConfig = await this.wageringConfigService.execute();
+      const multiplier = wageringConfig.defaultDepositMultiplier;
+      const bonusAmount = new Prisma.Decimal(0);
+      const totalAmount = actuallyPaid.add(bonusAmount);
+
+      // 8. 통합 롤링(Wagering Requirement) 생성 (DEPOSIT 원천)
+      await this.createWageringRequirementService.execute({
         userId: deposit.userId,
         currency: depositCurrency,
-        amount: totalAmount,
-        operation: UpdateOperation.ADD,
-        balanceType: UserWalletBalanceType.BONUS,
-        transactionType: UserWalletTransactionType.DEPOSIT,
-        referenceId: deposit.id!,
-      },
-      {
-        adminUserId: adminId,
-        reasonCode: AdjustmentReasonCode.MANUAL_DEPOSIT,
-        internalNote: memo,
-        actionName: WalletActionName.APPROVE_DEPOSIT,
-        metadata: {
-          depositId: deposit.id!.toString(),
-          bonusAmount: bonusAmount.toString(),
-          multiplier: multiplier.toString(),
+        sourceType: 'DEPOSIT',
+        sourceId: deposit.id!,
+        calculationMethod: 'FULL',
+        targetType: 'AMOUNT',
+        principalAmount: actuallyPaid,
+        multiplier: multiplier,
+        bonusAmount: bonusAmount,
+        initialFundAmount: totalAmount,
+        realMoneyRatio: totalAmount.isZero()
+          ? new Prisma.Decimal(0)
+          : actuallyPaid.div(totalAmount),
+        isForfeitable: false,
+        requestInfo: requestInfo,
+      });
+
+      // 9. 통합 잔액 업데이트 (입금액 + 보너스 합산 지급)
+      await this.updateUserBalanceService.updateBalance(
+        {
+          userId: deposit.userId,
+          currency: depositCurrency,
+          amount: totalAmount,
+          operation: UpdateOperation.ADD,
+          balanceType: UserWalletBalanceType.BONUS,
+          transactionType: UserWalletTransactionType.DEPOSIT,
+          referenceId: deposit.id!,
         },
-      },
-    );
+        {
+          adminUserId: adminId,
+          reasonCode: AdjustmentReasonCode.MANUAL_DEPOSIT,
+          internalNote: memo,
+          actionName: WalletActionName.APPROVE_DEPOSIT,
+          metadata: {
+            depositId: deposit.id!.toString(),
+            bonusAmount: bonusAmount.toString(),
+            multiplier: multiplier.toString(),
+          },
+        },
+      );
+    }
 
     // 10. 관리자 메모 저장 (트랜잭션 편입)
     if (memo) {
@@ -142,7 +221,7 @@ export class ApproveDepositService {
 
     return {
       actuallyPaid: actuallyPaid.toString(),
-      bonusAmount: bonusAmount.toString(),
+      bonusAmount: '0',
       userId: deposit.userId.toString(),
     };
   }

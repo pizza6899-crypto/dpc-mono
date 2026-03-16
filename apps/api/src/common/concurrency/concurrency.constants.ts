@@ -29,6 +29,7 @@ export enum LockNamespace {
   USER_CHAT_SUPPORT = 1016,
   QUEST_CONFIG = 1017,
   QUEST_MASTER = 1018,
+  USER_QUEST = 1019,
 }
 
 export const CONCURRENCY_CONSTANTS = {

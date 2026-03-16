@@ -134,6 +134,7 @@ enum WageringSourceType {
   PROMOTION_BONUS
   TIER_BONUS
   COUPON // 쿠폰 지급을 통한 롤링 발생
+  QUEST // 퀘스트 완료 보상에 의한 롤링
 }
 
 enum WageringCalculationMethod {

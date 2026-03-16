@@ -28,6 +28,7 @@ import {
 } from './ports/out';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { NotificationModule } from '../notification/notification.module';
+import { QuestEngineModule } from '../quest/engine/quest-engine.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { NotificationModule } from '../notification/notification.module';
     SnowflakeModule,
     NotificationModule,
     AdminMemoModule,
+    QuestEngineModule,
   ],
   providers: [
     // Infrastructure (Mapper)

@@ -6,4 +6,5 @@ export interface UserQuestRepository {
   save(userQuest: UserQuest): Promise<void>;
   findActiveByUser(userId: bigint): Promise<UserQuest[]>;
   findByUserIdAndQuestMasterIds(userId: bigint, masterIds: bigint[]): Promise<UserQuest[]>;
+  findBySourceId(sourceId: bigint): Promise<UserQuest | null>;
 }

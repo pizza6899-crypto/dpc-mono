@@ -66,4 +66,11 @@ export class PrismaUserQuestRepository implements UserQuestRepository {
     });
     return records.map(QuestCoreMapper.toUserQuestDomain);
   }
+
+  async findBySourceId(sourceId: bigint): Promise<UserQuest | null> {
+    const record = await this.tx.userQuest.findFirst({
+      where: { sourceId },
+    });
+    return record ? QuestCoreMapper.toUserQuestDomain(record) : null;
+  }
 }
