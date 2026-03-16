@@ -32,8 +32,8 @@ export async function seedQuests(prisma: PrismaClient) {
             },
             goals: {
                 create: [
-                    { currency: ExchangeCurrencyCode.KRW, targetAmount: 10000, targetCount: 1 },
-                    { currency: ExchangeCurrencyCode.USD, targetAmount: 10, targetCount: 1 },
+                    { currency: ExchangeCurrencyCode.KRW, targetAmount: 10000 },
+                    { currency: ExchangeCurrencyCode.USD, targetAmount: 10 },
                 ]
             },
             rewards: {

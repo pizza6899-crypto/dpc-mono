@@ -25,6 +25,7 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { QUEST_ENGINE_PORT } from '../ports/out/quest-engine.port';
 import type { QuestEnginePort } from '../ports/out/quest-engine.port';
+import { QuestMasterSnapshot } from 'src/modules/quest/core/domain/models/quest.interface';
 
 interface CreateCryptoDepositParams {
   user: AuthenticatedUser;
@@ -93,7 +94,7 @@ export class CreateCryptoDepositService {
       : new Prisma.Decimal(0);
 
     // --- (New) 퀘스트 유효성 검증 및 스냅샷 생성 ---
-    let promotionSnapshot: any | null = null;
+    let promotionSnapshot: QuestMasterSnapshot | null = null;
     if (appliedQuestId) {
       const isEligible = await this.questEnginePort.validateQuestEligibility({
         userId,

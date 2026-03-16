@@ -171,8 +171,14 @@ export class QuestMaster {
     }
 
     // 3. 첫 입금 한정 규칙
-    if (entryRule.isFirstDepositOnly && context.totalDepositCount > 1) {
-      return false;
+    if (entryRule.isFirstDepositOnly) {
+      // 이미 완료된 입금이 1건 이상 있다면(즉, 2번째 입금 신청 시점) 거절
+      // 신청 시점(validate)에는 count가 0이어야 하고, 
+      // 첫 입금 승인 직후 처리 시점(process)에는 count가 1이어야 함.
+      // 따라서 count가 1을 초과하는 순간부터는 절대 진입 불가.
+      if (context.totalDepositCount > 1) {
+        return false;
+      }
     }
 
     return true;

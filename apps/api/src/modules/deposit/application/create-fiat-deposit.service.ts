@@ -31,6 +31,7 @@ import {
 
 import { QUEST_ENGINE_PORT } from '../ports/out/quest-engine.port';
 import type { QuestEnginePort } from '../ports/out/quest-engine.port';
+import { QuestMasterSnapshot } from 'src/modules/quest/core/domain/models/quest.interface';
 
 interface CreateFiatDepositParams {
   user: AuthenticatedUser;
@@ -104,7 +105,7 @@ export class CreateFiatDepositService {
     const decimalAmount = new Prisma.Decimal(amount);
 
     // --- (New) 퀘스트 유효성 검증 및 스냅샷 생성 ---
-    let promotionSnapshot: any | null = null;
+    let promotionSnapshot: QuestMasterSnapshot | null = null;
     if (appliedQuestId) {
       const isEligible = await this.questEnginePort.validateQuestEligibility({
         userId,

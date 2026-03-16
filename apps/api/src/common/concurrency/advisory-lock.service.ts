@@ -10,7 +10,7 @@ export class AdvisoryLockService {
   constructor(
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
-  ) {}
+  ) { }
 
   /**
    * [Advisory] 트랜잭션 범위 내에서 배타적 락을 획득합니다. (Blocking)
