@@ -7,7 +7,7 @@ import type { UserQuestRepository } from '../../core/ports/user-quest.repository
 import { USER_QUEST_CONTEXT_PORT_TOKEN } from '../../core/ports/user-quest-context.port';
 import type { UserQuestContextPort } from '../../core/ports/user-quest-context.port';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
-import { Prisma } from '@prisma/client';
+import { Prisma, QuestType, ResetCycle } from '@prisma/client';
 import { UserQuest } from '../../core/domain/models/user-quest.entity';
 import { QuestMasterSnapshot } from '../../core/domain/models/quest.interface';
 import type {
@@ -43,10 +43,15 @@ export class ProcessDepositQuestService {
       { throwThrottleError: true }
     );
 
-    // 1. QuestMaster 조회
+    // 1. QuestMaster 조회 및 타입 검증
     const quest = await this.questMasterRepository.findById(questId);
     if (!quest || !quest.isAvailable()) {
       this.logger.warn(`Quest not found or not available: ${questId}`);
+      return { isSatisfied: false };
+    }
+
+    if (quest.type !== QuestType.DEPOSIT) {
+      this.logger.warn(`Invalid quest type for deposit processing: ${quest.type}`);
       return { isSatisfied: false };
     }
 
@@ -119,6 +124,11 @@ export class ProcessDepositQuestService {
 
     const quest = await this.questMasterRepository.findById(questId);
     if (!quest || !quest.isAvailable()) {
+      return false;
+    }
+
+    // 퀘스트 타입 검증 (입금용 엔진이므로 DEPOSIT 타입만 허용)
+    if (quest.type !== QuestType.DEPOSIT) {
       return false;
     }
 
