@@ -6,7 +6,9 @@ import type { UserQuestRepository } from '../../core/ports/user-quest.repository
 import { GetQuestsUserQueryDto } from '../controllers/dto/request/get-quests-user-query.dto';
 import { QuestUserResponseDto } from '../controllers/dto/response/quest-user-response.dto';
 import { PaginatedData } from 'src/common/http/types';
-import { Language, ExchangeCurrencyCode, QuestType } from '@prisma/client';
+import { Language, ExchangeCurrencyCode } from '@prisma/client';
+import { USER_QUEST_CONTEXT_PORT_TOKEN } from '../../core/ports/user-quest-context.port';
+import type { UserQuestContextPort } from '../../core/ports/user-quest-context.port';
 
 @Injectable()
 export class FindQuestsUserService {
@@ -15,6 +17,8 @@ export class FindQuestsUserService {
     private readonly questMasterRepository: QuestMasterRepository,
     @Inject(USER_QUEST_REPOSITORY_TOKEN)
     private readonly userQuestRepository: UserQuestRepository,
+    @Inject(USER_QUEST_CONTEXT_PORT_TOKEN)
+    private readonly userQuestContextPort: UserQuestContextPort,
   ) { }
 
   async list(
@@ -39,7 +43,10 @@ export class FindQuestsUserService {
       return { data: [], page, limit, total: 0 };
     }
 
-    // 2. 해당 유저의 진행 상태 조회
+    // 2. 유저 참여 자격 정보 조회 (입출금 횟수 등)
+    const userContext = await this.userQuestContextPort.getEntryContext(userId);
+
+    // 3. 해당 유저의 진행 상태 조회
     const userQuests = await this.userQuestRepository.findByUserIdAndQuestMasterIds(
       userId,
       masters.map((m) => m.id),
@@ -47,7 +54,7 @@ export class FindQuestsUserService {
 
     const userQuestMap = new Map(userQuests.map((uq) => [uq.questMasterId, uq]));
 
-    // 3. 응답 DTO 매핑
+    // 4. 응답 DTO 매핑
     const data = masters.map((master) => {
       const userQuest = userQuestMap.get(master.id);
       const translation =
@@ -56,9 +63,10 @@ export class FindQuestsUserService {
         master.translations[0];
 
       const goal = master.getGoal(currency);
+      const isEligible = master.canEntry(userContext);
 
       return {
-        id: master.id.toString(), // TODO: Sqid 적용 필요시 컨트롤러에서 처리
+        id: master.id.toString(),
         type: master.type,
         resetCycle: master.resetCycle,
         title: translation?.title ?? '',
@@ -79,6 +87,7 @@ export class FindQuestsUserService {
         targetCount: goal?.targetCount ?? null,
         currentAmount: userQuest?.progressData.currentAmount ?? 0,
         targetAmount: goal?.targetAmount ? Number(goal.targetAmount) : null,
+        isEligible: isEligible,
       };
     });
 

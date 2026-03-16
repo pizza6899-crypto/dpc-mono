@@ -5,8 +5,11 @@ import { QuestUserController } from './controllers/quest-user.controller';
 import { SqidsModule } from 'src/common/sqids/sqids.module';
 
 @Module({
-  imports: [QuestCoreModule, SqidsModule],
+  imports: [
+    QuestCoreModule,
+    SqidsModule,
+  ],
   controllers: [QuestUserController],
   providers: [FindQuestsUserService],
 })
-export class QuestUserModule {}
+export class QuestUserModule { }

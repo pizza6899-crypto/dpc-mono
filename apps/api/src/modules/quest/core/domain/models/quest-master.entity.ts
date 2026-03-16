@@ -149,6 +149,36 @@ export class QuestMaster {
   }
 
   /**
+   * 유저가 해당 퀘스트에 참여할 수 있는 자격이 있는지 확인합니다.
+   */
+  canEntry(context: {
+    totalWithdrawalCount: number;
+    totalDepositCount: number;
+    hasWithdrawalHistory: boolean;
+  }): boolean {
+    const { entryRule } = this.props;
+
+    // 1. 출금 내역 없어야 함 규칙
+    if (entryRule.requireNoWithdrawal && context.hasWithdrawalHistory) {
+      return false;
+    }
+
+    // 2. 최대 출금 횟수 제한 규칙
+    if (entryRule.maxWithdrawalCount !== undefined && entryRule.maxWithdrawalCount !== null) {
+      if (context.totalWithdrawalCount > entryRule.maxWithdrawalCount) {
+        return false;
+      }
+    }
+
+    // 3. 첫 입금 한정 규칙
+    if (entryRule.isFirstDepositOnly && context.totalDepositCount > 1) {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
    * 해당 통화에 대한 목표 설정을 조회합니다.
    * 통화별 전용 목표가 없으면 공통 목표(currency=null)를 반환합니다.
    */

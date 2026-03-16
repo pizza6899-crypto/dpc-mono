@@ -127,4 +127,10 @@ export class QuestUserResponseDto {
     example: 100.0
   })
   targetAmount: number | null;
+
+  @ApiProperty({
+    description: 'Eligibility to participate / 참여 자격 여부',
+    example: true
+  })
+  isEligible: boolean;
 }
