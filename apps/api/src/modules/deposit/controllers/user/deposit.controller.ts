@@ -128,8 +128,13 @@ export class UserDepositController {
     @CurrentUser() user: AuthenticatedUser,
     @RequestClientInfoParam() clientInfo: RequestClientInfo,
   ): Promise<CreateDepositResponseDto> {
+    const appliedQuestId = dto.appliedQuestId
+      ? this.sqidsService.decode(dto.appliedQuestId, SqidsPrefix.QUEST)
+      : undefined;
+
     const deposit = await this.createCryptoDepositService.execute({
       ...dto,
+      appliedQuestId,
       user: user,
       ipAddress: clientInfo.ip,
       deviceFingerprint: clientInfo.userAgent,
@@ -170,8 +175,13 @@ export class UserDepositController {
     @CurrentUser() user: AuthenticatedUser,
     @RequestClientInfoParam() clientInfo: RequestClientInfo,
   ): Promise<CreateDepositResponseDto> {
+    const appliedQuestId = dto.appliedQuestId
+      ? this.sqidsService.decode(dto.appliedQuestId, SqidsPrefix.QUEST)
+      : undefined;
+
     const result = await this.createFiatDepositService.execute({
       ...dto,
+      appliedQuestId,
       user: user,
       ipAddress: clientInfo.ip,
       deviceFingerprint: clientInfo.userAgent,

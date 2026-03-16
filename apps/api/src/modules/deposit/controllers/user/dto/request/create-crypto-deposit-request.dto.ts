@@ -3,13 +3,14 @@ import { ExchangeCurrencyCode } from '@prisma/client';
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateCryptoDepositRequestDto {
+
   @ApiPropertyOptional({
-    description: '입금 프로모션 코드 / Deposit promotion code',
-    example: 'WELCOME_BONUS',
+    description: '적용할 퀘스트 ID (프로모션 ID) / Applied quest ID (Promotion ID)',
+    example: 'sqid-encoded-id',
   })
   @IsOptional()
   @IsString()
-  depositPromotionCode?: string;
+  appliedQuestId?: string;
 
   @ApiProperty({
     description: '입금할 암호화폐 심볼 / Currency symbol (Coin)',

@@ -36,7 +36,7 @@ interface CreateFiatDepositParams {
   payCurrency: string;
   amount: string | number;
   depositorName?: string;
-  depositPromotionCode?: string; // Match DTO
+  appliedQuestId?: bigint;
   ipAddress?: string;
   deviceFingerprint?: string;
 }
@@ -65,13 +65,13 @@ export class CreateFiatDepositService {
       user,
       payCurrency,
       amount,
-      depositPromotionCode,
+      appliedQuestId,
       depositorName,
       ipAddress,
       deviceFingerprint,
     } = params;
 
-    const appliedQuestId = depositPromotionCode;
+
 
     const userId = user.id;
 
@@ -99,7 +99,7 @@ export class CreateFiatDepositService {
     if (appliedQuestId) {
       const isEligible = await this.questEnginePort.validateQuestEligibility({
         userId,
-        questId: BigInt(appliedQuestId),
+        questId: appliedQuestId,
         currency: payCurrency as ExchangeCurrencyCode,
         amount: decimalAmount,
       });
@@ -129,7 +129,7 @@ export class CreateFiatDepositService {
       depositorName,
       ipAddress,
       deviceFingerprint,
-      providerMetadata: appliedQuestId ? { appliedQuestId } : null,
+      providerMetadata: appliedQuestId ? { appliedQuestId: appliedQuestId.toString() } : null,
     });
 
     // 5. 저장

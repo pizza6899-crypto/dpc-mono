@@ -1,4 +1,5 @@
-import { PrismaClient, QuestType, ResetCycle, RewardType, Language, ExchangeCurrencyCode } from '@prisma/client';
+import { PrismaClient, QuestType, ResetCycle, RewardType, Language, ExchangeCurrencyCode, Prisma } from '@prisma/client';
+import { QuestEntryRule, QuestMatchRule, QuestRewardValue } from '../../src/modules/quest/core/domain/models/quest.interface';
 
 export async function seedQuests(prisma: PrismaClient) {
     console.log('   - Seeding Quest System...');
@@ -16,95 +17,44 @@ export async function seedQuests(prisma: PrismaClient) {
     }
 
     // 2. Initial Quest Masters & Goals & Rewards
-    const quests = [
+    // Prisma.QuestMasterCreateInput을 기본으로 사용하되, 인라인으로 타입을 지정하여 가독성 확보
+    const quests: (Omit<Prisma.QuestMasterCreateInput, 'entryRule'> & { entryRule: QuestEntryRule })[] = [
         {
             type: QuestType.DEPOSIT,
             resetCycle: ResetCycle.NONE,
             maxAttempts: 1,
             entryRule: { isFirstDepositOnly: true, requireNoWithdrawal: true },
-            translations: [
-                { language: Language.KO, title: '신규 가입 첫 입금 보너스', description: '생애 첫 입금 시 입금액의 100% 보너스 지급' },
-                { language: Language.EN, title: 'New Member First Deposit Bonus', description: '100% bonus on your very first deposit' },
-            ],
-            goals: [
-                { currency: ExchangeCurrencyCode.KRW, targetAmount: 10000, targetCount: 1 },
-                { currency: ExchangeCurrencyCode.USD, targetAmount: 10, targetCount: 1 },
-            ],
-            rewards: [
-                {
-                    type: RewardType.BONUS_MONEY,
-                    value: { rate: 1.0, maxAmount: 500000, usage: { allowedCategories: ['SLOT'] } },
-                    wageringMultiplier: 3.0
-                }
-            ]
-        },
-        {
-            type: QuestType.DEPOSIT,
-            resetCycle: ResetCycle.NONE,
-            maxAttempts: 1,
-            entryRule: { isFirstDepositOnly: true, requireNoWithdrawal: true },
-            translations: [
-                { language: Language.KO, title: '신규 크립토 첫 입금 보너스', description: '크립토 첫 입금 시 120% 보너스 지급' },
-                { language: Language.EN, title: 'New Member Crypto First Deposit Bonus', description: '120% bonus on your first crypto deposit' },
-            ],
-            goals: [
-                { currency: ExchangeCurrencyCode.USD, targetAmount: 20, targetCount: 1, matchRule: { method: 'CRYPTO' } },
-            ],
-            rewards: [
-                {
-                    type: RewardType.BONUS_MONEY,
-                    value: { rate: 1.2, maxAmount: 1000, usage: { allowedCategories: ['SLOT', 'CASINO'] } },
-                    wageringMultiplier: 5.0
-                }
-            ]
-        },
-        {
-            type: QuestType.DEPOSIT,
-            resetCycle: ResetCycle.NONE,
-            maxAttempts: null, // 무제한
-            entryRule: { minDepositAmount: 10000 },
-            translations: [
-                { language: Language.KO, title: '무한 매충 보너스', description: '입금할 때마다 10% 추가 보너스' },
-                { language: Language.EN, title: 'Unlimited Reload Bonus', description: 'Get 10% bonus on every deposit' },
-            ],
-            goals: [
-                { currency: ExchangeCurrencyCode.KRW, targetAmount: 10000, targetCount: 1 },
-            ],
-            rewards: [
-                {
-                    type: RewardType.BONUS_MONEY,
-                    value: { rate: 0.1, maxAmount: 100000 },
-                    wageringMultiplier: 1.0
-                }
-            ]
-        },
-        {
-            type: QuestType.DEPOSIT,
-            resetCycle: ResetCycle.WEEKLY,
-            maxAttempts: 1,
-            entryRule: {},
-            translations: [
-                { language: Language.KO, title: '주말 핫타임 보너스', description: '주말에만 드리는 특별한 20% 보너스' },
-                { language: Language.EN, title: 'Weekend Hot-Time Bonus', description: 'Special 20% bonus only on weekends' },
-            ],
-            goals: [
-                { currency: ExchangeCurrencyCode.KRW, targetAmount: 30000, targetCount: 1 },
-            ],
-            rewards: [
-                {
-                    type: RewardType.BONUS_MONEY,
-                    value: { rate: 0.2, maxAmount: 200000 },
-                    wageringMultiplier: 2.0
-                }
-            ]
+            translations: {
+                create: [
+                    { language: Language.KO, title: '신규 가입 첫 입금 보너스', description: '생애 첫 입금 시 입금액의 100% 보너스 지급' },
+                    { language: Language.EN, title: 'New Member First Deposit Bonus', description: '100% bonus on your very first deposit' },
+                ]
+            },
+            goals: {
+                create: [
+                    { currency: ExchangeCurrencyCode.KRW, targetAmount: 10000, targetCount: 1 },
+                    { currency: ExchangeCurrencyCode.USD, targetAmount: 10, targetCount: 1 },
+                ]
+            },
+            rewards: {
+                create: [
+                    {
+                        type: RewardType.BONUS_MONEY,
+                        value: { bonusRate: 1.0, maxAmount: 500000 } as QuestRewardValue as any,
+                        wageringMultiplier: 3.0
+                    }
+                ]
+            }
         }
     ];
 
     for (const q of quests) {
+        // 타이틀로 중복 체크 (첫 번째 KO 타이틀 기준)
+        const koTitle = (q.translations?.create as any[])[0].title;
         const existingQuest = await prisma.questMaster.findFirst({
             where: {
                 translations: {
-                    some: { title: q.translations[0].title }
+                    some: { title: koTitle }
                 }
             }
         });
@@ -112,22 +62,11 @@ export async function seedQuests(prisma: PrismaClient) {
         if (!existingQuest) {
             await prisma.questMaster.create({
                 data: {
-                    type: q.type,
-                    resetCycle: q.resetCycle,
-                    maxAttempts: q.maxAttempts,
-                    entryRule: q.entryRule,
-                    translations: {
-                        create: q.translations
-                    },
-                    goals: {
-                        create: q.goals
-                    },
-                    rewards: {
-                        create: q.rewards
-                    }
+                    ...q,
+                    entryRule: q.entryRule as any,
                 }
             });
-            console.log(`   ✅ Quest [${q.translations[0].title}] seeded.`);
+            console.log(`   ✅ Quest [${koTitle}] seeded.`);
         }
     }
 }

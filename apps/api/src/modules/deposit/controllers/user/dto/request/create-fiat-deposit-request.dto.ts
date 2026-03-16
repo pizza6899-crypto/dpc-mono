@@ -9,13 +9,14 @@ import {
 } from 'class-validator';
 
 export class CreateFiatDepositRequestDto {
+
   @ApiPropertyOptional({
-    description: '입금 프로모션 코드 / Deposit promotion code',
-    example: 'WELCOME_BONUS',
+    description: '적용할 퀘스트 ID (프로모션 ID) / Applied quest ID (Promotion ID)',
+    example: 'sqid-encoded-id',
   })
   @IsOptional()
   @IsString()
-  depositPromotionCode?: string;
+  appliedQuestId?: string;
 
   @ApiProperty({
     description: '입금할 통화 코드 / Currency code',

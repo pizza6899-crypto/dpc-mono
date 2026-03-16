@@ -30,7 +30,7 @@ interface CreateCryptoDepositParams {
   payCurrency: string;
   payNetwork: string;
   amount?: string | number;
-  depositPromotionCode?: string; // Match DTO
+  appliedQuestId?: bigint;
   ipAddress?: string;
   deviceFingerprint?: string;
 }
@@ -53,12 +53,12 @@ export class CreateCryptoDepositService {
       payCurrency,
       payNetwork,
       amount,
-      depositPromotionCode,
+      appliedQuestId,
       ipAddress,
       deviceFingerprint,
     } = params;
 
-    const appliedQuestId = depositPromotionCode;
+
 
     const userId = user.id;
 
@@ -88,7 +88,7 @@ export class CreateCryptoDepositService {
     if (appliedQuestId) {
       const isEligible = await this.questEnginePort.validateQuestEligibility({
         userId,
-        questId: BigInt(appliedQuestId),
+        questId: appliedQuestId,
         currency: payCurrency as ExchangeCurrencyCode,
         amount: decimalAmount.isZero() ? undefined : decimalAmount,
       });
@@ -122,7 +122,7 @@ export class CreateCryptoDepositService {
       depositNetwork: payNetwork,
       ipAddress,
       deviceFingerprint,
-      providerMetadata: appliedQuestId ? { appliedQuestId } : null,
+      providerMetadata: appliedQuestId ? { appliedQuestId: appliedQuestId.toString() } : null,
     });
 
     // 5. 저장 및 반환
