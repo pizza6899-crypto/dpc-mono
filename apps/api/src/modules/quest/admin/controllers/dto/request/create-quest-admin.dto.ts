@@ -1,4 +1,4 @@
-import { QuestType, QuestCategory, ResetCycle, RewardType, ExchangeCurrencyCode, Language } from '@prisma/client';
+import { QuestType, ResetCycle, RewardType, ExchangeCurrencyCode, Language } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsEnum, IsOptional, IsString, IsBoolean, IsNumber, IsArray, ValidateNested, IsDateString } from 'class-validator';
@@ -139,12 +139,6 @@ export class CreateQuestAdminDto {
   @IsEnum(QuestType)
   type: QuestType;
 
-  @ApiProperty({
-    description: 'Quest category / 퀘스트 카테고리',
-    enum: QuestCategory,
-  })
-  @IsEnum(QuestCategory)
-  category: QuestCategory;
 
   @ApiProperty({
     description: 'Reset cycle / 초기화 주기',

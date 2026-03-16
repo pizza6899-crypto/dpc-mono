@@ -38,12 +38,11 @@ export class PrismaQuestMasterRepository implements QuestMasterRepository {
   }
 
   async list(query: QuestMasterListQuery): Promise<{ items: QuestMaster[]; total: number }> {
-    const { skip, take, id, type, category, isActive, keyword, sortBy, sortOrder } = query;
+    const { skip, take, id, type, isActive, keyword, sortBy, sortOrder } = query;
 
     const where: Prisma.QuestMasterWhereInput = {
       id,
       type,
-      category,
       isActive,
       ...(keyword ? {
         translations: {

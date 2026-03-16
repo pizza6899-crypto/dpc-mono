@@ -51,7 +51,6 @@ export class CreateQuestAdminService {
     // 2. Aggregate Root(QuestMaster) 생성
     const questMaster = QuestMaster.create({
       type: dto.type,
-      category: dto.category,
       resetCycle: dto.resetCycle,
       maxAttempts: dto.maxAttempts,
       isActive: dto.isActive,

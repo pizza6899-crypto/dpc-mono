@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { QuestType, QuestCategory, ResetCycle, RewardType, ExchangeCurrencyCode, Language } from '@prisma/client';
+import { QuestType, ResetCycle, RewardType, ExchangeCurrencyCode, Language } from '@prisma/client';
 
 export class QuestMetadataResponseDto {
   @ApiProperty({ description: 'Is hot quest', nullable: true })
@@ -111,8 +111,6 @@ export class QuestAdminResponseDto {
   @ApiProperty({ description: 'Quest type', enum: QuestType })
   type: QuestType;
 
-  @ApiProperty({ description: 'Quest category', enum: QuestCategory })
-  category: QuestCategory;
 
   @ApiProperty({ description: 'Reset cycle', enum: ResetCycle })
   resetCycle: ResetCycle;

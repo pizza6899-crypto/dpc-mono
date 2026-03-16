@@ -1,4 +1,4 @@
-import { QuestType, QuestCategory } from '@prisma/client';
+import { QuestType } from '@prisma/client';
 import { QuestMaster } from '../domain/models';
 
 export interface QuestMasterListQuery {
@@ -6,7 +6,6 @@ export interface QuestMasterListQuery {
   take?: number;
   id?: bigint;
   type?: QuestType;
-  category?: QuestCategory;
   isActive?: boolean;
   keyword?: string;
   sortBy?: string;

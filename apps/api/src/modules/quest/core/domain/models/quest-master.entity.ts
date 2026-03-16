@@ -1,4 +1,4 @@
-import { QuestType, QuestCategory, ResetCycle, ExchangeCurrencyCode } from '@prisma/client';
+import { QuestType, ResetCycle, ExchangeCurrencyCode } from '@prisma/client';
 import { QuestEntryRule } from './quest.interface';
 import { QuestGoal } from './quest-goal.entity';
 import { QuestReward } from './quest-reward.entity';
@@ -8,7 +8,6 @@ export interface QuestMasterProps {
   id: bigint;
   displayOrder: number;
   type: QuestType;
-  category: QuestCategory;
   resetCycle: ResetCycle;
   maxAttempts: number | null;
   isActive: boolean;
@@ -44,7 +43,6 @@ export class QuestMaster {
   static create(params: {
     displayOrder?: number;
     type: QuestType;
-    category: QuestCategory;
     resetCycle?: ResetCycle;
     maxAttempts?: number | null;
     isActive?: boolean;
@@ -66,7 +64,6 @@ export class QuestMaster {
       id: 0n,
       displayOrder: params.displayOrder ?? 0,
       type: params.type,
-      category: params.category,
       resetCycle: params.resetCycle ?? 'NONE',
       maxAttempts: params.maxAttempts ?? null,
       isActive: params.isActive ?? true,
@@ -92,7 +89,6 @@ export class QuestMaster {
   get id(): bigint { return this.props.id; }
   get displayOrder(): number { return this.props.displayOrder; }
   get type(): QuestType { return this.props.type; }
-  get category(): QuestCategory { return this.props.category; }
   get resetCycle(): ResetCycle { return this.props.resetCycle; }
   get maxAttempts(): number | null { return this.props.maxAttempts; }
   get isActive(): boolean { return this.props.isActive; }
@@ -129,7 +125,6 @@ export class QuestMaster {
   update(params: Partial<{
     displayOrder: number;
     type: QuestType;
-    category: QuestCategory;
     resetCycle: ResetCycle;
     maxAttempts: number | null;
     isActive: boolean;

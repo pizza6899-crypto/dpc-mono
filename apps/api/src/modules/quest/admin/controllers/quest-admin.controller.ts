@@ -115,7 +115,6 @@ export class QuestAdminController {
     return {
       id: quest.id.toString(),
       type: quest.type,
-      category: quest.category,
       resetCycle: quest.resetCycle,
       maxAttempts: quest.maxAttempts,
       isActive: quest.isActive,

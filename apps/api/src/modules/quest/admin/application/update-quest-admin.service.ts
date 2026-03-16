@@ -69,7 +69,6 @@ export class UpdateQuestAdminService {
     // 3. 도메인 엔티티 업데이트
     existing.update({
       type: dto.type,
-      category: dto.category,
       resetCycle: dto.resetCycle,
       maxAttempts: dto.maxAttempts,
       isActive: dto.isActive,

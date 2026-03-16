@@ -60,7 +60,6 @@ export class FindQuestsUserService {
       return {
         id: master.id.toString(), // TODO: Sqid 적용 필요시 컨트롤러에서 처리
         type: master.type,
-        category: master.category,
         resetCycle: master.resetCycle,
         title: translation?.title ?? '',
         description: translation?.description ?? null,

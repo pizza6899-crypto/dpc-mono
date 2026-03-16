@@ -62,7 +62,6 @@ export class QuestCoreMapper {
     return {
       displayOrder: entity.displayOrder,
       type: entity.type,
-      category: entity.category,
       resetCycle: entity.resetCycle,
       maxAttempts: entity.maxAttempts,
       isActive: entity.isActive,
@@ -95,7 +94,6 @@ export class QuestCoreMapper {
     return {
       displayOrder: entity.displayOrder,
       type: entity.type,
-      category: entity.category,
       resetCycle: entity.resetCycle,
       maxAttempts: entity.maxAttempts,
       isActive: entity.isActive,
@@ -201,7 +199,6 @@ export class QuestCoreMapper {
       id: Cast.bigint(record.id),
       displayOrder: record.displayOrder ?? 0,
       type: record.type as any,
-      category: record.category as any,
       resetCycle: record.resetCycle as any,
       maxAttempts: record.maxAttempts,
       isActive: record.isActive,

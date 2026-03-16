@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { QuestType, QuestCategory } from '@prisma/client';
+import { QuestType } from '@prisma/client';
 import { Transform } from 'class-transformer';
 import { IsBoolean, IsEnum, IsOptional, IsString } from 'class-validator';
 import { createPaginationQueryDto } from 'src/common/http/types';
@@ -9,7 +9,6 @@ export class GetQuestsAdminQueryDto extends createPaginationQueryDto({}, [
   'updatedAt',
   'id',
   'type',
-  'category',
   'isActive',
 ]) {
   @ApiPropertyOptional({
@@ -27,13 +26,6 @@ export class GetQuestsAdminQueryDto extends createPaginationQueryDto({}, [
   @IsEnum(QuestType)
   type?: QuestType;
 
-  @ApiPropertyOptional({
-    description: 'Filter by Quest Category / 퀘스트 카테고리로 필터링',
-    enum: QuestCategory,
-  })
-  @IsOptional()
-  @IsEnum(QuestCategory)
-  category?: QuestCategory;
 
   @ApiPropertyOptional({
     description: 'Filter by IsActive / 활성화 여부로 필터링',

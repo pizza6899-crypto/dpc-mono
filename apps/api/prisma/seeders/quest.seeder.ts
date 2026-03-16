@@ -1,4 +1,4 @@
-import { PrismaClient, QuestType, QuestCategory, ResetCycle, RewardType, Language, ExchangeCurrencyCode } from '@prisma/client';
+import { PrismaClient, QuestType, ResetCycle, RewardType, Language, ExchangeCurrencyCode } from '@prisma/client';
 
 export async function seedQuests(prisma: PrismaClient) {
     console.log('   - Seeding Quest System...');
@@ -19,7 +19,6 @@ export async function seedQuests(prisma: PrismaClient) {
     const quests = [
         {
             type: QuestType.DEPOSIT,
-            category: QuestCategory.WELCOME,
             resetCycle: ResetCycle.NONE,
             maxAttempts: 1,
             entryRule: { isFirstDepositOnly: true, requireNoWithdrawal: true },
@@ -41,7 +40,6 @@ export async function seedQuests(prisma: PrismaClient) {
         },
         {
             type: QuestType.DEPOSIT,
-            category: QuestCategory.WELCOME,
             resetCycle: ResetCycle.NONE,
             maxAttempts: 1,
             entryRule: { isFirstDepositOnly: true, requireNoWithdrawal: true },
@@ -62,7 +60,6 @@ export async function seedQuests(prisma: PrismaClient) {
         },
         {
             type: QuestType.DEPOSIT,
-            category: QuestCategory.RELOAD,
             resetCycle: ResetCycle.NONE,
             maxAttempts: null, // 무제한
             entryRule: { minDepositAmount: 10000 },
@@ -83,7 +80,6 @@ export async function seedQuests(prisma: PrismaClient) {
         },
         {
             type: QuestType.DEPOSIT,
-            category: QuestCategory.SPECIAL,
             resetCycle: ResetCycle.WEEKLY,
             maxAttempts: 1,
             entryRule: {},
@@ -117,7 +113,6 @@ export async function seedQuests(prisma: PrismaClient) {
             await prisma.questMaster.create({
                 data: {
                     type: q.type,
-                    category: q.category,
                     resetCycle: q.resetCycle,
                     maxAttempts: q.maxAttempts,
                     entryRule: q.entryRule,

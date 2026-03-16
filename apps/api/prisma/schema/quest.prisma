@@ -9,12 +9,11 @@ model QuestSystemConfig {
 }
 
 model QuestMaster {
-  id          BigInt        @id @default(autoincrement())
+  id          BigInt     @id @default(autoincrement())
   type        QuestType // DEPOSIT, CHAT, ATTENDANCE, GAME_PLAY
-  category    QuestCategory
-  resetCycle  ResetCycle    @default(NONE)
-  maxAttempts Int?          @map("max_attempts") // 최대 참여(반복) 가능 횟수 (null: 무제한)
-  isActive    Boolean       @default(true)
+  resetCycle  ResetCycle @default(NONE)
+  maxAttempts Int?       @map("max_attempts") // 최대 참여(반복) 가능 횟수 (null: 무제한)
+  isActive    Boolean    @default(true)
 
   // [전시 설정]
   displayOrder Int     @default(0) @map("display_order")
@@ -67,14 +66,6 @@ enum RewardType {
   BADGE // 배지/업적
   COUPON // 쿠폰 아이템
   POINT // 포인트/기타 재화
-}
-
-enum QuestCategory {
-  WELCOME // 신규 유입 및 정착 (신규 가입, 신규 첫충 등)
-  RELOAD // 입금 활성화 (매충, 무한 매충 등)
-  ACTIVITY // 사이트 활동 (출석체크, 채팅, 게임 플레이 등)
-  SPECIAL // 기간/시간 한정 이벤트 (돌발, 해피아워, 주말 이벤트)
-  LOYALTY // 등급/충성도 (VIP 전용, 티어 달성 보상 등)
 }
 
 enum ResetCycle {

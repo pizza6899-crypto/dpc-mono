@@ -13,14 +13,13 @@ export class FindQuestsAdminService {
   ) { }
 
   async list(query: GetQuestsAdminQueryDto): Promise<PaginatedData<QuestMaster>> {
-    const { page = 1, limit = 20, id, type, category, isActive, keyword, sortBy, sortOrder } = query;
+    const { page = 1, limit = 20, id, type, isActive, keyword, sortBy, sortOrder } = query;
 
     const { items, total } = await this.questMasterRepository.list({
       skip: (page - 1) * limit,
       take: limit,
       id: id ? BigInt(id) : undefined,
       type,
-      category,
       isActive,
       keyword,
       sortBy,

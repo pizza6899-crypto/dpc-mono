@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { QuestType, QuestCategory, UserQuestStatus, ResetCycle, ExchangeCurrencyCode, RewardType } from '@prisma/client';
+import { QuestType, UserQuestStatus, ResetCycle, ExchangeCurrencyCode, RewardType } from '@prisma/client';
 
 export class QuestRewardUserResponseDto {
   @ApiProperty({
@@ -46,12 +46,6 @@ export class QuestUserResponseDto {
   })
   type: QuestType;
 
-  @ApiProperty({
-    description: 'Quest category / 퀘스트 카테고리',
-    enum: QuestCategory,
-    example: QuestCategory.WELCOME
-  })
-  category: QuestCategory;
 
   @ApiProperty({
     description: 'Quest reset cycle / 퀘스트 초기화 주기',
