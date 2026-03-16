@@ -80,7 +80,7 @@ export class OngoingWageringRequirementException extends DepositException {
   constructor() {
     super(
       'You have an ongoing wagering requirement. Please complete or cancel it before making a new deposit.',
-      MessageCode.VALIDATION_ERROR,
+      MessageCode.ROLLING_NOT_COMPLETED,
       HttpStatus.BAD_REQUEST,
     );
     this.name = 'OngoingWageringRequirementException';

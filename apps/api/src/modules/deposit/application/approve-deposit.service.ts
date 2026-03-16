@@ -88,22 +88,18 @@ export class ApproveDepositService {
     // 6. DepositDetail 상태 업데이트 (엔티티의 변경사항 반영)
     await this.depositRepository.update(deposit);
 
-    let isQuestProcessed = false;
-    const appliedQuestId = deposit.providerMetadata?.appliedQuestId;
-
-    // --- (New) 퀘스트 엔진 동기 처리 시도 ---
     let questResult: QuestProcessResult = { isSatisfied: false };
-    if (appliedQuestId) {
+    if (deposit.appliedQuestId) {
       try {
         questResult = await this.questEnginePort.processDepositQuest({
           userId: deposit.userId,
-          depositId: deposit.id!,
-          questId: BigInt(appliedQuestId),
+          depositId: deposit.id,
+          questId: deposit.appliedQuestId,
           actuallyPaid,
           currency: depositCurrency,
         });
       } catch (error) {
-        this.logger.error(`Failed to evaluate quest synchronously: ${appliedQuestId} for deposit ${deposit.id}`, error);
+        this.logger.error(`Failed to evaluate quest synchronously: ${deposit.appliedQuestId} for deposit ${deposit.id}`, error);
       }
     }
 
@@ -118,9 +114,9 @@ export class ApproveDepositService {
         await this.createWageringRequirementService.execute({
           userId: deposit.userId,
           currency: depositCurrency,
-          sourceType: 'QUEST',
-          sourceId: questResult.userQuestId!,
-          calculationMethod: 'FULL',
+          sourceType: 'DEPOSIT',
+          sourceId: deposit.id,
+          calculationMethod: 'WEIGHTED',
           targetType: 'AMOUNT',
           principalAmount: totalAmount,
           multiplier: multiplier,
@@ -149,8 +145,8 @@ export class ApproveDepositService {
           internalNote: memo,
           actionName: WalletActionName.QUEST_REWARD,
           metadata: {
-            questId: appliedQuestId?.toString() || '',
-            depositId: deposit.id!.toString(),
+            questId: deposit.appliedQuestId?.toString() || '',
+            depositId: deposit.id.toString(),
             actuallyPaid: actuallyPaid.toString(),
             rewardAmount: rewardAmount.toString(),
             multiplier: multiplier.toString(),
@@ -171,7 +167,7 @@ export class ApproveDepositService {
         userId: deposit.userId,
         currency: depositCurrency,
         sourceType: 'DEPOSIT',
-        sourceId: deposit.id!,
+        sourceId: deposit.id,
         calculationMethod: 'FULL',
         targetType: 'AMOUNT',
         principalAmount: actuallyPaid,
@@ -192,9 +188,9 @@ export class ApproveDepositService {
           currency: depositCurrency,
           amount: totalAmount,
           operation: UpdateOperation.ADD,
-          balanceType: UserWalletBalanceType.BONUS,
+          balanceType: UserWalletBalanceType.CASH, // 일반 입금은 현금 잔액으로 지급
           transactionType: UserWalletTransactionType.DEPOSIT,
-          referenceId: deposit.id!,
+          referenceId: deposit.id,
         },
         {
           adminUserId: adminId,
@@ -202,7 +198,7 @@ export class ApproveDepositService {
           internalNote: memo,
           actionName: WalletActionName.APPROVE_DEPOSIT,
           metadata: {
-            depositId: deposit.id!.toString(),
+            depositId: deposit.id.toString(),
             bonusAmount: bonusAmount.toString(),
             multiplier: multiplier.toString(),
           },
@@ -221,7 +217,7 @@ export class ApproveDepositService {
 
     return {
       actuallyPaid: actuallyPaid.toString(),
-      bonusAmount: '0',
+      bonusAmount: questResult.rewardAmount?.toString() || '0',
       userId: deposit.userId.toString(),
     };
   }
