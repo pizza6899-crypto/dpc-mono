@@ -8,6 +8,15 @@ import { AttachFileService } from '../../../file/application/attach-file.service
 import { FileUsageType } from '../../../file/domain';
 import { FileUrlService } from '../../../file/application/file-url.service';
 
+/**
+ * 서비스 내부에서 사용할 생성 명령 타입입니다.
+ */
+export type CreateQuestAdminCommand = Omit<CreateQuestAdminDto, 'iconFileId' | 'parentId' | 'precedingId'> & {
+  iconFileId?: bigint | null;
+  parentId?: bigint | null;
+  precedingId?: bigint | null;
+};
+
 @Injectable()
 export class CreateQuestAdminService {
   constructor(
@@ -18,7 +27,7 @@ export class CreateQuestAdminService {
   ) { }
 
   @Transactional()
-  async execute(dto: CreateQuestAdminDto, adminId: bigint): Promise<bigint> {
+  async execute(dto: CreateQuestAdminCommand, adminId: bigint): Promise<bigint> {
     // 1. 하위 도메인 엔티티 생성
     const translations = dto.translations.map(t => QuestTranslation.create({
       language: t.language,
@@ -56,10 +65,10 @@ export class CreateQuestAdminService {
       isActive: dto.isActive,
       isHot: dto.isHot,
       isNew: dto.isNew,
-      iconFileId: dto.iconFileId ? BigInt(dto.iconFileId) : null,
+      iconFileId: dto.iconFileId ?? null,
       displayOrder: dto.displayOrder,
-      parentId: dto.parentId ? BigInt(dto.parentId) : null,
-      precedingId: dto.precedingId ? BigInt(dto.precedingId) : null,
+      parentId: dto.parentId ?? null,
+      precedingId: dto.precedingId ?? null,
       entryRule: {
         requireNoWithdrawal: dto.requireNoWithdrawal,
         maxWithdrawalCount: dto.maxWithdrawalCount,

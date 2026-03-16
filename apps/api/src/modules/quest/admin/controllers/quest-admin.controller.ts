@@ -1,7 +1,7 @@
 import { Body, Controller, Param, ParseIntPipe, Post, Patch, Get, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { CreateQuestAdminService } from '../application/create-quest-admin.service';
-import { UpdateQuestAdminService } from '../application/update-quest-admin.service';
+import { CreateQuestAdminService, CreateQuestAdminCommand } from '../application/create-quest-admin.service';
+import { UpdateQuestAdminService, UpdateQuestAdminCommand } from '../application/update-quest-admin.service';
 import { FindQuestsAdminService } from '../application/find-quests-admin.service';
 import { CreateQuestAdminDto } from './dto/request/create-quest-admin.dto';
 import { UpdateQuestAdminDto } from './dto/request/update-quest-admin.dto';
@@ -70,13 +70,16 @@ export class QuestAdminController {
     @Body() dto: CreateQuestAdminDto,
     @CurrentUser() admin: User,
   ): Promise<CreateQuestAdminResponseDto> {
-    // 파일 ID만 디코딩 (파일 모듈만 Sqids 사용)
-    const decodedDto = {
-      ...dto,
-      iconFileId: dto.iconFileId ? this.sqidsService.decode(dto.iconFileId, SqidsPrefix.FILE) : undefined,
+    // Sqids 및 numeric ID 변환 (DTO -> Command)
+    const { iconFileId, parentId, precedingId, ...rest } = dto;
+    const command: CreateQuestAdminCommand = {
+      ...rest,
+      iconFileId: iconFileId ? this.sqidsService.decode(iconFileId, SqidsPrefix.FILE) : undefined,
+      parentId: parentId ? BigInt(parentId) : undefined,
+      precedingId: precedingId ? BigInt(precedingId) : undefined,
     };
 
-    const id = await this.createQuestService.execute(decodedDto as any, admin.id);
+    const id = await this.createQuestService.execute(command, admin.id);
     return { id: id.toString() };
   }
 
@@ -101,13 +104,16 @@ export class QuestAdminController {
     @Body() dto: UpdateQuestAdminDto,
     @CurrentUser() admin: User,
   ) {
-    // 파일 ID만 디코딩
-    const decodedDto = {
-      ...dto,
-      iconFileId: dto.iconFileId ? this.sqidsService.decode(dto.iconFileId, SqidsPrefix.FILE) : undefined,
+    // Sqids 및 numeric ID 변환 (DTO -> Command)
+    const { iconFileId, parentId, precedingId, ...rest } = dto;
+    const command: UpdateQuestAdminCommand = {
+      ...rest,
+      iconFileId: iconFileId !== undefined ? (iconFileId ? this.sqidsService.decode(iconFileId, SqidsPrefix.FILE) : null) : undefined,
+      parentId: parentId !== undefined ? (parentId ? BigInt(parentId) : null) : undefined,
+      precedingId: precedingId !== undefined ? (precedingId ? BigInt(precedingId) : null) : undefined,
     };
 
-    await this.updateQuestService.execute(BigInt(id), decodedDto as any, admin.id);
+    await this.updateQuestService.execute(BigInt(id), command, admin.id);
     return { success: true };
   }
 

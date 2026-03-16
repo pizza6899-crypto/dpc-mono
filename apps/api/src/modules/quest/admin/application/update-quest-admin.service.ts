@@ -10,6 +10,15 @@ import { AttachFileService } from '../../../file/application/attach-file.service
 import { FileUsageType } from '../../../file/domain';
 import { FileUrlService } from '../../../file/application/file-url.service';
 
+/**
+ * 서비스 내부에서 사용할 수정 명령 타입입니다.
+ */
+export type UpdateQuestAdminCommand = Omit<UpdateQuestAdminDto, 'iconFileId' | 'parentId' | 'precedingId'> & {
+  iconFileId?: bigint | null;
+  parentId?: bigint | null;
+  precedingId?: bigint | null;
+};
+
 @Injectable()
 export class UpdateQuestAdminService {
   constructor(
@@ -21,7 +30,7 @@ export class UpdateQuestAdminService {
   ) { }
 
   @Transactional()
-  async execute(id: bigint, dto: UpdateQuestAdminDto, adminId: bigint): Promise<void> {
+  async execute(id: bigint, dto: UpdateQuestAdminCommand, adminId: bigint): Promise<void> {
     // 0. 동시성 제어 (동일 퀘스트에 대한 어드민 중복 수정 방지)
     await this.advisoryLockService.acquireLock(LockNamespace.QUEST_MASTER, id.toString());
 
@@ -66,6 +75,8 @@ export class UpdateQuestAdminService {
       }))
       : existing.rewards;
 
+    const oldIconFileId = existing.iconFileId;
+
     // 3. 도메인 엔티티 업데이트
     existing.update({
       type: dto.type,
@@ -74,10 +85,10 @@ export class UpdateQuestAdminService {
       isActive: dto.isActive,
       isHot: dto.isHot !== undefined ? dto.isHot : existing.isHot,
       isNew: dto.isNew !== undefined ? dto.isNew : existing.isNew,
-      iconFileId: dto.iconFileId !== undefined ? (dto.iconFileId ? BigInt(dto.iconFileId) : null) : existing.iconFileId,
+      iconFileId: dto.iconFileId !== undefined ? dto.iconFileId : existing.iconFileId,
       displayOrder: dto.displayOrder !== undefined ? dto.displayOrder : existing.displayOrder,
-      parentId: dto.parentId !== undefined ? (dto.parentId ? BigInt(dto.parentId) : null) : undefined,
-      precedingId: dto.precedingId !== undefined ? (dto.precedingId ? BigInt(dto.precedingId) : null) : undefined,
+      parentId: dto.parentId !== undefined ? dto.parentId : undefined,
+      precedingId: dto.precedingId !== undefined ? dto.precedingId : undefined,
       entryRule: {
         ...existing.entryRule,
         requireNoWithdrawal: dto.requireNoWithdrawal ?? existing.entryRule.requireNoWithdrawal,
@@ -93,15 +104,22 @@ export class UpdateQuestAdminService {
     });
 
     // 4. 아이콘 파일 확정 및 URL 업데이트
-    if (dto.iconFileId && BigInt(dto.iconFileId) !== (existing.iconFileId ?? 0n)) {
-      const { files } = await this.attachFileService.execute({
-        fileIds: [BigInt(dto.iconFileId)],
-        usageType: FileUsageType.QUEST_ICON,
-        usageId: id,
-      });
+    // iconFileId가 명시적으로 변경되었을 경우에만 처리
+    if (dto.iconFileId !== undefined && dto.iconFileId !== oldIconFileId) {
+      if (dto.iconFileId) {
+        // 새 파일이 지정된 경우: 파일 사용 확정 및 URL 추출
+        const { files } = await this.attachFileService.execute({
+          fileIds: [dto.iconFileId],
+          usageType: FileUsageType.QUEST_ICON,
+          usageId: id,
+        });
 
-      const publicIconUrl = await this.fileUrlService.getUrl(files[0]);
-      existing.update({ iconUrl: publicIconUrl ?? null });
+        const publicIconUrl = await this.fileUrlService.getUrl(files[0]);
+        existing.update({ iconUrl: publicIconUrl ?? null });
+      } else {
+        // null이 명시적으로 전달된 경우: 아이콘 제거
+        existing.update({ iconUrl: null });
+      }
     }
 
     // 5. 저장 (Repository 내부에서 교체 로직 수행)
