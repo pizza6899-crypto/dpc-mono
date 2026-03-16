@@ -1,5 +1,6 @@
 // src/modules/deposit/application/create-fiat-deposit.service.ts
-import { Injectable, Inject, BadRequestException } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
+import { InvalidPromotionSelectionException } from '../domain/deposit.exception';
 import {
   Prisma,
   DepositMethodType,
@@ -104,7 +105,7 @@ export class CreateFiatDepositService {
       });
 
       if (!isEligible) {
-        throw new BadRequestException('INVALID_QUEST_OR_NOT_ELIGIBLE');
+        throw new InvalidPromotionSelectionException();
       }
     }
 

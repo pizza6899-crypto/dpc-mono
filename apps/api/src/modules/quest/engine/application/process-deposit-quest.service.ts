@@ -9,9 +9,9 @@ import type { UserQuestContextPort } from '../../core/ports/user-quest-context.p
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { Prisma } from '@prisma/client';
 import { UserQuest } from '../../core/domain/models/user-quest.entity';
-import type { 
-  ProcessDepositQuestCommand, 
-  QuestProcessResult, 
+import type {
+  ProcessDepositQuestCommand,
+  QuestProcessResult,
   ValidateQuestEligibilityCommand
 } from 'src/modules/deposit/ports/out/quest-engine.port';
 
@@ -121,16 +121,29 @@ export class ProcessDepositQuestService {
       return false;
     }
 
+    // 1. 해당 통화에 대한 목표(Goal)가 있는지 확인
+    const goal = quest.getGoal(currency);
+    if (!goal) {
+      return false;
+    }
+
+    // 2. 해당 통화에 대한 보상(Reward)이 설정되어 있는지 확인 (전용 혹은 공통 보상)
+    const hasReward = quest.rewards.some(
+      (r) => r.currency === currency || r.currency === null,
+    );
+    if (!hasReward) {
+      return false;
+    }
+
+    // 3. 유저 참여 자격 확인 (출금 이력, 입금 횟수 등)
     const userContext = await this.userQuestContextPort.getEntryContext(userId);
     if (!quest.canEntry(userContext)) {
       return false;
     }
 
-    if (amount) {
-      const goal = quest.getGoal(currency);
-      if (goal && !goal.isSatisfied(1, amount.toNumber())) {
-        return false;
-      }
+    // 4. 입금 신청 금액이 최소 조건을 충족하는지 확인
+    if (amount && !goal.isSatisfied(1, amount.toNumber())) {
+      return false;
     }
 
     return true;

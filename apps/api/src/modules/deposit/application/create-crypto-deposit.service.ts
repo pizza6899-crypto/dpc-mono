@@ -1,5 +1,6 @@
 // src/modules/deposit/application/create-crypto-deposit.service.ts
-import { Injectable, Inject, BadRequestException } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
+import { InvalidPromotionSelectionException } from '../domain/deposit.exception';
 import {
   Prisma,
   DepositMethodType,
@@ -93,7 +94,7 @@ export class CreateCryptoDepositService {
       });
 
       if (!isEligible) {
-        throw new BadRequestException('INVALID_QUEST_OR_NOT_ELIGIBLE');
+        throw new InvalidPromotionSelectionException();
       }
     }
 
