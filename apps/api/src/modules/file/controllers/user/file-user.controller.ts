@@ -10,18 +10,17 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiConsumes, ApiBody } from '@nestjs/swagger';
-import { UploadFileRequestDto } from './dto/request/upload-file.request.dto';
-import { FileResponseDto } from './dto/response/file.response.dto';
-import { EnvService } from 'src/common/env/env.service';
-import { CreateFileService } from '../application/create-file.service';
-import { FileUrlService } from '../application/file-url.service';
+import { UploadFileUserRequestDto } from './dto/request/upload-file-user.request.dto';
+import { FileUserResponseDto } from './dto/response/file-user.response.dto';
+import { CreateFileService } from '../../application/create-file.service';
+import { FileUrlService } from '../../application/file-url.service';
 import {
   FileEntity,
   FileValidationException,
   FileRequiredException,
   FileAccessType,
   FileConstants,
-} from '../domain';
+} from '../../domain';
 import { SessionAuthGuard } from 'src/common/auth/guards/session-auth.guard';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { type AuthenticatedUser } from 'src/common/auth/types/auth.types';
@@ -33,13 +32,13 @@ import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
-import { FileSizeExceptionFilter } from '../filters/file-size.filter';
+import { FileSizeExceptionFilter } from '../../filters/file-size.filter';
 import { MessageCode } from '@repo/shared';
 
 @Controller('file')
 @ApiTags('User File')
 @ApiStandardErrors()
-export class FileController {
+export class FileUserController {
   constructor(
     private readonly createFileService: CreateFileService,
     private readonly fileUrlService: FileUrlService,
@@ -88,29 +87,29 @@ export class FileController {
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     description: 'File and metadata / 파일 및 메타데이터',
-    type: UploadFileRequestDto,
+    type: UploadFileUserRequestDto,
   })
-  @ApiStandardResponse(FileResponseDto, {
+  @ApiStandardResponse(FileUserResponseDto, {
     status: HttpStatus.CREATED,
     description: 'File uploaded successfully / 파일 업로드 성공',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
     category: 'FILE',
-    action: 'FILE_UPLOAD',
-    extractMetadata: (req, args, result: FileResponseDto) => ({
+    action: 'USER_FILE_UPLOAD',
+    extractMetadata: (req, args, result: FileUserResponseDto) => ({
       fileId: result?.id,
       filename: args[0]?.originalname,
       mimetype: args[0]?.mimetype,
       size: args[0]?.size,
-      accessType: args[1]?.accessType,
+      accessType: FileAccessType.PRIVATE,
     }),
   })
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
-    @Body() dto: UploadFileRequestDto,
+    @Body() dto: UploadFileUserRequestDto,
     @CurrentUser() user: AuthenticatedUser,
-  ): Promise<FileResponseDto> {
+  ): Promise<FileUserResponseDto> {
     if (!file) {
       throw new FileRequiredException();
     }
@@ -118,16 +117,15 @@ export class FileController {
     const createdFile = await this.createFileService.execute({
       file,
       uploaderId: user.id,
-      accessType: dto.accessType || FileAccessType.PRIVATE,
+      accessType: FileAccessType.PRIVATE,
     });
 
     return await this.toResponseDto(createdFile);
   }
 
-  private async toResponseDto(file: FileEntity): Promise<FileResponseDto> {
+  private async toResponseDto(file: FileEntity): Promise<FileUserResponseDto> {
     return {
       id: this.sqidsService.encode(file.id!, SqidsPrefix.FILE),
-      url: (await this.fileUrlService.getUrl(file)) ?? undefined,
     };
   }
 }

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { EnvModule } from 'src/common/env/env.module';
-import { FileController } from './controllers/file.controller';
+import { FileUserController } from './controllers/user/file-user.controller';
+import { FileAdminController } from './controllers/admin/file-admin.controller';
 import { CreateFileService } from './application/create-file.service';
 import { AttachFileService } from './application/attach-file.service';
 import { FileUrlService } from './application/file-url.service';
@@ -14,7 +15,7 @@ import { FILE_USAGE_REPOSITORY } from './ports/file-usage.repository.token';
 
 @Module({
   imports: [EnvModule],
-  controllers: [FileController],
+  controllers: [FileUserController, FileAdminController],
   providers: [
     CreateFileService,
     AttachFileService,
