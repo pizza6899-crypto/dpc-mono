@@ -111,10 +111,6 @@ export interface PromotionRepositoryPort {
    */
   update(id: bigint, params: any): Promise<Promotion>;
 
-  /**
-   * 프로모션 삭제
-   */
-  delete(id: bigint): Promise<void>;
 
   /**
    * 프로모션 사용 횟수 증가 (Atomic)
@@ -143,13 +139,6 @@ export interface PromotionRepositoryPort {
     wageringMultiplier?: Prisma.Decimal | null;
   }): Promise<void>;
 
-  /**
-   * 프로모션의 통화별 규칙 삭제
-   */
-  deleteCurrencySettings(
-    promotionId: bigint,
-    currency: ExchangeCurrencyCode,
-  ): Promise<void>;
 
   /**
    * 프로모션별 UserPromotion 목록 조회 (관리자용)
@@ -191,8 +180,4 @@ export interface PromotionRepositoryPort {
     description?: string | null;
   }): Promise<PromotionTranslation>;
 
-  /**
-   * 프로모션 번역 삭제
-   */
-  deleteTranslation(promotionId: bigint, language: Language): Promise<void>;
 }

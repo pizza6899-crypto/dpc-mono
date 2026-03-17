@@ -41,7 +41,6 @@ export class ListPromotionsQueryDto extends createPaginationQueryDto<PromotionSo
 
   @ApiPropertyOptional({
     description: 'Start date (ISO 8601) - Based on creation / 시작 날짜 (ISO 8601 형식) - 생성일 기준',
-    example: '2024-01-01T00:00:00Z',
   })
   @IsOptional()
   @IsDateString()
@@ -49,7 +48,6 @@ export class ListPromotionsQueryDto extends createPaginationQueryDto<PromotionSo
 
   @ApiPropertyOptional({
     description: 'End date (ISO 8601) - Based on creation / 종료 날짜 (ISO 8601 형식) - 생성일 기준',
-    example: '2024-12-31T23:59:59Z',
   })
   @IsOptional()
   @IsDateString()

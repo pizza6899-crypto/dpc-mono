@@ -30,7 +30,6 @@ import { CreatePromotionService } from '../../application/create-promotion.servi
 import { UpdatePromotionService } from '../../application/update-promotion.service';
 import { FindPromotionParticipantsService } from '../../application/find-promotion-participants.service';
 import { GetPromotionAdminService } from '../../application/get-promotion-admin.service';
-import { DeletePromotionService } from '../../application/delete-promotion.service';
 import { CreatePromotionRequestDto } from './dto/request/create-promotion.request.dto';
 import { UpdatePromotionRequestDto } from './dto/request/update-promotion.request.dto';
 import { PromotionAdminResponseDto } from './dto/response/promotion-admin.response.dto';
@@ -59,7 +58,6 @@ export class PromotionAdminController {
     private readonly updatePromotionService: UpdatePromotionService,
     private readonly findPromotionParticipantsService: FindPromotionParticipantsService,
     private readonly getPromotionAdminService: GetPromotionAdminService,
-    private readonly deletePromotionService: DeletePromotionService,
     private readonly policy: PromotionPolicy,
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
@@ -248,34 +246,6 @@ export class PromotionAdminController {
       await this.getPromotionAdminService.execute(BigInt(id));
     return this.mapToAdminResponseDto(promotion, statistics);
   }
-
-  /**
-   * 프로모션 삭제 (Soft Delete)
-   */
-  @Delete(':id')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Delete promotion / 프로모션 삭제',
-    description: '프로모션을 삭제(소프트 삭제) 처리합니다.',
-  })
-  @ApiStandardResponse(Object, {
-    status: HttpStatus.OK,
-    description: 'Promotion deleted successfully / 프로모션 삭제 성공',
-  })
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    action: 'DELETE_PROMOTION',
-    category: 'PROMOTION',
-    extractMetadata: (_, args) => {
-      const [id] = args;
-      return { promotionId: id };
-    },
-  })
-  async deletePromotion(@Param('id', ParseIntPipe) id: number): Promise<any> {
-    await this.deletePromotionService.execute(BigInt(id));
-    return {};
-  }
-
 
   /**
    * 프로모션의 통화별 설정 생성/수정

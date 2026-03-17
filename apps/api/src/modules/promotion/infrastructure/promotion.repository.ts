@@ -251,12 +251,6 @@ export class PromotionRepository implements PromotionRepositoryPort {
     return this.mapper.toDomain(result);
   }
 
-  async delete(id: bigint): Promise<void> {
-    await this.tx.promotion.update({
-      where: { id },
-      data: { deletedAt: new Date() },
-    });
-  }
 
   async incrementUsageCount(id: bigint): Promise<Promotion> {
     const result = await this.tx.promotion.update({
@@ -290,11 +284,6 @@ export class PromotionRepository implements PromotionRepositoryPort {
     });
   }
 
-  async deleteCurrencySettings(promotionId: bigint, currency: ExchangeCurrencyCode): Promise<void> {
-    await this.tx.promotionCurrencyRule.delete({
-      where: { promotionId_currency: { promotionId, currency } },
-    });
-  }
 
   async findUserPromotionsByPromotionId(params: any): Promise<any> {
     const { promotionId, page = 1, limit = 20, sortBy = 'createdAt', sortOrder = 'desc', status, userId } = params;
@@ -353,9 +342,4 @@ export class PromotionRepository implements PromotionRepositoryPort {
     return result;
   }
 
-  async deleteTranslation(promotionId: bigint, language: Language): Promise<void> {
-    await this.tx.promotionTranslation.delete({
-      where: { promotionId_language: { promotionId, language } },
-    });
-  }
 }
