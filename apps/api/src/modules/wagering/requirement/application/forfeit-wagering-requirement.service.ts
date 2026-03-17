@@ -11,7 +11,6 @@ import {
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LogType } from 'src/modules/audit-log/domain';
 import { CreateWageringRequirementService } from './create-wagering-requirement.service';
-import { GetWageringConfigService } from '../../config/application/get-wagering-config.service';
 import { GetPromotionConfigService } from 'src/modules/promotion/config/application/get-promotion-config.service';
 
 interface ForfeitWageringRequirementCommand {
@@ -29,7 +28,7 @@ export class ForfeitWageringRequirementService {
     private readonly dispatchLogService: DispatchLogService,
     private readonly createWageringService: CreateWageringRequirementService,
     private readonly promotionConfigService: GetPromotionConfigService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(command: ForfeitWageringRequirementCommand): Promise<void> {

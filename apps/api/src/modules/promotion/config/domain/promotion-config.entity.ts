@@ -13,14 +13,4 @@ export class PromotionConfig {
     public readonly updatedBy: bigint | null,
   ) { }
 
-  static createDefault(): PromotionConfig {
-    return new PromotionConfig(
-      this.SINGLETON_ID,
-      new Prisma.Decimal(1.0),
-      30,
-      true,
-      new Date(),
-      null,
-    );
-  }
 }

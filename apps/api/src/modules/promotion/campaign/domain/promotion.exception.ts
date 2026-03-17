@@ -167,3 +167,17 @@ export class PromotionCurrencyRequiredException extends PromotionException {
     this.name = 'PromotionCurrencyRequiredException';
   }
 }
+
+/**
+ * 프로모션 환경 설정을 찾을 수 없는 경우
+ */
+export class PromotionConfigNotFoundException extends PromotionException {
+  constructor() {
+    super(
+      'Promotion configuration not found. Please ensure that seeding has been performed.',
+      MessageCode.VALIDATION_ERROR,
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
+    this.name = 'PromotionConfigNotFoundException';
+  }
+}

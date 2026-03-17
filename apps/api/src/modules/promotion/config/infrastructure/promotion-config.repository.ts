@@ -7,6 +7,8 @@ import { PromotionConfigMapper } from './promotion-config.mapper';
 import { CacheService } from 'src/common/cache/cache.service';
 import { CACHE_CONFIG } from 'src/common/cache/cache.constants';
 
+import { PromotionConfigNotFoundException } from '../../campaign/domain/promotion.exception';
+
 @Injectable()
 export class PromotionConfigRepository implements PromotionConfigRepositoryPort {
   constructor(
@@ -25,16 +27,7 @@ export class PromotionConfigRepository implements PromotionConfigRepositoryPort 
         });
 
         if (!config) {
-          const defaultConfig = PromotionConfig.createDefault();
-          const created = await this.tx.promotionConfig.create({
-            data: {
-              id: Number(defaultConfig.id),
-              defaultAmlDepositMultiplier: defaultConfig.defaultAmlDepositMultiplier,
-              defaultBonusExpiryDays: defaultConfig.defaultBonusExpiryDays,
-              isPromotionEnabled: defaultConfig.isPromotionEnabled,
-            },
-          });
-          return this.mapper.toDomain(created);
+          throw new PromotionConfigNotFoundException();
         }
 
         return this.mapper.toDomain(config);

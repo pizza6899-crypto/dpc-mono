@@ -1,6 +1,4 @@
-import { Prisma } from '@prisma/client';
 import { WageringCurrencySetting } from './value-objects/wagering-currency-setting.vo';
-import { InvalidWageringConfigException } from './wagering-config.exception';
 
 export class WageringConfig {
   public static readonly SINGLETON_ID = 1n;
