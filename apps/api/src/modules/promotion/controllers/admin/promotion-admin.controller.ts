@@ -40,7 +40,6 @@ import { PromotionParticipantResponseDto } from './dto/response/promotion-partic
 import { PromotionStatisticsResponseDto } from './dto/response/promotion-statistics.response.dto';
 import {
   Promotion,
-  PromotionNotFoundException,
 } from '../../domain';
 
 @Controller('admin/promotions')
@@ -65,7 +64,8 @@ export class PromotionAdminController {
   @Paginated()
   @ApiOperation({
     summary: 'Get promotions (Admin) / 프로모션 목록 조회 (관리자)',
-    description: '관리자가 프로모션 목록을 조회합니다. 페이징 및 필터링 지원.',
+    description:
+      'Retrieve the list of promotions with pagination and filtering. / 프로모션 목록을 조회합니다. 페이지네이션 및 필터링을 지원합니다.',
   })
   @ApiPaginatedResponse(PromotionAdminResponseDto, {
     status: HttpStatus.OK,
@@ -115,10 +115,8 @@ export class PromotionAdminController {
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: 'Create promotion / 프로모션 생성',
-    description: `
-새로운 프로모션의 기본 정보를 생성합니다. 
-생성 후 상세 페이지에서 통화별 설정 및 다국어 정보를 등록해야 합니다.
-    `,
+    description:
+      'Initialize basic promotion information. Currency rules and translations must be added separately. / 새로운 프로모션의 기본 정보를 생성합니다. 생성 후 상세 페이지에서 통화별 설정 및 다국어 정보를 등록해야 합니다.',
   })
   @ApiStandardResponse(PromotionAdminResponseDto, {
     status: HttpStatus.CREATED,
@@ -163,9 +161,8 @@ export class PromotionAdminController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Update promotion / 프로모션 수정',
-    description: `
-프로모션의 기본 정보를 수정합니다.
-    `,
+    description:
+      'Update the basic information of a promotion. / 프로모션의 기본 정보를 수정합니다.',
   })
   @ApiStandardResponse(PromotionAdminResponseDto, {
     status: HttpStatus.OK,
@@ -213,45 +210,6 @@ export class PromotionAdminController {
     return this.mapToAdminResponseDto(promotion);
   }
 
-  /**
-   * 프로모션 상세 조회 (관리자)
-   */
-  @Get(':id')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Get promotion detail (Admin) / 프로모션 상세 조회 (관리자)',
-    description:
-      '특정 프로모션의 상세 정보(통화별 설정, 번역, 통계 등)를 조회합니다.',
-  })
-  @ApiStandardResponse(PromotionAdminResponseDto, {
-    status: HttpStatus.OK,
-    description:
-      'Successfully retrieved promotion detail / 프로모션 상세 조회 성공',
-  })
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    action: 'VIEW_PROMOTION_DETAIL_ADMIN',
-    category: 'PROMOTION',
-    extractMetadata: (_, args) => {
-      const [id] = args;
-      return { promotionId: id };
-    },
-  })
-  async getPromotion(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<PromotionAdminResponseDto> {
-    const result = await this.findPromotionsAdminService.execute({
-      id: BigInt(id),
-      limit: 1,
-    });
-
-    if (result.total === 0) {
-      throw new PromotionNotFoundException();
-    }
-
-    const { promotion, statistics } = result.promotions[0];
-    return this.mapToAdminResponseDto(promotion, statistics);
-  }
 
 
   /**
@@ -262,9 +220,8 @@ export class PromotionAdminController {
   @ApiOperation({
     summary:
       'Upsert promotion currency rules / 프로모션 통화별 규칙 생성/수정',
-    description: `
-프로모션의 통화별 정책(금액 설정)을 생성하거나 수정합니다.
-    `,
+    description:
+      'Create or update currency-specific policies for a promotion. / 프로모션의 통화별 정책(금액 설정)을 생성하거나 수정합니다.',
   })
   @ApiStandardResponse(Object, {
     status: HttpStatus.OK,
@@ -310,7 +267,8 @@ export class PromotionAdminController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Upsert promotion translations / 프로모션 다국어 정보 생성/수정',
-    description: '프로모션의 제목, 설명 등 다국어 정보를 생성하거나 수정합니다.',
+    description:
+      'Create or update multilingual info such as title and description. / 프로모션의 제목, 설명 등 다국어 정보를 생성하거나 수정합니다.',
   })
   @ApiStandardResponse(Object, {
     status: HttpStatus.OK,
@@ -348,7 +306,7 @@ export class PromotionAdminController {
   @ApiOperation({
     summary: 'Get promotion participants / 프로모션 참가자 목록 조회',
     description:
-      '프로모션에 참가한 사용자 목록을 조회합니다. 페이징 및 필터링 지원.',
+      'Retrieve the list of users who participated in a specific promotion. / 특정 프로모션에 참가한 사용자 목록을 조회합니다.',
   })
   @ApiPaginatedResponse(PromotionParticipantResponseDto, {
     status: HttpStatus.OK,

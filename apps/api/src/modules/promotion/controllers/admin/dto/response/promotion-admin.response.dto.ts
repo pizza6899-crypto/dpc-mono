@@ -142,7 +142,8 @@ export class PromotionAdminResponseDto {
   periodicResetType: string;
 
   @ApiProperty({
-    description: 'Applicable days (0: Sunday, 1: Monday, ...) / 적용 요일',
+    description:
+      'Applicable days (0: Sun, 1: Mon, 2: Tue, 3: Wed, 4: Thu, 5: Fri, 6: Sat) / 적용 요일 (0: 일, 1: 월, 2: 화, 3: 수, 4: 목, 5: 금, 6: 토)',
     example: [6, 0],
     type: [Number],
   })

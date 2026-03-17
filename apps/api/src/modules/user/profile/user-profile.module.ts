@@ -11,7 +11,7 @@ import { CreateUserService } from './application/create-user.service';
 import { ListUsersService } from './application/list-users.service';
 import { GetUserService } from './application/get-user.service';
 import { GetMyProfileService } from './application/get-my-profile.service';
-import { UpdateMyProfileService } from './application/update-my-profile.service';
+import { UpdateMyLanguageService } from './application/update-my-language.service';
 import { UpdateMyNicknameService } from './application/update-my-nickname.service';
 import { UpdateMyAvatarService } from './application/update-my-avatar.service';
 import { ChangeMyPasswordService } from './application/change-my-password.service';
@@ -34,7 +34,7 @@ import { EnvModule } from 'src/common/env/env.module';
         ListUsersService,
         GetUserService,
         GetMyProfileService,
-        UpdateMyProfileService,
+        UpdateMyLanguageService,
         UpdateMyNicknameService,
         UpdateMyAvatarService,
         ChangeMyPasswordService,
@@ -55,7 +55,7 @@ import { EnvModule } from 'src/common/env/env.module';
         ListUsersService,
         GetUserService,
         GetMyProfileService,
-        UpdateMyProfileService,
+        UpdateMyLanguageService,
         UpdateMyNicknameService,
         UpdateMyAvatarService,
         ChangeMyPasswordService,

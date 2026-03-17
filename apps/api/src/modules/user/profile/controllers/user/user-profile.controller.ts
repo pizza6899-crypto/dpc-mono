@@ -14,13 +14,13 @@ import {
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import * as AuthTypes from 'src/common/auth/types/auth.types';
 import { MyProfileResponseDto } from './dto/response/my-profile.response.dto';
-import { UpdateMyProfileRequestDto } from './dto/request/update-my-profile.request.dto';
+import { UpdateMyLanguageRequestDto } from './dto/request/update-my-language.request.dto';
 import { UpdateNicknameRequestDto } from './dto/request/update-nickname.request.dto';
 import { UpdateMyAvatarRequestDto } from './dto/request/update-my-avatar.request.dto';
 import { ProfileChangePasswordRequestDto } from './dto/request/change-password.request.dto';
 import { UpdateMyCurrencyRequestDto } from './dto/request/update-my-currency.request.dto';
 import { GetMyProfileService } from '../../application/get-my-profile.service';
-import { UpdateMyProfileService } from '../../application/update-my-profile.service';
+import { UpdateMyLanguageService } from '../../application/update-my-language.service';
 import { UpdateMyNicknameService } from '../../application/update-my-nickname.service';
 import { UpdateMyAvatarService } from '../../application/update-my-avatar.service';
 import { ChangeMyPasswordService } from '../../application/change-my-password.service';
@@ -34,7 +34,7 @@ import { LogType } from 'src/modules/audit-log/domain';
 export class UserProfileController {
     constructor(
         private readonly getMyProfileService: GetMyProfileService,
-        private readonly updateMyProfileService: UpdateMyProfileService,
+        private readonly updateMyLanguageService: UpdateMyLanguageService,
         private readonly updateMyNicknameService: UpdateMyNicknameService,
         private readonly updateMyAvatarService: UpdateMyAvatarService,
         private readonly changeMyPasswordService: ChangeMyPasswordService,
@@ -57,27 +57,27 @@ export class UserProfileController {
         return this.getMyProfileService.execute(user.id);
     }
 
-    @Patch()
+    @Patch('language')
     @HttpCode(HttpStatus.OK)
     @ApiOperation({
-        summary: 'Update my profile / 내 프로필 정보 수정',
-        description: 'Update personal profile information such as nickname, language, and timezone. / 닉네임, 언어, 타임존 등 본인의 프로필 정보를 수정합니다.',
+        summary: 'Update my language / 내 언어 설정 수정',
+        description: 'Update the user preferred language setting. / 본인의 기본 언어 설정을 수정합니다.',
     })
     @AuditLog({
         type: LogType.ACTIVITY,
         category: 'USER',
-        action: 'UPDATE_MY_PROFILE',
+        action: 'UPDATE_MY_LANGUAGE',
         extractMetadata: (req) => ({ body: req.body }),
     })
     @ApiStandardResponse(MyProfileResponseDto, {
         status: HttpStatus.OK,
-        description: 'Successfully updated profile',
+        description: 'Successfully updated language',
     })
-    async updateMyProfile(
+    async updateLanguage(
         @CurrentUser() user: AuthTypes.AuthenticatedUser,
-        @Body() dto: UpdateMyProfileRequestDto,
+        @Body() dto: UpdateMyLanguageRequestDto,
     ): Promise<MyProfileResponseDto> {
-        return this.updateMyProfileService.execute(user.id, dto);
+        return this.updateMyLanguageService.execute(user.id, dto);
     }
 
     @Patch('nickname')

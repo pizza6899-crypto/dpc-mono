@@ -52,7 +52,7 @@ export class PromotionUserController {
   @ApiOperation({
     summary: 'Get active promotions / 활성 프로모션 목록 조회',
     description:
-      '현재 활성화된 프로모션 목록을 조회합니다. 페이지네이션 및 언어 파라미터 지원.',
+      '현재 활성화된 프로모션 목록을 조회합니다. 페이지네이션을 지원하며, 언어와 통화는 세션 설정을 따릅니다.',
   })
   @ApiPaginatedResponse(PromotionResponseDto, {
     status: HttpStatus.OK,
@@ -80,8 +80,8 @@ export class PromotionUserController {
       limit: query.limit,
       sortBy: query.sortBy,
       sortOrder: query.sortOrder,
-      language: query.language,
-      currency: query.currency,
+      language: user?.language,
+      currency: user?.playCurrency,
       userId: user?.id,
     });
 
