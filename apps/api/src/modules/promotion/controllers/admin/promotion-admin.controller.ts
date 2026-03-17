@@ -4,14 +4,12 @@ import {
   Get,
   Post,
   Put,
-  Delete,
   Body,
   Param,
   Query,
   HttpCode,
   HttpStatus,
   ParseIntPipe,
-  Inject,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
@@ -22,13 +20,15 @@ import {
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import type { PaginatedData } from 'src/common/http/types/pagination.types';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
-import { UserRoleType, Prisma } from '@prisma/client';
+import { UserRoleType } from '@prisma/client';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 import { FindPromotionsAdminService } from '../../application/find-promotions-admin.service';
 import { CreatePromotionService } from '../../application/create-promotion.service';
 import { UpdatePromotionService } from '../../application/update-promotion.service';
 import { FindPromotionParticipantsService } from '../../application/find-promotion-participants.service';
+import { UpsertPromotionCurrencyService } from '../../application/upsert-promotion-currency.service';
+import { UpsertPromotionTranslationService } from '../../application/upsert-promotion-translation.service';
 import { CreatePromotionRequestDto } from './dto/request/create-promotion.request.dto';
 import { UpdatePromotionRequestDto } from './dto/request/update-promotion.request.dto';
 import { PromotionAdminResponseDto } from './dto/response/promotion-admin.response.dto';
@@ -38,12 +38,9 @@ import { UpsertCurrencySettingsRequestDto } from './dto/request/upsert-currency-
 import { UpsertTranslationRequestDto } from './dto/request/upsert-translation.request.dto';
 import { PromotionParticipantResponseDto } from './dto/response/promotion-participant.response.dto';
 import { PromotionStatisticsResponseDto } from './dto/response/promotion-statistics.response.dto';
-import { PROMOTION_REPOSITORY } from '../../ports';
-import type { PromotionRepositoryPort } from '../../ports/promotion.repository.port';
 import {
   Promotion,
   PromotionNotFoundException,
-  PromotionPolicy,
 } from '../../domain';
 
 @Controller('admin/promotions')
@@ -56,9 +53,8 @@ export class PromotionAdminController {
     private readonly createPromotionService: CreatePromotionService,
     private readonly updatePromotionService: UpdatePromotionService,
     private readonly findPromotionParticipantsService: FindPromotionParticipantsService,
-    private readonly policy: PromotionPolicy,
-    @Inject(PROMOTION_REPOSITORY)
-    private readonly repository: PromotionRepositoryPort,
+    private readonly upsertPromotionCurrencyService: UpsertPromotionCurrencyService,
+    private readonly upsertPromotionTranslationService: UpsertPromotionTranslationService,
   ) { }
 
   /**
@@ -290,32 +286,15 @@ export class PromotionAdminController {
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpsertCurrencySettingsRequestDto,
   ): Promise<any> {
-    const promotion = await this.repository.findById(BigInt(id));
-    if (!promotion) {
-      throw new PromotionNotFoundException();
-    }
-
-    // 도메인 레벨에서 설정 파일들에 대한 종합 검증
-    this.policy.validateConfiguration({
-      bonusType: promotion.bonusType,
-      currencyRules: [
-        {
-          minDepositAmount: new Prisma.Decimal(dto.minDepositAmount),
-          maxBonusAmount: dto.maxBonusAmount ? new Prisma.Decimal(dto.maxBonusAmount) : null,
-          bonusRate: dto.bonusRate ? new Prisma.Decimal(dto.bonusRate) : null,
-        }
-      ]
-    });
-
-    await this.repository.upsertCurrencySettings({
+    await this.upsertPromotionCurrencyService.execute({
       promotionId: BigInt(id),
       currency: dto.currency,
-      minDepositAmount: new Prisma.Decimal(dto.minDepositAmount),
-      maxDepositAmount: dto.maxDepositAmount ? new Prisma.Decimal(dto.maxDepositAmount) : null,
-      maxBonusAmount: dto.maxBonusAmount ? new Prisma.Decimal(dto.maxBonusAmount) : null,
-      maxWithdrawAmount: dto.maxWithdrawAmount ? new Prisma.Decimal(dto.maxWithdrawAmount) : null,
-      bonusRate: dto.bonusRate ? new Prisma.Decimal(dto.bonusRate) : null,
-      wageringMultiplier: dto.wageringMultiplier ? new Prisma.Decimal(dto.wageringMultiplier) : null,
+      minDepositAmount: dto.minDepositAmount,
+      maxDepositAmount: dto.maxDepositAmount,
+      maxBonusAmount: dto.maxBonusAmount,
+      maxWithdrawAmount: dto.maxWithdrawAmount,
+      bonusRate: dto.bonusRate,
+      wageringMultiplier: dto.wageringMultiplier,
     });
 
     return {};
@@ -347,7 +326,7 @@ export class PromotionAdminController {
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpsertTranslationRequestDto,
   ): Promise<any> {
-    await this.repository.upsertTranslation({
+    await this.upsertPromotionTranslationService.execute({
       promotionId: BigInt(id),
       language: dto.language,
       title: dto.title,

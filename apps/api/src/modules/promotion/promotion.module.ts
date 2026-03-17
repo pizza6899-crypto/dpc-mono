@@ -12,6 +12,8 @@ import { UpdatePromotionService } from './application/update-promotion.service';
 import { FindPromotionParticipantsService } from './application/find-promotion-participants.service';
 import { GetActivePromotionsForUserService } from './application/get-active-promotions-for-user.service';
 import { GetMyPromotionsForUserService } from './application/get-my-promotions-for-user.service';
+import { UpsertPromotionCurrencyService } from './application/upsert-promotion-currency.service';
+import { UpsertPromotionTranslationService } from './application/upsert-promotion-translation.service';
 import { PromotionRepository } from './infrastructure/promotion.repository';
 import { PromotionMapper } from './infrastructure/promotion.mapper';
 import { PROMOTION_REPOSITORY } from './ports';
@@ -40,6 +42,8 @@ import { NotificationModule } from '../notification/notification.module';
     FindPromotionParticipantsService,
     GetActivePromotionsForUserService,
     GetMyPromotionsForUserService,
+    UpsertPromotionCurrencyService,
+    UpsertPromotionTranslationService,
     PromotionMapper,
     {
       provide: PROMOTION_REPOSITORY,
