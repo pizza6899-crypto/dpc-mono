@@ -25,6 +25,8 @@ import { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { CheckEligiblePromotionsService } from '../../promotion/application/check-eligible-promotions.service';
 import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { SqidsService } from 'src/common/sqids/sqids.service';
+import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
 import { SOCKET_ROOMS } from 'src/infrastructure/websocket/constants/websocket-rooms.constant';
 import {
@@ -37,7 +39,7 @@ interface CreateFiatDepositParams {
   payCurrency: string;
   amount: string | number;
   depositorName?: string;
-  depositPromotionCode?: string;
+  promotionId?: string;
   ipAddress?: string;
   deviceFingerprint?: string;
 }
@@ -55,6 +57,7 @@ export class CreateFiatDepositService {
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly depositRequirementPolicy: DepositRequirementPolicy,
     private readonly websocketService: WebsocketService,
+    private readonly sqidsService: SqidsService,
   ) { }
 
   @Transactional()
@@ -65,7 +68,7 @@ export class CreateFiatDepositService {
       user,
       payCurrency,
       amount,
-      depositPromotionCode,
+      promotionId: encodedPromotionId,
       depositorName,
       ipAddress,
       deviceFingerprint,
@@ -94,7 +97,9 @@ export class CreateFiatDepositService {
     let promotionId: bigint | null = null;
 
     // 1. 프로모션 유효성 검사
-    if (depositPromotionCode) {
+    if (encodedPromotionId) {
+      const decodedPromotionId = this.sqidsService.decode(encodedPromotionId, SqidsPrefix.PROMOTION);
+
       const eligiblePromotions = await this.promotionsService.execute({
         userId,
         depositAmount: new Prisma.Decimal(amount),
@@ -102,7 +107,7 @@ export class CreateFiatDepositService {
       });
 
       const selectedPromotion = eligiblePromotions.find(
-        (p) => p.code === depositPromotionCode,
+        (p) => p.id === decodedPromotionId,
       );
 
       if (!selectedPromotion) {

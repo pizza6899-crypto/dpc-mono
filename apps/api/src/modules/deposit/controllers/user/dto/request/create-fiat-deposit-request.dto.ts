@@ -10,12 +10,12 @@ import {
 
 export class CreateFiatDepositRequestDto {
   @ApiPropertyOptional({
-    description: '입금 프로모션 코드 / Deposit promotion code',
-    example: 'WELCOME_BONUS',
+    description: '입금 프로모션 ID (인코딩됨) / Deposit promotion ID (Encoded)',
+    example: '8k2n9r1w',
   })
   @IsOptional()
   @IsString()
-  depositPromotionCode?: string;
+  promotionId?: string;
 
   @ApiProperty({
     description: '입금할 통화 코드 / Currency code',

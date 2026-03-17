@@ -25,13 +25,15 @@ import { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { CheckEligiblePromotionsService } from '../../promotion/application/check-eligible-promotions.service';
 import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { SqidsService } from 'src/common/sqids/sqids.service';
+import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 
 interface CreateCryptoDepositParams {
   user: AuthenticatedUser;
   payCurrency: string;
   payNetwork: string;
   amount?: string | number;
-  depositPromotionCode?: string;
+  promotionId?: string;
   ipAddress?: string;
   deviceFingerprint?: string;
 }
@@ -44,6 +46,7 @@ export class CreateCryptoDepositService {
     private readonly checkEligiblePromotionsService: CheckEligiblePromotionsService,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly depositRequirementPolicy: DepositRequirementPolicy,
+    private readonly sqidsService: SqidsService,
   ) { }
 
   @Transactional()
@@ -53,7 +56,7 @@ export class CreateCryptoDepositService {
       payCurrency,
       payNetwork,
       amount,
-      depositPromotionCode,
+      promotionId: encodedPromotionId,
       ipAddress,
       deviceFingerprint,
     } = params;
@@ -81,7 +84,9 @@ export class CreateCryptoDepositService {
     let promotionId: bigint | null = null;
 
     // 1. 프로모션 유효성 검사
-    if (depositPromotionCode) {
+    if (encodedPromotionId) {
+      const decodedPromotionId = this.sqidsService.decode(encodedPromotionId, SqidsPrefix.PROMOTION);
+
       const eligiblePromotions =
         await this.checkEligiblePromotionsService.execute({
           userId,
@@ -92,7 +97,7 @@ export class CreateCryptoDepositService {
         });
 
       const selectedPromotion = eligiblePromotions.find(
-        (p) => p.code === depositPromotionCode,
+        (p) => p.id === decodedPromotionId,
       );
 
       if (!selectedPromotion) {
