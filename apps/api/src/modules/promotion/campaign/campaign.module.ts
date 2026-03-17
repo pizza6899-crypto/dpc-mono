@@ -11,7 +11,6 @@ import { CreatePromotionService } from './application/create-promotion.service';
 import { UpdatePromotionService } from './application/update-promotion.service';
 import { FindPromotionParticipantsService } from './application/find-promotion-participants.service';
 import { GetActivePromotionsForUserService } from './application/get-active-promotions-for-user.service';
-import { GetMyPromotionsForUserService } from './application/get-my-promotions-for-user.service';
 import { UpsertPromotionCurrencyService } from './application/upsert-promotion-currency.service';
 import { UpsertPromotionTranslationService } from './application/upsert-promotion-translation.service';
 import { ProcessDepositPromotionService } from './application/process-deposit-promotion.service';
@@ -42,7 +41,6 @@ import { PromotionConfigModule } from '../config/promotion-config.module';
     UpdatePromotionService,
     FindPromotionParticipantsService,
     GetActivePromotionsForUserService,
-    GetMyPromotionsForUserService,
     UpsertPromotionCurrencyService,
     UpsertPromotionTranslationService,
     ProcessDepositPromotionService,

@@ -1,5 +1,4 @@
-// src/modules/reward/domain/reward.types.ts
-
+import { WageringCalculationMethod } from '@prisma/client';
 
 // 1. 메타데이터 (JSON) 속 타입들
 export enum RewardMetadataType {
@@ -26,6 +25,7 @@ export interface PromotionMetadata {
     depositAmount?: string;
     depositId?: string;
     promotionId?: string;
+    wageringCalculationMethod?: WageringCalculationMethod;
 }
 
 export type RewardMetadata = TranslationMetadata | FreeSpinMetadata | PromotionMetadata;

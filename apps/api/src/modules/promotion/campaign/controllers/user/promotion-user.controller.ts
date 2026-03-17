@@ -24,14 +24,11 @@ import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 import { GetActivePromotionsForUserService } from '../../application/get-active-promotions-for-user.service';
 import { PromotionResponseDto } from './dto/response/promotion.response.dto';
-import { UserPromotionResponseDto } from './dto/response/user-promotion.response.dto';
 import { ListActivePromotionsQueryDto } from './dto/request/list-active-promotions-query.dto';
-import { ListMyPromotionsQueryDto } from './dto/request/list-my-promotions-query.dto';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { Promotion, PromotionTranslation, UserPromotion, PromotionLanguageRequiredException, PromotionCurrencyRequiredException } from '../../domain';
 import { PromotionCurrencyRule } from '../../domain/model/promotion-currency-rule.entity';
-import { GetMyPromotionsForUserService } from '../../application/get-my-promotions-for-user.service';
 
 @Controller('promotions')
 @ApiTags('User Promotion')
@@ -40,7 +37,6 @@ import { GetMyPromotionsForUserService } from '../../application/get-my-promotio
 export class PromotionUserController {
   constructor(
     private readonly getActivePromotionsForUserService: GetActivePromotionsForUserService,
-    private readonly getMyPromotionsForUserService: GetMyPromotionsForUserService,
     private readonly sqidsService: SqidsService,
   ) { }
 
@@ -107,59 +103,6 @@ export class PromotionUserController {
     };
   }
 
-  /**
-   * 사용자의 프로모션 목록 조회
-   */
-  @Get('my')
-  @HttpCode(HttpStatus.OK)
-  @Paginated()
-  @ApiOperation({
-    summary: 'Get my promotions / 내 프로모션 목록 조회',
-    description:
-      'Retrieve the promotions the user has participated in. Supports pagination. / 사용자가 참여한 프로모션 목록을 조회합니다. 페이지네이션을 지원합니다.',
-  })
-  @ApiPaginatedResponse(UserPromotionResponseDto, {
-    status: HttpStatus.OK,
-    description:
-      'Successfully retrieved user promotions / 사용자 프로모션 목록 조회 성공',
-  })
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    action: 'VIEW_MY_PROMOTIONS',
-    category: 'PROMOTION',
-    extractMetadata: (_, args, result, error) => {
-      if (error) {
-        return {
-          failureReason: 'USER_NOT_AUTHENTICATED',
-        };
-      }
-      return {
-        promotionCount: result?.data?.length || 0,
-        total: result?.total || 0,
-        page: result?.page || 1,
-      };
-    },
-  })
-  async getMyPromotions(
-    @CurrentUser() user: AuthenticatedUser,
-    @Query() query: ListMyPromotionsQueryDto,
-  ): Promise<PaginatedData<UserPromotionResponseDto>> {
-    const result = await this.getMyPromotionsForUserService.execute({
-      userId: user.id,
-      page: query.page,
-      limit: query.limit,
-      sortBy: query.sortBy,
-      sortOrder: query.sortOrder,
-      status: query.status,
-    });
-
-    return {
-      data: result.userPromotions.map((up) => this.mapUserPromotionToDto(up)),
-      page: query.page || 1,
-      limit: query.limit || 20,
-      total: result.total,
-    };
-  }
 
   private mapPromotionToDto(
     promotion: Promotion,
@@ -187,15 +130,4 @@ export class PromotionUserController {
     };
   }
 
-  private mapUserPromotionToDto(up: UserPromotion): UserPromotionResponseDto {
-    return {
-      id: this.sqidsService.encode(up.id, SqidsPrefix.USER_PROMOTION),
-      status: up.status as string,
-      depositAmount: up.depositAmount.toString(),
-      bonusAmount: up.bonusAmount.toString(),
-      currency: up.currency,
-      createdAt: up.createdAt,
-      completedAt: up.completedAt,
-    };
-  }
 }

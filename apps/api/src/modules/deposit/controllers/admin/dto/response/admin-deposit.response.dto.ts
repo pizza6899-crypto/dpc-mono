@@ -28,6 +28,36 @@ export class AdminDepositListItemDto {
   @ApiProperty({ enum: ExchangeCurrencyCode, description: '입금 통화 / Deposit currency' })
   depositCurrency: ExchangeCurrencyCode;
 
+  @ApiProperty({ description: '신청 금액 / Requested amount' })
+  requestedAmount: string;
+
+  @ApiProperty({ description: '실제 입금액 / Actually paid amount', required: false })
+  actuallyPaid: string | null;
+
+  @ApiProperty({ description: '트랜잭션 해시 / Transaction hash', required: false })
+  transactionHash: string | null;
+
+  @ApiProperty({ description: '처리 관리자 ID / Processed admin ID', required: false })
+  processedBy: string | null;
+
+  @ApiProperty({ description: '입금 확인 일시 / Confirmed at', required: false })
+  confirmedAt: Date | null;
+
+  @ApiProperty({ description: '프로모션 ID / Promotion ID', required: false })
+  promotionId: string | null;
+
+  @ApiProperty({ description: '입금자명 / Depositor name', required: false })
+  depositorName: string | null;
+
+  @ApiProperty({ description: '입금 은행 / Depositor bank', required: false })
+  depositorBank: string | null;
+
+  @ApiProperty({ description: '입금 계좌 / Depositor account', required: false })
+  depositorAccount: string | null;
+
+  @ApiProperty({ description: 'IP 주소 / IP Address', required: false })
+  ipAddress: string | null;
+
   @ApiProperty({ description: '생성 일시 / Created at' })
   createdAt: Date;
 

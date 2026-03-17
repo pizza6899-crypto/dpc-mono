@@ -95,7 +95,7 @@ export class CreateWageringRequirementService {
     const config = await this.getConfigService.execute();
 
     // 3. 목표 금액 계산
-    const requiredAmount = principalAmount.mul(multiplier);
+    const requiredAmount = principalAmount.add(bonusAmount).mul(multiplier);
 
     // 2. 설정 보정
     const setting = config.getSetting(currency);

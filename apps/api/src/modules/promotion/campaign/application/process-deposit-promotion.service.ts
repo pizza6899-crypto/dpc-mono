@@ -1,7 +1,7 @@
 // src/modules/promotion/campaign/application/process-deposit-promotion.service.ts
 import { Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { Prisma, ExchangeCurrencyCode, RewardSourceType, RewardItemType } from '@prisma/client';
+import { Prisma, ExchangeCurrencyCode, RewardSourceType, RewardItemType, WageringCalculationMethod } from '@prisma/client';
 import { InstantGrantRewardService } from 'src/modules/reward/core/application/instant-grant-reward.service';
 import { RewardMetadataType } from 'src/modules/reward/core/domain/reward.types';
 import { GrantPromotionBonusService } from './grant-promotion-bonus.service';
@@ -36,6 +36,7 @@ export class ProcessDepositPromotionService {
 
     let bonusAmount = new Prisma.Decimal(0);
     let multiplier = new Prisma.Decimal(1);
+    let calculationMethod: WageringCalculationMethod = WageringCalculationMethod.FULL;
 
     // 1. 보너스 및 배수 결정
     if (promotionId) {
@@ -52,6 +53,7 @@ export class ProcessDepositPromotionService {
       multiplier = new Prisma.Decimal(
         userPromotion.policySnapshot.wageringMultiplier ?? 1,
       );
+      calculationMethod = WageringCalculationMethod.WEIGHTED;
     } else {
       // 프로모션이 없는 경우: 기본 AML 롤링 설정 적용
       const config = await this.getPromotionConfigService.execute();
@@ -74,6 +76,7 @@ export class ProcessDepositPromotionService {
         depositAmount: amount.toString(),
         depositId: depositId.toString(),
         promotionId: promotionId?.toString(),
+        wageringCalculationMethod: calculationMethod,
       },
     });
 

@@ -7,7 +7,7 @@ import { RewardNotFoundException } from '../domain/reward.exception';
 import { Transactional } from '@nestjs-cls/transactional';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { CreateWageringRequirementService } from 'src/modules/wagering/requirement/application/create-wagering-requirement.service';
-import { Prisma, UserWalletBalanceType, UserWalletTransactionType, WageringSourceType, RewardSourceType } from '@prisma/client';
+import { Prisma, UserWalletBalanceType, UserWalletTransactionType, WageringSourceType, RewardSourceType, WageringCalculationMethod } from '@prisma/client';
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain/wallet.constant';
 import { RewardMetadataType } from '../domain/reward.types';
 
@@ -78,6 +78,7 @@ export class ClaimRewardService {
         // --- 입금 보너스 전용 처리 (원금 + 보너스 통합) ---
         let principalAmount = new Prisma.Decimal(0);
         let depositId: bigint | undefined = undefined;
+        let calculationMethod: WageringCalculationMethod | undefined = undefined;
 
         if (reward.metadata?.type === RewardMetadataType.PROMOTION) {
             if (reward.metadata.depositAmount) {
@@ -85,6 +86,9 @@ export class ClaimRewardService {
             }
             if (reward.metadata.depositId) {
                 depositId = BigInt(reward.metadata.depositId);
+            }
+            if (reward.metadata.wageringCalculationMethod) {
+                calculationMethod = reward.metadata.wageringCalculationMethod;
             }
         }
 
@@ -128,6 +132,7 @@ export class ClaimRewardService {
                 sourceType: wageringSourceType,
                 sourceId: reward.id,
                 targetType: reward.wageringTargetType,
+                calculationMethod: calculationMethod,
                 principalAmount: principalAmount, // 원금 전달
                 multiplier: new Prisma.Decimal(reward.wageringMultiplier!.toString()),
                 bonusAmount: new Prisma.Decimal(reward.amount.toString()),
