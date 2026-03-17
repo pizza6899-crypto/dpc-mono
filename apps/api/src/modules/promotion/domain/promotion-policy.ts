@@ -2,12 +2,11 @@
 import type { Prisma } from '@prisma/client';
 import {
   PromotionTargetType,
-  PromotionQualification,
   PromotionBonusType,
 } from '@prisma/client';
 import type { Promotion } from './model/promotion.entity';
 import type { UserPromotion } from './model/user-promotion.entity';
-import type { PromotionCurrency } from './model/promotion-currency.entity';
+import type { PromotionCurrencyRule } from './model/promotion-currency-rule.entity';
 import {
   PromotionNotEligibleException,
   PromotionAlreadyUsedException,
@@ -30,51 +29,30 @@ export class PromotionPolicy {
   }
 
   /**
-   * 입금 금액이 최소 입금 금액을 만족하는지 확인
+   * 입금 금액이 정책을 만족하는지 확인
    */
-  validateMinDepositAmount(
+  validateDepositAmount(
     depositAmount: Prisma.Decimal,
-    currencySettings: PromotionCurrency,
-    isDepositRequired: boolean = true,
+    currencyRule: PromotionCurrencyRule,
   ): void {
-    if (
-      isDepositRequired &&
-      !currencySettings.validateMinDepositAmount(depositAmount)
-    ) {
+    if (!currencyRule.validateDepositAmount(depositAmount)) {
       throw new PromotionNotEligibleException(
-        `Minimum deposit amount is ${currencySettings.minDepositAmount.toString()}`,
+        `Required deposit range: ${currencyRule.minDepositAmount.toString()} ~ ${currencyRule.maxDepositAmount?.toString() ?? 'No limit'}`,
       );
     }
   }
 
   /**
-   * 1회성 프로모션인 경우 이미 사용했는지 확인
+   * 중복 참여 여부 확인
    */
-  validateOneTimePromotion(
+  validateOneTimeParticipation(
     promotion: Promotion,
     existingUserPromotion: UserPromotion | null,
   ): void {
-    if (promotion.isOneTime && existingUserPromotion) {
-      if (existingUserPromotion.bonusGranted) {
-        throw new PromotionAlreadyUsedException();
-      }
+    // 신규 유저 첫 입금 보너스는 무조건 1회만 가능
+    if (promotion.targetType === PromotionTargetType.NEW_USER_FIRST_DEPOSIT && existingUserPromotion) {
+      throw new PromotionAlreadyUsedException('You have already used this welcome bonus');
     }
-  }
-
-  /**
-   * 반복 가능한 프로모션인 경우 시간 조건 확인
-   * 현재는 추가 검증 없음 (향후 확장 가능)
-   */
-  validateRepeatablePromotion(
-    promotion: Promotion,
-    now: Date = new Date(),
-  ): void {
-    if (promotion.isOneTime) {
-      return; // 1회성 프로모션은 시간 조건 없음
-    }
-
-    // 반복 가능한 프로모션의 경우 추가 시간 조건 검증이 필요하면 여기에 구현
-    // 현재는 활성화 기간(startDate, endDate)만 확인하면 됨
   }
 
   /**
@@ -101,7 +79,7 @@ export class PromotionPolicy {
       hasPreviousDeposits
     ) {
       throw new PromotionNotEligibleException(
-        'This promotion is only for first deposit',
+        'This promotion is only for users with no previous deposits',
       );
     }
   }
@@ -112,96 +90,60 @@ export class PromotionPolicy {
   validateEligibility(
     promotion: Promotion,
     depositAmount: Prisma.Decimal,
-    currencySettings: PromotionCurrency,
+    currencyRule: PromotionCurrencyRule,
     existingUserPromotion: UserPromotion | null,
     hasPreviousDeposits: boolean,
-    hasWithdrawn: boolean,
     now: Date = new Date(),
   ): void {
     // 1. 활성화 여부 확인
     this.isPromotionActive(promotion, now);
 
-    // 2. 최소 입금 금액 확인 (통화별 설정 사용)
-    this.validateMinDepositAmount(
-      depositAmount,
-      currencySettings,
-      promotion.isDepositRequired,
-    );
+    // 2. 금액 조건 확인
+    this.validateDepositAmount(depositAmount, currencyRule);
 
-    // 3. 1회성 프로모션 확인
-    this.validateOneTimePromotion(promotion, existingUserPromotion);
+    // 3. 중복 참여 확인
+    this.validateOneTimeParticipation(promotion, existingUserPromotion);
 
-    // 4. 반복 가능 프로모션 시간 조건 확인
-    this.validateRepeatablePromotion(promotion, now);
-
-    // 5. 첫 입금 프로모션 확인
+    // 4. 첫 입금 자격 확인
     this.validateFirstDepositEligibility(promotion, hasPreviousDeposits);
 
-    // 6. 선착순 마감 확인
+    // 5. 마감 여부 확인
     this.validateMaxUsageCount(promotion);
   }
 
   /**
-   * 프로모션 설정 유효성 검사 (생성/수정 시 호출)
+   * 프로모션 설정 유효성 검사
    */
   validateConfiguration(params: {
-    isDepositRequired: boolean;
     bonusType: PromotionBonusType;
-    bonusRate?: Prisma.Decimal | null;
-    currencies?: Array<{
+    currencyRules?: Array<{
       minDepositAmount: Prisma.Decimal;
       maxBonusAmount?: Prisma.Decimal | null;
+      bonusRate?: Prisma.Decimal | null;
     }>;
   }): void {
-    const { isDepositRequired, bonusType, bonusRate, currencies } = params;
+    const { bonusType, currencyRules } = params;
 
-    // 1. 비입금 프로모션 (isDepositRequired: false)
-    if (!isDepositRequired) {
-      if (bonusType !== PromotionBonusType.FIXED_AMOUNT) {
-        throw new PromotionInvalidConfigurationException(
-          'Non-deposit promotion must have FIXED_AMOUNT bonus type',
-        );
-      }
+    if (!currencyRules || currencyRules.length === 0) {
+      throw new PromotionInvalidConfigurationException('At least one currency rule is required');
     }
 
-    // 2. 입금 프로모션 (isDepositRequired: true)
-    if (isDepositRequired) {
-      // PERCENTAGE 타입인 경우 bonusRate 필수
+    for (const rule of currencyRules) {
+      // 1. PERCENTAGE 타입인 경우 bonusRate 필수 검증
       if (bonusType === PromotionBonusType.PERCENTAGE) {
-        if (!bonusRate || bonusRate.lte(0)) {
+        if (!rule.bonusRate || rule.bonusRate.lte(0)) {
           throw new PromotionInvalidConfigurationException(
-            'Deposit promotion with PERCENTAGE type requires a positive bonus rate',
+            'PERCENTAGE type requires a positive bonus rate for all currency rules',
           );
         }
       }
-    }
 
-    // 3. 통화별 설정 검증
-    if (currencies) {
-      for (const config of currencies) {
-        // 입금 프로모션인 경우 minDepositAmount는 양수여야 함
-        if (isDepositRequired) {
-          if (config.minDepositAmount.lte(0)) {
-            throw new PromotionInvalidConfigurationException(
-              'Deposit promotion requires a positive minimum deposit amount',
-            );
-          }
-        } else {
-          // 비입금 프로모션인 경우 minDepositAmount는 0이어야 함 (무시하거나 0 강제)
-          if (config.minDepositAmount.gt(0)) {
-            throw new PromotionInvalidConfigurationException(
-              'Non-deposit promotion must have 0 minimum deposit amount',
-            );
-          }
-        }
-
-        // FIXED_AMOUNT 타입인 경우 지급할 고정 금액(maxBonusAmount)이 필수
-        if (bonusType === PromotionBonusType.FIXED_AMOUNT) {
-          if (!config.maxBonusAmount || config.maxBonusAmount.lte(0)) {
-            throw new PromotionInvalidConfigurationException(
-              'FIXED_AMOUNT bonus type requires a positive maxBonusAmount as the fixed bonus amount',
-            );
-          }
+      // 2. FIXED_AMOUNT 타입인 경우 지급할 고정 금액(maxBonusAmount)이 필수
+      if (bonusType === PromotionBonusType.FIXED_AMOUNT) {
+        if (!rule.maxBonusAmount || rule.maxBonusAmount.lte(0)) {
+          throw new PromotionInvalidConfigurationException(
+            'FIXED_AMOUNT type requires a positive maxBonusAmount (used as fixed bonus) for all currency rules',
+          );
         }
       }
     }

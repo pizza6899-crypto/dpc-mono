@@ -2,6 +2,9 @@ import { HttpStatus } from '@nestjs/common';
 import { MessageCode } from '@repo/shared';
 import { DomainException } from 'src/common/exception/domain.exception';
 
+/**
+ * 프로모션 도메인 기본 예외
+ */
 export class PromotionException extends DomainException {
   constructor(
     message: string,
@@ -13,6 +16,9 @@ export class PromotionException extends DomainException {
   }
 }
 
+/**
+ * 프로모션을 찾을 수 없는 경우
+ */
 export class PromotionNotFoundException extends PromotionException {
   constructor() {
     super(
@@ -24,10 +30,13 @@ export class PromotionNotFoundException extends PromotionException {
   }
 }
 
+/**
+ * 프로모션이 활성 상태가 아닌 경우 (기간 만료 포함)
+ */
 export class PromotionNotActiveException extends PromotionException {
   constructor() {
     super(
-      'Promotion is not active',
+      'The promotion is currently not active or has expired',
       MessageCode.PROMOTION_NOT_ACTIVE,
       HttpStatus.BAD_REQUEST,
     );
@@ -35,10 +44,13 @@ export class PromotionNotActiveException extends PromotionException {
   }
 }
 
+/**
+ * 프로모션 참여 자격이 없는 경우 (입금액 미달, 타겟 미달 등)
+ */
 export class PromotionNotEligibleException extends PromotionException {
   constructor(reason?: string) {
     super(
-      reason ? `Promotion not eligible: ${reason}` : 'Promotion not eligible',
+      reason ? `Promotion eligibility failed: ${reason}` : 'You are not eligible for this promotion',
       MessageCode.PROMOTION_NOT_ELIGIBLE,
       HttpStatus.BAD_REQUEST,
     );
@@ -46,10 +58,13 @@ export class PromotionNotEligibleException extends PromotionException {
   }
 }
 
+/**
+ * 이미 사용한 프로모션인 경우
+ */
 export class PromotionAlreadyUsedException extends PromotionException {
-  constructor() {
+  constructor(customMessage?: string) {
     super(
-      'Promotion has already been used',
+      customMessage ?? 'This promotion has already been used',
       MessageCode.PROMOTION_ALREADY_USED,
       HttpStatus.BAD_REQUEST,
     );
@@ -57,32 +72,27 @@ export class PromotionAlreadyUsedException extends PromotionException {
   }
 }
 
+/**
+ * 프로모션 선착순/사용 한도를 초과한 경우
+ */
 export class PromotionUsageLimitExceededException extends PromotionException {
   constructor() {
     super(
-      'Promotion usage limit has been exceeded',
-      MessageCode.PROMOTION_ALREADY_USED, // 사용 가능한 적절한 코드가 없으면 근사한 것 사용
+      'The maximum usage limit for this promotion has been reached',
+      MessageCode.PROMOTION_NOT_ELIGIBLE,
       HttpStatus.BAD_REQUEST,
     );
     this.name = 'PromotionUsageLimitExceededException';
   }
 }
 
-export class PromotionBonusLimitExceededException extends PromotionException {
-  constructor() {
-    super(
-      'Bonus amount exceeds the maximum limit',
-      MessageCode.VALIDATION_ERROR,
-      HttpStatus.BAD_REQUEST,
-    );
-    this.name = 'PromotionBonusLimitExceededException';
-  }
-}
-
+/**
+ * 사용자 프로모션 참여 기록을 찾을 수 없는 경우
+ */
 export class UserPromotionNotFoundException extends PromotionException {
   constructor() {
     super(
-      'User promotion not found',
+      'Participation record not found',
       MessageCode.PROMOTION_NOT_FOUND,
       HttpStatus.NOT_FOUND,
     );
@@ -90,17 +100,9 @@ export class UserPromotionNotFoundException extends PromotionException {
   }
 }
 
-export class PromotionCodeAlreadyExistsException extends PromotionException {
-  constructor() {
-    super(
-      'Promotion code already exists',
-      MessageCode.VALIDATION_ERROR,
-      HttpStatus.CONFLICT,
-    );
-    this.name = 'PromotionCodeAlreadyExistsException';
-  }
-}
-
+/**
+ * 프로모션 설정이 올바르지 않은 경우 (Admin용)
+ */
 export class PromotionInvalidConfigurationException extends PromotionException {
   constructor(reason?: string) {
     super(

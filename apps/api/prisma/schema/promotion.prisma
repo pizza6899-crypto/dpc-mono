@@ -39,8 +39,8 @@ model PromotionTranslation {
   id          BigInt    @id @default(autoincrement())
   promotionId BigInt    @map("promotion_id")
   language    Language
-  name        String
-  description String?
+  title       String    @map("title") // 프로모션 제목 (사용자 노출용)
+  description String?   @map("description") @db.Text
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
   promotion   Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
@@ -83,18 +83,18 @@ model UserPromotion {
   depositAmount         Decimal              @default(0) @map("deposit_amount") @db.Decimal(32, 18)
   bonusAmount           Decimal              @map("bonus_amount") @db.Decimal(32, 18)
   currency              ExchangeCurrencyCode
+
   /// 적용 당시의 정책 스냅샷
-  /// { bonusRate: number, wageringMultiplier: number, maxWithdrawAmount: number, isForfeitable: boolean }
-  policySnapshot        Json                 @map("policy_snapshot")
-  createdAt             DateTime             @default(now()) @map("created_at")
-  updatedAt             DateTime             @updatedAt @map("updated_at")
-  completedAt           DateTime?            @map("completed_at")
-  voidedAt              DateTime?            @map("voided_at")
-  adminMemos            AdminMemo[]
-  promotion             Promotion            @relation(fields: [promotionId], references: [id])
-  user                  User                 @relation(fields: [userId], references: [id])
-  deposit               DepositDetail?       @relation(fields: [depositId], references: [id])
-  wageringRequirement   WageringRequirement? @relation(fields: [wageringRequirementId], references: [id])
+  policySnapshot      Json                 @map("policy_snapshot")
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @updatedAt @map("updated_at")
+  completedAt         DateTime?            @map("completed_at")
+  voidedAt            DateTime?            @map("voided_at")
+  adminMemos          AdminMemo[]
+  promotion           Promotion            @relation(fields: [promotionId], references: [id])
+  user                User                 @relation(fields: [userId], references: [id])
+  deposit             DepositDetail?       @relation(fields: [depositId], references: [id])
+  wageringRequirement WageringRequirement? @relation(fields: [wageringRequirementId], references: [id])
 
   @@index([userId, status])
   @@index([depositId])
