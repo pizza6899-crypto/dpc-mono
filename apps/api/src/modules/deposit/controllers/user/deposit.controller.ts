@@ -128,12 +128,18 @@ export class UserDepositController {
     @CurrentUser() user: AuthenticatedUser,
     @RequestClientInfoParam() clientInfo: RequestClientInfo,
   ): Promise<CreateDepositResponseDto> {
+    const promotionId = dto.promotionId
+      ? this.sqidsService.decode(dto.promotionId, SqidsPrefix.PROMOTION)
+      : undefined;
+
     const deposit = await this.createCryptoDepositService.execute({
       ...dto,
+      promotionId,
       user: user,
       ipAddress: clientInfo.ip,
       deviceFingerprint: clientInfo.userAgent,
     });
+
     return {
       id: this.sqidsService.encode(deposit.id!, SqidsPrefix.DEPOSIT),
       payAddress: deposit.walletAddress ?? undefined,
@@ -170,12 +176,18 @@ export class UserDepositController {
     @CurrentUser() user: AuthenticatedUser,
     @RequestClientInfoParam() clientInfo: RequestClientInfo,
   ): Promise<CreateDepositResponseDto> {
+    const promotionId = dto.promotionId
+      ? this.sqidsService.decode(dto.promotionId, SqidsPrefix.PROMOTION)
+      : undefined;
+
     const result = await this.createFiatDepositService.execute({
       ...dto,
+      promotionId,
       user: user,
       ipAddress: clientInfo.ip,
       deviceFingerprint: clientInfo.userAgent,
     });
+
     return {
       id: this.sqidsService.encode(result.deposit.id!, SqidsPrefix.DEPOSIT),
       payCurrency: result.deposit.depositCurrency,

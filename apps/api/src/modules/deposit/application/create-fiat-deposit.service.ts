@@ -17,7 +17,6 @@ import {
   DepositDetail,
   DepositMethod,
   DepositAmount,
-  PendingDepositExistsException,
   InvalidPromotionSelectionException,
 } from '../domain';
 import { DepositRequirementPolicy } from '../domain/policy/deposit-requirement.policy';
@@ -25,13 +24,10 @@ import { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { CheckEligiblePromotionsService } from '../../promotion/application/check-eligible-promotions.service';
 import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
 import { SOCKET_ROOMS } from 'src/infrastructure/websocket/constants/websocket-rooms.constant';
 import {
   SOCKET_EVENT_TYPES,
-  SocketFiatDepositRequestedPayload,
 } from 'src/infrastructure/websocket/types/socket-payload.types';
 
 interface CreateFiatDepositParams {
@@ -39,7 +35,7 @@ interface CreateFiatDepositParams {
   payCurrency: string;
   amount: string | number;
   depositorName?: string;
-  promotionId?: string;
+  promotionId?: bigint;
   ipAddress?: string;
   deviceFingerprint?: string;
 }
@@ -57,7 +53,6 @@ export class CreateFiatDepositService {
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly depositRequirementPolicy: DepositRequirementPolicy,
     private readonly websocketService: WebsocketService,
-    private readonly sqidsService: SqidsService,
   ) { }
 
   @Transactional()
@@ -68,7 +63,7 @@ export class CreateFiatDepositService {
       user,
       payCurrency,
       amount,
-      promotionId: encodedPromotionId,
+      promotionId: requestedPromotionId,
       depositorName,
       ipAddress,
       deviceFingerprint,
@@ -97,9 +92,7 @@ export class CreateFiatDepositService {
     let promotionId: bigint | null = null;
 
     // 1. 프로모션 유효성 검사
-    if (encodedPromotionId) {
-      const decodedPromotionId = this.sqidsService.decode(encodedPromotionId, SqidsPrefix.PROMOTION);
-
+    if (requestedPromotionId) {
       const eligiblePromotions = await this.promotionsService.execute({
         userId,
         depositAmount: new Prisma.Decimal(amount),
@@ -107,7 +100,7 @@ export class CreateFiatDepositService {
       });
 
       const selectedPromotion = eligiblePromotions.find(
-        (p) => p.id === decodedPromotionId,
+        (p) => p.id === requestedPromotionId,
       );
 
       if (!selectedPromotion) {
@@ -156,8 +149,6 @@ export class CreateFiatDepositService {
         requestedAt: savedDeposit.createdAt.toISOString(),
       },
     );
-
-    // 나중에 텔레그램도 처리해야함.
 
     // 7. 도메인 엔티티 반환
     return {

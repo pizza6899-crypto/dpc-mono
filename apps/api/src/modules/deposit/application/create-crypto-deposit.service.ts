@@ -17,7 +17,6 @@ import {
   DepositDetail,
   DepositMethod,
   DepositAmount,
-  PendingDepositExistsException,
   InvalidPromotionSelectionException,
 } from '../domain';
 import { DepositRequirementPolicy } from '../domain/policy/deposit-requirement.policy';
@@ -25,15 +24,13 @@ import { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { CheckEligiblePromotionsService } from '../../promotion/application/check-eligible-promotions.service';
 import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 
 interface CreateCryptoDepositParams {
   user: AuthenticatedUser;
   payCurrency: string;
   payNetwork: string;
   amount?: string | number;
-  promotionId?: string;
+  promotionId?: bigint;
   ipAddress?: string;
   deviceFingerprint?: string;
 }
@@ -46,7 +43,6 @@ export class CreateCryptoDepositService {
     private readonly checkEligiblePromotionsService: CheckEligiblePromotionsService,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly depositRequirementPolicy: DepositRequirementPolicy,
-    private readonly sqidsService: SqidsService,
   ) { }
 
   @Transactional()
@@ -56,7 +52,7 @@ export class CreateCryptoDepositService {
       payCurrency,
       payNetwork,
       amount,
-      promotionId: encodedPromotionId,
+      promotionId: requestedPromotionId,
       ipAddress,
       deviceFingerprint,
     } = params;
@@ -84,9 +80,7 @@ export class CreateCryptoDepositService {
     let promotionId: bigint | null = null;
 
     // 1. 프로모션 유효성 검사
-    if (encodedPromotionId) {
-      const decodedPromotionId = this.sqidsService.decode(encodedPromotionId, SqidsPrefix.PROMOTION);
-
+    if (requestedPromotionId) {
       const eligiblePromotions =
         await this.checkEligiblePromotionsService.execute({
           userId,
@@ -97,7 +91,7 @@ export class CreateCryptoDepositService {
         });
 
       const selectedPromotion = eligiblePromotions.find(
-        (p) => p.id === decodedPromotionId,
+        (p) => p.id === requestedPromotionId,
       );
 
       if (!selectedPromotion) {

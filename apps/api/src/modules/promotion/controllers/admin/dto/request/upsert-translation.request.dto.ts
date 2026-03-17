@@ -14,12 +14,12 @@ export class UpsertTranslationRequestDto {
   language: Language;
 
   @ApiProperty({
-    description: '프로모션 이름',
+    description: '프로모션 제목',
     example: '첫 충전 100% 보너스',
   })
   @IsNotEmpty()
   @IsString()
-  name: string;
+  title: string;
 
   @ApiPropertyOptional({
     description: '프로모션 설명',

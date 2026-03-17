@@ -37,6 +37,7 @@ import { PromotionAdminResponseDto } from './dto/response/promotion-admin.respon
 import { ListPromotionsQueryDto } from './dto/request/list-promotions-query.dto';
 import { ListParticipantsQueryDto } from './dto/request/list-participants-query.dto';
 import { UpsertCurrencySettingsRequestDto } from './dto/request/upsert-currency-settings.request.dto';
+import { UpsertTranslationRequestDto } from './dto/request/upsert-translation.request.dto';
 import { PromotionParticipantResponseDto } from './dto/response/promotion-participant.response.dto';
 import { PromotionStatisticsResponseDto } from './dto/response/promotion-statistics.response.dto';
 import { PROMOTION_REPOSITORY } from '../../ports';
@@ -337,6 +338,42 @@ export class PromotionAdminController {
       maxWithdrawAmount: dto.maxWithdrawAmount ? new Prisma.Decimal(dto.maxWithdrawAmount) : null,
       bonusRate: dto.bonusRate ? new Prisma.Decimal(dto.bonusRate) : null,
       wageringMultiplier: dto.wageringMultiplier ? new Prisma.Decimal(dto.wageringMultiplier) : null,
+    });
+
+    return {};
+  }
+
+  /**
+   * 프로모션 다국어 정보 생성/수정
+   */
+  @Post(':id/translations')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Upsert promotion translations / 프로모션 다국어 정보 생성/수정',
+    description: '프로모션의 제목, 설명 등 다국어 정보를 생성하거나 수정합니다.',
+  })
+  @ApiStandardResponse(Object, {
+    status: HttpStatus.OK,
+    description: 'Translations upserted successfully / 다국어 정보 생성/수정 성공',
+  })
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    action: 'UPSERT_PROMOTION_TRANSLATION',
+    category: 'PROMOTION',
+    extractMetadata: (_, args) => {
+      const [id, dto] = args;
+      return { promotionId: id, language: dto?.language };
+    },
+  })
+  async upsertPromotionTranslation(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpsertTranslationRequestDto,
+  ): Promise<any> {
+    await this.repository.upsertTranslation({
+      promotionId: BigInt(id),
+      language: dto.language,
+      title: dto.title,
+      description: dto.description || null,
     });
 
     return {};
