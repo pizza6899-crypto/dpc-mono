@@ -5,10 +5,7 @@ import { AdminDepositController } from './controllers/admin/deposit.controller';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { PaymentModule } from '../payment/payment.module';
-import { WalletModule } from '../wallet/wallet.module';
 import { PromotionModule } from '../promotion/promotion.module';
-import { WageringModule } from '../wagering/wagering.module';
-import { TierEvaluatorModule } from '../tier/evaluator/tier-evaluator.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { AdminMemoModule } from '../admin-memo/admin-memo.module';
 import { GetDepositStatsService } from './application/get-deposit-stats.service';
@@ -26,7 +23,7 @@ import { DepositDetailRepository } from './infrastructure/deposit-detail.reposit
 import { DepositRequirementPolicy } from './domain/policy/deposit-requirement.policy';
 import {
   DEPOSIT_DETAIL_REPOSITORY,
-} from './ports/out';
+} from './ports';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { NotificationModule } from '../notification/notification.module';
 
@@ -35,10 +32,7 @@ import { NotificationModule } from '../notification/notification.module';
     PrismaModule,
     EnvModule,
     PaymentModule, // NowPaymentApiService 사용을 위해
-    WalletModule, // UpdateUserBalanceAdminService 사용을 위해
     PromotionModule, // CheckEligiblePromotionsService 사용을 위해
-    WageringModule,
-    TierEvaluatorModule,
     ConcurrencyModule,
     SnowflakeModule,
     NotificationModule,

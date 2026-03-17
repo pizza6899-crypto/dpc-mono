@@ -4,6 +4,7 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma, ExchangeCurrencyCode, RewardSourceType, RewardItemType } from '@prisma/client';
 import { InstantGrantRewardService } from 'src/modules/reward/core/application/instant-grant-reward.service';
 import { RewardMetadataType } from 'src/modules/reward/core/domain/reward.types';
+import { GetWageringConfigService } from 'src/modules/wagering/config/application/get-wagering-config.service';
 import { GrantPromotionBonusService } from './grant-promotion-bonus.service';
 import type { RequestClientInfo } from 'src/common/http/types';
 import Decimal from 'decimal.js';
@@ -26,6 +27,7 @@ export class ProcessDepositPromotionService {
   constructor(
     private readonly grantPromotionBonusService: GrantPromotionBonusService,
     private readonly instantGrantRewardService: InstantGrantRewardService,
+    private readonly wageringConfigService: GetWageringConfigService,
   ) { }
 
   @Transactional()
@@ -51,9 +53,9 @@ export class ProcessDepositPromotionService {
         userPromotion.policySnapshot.wageringMultiplier ?? 1,
       );
     } else {
-      // 프로모션이 없는 경우: 리워드 모듈에서 기본 롤링으로 처리하거나 
-      // 여기서 기본 배수를 결정하여 넘깁니다.
-      multiplier = new Prisma.Decimal(1); // 기본 1배 (필요시 ConfigService 주입)
+      // 프로모션이 없는 경우: 기본 AML 롤링 설정 획득
+      const wageringConfig = await this.wageringConfigService.execute();
+      multiplier = wageringConfig.defaultDepositMultiplier;
     }
 
     const totalAmount = amount.add(bonusAmount);

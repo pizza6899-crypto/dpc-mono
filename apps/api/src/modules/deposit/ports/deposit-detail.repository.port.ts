@@ -1,11 +1,11 @@
-// apps/api/src/modules/deposit/ports/out/deposit-detail.repository.port.ts
+// apps/api/src/modules/deposit/ports/deposit-detail.repository.port.ts
 import type {
   Prisma,
   ExchangeCurrencyCode,
   DepositDetailStatus,
   DepositMethodType,
 } from '@prisma/client';
-import type { DepositDetail } from '../../domain';
+import type { DepositDetail } from '../domain';
 
 export interface DepositListQuery {
   skip?: number;

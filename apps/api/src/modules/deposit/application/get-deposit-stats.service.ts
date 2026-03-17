@@ -1,10 +1,10 @@
 // src/modules/deposit/application/get-deposit-stats.service.ts
 import { Injectable, Inject } from '@nestjs/common';
-import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
+import { DEPOSIT_DETAIL_REPOSITORY } from '../ports';
 import type {
   DepositDetailRepositoryPort,
   DepositStats,
-} from '../ports/out/deposit-detail.repository.port';
+} from '../ports/deposit-detail.repository.port';
 
 interface GetDepositStatsResult {
   todayTotalAmount: string;

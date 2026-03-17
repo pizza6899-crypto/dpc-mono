@@ -1,11 +1,11 @@
 // src/modules/deposit/application/get-my-deposits.service.ts
 import { Injectable, Inject } from '@nestjs/common';
 import type { PaginatedData } from 'src/common/http/types';
-import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
+import { DEPOSIT_DETAIL_REPOSITORY } from '../ports';
 import type {
   DepositDetailRepositoryPort,
   DepositListQuery,
-} from '../ports/out/deposit-detail.repository.port';
+} from '../ports/deposit-detail.repository.port';
 import { DepositDetail } from '../domain';
 
 interface GetMyDepositsParams {

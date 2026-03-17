@@ -1,8 +1,8 @@
 // src/modules/deposit/application/reject-deposit.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
-import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
+import { DEPOSIT_DETAIL_REPOSITORY } from '../ports';
+import type { DepositDetailRepositoryPort } from '../ports/deposit-detail.repository.port';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { CreateAdminMemoService } from '../../admin-memo/application/create-admin-memo.service';
 import { DepositNotFoundException } from '../domain';

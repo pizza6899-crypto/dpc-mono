@@ -9,10 +9,10 @@ import {
 
 import {
   DEPOSIT_DETAIL_REPOSITORY,
-} from '../ports/out';
+} from '../ports';
 import type {
   DepositDetailRepositoryPort,
-} from '../ports/out';
+} from '../ports';
 import {
   DepositDetail,
   DepositMethod,

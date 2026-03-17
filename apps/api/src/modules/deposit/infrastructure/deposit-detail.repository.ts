@@ -8,7 +8,7 @@ import type {
   DepositListQuery,
   DepositStats,
   DepositWithUser,
-} from '../ports/out/deposit-detail.repository.port';
+} from '../ports/deposit-detail.repository.port';
 import { DepositDetailMapper } from './deposit-detail.mapper';
 import {
   Prisma,
