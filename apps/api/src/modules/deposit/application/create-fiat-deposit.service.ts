@@ -21,7 +21,9 @@ import {
 } from '../domain';
 import { DepositRequirementPolicy } from '../domain/policy/deposit-requirement.policy';
 import { AuthenticatedUser } from 'src/common/auth/types/auth.types';
-import { CheckEligiblePromotionsService } from '../../promotion/application/check-eligible-promotions.service';
+import { PromotionPolicy, PromotionNotFoundException } from '../../promotion/domain';
+import { PROMOTION_REPOSITORY } from '../../promotion/ports';
+import type { PromotionRepositoryPort } from '../../promotion/ports/promotion.repository.port';
 import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
@@ -49,7 +51,9 @@ export class CreateFiatDepositService {
   constructor(
     @Inject(DEPOSIT_DETAIL_REPOSITORY)
     private readonly depositRepository: DepositDetailRepositoryPort,
-    private readonly promotionsService: CheckEligiblePromotionsService,
+    @Inject(PROMOTION_REPOSITORY)
+    private readonly promotionRepository: PromotionRepositoryPort,
+    private readonly promotionPolicy: PromotionPolicy,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly depositRequirementPolicy: DepositRequirementPolicy,
     private readonly websocketService: WebsocketService,
@@ -93,20 +97,36 @@ export class CreateFiatDepositService {
 
     // 1. 프로모션 유효성 검사
     if (requestedPromotionId) {
-      const eligiblePromotions = await this.promotionsService.execute({
-        userId,
-        depositAmount: new Prisma.Decimal(amount),
-        currency: payCurrency as ExchangeCurrencyCode,
-      });
+      const promotion = await this.promotionRepository.findById(requestedPromotionId);
+      if (!promotion) {
+        throw new PromotionNotFoundException();
+      }
 
-      const selectedPromotion = eligiblePromotions.find(
-        (p) => p.id === requestedPromotionId,
+      const currencyRule = await this.promotionRepository.getCurrencyRule(
+        requestedPromotionId,
+        payCurrency as ExchangeCurrencyCode,
       );
 
-      if (!selectedPromotion) {
-        throw new InvalidPromotionSelectionException();
+      if (!currencyRule) {
+        throw new InvalidPromotionSelectionException('Currency not supported for this promotion');
       }
-      promotionId = selectedPromotion.id;
+
+      const hasPreviousDeposits = await this.promotionRepository.hasPreviousDeposits(userId);
+      const userParticipations = await this.promotionRepository.findUserPromotions(userId, 'ACTIVE');
+
+      // 도메인 정책을 통한 통합 검증
+      try {
+        this.promotionPolicy.validateEligibility(
+          promotion,
+          currencyRule,
+          new Prisma.Decimal(amount),
+          hasPreviousDeposits,
+          userParticipations,
+        );
+        promotionId = requestedPromotionId;
+      } catch (error) {
+        throw new InvalidPromotionSelectionException(error.message);
+      }
     }
 
     const decimalAmount = new Prisma.Decimal(amount);

@@ -2,7 +2,6 @@
 import { Module } from '@nestjs/common';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { PromotionPolicy } from './domain';
-import { CheckEligiblePromotionsService } from './application/check-eligible-promotions.service';
 import { GrantPromotionBonusService } from './application/grant-promotion-bonus.service';
 import { FindActivePromotionsService } from './application/find-active-promotions.service';
 import { FindUserPromotionsService } from './application/find-user-promotions.service';
@@ -32,7 +31,6 @@ import { NotificationModule } from '../notification/notification.module';
   ],
   providers: [
     PromotionPolicy,
-    CheckEligiblePromotionsService,
     GrantPromotionBonusService,
     FindActivePromotionsService,
     FindUserPromotionsService,
@@ -53,7 +51,7 @@ import { NotificationModule } from '../notification/notification.module';
   controllers: [PromotionUserController, PromotionAdminController],
   exports: [
     GrantPromotionBonusService,
-    CheckEligiblePromotionsService,
+    PromotionPolicy,
     FindActivePromotionsService,
     PROMOTION_REPOSITORY,
   ],

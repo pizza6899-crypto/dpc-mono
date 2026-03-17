@@ -145,9 +145,12 @@ export class DepositAmountExceedsMaximumException extends DepositException {
  * @httpStatus 400
  */
 export class InvalidPromotionSelectionException extends DepositException {
-  constructor() {
+  constructor(reason?: string) {
+    const message = reason
+      ? `The selected promotion is invalid or ineligible: ${reason}`
+      : 'The selected promotion is invalid or ineligible';
     super(
-      'The selected promotion is invalid or ineligible',
+      message,
       MessageCode.PROMOTION_NOT_FOUND,
       HttpStatus.BAD_REQUEST,
     );
