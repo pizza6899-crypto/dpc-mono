@@ -116,33 +116,37 @@ model User {
   processedDeposits  DepositDetail[]     @relation("AdminProcessedDeposits")
 
   // 관리자 메모 관련 (Centralized Memo System)
-  memosWritten           AdminMemo[]             @relation("AdminMemosWritten") // 관리자로서 작성한 메모
-  adminMemos             AdminMemo[]             @relation("UserMemos") // 이 사용자에 대해 작성된 관리자 메모
-  withdrawalDetails      WithdrawalDetail[]
-  userWallets            UserWallet[]
-  userTotalStats         UserWalletTotalStats[]
-  userHourlyStats        UserWalletHourlyStats[]
-  userPromotions         UserPromotion[]
-  userSessions           UserSession[]           @relation("UserSessions")
-  revokedSessions        UserSession[]           @relation("RevokedSessions")
-  revokedGameSessions    CasinoGameSession[]     @relation("RevokedGameSessions")
-  verificationTokens     VerificationToken[]
-  loginAttempts          LoginAttempt[]
-  userTier               UserTier?
-  tierHistory            TierHistory[]
-  adminAdjustmentDetails AdminAdjustmentDetail[] @relation("AdminAdjustments")
-  wageringRequirements   WageringRequirement[]
-  compAccounts           UserCompAccount[]
-  alerts                 Alert[]
-  notificationLogs       NotificationLog[]
-  casinoGameRounds       CasinoGameRound[]
-  tierConfigsUpdated     TierConfig[]            @relation("TierConfigUpdatedBy")
-  tiersUpdated           Tier[]                  @relation("TierUpdatedBy")
-  userRewards            UserReward[]
-  compDailySettlements   CompDailySettlement[]
-  userConfigsUpdated     UserConfig[]            @relation("UserConfigUpdatedBy")
-  userExpLogs            UserExpLog[]
-  tierHistoriesChangedBy TierHistory[]           @relation("TierHistoryChangedBy")
+  memosWritten                     AdminMemo[]                @relation("AdminMemosWritten") // 관리자로서 작성한 메모
+  adminMemos                       AdminMemo[]                @relation("UserMemos") // 이 사용자에 대해 작성된 관리자 메모
+  withdrawalDetails                WithdrawalDetail[]
+  userWallets                      UserWallet[]
+  userTotalStats                   UserWalletTotalStats[]
+  userHourlyStats                  UserWalletHourlyStats[]
+  userPromotions                   UserPromotion[]
+  userSessions                     UserSession[]              @relation("UserSessions")
+  revokedSessions                  UserSession[]              @relation("RevokedSessions")
+  revokedGameSessions              CasinoGameSession[]        @relation("RevokedGameSessions")
+  verificationTokens               VerificationToken[]
+  loginAttempts                    LoginAttempt[]
+  userTier                         UserTier?
+  tierHistory                      TierHistory[]
+  adminAdjustmentDetails           AdminAdjustmentDetail[]    @relation("AdminAdjustments")
+  wageringRequirements             WageringRequirement[]
+  compAccounts                     UserCompAccount[]
+  alerts                           Alert[]
+  notificationLogs                 NotificationLog[]
+  casinoGameRounds                 CasinoGameRound[]
+  tierConfigsUpdated               TierConfig[]               @relation("TierConfigUpdatedBy")
+  tiersUpdated                     Tier[]                     @relation("TierUpdatedBy")
+  userRewards                      UserReward[]
+  compDailySettlements             CompDailySettlement[]
+  userConfigsUpdated               UserConfig[]               @relation("UserConfigUpdatedBy")
+  promotionConfigsUpdated          PromotionConfig[]          @relation("PromotionConfigUpdatedBy")
+  promotionsCreated                Promotion[]                @relation("PromotionCreatedBy")
+  promotionsUpdated                Promotion[]                @relation("PromotionUpdatedBy")
+  promotionCurrencyRulesUpdated    PromotionCurrencyRule[]    @relation("PromotionCurrencyRuleUpdatedBy")
+  userExpLogs                      UserExpLog[]
+  tierHistoriesChangedBy           TierHistory[]              @relation("TierHistoryChangedBy")
 
   // [Chat System]
   chatMessages    ChatMessage[]    @relation("UserMessages")

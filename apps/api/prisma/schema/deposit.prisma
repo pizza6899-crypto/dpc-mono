@@ -61,6 +61,7 @@ model DepositDetail {
   providerMetadata Json?      @default("{}") @map("provider_metadata")
   promotionId      BigInt?    @map("promotion_id")
   promotion        Promotion? @relation(fields: [promotionId], references: [id])
+  userPromotions   UserPromotion[]
 
   @@index([provider, providerPaymentId])
   @@index([status, createdAt])

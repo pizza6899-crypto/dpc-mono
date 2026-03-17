@@ -100,6 +100,7 @@ model WageringRequirement {
   parentWageringId BigInt?               @map("parent_wagering_id")
   parentWagering   WageringRequirement?  @relation("WageringHistory", fields: [parentWageringId], references: [id])
   childWagerings   WageringRequirement[] @relation("WageringHistory")
+  userPromotions   UserPromotion[]
 
   @@index([userId, status, currency, priority])
   @@index([userId, status])

@@ -23,8 +23,18 @@ model AdminMemo {
     userId BigInt? @map("user_id")
     user   User?   @relation("UserMemos", fields: [userId], references: [id])
 
+    /// 프로모션 정의 관련 메모 시 연결
+    promotionId BigInt?    @map("promotion_id")
+    promotion   Promotion? @relation(fields: [promotionId], references: [id])
+
+    /// 특정 유저의 프로모션 참여 건 관련 메모 시 연결
+    userPromotionId BigInt?        @map("user_promotion_id")
+    userPromotion   UserPromotion? @relation(fields: [userPromotionId], references: [id])
+
     @@index([adminId])
     @@index([depositId])
     @@index([userId])
+    @@index([promotionId])
+    @@index([userPromotionId])
     @@map("admin_memos")
 }
