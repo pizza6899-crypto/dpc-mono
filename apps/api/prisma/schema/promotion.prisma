@@ -16,7 +16,6 @@ model Promotion {
   endDate            DateTime?               @map("end_date")
   deletedAt          DateTime?               @map("deleted_at")
   targetType         PromotionTargetType     @map("target_type")
-  bonusType          PromotionBonusType      @map("bonus_type")
   maxUsageCount      Int?                    @map("max_usage_count")
   currentUsageCount  Int                     @default(0) @map("current_usage_count")
   bonusExpiryMinutes Int?                    @map("bonus_expiry_minutes")
@@ -117,17 +116,6 @@ enum PromotionTargetType {
   // VIP_LEVEL_UP                // VIP 레벨업 프로모션
   // REFERRAL_BONUS              // 추천인 보너스
   // LOYALTY_REWARD              // 로열티 보상
-}
-
-/**
- * 프로모션 보너스 타입
- * 보너스 지급 방식
- */
-enum PromotionBonusType {
-  /// 퍼센트 기반 보너스 - 입금 금액의 일정 비율로 지급
-  PERCENTAGE
-  /// 고정 금액 보너스 - 입금 금액과 무관하게 고정 금액 지급
-  FIXED_AMOUNT
 }
 
 /**

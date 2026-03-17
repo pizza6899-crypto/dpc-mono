@@ -58,18 +58,12 @@ export class PromotionCurrencyRule {
   }
 
   /**
-   * 보너스 금액 계산
+   * 보너스 금액 계산 (PERCENTAGE 방식 고정)
    */
-  calculateBonusAmount(depositAmount: Prisma.Decimal, bonusType: 'PERCENTAGE' | 'FIXED_AMOUNT'): Prisma.Decimal {
-    let bonus: Prisma.Decimal;
+  calculateBonusAmount(depositAmount: Prisma.Decimal): Prisma.Decimal {
+    if (!this.bonusRate) return new Prisma.Decimal(0);
 
-    if (bonusType === 'PERCENTAGE') {
-      if (!this.bonusRate) return new Prisma.Decimal(0);
-      bonus = depositAmount.mul(this.bonusRate);
-    } else {
-      // FIXED_AMOUNT의 경우 maxBonusAmount를 지급액으로 사용
-      bonus = this.maxBonusAmount ?? new Prisma.Decimal(0);
-    }
+    let bonus = depositAmount.mul(this.bonusRate);
 
     // 최대 보너스 한도 적용
     if (this.maxBonusAmount && bonus.gt(this.maxBonusAmount)) {

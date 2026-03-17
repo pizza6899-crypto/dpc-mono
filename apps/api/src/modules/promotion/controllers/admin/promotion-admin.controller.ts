@@ -118,11 +118,6 @@ export class PromotionAdminController {
     description: `
 새로운 프로모션의 기본 정보를 생성합니다. 
 생성 후 상세 페이지에서 통화별 설정 및 다국어 정보를 등록해야 합니다.
-
-### 주요 설정 안내
-1. **보너스 타입 (bonusType)**:
-   - \`PERCENTAGE\`: 입금액의 특정 비율(bonusRate)만큼 보너스 지급.
-   - \`FIXED_AMOUNT\`: 입금액과 상관없이 고정 금액 지급. (통화별 설정의 \`maxBonusAmount\`가 지급액이 됨)
     `,
   })
   @ApiStandardResponse(PromotionAdminResponseDto, {
@@ -149,7 +144,6 @@ export class PromotionAdminController {
       startDate: dto.startDate ? new Date(dto.startDate) : null,
       endDate: dto.endDate ? new Date(dto.endDate) : null,
       targetType: dto.targetType,
-      bonusType: dto.bonusType,
       maxUsageCount: dto.maxUsageCount,
       bonusExpiryMinutes: dto.bonusExpiryMinutes,
     });
@@ -201,7 +195,6 @@ export class PromotionAdminController {
           : dto.endDate === null
             ? null
             : new Date(dto.endDate),
-      bonusType: dto.bonusType,
       targetType: dto.targetType,
       maxUsageCount: dto.maxUsageCount,
       bonusExpiryMinutes: dto.bonusExpiryMinutes,
@@ -407,7 +400,6 @@ export class PromotionAdminController {
       id: promotion.id.toString(),
       isActive: promotion.isActive,
       targetType: promotion.targetType as string,
-      bonusType: promotion.bonusType as string,
       maxUsageCount: promotion.maxUsageCount,
       currentUsageCount: promotion.currentUsageCount,
       bonusExpiryMinutes: promotion.bonusExpiryMinutes,

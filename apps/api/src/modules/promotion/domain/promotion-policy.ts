@@ -2,7 +2,6 @@
 import type { Prisma } from '@prisma/client';
 import {
   PromotionTargetType,
-  PromotionBonusType,
 } from '@prisma/client';
 import type { Promotion } from './model/promotion.entity';
 import type { UserPromotion } from './model/user-promotion.entity';
@@ -118,35 +117,23 @@ export class PromotionPolicy {
    * 프로모션 설정 유효성 검사
    */
   validateConfiguration(params: {
-    bonusType: PromotionBonusType;
     currencyRules?: Array<{
       minDepositAmount: Prisma.Decimal;
       maxBonusAmount?: Prisma.Decimal | null;
       bonusRate?: Prisma.Decimal | null;
     }>;
   }): void {
-    const { bonusType, currencyRules } = params;
+    const { currencyRules } = params;
 
     if (!currencyRules || currencyRules.length === 0) {
-      // 설 생성 단계에서는 Rule이 없을 수 있으므로 유연하게 처리하거나 필수라면 체크
       return;
     }
 
     for (const rule of currencyRules) {
-      if (bonusType === PromotionBonusType.PERCENTAGE) {
-        if (!rule.bonusRate || rule.bonusRate.lte(0)) {
-          throw new PromotionInvalidConfigurationException(
-            'PERCENTAGE type requires a positive bonus rate',
-          );
-        }
-      }
-
-      if (bonusType === PromotionBonusType.FIXED_AMOUNT) {
-        if (!rule.maxBonusAmount || rule.maxBonusAmount.lte(0)) {
-          throw new PromotionInvalidConfigurationException(
-            'FIXED_AMOUNT type requires a positive fixed bonus amount (maxBonusAmount)',
-          );
-        }
+      if (!rule.bonusRate || rule.bonusRate.lte(0)) {
+        throw new PromotionInvalidConfigurationException(
+          'Promotion requires a positive bonus rate',
+        );
       }
     }
   }

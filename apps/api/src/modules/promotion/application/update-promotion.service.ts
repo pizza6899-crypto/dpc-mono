@@ -1,5 +1,6 @@
 // src/modules/promotion/application/update-promotion.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { PromotionTargetType } from '@prisma/client';
 import { Transactional } from '@nestjs-cls/transactional';
 import { Promotion } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports';
@@ -10,8 +11,7 @@ interface UpdatePromotionParams {
   isActive?: boolean;
   startDate?: Date | null;
   endDate?: Date | null;
-  targetType?: any;
-  bonusType?: any;
+  targetType?: PromotionTargetType;
   maxUsageCount?: number | null;
   bonusExpiryMinutes?: number | null;
 }
@@ -32,7 +32,6 @@ export class UpdatePromotionService {
       startDate: params.startDate,
       endDate: params.endDate,
       targetType: params.targetType,
-      bonusType: params.bonusType,
       maxUsageCount: params.maxUsageCount,
       bonusExpiryMinutes: params.bonusExpiryMinutes,
     });

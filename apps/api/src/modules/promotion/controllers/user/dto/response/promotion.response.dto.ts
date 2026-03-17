@@ -4,7 +4,6 @@ import {
   Language,
   ExchangeCurrencyCode,
   PromotionTargetType,
-  PromotionBonusType,
 } from '@prisma/client';
 
 export class PromotionResponseDto {
@@ -63,15 +62,9 @@ export class PromotionResponseDto {
   })
   targetType: PromotionTargetType;
 
-  @ApiProperty({
-    description: 'Bonus type / 보너스 타입',
-    example: PromotionBonusType.PERCENTAGE,
-    enum: PromotionBonusType,
-  })
-  bonusType: PromotionBonusType;
 
   @ApiPropertyOptional({
-    description: 'Bonus rate (For PERCENTAGE type) / 보너스 비율 (PERCENTAGE 타입인 경우)',
+    description: 'Bonus rate / 보너스 비율',
     example: '1.0',
     type: String,
   })

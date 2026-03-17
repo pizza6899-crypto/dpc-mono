@@ -1,6 +1,6 @@
 // src/modules/promotion/ports/promotion.repository.port.ts
 import type { Promotion, UserPromotion, PromotionCurrencyRule, PromotionTranslation } from '../domain';
-import type { Prisma, ExchangeCurrencyCode, Language } from '@prisma/client';
+import type { Prisma, ExchangeCurrencyCode, Language, PromotionTargetType } from '@prisma/client';
 
 export interface PromotionRepositoryPort {
   /**
@@ -30,7 +30,7 @@ export interface PromotionRepositoryPort {
   /**
    * 타입별 활성 프로모션 조회
    */
-  findByTargetType(targetType: string, now?: Date): Promise<Promotion[]>;
+  findByTargetType(targetType: PromotionTargetType, now?: Date): Promise<Promotion[]>;
 
   /**
    * 사용자의 모든 프로모션 조회
@@ -86,7 +86,7 @@ export interface PromotionRepositoryPort {
     sortOrder?: 'asc' | 'desc';
     id?: bigint;
     isActive?: boolean;
-    targetType?: string;
+    targetType?: PromotionTargetType;
     startDate?: Date;
     endDate?: Date;
   }): Promise<{
@@ -101,8 +101,7 @@ export interface PromotionRepositoryPort {
     isActive?: boolean;
     startDate?: Date | null;
     endDate?: Date | null;
-    targetType: string;
-    bonusType: string;
+    targetType: PromotionTargetType;
     maxUsageCount?: number | null;
     bonusExpiryMinutes?: number | null;
   }): Promise<Promotion>;
@@ -110,7 +109,7 @@ export interface PromotionRepositoryPort {
   /**
    * 프로모션 업데이트
    */
-  update(id: bigint, params: any): Promise<Promotion>;
+  update(id: bigint, params: Partial<Prisma.PromotionUpdateInput>): Promise<Promotion>;
 
 
   /**

@@ -1,11 +1,12 @@
 // src/modules/promotion/application/find-active-promotions.service.ts
 import { Inject, Injectable } from '@nestjs/common';
+import { PromotionTargetType } from '@prisma/client';
 import type { Promotion } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports';
 import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
 
 interface FindActivePromotionsParams {
-  targetType?: string;
+  targetType?: PromotionTargetType;
   now?: Date;
 }
 

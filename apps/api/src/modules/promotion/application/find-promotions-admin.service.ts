@@ -1,5 +1,6 @@
 // src/modules/promotion/application/find-promotions-admin.service.ts
 import { Inject, Injectable } from '@nestjs/common';
+import { PromotionTargetType } from '@prisma/client';
 import type { Promotion } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports';
 import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
@@ -11,7 +12,7 @@ interface FindPromotionsAdminParams {
   sortBy?: 'createdAt' | 'updatedAt' | 'id';
   sortOrder?: 'asc' | 'desc';
   isActive?: boolean;
-  targetType?: string;
+  targetType?: PromotionTargetType;
   startDate?: Date;
   endDate?: Date;
 }

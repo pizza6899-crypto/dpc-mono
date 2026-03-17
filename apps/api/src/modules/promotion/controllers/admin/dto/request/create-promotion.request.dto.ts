@@ -12,7 +12,6 @@ import {
 import { Type } from 'class-transformer';
 import {
   PromotionTargetType,
-  PromotionBonusType,
 } from '@prisma/client';
 
 export class CreatePromotionRequestDto {
@@ -27,7 +26,6 @@ export class CreatePromotionRequestDto {
 
   @ApiPropertyOptional({
     description: 'Promotion start date / 프로모션 시작일',
-    example: '2024-01-01T00:00:00Z',
     nullable: true,
   })
   @IsOptional()
@@ -36,7 +34,6 @@ export class CreatePromotionRequestDto {
 
   @ApiPropertyOptional({
     description: 'Promotion end date / 프로모션 종료일',
-    example: '2024-12-31T23:59:59Z',
     nullable: true,
   })
   @IsOptional()
@@ -45,21 +42,12 @@ export class CreatePromotionRequestDto {
 
   @ApiProperty({
     description: 'Promotion target type / 프로모션 타겟 타입',
-    example: PromotionTargetType.NEW_USER_FIRST_DEPOSIT,
     enum: PromotionTargetType,
   })
   @IsNotEmpty()
   @IsEnum(PromotionTargetType)
   targetType: PromotionTargetType;
 
-  @ApiProperty({
-    description: 'Bonus type / 보너스 타입',
-    example: PromotionBonusType.PERCENTAGE,
-    enum: PromotionBonusType,
-  })
-  @IsNotEmpty()
-  @IsEnum(PromotionBonusType)
-  bonusType: PromotionBonusType;
 
   @ApiPropertyOptional({
     description: 'Maximum usage count (FCFS) / 최대 사용 횟수 (선착순)',

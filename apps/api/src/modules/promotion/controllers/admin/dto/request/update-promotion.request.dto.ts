@@ -11,7 +11,6 @@ import {
 import { Type } from 'class-transformer';
 import {
   PromotionTargetType,
-  PromotionBonusType,
 } from '@prisma/client';
 
 export class UpdatePromotionRequestDto {
@@ -47,13 +46,6 @@ export class UpdatePromotionRequestDto {
   @IsEnum(PromotionTargetType)
   targetType?: PromotionTargetType;
 
-  @ApiPropertyOptional({
-    description: 'Bonus type / 보너스 타입',
-    enum: PromotionBonusType,
-  })
-  @IsOptional()
-  @IsEnum(PromotionBonusType)
-  bonusType?: PromotionBonusType;
 
   @ApiPropertyOptional({
     description: 'Maximum usage count (FCFS) / 최대 사용 횟수 (선착순)',

@@ -40,7 +40,6 @@ export class ListPromotionsQueryDto extends createPaginationQueryDto<PromotionSo
   @ApiPropertyOptional({
     description: 'Promotion target type filter / 프로모션 타겟 타입 필터',
     enum: PromotionTargetType,
-    example: PromotionTargetType.NEW_USER_FIRST_DEPOSIT,
   })
   @IsOptional()
   @IsEnum(PromotionTargetType)

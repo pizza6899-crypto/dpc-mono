@@ -104,12 +104,6 @@ export class PromotionAdminResponseDto {
   })
   targetType: string;
 
-  @ApiProperty({
-    description: 'Bonus type / 보너스 타입',
-    example: 'PERCENTAGE',
-  })
-  bonusType: string;
-
   @ApiPropertyOptional({
     description: 'Maximum usage count / 최대 사용 횟수',
     example: 100,

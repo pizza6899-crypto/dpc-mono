@@ -2,8 +2,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { Prisma, ExchangeCurrencyCode, Language } from '@prisma/client';
-import { Promotion, UserPromotion, PromotionCurrencyRule } from '../domain';
+import { Prisma, ExchangeCurrencyCode, Language, PromotionTargetType } from '@prisma/client';
+import { Promotion, UserPromotion, PromotionCurrencyRule, PromotionTranslation } from '../domain';
 import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
 import { PromotionMapper } from './promotion.mapper';
 
@@ -85,7 +85,7 @@ export class PromotionRepository implements PromotionRepositoryPort {
     return result ? this.mapper.toDomainWithRelations(result) : null;
   }
 
-  async findByTargetType(targetType: string, now: Date = new Date()): Promise<Promotion[]> {
+  async findByTargetType(targetType: PromotionTargetType, now: Date = new Date()): Promise<Promotion[]> {
     const results = await this.tx.promotion.findMany({
       where: {
         isActive: true,
@@ -188,7 +188,7 @@ export class PromotionRepository implements PromotionRepositoryPort {
     sortOrder?: 'asc' | 'desc';
     id?: bigint;
     isActive?: boolean;
-    targetType?: string;
+    targetType?: PromotionTargetType;
     startDate?: Date;
     endDate?: Date;
   }): Promise<{ promotions: Promotion[]; total: number }> {
@@ -223,8 +223,7 @@ export class PromotionRepository implements PromotionRepositoryPort {
     isActive?: boolean;
     startDate?: Date | null;
     endDate?: Date | null;
-    targetType: string;
-    bonusType: string;
+    targetType: PromotionTargetType;
     maxUsageCount?: number | null;
     bonusExpiryMinutes?: number | null;
   }): Promise<Promotion> {
@@ -234,7 +233,6 @@ export class PromotionRepository implements PromotionRepositoryPort {
         startDate: params.startDate,
         endDate: params.endDate,
         targetType: params.targetType as any,
-        bonusType: params.bonusType as any,
         maxUsageCount: params.maxUsageCount,
         bonusExpiryMinutes: params.bonusExpiryMinutes,
       },
@@ -242,7 +240,7 @@ export class PromotionRepository implements PromotionRepositoryPort {
     return this.mapper.toDomain(result);
   }
 
-  async update(id: bigint, params: any): Promise<Promotion> {
+  async update(id: bigint, params: Partial<Prisma.PromotionUpdateInput>): Promise<Promotion> {
     const result = await this.tx.promotion.update({
       where: { id },
       data: {
@@ -287,7 +285,21 @@ export class PromotionRepository implements PromotionRepositoryPort {
   }
 
 
-  async findUserPromotionsByPromotionId(params: any): Promise<any> {
+  async findUserPromotionsByPromotionId(params: {
+    promotionId: bigint;
+    page?: number;
+    limit?: number;
+    sortBy?: 'createdAt' | 'updatedAt' | 'id';
+    sortOrder?: 'asc' | 'desc';
+    status?: string;
+    userId?: bigint;
+  }): Promise<{
+    userPromotions: Array<{
+      userPromotion: UserPromotion;
+      user: { id: bigint; email: string | null } | null;
+    }>;
+    total: number;
+  }> {
     const { promotionId, page = 1, limit = 20, sortBy = 'createdAt', sortOrder = 'desc', status, userId } = params;
     const skip = (page - 1) * limit;
     const where: Prisma.UserPromotionWhereInput = {
@@ -316,7 +328,10 @@ export class PromotionRepository implements PromotionRepositoryPort {
     };
   }
 
-  async getPromotionStatistics(promotionId: bigint): Promise<any> {
+  async getPromotionStatistics(promotionId: bigint): Promise<{
+    totalParticipants: number;
+    statusCounts: Record<string, number>;
+  }> {
     const [total, statusGroups] = await Promise.all([
       this.tx.userPromotion.count({ where: { promotionId } }),
       this.tx.userPromotion.groupBy({
@@ -335,7 +350,7 @@ export class PromotionRepository implements PromotionRepositoryPort {
     language: Language;
     title: string;
     description?: string | null;
-  }): Promise<any> {
+  }): Promise<PromotionTranslation> {
     const result = await this.tx.promotionTranslation.upsert({
       where: { promotionId_language: { promotionId: params.promotionId, language: params.language } },
       create: { ...params },

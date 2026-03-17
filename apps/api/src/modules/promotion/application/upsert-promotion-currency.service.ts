@@ -32,7 +32,6 @@ export class UpsertPromotionCurrencyService {
 
     // 도메인 레벨에서 설정들에 대한 종합 검증
     this.policy.validateConfiguration({
-      bonusType: promotion.bonusType,
       currencyRules: [
         {
           minDepositAmount: new Prisma.Decimal(params.minDepositAmount),

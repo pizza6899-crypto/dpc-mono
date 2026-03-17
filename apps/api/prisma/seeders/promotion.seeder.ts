@@ -1,4 +1,4 @@
-import { PrismaClient, PromotionTargetType, PromotionBonusType, Language, ExchangeCurrencyCode } from '@prisma/client';
+import { PrismaClient, PromotionTargetType, Language, ExchangeCurrencyCode } from '@prisma/client';
 
 export async function seedPromotions(prisma: PrismaClient) {
   console.log('   - Seeding Promotion Config...');
@@ -20,7 +20,6 @@ export async function seedPromotions(prisma: PrismaClient) {
       id: 1n,
       isActive: true,
       targetType: PromotionTargetType.NEW_USER_FIRST_DEPOSIT,
-      bonusType: PromotionBonusType.PERCENTAGE,
       bonusExpiryMinutes: 10080, // 7일
       translations: {
         createMany: {

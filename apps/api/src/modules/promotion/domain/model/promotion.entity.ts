@@ -3,7 +3,6 @@ import type {
   PromotionTargetType,
   Language,
 } from '@prisma/client';
-import { PromotionBonusType } from '@prisma/client';
 import type { PromotionCurrencyRule } from './promotion-currency-rule.entity';
 
 export interface PromotionTranslation {
@@ -23,7 +22,6 @@ export class Promotion {
     public readonly startDate: Date | null,
     public readonly endDate: Date | null,
     public readonly targetType: PromotionTargetType,
-    public readonly bonusType: PromotionBonusType,
     public readonly maxUsageCount: number | null,
     public readonly currentUsageCount: number,
     public readonly bonusExpiryMinutes: number | null,
@@ -42,7 +40,6 @@ export class Promotion {
     startDate: Date | null;
     endDate: Date | null;
     targetType: PromotionTargetType;
-    bonusType: PromotionBonusType;
     maxUsageCount: number | null;
     currentUsageCount: number;
     bonusExpiryMinutes: number | null;
@@ -60,7 +57,6 @@ export class Promotion {
       data.startDate,
       data.endDate,
       data.targetType,
-      data.bonusType,
       data.maxUsageCount,
       data.currentUsageCount,
       data.bonusExpiryMinutes,
@@ -141,7 +137,6 @@ export class Promotion {
       startDate: this.startDate,
       endDate: this.endDate,
       targetType: this.targetType,
-      bonusType: this.bonusType,
       maxUsageCount: this.maxUsageCount,
       currentUsageCount: this.currentUsageCount,
       bonusExpiryMinutes: this.bonusExpiryMinutes,

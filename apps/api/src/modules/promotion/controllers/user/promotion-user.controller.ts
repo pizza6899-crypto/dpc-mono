@@ -167,7 +167,6 @@ export class PromotionUserController {
       minDepositAmount: currencyRule.minDepositAmount.toString(),
       maxBonusAmount: currencyRule.maxBonusAmount?.toString() || null,
       targetType: promotion.targetType,
-      bonusType: promotion.bonusType,
       bonusRate: currencyRule.bonusRate?.toString(),
       wageringMultiplier: currencyRule.wageringMultiplier?.toString(),
       startDate: promotion.startDate,
