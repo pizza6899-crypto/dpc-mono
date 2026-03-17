@@ -4,7 +4,7 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma, ExchangeCurrencyCode, RewardSourceType, RewardItemType } from '@prisma/client';
 import { InstantGrantRewardService } from 'src/modules/reward/core/application/instant-grant-reward.service';
 import { RewardMetadataType } from 'src/modules/reward/core/domain/reward.types';
-import { GetWageringConfigService } from 'src/modules/wagering/config/application/get-wagering-config.service';
+import { DEFAULT_AML_DEPOSIT_MULTIPLIER } from '../domain/promotion.constants';
 import { GrantPromotionBonusService } from './grant-promotion-bonus.service';
 import type { RequestClientInfo } from 'src/common/http/types';
 import Decimal from 'decimal.js';
@@ -27,7 +27,6 @@ export class ProcessDepositPromotionService {
   constructor(
     private readonly grantPromotionBonusService: GrantPromotionBonusService,
     private readonly instantGrantRewardService: InstantGrantRewardService,
-    private readonly wageringConfigService: GetWageringConfigService,
   ) { }
 
   @Transactional()
@@ -53,12 +52,9 @@ export class ProcessDepositPromotionService {
         userPromotion.policySnapshot.wageringMultiplier ?? 1,
       );
     } else {
-      // 프로모션이 없는 경우: 기본 AML 롤링 설정 획득
-      const wageringConfig = await this.wageringConfigService.execute();
-      multiplier = wageringConfig.defaultDepositMultiplier;
+      // 프로모션이 없는 경우: 기본 AML 롤링 설정 적용
+      multiplier = DEFAULT_AML_DEPOSIT_MULTIPLIER;
     }
-
-    const totalAmount = amount.add(bonusAmount);
 
     // 2. 리워드 모듈을 통한 즉시 지급 처리
     // 리워드 모듈이 지갑 업데이트와 롤링 생성을 담당합니다.

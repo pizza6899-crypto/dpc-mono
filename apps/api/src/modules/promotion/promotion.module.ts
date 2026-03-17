@@ -20,15 +20,11 @@ import { PromotionMapper } from './infrastructure/promotion.mapper';
 import { PROMOTION_REPOSITORY } from './ports';
 import { PromotionUserController } from './controllers/user/promotion-user.controller';
 import { PromotionAdminController } from './controllers/admin/promotion-admin.controller';
-import { WageringModule } from '../wagering/wagering.module';
-import { WalletModule } from '../wallet/wallet.module';
 import { NotificationModule } from '../notification/notification.module';
 import { RewardModule } from '../reward/reward.module';
 
 @Module({
   imports: [
-    WageringModule,
-    WalletModule,
     NotificationModule,
     ConcurrencyModule,
     RewardModule,
