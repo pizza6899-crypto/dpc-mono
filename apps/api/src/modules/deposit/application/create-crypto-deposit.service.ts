@@ -21,7 +21,7 @@ import {
 } from '../domain';
 import { DepositRequirementPolicy } from '../domain/policy/deposit-requirement.policy';
 import { AuthenticatedUser } from 'src/common/auth/types/auth.types';
-import { ValidatePromotionEligibilityService } from '../../promotion/application/validate-promotion-eligibility.service';
+import { ValidatePromotionEligibilityService } from '../../promotion/campaign/application/validate-promotion-eligibility.service';
 import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 

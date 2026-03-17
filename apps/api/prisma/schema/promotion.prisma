@@ -1,10 +1,14 @@
 model PromotionConfig {
   id Int @id @default(1)
 
+  defaultAmlDepositMultiplier Decimal @default(1.0) @map("default_aml_deposit_multiplier") @db.Decimal(8, 4)
+  isPromotionEnabled          Boolean @default(true) @map("is_promotion_enabled")
+
   // --- Audit ---
-  updatedAt     DateTime @updatedAt @map("updated_at")
-  updatedBy     BigInt?  @map("updated_by")
-  updatedByUser User?    @relation("PromotionConfigUpdatedBy", fields: [updatedBy], references: [id])
+  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedBy BigInt?  @map("updated_by")
+
+  updatedByUser User? @relation("PromotionConfigUpdatedBy", fields: [updatedBy], references: [id])
 
   @@map("promotion_configs")
 }

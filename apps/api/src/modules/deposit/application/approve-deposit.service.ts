@@ -8,7 +8,7 @@ import type { DepositDetailRepositoryPort } from '../ports/deposit-detail.reposi
 import { DEPOSIT_DETAIL_REPOSITORY } from '../ports';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { CreateAdminMemoService } from '../../admin-memo/application/create-admin-memo.service';
-import { ProcessDepositPromotionService } from '../../promotion/application/process-deposit-promotion.service';
+import { ProcessDepositPromotionService } from '../../promotion/campaign/application/process-deposit-promotion.service';
 import { DepositNotFoundException } from '../domain';
 
 interface ApproveDepositParams {

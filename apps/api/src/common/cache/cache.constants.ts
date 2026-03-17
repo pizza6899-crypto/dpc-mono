@@ -112,4 +112,14 @@ export const CACHE_CONFIG = {
       store: CacheStore.REDIS,
     }),
   },
+  /**
+   * 프로모션 관련
+   */
+  PROMOTION: {
+    CONFIG: {
+      key: 'promotion:config:global',
+      ttlSeconds: 60, // 1분
+      store: CacheStore.MEMORY,
+    },
+  },
 } as const;
