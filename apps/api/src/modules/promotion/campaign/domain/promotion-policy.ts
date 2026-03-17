@@ -64,17 +64,6 @@ export class PromotionPolicy {
     }
   }
 
-  /**
-   * 선착순 마감 확인
-   */
-  validateMaxUsageCount(promotion: Promotion): void {
-    if (
-      promotion.maxUsageCount !== null &&
-      promotion.currentUsageCount >= promotion.maxUsageCount
-    ) {
-      throw new PromotionNotEligibleException('Promotion usage limit reached');
-    }
-  }
 
   /**
    * 입금/출금 기록 기반 타겟 자격 확인
@@ -182,9 +171,6 @@ export class PromotionPolicy {
 
     // 5. 유저별 참여 횟수 및 중복 참여 확인
     this.validateUserParticipation(promotion, participationCountInPeriod, activeParticipations);
-
-    // 6. 선착순 마감 확인 (글로벌 제한)
-    this.validateMaxUsageCount(promotion);
   }
 
   /**

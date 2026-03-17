@@ -23,8 +23,6 @@ export class Promotion {
     public readonly startDate: Date | null,
     public readonly endDate: Date | null,
     public readonly targetType: PromotionTargetType,
-    public readonly maxUsageCount: number | null,
-    public readonly currentUsageCount: number,
     public readonly maxUsagePerUser: number | null,
     public readonly periodicResetType: PromotionResetType,
     public readonly applicableDays: number[],
@@ -46,8 +44,6 @@ export class Promotion {
     startDate: Date | null;
     endDate: Date | null;
     targetType: PromotionTargetType;
-    maxUsageCount: number | null;
-    currentUsageCount: number;
     maxUsagePerUser: number | null;
     periodicResetType: PromotionResetType;
     applicableDays: number[];
@@ -68,8 +64,6 @@ export class Promotion {
       data.startDate,
       data.endDate,
       data.targetType,
-      data.maxUsageCount,
-      data.currentUsageCount,
       data.maxUsagePerUser,
       data.periodicResetType,
       data.applicableDays,
@@ -211,8 +205,6 @@ export class Promotion {
       startDate: this.startDate,
       endDate: this.endDate,
       targetType: this.targetType,
-      maxUsageCount: this.maxUsageCount,
-      currentUsageCount: this.currentUsageCount,
       maxUsagePerUser: this.maxUsagePerUser,
       periodicResetType: this.periodicResetType,
       applicableDays: this.applicableDays,

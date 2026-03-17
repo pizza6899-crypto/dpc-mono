@@ -89,8 +89,6 @@ export class GrantPromotionBonusService {
     // 보너스 계산 (Rule 엔티티 내부 로직 사용)
     const bonusAmount = currencyRule.calculateBonusAmount(depositAmount);
 
-    // 사용 횟수 증가 (Atomicity는 DB 레벨에서 보장한다고 가정하거나 incrementUsageCount 사용)
-    await this.repository.incrementUsageCount(promotionId);
 
     // 정책 스냅샷 생성
     const policySnapshot = {

@@ -104,20 +104,6 @@ export class PromotionAdminResponseDto {
   })
   targetType: string;
 
-  @ApiPropertyOptional({
-    description: 'Maximum usage count / 최대 사용 횟수',
-    example: 100,
-    type: Number,
-    nullable: true,
-  })
-  maxUsageCount: number | null;
-
-  @ApiProperty({
-    description: 'Current usage count / 현재 사용 횟수',
-    example: 10,
-    type: Number,
-  })
-  currentUsageCount: number;
 
   @ApiPropertyOptional({
     description: 'Bonus expiry minutes / 보너스 만료 분',

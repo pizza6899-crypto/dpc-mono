@@ -122,7 +122,6 @@ export interface PromotionRepositoryPort {
     startDate?: Date | null;
     endDate?: Date | null;
     targetType: PromotionTargetType;
-    maxUsageCount?: number | null;
     maxUsagePerUser?: number | null;
     periodicResetType?: PromotionResetType;
     applicableDays?: number[];
@@ -137,10 +136,6 @@ export interface PromotionRepositoryPort {
   update(id: bigint, params: Partial<Prisma.PromotionUpdateInput>): Promise<Promotion>;
 
 
-  /**
-   * 프로모션 사용 횟수 증가 (Atomic)
-   */
-  incrementUsageCount(id: bigint): Promise<Promotion>;
 
   /**
    * 프로모션의 통화별 규칙 조회

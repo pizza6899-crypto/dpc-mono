@@ -18,8 +18,6 @@ export class PromotionMapper {
       startDate: prismaModel.startDate,
       endDate: prismaModel.endDate,
       targetType: prismaModel.targetType,
-      maxUsageCount: prismaModel.maxUsageCount,
-      currentUsageCount: prismaModel.currentUsageCount,
       maxUsagePerUser: prismaModel.maxUsagePerUser,
       periodicResetType: prismaModel.periodicResetType,
       applicableDays: prismaModel.applicableDays,

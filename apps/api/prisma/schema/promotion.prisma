@@ -20,8 +20,6 @@ model Promotion {
   endDate             DateTime?               @map("end_date")
   deletedAt           DateTime?               @map("deleted_at")
   targetType          PromotionTargetType     @map("target_type")
-  maxUsageCount       Int?                    @map("max_usage_count")
-  currentUsageCount   Int                     @default(0) @map("current_usage_count")
   maxUsagePerUser     Int?                    @map("max_usage_per_user")
   periodicResetType   PromotionResetType      @default(NONE) @map("periodic_reset_type")
   applicableDays      Int[]                   @default([]) @map("applicable_days")

@@ -14,7 +14,6 @@ interface CreatePromotionParams {
   startDate?: Date | null;
   endDate?: Date | null;
   targetType: PromotionTargetType;
-  maxUsageCount?: number | null;
   maxUsagePerUser?: number | null;
   periodicResetType?: PromotionResetType;
   applicableDays?: number[];
@@ -43,7 +42,6 @@ export class CreatePromotionService {
       startDate: params.startDate ?? null,
       endDate: params.endDate ?? null,
       targetType: params.targetType,
-      maxUsageCount: params.maxUsageCount ?? null,
       maxUsagePerUser: params.maxUsagePerUser ?? null,
       periodicResetType: params.periodicResetType ?? 'NONE',
       applicableDays: params.applicableDays ?? [],

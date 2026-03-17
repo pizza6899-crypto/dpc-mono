@@ -51,14 +51,6 @@ export class UpdatePromotionRequestDto {
   targetType?: PromotionTargetType;
 
 
-  @ApiPropertyOptional({
-    description: 'Maximum usage count (FCFS) / 최대 사용 횟수 (선착순)',
-  })
-  @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  maxUsageCount?: number;
 
   @ApiPropertyOptional({
     description: 'Bonus validity period (minutes) / 보너스 유효 기간 (분 단위)',

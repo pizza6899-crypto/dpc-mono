@@ -255,7 +255,6 @@ export class PromotionRepository implements PromotionRepositoryPort {
     startDate?: Date | null;
     endDate?: Date | null;
     targetType: PromotionTargetType;
-    maxUsageCount?: number | null;
     maxUsagePerUser?: number | null;
     periodicResetType?: PromotionResetType;
     applicableDays?: number[];
@@ -269,7 +268,6 @@ export class PromotionRepository implements PromotionRepositoryPort {
         startDate: params.startDate,
         endDate: params.endDate,
         targetType: params.targetType as any,
-        maxUsageCount: params.maxUsageCount,
         maxUsagePerUser: params.maxUsagePerUser,
         periodicResetType: params.periodicResetType,
         applicableDays: params.applicableDays,
@@ -293,13 +291,6 @@ export class PromotionRepository implements PromotionRepositoryPort {
   }
 
 
-  async incrementUsageCount(id: bigint): Promise<Promotion> {
-    const result = await this.tx.promotion.update({
-      where: { id },
-      data: { currentUsageCount: { increment: 1 } },
-    });
-    return this.mapper.toDomain(result);
-  }
 
   async getCurrencyRule(promotionId: bigint, currency: ExchangeCurrencyCode): Promise<PromotionCurrencyRule | null> {
     const result = await this.tx.promotionCurrencyRule.findUnique({
