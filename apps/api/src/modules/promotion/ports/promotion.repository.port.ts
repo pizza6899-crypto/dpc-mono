@@ -84,6 +84,7 @@ export interface PromotionRepositoryPort {
     limit?: number;
     sortBy?: 'createdAt' | 'updatedAt' | 'id';
     sortOrder?: 'asc' | 'desc';
+    id?: bigint;
     isActive?: boolean;
     targetType?: string;
     startDate?: Date;

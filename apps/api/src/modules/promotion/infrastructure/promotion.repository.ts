@@ -186,15 +186,17 @@ export class PromotionRepository implements PromotionRepositoryPort {
     limit?: number;
     sortBy?: 'createdAt' | 'updatedAt' | 'id';
     sortOrder?: 'asc' | 'desc';
+    id?: bigint;
     isActive?: boolean;
     targetType?: string;
     startDate?: Date;
     endDate?: Date;
   }): Promise<{ promotions: Promotion[]; total: number }> {
-    const { page = 1, limit = 20, sortBy = 'createdAt', sortOrder = 'desc', isActive, targetType, startDate, endDate } = params;
+    const { id, page = 1, limit = 20, sortBy = 'createdAt', sortOrder = 'desc', isActive, targetType, startDate, endDate } = params;
     const skip = (page - 1) * limit;
     const where: Prisma.PromotionWhereInput = {
       deletedAt: null,
+      ...(id && { id }),
       ...(isActive !== undefined && { isActive }),
       ...(targetType && { targetType: targetType as any }),
       ...(startDate && endDate && { createdAt: { gte: startDate, lte: endDate } }),

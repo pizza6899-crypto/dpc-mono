@@ -5,6 +5,7 @@ import { PROMOTION_REPOSITORY } from '../ports';
 import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
 
 interface FindPromotionsAdminParams {
+  id?: bigint;
   page?: number;
   limit?: number;
   sortBy?: 'createdAt' | 'updatedAt' | 'id';

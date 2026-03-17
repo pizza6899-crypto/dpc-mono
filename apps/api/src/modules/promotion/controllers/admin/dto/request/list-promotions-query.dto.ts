@@ -22,6 +22,14 @@ export class ListPromotionsQueryDto extends createPaginationQueryDto<PromotionSo
   ['createdAt', 'updatedAt', 'id'],
 ) {
   @ApiPropertyOptional({
+    description: 'Promotion ID filter / 프로모션 ID 필터',
+    example: '1',
+  })
+  @IsOptional()
+  @IsString()
+  id?: string;
+
+  @ApiPropertyOptional({
     description: 'Activation status filter / 활성화 여부 필터',
     example: true,
   })

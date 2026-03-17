@@ -29,7 +29,6 @@ import { FindPromotionsAdminService } from '../../application/find-promotions-ad
 import { CreatePromotionService } from '../../application/create-promotion.service';
 import { UpdatePromotionService } from '../../application/update-promotion.service';
 import { FindPromotionParticipantsService } from '../../application/find-promotion-participants.service';
-import { GetPromotionAdminService } from '../../application/get-promotion-admin.service';
 import { CreatePromotionRequestDto } from './dto/request/create-promotion.request.dto';
 import { UpdatePromotionRequestDto } from './dto/request/update-promotion.request.dto';
 import { PromotionAdminResponseDto } from './dto/response/promotion-admin.response.dto';
@@ -57,7 +56,6 @@ export class PromotionAdminController {
     private readonly createPromotionService: CreatePromotionService,
     private readonly updatePromotionService: UpdatePromotionService,
     private readonly findPromotionParticipantsService: FindPromotionParticipantsService,
-    private readonly getPromotionAdminService: GetPromotionAdminService,
     private readonly policy: PromotionPolicy,
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
@@ -97,6 +95,7 @@ export class PromotionAdminController {
       limit: query.limit,
       sortBy: query.sortBy,
       sortOrder: query.sortOrder,
+      id: query.id ? BigInt(query.id) : undefined,
       isActive: query.isActive,
       targetType: query.targetType,
       startDate: query.startDate ? new Date(query.startDate) : undefined,
@@ -242,10 +241,19 @@ export class PromotionAdminController {
   async getPromotion(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<PromotionAdminResponseDto> {
-    const { promotion, statistics } =
-      await this.getPromotionAdminService.execute(BigInt(id));
+    const result = await this.findPromotionsAdminService.execute({
+      id: BigInt(id),
+      limit: 1,
+    });
+
+    if (result.total === 0) {
+      throw new PromotionNotFoundException();
+    }
+
+    const { promotion, statistics } = result.promotions[0];
     return this.mapToAdminResponseDto(promotion, statistics);
   }
+
 
   /**
    * 프로모션의 통화별 설정 생성/수정
