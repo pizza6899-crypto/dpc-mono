@@ -6,7 +6,6 @@ import type { PromotionConfigRepositoryPort } from '../ports/promotion-config.re
 import { PromotionConfigMapper } from './promotion-config.mapper';
 import { CacheService } from 'src/common/cache/cache.service';
 import { CACHE_CONFIG } from 'src/common/cache/cache.constants';
-
 import { PromotionConfigNotFoundException } from '../../campaign/domain/promotion.exception';
 
 @Injectable()

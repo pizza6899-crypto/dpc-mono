@@ -12,7 +12,6 @@ export async function seedWageringConfig(prisma: PrismaClient) {
         await prisma.wageringConfig.create({
             data: {
                 id: configId,
-                defaultBonusExpiryDays: 30,
                 currencySettings: {
                     KRW: { cancellationThreshold: 500, minBetAmount: 100, maxBetAmount: 0 },
                     // USD: { cancellationThreshold: 0.5, minBetAmount: 0.1, maxBetAmount: 0 },

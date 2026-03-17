@@ -7,6 +7,9 @@ export async function seedPromotions(prisma: PrismaClient) {
     update: {},
     create: {
       id: 1,
+      defaultAmlDepositMultiplier: 1.0,
+      defaultBonusExpiryDays: 30,
+      isPromotionEnabled: true,
     },
   });
 
