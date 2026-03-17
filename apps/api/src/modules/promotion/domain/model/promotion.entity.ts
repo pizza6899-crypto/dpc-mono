@@ -99,12 +99,43 @@ export class Promotion {
       return false;
     }
 
+    // 1. 기간 체크
     if (this.startDate && now < this.startDate) {
       return false;
     }
-
     if (this.endDate && now > this.endDate) {
       return false;
+    }
+
+    // 2. 요일 체크 (applicableDays가 있으면 현재 요일이 포함되어야 함)
+    if (this.applicableDays && this.applicableDays.length > 0) {
+      const currentDay = now.getUTCDay(); // 0: Sunday, 1: Monday, ...
+      if (!this.applicableDays.includes(currentDay)) {
+        return false;
+      }
+    }
+
+    // 3. 시간대 체크 (시간/분만 비교)
+    if (this.applicableStartTime || this.applicableEndTime) {
+      const currentMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
+
+      if (this.applicableStartTime) {
+        const startMinutes =
+          this.applicableStartTime.getUTCHours() * 60 +
+          this.applicableStartTime.getUTCMinutes();
+        if (currentMinutes < startMinutes) {
+          return false;
+        }
+      }
+
+      if (this.applicableEndTime) {
+        const endMinutes =
+          this.applicableEndTime.getUTCHours() * 60 +
+          this.applicableEndTime.getUTCMinutes();
+        if (currentMinutes > endMinutes) {
+          return false;
+        }
+      }
     }
 
     return true;

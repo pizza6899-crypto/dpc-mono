@@ -4,6 +4,8 @@ import { Language, ExchangeCurrencyCode } from '@prisma/client';
 import {
   Promotion,
   PromotionTranslation,
+  PromotionLanguageRequiredException,
+  PromotionCurrencyRequiredException,
 } from '../domain';
 import { PromotionCurrencyRule } from '../domain/model/promotion-currency-rule.entity';
 import { PROMOTION_REPOSITORY } from '../ports';
@@ -15,8 +17,8 @@ interface GetActivePromotionsForUserParams {
   limit?: number;
   sortBy?: 'createdAt' | 'updatedAt' | 'id';
   sortOrder?: 'asc' | 'desc';
-  language?: Language;
-  currency?: ExchangeCurrencyCode;
+  language: Language;
+  currency: ExchangeCurrencyCode;
 }
 
 export interface ActivePromotionInfo {
@@ -40,10 +42,18 @@ export class GetActivePromotionsForUserService {
       limit = 20,
       sortBy = 'createdAt',
       sortOrder = 'desc',
-      language = Language.EN,
-      currency = ExchangeCurrencyCode.USDT,
+      language,
+      currency,
       userId,
     } = params;
+
+    if (!language) {
+      throw new PromotionLanguageRequiredException();
+    }
+
+    if (!currency) {
+      throw new PromotionCurrencyRequiredException();
+    }
 
     const result = await this.repository.findActivePromotionsPaginated({
       page,
@@ -64,7 +74,12 @@ export class GetActivePromotionsForUserService {
     const filteredResults: ActivePromotionInfo[] = [];
 
     result.promotions.forEach((promotion) => {
-      // 이미 참여한 프로모션 필터링 (TargetType 로직에 따라 다르겠지만 여기서는 참여 기록이 있으면 제외하는 예시)
+      // 1. 활성 상태 및 기간/요일/시간 체크
+      if (!promotion.isCurrentlyActive()) {
+        return;
+      }
+
+      // 2. 이미 참여한 프로모션 필터링 (TargetType 로직에 따라 다르겠지만 여기서는 참여 기록이 있으면 제외하는 예시)
       if (userId && userParticipatedPromotionIds.has(promotion.id.toString())) {
         return;
       }

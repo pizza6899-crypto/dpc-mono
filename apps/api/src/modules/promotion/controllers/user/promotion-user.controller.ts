@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Query,
 } from '@nestjs/common';
+import { Language, ExchangeCurrencyCode } from '@prisma/client';
 import {
   ApiTags,
   ApiOperation,
@@ -28,7 +29,7 @@ import { ListActivePromotionsQueryDto } from './dto/request/list-active-promotio
 import { ListMyPromotionsQueryDto } from './dto/request/list-my-promotions-query.dto';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
-import { Promotion, PromotionTranslation, UserPromotion } from '../../domain';
+import { Promotion, PromotionTranslation, UserPromotion, PromotionLanguageRequiredException, PromotionCurrencyRequiredException } from '../../domain';
 import { PromotionCurrencyRule } from '../../domain/model/promotion-currency-rule.entity';
 import { GetMyPromotionsForUserService } from '../../application/get-my-promotions-for-user.service';
 
@@ -52,7 +53,7 @@ export class PromotionUserController {
   @ApiOperation({
     summary: 'Get active promotions / 활성 프로모션 목록 조회',
     description:
-      '현재 활성화된 프로모션 목록을 조회합니다. 페이지네이션을 지원하며, 언어와 통화는 세션 설정을 따릅니다.',
+      'Retrieve the list of active promotions. Supports pagination; language and currency follow session settings. / 현재 활성화된 프로모션 목록을 조회합니다. 페이지네이션을 지원하며, 언어와 통화는 세션 설정을 따릅니다.',
   })
   @ApiPaginatedResponse(PromotionResponseDto, {
     status: HttpStatus.OK,
@@ -75,14 +76,21 @@ export class PromotionUserController {
     @CurrentUser() user: AuthenticatedUser | undefined,
     @Query() query: ListActivePromotionsQueryDto,
   ): Promise<PaginatedData<PromotionResponseDto>> {
+    if (!user?.language) {
+      throw new PromotionLanguageRequiredException();
+    }
+    if (!user?.playCurrency) {
+      throw new PromotionCurrencyRequiredException();
+    }
+
     const result = await this.getActivePromotionsForUserService.execute({
       page: query.page,
       limit: query.limit,
       sortBy: query.sortBy,
       sortOrder: query.sortOrder,
-      language: user?.language,
-      currency: user?.playCurrency,
-      userId: user?.id,
+      language: user.language as Language,
+      currency: user.playCurrency as ExchangeCurrencyCode,
+      userId: user.id,
     });
 
     return {
@@ -108,7 +116,7 @@ export class PromotionUserController {
   @ApiOperation({
     summary: 'Get my promotions / 내 프로모션 목록 조회',
     description:
-      '사용자가 참여한 프로모션 목록을 조회합니다. 페이지네이션 지원.',
+      'Retrieve the promotions the user has participated in. Supports pagination. / 사용자가 참여한 프로모션 목록을 조회합니다. 페이지네이션을 지원합니다.',
   })
   @ApiPaginatedResponse(UserPromotionResponseDto, {
     status: HttpStatus.OK,

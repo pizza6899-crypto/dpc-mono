@@ -31,6 +31,20 @@ export class PromotionNotFoundException extends PromotionException {
 }
 
 /**
+ * 프로모션 번역 정보를 찾을 수 없는 경우
+ */
+export class PromotionTranslationNotFoundException extends PromotionException {
+  constructor() {
+    super(
+      'Promotion translation not found',
+      MessageCode.PROMOTION_TRANSLATION_NOT_FOUND,
+      HttpStatus.NOT_FOUND,
+    );
+    this.name = 'PromotionTranslationNotFoundException';
+  }
+}
+
+/**
  * 프로모션이 활성 상태가 아닌 경우 (기간 만료 포함)
  */
 export class PromotionNotActiveException extends PromotionException {
@@ -113,5 +127,43 @@ export class PromotionInvalidConfigurationException extends PromotionException {
       HttpStatus.BAD_REQUEST,
     );
     this.name = 'PromotionInvalidConfigurationException';
+  }
+}
+
+/**
+ * 프로모션 요청 파라미터가 누락되었거나 올바르지 않은 경우
+ */
+export class PromotionInvalidRequestException extends PromotionException {
+  constructor(message: string) {
+    super(message, MessageCode.VALIDATION_ERROR, HttpStatus.BAD_REQUEST);
+    this.name = 'PromotionInvalidRequestException';
+  }
+}
+
+/**
+ * 프로모션 조회를 위해 언어 설정이 필요한 경우
+ */
+export class PromotionLanguageRequiredException extends PromotionException {
+  constructor() {
+    super(
+      'User language is required',
+      MessageCode.PROMOTION_LANGUAGE_REQUIRED,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'PromotionLanguageRequiredException';
+  }
+}
+
+/**
+ * 프로모션 조회를 위해 통화 설정이 필요한 경우
+ */
+export class PromotionCurrencyRequiredException extends PromotionException {
+  constructor() {
+    super(
+      'User currency is required',
+      MessageCode.PROMOTION_CURRENCY_REQUIRED,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'PromotionCurrencyRequiredException';
   }
 }
