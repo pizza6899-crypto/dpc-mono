@@ -55,17 +55,36 @@ export class GrantPromotionBonusService {
       throw new PromotionNotFoundException(); // 통화 규칙 없으면 참여 불가
     }
 
-    const hasPreviousDeposits = await this.repository.hasPreviousDeposits(userId);
-    const userParticipations = await this.repository.findUserPromotions(userId, 'ACTIVE');
+    const now = new Date();
+    const periodStart = promotion.getCurrentPeriodStartDate(now);
+
+    const [
+      depositCount,
+      withdrawalCount,
+      participationCountInPeriod,
+      activeParticipations,
+    ] = await Promise.all([
+      this.repository.countCompletedDeposits(userId),
+      this.repository.countCompletedWithdrawals(userId),
+      this.repository.countUserPromotionsInPeriod({
+        userId,
+        promotionId,
+        startDate: periodStart,
+      }),
+      this.repository.findUserPromotions(userId, 'ACTIVE'),
+    ]);
 
     // 자격 검증
-    this.policy.validateEligibility(
+    this.policy.validateEligibility({
       promotion,
       currencyRule,
       depositAmount,
-      hasPreviousDeposits,
-      userParticipations,
-    );
+      depositCount,
+      withdrawalCount,
+      participationCountInPeriod,
+      activeParticipations,
+      now,
+    });
 
     // 보너스 계산 (Rule 엔티티 내부 로직 사용)
     const bonusAmount = currencyRule.calculateBonusAmount(depositAmount);

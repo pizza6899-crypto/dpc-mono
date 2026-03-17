@@ -42,19 +42,26 @@ export class PromotionPolicy {
   }
 
   /**
-   * 중복 참여 여부 확인
+   * 사용자별 참여 제한 및 중복 참여 확인
    */
-  validateDuplicateParticipation(
+  validateUserParticipation(
     promotion: Promotion,
-    userParticipations: UserPromotion[],
+    participationCountInPeriod: number,
+    activeParticipations: UserPromotion[],
   ): void {
-    const isAlreadyParticipating = userParticipations.some(up => up.promotionId === promotion.id);
+    // 1. 현재 진행 중인 동일 프로모션이 있는지 확인 (중복 참여 방지)
+    const isAlreadyParticipating = activeParticipations.some(up => up.promotionId === promotion.id);
     if (isAlreadyParticipating) {
       throw new PromotionAlreadyUsedException('You are already participating in this promotion');
     }
 
-    // 신규 유저 첫 입금 보너스는 역사상 1회만 가능 (ACTIVE가 아니어도 기록이 있으면 금지하려면 repository에서 전체 조회가 필요하겠지만 여기서는 정책적 가이드만)
-    // 실제 중복 체크는 repository.hasUserUsedPromotion 등을 활용하는 것이 더 정확함
+    // 2. 누적 참여 횟수(또는 주기별 참여 횟수) 제한 확인
+    if (
+      promotion.maxUsagePerUser !== null &&
+      participationCountInPeriod >= promotion.maxUsagePerUser
+    ) {
+      throw new PromotionAlreadyUsedException('You have reached the maximum usage limit for this promotion');
+    }
   }
 
   /**
@@ -70,46 +77,113 @@ export class PromotionPolicy {
   }
 
   /**
-   * 첫 입금 프로모션 자격 확인
+   * 입금/출금 기록 기반 타겟 자격 확인
    */
-  validateFirstDepositEligibility(
+  validateTargetEligibility(
     promotion: Promotion,
-    hasPreviousDeposits: boolean,
+    depositCount: number,
+    withdrawalCount: number,
   ): void {
-    if (
-      promotion.targetType === PromotionTargetType.NEW_USER_FIRST_DEPOSIT &&
-      hasPreviousDeposits
-    ) {
-      throw new PromotionNotEligibleException(
-        'This promotion is only for users with no previous deposits',
-      );
+    switch (promotion.targetType) {
+      case PromotionTargetType.FIRST_DEPOSIT:
+        if (depositCount > 0) {
+          throw new PromotionNotEligibleException('Only for your very first deposit');
+        }
+        break;
+      case PromotionTargetType.SECOND_DEPOSIT:
+        if (depositCount !== 1) {
+          throw new PromotionNotEligibleException('Only for your second deposit');
+        }
+        break;
+      case PromotionTargetType.THIRD_DEPOSIT:
+        if (depositCount !== 2) {
+          throw new PromotionNotEligibleException('Only for your third deposit');
+        }
+        break;
+      case PromotionTargetType.BEFORE_FIRST_WITHDRAWAL:
+        if (withdrawalCount > 0) {
+          throw new PromotionNotEligibleException('Only available before your first withdrawal');
+        }
+        break;
+      case PromotionTargetType.RELOAD_DEPOSIT:
+        // 재충전은 별도 입금 횟수 제한 없음 (UsageLimit에서 처리)
+        break;
+    }
+  }
+
+  /**
+   * 요일 및 시간대 제한 확인 (Happy Hour 등)
+   */
+  validateTimeConstraints(promotion: Promotion, now: Date): void {
+    // 1. 요일 확인
+    if (promotion.applicableDays.length > 0) {
+      const day = now.getDay(); // 0: 일요일 ~ 6: 토요일
+      if (!promotion.applicableDays.includes(day)) {
+        throw new PromotionNotEligibleException('Not available today');
+      }
+    }
+
+    // 2. 시간 확인 (시/분 정밀 비교)
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+    if (promotion.applicableStartTime !== null) {
+      const startMinutes =
+        promotion.applicableStartTime.getHours() * 60 +
+        promotion.applicableStartTime.getMinutes();
+      if (currentMinutes < startMinutes) {
+        throw new PromotionNotEligibleException('Not yet available at this hour');
+      }
+    }
+
+    if (promotion.applicableEndTime !== null) {
+      const endMinutes =
+        promotion.applicableEndTime.getHours() * 60 + promotion.applicableEndTime.getMinutes();
+      if (currentMinutes >= endMinutes) {
+        throw new PromotionNotEligibleException('Expired for this hour');
+      }
     }
   }
 
   /**
    * 프로모션 자격 종합 검증
    */
-  validateEligibility(
-    promotion: Promotion,
-    currencyRule: PromotionCurrencyRule,
-    depositAmount: Prisma.Decimal,
-    hasPreviousDeposits: boolean,
-    userParticipations: UserPromotion[],
-    now: Date = new Date(),
-  ): void {
-    // 1. 활성화 여부 확인
+  validateEligibility(params: {
+    promotion: Promotion;
+    currencyRule: PromotionCurrencyRule;
+    depositAmount: Prisma.Decimal;
+    depositCount: number;
+    withdrawalCount: number;
+    participationCountInPeriod: number;
+    activeParticipations: UserPromotion[];
+    now?: Date;
+  }): void {
+    const {
+      promotion,
+      currencyRule,
+      depositAmount,
+      depositCount,
+      withdrawalCount,
+      participationCountInPeriod,
+      activeParticipations,
+      now = new Date(),
+    } = params;
+
+    // 1. 활성화 및 기간 여부 확인
     this.isPromotionActive(promotion, now);
 
-    // 2. 금액 조건 확인
+    // 2. 요일 및 시간대 확인
+    this.validateTimeConstraints(promotion, now);
+
+    // 3. 입금 금액 조건 확인
     this.validateDepositAmount(depositAmount, currencyRule);
 
-    // 3. 중복 참여 확인
-    this.validateDuplicateParticipation(promotion, userParticipations);
+    // 4. 타겟 자격 확인 (N차 입금, 출금 전 등)
+    this.validateTargetEligibility(promotion, depositCount, withdrawalCount);
 
-    // 4. 첫 입금 자격 확인
-    this.validateFirstDepositEligibility(promotion, hasPreviousDeposits);
+    // 5. 유저별 참여 횟수 및 중복 참여 확인
+    this.validateUserParticipation(promotion, participationCountInPeriod, activeParticipations);
 
-    // 5. 마감 여부 확인
+    // 6. 선착순 마감 확인 (글로벌 제한)
     this.validateMaxUsageCount(promotion);
   }
 

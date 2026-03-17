@@ -171,6 +171,11 @@ export class PromotionUserController {
       wageringMultiplier: currencyRule.wageringMultiplier?.toString(),
       startDate: promotion.startDate,
       endDate: promotion.endDate,
+      maxUsagePerUser: promotion.maxUsagePerUser,
+      periodicResetType: promotion.periodicResetType,
+      applicableDays: promotion.applicableDays,
+      applicableStartTime: promotion.applicableStartTime,
+      applicableEndTime: promotion.applicableEndTime,
     };
   }
 

@@ -145,6 +145,11 @@ export class PromotionAdminController {
       endDate: dto.endDate ? new Date(dto.endDate) : null,
       targetType: dto.targetType,
       maxUsageCount: dto.maxUsageCount,
+      maxUsagePerUser: dto.maxUsagePerUser,
+      periodicResetType: dto.periodicResetType,
+      applicableDays: dto.applicableDays,
+      applicableStartTime: dto.applicableStartTime ? new Date(dto.applicableStartTime) : null,
+      applicableEndTime: dto.applicableEndTime ? new Date(dto.applicableEndTime) : null,
       bonusExpiryMinutes: dto.bonusExpiryMinutes,
     });
 
@@ -197,6 +202,11 @@ export class PromotionAdminController {
             : new Date(dto.endDate),
       targetType: dto.targetType,
       maxUsageCount: dto.maxUsageCount,
+      maxUsagePerUser: dto.maxUsagePerUser,
+      periodicResetType: dto.periodicResetType,
+      applicableDays: dto.applicableDays,
+      applicableStartTime: dto.applicableStartTime ? new Date(dto.applicableStartTime) : null,
+      applicableEndTime: dto.applicableEndTime ? new Date(dto.applicableEndTime) : null,
       bonusExpiryMinutes: dto.bonusExpiryMinutes,
     });
 
@@ -402,6 +412,11 @@ export class PromotionAdminController {
       targetType: promotion.targetType as string,
       maxUsageCount: promotion.maxUsageCount,
       currentUsageCount: promotion.currentUsageCount,
+      maxUsagePerUser: promotion.maxUsagePerUser,
+      periodicResetType: promotion.periodicResetType,
+      applicableDays: promotion.applicableDays,
+      applicableStartTime: promotion.applicableStartTime,
+      applicableEndTime: promotion.applicableEndTime,
       bonusExpiryMinutes: promotion.bonusExpiryMinutes,
       startDate: promotion.startDate,
       endDate: promotion.endDate,

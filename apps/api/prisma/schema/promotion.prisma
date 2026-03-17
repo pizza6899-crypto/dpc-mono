@@ -10,26 +10,31 @@ model PromotionConfig {
 }
 
 model Promotion {
-  id                 BigInt                  @id @default(autoincrement())
-  isActive           Boolean                 @default(true) @map("is_active")
-  startDate          DateTime?               @map("start_date")
-  endDate            DateTime?               @map("end_date")
-  deletedAt          DateTime?               @map("deleted_at")
-  targetType         PromotionTargetType     @map("target_type")
-  maxUsageCount      Int?                    @map("max_usage_count")
-  currentUsageCount  Int                     @default(0) @map("current_usage_count")
-  bonusExpiryMinutes Int?                    @map("bonus_expiry_minutes")
-  adminMemos         AdminMemo[]
-  createdAt          DateTime                @default(now()) @map("created_at")
-  updatedAt          DateTime                @updatedAt @map("updated_at")
-  createdBy          BigInt?                 @map("created_by")
-  updatedBy          BigInt?                 @map("updated_by")
-  createdByUser      User?                   @relation("PromotionCreatedBy", fields: [createdBy], references: [id])
-  updatedByUser      User?                   @relation("PromotionUpdatedBy", fields: [updatedBy], references: [id])
-  translations       PromotionTranslation[]
-  currencyRules      PromotionCurrencyRule[]
-  userPromotions     UserPromotion[]
-  depositDetails     DepositDetail[]
+  id                  BigInt                  @id @default(autoincrement())
+  isActive            Boolean                 @default(true) @map("is_active")
+  startDate           DateTime?               @map("start_date")
+  endDate             DateTime?               @map("end_date")
+  deletedAt           DateTime?               @map("deleted_at")
+  targetType          PromotionTargetType     @map("target_type")
+  maxUsageCount       Int?                    @map("max_usage_count")
+  currentUsageCount   Int                     @default(0) @map("current_usage_count")
+  maxUsagePerUser     Int?                    @map("max_usage_per_user")
+  periodicResetType   PromotionResetType      @default(NONE) @map("periodic_reset_type")
+  applicableDays      Int[]                   @default([]) @map("applicable_days")
+  applicableStartTime DateTime?               @map("applicable_start_time") // 적용 시작 시간 (날짜 무시, 시간/분만 사용)
+  applicableEndTime   DateTime?               @map("applicable_end_time") // 적용 종료 시간 (날짜 무시, 시간/분만 사용)
+  bonusExpiryMinutes  Int?                    @map("bonus_expiry_minutes")
+  adminMemos          AdminMemo[]
+  createdAt           DateTime                @default(now()) @map("created_at")
+  updatedAt           DateTime                @updatedAt @map("updated_at")
+  createdBy           BigInt?                 @map("created_by")
+  updatedBy           BigInt?                 @map("updated_by")
+  createdByUser       User?                   @relation("PromotionCreatedBy", fields: [createdBy], references: [id])
+  updatedByUser       User?                   @relation("PromotionUpdatedBy", fields: [updatedBy], references: [id])
+  translations        PromotionTranslation[]
+  currencyRules       PromotionCurrencyRule[]
+  userPromotions      UserPromotion[]
+  depositDetails      DepositDetail[]
 
   @@map("promotions")
 }
@@ -106,16 +111,26 @@ model UserPromotion {
  * 프로모션이 적용되는 대상 사용자 유형
  */
 enum PromotionTargetType {
-  /// 신규 유저 첫 입금 - 신규 가입 후 첫 입금 시 적용
-  NEW_USER_FIRST_DEPOSIT
-  // 추천 추가 값들:
-  // EXISTING_USER_DEPOSIT      // 기존 유저 입금
-  // WEEKLY_DEPOSIT              // 주간 입금 프로모션
-  // MONTHLY_DEPOSIT             // 월간 입금 프로모션
-  // BIRTHDAY                    // 생일 프로모션
-  // VIP_LEVEL_UP                // VIP 레벨업 프로모션
-  // REFERRAL_BONUS              // 추천인 보너스
-  // LOYALTY_REWARD              // 로열티 보상
+  /// 생애 첫 입금
+  FIRST_DEPOSIT
+  /// 2차 입금
+  SECOND_DEPOSIT
+  /// 3차 입금
+  THIRD_DEPOSIT
+  /// 일반 재충전 (무한 또는 횟수제한)
+  RELOAD_DEPOSIT
+  /// 첫 출금 전까지 무제한
+  BEFORE_FIRST_WITHDRAWAL
+}
+
+/**
+ * 프로모션 참여 횟수 초기화 주기
+ */
+enum PromotionResetType {
+  NONE
+  DAILY
+  WEEKLY
+  MONTHLY
 }
 
 /**

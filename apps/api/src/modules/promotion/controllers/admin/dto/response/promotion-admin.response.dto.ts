@@ -100,7 +100,7 @@ export class PromotionAdminResponseDto {
 
   @ApiProperty({
     description: 'Promotion target type / 프로모션 타겟 타입',
-    example: 'NEW_USER_FIRST_DEPOSIT',
+    example: 'FIRST_DEPOSIT',
   })
   targetType: string;
 
@@ -126,6 +126,41 @@ export class PromotionAdminResponseDto {
     nullable: true,
   })
   bonusExpiryMinutes: number | null;
+
+  @ApiPropertyOptional({
+    description: 'Maximum usage count per user / 유저당 최대 사용 횟수',
+    example: 1,
+    type: Number,
+    nullable: true,
+  })
+  maxUsagePerUser: number | null;
+
+  @ApiProperty({
+    description: 'Periodic reset type / 참여 횟수 초기화 주기',
+    example: 'NONE',
+  })
+  periodicResetType: string;
+
+  @ApiProperty({
+    description: 'Applicable days (0: Sunday, 1: Monday, ...) / 적용 요일',
+    example: [6, 0],
+    type: [Number],
+  })
+  applicableDays: number[];
+
+  @ApiPropertyOptional({
+    description: 'Applicable start time / 적용 시작 시간',
+    example: '2024-01-01T18:30:00Z',
+    nullable: true,
+  })
+  applicableStartTime: Date | null;
+
+  @ApiPropertyOptional({
+    description: 'Applicable end time / 적용 종료 시간',
+    example: '2024-01-01T22:00:00Z',
+    nullable: true,
+  })
+  applicableEndTime: Date | null;
 
   @ApiPropertyOptional({
     description: 'Promotion start date / 프로모션 시작일',

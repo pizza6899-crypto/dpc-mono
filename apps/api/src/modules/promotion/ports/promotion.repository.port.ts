@@ -1,6 +1,6 @@
 // src/modules/promotion/ports/promotion.repository.port.ts
 import type { Promotion, UserPromotion, PromotionCurrencyRule, PromotionTranslation } from '../domain';
-import type { Prisma, ExchangeCurrencyCode, Language, PromotionTargetType } from '@prisma/client';
+import type { Prisma, ExchangeCurrencyCode, Language, PromotionTargetType, PromotionResetType } from '@prisma/client';
 
 export interface PromotionRepositoryPort {
   /**
@@ -58,6 +58,26 @@ export interface PromotionRepositoryPort {
   hasUserUsedPromotion(userId: bigint, promotionId: bigint): Promise<boolean>;
 
   /**
+   * 사용자의 완료된 입금 횟수 조회
+   */
+  countCompletedDeposits(userId: bigint): Promise<number>;
+
+  /**
+   * 사용자의 완료된 출금 횟수 조회
+   */
+  countCompletedWithdrawals(userId: bigint): Promise<number>;
+
+  /**
+   * 특정 기간 내 사용자의 프로모션 참여 횟수 조회
+   */
+  countUserPromotionsInPeriod(params: {
+    userId: bigint;
+    promotionId: bigint;
+    startDate: Date;
+    endDate?: Date;
+  }): Promise<number>;
+
+  /**
    * UserPromotion 생성
    */
   createUserPromotion(params: {
@@ -72,7 +92,7 @@ export interface PromotionRepositoryPort {
   }): Promise<UserPromotion>;
 
   /**
-   * 사용자가 이전 입금이 있는지 확인
+   * 사용자가 이전 입금이 있는지 확인 (DEPRECATED: countCompletedDeposits 사용 권장)
    */
   hasPreviousDeposits(userId: bigint): Promise<boolean>;
 
@@ -103,6 +123,11 @@ export interface PromotionRepositoryPort {
     endDate?: Date | null;
     targetType: PromotionTargetType;
     maxUsageCount?: number | null;
+    maxUsagePerUser?: number | null;
+    periodicResetType?: PromotionResetType;
+    applicableDays?: number[];
+    applicableStartTime?: Date | null;
+    applicableEndTime?: Date | null;
     bonusExpiryMinutes?: number | null;
   }): Promise<Promotion>;
 

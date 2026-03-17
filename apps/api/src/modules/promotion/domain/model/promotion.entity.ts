@@ -1,6 +1,7 @@
 // src/modules/promotion/domain/model/promotion.entity.ts
 import type {
   PromotionTargetType,
+  PromotionResetType,
   Language,
 } from '@prisma/client';
 import type { PromotionCurrencyRule } from './promotion-currency-rule.entity';
@@ -24,6 +25,11 @@ export class Promotion {
     public readonly targetType: PromotionTargetType,
     public readonly maxUsageCount: number | null,
     public readonly currentUsageCount: number,
+    public readonly maxUsagePerUser: number | null,
+    public readonly periodicResetType: PromotionResetType,
+    public readonly applicableDays: number[],
+    public readonly applicableStartTime: Date | null,
+    public readonly applicableEndTime: Date | null,
     public readonly bonusExpiryMinutes: number | null,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
@@ -42,6 +48,11 @@ export class Promotion {
     targetType: PromotionTargetType;
     maxUsageCount: number | null;
     currentUsageCount: number;
+    maxUsagePerUser: number | null;
+    periodicResetType: PromotionResetType;
+    applicableDays: number[];
+    applicableStartTime: Date | null;
+    applicableEndTime: Date | null;
     bonusExpiryMinutes: number | null;
     createdAt: Date;
     updatedAt: Date;
@@ -59,6 +70,11 @@ export class Promotion {
       data.targetType,
       data.maxUsageCount,
       data.currentUsageCount,
+      data.maxUsagePerUser,
+      data.periodicResetType,
+      data.applicableDays,
+      data.applicableStartTime,
+      data.applicableEndTime,
       data.bonusExpiryMinutes,
       data.createdAt,
       data.updatedAt,
@@ -130,6 +146,33 @@ export class Promotion {
     this._deletedAt = new Date();
   }
 
+  /**
+   * 현재 리셋 주기의 시작일 계산
+   */
+  getCurrentPeriodStartDate(now: Date = new Date()): Date {
+    const startDate = new Date(now);
+    startDate.setMilliseconds(0);
+    startDate.setSeconds(0);
+    startDate.setMinutes(0);
+    startDate.setHours(0);
+
+    switch (this.periodicResetType) {
+      case 'DAILY':
+        return startDate;
+      case 'WEEKLY': {
+        const day = startDate.getDay();
+        const diff = startDate.getDate() - day + (day === 0 ? -6 : 1); // 월요일 기준
+        startDate.setDate(diff);
+        return startDate;
+      }
+      case 'MONTHLY':
+        startDate.setDate(1);
+        return startDate;
+      default:
+        return new Date(0); // NONE 또는 기타: 전체 기간 (Epoch)
+    }
+  }
+
   toPersistence() {
     return {
       id: this.id,
@@ -139,6 +182,11 @@ export class Promotion {
       targetType: this.targetType,
       maxUsageCount: this.maxUsageCount,
       currentUsageCount: this.currentUsageCount,
+      maxUsagePerUser: this.maxUsagePerUser,
+      periodicResetType: this.periodicResetType,
+      applicableDays: this.applicableDays,
+      applicableStartTime: this.applicableStartTime,
+      applicableEndTime: this.applicableEndTime,
       bonusExpiryMinutes: this.bonusExpiryMinutes,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,

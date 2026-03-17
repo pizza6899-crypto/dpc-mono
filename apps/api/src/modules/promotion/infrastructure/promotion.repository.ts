@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { Prisma, ExchangeCurrencyCode, Language, PromotionTargetType } from '@prisma/client';
+import { Prisma, ExchangeCurrencyCode, Language, PromotionTargetType, PromotionResetType } from '@prisma/client';
 import { Promotion, UserPromotion, PromotionCurrencyRule, PromotionTranslation } from '../domain';
 import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
 import { PromotionMapper } from './promotion.mapper';
@@ -148,6 +148,37 @@ export class PromotionRepository implements PromotionRepositoryPort {
     return count > 0;
   }
 
+  async countCompletedDeposits(userId: bigint): Promise<number> {
+    return await this.tx.depositDetail.count({
+      where: { userId, status: 'COMPLETED' },
+    });
+  }
+
+  async countCompletedWithdrawals(userId: bigint): Promise<number> {
+    return await this.tx.withdrawalDetail.count({
+      where: { userId, status: 'COMPLETED' },
+    });
+  }
+
+  async countUserPromotionsInPeriod(params: {
+    userId: bigint;
+    promotionId: bigint;
+    startDate: Date;
+    endDate?: Date;
+  }): Promise<number> {
+    return await this.tx.userPromotion.count({
+      where: {
+        userId: params.userId,
+        promotionId: params.promotionId,
+        createdAt: {
+          gte: params.startDate,
+          ...(params.endDate && { lte: params.endDate }),
+        },
+        status: { not: 'VOIDED' }, // 무효화된 참여는 카운트에서 제외 (정책에 따라 다를 수 있음)
+      },
+    });
+  }
+
   async createUserPromotion(params: {
     userId: bigint;
     promotionId: bigint;
@@ -225,6 +256,11 @@ export class PromotionRepository implements PromotionRepositoryPort {
     endDate?: Date | null;
     targetType: PromotionTargetType;
     maxUsageCount?: number | null;
+    maxUsagePerUser?: number | null;
+    periodicResetType?: PromotionResetType;
+    applicableDays?: number[];
+    applicableStartTime?: Date | null;
+    applicableEndTime?: Date | null;
     bonusExpiryMinutes?: number | null;
   }): Promise<Promotion> {
     const result = await this.tx.promotion.create({
@@ -234,6 +270,11 @@ export class PromotionRepository implements PromotionRepositoryPort {
         endDate: params.endDate,
         targetType: params.targetType as any,
         maxUsageCount: params.maxUsageCount,
+        maxUsagePerUser: params.maxUsagePerUser,
+        periodicResetType: params.periodicResetType,
+        applicableDays: params.applicableDays,
+        applicableStartTime: params.applicableStartTime,
+        applicableEndTime: params.applicableEndTime,
         bonusExpiryMinutes: params.bonusExpiryMinutes,
       },
     });

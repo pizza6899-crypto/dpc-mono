@@ -40,18 +40,36 @@ export class ValidatePromotionEligibilityService {
       throw new PromotionNotEligibleException('Currency not supported for this promotion');
     }
 
-    // 3. 자격 검증을 위한 데이터 조회
-    const hasPreviousDeposits = await this.repository.hasPreviousDeposits(userId);
-    const userParticipations = await this.repository.findUserPromotions(userId, 'ACTIVE');
+    const now = new Date();
+    const periodStart = promotion.getCurrentPeriodStartDate(now);
+
+    const [
+      depositCount,
+      withdrawalCount,
+      participationCountInPeriod,
+      activeParticipations,
+    ] = await Promise.all([
+      this.repository.countCompletedDeposits(userId),
+      this.repository.countCompletedWithdrawals(userId),
+      this.repository.countUserPromotionsInPeriod({
+        userId,
+        promotionId,
+        startDate: periodStart,
+      }),
+      this.repository.findUserPromotions(userId, 'ACTIVE'),
+    ]);
 
     // 4. 도메인 정책을 통한 검증
-    this.policy.validateEligibility(
+    this.policy.validateEligibility({
       promotion,
       currencyRule,
       depositAmount,
-      hasPreviousDeposits,
-      userParticipations,
-    );
+      depositCount,
+      withdrawalCount,
+      participationCountInPeriod,
+      activeParticipations,
+      now,
+    });
 
     return promotion;
   }
