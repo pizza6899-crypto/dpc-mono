@@ -6,17 +6,9 @@ import type { RequestClientInfo } from 'src/common/http/types';
 import { DepositAlreadyProcessedException } from '../domain';
 import type { DepositDetailRepositoryPort } from '../ports/out/deposit-detail.repository.port';
 import { DEPOSIT_DETAIL_REPOSITORY } from '../ports/out';
-import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
-import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
-import {
-  UserWalletBalanceType,
-  UserWalletTransactionType,
-} from '@prisma/client';
-import { GrantPromotionBonusService } from '../../promotion/application/grant-promotion-bonus.service';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
-import { CreateWageringRequirementService } from 'src/modules/wagering/requirement/application';
-import { GetWageringConfigService } from 'src/modules/wagering/config/application/get-wagering-config.service';
 import { CreateAdminMemoService } from '../../admin-memo/application/create-admin-memo.service';
+import { ProcessDepositPromotionService } from '../../promotion/application/process-deposit-promotion.service';
 import { DepositNotFoundException } from '../domain';
 
 interface ApproveDepositParams {
@@ -39,11 +31,8 @@ export class ApproveDepositService {
   constructor(
     @Inject(DEPOSIT_DETAIL_REPOSITORY)
     private readonly depositRepository: DepositDetailRepositoryPort,
-    private readonly updateUserBalanceService: UpdateUserBalanceService,
-    private readonly grantPromotionBonusService: GrantPromotionBonusService,
-    private readonly createWageringRequirementService: CreateWageringRequirementService,
     private readonly advisoryLockService: AdvisoryLockService,
-    private readonly wageringConfigService: GetWageringConfigService,
+    private readonly processDepositPromotionService: ProcessDepositPromotionService,
     private readonly createAdminMemoService: CreateAdminMemoService,
   ) { }
 
@@ -84,81 +73,17 @@ export class ApproveDepositService {
     // 6. DepositDetail 상태 업데이트 (엔티티의 변경사항 반영)
     await this.depositRepository.update(deposit);
 
-    // --- 통합 입금 및 롤링 처리 시작 ---
-    let bonusAmount = new Prisma.Decimal(0);
-    let multiplier = new Prisma.Decimal(1); // 기본 배수
-    let sourceId: bigint = deposit.id!;
-    let sourceType: string = 'DEPOSIT';
-
-    // 7. 보너스 및 배수 결정
-    if (deposit.promotionId) {
-      // 7.1. 프로모션이 있는 경우: 참여 기록 생성 및 보너스/배수 정보 획득
-      const userPromotion = await this.grantPromotionBonusService.execute({
-        userId: deposit.userId,
-        promotionId: deposit.promotionId,
-        depositAmount: actuallyPaid,
-        currency: deposit.depositCurrency,
-        depositDetailId: deposit.id!,
-      });
-      bonusAmount = userPromotion.bonusAmount;
-      multiplier = new Prisma.Decimal(
-        userPromotion.policySnapshot.wageringMultiplier ?? 1,
-      );
-      sourceId = userPromotion.id;
-      sourceType = 'PROMOTION_BONUS';
-    } else {
-      // 7.2. 프로모션이 없는 경우: 기본 입금 배수(AML) 획득
-      const wageringConfig = await this.wageringConfigService.execute();
-      multiplier = wageringConfig.defaultDepositMultiplier;
-    }
-
-    const totalAmount = actuallyPaid.add(bonusAmount);
-
-    // 8. 통합 롤링(Wagering Requirement) 생성
-    // 정책: 입금액+보너스 전체에 대해 하나의 롤링 조건을 부여
-    // 프로모션이 있으면 기중치 기반(WEIGHTED), 없으면 전액 인정(FULL)
-    await this.createWageringRequirementService.execute({
+    // --- 프로모션 및 롤링 후처리 위임 (Promotion Module) ---
+    const { bonusAmount } = await this.processDepositPromotionService.execute({
       userId: deposit.userId,
+      depositId: deposit.id!,
+      amount: actuallyPaid,
       currency: depositCurrency,
-      sourceType: sourceType as any,
-      sourceId: sourceId,
-      calculationMethod: deposit.promotionId ? 'WEIGHTED' : 'FULL',
-      targetType: 'AMOUNT',
-      principalAmount: actuallyPaid,
-      multiplier: multiplier,
-      bonusAmount: bonusAmount,
-      initialFundAmount: totalAmount,
-      realMoneyRatio: totalAmount.isZero()
-        ? new Prisma.Decimal(0)
-        : actuallyPaid.div(totalAmount),
-      isForfeitable: deposit.promotionId ? true : false,
+      promotionId: deposit.promotionId ?? undefined,
+      adminId: adminId,
+      memo: memo,
       requestInfo: requestInfo,
     });
-
-    // 9. 통합 잔액 업데이트 (입금액 + 보너스 합산 지급)
-    await this.updateUserBalanceService.updateBalance(
-      {
-        userId: deposit.userId,
-        currency: depositCurrency,
-        amount: totalAmount,
-        operation: UpdateOperation.ADD,
-        balanceType: UserWalletBalanceType.BONUS,
-        transactionType: UserWalletTransactionType.DEPOSIT,
-        referenceId: deposit.id!,
-      },
-      {
-        adminUserId: adminId,
-        reasonCode: AdjustmentReasonCode.MANUAL_DEPOSIT,
-        internalNote: memo,
-        actionName: WalletActionName.APPROVE_DEPOSIT,
-        metadata: {
-          depositId: deposit.id!.toString(),
-          promotionId: deposit.promotionId?.toString(),
-          bonusAmount: bonusAmount.toString(),
-          multiplier: multiplier.toString(),
-        },
-      },
-    );
 
     // 10. 관리자 메모 저장 (트랜잭션 편입)
     if (memo) {

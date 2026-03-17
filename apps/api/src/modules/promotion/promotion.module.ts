@@ -14,6 +14,7 @@ import { GetActivePromotionsForUserService } from './application/get-active-prom
 import { GetMyPromotionsForUserService } from './application/get-my-promotions-for-user.service';
 import { UpsertPromotionCurrencyService } from './application/upsert-promotion-currency.service';
 import { UpsertPromotionTranslationService } from './application/upsert-promotion-translation.service';
+import { ProcessDepositPromotionService } from './application/process-deposit-promotion.service';
 import { PromotionRepository } from './infrastructure/promotion.repository';
 import { PromotionMapper } from './infrastructure/promotion.mapper';
 import { PROMOTION_REPOSITORY } from './ports';
@@ -22,6 +23,7 @@ import { PromotionAdminController } from './controllers/admin/promotion-admin.co
 import { WageringModule } from '../wagering/wagering.module';
 import { WalletModule } from '../wallet/wallet.module';
 import { NotificationModule } from '../notification/notification.module';
+import { RewardModule } from '../reward/reward.module';
 
 @Module({
   imports: [
@@ -29,6 +31,7 @@ import { NotificationModule } from '../notification/notification.module';
     WalletModule,
     NotificationModule,
     ConcurrencyModule,
+    RewardModule,
   ],
   providers: [
     PromotionPolicy,
@@ -44,6 +47,7 @@ import { NotificationModule } from '../notification/notification.module';
     GetMyPromotionsForUserService,
     UpsertPromotionCurrencyService,
     UpsertPromotionTranslationService,
+    ProcessDepositPromotionService,
     PromotionMapper,
     {
       provide: PROMOTION_REPOSITORY,
@@ -55,6 +59,7 @@ import { NotificationModule } from '../notification/notification.module';
     GrantPromotionBonusService,
     ValidatePromotionEligibilityService,
     FindActivePromotionsService,
+    ProcessDepositPromotionService,
   ],
 })
 export class PromotionModule { }

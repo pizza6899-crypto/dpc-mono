@@ -5,6 +5,7 @@
 export enum RewardMetadataType {
     TRANSLATION = 'TRANSLATION',
     FREE_SPIN = 'FREE_SPIN',
+    PROMOTION = 'PROMOTION',
 }
 
 export interface TranslationMetadata {
@@ -20,4 +21,11 @@ export interface FreeSpinMetadata {
     ticketToken: string;
 }
 
-export type RewardMetadata = TranslationMetadata | FreeSpinMetadata;
+export interface PromotionMetadata {
+    type: RewardMetadataType.PROMOTION;
+    depositAmount?: string;
+    depositId?: string;
+    promotionId?: string;
+}
+
+export type RewardMetadata = TranslationMetadata | FreeSpinMetadata | PromotionMetadata;

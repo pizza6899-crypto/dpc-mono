@@ -9,6 +9,7 @@ import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-
 import { CreateWageringRequirementService } from 'src/modules/wagering/requirement/application/create-wagering-requirement.service';
 import { Prisma, UserWalletBalanceType, UserWalletTransactionType, WageringSourceType, RewardSourceType } from '@prisma/client';
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain/wallet.constant';
+import { RewardMetadataType } from '../domain/reward.types';
 
 export interface ClaimRewardCommand {
     userId: bigint;
@@ -64,22 +65,42 @@ export class ClaimRewardService {
                 actionName = WalletActionName.CLAIM_COMP;
                 wageringSourceType = WageringSourceType.PROMOTION_BONUS;
                 break;
+            case RewardSourceType.PROMOTION_BONUS:
+                actionName = WalletActionName.APPROVE_DEPOSIT;
+                wageringSourceType = WageringSourceType.PROMOTION_BONUS;
+                break;
             default:
                 actionName = WalletActionName.GRANT_PROMOTION_BONUS;
                 wageringSourceType = WageringSourceType.PROMOTION_BONUS;
                 break;
         }
 
+        // --- 입금 보너스 전용 처리 (원금 + 보너스 통합) ---
+        let principalAmount = new Prisma.Decimal(0);
+        let depositId: bigint | undefined = undefined;
+
+        if (reward.metadata?.type === RewardMetadataType.PROMOTION) {
+            if (reward.metadata.depositAmount) {
+                principalAmount = new Prisma.Decimal(reward.metadata.depositAmount);
+            }
+            if (reward.metadata.depositId) {
+                depositId = BigInt(reward.metadata.depositId);
+            }
+        }
+
+        const totalAmount = new Prisma.Decimal(reward.amount.toString()).add(principalAmount);
+        const referenceId = depositId ?? reward.id;
+
         // A. 지갑(Wallet) 모듈에 '보너스 머니' 또는 '캐시' 충전 요청
         await this.updateUserBalanceService.updateBalance(
             {
                 userId: reward.userId,
                 currency: reward.currency,
-                amount: new Prisma.Decimal(reward.amount.toString()),
+                amount: totalAmount, // 통합 금액
                 operation: UpdateOperation.ADD,
                 balanceType: balanceType,
-                transactionType: UserWalletTransactionType.BONUS_IN, // 명목상 보너스 입금으로 기록
-                referenceId: reward.id,
+                transactionType: UserWalletTransactionType.DEPOSIT, // 입금 흐름으로 처리
+                referenceId: referenceId,
             },
             {
                 actionName,
@@ -87,6 +108,8 @@ export class ClaimRewardService {
                 metadata: {
                     description: `Reward Claim: ${reward.sourceType}`,
                     traceId: reward.id.toString(),
+                    depositId: depositId?.toString(),
+                    bonusAmount: reward.amount.toString(),
                 },
             }
         );
@@ -105,11 +128,13 @@ export class ClaimRewardService {
                 sourceType: wageringSourceType,
                 sourceId: reward.id,
                 targetType: reward.wageringTargetType,
-                principalAmount: new Prisma.Decimal(reward.amount.toString()),
+                principalAmount: principalAmount, // 원금 전달
                 multiplier: new Prisma.Decimal(reward.wageringMultiplier!.toString()),
                 bonusAmount: new Prisma.Decimal(reward.amount.toString()),
-                initialFundAmount: new Prisma.Decimal(reward.amount.toString()),
-                realMoneyRatio: new Prisma.Decimal(0), // 전액 보너스 기원이므로 0
+                initialFundAmount: totalAmount, // 통합 초기 자금
+                realMoneyRatio: totalAmount.isZero()
+                    ? new Prisma.Decimal(0)
+                    : principalAmount.div(totalAmount),
                 isForfeitable: reward.isForfeitable,
                 expiresAt,
             });

@@ -4,6 +4,7 @@ import { REWARD_REPOSITORY } from './ports/reward.repository.port';
 import { RewardRepository } from './infrastructure/reward.repository';
 import { ClaimRewardService } from './application/claim-reward.service';
 import { GrantRewardService } from './application/grant-reward.service';
+import { InstantGrantRewardService } from './application/instant-grant-reward.service';
 import { GetUserRewardsService } from './application/get-user-rewards.service';
 import { GetAdminRewardsService } from './application/get-admin-rewards.service';
 import { VoidRewardService } from './application/void-reward.service';
@@ -35,6 +36,7 @@ import { RequirementModule } from 'src/modules/wagering/requirement/requirement.
         },
         ClaimRewardService,
         GrantRewardService,
+        InstantGrantRewardService,
         GetUserRewardsService,
         GetAdminRewardsService,
         VoidRewardService,
@@ -43,6 +45,7 @@ import { RequirementModule } from 'src/modules/wagering/requirement/requirement.
         REWARD_REPOSITORY,
         ClaimRewardService,
         GrantRewardService,
+        InstantGrantRewardService,
         GetUserRewardsService,
         GetAdminRewardsService,
         VoidRewardService,
