@@ -4,8 +4,6 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { PromotionPolicy } from './domain';
 import { ValidatePromotionEligibilityService } from './application/validate-promotion-eligibility.service';
 import { GrantPromotionBonusService } from './application/grant-promotion-bonus.service';
-import { FindActivePromotionsService } from './application/find-active-promotions.service';
-import { FindUserPromotionsService } from './application/find-user-promotions.service';
 import { FindPromotionsAdminService } from './application/find-promotions-admin.service';
 import { CreatePromotionService } from './application/create-promotion.service';
 import { UpdatePromotionService } from './application/update-promotion.service';
@@ -34,8 +32,6 @@ import { PromotionConfigModule } from '../config/promotion-config.module';
     PromotionPolicy,
     ValidatePromotionEligibilityService,
     GrantPromotionBonusService,
-    FindActivePromotionsService,
-    FindUserPromotionsService,
     FindPromotionsAdminService,
     CreatePromotionService,
     UpdatePromotionService,
@@ -54,7 +50,6 @@ import { PromotionConfigModule } from '../config/promotion-config.module';
   exports: [
     GrantPromotionBonusService,
     ValidatePromotionEligibilityService,
-    FindActivePromotionsService,
     ProcessDepositPromotionService,
   ],
 })
