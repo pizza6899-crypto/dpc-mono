@@ -15,7 +15,7 @@ export class ListMyPromotionsQueryDto extends createPaginationQueryDto<UserPromo
   ['createdAt', 'updatedAt', 'id'],
 ) {
   @ApiPropertyOptional({
-    description: '프로모션 상태 필터',
+    description: 'Promotion status filter / 프로모션 상태 필터',
     example: 'ACTIVE',
   })
   @IsOptional()

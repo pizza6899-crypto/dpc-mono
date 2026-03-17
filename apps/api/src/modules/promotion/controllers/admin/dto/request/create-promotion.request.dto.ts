@@ -17,7 +17,7 @@ import {
 
 export class CreatePromotionRequestDto {
   @ApiPropertyOptional({
-    description: '활성화 여부',
+    description: 'Whether the promotion is active / 활성화 여부',
     example: true,
     default: true,
   })
@@ -26,7 +26,7 @@ export class CreatePromotionRequestDto {
   isActive?: boolean;
 
   @ApiPropertyOptional({
-    description: '프로모션 시작일',
+    description: 'Promotion start date / 프로모션 시작일',
     example: '2024-01-01T00:00:00Z',
     nullable: true,
   })
@@ -35,7 +35,7 @@ export class CreatePromotionRequestDto {
   startDate?: string | null;
 
   @ApiPropertyOptional({
-    description: '프로모션 종료일',
+    description: 'Promotion end date / 프로모션 종료일',
     example: '2024-12-31T23:59:59Z',
     nullable: true,
   })
@@ -44,7 +44,7 @@ export class CreatePromotionRequestDto {
   endDate?: string | null;
 
   @ApiProperty({
-    description: '프로모션 타겟 타입',
+    description: 'Promotion target type / 프로모션 타겟 타입',
     example: PromotionTargetType.NEW_USER_FIRST_DEPOSIT,
     enum: PromotionTargetType,
   })
@@ -53,7 +53,7 @@ export class CreatePromotionRequestDto {
   targetType: PromotionTargetType;
 
   @ApiProperty({
-    description: '보너스 타입',
+    description: 'Bonus type / 보너스 타입',
     example: PromotionBonusType.PERCENTAGE,
     enum: PromotionBonusType,
   })
@@ -62,7 +62,7 @@ export class CreatePromotionRequestDto {
   bonusType: PromotionBonusType;
 
   @ApiPropertyOptional({
-    description: '최대 사용 횟수 (선착순)',
+    description: 'Maximum usage count (FCFS) / 최대 사용 횟수 (선착순)',
     example: 100,
     type: Number,
   })
@@ -73,7 +73,7 @@ export class CreatePromotionRequestDto {
   maxUsageCount?: number;
 
   @ApiPropertyOptional({
-    description: '보너스 유효 기간 (분 단위)',
+    description: 'Bonus validity period (minutes) / 보너스 유효 기간 (분 단위)',
     example: 1440, // 24시간
     type: Number,
   })

@@ -16,7 +16,7 @@ export class ListActivePromotionsQueryDto extends createPaginationQueryDto<Promo
   ['createdAt', 'updatedAt', 'id'],
 ) {
   @ApiPropertyOptional({
-    description: '언어 코드 (번역 정보 포함, 기본값: EN)',
+    description: 'Language code (Includes translation info, default: EN) / 언어 코드 (번역 정보 포함, 기본값: EN)',
     enum: Language,
     example: Language.EN,
   })
@@ -25,7 +25,7 @@ export class ListActivePromotionsQueryDto extends createPaginationQueryDto<Promo
   language?: Language;
 
   @ApiPropertyOptional({
-    description: '통화 코드 (특정 통화의 프로모션만 조회)',
+    description: 'Currency code (Filter by specific currency) / 통화 코드 (특정 통화의 프로모션만 조회)',
     enum: ExchangeCurrencyCode,
     example: ExchangeCurrencyCode.USDT,
   })

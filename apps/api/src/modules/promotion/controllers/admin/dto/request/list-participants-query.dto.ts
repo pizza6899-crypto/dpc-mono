@@ -16,7 +16,7 @@ export class ListParticipantsQueryDto extends createPaginationQueryDto<Participa
   ['createdAt', 'updatedAt', 'id'],
 ) {
   @ApiPropertyOptional({
-    description: '상태 필터',
+    description: 'Status filter / 상태 필터',
     example: UserPromotionStatus.ACTIVE,
     enum: UserPromotionStatus,
   })
@@ -25,8 +25,7 @@ export class ListParticipantsQueryDto extends createPaginationQueryDto<Participa
   status?: UserPromotionStatus;
 
   @ApiPropertyOptional({
-    description: '사용자 ID 필터',
-    example: '1234567890123456789',
+    description: 'User ID filter / 사용자 ID 필터',
     type: String,
   })
   @IsOptional()

@@ -5,7 +5,7 @@ import { ExchangeCurrencyCode } from '@prisma/client';
 
 export class UpsertCurrencySettingsRequestDto {
   @ApiProperty({
-    description: '통화 코드',
+    description: 'Currency code / 통화 코드',
     example: ExchangeCurrencyCode.USDT,
     enum: ExchangeCurrencyCode,
   })
@@ -14,7 +14,7 @@ export class UpsertCurrencySettingsRequestDto {
   currency: ExchangeCurrencyCode;
 
   @ApiProperty({
-    description: '최소 입금 금액',
+    description: 'Minimum deposit amount / 최소 입금 금액',
     example: '10.00',
     type: String,
   })
@@ -23,7 +23,7 @@ export class UpsertCurrencySettingsRequestDto {
   minDepositAmount: string;
 
   @ApiPropertyOptional({
-    description: '최대 입금 인정 금액',
+    description: 'Maximum recognized deposit amount / 최대 입금 인정 금액',
     example: '1000.00',
     type: String,
   })
@@ -32,7 +32,7 @@ export class UpsertCurrencySettingsRequestDto {
   maxDepositAmount?: string;
 
   @ApiPropertyOptional({
-    description: '최대 보너스 금액',
+    description: 'Maximum bonus amount / 최대 보너스 금액',
     example: '100.00',
     type: String,
   })
@@ -41,7 +41,7 @@ export class UpsertCurrencySettingsRequestDto {
   maxBonusAmount?: string;
 
   @ApiPropertyOptional({
-    description: '최대 출금 금액',
+    description: 'Maximum withdrawal amount / 최대 출금 금액',
     example: '500.00',
     type: String,
   })
@@ -50,7 +50,7 @@ export class UpsertCurrencySettingsRequestDto {
   maxWithdrawAmount?: string;
 
   @ApiPropertyOptional({
-    description: '보너스 비율',
+    description: 'Bonus rate / 보너스 비율',
     example: '1.0',
     type: String,
   })
@@ -59,7 +59,7 @@ export class UpsertCurrencySettingsRequestDto {
   bonusRate?: string;
 
   @ApiPropertyOptional({
-    description: '웨이저링 배수',
+    description: 'Wagering multiplier / 웨이저링 배수',
     example: '20.0',
     type: String,
   })

@@ -22,7 +22,7 @@ export class ListPromotionsQueryDto extends createPaginationQueryDto<PromotionSo
   ['createdAt', 'updatedAt', 'id'],
 ) {
   @ApiPropertyOptional({
-    description: '활성화 여부 필터',
+    description: 'Activation status filter / 활성화 여부 필터',
     example: true,
   })
   @IsOptional()
@@ -31,7 +31,7 @@ export class ListPromotionsQueryDto extends createPaginationQueryDto<PromotionSo
   isActive?: boolean;
 
   @ApiPropertyOptional({
-    description: '프로모션 타겟 타입 필터',
+    description: 'Promotion target type filter / 프로모션 타겟 타입 필터',
     enum: PromotionTargetType,
     example: PromotionTargetType.NEW_USER_FIRST_DEPOSIT,
   })
@@ -40,7 +40,7 @@ export class ListPromotionsQueryDto extends createPaginationQueryDto<PromotionSo
   targetType?: PromotionTargetType;
 
   @ApiPropertyOptional({
-    description: '시작 날짜 (ISO 8601 형식) - 생성일 기준',
+    description: 'Start date (ISO 8601) - Based on creation / 시작 날짜 (ISO 8601 형식) - 생성일 기준',
     example: '2024-01-01T00:00:00Z',
   })
   @IsOptional()
@@ -48,7 +48,7 @@ export class ListPromotionsQueryDto extends createPaginationQueryDto<PromotionSo
   startDate?: string;
 
   @ApiPropertyOptional({
-    description: '종료 날짜 (ISO 8601 형식) - 생성일 기준',
+    description: 'End date (ISO 8601) - Based on creation / 종료 날짜 (ISO 8601 형식) - 생성일 기준',
     example: '2024-12-31T23:59:59Z',
   })
   @IsOptional()

@@ -3,13 +3,13 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class PromotionStatisticsResponseDto {
   @ApiProperty({
-    description: '전체 참가자 수',
+    description: 'Total number of participants / 전체 참가자 수',
     example: 100,
   })
   totalParticipants: number;
 
   @ApiProperty({
-    description: '상태별 참가자 수',
+    description: 'Number of participants by status / 상태별 참가자 수',
     example: {
       ACTIVE: 50,
       QUALIFICATION_LOST: 20,
