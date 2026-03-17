@@ -1,31 +1,21 @@
 // src/modules/promotion/application/create-promotion.service.ts
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { Prisma } from '@prisma/client';
 import {
   Promotion,
   PromotionPolicy,
-  PromotionCodeAlreadyExistsException,
 } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports';
 import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
 
 interface CreatePromotionParams {
-  managementName: string;
   isActive?: boolean;
   startDate?: Date | null;
   endDate?: Date | null;
-  targetType: string;
-  bonusType: string;
-  bonusRate?: Prisma.Decimal | null;
-  rollingMultiplier?: Prisma.Decimal | null;
-  qualificationMaintainCondition: string;
-  isOneTime?: boolean;
-  isDepositRequired?: boolean;
+  targetType: any;
+  bonusType: any;
   maxUsageCount?: number | null;
   bonusExpiryMinutes?: number | null;
-  code: string;
-  targetUserIds?: bigint[];
 }
 
 @Injectable()
@@ -40,40 +30,23 @@ export class CreatePromotionService {
 
   @Transactional()
   async execute(params: CreatePromotionParams): Promise<Promotion> {
-    const existing = await this.repository.findByCode(params.code);
-    if (existing) {
-      throw new PromotionCodeAlreadyExistsException();
-    }
-
-    // 설정 유효성 검사 (통화별 설정은 별도 API로 처리하므로 currencies 제외)
+    // 설정 유효성 검사 (입금 필수 프로모션만 다루므로 정책 단순화)
     this.policy.validateConfiguration({
-      isDepositRequired: params.isDepositRequired ?? true,
-      bonusType: params.bonusType as any,
-      bonusRate: params.bonusRate,
+      bonusType: params.bonusType,
     });
 
     const promotion = await this.repository.create({
-      managementName: params.managementName,
       isActive: params.isActive ?? true,
       startDate: params.startDate ?? null,
       endDate: params.endDate ?? null,
-      targetType: params.targetType as any,
-      bonusType: params.bonusType as any,
-      bonusRate: params.bonusRate ?? null,
-      rollingMultiplier: params.rollingMultiplier ?? null,
-      qualificationMaintainCondition:
-        params.qualificationMaintainCondition as any,
-      isOneTime: params.isOneTime ?? false,
-      isDepositRequired: params.isDepositRequired ?? true,
+      targetType: params.targetType,
+      bonusType: params.bonusType,
       maxUsageCount: params.maxUsageCount ?? null,
       bonusExpiryMinutes: params.bonusExpiryMinutes ?? null,
-      note: [],
-      code: params.code,
-      targetUserIds: params.targetUserIds,
     });
 
     this.logger.log(
-      `Promotion created: id=${promotion.id}, name=${params.managementName}`,
+      `Promotion created: id=${promotion.id}`,
     );
 
     return promotion;

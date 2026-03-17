@@ -2,7 +2,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { PromotionStatisticsResponseDto } from './promotion-statistics.response.dto';
 
-export class PromotionCurrencyResponseDto {
+export class PromotionCurrencyRuleResponseDto {
   @ApiProperty({ description: 'ID', example: '1' })
   id: string;
 
@@ -14,6 +14,13 @@ export class PromotionCurrencyResponseDto {
 
   @ApiProperty({ description: '최소 입금 금액', example: '10.00' })
   minDepositAmount: string;
+
+  @ApiPropertyOptional({
+    description: '최대 입금 인정 금액',
+    example: '1000.00',
+    nullable: true,
+  })
+  maxDepositAmount: string | null;
 
   @ApiPropertyOptional({
     description: '최대 보너스 금액',
@@ -28,6 +35,20 @@ export class PromotionCurrencyResponseDto {
     nullable: true,
   })
   maxWithdrawAmount: string | null;
+
+  @ApiPropertyOptional({
+    description: '보너스 비율',
+    example: '1.0',
+    nullable: true,
+  })
+  bonusRate: string | null;
+
+  @ApiPropertyOptional({
+    description: '웨이저링 배수',
+    example: '20.0',
+    nullable: true,
+  })
+  wageringMultiplier: string | null;
 
   @ApiProperty({ description: '생성일시' })
   createdAt: Date;
@@ -46,8 +67,8 @@ export class PromotionTranslationResponseDto {
   @ApiProperty({ description: '언어 코드', example: 'EN' })
   language: string;
 
-  @ApiProperty({ description: '프로모션 이름', example: 'Welcome Bonus' })
-  name: string;
+  @ApiProperty({ description: '프로모션 제목', example: 'Welcome Bonus' })
+  title: string;
 
   @ApiPropertyOptional({
     description: '프로모션 설명',
@@ -72,18 +93,6 @@ export class PromotionAdminResponseDto {
   id: string;
 
   @ApiProperty({
-    description: '관리용 프로모션 이름',
-    example: '첫 충전 100% 보너스',
-  })
-  managementName: string;
-
-  @ApiProperty({
-    description: '프로모션 코드',
-    example: 'WELCOME_BONUS',
-  })
-  code: string;
-
-  @ApiProperty({
     description: '활성화 여부',
     example: true,
   })
@@ -100,32 +109,6 @@ export class PromotionAdminResponseDto {
     example: 'PERCENTAGE',
   })
   bonusType: string;
-
-  @ApiPropertyOptional({
-    description: '보너스 비율',
-    example: '1.0',
-    type: String,
-  })
-  bonusRate?: string;
-
-  @ApiPropertyOptional({
-    description: '롤링 배수',
-    example: '20.0',
-    type: String,
-  })
-  rollingMultiplier?: string;
-
-  @ApiProperty({
-    description: '1회성 프로모션 여부',
-    example: true,
-  })
-  isOneTime: boolean;
-
-  @ApiProperty({
-    description: '입금 필수 여부',
-    example: true,
-  })
-  isDepositRequired: boolean;
 
   @ApiPropertyOptional({
     description: '최대 사용 횟수',
@@ -149,19 +132,6 @@ export class PromotionAdminResponseDto {
     nullable: true,
   })
   bonusExpiryMinutes: number | null;
-
-  @ApiProperty({
-    description: '관리자 메모',
-    example: ['VIP Only'],
-    type: [String],
-  })
-  note: string[];
-
-  @ApiProperty({
-    description: '자격 유지 조건',
-    example: 'FORFEIT_BONUS_ON_WITHDRAWAL',
-  })
-  qualificationMaintainCondition: string;
 
   @ApiPropertyOptional({
     description: '프로모션 시작일',
@@ -196,10 +166,10 @@ export class PromotionAdminResponseDto {
   statistics?: PromotionStatisticsResponseDto;
 
   @ApiProperty({
-    description: '통화별 설정 목록',
-    type: [PromotionCurrencyResponseDto],
+    description: '통화별 규칙 목록',
+    type: [PromotionCurrencyRuleResponseDto],
   })
-  currencies: PromotionCurrencyResponseDto[];
+  currencyRules: PromotionCurrencyRuleResponseDto[];
 
   @ApiProperty({
     description: '번역 정보 목록',

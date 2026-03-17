@@ -13,18 +13,27 @@ export class UpsertCurrencySettingsRequestDto {
   @IsEnum(ExchangeCurrencyCode)
   currency: ExchangeCurrencyCode;
 
-  @ApiPropertyOptional({
-    description: '최소 입금 금액 (입금형 프로모션인 경우 필수)',
+  @ApiProperty({
+    description: '최소 입금 금액',
     example: '10.00',
+    type: String,
+  })
+  @IsNotEmpty()
+  @IsString()
+  minDepositAmount: string;
+
+  @ApiPropertyOptional({
+    description: '최대 입금 인정 금액',
+    example: '1000.00',
     type: String,
   })
   @IsOptional()
   @IsString()
-  minDepositAmount?: string;
+  maxDepositAmount?: string;
 
   @ApiPropertyOptional({
     description: '최대 보너스 금액',
-    example: '1000.00',
+    example: '100.00',
     type: String,
   })
   @IsOptional()
@@ -33,10 +42,28 @@ export class UpsertCurrencySettingsRequestDto {
 
   @ApiPropertyOptional({
     description: '최대 출금 금액',
-    example: '5000.00',
+    example: '500.00',
     type: String,
   })
   @IsOptional()
   @IsString()
   maxWithdrawAmount?: string;
+
+  @ApiPropertyOptional({
+    description: '보너스 비율',
+    example: '1.0',
+    type: String,
+  })
+  @IsOptional()
+  @IsString()
+  bonusRate?: string;
+
+  @ApiPropertyOptional({
+    description: '웨이저링 배수',
+    example: '20.0',
+    type: String,
+  })
+  @IsOptional()
+  @IsString()
+  wageringMultiplier?: string;
 }

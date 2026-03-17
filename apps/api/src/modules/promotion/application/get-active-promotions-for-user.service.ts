@@ -4,8 +4,8 @@ import { Language, ExchangeCurrencyCode } from '@prisma/client';
 import {
   Promotion,
   PromotionTranslation,
-} from '../domain/model/promotion.entity';
-import { PromotionCurrency } from '../domain/model/promotion-currency.entity';
+} from '../domain';
+import { PromotionCurrencyRule } from '../domain/model/promotion-currency-rule.entity';
 import { PROMOTION_REPOSITORY } from '../ports';
 import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
 import type { PaginatedData } from 'src/common/http/types/pagination.types';
@@ -22,7 +22,7 @@ interface GetActivePromotionsForUserParams {
 export interface ActivePromotionInfo {
   promotion: Promotion;
   translation: PromotionTranslation;
-  currencySetting: PromotionCurrency;
+  currencySetting: PromotionCurrencyRule;
 }
 
 @Injectable()
@@ -41,7 +41,7 @@ export class GetActivePromotionsForUserService {
       sortBy = 'createdAt',
       sortOrder = 'desc',
       language = Language.EN,
-      currency = ExchangeCurrencyCode.USD,
+      currency = ExchangeCurrencyCode.USDT,
       userId,
     } = params;
 
@@ -52,7 +52,7 @@ export class GetActivePromotionsForUserService {
       sortOrder,
     });
 
-    const userParticipatedPromotionIds = new Set<string>(); // BigInt to String
+    const userParticipatedPromotionIds = new Set<string>();
 
     if (userId) {
       const userPromotions = await this.repository.findUserPromotions(userId);
@@ -61,34 +61,24 @@ export class GetActivePromotionsForUserService {
       });
     }
 
-    // 번역과 통화 정보가 모두 있는 프로모션만 필터링 + 유저 참여 여부 필터링
     const filteredResults: ActivePromotionInfo[] = [];
 
     result.promotions.forEach((promotion) => {
-      // 1. 이미 참여한 일회성 프로모션 제외
-      if (
-        userId &&
-        promotion.isOneTime &&
-        userParticipatedPromotionIds.has(promotion.id.toString())
-      ) {
+      // 이미 참여한 프로모션 필터링 (TargetType 로직에 따라 다르겠지만 여기서는 참여 기록이 있으면 제외하는 예시)
+      if (userId && userParticipatedPromotionIds.has(promotion.id.toString())) {
         return;
       }
 
       const translations = promotion.getTranslations();
-      const currencies = promotion.getCurrencies();
-      const currentTranslation = translations?.find(
-        (t) => t.language === language,
-      );
-      // currency 파라미터가 있으면 해당 통화를 찾고, 없으면 첫 번째 통화 사용
-      const currentCurrency = currency
-        ? currencies?.find((c) => c.currency === currency)
-        : currencies?.[0];
+      const currencyRules = promotion.getCurrencyRules();
+      const currentTranslation = translations?.find((t) => t.language === language);
+      const currentCurrencyRule = currencyRules?.find((c) => c.currency === currency) || currencyRules?.[0];
 
-      if (currentTranslation && currentCurrency) {
+      if (currentTranslation && currentCurrencyRule) {
         filteredResults.push({
           promotion,
           translation: currentTranslation,
-          currencySetting: currentCurrency,
+          currencySetting: currentCurrencyRule,
         });
       }
     });
@@ -97,7 +87,7 @@ export class GetActivePromotionsForUserService {
       data: filteredResults,
       page,
       limit,
-      total: filteredResults.length,
+      total: result.total, // 전체 개수는 원본 결과 기준
     };
   }
 }

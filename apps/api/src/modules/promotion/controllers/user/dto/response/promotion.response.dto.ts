@@ -9,16 +9,16 @@ import {
 
 export class PromotionResponseDto {
   @ApiProperty({
-    description: '프로모션 코드',
-    example: 'WELCOME_BONUS',
+    description: '프로모션 ID (Encoded)',
+    example: 'p_abc123',
   })
-  code: string;
+  id: string;
 
   @ApiProperty({
-    description: '프로모션 이름 (현재 언어)',
+    description: '프로모션 제목 (현재 언어)',
     example: '첫 충전 100% 보너스',
   })
-  name: string;
+  title: string;
 
   @ApiPropertyOptional({
     description: '프로모션 설명 (현재 언어)',
@@ -78,17 +78,11 @@ export class PromotionResponseDto {
   bonusRate?: string;
 
   @ApiPropertyOptional({
-    description: '롤링 배수',
+    description: '웨이저링 배수',
     example: '20.0',
     type: String,
   })
-  rollingMultiplier?: string;
-
-  @ApiProperty({
-    description: '1회성 프로모션 여부',
-    example: true,
-  })
-  isOneTime: boolean;
+  wageringMultiplier?: string;
 
   @ApiPropertyOptional({
     description: '프로모션 시작일',

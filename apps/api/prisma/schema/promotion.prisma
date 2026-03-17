@@ -127,7 +127,7 @@ enum PromotionBonusType {
   /// 퍼센트 기반 보너스 - 입금 금액의 일정 비율로 지급
   PERCENTAGE
   /// 고정 금액 보너스 - 입금 금액과 무관하게 고정 금액 지급
-  FIXED_AMOUNT // 비입금 쿠폰사용을 위한 필드
+  FIXED_AMOUNT
 }
 
 /**

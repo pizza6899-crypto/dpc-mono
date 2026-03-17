@@ -1,5 +1,5 @@
 // src/modules/promotion/controllers/user/dto/response/user-promotion.response.dto.ts
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UserPromotionResponseDto {
   @ApiProperty({
@@ -8,12 +8,6 @@ export class UserPromotionResponseDto {
   })
   id: string;
 
-  @ApiPropertyOptional({
-    description: '프로모션 코드',
-    example: 'WELCOME_BONUS',
-  })
-  promotionCode?: string | null;
-
   @ApiProperty({
     description: '프로모션 상태',
     example: 'ACTIVE',
@@ -21,38 +15,18 @@ export class UserPromotionResponseDto {
   status: string;
 
   @ApiProperty({
-    description: '보너스 지급 여부',
-    example: true,
-  })
-  bonusGranted: boolean;
-
-  @ApiProperty({
-    description: '입금 금액 (스냅샷)',
+    description: '입금 금액',
     example: '100.00',
     type: String,
   })
   depositAmount: string;
 
   @ApiProperty({
-    description: '보너스 금액 (스냅샷)',
+    description: '보너스 금액',
     example: '100.00',
     type: String,
   })
   bonusAmount: string;
-
-  @ApiProperty({
-    description: '목표 롤링 금액',
-    example: '2000.00',
-    type: String,
-  })
-  targetRollingAmount: string;
-
-  @ApiProperty({
-    description: '현재 롤링 금액',
-    example: '500.00',
-    type: String,
-  })
-  currentRollingAmount: string;
 
   @ApiProperty({
     description: '통화',
@@ -65,6 +39,13 @@ export class UserPromotionResponseDto {
     example: '2024-01-01T00:00:00Z',
   })
   createdAt: Date;
+
+  @ApiProperty({
+    description: '완료일시',
+    example: '2024-01-01T00:00:00Z',
+    nullable: true,
+  })
+  completedAt: Date | null;
 }
 
 export class MyPromotionsResponseDto {

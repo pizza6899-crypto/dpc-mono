@@ -9,7 +9,6 @@ interface CheckEligiblePromotionsParams {
   userId: bigint;
   depositAmount: Prisma.Decimal;
   currency: ExchangeCurrencyCode;
-  now?: Date;
 }
 
 @Injectable()
@@ -23,75 +22,37 @@ export class CheckEligiblePromotionsService {
     userId,
     depositAmount,
     currency,
-    now = new Date(),
   }: CheckEligiblePromotionsParams): Promise<Promotion[]> {
-    // 활성 프로모션 조회
-    const activePromotions = await this.repository.findActivePromotions(now);
+    const activePromotions = await this.repository.findActivePromotions();
+    const hasPreviousDeposits = await this.repository.hasPreviousDeposits(userId);
+    const userParticipations = await this.repository.findUserPromotions(userId, 'ACTIVE');
 
-    // 사용자 정보 확인
-    const hasPreviousDeposits =
-      await this.repository.hasPreviousDeposits(userId);
-    const hasWithdrawn = await this.repository.hasWithdrawn(userId);
-
-    // 각 프로모션에 대해 자격 확인
     const eligiblePromotions: Promotion[] = [];
 
     for (const promotion of activePromotions) {
       try {
-        // 통화별 설정 조회
-        const currencySettings = await this.repository.getCurrencySettings(
-          promotion.id,
-          currency,
-        );
+        const currencyRule = await this.repository.getCurrencyRule(promotion.id, currency);
+        if (!currencyRule) continue;
 
         // 최소 입금 금액 확인
-        // 입금 필수일 경우에만 체크, 비입금 쿠폰은 패스
-        if (promotion.isDepositRequired) {
-          if (depositAmount.lt(currencySettings.minDepositAmount)) {
-            continue;
-          }
-        }
+        if (depositAmount.lt(currencyRule.minDepositAmount)) continue;
 
         // 선착순 마감 확인
-        if (
-          promotion.maxUsageCount !== null &&
-          promotion.currentUsageCount >= promotion.maxUsageCount
-        ) {
+        if (promotion.maxUsageCount !== null && promotion.currentUsageCount >= promotion.maxUsageCount) {
           continue;
         }
 
-        // 타겟 타입별 자격 확인
-        const targetType = promotion.targetType as string;
-
-        if (targetType === 'NEW_USER_FIRST_DEPOSIT') {
-          if (hasPreviousDeposits) {
-            continue;
-          }
-        } else if (targetType === 'SPECIFIC_USERS') {
-          const isAllowed = await this.repository.isUserAllowed(
-            promotion.id,
-            userId,
-          );
-          if (!isAllowed) {
-            continue;
-          }
+        // 타겟 타입별 자격 확인 (New User 예시)
+        if (promotion.targetType === 'NEW_USER_FIRST_DEPOSIT' && hasPreviousDeposits) {
+          continue;
         }
-        // ALL_USERS는 추가 체크 없음
 
-        // 1회성 프로모션 확인
-        if (promotion.isOneTime) {
-          const existingUserPromotion = await this.repository.findUserPromotion(
-            userId,
-            promotion.id,
-          );
-          if (existingUserPromotion?.bonusGranted) {
-            continue;
-          }
-        }
+        // 중복 참여 확인 (Active한 프로모션이 있으면 제외하는 등의 비즈니스 상식 적용)
+        const isAlreadyParticipating = userParticipations.some(up => up.promotionId === promotion.id);
+        if (isAlreadyParticipating) continue;
 
         eligiblePromotions.push(promotion);
       } catch (error) {
-        // 자격 미달 프로모션은 무시
         continue;
       }
     }

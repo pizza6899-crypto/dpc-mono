@@ -5,13 +5,10 @@ import { Prisma, ExchangeCurrencyCode } from '@prisma/client';
 import {
   PromotionPolicy,
   PromotionNotFoundException,
-  PromotionBonusLimitExceededException,
-  PromotionUsageLimitExceededException,
 } from '../domain';
 import type { UserPromotion } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports';
 import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
-import type { RequestClientInfo } from 'src/common/http/types';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 
 interface GrantPromotionBonusParams {
@@ -20,14 +17,6 @@ interface GrantPromotionBonusParams {
   depositAmount: Prisma.Decimal;
   currency: ExchangeCurrencyCode;
   depositDetailId: bigint;
-  now?: Date;
-  requestInfo?: RequestClientInfo;
-}
-
-interface GrantPromotionBonusResult {
-  userPromotion: UserPromotion;
-  bonusAmount: Prisma.Decimal;
-  rollingMultiplier: Prisma.Decimal;
 }
 
 @Injectable()
@@ -48,109 +37,65 @@ export class GrantPromotionBonusService {
     depositAmount,
     currency,
     depositDetailId,
-    now = new Date(),
-    requestInfo,
-  }: GrantPromotionBonusParams): Promise<GrantPromotionBonusResult> {
-    // 0. 락 획득 (동시성 제어)
+  }: GrantPromotionBonusParams): Promise<UserPromotion> {
+    // 락 획득
     await this.advisoryLockService.acquireLock(
       LockNamespace.PROMOTION,
       userId.toString(),
-      {
-        throwThrottleError: true,
-      },
+      { throwThrottleError: true },
     );
 
-    // 프로모션 조회
     const promotion = await this.repository.findById(promotionId);
     if (!promotion) {
       throw new PromotionNotFoundException();
     }
 
-    // 통화별 설정 조회
-    const currencySettings = await this.repository.getCurrencySettings(
-      promotionId,
-      currency,
-    );
+    const currencyRule = await this.repository.getCurrencyRule(promotionId, currency);
+    if (!currencyRule) {
+      throw new PromotionNotFoundException(); // 통화 규칙 없으면 참여 불가
+    }
 
-    // 사용자 정보 확인
-    const hasPreviousDeposits =
-      await this.repository.hasPreviousDeposits(userId);
-    const hasWithdrawn = await this.repository.hasWithdrawn(userId);
+    const hasPreviousDeposits = await this.repository.hasPreviousDeposits(userId);
+    const userParticipations = await this.repository.findUserPromotions(userId, 'ACTIVE');
 
-    // 기존 UserPromotion 조회
-    let userPromotion = await this.repository.findUserPromotion(
-      userId,
-      promotionId,
-    );
-
-    // 자격 검증 (통화별 설정 사용)
+    // 자격 검증
     this.policy.validateEligibility(
       promotion,
+      currencyRule,
       depositAmount,
-      currencySettings,
-      userPromotion,
       hasPreviousDeposits,
-      hasWithdrawn,
-      now,
+      userParticipations,
     );
 
-    // 보너스 계산 (통화별 maxBonusAmount 사용)
-    const bonusAmount = promotion.calculateBonus(
-      depositAmount,
-      currencySettings.maxBonusAmount,
-    );
+    // 보너스 계산 (Rule 엔티티 내부 로직 사용)
+    const bonusAmount = currencyRule.calculateBonusAmount(depositAmount, promotion.bonusType);
 
-    // 최대 보너스 금액 검증
-    if (!currencySettings.validateMaxBonusAmount(bonusAmount)) {
-      throw new PromotionBonusLimitExceededException();
-    }
+    // 사용 횟수 증가 (Atomicity는 DB 레벨에서 보장한다고 가정하거나 incrementUsageCount 사용)
+    await this.repository.incrementUsageCount(promotionId);
 
-    // 롤링 배수 계산 (보너스 금액에만 롤링 적용)
-    const rollingMultiplier = promotion.getRollingMultiplier();
-    const targetRollingAmount = bonusAmount.mul(rollingMultiplier);
+    // 정책 스냅샷 생성
+    const policySnapshot = {
+      bonusRate: currencyRule.bonusRate?.toNumber() ?? null,
+      wageringMultiplier: currencyRule.wageringMultiplier?.toNumber() ?? null,
+      maxWithdrawAmount: currencyRule.maxWithdrawAmount?.toNumber() ?? null,
+      isForfeitable: true, // 기본값
+    };
 
-    // 사용 횟수 증가 (Atomic)
-    // 동시성 제어를 위해 DB에서 원자적으로 증가시키고 결과를 확인
-    const updatedPromotion =
-      await this.repository.incrementUsageCount(promotionId);
-
-    if (
-      updatedPromotion.maxUsageCount !== null &&
-      updatedPromotion.currentUsageCount > updatedPromotion.maxUsageCount
-    ) {
-      // 선착순 마감됨 (트랜잭션 롤백)
-      throw new PromotionUsageLimitExceededException();
-    }
-
-    // 만료 시간 계산
-    let expiresAt: Date | null = null;
-    if (promotion.bonusExpiryMinutes) {
-      expiresAt = new Date(
-        now.getTime() + promotion.bonusExpiryMinutes * 60 * 1000,
-      );
-    }
-
-    // UserPromotion 생성 (Policy에서 이미 중복 참여 검증 완료)
-    // 1회성 프로모션이 아닌 경우 여러 번 참여 가능
-    userPromotion = await this.repository.createUserPromotion({
+    // UserPromotion 생성
+    const userPromotion = await this.repository.createUserPromotion({
       userId,
       promotionId,
+      depositId: depositDetailId,
       depositAmount,
-      lockedAmount: depositAmount, // 기본적으로 입금 원금을 잠금
       bonusAmount,
-      targetRollingAmount,
       currency,
-      expiresAt,
+      policySnapshot,
     });
 
     this.logger.log(
-      `Promotion participation recorded: userId=${userId}, promotionId=${promotionId}, bonusAmount=${bonusAmount.toString()}`,
+      `Promotion bonus granted: userId=${userId}, promotionId=${promotionId}, bonus=${bonusAmount.toString()}`,
     );
 
-    return {
-      userPromotion,
-      bonusAmount,
-      rollingMultiplier,
-    };
+    return userPromotion;
   }
 }

@@ -45,14 +45,17 @@ export class PromotionPolicy {
   /**
    * 중복 참여 여부 확인
    */
-  validateOneTimeParticipation(
+  validateDuplicateParticipation(
     promotion: Promotion,
-    existingUserPromotion: UserPromotion | null,
+    userParticipations: UserPromotion[],
   ): void {
-    // 신규 유저 첫 입금 보너스는 무조건 1회만 가능
-    if (promotion.targetType === PromotionTargetType.NEW_USER_FIRST_DEPOSIT && existingUserPromotion) {
-      throw new PromotionAlreadyUsedException('You have already used this welcome bonus');
+    const isAlreadyParticipating = userParticipations.some(up => up.promotionId === promotion.id);
+    if (isAlreadyParticipating) {
+      throw new PromotionAlreadyUsedException('You are already participating in this promotion');
     }
+
+    // 신규 유저 첫 입금 보너스는 역사상 1회만 가능 (ACTIVE가 아니어도 기록이 있으면 금지하려면 repository에서 전체 조회가 필요하겠지만 여기서는 정책적 가이드만)
+    // 실제 중복 체크는 repository.hasUserUsedPromotion 등을 활용하는 것이 더 정확함
   }
 
   /**
@@ -89,10 +92,10 @@ export class PromotionPolicy {
    */
   validateEligibility(
     promotion: Promotion,
-    depositAmount: Prisma.Decimal,
     currencyRule: PromotionCurrencyRule,
-    existingUserPromotion: UserPromotion | null,
+    depositAmount: Prisma.Decimal,
     hasPreviousDeposits: boolean,
+    userParticipations: UserPromotion[],
     now: Date = new Date(),
   ): void {
     // 1. 활성화 여부 확인
@@ -102,7 +105,7 @@ export class PromotionPolicy {
     this.validateDepositAmount(depositAmount, currencyRule);
 
     // 3. 중복 참여 확인
-    this.validateOneTimeParticipation(promotion, existingUserPromotion);
+    this.validateDuplicateParticipation(promotion, userParticipations);
 
     // 4. 첫 입금 자격 확인
     this.validateFirstDepositEligibility(promotion, hasPreviousDeposits);
@@ -125,24 +128,23 @@ export class PromotionPolicy {
     const { bonusType, currencyRules } = params;
 
     if (!currencyRules || currencyRules.length === 0) {
-      throw new PromotionInvalidConfigurationException('At least one currency rule is required');
+      // 설 생성 단계에서는 Rule이 없을 수 있으므로 유연하게 처리하거나 필수라면 체크
+      return;
     }
 
     for (const rule of currencyRules) {
-      // 1. PERCENTAGE 타입인 경우 bonusRate 필수 검증
       if (bonusType === PromotionBonusType.PERCENTAGE) {
         if (!rule.bonusRate || rule.bonusRate.lte(0)) {
           throw new PromotionInvalidConfigurationException(
-            'PERCENTAGE type requires a positive bonus rate for all currency rules',
+            'PERCENTAGE type requires a positive bonus rate',
           );
         }
       }
 
-      // 2. FIXED_AMOUNT 타입인 경우 지급할 고정 금액(maxBonusAmount)이 필수
       if (bonusType === PromotionBonusType.FIXED_AMOUNT) {
         if (!rule.maxBonusAmount || rule.maxBonusAmount.lte(0)) {
           throw new PromotionInvalidConfigurationException(
-            'FIXED_AMOUNT type requires a positive maxBonusAmount (used as fixed bonus) for all currency rules',
+            'FIXED_AMOUNT type requires a positive fixed bonus amount (maxBonusAmount)',
           );
         }
       }

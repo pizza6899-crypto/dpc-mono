@@ -1,22 +1,20 @@
+// src/modules/promotion/controllers/admin/dto/request/update-promotion.request.dto.ts
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import {
-  IsString,
   IsOptional,
   IsBoolean,
   IsDateString,
   IsEnum,
+  IsInt,
+  Min,
 } from 'class-validator';
-import { PromotionBonusType, PromotionTargetType } from '@prisma/client';
+import { Type } from 'class-transformer';
+import {
+  PromotionTargetType,
+  PromotionBonusType,
+} from '@prisma/client';
 
 export class UpdatePromotionRequestDto {
-  @ApiPropertyOptional({
-    description: '관리용 프로모션 이름',
-    example: '첫 충전 100% 보너스',
-  })
-  @IsOptional()
-  @IsString()
-  managementName?: string;
-
   @ApiPropertyOptional({
     description: '활성화 여부',
     example: true,
@@ -24,32 +22,6 @@ export class UpdatePromotionRequestDto {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
-
-  @ApiPropertyOptional({
-    description: '프로모션 코드',
-    example: 'WELCOME_BONUS',
-  })
-  @IsOptional()
-  @IsString()
-  code?: string;
-
-  @ApiPropertyOptional({
-    description: '프로모션 타겟 타입',
-    example: PromotionTargetType.NEW_USER_FIRST_DEPOSIT,
-    enum: PromotionTargetType,
-  })
-  @IsOptional()
-  @IsEnum(PromotionTargetType)
-  targetType?: PromotionTargetType;
-
-  @ApiPropertyOptional({
-    description: '보너스 타입',
-    example: PromotionBonusType.PERCENTAGE,
-    enum: PromotionBonusType,
-  })
-  @IsOptional()
-  @IsEnum(PromotionBonusType)
-  bonusType?: PromotionBonusType;
 
   @ApiPropertyOptional({
     description: '프로모션 시작일',
@@ -70,54 +42,40 @@ export class UpdatePromotionRequestDto {
   endDate?: string | null;
 
   @ApiPropertyOptional({
-    description: '보너스 비율',
-    example: '1.0',
-    type: String,
-    nullable: true,
+    description: '프로모션 타겟 타입',
+    example: PromotionTargetType.NEW_USER_FIRST_DEPOSIT,
+    enum: PromotionTargetType,
   })
   @IsOptional()
-  @IsString()
-  bonusRate?: string | null;
+  @IsEnum(PromotionTargetType)
+  targetType?: PromotionTargetType;
 
   @ApiPropertyOptional({
-    description: '롤링 배수',
-    example: '20.0',
-    type: String,
-    nullable: true,
+    description: '보너스 타입',
+    example: PromotionBonusType.PERCENTAGE,
+    enum: PromotionBonusType,
   })
   @IsOptional()
-  @IsString()
-  rollingMultiplier?: string | null;
-
-  @ApiPropertyOptional({
-    description: '1회성 프로모션 여부',
-    example: false,
-  })
-  @IsOptional()
-  @IsBoolean()
-  isOneTime?: boolean;
-
-  @ApiPropertyOptional({
-    description: '입금 필수 여부',
-    example: true,
-  })
-  @IsOptional()
-  @IsBoolean()
-  isDepositRequired?: boolean;
+  @IsEnum(PromotionBonusType)
+  bonusType?: PromotionBonusType;
 
   @ApiPropertyOptional({
     description: '최대 사용 횟수 (선착순)',
     example: 100,
-    type: Number,
   })
   @IsOptional()
-  maxUsageCount?: number | null;
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  maxUsageCount?: number;
 
   @ApiPropertyOptional({
     description: '보너스 유효 기간 (분 단위)',
     example: 1440,
-    type: Number,
   })
   @IsOptional()
-  bonusExpiryMinutes?: number | null;
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  bonusExpiryMinutes?: number;
 }
