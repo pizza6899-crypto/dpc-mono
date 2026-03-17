@@ -25,8 +25,8 @@ export async function seedPromotions(prisma: PrismaClient) {
       translations: {
         createMany: {
           data: [
-            { language: Language.KO, name: '100% 신규 가입 보너스', description: '생애 첫 입금 시 100% 보너스를 드립니다.' },
-            { language: Language.EN, name: '100% Welcome Bonus', description: 'Get a 100% bonus on your very first deposit.' },
+            { language: Language.KO, title: '100% 신규 가입 보너스', description: '생애 첫 입금 시 100% 보너스를 드립니다.' },
+            { language: Language.EN, title: '100% Welcome Bonus', description: 'Get a 100% bonus on your very first deposit.' },
           ],
         },
       },

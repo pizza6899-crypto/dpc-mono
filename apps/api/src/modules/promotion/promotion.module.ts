@@ -12,7 +12,6 @@ import { UpdatePromotionService } from './application/update-promotion.service';
 import { FindPromotionParticipantsService } from './application/find-promotion-participants.service';
 import { GetPromotionAdminService } from './application/get-promotion-admin.service';
 import { DeletePromotionService } from './application/delete-promotion.service';
-import { AddPromotionNoteService } from './application/add-promotion-note.service';
 import { GetActivePromotionsForUserService } from './application/get-active-promotions-for-user.service';
 import { GetMyPromotionsForUserService } from './application/get-my-promotions-for-user.service';
 import { PromotionRepository } from './infrastructure/promotion.repository';
@@ -43,7 +42,6 @@ import { NotificationModule } from '../notification/notification.module';
     FindPromotionParticipantsService,
     GetPromotionAdminService,
     DeletePromotionService,
-    AddPromotionNoteService,
     GetActivePromotionsForUserService,
     GetMyPromotionsForUserService,
     PromotionMapper,

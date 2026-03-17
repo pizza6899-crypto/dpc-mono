@@ -79,7 +79,7 @@ export class PromotionResponseDto {
 
   @ApiPropertyOptional({
     description: '웨이저링 배수',
-    example: '20.0',
+    example: '2.0',
     type: String,
   })
   wageringMultiplier?: string;
