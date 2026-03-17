@@ -30,6 +30,7 @@ export class PromotionConfigRepository implements PromotionConfigRepositoryPort 
             data: {
               id: Number(defaultConfig.id),
               defaultAmlDepositMultiplier: defaultConfig.defaultAmlDepositMultiplier,
+              defaultBonusExpiryDays: defaultConfig.defaultBonusExpiryDays,
               isPromotionEnabled: defaultConfig.isPromotionEnabled,
             },
           });

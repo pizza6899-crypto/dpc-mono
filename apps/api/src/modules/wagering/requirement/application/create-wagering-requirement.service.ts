@@ -13,6 +13,7 @@ import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-l
 import { LogType } from 'src/modules/audit-log/domain';
 import type { RequestClientInfo } from 'src/common/http/types';
 import { GetWageringConfigService } from '../../config/application/get-wagering-config.service';
+import { GetPromotionConfigService } from 'src/modules/promotion/config/application/get-promotion-config.service';
 import { DateTime } from 'luxon';
 import { Transactional } from '@nestjs-cls/transactional';
 import { WageringAppliedConfig } from '../domain/wagering-applied-config';
@@ -47,6 +48,7 @@ export class CreateWageringRequirementService {
     private readonly repository: WageringRequirementRepositoryPort,
     private readonly policy: WageringPolicy,
     private readonly getConfigService: GetWageringConfigService,
+    private readonly getPromotionConfigService: GetPromotionConfigService,
     private readonly dispatchLogService: DispatchLogService,
   ) { }
 
@@ -92,7 +94,10 @@ export class CreateWageringRequirementService {
     this.policy.validateCreation({ principalAmount, multiplier, sourceType });
 
     // 0. 글로벌 설정 조회
-    const config = await this.getConfigService.execute();
+    const [config, promotionConfig] = await Promise.all([
+      this.getConfigService.execute(),
+      this.getPromotionConfigService.execute(),
+    ]);
 
     // 3. 목표 금액 계산
     const requiredAmount = principalAmount.add(bonusAmount).mul(multiplier);
@@ -101,7 +106,9 @@ export class CreateWageringRequirementService {
     const setting = config.getSetting(currency);
     const finalExpiresAt =
       command.expiresAt ??
-      DateTime.now().plus({ days: config.defaultBonusExpiryDays }).toJSDate();
+      DateTime.now()
+        .plus({ days: promotionConfig.defaultBonusExpiryDays })
+        .toJSDate();
 
     this.logger.log(
       `Creating wagering requirement for user ${userId}, targetType ${targetType}, principal ${principalAmount} (x${multiplier}), bonus ${bonusAmount}`,
@@ -130,8 +137,9 @@ export class CreateWageringRequirementService {
       appliedConfig: {
         ...appliedConfig,
         snapshot: {
-          defaultBonusExpiryDays: config.defaultBonusExpiryDays,
-          defaultDepositMultiplier: config.defaultDepositMultiplier.toString(),
+          defaultBonusExpiryDays: promotionConfig.defaultBonusExpiryDays,
+          defaultDepositMultiplier:
+            promotionConfig.defaultAmlDepositMultiplier.toString(),
           isWageringCheckEnabled: config.isWageringCheckEnabled,
           currencyThreshold: setting.cancellationThreshold.toString(),
           minBet: setting.minBetAmount,

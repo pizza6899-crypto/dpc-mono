@@ -9,6 +9,7 @@ export class PromotionConfigMapper {
     return new PromotionConfig(
       BigInt(prismaConfig.id),
       prismaConfig.defaultAmlDepositMultiplier,
+      prismaConfig.defaultBonusExpiryDays,
       prismaConfig.isPromotionEnabled,
       prismaConfig.updatedAt,
       prismaConfig.updatedBy,
@@ -18,6 +19,7 @@ export class PromotionConfigMapper {
   toPrismaUpdate(config: PromotionConfig): any {
     return {
       defaultAmlDepositMultiplier: config.defaultAmlDepositMultiplier,
+      defaultBonusExpiryDays: config.defaultBonusExpiryDays,
       isPromotionEnabled: config.isPromotionEnabled,
       updatedBy: config.updatedBy,
     };

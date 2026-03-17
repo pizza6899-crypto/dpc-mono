@@ -7,8 +7,6 @@ export class WageringConfig {
 
   constructor(
     public readonly id: bigint,
-    public readonly defaultBonusExpiryDays: number,
-    public readonly defaultDepositMultiplier: Prisma.Decimal,
     public readonly currencySettings: Record<string, WageringCurrencySetting>,
     public readonly isWageringCheckEnabled: boolean,
     public readonly isAutoCancellationEnabled: boolean,
@@ -16,16 +14,6 @@ export class WageringConfig {
     public readonly updatedBy: bigint | null,
   ) {
     // 도메인 검증
-    if (defaultBonusExpiryDays < 1) {
-      throw new InvalidWageringConfigException(
-        'Default bonus expiry days must be at least 1 day',
-      );
-    }
-    if (defaultDepositMultiplier.lessThan(0)) {
-      throw new InvalidWageringConfigException(
-        'Default deposit multiplier cannot be negative',
-      );
-    }
   }
 
   /**
@@ -37,8 +25,6 @@ export class WageringConfig {
 
   static fromPersistence(data: {
     id: bigint;
-    defaultBonusExpiryDays: number;
-    defaultDepositMultiplier: Prisma.Decimal | number | string;
     currencySettings: Record<string, WageringCurrencySetting>;
     isWageringCheckEnabled: boolean;
     isAutoCancellationEnabled: boolean;
@@ -47,8 +33,6 @@ export class WageringConfig {
   }): WageringConfig {
     return new WageringConfig(
       data.id,
-      data.defaultBonusExpiryDays,
-      new Prisma.Decimal(data.defaultDepositMultiplier),
       data.currencySettings,
       data.isWageringCheckEnabled,
       data.isAutoCancellationEnabled,

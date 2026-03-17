@@ -22,18 +22,6 @@ export class WageringCurrencySettingResponseDto {
 }
 
 export class WageringConfigAdminResponseDto {
-  @ApiProperty({
-    description: 'Default bonus expiry days / 기본 보너스 만료일',
-    example: 30,
-  })
-  defaultBonusExpiryDays: number;
-
-  @ApiProperty({
-    description:
-      'Default deposit multiplier for AML / 자금세탁 방지용 기본 입금 롤링 배수',
-    example: 1.0,
-  })
-  defaultDepositMultiplier: number;
 
   @ApiProperty({
     description: 'Currency specific settings / 통화별 상세 설정',

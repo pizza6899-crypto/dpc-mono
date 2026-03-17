@@ -2,6 +2,7 @@ model PromotionConfig {
   id Int @id @default(1)
 
   defaultAmlDepositMultiplier Decimal @default(1.0) @map("default_aml_deposit_multiplier") @db.Decimal(8, 4)
+  defaultBonusExpiryDays      Int     @default(30) @map("default_bonus_expiry_days")
   isPromotionEnabled          Boolean @default(true) @map("is_promotion_enabled")
 
   // --- Audit ---

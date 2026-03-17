@@ -52,8 +52,6 @@ export class CreatePromotionRequestDto {
   @IsEnum(PromotionTargetType)
   targetType: PromotionTargetType;
 
-
-
   @ApiPropertyOptional({
     description: 'Bonus validity period (minutes) / 보너스 유효 기간 (분 단위)',
     example: 1440, // 24시간

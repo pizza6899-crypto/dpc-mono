@@ -7,6 +7,7 @@ export class PromotionConfig {
   constructor(
     public readonly id: bigint,
     public readonly defaultAmlDepositMultiplier: Prisma.Decimal,
+    public readonly defaultBonusExpiryDays: number,
     public readonly isPromotionEnabled: boolean,
     public readonly updatedAt: Date,
     public readonly updatedBy: bigint | null,
@@ -16,6 +17,7 @@ export class PromotionConfig {
     return new PromotionConfig(
       this.SINGLETON_ID,
       new Prisma.Decimal(1.0),
+      30,
       true,
       new Date(),
       null,

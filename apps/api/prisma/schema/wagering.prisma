@@ -1,10 +1,6 @@
 model WageringConfig {
   id BigInt @id @default(autoincrement()) // id=1 하나만 사용
 
-  // [Default Policy]
-  defaultBonusExpiryDays   Int     @default(30) @map("default_bonus_expiry_days") // 기본 보너스 유효기간 (일)
-  defaultDepositMultiplier Decimal @default(1.0) @map("default_deposit_multiplier") @db.Decimal(8, 4) // 자금세탁 방지용 기본 입금 롤링 배수
-
   // [Currency Specific Policy]
   // 화폐별 오링 기준(threshold) 및 최소 베팅 보정치 등을 JSON으로 관리
   // 예: { "KRW": { "cancellationThreshold": 500 }, "USD": { "cancellationThreshold": 0.5 }, "BTC": { "cancellationThreshold": 0.00001 } }

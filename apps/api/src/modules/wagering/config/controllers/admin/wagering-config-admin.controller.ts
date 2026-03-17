@@ -81,8 +81,6 @@ export class WageringConfigAdminController {
     }
 
     return {
-      defaultBonusExpiryDays: config.defaultBonusExpiryDays,
-      defaultDepositMultiplier: config.defaultDepositMultiplier.toNumber(),
       currencySettings: rawSettings,
       isWageringCheckEnabled: config.isWageringCheckEnabled,
       isAutoCancellationEnabled: config.isAutoCancellationEnabled,

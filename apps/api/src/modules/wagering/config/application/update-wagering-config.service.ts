@@ -10,8 +10,6 @@ import { InvalidWageringConfigException } from '../domain/wagering-config.except
 import { UpdateWageringCurrencySettingDto } from '../controllers/admin/dto/request/update-wagering-config.dto';
 
 interface UpdateWageringConfigCommand {
-  defaultBonusExpiryDays?: number;
-  defaultDepositMultiplier?: number;
   currencySettings?: Record<string, UpdateWageringCurrencySettingDto>;
   isWageringCheckEnabled?: boolean;
   isAutoCancellationEnabled?: boolean;
@@ -60,10 +58,6 @@ export class UpdateWageringConfigService {
     // 2. 불변 엔티티 패턴: 기존 값을 기반으로 새로운 값 반영하여 인스턴스 생성
     const updatedConfig = WageringConfig.fromPersistence({
       id: current.id,
-      defaultBonusExpiryDays:
-        command.defaultBonusExpiryDays ?? current.defaultBonusExpiryDays,
-      defaultDepositMultiplier:
-        command.defaultDepositMultiplier ?? current.defaultDepositMultiplier,
       currencySettings: updatedCurrencySettings,
       isWageringCheckEnabled:
         command.isWageringCheckEnabled ?? current.isWageringCheckEnabled,

@@ -12,6 +12,7 @@ import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-l
 import { LogType } from 'src/modules/audit-log/domain';
 import { CreateWageringRequirementService } from './create-wagering-requirement.service';
 import { GetWageringConfigService } from '../../config/application/get-wagering-config.service';
+import { GetPromotionConfigService } from 'src/modules/promotion/config/application/get-promotion-config.service';
 
 interface ForfeitWageringRequirementCommand {
   id: bigint;
@@ -27,7 +28,7 @@ export class ForfeitWageringRequirementService {
     private readonly repository: WageringRequirementRepositoryPort,
     private readonly dispatchLogService: DispatchLogService,
     private readonly createWageringService: CreateWageringRequirementService,
-    private readonly wageringConfigService: GetWageringConfigService,
+    private readonly promotionConfigService: GetPromotionConfigService,
   ) {}
 
   @Transactional()
@@ -69,7 +70,7 @@ export class ForfeitWageringRequirementService {
       principalAmount.gt(0) &&
       depositId
     ) {
-      const config = await this.wageringConfigService.execute();
+      const promotionConfig = await this.promotionConfigService.execute();
       await this.createWageringService.execute({
         userId,
         currency: requirement.currency,
@@ -77,7 +78,7 @@ export class ForfeitWageringRequirementService {
         sourceId: BigInt(depositId),
         targetType: 'AMOUNT',
         principalAmount: principalAmount,
-        multiplier: new Prisma.Decimal(config.defaultDepositMultiplier),
+        multiplier: promotionConfig.defaultAmlDepositMultiplier,
         bonusAmount: new Prisma.Decimal(0),
         initialFundAmount: principalAmount,
         realMoneyRatio: new Prisma.Decimal(1),
