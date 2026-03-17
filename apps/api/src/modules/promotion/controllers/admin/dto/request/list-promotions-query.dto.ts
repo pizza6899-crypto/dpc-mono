@@ -23,7 +23,6 @@ export class ListPromotionsQueryDto extends createPaginationQueryDto<PromotionSo
 ) {
   @ApiPropertyOptional({
     description: 'Promotion ID filter / 프로모션 ID 필터',
-    example: '1',
   })
   @IsOptional()
   @IsString()
