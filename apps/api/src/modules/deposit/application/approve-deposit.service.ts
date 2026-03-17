@@ -93,17 +93,18 @@ export class ApproveDepositService {
     // 7. 보너스 및 배수 결정
     if (deposit.promotionId) {
       // 7.1. 프로모션이 있는 경우: 참여 기록 생성 및 보너스/배수 정보 획득
-      const result = await this.grantPromotionBonusService.execute({
+      const userPromotion = await this.grantPromotionBonusService.execute({
         userId: deposit.userId,
         promotionId: deposit.promotionId,
         depositAmount: actuallyPaid,
         currency: deposit.depositCurrency,
         depositDetailId: deposit.id!,
-        requestInfo,
       });
-      bonusAmount = result.bonusAmount;
-      multiplier = result.rollingMultiplier;
-      sourceId = result.userPromotion.id;
+      bonusAmount = userPromotion.bonusAmount;
+      multiplier = new Prisma.Decimal(
+        userPromotion.policySnapshot.wageringMultiplier ?? 1,
+      );
+      sourceId = userPromotion.id;
       sourceType = 'PROMOTION_BONUS';
     } else {
       // 7.2. 프로모션이 없는 경우: 기본 입금 배수(AML) 획득
