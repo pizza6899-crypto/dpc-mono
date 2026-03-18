@@ -5,6 +5,7 @@ import {
   CouponExhaustedException,
   CouponExpiredException,
   CouponUserNotAllowedException,
+  CouponUserUsageExceededException,
   CouponException,
 } from './coupon.exception';
 
@@ -41,7 +42,7 @@ export class Coupon {
   get rewards(): CouponReward[] { return [...this._rewards]; }
   get allowlists(): CouponAllowlist[] { return [...this._allowlists]; }
 
-  validateEligibility(userId: bigint): void {
+  validateEligibility(userId: bigint, userUsageCount: number): void {
     if (this._status !== 'ACTIVE') {
       throw new CouponException(`Coupon is not active (Status: ${this._status})`);
     }
@@ -56,6 +57,10 @@ export class Coupon {
 
     if (this._maxUsage > 0 && this._usageCount >= this._maxUsage) {
       throw new CouponExhaustedException();
+    }
+
+    if (userUsageCount >= this._maxUsagePerUser) {
+      throw new CouponUserUsageExceededException();
     }
 
     if (this._isAllowlistOnly) {

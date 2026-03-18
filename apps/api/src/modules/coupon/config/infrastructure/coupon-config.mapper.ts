@@ -20,6 +20,7 @@ export class CouponConfigMapper {
       maxDailyAttemptsPerUser: props.maxDailyAttemptsPerUser,
       defaultExpiryDays: props.defaultExpiryDays,
       updatedBy: props.updatedBy,
+      updatedAt: props.updatedAt,
     };
   }
 }
