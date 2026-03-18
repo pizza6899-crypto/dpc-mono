@@ -7,15 +7,16 @@ export class UserCoupon {
   ) { }
 
   static create(params: {
-    id: bigint; // Snowflake ID (usually provided from outside create logic or generator)
+    id: bigint; // Snowflake ID (반드시 외부에서 생성 후 주입)
     couponId: bigint;
     userId: bigint;
+    usedAt: Date; // 파티셔닝 정합성을 위해 Snowflake 생성 시점 일자 필수 권장
   }): UserCoupon {
     return new UserCoupon(
       params.id,
       params.couponId,
       params.userId,
-      new Date(),
+      params.usedAt,
     );
   }
 

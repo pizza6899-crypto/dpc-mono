@@ -263,6 +263,7 @@ export enum MessageCode {
     COUPON_NOT_FOUND = 'COUPON_NOT_FOUND', // 쿠폰을 찾을 수 없을 때
     COUPON_INVALID_CODE = 'COUPON_INVALID_CODE', // 유효하지 않은 쿠폰 코드일 때
     COUPON_INACTIVE = 'COUPON_INACTIVE', // 비활성 상태의 쿠폰일 때
+    COUPON_NOT_STARTED = 'COUPON_NOT_STARTED', // 쿠폰 시작 일시 전일 때
     COUPON_EXPIRED = 'COUPON_EXPIRED', // 만료된 쿠폰일 때
     COUPON_EXHAUSTED = 'COUPON_EXHAUSTED', // 수량이 소진된 쿠폰일 때
     COUPON_VOIDED = 'COUPON_VOIDED', // 무효화된 쿠폰일 때

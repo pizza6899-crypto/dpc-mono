@@ -46,6 +46,17 @@ export class CouponExpiredException extends CouponException {
   }
 }
 
+export class CouponNotStartedException extends CouponException {
+  constructor() {
+    super(
+      'Coupon has not started yet',
+      MessageCode.COUPON_NOT_STARTED,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'CouponNotStartedException';
+  }
+}
+
 export class CouponExhaustedException extends CouponException {
   constructor() {
     super(
@@ -98,5 +109,27 @@ export class CouponDailyAttemptExceededException extends CouponException {
       HttpStatus.TOO_MANY_REQUESTS,
     );
     this.name = 'CouponDailyAttemptExceededException';
+  }
+}
+
+export class CouponNotActiveException extends CouponException {
+  constructor() {
+    super(
+      'This coupon is currently inactive',
+      MessageCode.COUPON_INACTIVE,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'CouponNotActiveException';
+  }
+}
+
+export class CouponVoidedException extends CouponException {
+  constructor() {
+    super(
+      'This coupon has been voided',
+      MessageCode.COUPON_VOIDED,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'CouponVoidedException';
   }
 }

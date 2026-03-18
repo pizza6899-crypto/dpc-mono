@@ -6,7 +6,9 @@ import {
   CouponExpiredException,
   CouponUserNotAllowedException,
   CouponUserUsageExceededException,
-  CouponException,
+  CouponNotStartedException,
+  CouponNotActiveException,
+  CouponVoidedException,
 } from './coupon.exception';
 
 export class Coupon {
@@ -43,13 +45,16 @@ export class Coupon {
   get allowlists(): CouponAllowlist[] { return [...this._allowlists]; }
 
   validateEligibility(userId: bigint, userUsageCount: number): void {
+    if (this._status === 'VOIDED') {
+      throw new CouponVoidedException();
+    }
     if (this._status !== 'ACTIVE') {
-      throw new CouponException(`Coupon is not active (Status: ${this._status})`);
+      throw new CouponNotActiveException();
     }
 
     const now = new Date();
     if (this._startsAt && now < this._startsAt) {
-      throw new CouponException('Coupon has not started yet');
+      throw new CouponNotStartedException();
     }
     if (this._expiresAt && now > this._expiresAt) {
       throw new CouponExpiredException();
