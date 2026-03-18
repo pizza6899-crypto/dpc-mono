@@ -24,6 +24,7 @@ import { WageringRequirementUserController } from './controllers/user/wagering-r
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { WageringConfigModule } from '../config/wagering-config.module';
 import { WalletModule } from '../../wallet/wallet.module';
+import { PromotionConfigModule } from '../../promotion/config/promotion-config.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { WalletModule } from '../../wallet/wallet.module';
     SnowflakeModule,
     WageringConfigModule,
     WalletModule,
+    PromotionConfigModule,
   ],
   controllers: [
     WageringRequirementAdminController,
