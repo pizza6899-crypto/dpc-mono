@@ -6,4 +6,4 @@ import { WageringConfigModule } from './config/wagering-config.module';
   imports: [RequirementModule, WageringConfigModule],
   exports: [RequirementModule, WageringConfigModule],
 })
-export class WageringModule {}
+export class WageringModule { }

@@ -133,3 +133,14 @@ export class CouponVoidedException extends CouponException {
     this.name = 'CouponVoidedException';
   }
 }
+
+export class CouponAlreadyExistsException extends CouponException {
+  constructor(code: string) {
+    super(
+      `Coupon code already exists: ${code}`,
+      MessageCode.VALIDATION_ERROR, // 적절한 MessageCode가 없을 경우 VALIDATION_ERROR 또는 유사한 코드 사용
+      HttpStatus.CONFLICT,
+    );
+    this.name = 'CouponAlreadyExistsException';
+  }
+}

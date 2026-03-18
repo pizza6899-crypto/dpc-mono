@@ -1,4 +1,4 @@
-import { Prisma, CouponStatus } from '@prisma/client';
+import { CouponStatus } from '@prisma/client';
 import { CouponReward } from './coupon-reward.entity';
 import { CouponAllowlist } from './coupon-allowlist.entity';
 import {
@@ -12,6 +12,17 @@ import {
 } from './coupon.exception';
 
 export interface CouponMetadata {
+  /** 다국어 제목 (ex: { "ko": "신규 유저 쿠폰", "en": "New User Coupon" }) */
+  title?: Record<string, string>;
+  /** 다국어 설명 */
+  description?: Record<string, string>;
+  /** UI 표시 설정 */
+  display?: {
+    color?: string;
+    icon?: string;
+    imageUrl?: string;
+  };
+  [key: string]: any;
 }
 
 export class Coupon {
@@ -148,10 +159,10 @@ export class Coupon {
     );
   }
 
-  static fromPersistence(data: {
+  static reconstitute(data: {
     id: bigint;
     code: string;
-    metadata: Prisma.JsonValue | null;
+    metadata: CouponMetadata | null;
     isAllowlistOnly: boolean;
     maxUsage: number;
     usageCount: number;
@@ -169,7 +180,7 @@ export class Coupon {
     return new Coupon(
       data.id,
       data.code,
-      data.metadata as CouponMetadata | null,
+      data.metadata,
       data.isAllowlistOnly,
       data.maxUsage,
       data.usageCount,
@@ -184,24 +195,5 @@ export class Coupon {
       data.rewards,
       data.allowlists,
     );
-  }
-
-  toPersistence() {
-    return {
-      id: this.id,
-      code: this._code,
-      metadata: this._metadata,
-      isAllowlistOnly: this._isAllowlistOnly,
-      maxUsage: this._maxUsage,
-      usageCount: this._usageCount,
-      maxUsagePerUser: this._maxUsagePerUser,
-      status: this._status,
-      startsAt: this._startsAt,
-      expiresAt: this._expiresAt,
-      createdAt: this.createdAt,
-      updatedAt: this._updatedAt,
-      createdBy: this.createdBy,
-      updatedBy: this.updatedBy,
-    };
   }
 }

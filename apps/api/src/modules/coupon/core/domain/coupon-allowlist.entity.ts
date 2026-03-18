@@ -19,26 +19,17 @@ export class CouponAllowlist {
     );
   }
 
-  static fromPersistence(data: {
+  static reconstitute(params: {
     id: bigint;
     couponId: bigint;
     userId: bigint;
     createdAt: Date;
   }): CouponAllowlist {
     return new CouponAllowlist(
-      data.id,
-      data.couponId,
-      data.userId,
-      data.createdAt,
+      params.id,
+      params.couponId,
+      params.userId,
+      params.createdAt,
     );
-  }
-
-  toPersistence() {
-    return {
-      id: this.id,
-      couponId: this.couponId,
-      userId: this.userId,
-      createdAt: this.createdAt,
-    };
   }
 }

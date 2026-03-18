@@ -38,6 +38,40 @@ export class CouponRepository implements CouponRepositoryPort {
     return CouponMapper.toDomain(data);
   }
 
+  async findAll(params: {
+    code?: string;
+    status?: string[];
+    startsAt?: Date;
+    expiresAt?: Date;
+    skip?: number;
+    take?: number;
+  }): Promise<{ items: Coupon[]; total: number }> {
+    const where: any = {};
+    if (params.code) where.code = { contains: params.code };
+    if (params.status && params.status.length > 0) where.status = { in: params.status };
+    if (params.startsAt) where.startsAt = { gte: params.startsAt };
+    if (params.expiresAt) where.expiresAt = { lte: params.expiresAt };
+
+    const [items, total] = await Promise.all([
+      this.tx.coupon.findMany({
+        where,
+        include: {
+          rewards: true,
+          allowlists: true,
+        },
+        skip: params.skip || 0,
+        take: params.take || 10,
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.tx.coupon.count({ where }),
+    ]);
+
+    return {
+      items: items.map(CouponMapper.toDomain),
+      total,
+    };
+  }
+
   async save(coupon: Coupon): Promise<void> {
     const data = CouponMapper.toPrisma(coupon);
     const rewardData = CouponMapper.toRewardCreateInput(coupon.rewards);

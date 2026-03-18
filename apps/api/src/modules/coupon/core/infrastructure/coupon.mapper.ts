@@ -16,19 +16,19 @@ export type PrismaCouponWithRelations = PrismaCoupon & {
 export class CouponMapper {
   static toDomain(prismaCoupon: PrismaCouponWithRelations): Coupon {
     const rewards = (prismaCoupon.rewards || []).map((reward) =>
-      CouponReward.fromPersistence({
+      CouponReward.reconstitute({
         id: reward.id,
         couponId: reward.couponId,
         rewardType: reward.rewardType,
         currency: reward.currency,
-        amount: reward.amount,
-        wageringMultiplier: reward.wageringMultiplier,
-        maxCashConversion: reward.maxCashConversion,
+        amount: reward.amount.toString(),
+        wageringMultiplier: reward.wageringMultiplier?.toString() || null,
+        maxCashConversion: reward.maxCashConversion?.toString() || null,
       }),
     );
 
     const allowlists = (prismaCoupon.allowlists || []).map((allowlist) =>
-      CouponAllowlist.fromPersistence({
+      CouponAllowlist.reconstitute({
         id: allowlist.id,
         couponId: allowlist.couponId,
         userId: allowlist.userId,
@@ -36,10 +36,10 @@ export class CouponMapper {
       }),
     );
 
-    return Coupon.fromPersistence({
+    return Coupon.reconstitute({
       id: prismaCoupon.id,
       code: prismaCoupon.code,
-      metadata: prismaCoupon.metadata,
+      metadata: prismaCoupon.metadata as any,
       isAllowlistOnly: prismaCoupon.isAllowlistOnly,
       maxUsage: prismaCoupon.maxUsage,
       usageCount: prismaCoupon.usageCount,

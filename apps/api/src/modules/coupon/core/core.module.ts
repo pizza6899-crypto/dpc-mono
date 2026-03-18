@@ -1,17 +1,19 @@
 import { Module } from '@nestjs/common';
-import { CreateCouponService } from './application/create-coupon.service';
-import { GetCouponService } from './application/get-coupon.service';
 import { CouponRepository } from './infrastructure/coupon.repository';
 import { COUPON_REPOSITORY_TOKEN } from './ports/coupon.repository.token';
 import { USER_COUPON_REPOSITORY_TOKEN } from './ports/user-coupon.repository.token';
 import { UserCouponRepository } from './infrastructure/user-coupon.repository';
-import { CouponAdminController } from './controllers/admin/coupon-admin.controller';
+
+import { AdminCouponController } from './controllers/admin/admin-coupon.controller';
+import { CreateCouponAdminService } from './application/admin/create-coupon.admin.service';
+import { UpdateCouponAdminService } from './application/admin/update-coupon.admin.service';
+import { UpdateCouponStatusAdminService } from './application/admin/update-coupon-status.admin.service';
+import { GetCouponDetailAdminService } from './application/admin/get-coupon-detail.admin.service';
+import { GetCouponListAdminService } from './application/admin/get-coupon-list.admin.service';
 
 @Module({
-  controllers: [CouponAdminController],
+  controllers: [AdminCouponController],
   providers: [
-    CreateCouponService,
-    GetCouponService,
     {
       provide: COUPON_REPOSITORY_TOKEN,
       useClass: CouponRepository,
@@ -20,7 +22,20 @@ import { CouponAdminController } from './controllers/admin/coupon-admin.controll
       provide: USER_COUPON_REPOSITORY_TOKEN,
       useClass: UserCouponRepository,
     },
+    CreateCouponAdminService,
+    UpdateCouponAdminService,
+    UpdateCouponStatusAdminService,
+    GetCouponDetailAdminService,
+    GetCouponListAdminService,
   ],
-  exports: [GetCouponService, COUPON_REPOSITORY_TOKEN, USER_COUPON_REPOSITORY_TOKEN],
+  exports: [
+    COUPON_REPOSITORY_TOKEN,
+    USER_COUPON_REPOSITORY_TOKEN,
+    CreateCouponAdminService,
+    UpdateCouponAdminService,
+    UpdateCouponStatusAdminService,
+    GetCouponDetailAdminService,
+    GetCouponListAdminService,
+  ],
 })
-export class CouponCoreModule {}
+export class CouponCoreModule { }
