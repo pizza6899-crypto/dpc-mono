@@ -38,13 +38,13 @@ model UserReward {
   @@map("user_rewards")
 }
 
-// 보상의 지급 출처(도메인)
 enum RewardSourceType {
   DEPOSIT // 일반 입금 (원금 롤링)
   PROMOTION_BONUS // 프로모션 참여로 인한 보너스 지급
   ADMIN_GRANT // 관리자가 수동으로 부여한 보상 (CS 보장, 이벤트 누락 대응 등)
   COMP_REWARD // 콤프/리베이트 스케줄러로 인한 지급
   TIER_REWARD // 승급/유지 등의 티어 혜택
+  COUPON // 쿠폰 사용으로 인한 보상
   // TOURNAMENT_PRIZE // (향후 추가) 토너먼트/에어드랍 입상 보상 등 확장용
   // SYSTEM_REBATE // (향후 추가) 기타 시스템 기반 리베이트 보상
 }
