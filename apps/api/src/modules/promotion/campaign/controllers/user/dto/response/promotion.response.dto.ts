@@ -27,19 +27,6 @@ export class PromotionResponseDto {
   })
   description?: string | null;
 
-  @ApiPropertyOptional({
-    description: 'Language code / 언어 코드',
-    example: Language.KO,
-    enum: Language,
-  })
-  language?: Language;
-
-  @ApiPropertyOptional({
-    description: 'Currency code / 통화 코드',
-    example: ExchangeCurrencyCode.USDT,
-    enum: ExchangeCurrencyCode,
-  })
-  currency?: ExchangeCurrencyCode;
 
   @ApiPropertyOptional({
     description: 'Minimum deposit amount / 최소 입금 금액',
@@ -63,18 +50,6 @@ export class PromotionResponseDto {
   })
   targetType: PromotionTargetType;
 
-  @ApiPropertyOptional({
-    description: 'Maximum usage count per user / 유저당 최대 사용 횟수',
-    example: 1,
-    nullable: true,
-  })
-  maxUsagePerUser: number | null;
-
-  @ApiProperty({
-    description: 'Periodic reset type / 참여 횟수 초기화 주기',
-    enum: PromotionResetType,
-  })
-  periodicResetType: PromotionResetType;
 
   @ApiProperty({
     description: 'Applicable days (0: Sunday, 1: Monday, ...) / 적용 요일',

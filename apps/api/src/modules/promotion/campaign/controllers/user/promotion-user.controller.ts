@@ -27,7 +27,7 @@ import { PromotionResponseDto } from './dto/response/promotion.response.dto';
 import { ListActivePromotionsQueryDto } from './dto/request/list-active-promotions-query.dto';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
-import { Promotion, PromotionTranslation, UserPromotion, PromotionLanguageRequiredException, PromotionCurrencyRequiredException } from '../../domain';
+import { Promotion, PromotionTranslation, PromotionLanguageRequiredException, PromotionCurrencyRequiredException } from '../../domain';
 import { PromotionCurrencyRule } from '../../domain/model/promotion-currency-rule.entity';
 
 @Controller('promotions')
@@ -113,8 +113,6 @@ export class PromotionUserController {
       id: this.sqidsService.encode(promotion.id, SqidsPrefix.PROMOTION),
       title: translation.title,
       description: translation.description ?? null,
-      language: translation.language,
-      currency: currencyRule.currency,
       minDepositAmount: currencyRule.minDepositAmount.toString(),
       maxBonusAmount: currencyRule.maxBonusAmount?.toString() || null,
       targetType: promotion.targetType,
@@ -122,8 +120,6 @@ export class PromotionUserController {
       wageringMultiplier: currencyRule.wageringMultiplier?.toString(),
       startDate: promotion.startDate,
       endDate: promotion.endDate,
-      maxUsagePerUser: promotion.maxUsagePerUser,
-      periodicResetType: promotion.periodicResetType,
       applicableDays: promotion.applicableDays,
       applicableStartTime: promotion.applicableStartTime,
       applicableEndTime: promotion.applicableEndTime,
