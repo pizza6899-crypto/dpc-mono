@@ -9,9 +9,8 @@ export class WageringPolicy {
   validateCreation(params: {
     principalAmount: Prisma.Decimal;
     multiplier: Prisma.Decimal;
-    sourceType: WageringSourceType;
   }): void {
-    const { principalAmount, multiplier, sourceType } = params;
+    const { principalAmount, multiplier } = params;
 
     // 1. 원금 검증: 0 이하는 허용하지 않음
     if (principalAmount.lte(0)) {
@@ -25,15 +24,7 @@ export class WageringPolicy {
       throw new WageringRequirementException('Multiplier cannot be negative.');
     }
 
-    // 3. 소스별 특화 규칙
-    // 일반 입금(DEPOSIT)은 최소 1배 이상이어야 함 (보통 본인 원금의 1배는 롤링을 채워야 함)
-    if (sourceType === 'DEPOSIT' && multiplier.lessThan(1)) {
-      throw new WageringRequirementException(
-        'Deposit wagering multiplier must be at least 1x.',
-      );
-    }
-
-    // 4. 최대 배수 제한 (시스템 안전 범위 - 예: 200배 초과 비정상 데이터로 간주)
+    // 3. 최대 배수 제한 (시스템 안전 범위 - 예: 200배 초과 비정상 데이터로 간주)
     if (multiplier.greaterThan(200)) {
       throw new WageringRequirementException(
         'Wagering multiplier exceeds system limit (max 200x).',

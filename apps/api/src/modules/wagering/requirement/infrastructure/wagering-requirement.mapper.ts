@@ -16,8 +16,7 @@ export class WageringRequirementMapper {
       id: prismaModel.id,
       userId: prismaModel.userId,
       currency: prismaModel.currency,
-      sourceType: prismaModel.sourceType,
-      sourceId: prismaModel.sourceId,
+      rewardId: prismaModel.rewardId,
       calculationMethod: prismaModel.calculationMethod,
       targetType: prismaModel.targetType,
 
@@ -58,6 +57,7 @@ export class WageringRequirementMapper {
       cancelledBy: prismaModel.cancelledBy,
       balanceAtCancellation: prismaModel.balanceAtCancellation,
       forfeitedAmount: prismaModel.forfeitedAmount,
+      accumulatedBetAmount: prismaModel.accumulatedBetAmount,
     });
   }
 
@@ -71,8 +71,7 @@ export class WageringRequirementMapper {
       id: domain.id,
       userId: domain.userId,
       currency: domain.currency,
-      sourceType: domain.sourceType,
-      sourceId: domain.sourceId,
+      rewardId: domain.rewardId,
       calculationMethod: domain.calculationMethod,
       targetType: domain.targetType,
 
@@ -111,6 +110,7 @@ export class WageringRequirementMapper {
       cancelledBy: domain.cancelledBy,
       balanceAtCancellation: domain.balanceAtCancellation,
       forfeitedAmount: domain.forfeitedAmount,
+      accumulatedBetAmount: domain.accumulatedBetAmount,
     };
   }
 

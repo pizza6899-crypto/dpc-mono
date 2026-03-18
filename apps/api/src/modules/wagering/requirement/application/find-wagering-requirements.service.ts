@@ -30,8 +30,7 @@ export class FindWageringRequirementsService {
   async findPaginated(params: {
     userId?: bigint;
     statuses?: WageringStatus[];
-    sourceType?: WageringSourceType;
-    sourceId?: bigint;
+    rewardId?: bigint;
     currency?: ExchangeCurrencyCode;
     fromAt?: Date;
     toAt?: Date;
@@ -44,18 +43,13 @@ export class FindWageringRequirementsService {
   }
 
   /**
-   * 특정 소스(입금, 프로모션 등)로 생성된 가장 최근의 롤링 조건을 조회합니다.
+   * 특정 리워드(보상/제약)로 생성된 가장 최근의 롤링 조건을 조회합니다.
    * 외부 모듈(예: Promotion)에서 상태 확인용으로 사용합니다.
    */
-  async findLatestBySource(
+  async findLatestByReward(
     userId: bigint,
-    sourceType: WageringSourceType,
-    sourceId: bigint,
+    rewardId: bigint,
   ): Promise<WageringRequirement | null> {
-    return await this.repository.findLatestBySource(
-      userId,
-      sourceType,
-      sourceId,
-    );
+    return await this.repository.findLatestByReward(userId, rewardId);
   }
 }

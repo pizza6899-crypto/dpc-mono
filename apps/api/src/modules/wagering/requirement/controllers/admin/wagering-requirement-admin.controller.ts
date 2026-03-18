@@ -38,7 +38,7 @@ export class WageringRequirementAdminController {
     private readonly findService: FindWageringRequirementsService,
     private readonly voidService: VoidWageringRequirementService,
     private readonly findLogsService: FindWageringContributionLogsService,
-  ) {}
+  ) { }
 
   @Get()
   @Paginated()
@@ -53,8 +53,7 @@ export class WageringRequirementAdminController {
     const paginatedData = await this.findService.findPaginated({
       userId: query.userId ? BigInt(query.userId) : undefined,
       statuses: query.statuses,
-      sourceType: query.sourceType,
-      sourceId: query.sourceId ? BigInt(query.sourceId) : undefined,
+      rewardId: query.rewardId ? BigInt(query.rewardId) : undefined,
       currency: query.currency,
       fromAt: query.fromAt,
       toAt: query.toAt,
@@ -133,7 +132,7 @@ export class WageringRequirementAdminController {
       id: item.id?.toString() || '0',
       userId: item.userId?.toString() || '0',
       currency: item.currency,
-      sourceType: item.sourceType,
+      rewardId: item.rewardId.toString(),
       targetType: item.targetType,
       requiredAmount: item.requiredAmount?.toString(),
       wageredAmount: item.wageredAmount?.toString(),
@@ -147,6 +146,7 @@ export class WageringRequirementAdminController {
       initialFundAmount: item.initialFundAmount?.toString(),
       currentBalance: item.currentBalance?.toString(),
       totalBetAmount: item.totalBetAmount?.toString(),
+      accumulatedBetAmount: item.accumulatedBetAmount.toString(),
       totalWinAmount: item.totalWinAmount?.toString(),
       realMoneyRatio: item.realMoneyRatio?.toString(),
       isForfeitable: item.isForfeitable,
@@ -156,7 +156,7 @@ export class WageringRequirementAdminController {
       isAutoCancelable: item.isAutoCancelable,
       status: item.status,
       priority: item.priority,
-      sourceId: item.sourceId?.toString(),
+      // rewardId replaces sourceId
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,
       expiresAt: item.expiresAt,

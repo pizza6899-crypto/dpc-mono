@@ -44,14 +44,6 @@ export class GetMyWageringRequirementsQueryDto extends createPaginationQueryDto<
   currency?: ExchangeCurrencyCode;
 
   @ApiPropertyOptional({
-    description: 'Source Type Filter (소스 타입 필터)',
-    enum: WageringSourceType,
-  })
-  @IsOptional()
-  @IsEnum(WageringSourceType)
-  sourceType?: WageringSourceType;
-
-  @ApiPropertyOptional({
     description: 'From Date Filter (시작 날짜)',
     example: '2024-01-01T00:00:00Z',
   })

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { AuditLogModule } from '../../../modules/audit-log/audit-log.module';
 import { WageringRequirementRepository } from './infrastructure/wagering-requirement.repository';
 import { WageringContributionLogRepository } from './infrastructure/wagering-contribution-log.repository';
@@ -25,6 +25,8 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { WageringConfigModule } from '../config/wagering-config.module';
 import { WalletModule } from '../../wallet/wallet.module';
 import { PromotionConfigModule } from '../../promotion/config/promotion-config.module';
+import { RewardCoreModule } from '../../reward/core/reward-core.module';
+
 
 @Module({
   imports: [
@@ -33,6 +35,8 @@ import { PromotionConfigModule } from '../../promotion/config/promotion-config.m
     WageringConfigModule,
     WalletModule,
     PromotionConfigModule,
+    forwardRef(() => RewardCoreModule),
+
   ],
   controllers: [
     WageringRequirementAdminController,

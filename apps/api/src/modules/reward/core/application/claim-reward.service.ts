@@ -129,8 +129,7 @@ export class ClaimRewardService {
             await this.createWageringRequirementService.execute({
                 userId: reward.userId,
                 currency: reward.currency,
-                sourceType: wageringSourceType,
-                sourceId: reward.id,
+                rewardId: reward.id,
                 targetType: reward.wageringTargetType,
                 calculationMethod: calculationMethod,
                 principalAmount: principalAmount, // 원금 전달

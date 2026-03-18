@@ -21,8 +21,7 @@ import { WageringAppliedConfig } from '../domain/wagering-applied-config';
 interface CreateWageringRequirementCommand {
   userId: bigint;
   currency: ExchangeCurrencyCode;
-  sourceType: WageringSourceType;
-  sourceId: bigint;
+  rewardId: bigint;
   calculationMethod?: WageringCalculationMethod;
   targetType: WageringTargetType;
   principalAmount: Prisma.Decimal;
@@ -59,8 +58,7 @@ export class CreateWageringRequirementService {
     const {
       userId,
       currency,
-      sourceType,
-      sourceId,
+      rewardId,
       calculationMethod,
       targetType,
       principalAmount,
@@ -78,20 +76,19 @@ export class CreateWageringRequirementService {
     } = command;
 
     // 1. 중복 생성 방지 (Idempotency)
-    const existing = await this.repository.findLatestBySource(
+    const existing = await this.repository.findLatestByReward(
       userId,
-      sourceType,
-      sourceId,
+      rewardId,
     );
     if (existing) {
       this.logger.warn(
-        `Wagering requirement already exists for user ${userId}, ${sourceType}(${sourceId}). Skipping creation.`,
+        `Wagering requirement already exists for user ${userId}, reward ${rewardId}. Skipping creation.`,
       );
       return existing;
     }
 
     // 2. 비즈니스 정책 검증 (Domain Policy)
-    this.policy.validateCreation({ principalAmount, multiplier, sourceType });
+    this.policy.validateCreation({ principalAmount, multiplier });
 
     // 0. 글로벌 설정 조회
     const [config, promotionConfig] = await Promise.all([
@@ -118,8 +115,7 @@ export class CreateWageringRequirementService {
     const wageringRequirement = WageringRequirement.create({
       userId,
       currency,
-      sourceType,
-      sourceId,
+      rewardId,
       calculationMethod,
       targetType,
       requiredAmount,
@@ -161,8 +157,7 @@ export class CreateWageringRequirementService {
           action: 'CREATE_WAGERING_REQUIREMENT',
           metadata: {
             wageringId: created.id.toString(),
-            sourceType,
-            sourceId: sourceId.toString(),
+            rewardId: rewardId.toString(),
             targetType,
             principalAmount: principalAmount.toString(),
             multiplier: multiplier.toString(),

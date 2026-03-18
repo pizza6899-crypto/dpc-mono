@@ -7,6 +7,7 @@ export class WageringRequirementUserResponseDto {
   })
   id: string;
 
+
   @ApiProperty({ description: 'Currency / 통화' })
   currency: ExchangeCurrencyCode;
 
@@ -66,6 +67,12 @@ export class WageringRequirementUserResponseDto {
 
   @ApiProperty({ description: 'Expires At / 만료 예정일', nullable: true })
   expiresAt: Date | null;
+
+  @ApiProperty({
+    description: 'Accumulated Bet Amount / 필터 적용 전 총 배팅 금액',
+    example: '120000',
+  })
+  accumulatedBetAmount: string;
 
   @ApiProperty({ description: 'Created At / 생성일' })
   createdAt: Date;

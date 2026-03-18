@@ -44,20 +44,12 @@ export class GetWageringRequirementsAdminQueryDto extends createPaginationQueryD
   statuses?: WageringStatus[];
 
   @ApiPropertyOptional({
-    description: 'Source Type Filter / 소스 타입 필터',
-    enum: WageringSourceType,
-  })
-  @IsOptional()
-  @IsEnum(WageringSourceType)
-  sourceType?: WageringSourceType;
-
-  @ApiPropertyOptional({
-    description: 'Source ID Filter / 소스 ID 필터 (입금 ID, 프로모션 ID 등)',
+    description: 'Reward ID Filter / 리워드 ID 필터',
     example: '1234567890',
   })
   @IsOptional()
   @IsNumberString()
-  sourceId?: string;
+  rewardId?: string;
 
   @ApiPropertyOptional({
     description: 'Currency Filter / 통화 필터',

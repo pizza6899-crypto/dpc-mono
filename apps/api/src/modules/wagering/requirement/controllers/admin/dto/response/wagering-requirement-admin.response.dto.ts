@@ -15,11 +15,8 @@ export class WageringRequirementAdminResponseDto {
   @ApiProperty({ description: 'Currency / 통화' })
   currency: ExchangeCurrencyCode;
 
-  @ApiProperty({
-    description:
-      'Source Type / 생성 소스 (DEPOSIT, PROMOTION_BONUS, TIER_BONUS)',
-  })
-  sourceType: WageringSourceType;
+  @ApiProperty({ description: 'Reward ID / 리워드 ID', example: '123456789' })
+  rewardId: string;
 
   @ApiProperty({
     description: 'Target Type / 목표 기준 타입 (AMOUNT/ROUND_COUNT)',
@@ -84,10 +81,16 @@ export class WageringRequirementAdminResponseDto {
   currentBalance: string;
 
   @ApiProperty({
-    description: 'Total Bet Amount / 펀드 내 발생한 총 누적 베팅액',
+    description: 'Total Bet Amount / 펀드 내 발생한 총 누적 기여 인정 배팅액',
     example: '5000',
   })
   totalBetAmount: string;
+
+  @ApiProperty({
+    description: 'Accumulated Bet Amount / 펀드 내 발생한 필터 전 총 누적 배팅액',
+    example: '6000',
+  })
+  accumulatedBetAmount: string;
 
   @ApiProperty({
     description: 'Total Win Amount / 펀드 내 발생한 총 누적 당첨액',
@@ -132,12 +135,6 @@ export class WageringRequirementAdminResponseDto {
 
   @ApiProperty({ description: 'Priority / 반영 우선순위' })
   priority: number;
-
-  @ApiProperty({
-    description: 'Source ID / 연관된 데이터 식별자 (입금 ID, 프로모션 ID 등)',
-    example: '123456789',
-  })
-  sourceId: string;
 
   @ApiProperty({ description: 'Created At / 생성일' })
   createdAt: Date;

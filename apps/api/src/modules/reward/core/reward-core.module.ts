@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { REWARD_REPOSITORY } from './ports/reward.repository.port';
 import { RewardRepository } from './infrastructure/reward.repository';
@@ -8,6 +8,8 @@ import { InstantGrantRewardService } from './application/instant-grant-reward.se
 import { GetUserRewardsService } from './application/get-user-rewards.service';
 import { GetAdminRewardsService } from './application/get-admin-rewards.service';
 import { VoidRewardService } from './application/void-reward.service';
+import { GetRewardService } from './application/get-reward.service';
+
 import { RewardController } from './controllers/user/reward.controller';
 import { RewardAdminController } from './controllers/admin/reward-admin.controller';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
@@ -23,7 +25,8 @@ import { RequirementModule } from 'src/modules/wagering/requirement/requirement.
         SqidsModule,
         ConcurrencyModule,
         WalletModule,
-        RequirementModule,
+        forwardRef(() => RequirementModule),
+
     ],
     controllers: [
         RewardController,
@@ -40,6 +43,8 @@ import { RequirementModule } from 'src/modules/wagering/requirement/requirement.
         GetUserRewardsService,
         GetAdminRewardsService,
         VoidRewardService,
+        GetRewardService,
+
     ],
     exports: [
         REWARD_REPOSITORY,
@@ -49,6 +54,8 @@ import { RequirementModule } from 'src/modules/wagering/requirement/requirement.
         GetUserRewardsService,
         GetAdminRewardsService,
         VoidRewardService,
+        GetRewardService,
+
     ],
 })
 export class RewardCoreModule { }

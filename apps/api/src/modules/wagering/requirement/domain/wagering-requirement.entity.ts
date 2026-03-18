@@ -14,8 +14,7 @@ export class WageringRequirement {
     public readonly id: bigint,
     public readonly userId: bigint,
     public readonly currency: ExchangeCurrencyCode,
-    public readonly sourceType: WageringSourceType,
-    public readonly sourceId: bigint,
+    public readonly rewardId: bigint,
     public readonly calculationMethod: WageringCalculationMethod,
 
     public readonly targetType: WageringTargetType,
@@ -56,7 +55,8 @@ export class WageringRequirement {
     private _cancelledBy: string | null,
     private _balanceAtCancellation: Prisma.Decimal | null,
     private _forfeitedAmount: Prisma.Decimal | null,
-  ) {}
+    private _accumulatedBetAmount: Prisma.Decimal,
+  ) { }
 
   // Getters
   get requiredAmount(): Prisma.Decimal {
@@ -124,6 +124,9 @@ export class WageringRequirement {
   get forfeitedAmount(): Prisma.Decimal | null {
     return this._forfeitedAmount;
   }
+  get accumulatedBetAmount(): Prisma.Decimal {
+    return this._accumulatedBetAmount;
+  }
 
   get remainingAmount(): Prisma.Decimal {
     if (this.targetType !== 'AMOUNT') return new Prisma.Decimal('0');
@@ -182,8 +185,8 @@ export class WageringRequirement {
   ): Prisma.Decimal {
     if (!this.isActive) return new Prisma.Decimal(0);
 
+    // [중요] recordActivity를 통해 이미 차감된 것으로 가정하고 기여도만 기록
     this._totalBetAmount = this._totalBetAmount.add(betAmount);
-    this._currentBalance = this._currentBalance.sub(betAmount);
 
     if (this.targetType === 'AMOUNT') {
       const remaining = this.remainingAmount;
@@ -207,8 +210,8 @@ export class WageringRequirement {
   contributeRound(betAmount: Prisma.Decimal): number {
     if (!this.isActive) return 0;
 
+    // [중요] recordActivity를 통해 이미 차감된 것으로 가정하고 기여도만 기록
     this._totalBetAmount = this._totalBetAmount.add(betAmount);
-    this._currentBalance = this._currentBalance.sub(betAmount);
 
     if (this.targetType === 'ROUND_COUNT') {
       const remaining = this.remainingCount;
@@ -222,6 +225,16 @@ export class WageringRequirement {
 
     this._updatedAt = new Date();
     return 0;
+  }
+
+  /**
+   * 베팅 활동을 기록하고 자금을 소모합니다. (롤링 기여 여부와 상관없이 호출 가능)
+   */
+  recordActivity(betAmount: Prisma.Decimal): void {
+    if (!this.isActive) return;
+    this._accumulatedBetAmount = this._accumulatedBetAmount.add(betAmount);
+    this._currentBalance = this._currentBalance.sub(betAmount);
+    this._updatedAt = new Date();
   }
 
   /**
@@ -308,8 +321,7 @@ export class WageringRequirement {
     id?: bigint;
     userId: bigint;
     currency: ExchangeCurrencyCode;
-    sourceType: WageringSourceType;
-    sourceId: bigint;
+    rewardId: bigint;
     calculationMethod?: WageringCalculationMethod;
     targetType: WageringTargetType;
 
@@ -330,13 +342,13 @@ export class WageringRequirement {
     parentWageringId?: bigint | null;
     priority?: number;
     expiresAt?: Date | null;
+    accumulatedBetAmount?: Prisma.Decimal;
   }): WageringRequirement {
     return new WageringRequirement(
       params.id ?? 0n,
       params.userId,
       params.currency,
-      params.sourceType,
-      params.sourceId,
+      params.rewardId,
       params.calculationMethod ?? 'WEIGHTED',
       params.targetType,
       params.requiredAmount ?? new Prisma.Decimal(0),
@@ -376,6 +388,7 @@ export class WageringRequirement {
       null,
       null,
       null,
+      params.accumulatedBetAmount ?? new Prisma.Decimal(0),
     );
   }
 
@@ -383,8 +396,7 @@ export class WageringRequirement {
     id: bigint;
     userId: bigint;
     currency: ExchangeCurrencyCode;
-    sourceType: WageringSourceType;
-    sourceId: bigint;
+    rewardId: bigint;
     calculationMethod: WageringCalculationMethod;
     targetType: WageringTargetType;
 
@@ -425,13 +437,13 @@ export class WageringRequirement {
     cancelledBy: string | null;
     balanceAtCancellation: Prisma.Decimal | null;
     forfeitedAmount: Prisma.Decimal | null;
+    accumulatedBetAmount: Prisma.Decimal;
   }): WageringRequirement {
     return new WageringRequirement(
       data.id,
       data.userId,
       data.currency,
-      data.sourceType,
-      data.sourceId,
+      data.rewardId,
       data.calculationMethod,
       data.targetType,
       data.requiredAmount,
@@ -471,6 +483,51 @@ export class WageringRequirement {
       data.cancelledBy,
       data.balanceAtCancellation,
       data.forfeitedAmount,
+      data.accumulatedBetAmount,
     );
+  }
+
+  toPersistence() {
+    return {
+      id: this.id,
+      userId: this.userId,
+      currency: this.currency,
+      rewardId: this.rewardId,
+      calculationMethod: this.calculationMethod,
+      targetType: this.targetType,
+      requiredAmount: this._requiredAmount,
+      wageredAmount: this._wageredAmount,
+      requiredCount: this._requiredCount,
+      wageredCount: this._wageredCount,
+      isAutoCancelable: this._isAutoCancelable,
+      principalAmount: this.principalAmount,
+      multiplier: this.multiplier,
+      bonusAmount: this.bonusAmount,
+      initialFundAmount: this.initialFundAmount,
+      currentBalance: this._currentBalance,
+      totalBetAmount: this._totalBetAmount,
+      totalWinAmount: this._totalWinAmount,
+      accumulatedBetAmount: this._accumulatedBetAmount,
+      realMoneyRatio: this.realMoneyRatio,
+      isForfeitable: this.isForfeitable,
+      parentWageringId: this.parentWageringId,
+      appliedConfig: this.appliedConfig,
+      maxCashConversion: this._maxCashConversion,
+      convertedAmount: this._convertedAmount,
+      isPaused: this._isPaused,
+      status: this._status,
+      priority: this.priority,
+      createdAt: this.createdAt,
+      updatedAt: this._updatedAt,
+      expiresAt: this.expiresAt,
+      lastContributedAt: this._lastContributedAt,
+      completedAt: this._completedAt,
+      cancelledAt: this._cancelledAt,
+      cancellationNote: this._cancellationNote,
+      cancellationReasonType: this._cancellationReasonType,
+      cancelledBy: this._cancelledBy,
+      balanceAtCancellation: this._balanceAtCancellation,
+      forfeitedAmount: this._forfeitedAmount,
+    };
   }
 }

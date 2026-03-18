@@ -32,7 +32,7 @@ export class WageringRequirementUserController {
     private readonly checkService: CheckWageringRequirementService,
     private readonly forfeitService: ForfeitWageringRequirementService,
     private readonly sqidsService: SqidsService,
-  ) {}
+  ) { }
 
   @Get()
   @ApiOperation({ summary: 'Get my wagering requirements / 내 롤링 조건 조회' })
@@ -46,7 +46,6 @@ export class WageringRequirementUserController {
       userId: user.id,
       statuses: query.statuses || ['ACTIVE'], // 기본값: 진행 중인 롤링만
       currency: query.currency,
-      sourceType: query.sourceType,
       fromAt: query.fromAt,
       toAt: query.toAt,
       page: query.page!,
@@ -69,6 +68,7 @@ export class WageringRequirementUserController {
         requiredCount: item.requiredCount,
         wageredCount: item.wageredCount,
         remainingCount: item.remainingCount,
+        accumulatedBetAmount: item.accumulatedBetAmount.toString(),
         progressRate: item.progressRate,
         status: item.status,
         expiresAt: item.expiresAt,

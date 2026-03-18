@@ -73,16 +73,14 @@ export class WageringRequirementRepository implements WageringRequirementReposit
     return this.mapper.toDomain(result);
   }
 
-  async findLatestBySource(
+  async findLatestByReward(
     userId: bigint,
-    sourceType: WageringSourceType,
-    sourceId: bigint,
+    rewardId: bigint,
   ): Promise<WageringRequirement | null> {
     const result = await this.tx.wageringRequirement.findFirst({
       where: {
         userId,
-        sourceType,
-        sourceId,
+        rewardId,
       },
       orderBy: { createdAt: 'desc' },
     });
@@ -122,8 +120,7 @@ export class WageringRequirementRepository implements WageringRequirementReposit
   async findPaginated(params: {
     userId?: bigint;
     statuses?: WageringStatus[];
-    sourceType?: WageringSourceType;
-    sourceId?: bigint;
+    rewardId?: bigint;
     currency?: ExchangeCurrencyCode;
     fromAt?: Date;
     toAt?: Date;
@@ -135,8 +132,7 @@ export class WageringRequirementRepository implements WageringRequirementReposit
     const {
       userId,
       statuses,
-      sourceType,
-      sourceId,
+    rewardId,
       currency,
       fromAt,
       toAt,
@@ -157,12 +153,8 @@ export class WageringRequirementRepository implements WageringRequirementReposit
       where.status = { in: statuses };
     }
 
-    if (sourceType) {
-      where.sourceType = sourceType;
-    }
-
-    if (sourceId) {
-      where.sourceId = sourceId;
+    if (rewardId) {
+      where.rewardId = rewardId;
     }
 
     if (currency) {
