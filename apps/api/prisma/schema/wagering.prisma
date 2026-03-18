@@ -17,14 +17,14 @@ model WageringConfig {
 }
 
 model WageringRequirement {
-  id                BigInt                    @id @default(autoincrement()) // Auto Increment ID
-  userId            BigInt                    @map("user_id")
-  currency          ExchangeCurrencyCode
+  id       BigInt               @id @default(autoincrement()) // Auto Increment ID
+  userId   BigInt               @map("user_id")
+  currency ExchangeCurrencyCode
   // [발행 및 원천 추적]
   // 발행 수단: 이 웨이저링 조건을 생성한 리워드(Reward) ID (Required)
   // 모든 웨이저링은 리워드 모듈을 통해 보상 또는 제약으로 발행됩니다.
-  rewardId BigInt @map("reward_id")
-  
+  rewardId BigInt               @map("reward_id")
+
   // [계산 방식 설정]
   // FULL: 게임 종류에 상관없이 실제 베팅 금액을 100% 인정 (입금 롤링, 쿠폰 등)
   // WEIGHTED: 게임별 기여 가중치(Weight) 적용 (보너스, 이벤트 등)
@@ -70,7 +70,6 @@ model WageringRequirement {
   // 상태
   isPaused Boolean        @default(false) @map("is_paused") // 관리자 조사 등으로 인한 진행 일시 정지
   status   WageringStatus @default(ACTIVE)
-
 
   // 타임스탬프
   createdAt         DateTime  @default(now()) @map("created_at")

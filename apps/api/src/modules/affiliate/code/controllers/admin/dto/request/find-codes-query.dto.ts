@@ -23,7 +23,6 @@ export class FindCodesQueryDto extends createPaginationQueryDto<CodeSortFields>(
 ) {
   @ApiPropertyOptional({
     description: '사용자 ID 필터',
-    example: '1234567890123456789',
     type: String,
   })
   @IsOptional()
@@ -32,7 +31,6 @@ export class FindCodesQueryDto extends createPaginationQueryDto<CodeSortFields>(
 
   @ApiPropertyOptional({
     description: '코드 검색 (부분 일치)',
-    example: 'SUMMER',
   })
   @IsOptional()
   @IsString()
@@ -58,7 +56,6 @@ export class FindCodesQueryDto extends createPaginationQueryDto<CodeSortFields>(
 
   @ApiPropertyOptional({
     description: '시작 날짜 (ISO 8601 형식) - 생성일 기준',
-    example: '2024-01-01T00:00:00Z',
   })
   @IsOptional()
   @IsDateString()
@@ -66,7 +63,6 @@ export class FindCodesQueryDto extends createPaginationQueryDto<CodeSortFields>(
 
   @ApiPropertyOptional({
     description: '종료 날짜 (ISO 8601 형식) - 생성일 기준',
-    example: '2024-12-31T23:59:59Z',
   })
   @IsOptional()
   @IsDateString()

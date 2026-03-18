@@ -33,7 +33,6 @@ export class FindCommissionsQueryDto extends createPaginationQueryDto<Commission
 
   @ApiPropertyOptional({
     description: '시작 날짜 (ISO 8601 형식)',
-    example: '2024-01-01T00:00:00Z',
   })
   @IsOptional()
   @IsDateString()
@@ -41,7 +40,6 @@ export class FindCommissionsQueryDto extends createPaginationQueryDto<Commission
 
   @ApiPropertyOptional({
     description: '종료 날짜 (ISO 8601 형식)',
-    example: '2024-12-31T23:59:59Z',
   })
   @IsOptional()
   @IsDateString()

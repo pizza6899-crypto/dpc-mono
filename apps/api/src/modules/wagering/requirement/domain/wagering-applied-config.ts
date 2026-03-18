@@ -18,9 +18,4 @@ export interface WageringAppliedConfig {
     isWageringCheckEnabled?: boolean;
     currencyThreshold?: string;
   };
-
-  /**
-   * 기타 동적 메타데이터
-   */
-  [key: string]: any;
 }

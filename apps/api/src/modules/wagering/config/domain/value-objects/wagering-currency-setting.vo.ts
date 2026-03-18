@@ -1,5 +1,16 @@
 import { Prisma } from '@prisma/client';
-import { InvalidWageringConfigException } from '../wagering-config.exception';
+import {
+  InvalidWageringConfigException,
+  WageringConfigInvalidNumberFormatException,
+  WageringConfigMinGTMaxException,
+  WageringConfigNegativeValueException
+} from '../wagering-config.exception';
+
+export interface WageringCurrencySettingProps {
+  cancellationThreshold: number | string | Prisma.Decimal;
+  minBetAmount: number | string | Prisma.Decimal;
+  maxBetAmount: number | string | Prisma.Decimal;
+}
 
 export class WageringCurrencySetting {
   constructor(
@@ -9,23 +20,14 @@ export class WageringCurrencySetting {
   ) {
     // 도메인 검증: 금액 관련 수치는 음수일 수 없음
     if (cancellationThreshold.isNeg())
-      throw new InvalidWageringConfigException(
-        'Cancellation threshold cannot be negative',
-      );
+      throw new WageringConfigNegativeValueException('Cancellation threshold');
     if (minBetAmount.isNeg())
-      throw new InvalidWageringConfigException(
-        'Minimum bet amount cannot be negative',
-      );
+      throw new WageringConfigNegativeValueException('Minimum bet amount');
     if (maxBetAmount.isNeg())
-      throw new InvalidWageringConfigException(
-        'Maximum bet amount cannot be negative',
-      );
-
+      throw new WageringConfigNegativeValueException('Maximum bet amount');
     // 최소 베팅액이 최대 베팅액보다 클 수 없음 (0은 무제한을 의미)
     if (!maxBetAmount.isZero() && minBetAmount.greaterThan(maxBetAmount)) {
-      throw new InvalidWageringConfigException(
-        'Minimum bet amount cannot be greater than maximum bet amount',
-      );
+      throw new WageringConfigMinGTMaxException();
     }
   }
 
@@ -40,16 +42,16 @@ export class WageringCurrencySetting {
   /**
    * 원시 데이터(JSON)로부터 설정 객체를 생성합니다.
    */
-  static fromRaw(data: {
-    cancellationThreshold?: number | string | Prisma.Decimal;
-    minBetAmount?: number | string | Prisma.Decimal;
-    maxBetAmount?: number | string | Prisma.Decimal;
-  }): WageringCurrencySetting {
-    return new WageringCurrencySetting(
-      new Prisma.Decimal(data.cancellationThreshold ?? 0),
-      new Prisma.Decimal(data.minBetAmount ?? 0),
-      new Prisma.Decimal(data.maxBetAmount ?? 0),
-    );
+  static fromRaw(data: Partial<WageringCurrencySettingProps>): WageringCurrencySetting {
+    try {
+      return new WageringCurrencySetting(
+        new Prisma.Decimal(data.cancellationThreshold ?? 0),
+        new Prisma.Decimal(data.minBetAmount ?? 0),
+        new Prisma.Decimal(data.maxBetAmount ?? 0),
+      );
+    } catch {
+      throw new WageringConfigInvalidNumberFormatException();
+    }
   }
 
   /**

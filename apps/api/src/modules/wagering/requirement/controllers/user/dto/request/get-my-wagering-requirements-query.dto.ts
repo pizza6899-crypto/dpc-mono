@@ -45,7 +45,6 @@ export class GetMyWageringRequirementsQueryDto extends createPaginationQueryDto<
 
   @ApiPropertyOptional({
     description: 'From Date Filter (시작 날짜)',
-    example: '2024-01-01T00:00:00Z',
   })
   @IsOptional()
   @Transform(({ value }) => (value ? new Date(value) : undefined))
@@ -53,7 +52,6 @@ export class GetMyWageringRequirementsQueryDto extends createPaginationQueryDto<
 
   @ApiPropertyOptional({
     description: 'To Date Filter (종료 날짜)',
-    example: '2024-12-31T23:59:59Z',
   })
   @IsOptional()
   @Transform(({ value }) => (value ? new Date(value) : undefined))
