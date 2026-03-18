@@ -9,7 +9,8 @@ import { seedGameCategories } from './seeders/game-category.seeder';
 import { seedCompConfig } from './seeders/comp-config.seeder';
 import { seedWageringConfig } from './seeders/wagering.seeder';
 import { seedChatRooms } from './seeders/chat-room.seeder';
-import { seedPromotions } from './seeders/promotion.seeder';
+import { seedPromotionConfig } from './seeders/promotion-config.seeder';
+import { seedPromotionCampaigns } from './seeders/promotion-campaign.seeder';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
 
@@ -70,9 +71,13 @@ async function main() {
     await seedChatRooms(prisma);
     console.log('✅ 기본 채팅방 시딩이 완료되었습니다.');
 
-    // 프로모션 시딩 처리
-    await seedPromotions(prisma);
-    console.log('✅ 프로모션 시딩이 완료되었습니다.');
+    // 프로모션 설정 시딩 처리
+    await seedPromotionConfig(prisma);
+    console.log('✅ 프로모션 설정 시딩이 완료되었습니다.');
+
+    // 프로모션 캠페인 시딩 처리
+    await seedPromotionCampaigns(prisma);
+    console.log('✅ 프로모션 캠페인 시딩이 완료되었습니다.');
 
   } catch (error) {
     console.error('❌ 시딩 중 오류가 발생했습니다:', error);

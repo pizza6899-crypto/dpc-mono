@@ -1,19 +1,7 @@
 import { PrismaClient, PromotionTargetType, Language, ExchangeCurrencyCode, PromotionResetType } from '@prisma/client';
 
-export async function seedPromotions(prisma: PrismaClient) {
-  console.log('   - Seeding Promotion Config...');
-  await prisma.promotionConfig.upsert({
-    where: { id: 1 },
-    update: {},
-    create: {
-      id: 1,
-      defaultAmlDepositMultiplier: 1.0,
-      defaultBonusExpiryDays: 30,
-      isPromotionEnabled: true,
-    },
-  });
-
-  console.log('   - Seeding Promotions...');
+export async function seedPromotionCampaigns(prisma: PrismaClient) {
+  console.log('   - Seeding Promotion Campaigns...');
 
   // 1. 100% 신규 가입 보너스 (1차 입금)
   // 설정: 평생 1회 (maxUsagePerUser: 1)
@@ -32,7 +20,7 @@ export async function seedPromotions(prisma: PrismaClient) {
           data: [
             { language: Language.KO, title: '100% 신규 가입 보너스', description: '생애 첫 입금 시 100% 보너스를 드립니다.' },
             { language: Language.EN, title: '100% Welcome Bonus', description: 'Get a 100% bonus on your very first deposit.' },
-            { language: Language.JA, title: '100% 新規登録ボーナス', description: '初回入金時に100%のボーナスを差し上げます。' },
+            { language: Language.JA, title: '100% 新規登録ボーナス', description: '初回入금시에 100%의 보너스를 드립니다.' },
           ],
         },
       },
@@ -167,8 +155,6 @@ export async function seedPromotions(prisma: PrismaClient) {
   });
 
   // 5. 밤 올빼미 해피아워 (22:00 ~ 02:00)
-  // 설정: 22:00 시작, 02:00 종료 (로직상 종료시간이 시작시간보다 작으면 다음날로 간주할지 여부는 정책에 따라 다르지만 여기선 정직하게 22시~24시 예시)
-  // 날짜는 아무 날짜나 사용 (시간/분만 사용됨)
   const startTime = new Date();
   startTime.setHours(22, 0, 0, 0); // 로컬 22:00
   const endTime = new Date();
@@ -221,7 +207,7 @@ export async function seedPromotions(prisma: PrismaClient) {
           data: [
             { language: Language.KO, title: '2차 입금 50% 보너스', description: '두 번째 입금 시 50% 보너스를 드립니다.' },
             { language: Language.EN, title: '2nd Deposit 50% Bonus', description: 'Get a 50% bonus on your second deposit.' },
-            { language: Language.JA, title: '2回目入金 50% ボーナス', description: '2回目の入金時に50%のボーナスを差し上げます。' },
+            { language: Language.JA, title: '2回目入金 50% ボーナス', description: '2回目の入金時に50%のボーナス을 드립니다.' },
           ],
         },
       },
@@ -240,5 +226,5 @@ export async function seedPromotions(prisma: PrismaClient) {
     },
   });
 
-  console.log('   ✅ Promotions seeded.');
+  console.log('   ✅ Promotion campaigns seeded.');
 }
