@@ -1,0 +1,125 @@
+// ═══════════════════════════════════════════════════════════════
+// 쿠폰 (Coupon) - 독립적인 리워드 지급용 바우처 시스템
+// ═══════════════════════════════════════════════════════════════
+
+model CouponConfig {
+    id Int @id @default(1)
+
+    /// 쿠폰 시스템 전체 활성화 여부
+    isCouponEnabled Boolean @default(true) @map("is_coupon_enabled")
+
+    /// 유저당 일일 쿠폰 코드 대입 시도 제한 (Brute-force 방지)
+    maxDailyAttemptsPerUser Int @default(10) @map("max_daily_attempts_per_user")
+
+    /// 쿠폰 생성 시 기본 유효 기간 (Days)
+    defaultExpiryDays Int @default(30) @map("default_expiry_days")
+
+    updatedAt     DateTime @updatedAt @map("updated_at")
+    updatedBy     BigInt?  @map("updated_by")
+    updatedByUser User?    @relation("CouponConfigUpdatedBy", fields: [updatedBy], references: [id])
+
+    @@map("coupon_configs")
+}
+
+model Coupon {
+    id   BigInt @id @default(autoincrement())
+    code String @unique // 쿠폰 코드 (ex: GIFT-1000-KRW)
+
+    /// 쿠폰 설명 및 다국어 처리를 위한 메타데이터
+    metadata Json?
+
+    /// 관리자가 지정한 유저 리스트만 사용 가능한지 여부
+    isAllowlistOnly Boolean @default(false) @map("is_allowlist_only")
+
+    /// 이 쿠폰 코드가 전체적으로 사용 가능한 최대 횟수
+    maxUsage   Int @default(1) @map("max_usage")
+    /// 현재까지 사용된 총 횟수
+    usageCount Int @default(0) @map("usage_count")
+
+    status CouponStatus @default(ACTIVE) @map("status")
+
+    // --- 비즈니스 유효 기간 ---
+    startsAt  DateTime? @map("starts_at") // 유효 기간 시작 (예약 발행용)
+    expiresAt DateTime? @map("expires_at")
+    createdAt DateTime  @default(now()) @map("created_at")
+    updatedAt DateTime  @updatedAt @map("updated_at")
+
+    /// 생성 및 수정 관리자 정보
+    createdBy     BigInt? @map("created_by")
+    updatedBy     BigInt? @map("updated_by")
+    createdByUser User?   @relation("CouponCreatedBy", fields: [createdBy], references: [id])
+    updatedByUser User?   @relation("CouponUpdatedBy", fields: [updatedBy], references: [id])
+
+    rewards     CouponReward[]
+    allowlists  CouponAllowlist[]
+    userCoupons UserCoupon[]
+    adminMemos  AdminMemo[]
+
+    @@index([code])
+    @@map("coupons")
+}
+
+/**
+ * 쿠폰 사용 시 지급될 개별 보상 설정 (1:N)
+ */
+model CouponReward {
+    id       BigInt @id @default(autoincrement())
+    couponId BigInt @map("coupon_id")
+
+    // [Reward Spec]
+    rewardType RewardItemType       @map("reward_type")
+    currency   ExchangeCurrencyCode @map("currency")
+    amount     Decimal              @map("amount") @db.Decimal(32, 18)
+
+    // [Wagering Policy]
+    wageringMultiplier Decimal? @map("wagering_multiplier")
+    maxCashConversion  Decimal? @map("max_cash_conversion")
+
+    coupon Coupon @relation(fields: [couponId], references: [id], onDelete: Cascade)
+
+    @@index([couponId])
+    @@map("coupon_rewards")
+}
+
+/**
+ * 쿠폰 화이트리스트 (특정 유저 리스트 대상)
+ */
+model CouponAllowlist {
+    id        BigInt   @id @default(autoincrement())
+    couponId  BigInt   @map("coupon_id")
+    userId    BigInt   @map("user_id")
+    createdAt DateTime @default(now()) @map("created_at")
+
+    coupon Coupon @relation(fields: [couponId], references: [id], onDelete: Cascade)
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([couponId, userId])
+    @@index([couponId])
+    @@index([userId])
+    @@map("coupon_allowlists")
+}
+
+/**
+ * 쿠폰 사용 이력
+ */
+model UserCoupon {
+    id       BigInt @id @default(autoincrement())
+    couponId BigInt @map("coupon_id")
+    userId   BigInt @map("user_id")
+
+    usedAt DateTime @default(now()) @map("used_at")
+
+    coupon Coupon @relation(fields: [couponId], references: [id])
+    user   User   @relation("UserRedeemedCoupons", fields: [userId], references: [id])
+
+    @@unique([couponId, userId])
+    @@index([userId])
+    @@map("user_coupons")
+}
+
+enum CouponStatus {
+    ACTIVE // 사용 가능
+    EXPIRED // 기간 만료
+    EXHAUSTED // 수량 소진
+    VOIDED // 무효화
+}

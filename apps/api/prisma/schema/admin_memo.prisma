@@ -31,10 +31,15 @@ model AdminMemo {
     userPromotionId BigInt?        @map("user_promotion_id")
     userPromotion   UserPromotion? @relation(fields: [userPromotionId], references: [id])
 
+    /// 쿠폰 관련 메모 시 연결
+    couponId BigInt? @map("coupon_id")
+    coupon   Coupon? @relation(fields: [couponId], references: [id])
+
     @@index([adminId])
     @@index([depositId])
     @@index([userId])
     @@index([promotionId])
     @@index([userPromotionId])
+    @@index([couponId])
     @@map("admin_memos")
 }
