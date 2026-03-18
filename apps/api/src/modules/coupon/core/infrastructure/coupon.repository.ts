@@ -40,19 +40,33 @@ export class CouponRepository implements CouponRepositoryPort {
 
   async save(coupon: Coupon): Promise<void> {
     const data = CouponMapper.toPrisma(coupon);
+    const rewardData = CouponMapper.toRewardCreateInput(coupon.rewards);
+    const allowlistData = CouponMapper.toAllowlistCreateInput(coupon.allowlists);
 
-    // [Aggregate Persistence Pattern]
-    // Normally we use upsert for single entity, but for collections (rewards/allowlists)
-    // we would need to sync them if they change. 
-    // Here we focus on the basic Coupon persistence.
-    await this.tx.coupon.upsert({
-      where: { id: coupon.id },
-      update: data,
-      create: {
-        ...data,
-        id: coupon.id > 0n ? coupon.id : undefined,
-      },
-    });
+    if (coupon.id === 0n) {
+      await this.tx.coupon.create({
+        data: {
+          ...data,
+          rewards: { createMany: { data: rewardData } },
+          allowlists: { createMany: { data: allowlistData } },
+        },
+      });
+    } else {
+      await this.tx.coupon.update({
+        where: { id: coupon.id },
+        data: {
+          ...data,
+          rewards: {
+            deleteMany: {},
+            createMany: { data: rewardData },
+          },
+          allowlists: {
+            deleteMany: {},
+            createMany: { data: allowlistData },
+          },
+        },
+      });
+    }
   }
 
   async delete(id: bigint): Promise<void> {

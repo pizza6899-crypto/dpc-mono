@@ -1,13 +1,13 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { COUPON_REPOSITORY_TOKEN } from '../ports/coupon.repository.token';
 import type { CouponRepositoryPort } from '../ports/coupon.repository.port';
-import { Coupon } from '../domain/coupon.entity';
+import { Coupon, CouponMetadata } from '../domain/coupon.entity';
 import { CouponReward } from '../domain/coupon-reward.entity';
 import { Prisma, RewardItemType, ExchangeCurrencyCode } from '@prisma/client';
 
 export interface CreateCouponParams {
   code: string;
-  metadata?: Prisma.JsonValue;
+  metadata?: CouponMetadata;
   isAllowlistOnly?: boolean;
   maxUsage?: number;
   maxUsagePerUser?: number;

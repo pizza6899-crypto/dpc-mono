@@ -56,19 +56,35 @@ export class CouponMapper {
     });
   }
 
-  static toPrisma(domainCoupon: Coupon): Prisma.CouponUncheckedUpdateInput {
+  static toPrisma(domainCoupon: Coupon) {
     return {
       code: domainCoupon.code,
-      metadata: domainCoupon.metadata as Prisma.InputJsonValue,
+      metadata: (domainCoupon.metadata as Prisma.InputJsonValue) ?? undefined,
       isAllowlistOnly: domainCoupon.isAllowlistOnly,
       maxUsage: domainCoupon.maxUsage,
       usageCount: domainCoupon.usageCount,
       maxUsagePerUser: domainCoupon.maxUsagePerUser,
       status: domainCoupon.status,
-      startsAt: domainCoupon.startsAt,
-      expiresAt: domainCoupon.expiresAt,
-      createdBy: domainCoupon.createdBy,
-      updatedBy: domainCoupon.updatedBy,
+      startsAt: domainCoupon.startsAt ?? undefined,
+      expiresAt: domainCoupon.expiresAt ?? undefined,
+      createdBy: domainCoupon.createdBy ?? undefined,
+      updatedBy: domainCoupon.updatedBy ?? undefined,
     };
+  }
+
+  static toRewardCreateInput(rewards: CouponReward[]): Prisma.CouponRewardCreateManyCouponInput[] {
+    return rewards.map(r => ({
+      rewardType: r.rewardType,
+      currency: r.currency,
+      amount: new Prisma.Decimal(r.amount.toString()),
+      wageringMultiplier: r.wageringMultiplier ? new Prisma.Decimal(r.wageringMultiplier.toString()) : null,
+      maxCashConversion: r.maxCashConversion ? new Prisma.Decimal(r.maxCashConversion.toString()) : null,
+    }));
+  }
+
+  static toAllowlistCreateInput(allowlists: CouponAllowlist[]): Prisma.CouponAllowlistCreateManyCouponInput[] {
+    return allowlists.map(a => ({
+      userId: a.userId,
+    }));
   }
 }

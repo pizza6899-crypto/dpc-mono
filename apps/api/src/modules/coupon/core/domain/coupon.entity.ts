@@ -11,11 +11,14 @@ import {
   CouponVoidedException,
 } from './coupon.exception';
 
+export interface CouponMetadata {
+}
+
 export class Coupon {
   private constructor(
     public readonly id: bigint,
     private _code: string,
-    private _metadata: Prisma.JsonValue | null,
+    private _metadata: CouponMetadata | null,
     private _isAllowlistOnly: boolean,
     private _maxUsage: number,
     private _usageCount: number,
@@ -32,7 +35,7 @@ export class Coupon {
   ) { }
 
   get code(): string { return this._code; }
-  get metadata(): Prisma.JsonValue | null { return this._metadata; }
+  get metadata(): CouponMetadata | null { return this._metadata; }
   get isAllowlistOnly(): boolean { return this._isAllowlistOnly; }
   get maxUsage(): number { return this._maxUsage; }
   get usageCount(): number { return this._usageCount; }
@@ -94,7 +97,7 @@ export class Coupon {
   }
 
   update(params: {
-    metadata?: Prisma.JsonValue;
+    metadata?: CouponMetadata;
     isAllowlistOnly?: boolean;
     maxUsage?: number;
     maxUsagePerUser?: number;
@@ -115,7 +118,7 @@ export class Coupon {
   static create(params: {
     id?: bigint;
     code: string;
-    metadata?: Prisma.JsonValue;
+    metadata?: CouponMetadata;
     isAllowlistOnly?: boolean;
     maxUsage?: number;
     maxUsagePerUser?: number;
@@ -166,7 +169,7 @@ export class Coupon {
     return new Coupon(
       data.id,
       data.code,
-      data.metadata,
+      data.metadata as CouponMetadata | null,
       data.isAllowlistOnly,
       data.maxUsage,
       data.usageCount,
