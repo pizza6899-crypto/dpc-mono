@@ -25,21 +25,23 @@ model Coupon {
     id   BigInt @id @default(autoincrement())
     code String @unique // 쿠폰 코드 (ex: GIFT-1000-KRW)
 
-    /// 쿠폰 설명 및 다국어 처리를 위한 메타데이터
+    /// 쿠폰 설명 및 다국어 처리를 위한 메타데이터 (title, description 등)
     metadata Json?
 
     /// 관리자가 지정한 유저 리스트만 사용 가능한지 여부
     isAllowlistOnly Boolean @default(false) @map("is_allowlist_only")
 
-    /// 이 쿠폰 코드가 전체적으로 사용 가능한 최대 횟수
-    maxUsage   Int @default(1) @map("max_usage")
+    /// 이 쿠폰 코드가 전체적으로 사용 가능한 최대 횟수 (0=무제한)
+    maxUsage        Int @default(1) @map("max_usage")
     /// 현재까지 사용된 총 횟수
-    usageCount Int @default(0) @map("usage_count")
+    usageCount      Int @default(0) @map("usage_count")
+    /// 유저 1명당 이 코드를 사용할 수 있는 횟수
+    maxUsagePerUser Int @default(1) @map("max_usage_per_user")
 
-    status CouponStatus @default(ACTIVE) @map("status")
+    status CouponStatus @default(ACTIVE)
 
     // --- 비즈니스 유효 기간 ---
-    startsAt  DateTime? @map("starts_at") // 유효 기간 시작 (예약 발행용)
+    startsAt  DateTime? @map("starts_at") // 예약 발행용
     expiresAt DateTime? @map("expires_at")
     createdAt DateTime  @default(now()) @map("created_at")
     updatedAt DateTime  @updatedAt @map("updated_at")
@@ -68,7 +70,7 @@ model CouponReward {
 
     // [Reward Spec]
     rewardType RewardItemType       @map("reward_type")
-    currency   ExchangeCurrencyCode @map("currency")
+    currency   ExchangeCurrencyCode
     amount     Decimal              @map("amount") @db.Decimal(32, 18)
 
     // [Wagering Policy]
@@ -103,7 +105,7 @@ model CouponAllowlist {
  * 쿠폰 사용 이력
  */
 model UserCoupon {
-    id       BigInt @id @default(autoincrement())
+    id       BigInt // Snowflake ID
     couponId BigInt @map("coupon_id")
     userId   BigInt @map("user_id")
 
@@ -112,8 +114,11 @@ model UserCoupon {
     coupon Coupon @relation(fields: [couponId], references: [id])
     user   User   @relation("UserRedeemedCoupons", fields: [userId], references: [id])
 
-    @@unique([couponId, userId])
+    @@id([id, usedAt])
+    @@unique([id])
+    @@index([couponId])
     @@index([userId])
+    @@index([userId, couponId])
     @@map("user_coupons")
 }
 
