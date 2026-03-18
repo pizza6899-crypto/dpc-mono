@@ -23,4 +23,4 @@ import { RewardCoreModule } from '../../reward/core/reward-core.module';
   ],
   exports: [ApplyCouponService],
 })
-export class CouponRedemptionModule {}
+export class CouponRedemptionModule { }

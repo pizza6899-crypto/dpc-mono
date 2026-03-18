@@ -15,4 +15,4 @@ import { CouponRedemptionModule } from './redemption/redemption.module';
     CouponRedemptionModule,
   ],
 })
-export class CouponModule {}
+export class CouponModule { }

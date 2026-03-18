@@ -122,4 +122,14 @@ export const CACHE_CONFIG = {
       store: CacheStore.MEMORY,
     },
   },
+  /**
+   * 쿠폰 관련
+   */
+  COUPON: {
+    CONFIG: {
+      key: 'coupon:config:global',
+      ttlSeconds: 60, // 1분
+      store: CacheStore.MEMORY,
+    },
+  },
 } as const;

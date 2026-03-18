@@ -11,6 +11,7 @@ import { seedWageringConfig } from './seeders/wagering.seeder';
 import { seedChatRooms } from './seeders/chat-room.seeder';
 import { seedPromotionConfig } from './seeders/promotion-config.seeder';
 import { seedPromotionCampaigns } from './seeders/promotion-campaign.seeder';
+import { seedCouponConfig } from './seeders/coupon-config.seeder';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
 
@@ -78,6 +79,10 @@ async function main() {
     // 프로모션 캠페인 시딩 처리
     await seedPromotionCampaigns(prisma);
     console.log('✅ 프로모션 캠페인 시딩이 완료되었습니다.');
+
+    // 쿠폰 설정 시딩 처리
+    await seedCouponConfig(prisma);
+    console.log('✅ 쿠폰 설정 시딩이 완료되었습니다.');
 
   } catch (error) {
     console.error('❌ 시딩 중 오류가 발생했습니다:', error);
