@@ -259,5 +259,16 @@ export enum MessageCode {
     COUPON_CONFIG_NOT_FOUND = 'COUPON_CONFIG_NOT_FOUND', // 전역 쿠폰 설정을 찾을 수 없을 때
     COUPON_CONFIG_INVALID = 'COUPON_CONFIG_INVALID', // 전역 쿠폰 설정이 유효하지 않을 때
     COUPON_CONFIG_NEGATIVE_VALUE = 'COUPON_CONFIG_NEGATIVE_VALUE', // 설정값이 음수일 때
+
+    COUPON_NOT_FOUND = 'COUPON_NOT_FOUND', // 쿠폰을 찾을 수 없을 때
+    COUPON_INVALID_CODE = 'COUPON_INVALID_CODE', // 유효하지 않은 쿠폰 코드일 때
+    COUPON_INACTIVE = 'COUPON_INACTIVE', // 비활성 상태의 쿠폰일 때
+    COUPON_EXPIRED = 'COUPON_EXPIRED', // 만료된 쿠폰일 때
+    COUPON_EXHAUSTED = 'COUPON_EXHAUSTED', // 수량이 소진된 쿠폰일 때
+    COUPON_VOIDED = 'COUPON_VOIDED', // 무효화된 쿠폰일 때
+    COUPON_USER_USAGE_EXCEEDED = 'COUPON_USER_USAGE_EXCEEDED', // 유저당 사용 횟수를 초과했을 때
+    COUPON_ALLOWLIST_ONLY = 'COUPON_ALLOWLIST_ONLY', // 허용된 리스트의 유저만 사용 가능할 때
+    COUPON_ALREADY_USED = 'COUPON_ALREADY_USED', // 이미 사용한 쿠폰일 때
+    COUPON_DAILY_ATTEMPT_EXCEEDED = 'COUPON_DAILY_ATTEMPT_EXCEEDED', // 일일 쿠폰 시도 횟수를 초과했을 때
 }
 

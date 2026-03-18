@@ -1,6 +1,12 @@
 import { Prisma, CouponStatus } from '@prisma/client';
 import { CouponReward } from './coupon-reward.entity';
 import { CouponAllowlist } from './coupon-allowlist.entity';
+import {
+  CouponExhaustedException,
+  CouponExpiredException,
+  CouponUserNotAllowedException,
+  CouponException,
+} from './coupon.exception';
 
 export class Coupon {
   private constructor(
@@ -35,6 +41,31 @@ export class Coupon {
   get rewards(): CouponReward[] { return [...this._rewards]; }
   get allowlists(): CouponAllowlist[] { return [...this._allowlists]; }
 
+  validateEligibility(userId: bigint): void {
+    if (this._status !== 'ACTIVE') {
+      throw new CouponException(`Coupon is not active (Status: ${this._status})`);
+    }
+
+    const now = new Date();
+    if (this._startsAt && now < this._startsAt) {
+      throw new CouponException('Coupon has not started yet');
+    }
+    if (this._expiresAt && now > this._expiresAt) {
+      throw new CouponExpiredException();
+    }
+
+    if (this._maxUsage > 0 && this._usageCount >= this._maxUsage) {
+      throw new CouponExhaustedException();
+    }
+
+    if (this._isAllowlistOnly) {
+      const allowed = this._allowlists.some(a => a.userId === userId);
+      if (!allowed) {
+        throw new CouponUserNotAllowedException();
+      }
+    }
+  }
+
   get isActive(): boolean {
     if (this._status !== 'ACTIVE') return false;
     const now = new Date();
@@ -46,7 +77,7 @@ export class Coupon {
 
   incrementUsage(): void {
     if (this._maxUsage > 0 && this._usageCount >= this._maxUsage) {
-      throw new Error('Coupon usage limit reached');
+      throw new CouponExhaustedException();
     }
     this._usageCount++;
     this._updatedAt = new Date();

@@ -15,7 +15,7 @@ export class CouponConfigRepository implements CouponConfigRepositoryPort {
     private readonly cacheService: CacheService,
   ) { }
 
-  async find(): Promise<CouponConfig> {
+  async find(): Promise<CouponConfig | null> {
     const singletonId = CouponConfig.SINGLETON_ID;
 
     // 1. 캐시에서 먼저 조회
@@ -29,17 +29,14 @@ export class CouponConfigRepository implements CouponConfigRepositoryPort {
       });
     }
 
-    // 2. 캐시 없으면 DB 조회 (Upsert로 싱글톤 보장)
-    const config = await this.tx.couponConfig.upsert({
+    // 2. 캐시 없으면 DB 조회
+    const config = await this.tx.couponConfig.findUnique({
       where: { id: singletonId },
-      update: {},
-      create: {
-        id: singletonId,
-        isCouponEnabled: true,
-        maxDailyAttemptsPerUser: 10,
-        defaultExpiryDays: 30
-      },
     });
+
+    if (!config) {
+      return null;
+    }
 
     const domain = CouponConfigMapper.toDomain(config);
 
