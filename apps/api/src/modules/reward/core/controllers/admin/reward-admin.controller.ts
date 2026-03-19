@@ -1,7 +1,8 @@
 import { Controller, Post, Body, Param, HttpCode, HttpStatus, Get, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { ApiStandardResponse, ApiStandardErrors, ApiPaginatedResponse } from 'src/common/http/decorators/api-response.decorator';
-import { Admin } from 'src/common/auth/decorators/roles.decorator';
+import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
+import { UserRoleType } from '@prisma/client';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 import { GrantRewardService } from '../../application/grant-reward.service';
@@ -16,7 +17,7 @@ import Decimal from 'decimal.js';
 
 @ApiTags('Admin Reward')
 @Controller('admin/rewards')
-@Admin()
+@RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 @ApiStandardErrors()
 export class RewardAdminController {
     constructor(

@@ -3,13 +3,14 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SyncGamesService } from '../../application/sync-games.service';
 import { SyncResultResponseDto } from './dto/response/sync-result.response.dto';
 import { SyncGamesRequestDto } from './dto/request/sync-games.request.dto';
-import { Admin } from 'src/common/auth/decorators/roles.decorator';
+import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
+import { UserRoleType } from '@prisma/client';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 
 @ApiTags('Admin Casino Game')
 @Controller('admin/casino/sync')
-@Admin()
+@RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class SyncAdminController {
   constructor(private readonly syncGamesService: SyncGamesService) {}
 

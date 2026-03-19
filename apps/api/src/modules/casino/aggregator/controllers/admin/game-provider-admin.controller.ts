@@ -8,7 +8,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { Admin } from 'src/common/auth/decorators/roles.decorator';
+import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
+import { UserRoleType } from '@prisma/client';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 import { FindGameProvidersService } from '../../application/provider/find-game-providers.service';
@@ -19,7 +20,7 @@ import { GameProviderResponseDto } from './dto/response/provider/game-provider.r
 import { CasinoGameProvider } from '../../domain';
 
 @ApiTags('Admin Casino Game Provider')
-@Admin()
+@RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 @Controller('admin/casino/providers')
 export class GameProviderAdminController {
   constructor(

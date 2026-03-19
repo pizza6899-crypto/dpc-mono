@@ -8,7 +8,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { Public, AuthAll } from 'src/common/auth/decorators/roles.decorator';
+import { Public, RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { FindGamesService } from '../../application/find-games.service';
@@ -21,7 +21,7 @@ import {
 } from 'src/common/http/decorators/api-response.decorator';
 import { PaginatedData } from 'src/common/http/types';
 import type { RequestClientInfo } from 'src/common/http/types';
-import { Language } from '@prisma/client';
+import { Language, UserRoleType } from '@prisma/client';
 import { GetCategoryByCodeService } from '../../application/get-category-by-code.service';
 import { LaunchGameService } from '../../../application/launch-game.service';
 import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
@@ -108,7 +108,7 @@ export class GameUserController {
   }
 
   @Post('launch')
-  @AuthAll()
+  @RequireRoles(UserRoleType.USER, UserRoleType.AGENT, UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
   @HttpCode(HttpStatus.OK)
   @Throttle({
     limit: 30,

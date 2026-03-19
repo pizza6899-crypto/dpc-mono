@@ -15,7 +15,8 @@ import {
 } from 'src/common/http/decorators/api-response.decorator';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
-import { Admin } from 'src/common/auth/decorators/roles.decorator';
+import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
+import { UserRoleType } from '@prisma/client';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain/log-payload.type';
 import { FindForbiddenWordsAdminService } from '../../application/admin/find-forbidden-words-admin.service';
@@ -28,7 +29,7 @@ import { UpdateForbiddenWordAdminDto } from './dto/request/update-forbidden-word
 import { ForbiddenWordAdminResponseDto } from './dto/response/forbidden-word-admin.response.dto';
 
 @ApiTags('Admin Moderation')
-@Admin() // 관리자 권한 필수
+@RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN) // 관리자 권한 필수
 @Controller('admin/forbidden-words')
 export class ForbiddenWordAdminController {
     constructor(

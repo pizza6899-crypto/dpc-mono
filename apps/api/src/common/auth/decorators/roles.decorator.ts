@@ -16,22 +16,3 @@ export const RequireRoles = (...aud: Array<UserRoleType>) =>
 export const Perms = (...perms: string[]) =>
   applyDecorators(SetMetadata(PERMISSIONS_KEY, perms), ApiCookieAuth());
 
-export const AuthAll = (...p: string[]) =>
-  applyDecorators(
-    RequireRoles(
-      UserRoleType.USER,
-      UserRoleType.AGENT,
-      UserRoleType.ADMIN,
-      UserRoleType.SUPER_ADMIN,
-    ),
-    Perms(...p),
-  );
-
-export const Admin = (...p: string[]) =>
-  applyDecorators(
-    RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN),
-    Perms(...p),
-  );
-
-export const SuperAdmin = (...p: string[]) =>
-  applyDecorators(RequireRoles(UserRoleType.SUPER_ADMIN), Perms(...p));

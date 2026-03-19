@@ -34,7 +34,8 @@ import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
 import { UserTierListItemResponseDto } from './dto/response/user-tier-list.response.dto';
 import { SessionAuthGuard } from 'src/common/auth/guards/session-auth.guard';
-import { Admin } from 'src/common/auth/decorators/roles.decorator';
+import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
+import { UserRoleType } from '@prisma/client';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 import { UpdateUserTierStatusRequestDto } from './dto/request/update-user-tier-status.request.dto';
@@ -43,7 +44,7 @@ import { UpdateUserTierStatusRequestDto } from './dto/request/update-user-tier-s
 @Controller('admin/user-tiers')
 @ApiBearerAuth()
 @UseGuards(SessionAuthGuard)
-@Admin()
+@RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class UserTierAdminController {
   constructor(
     private readonly listUserTiersService: ListUserTiersService,

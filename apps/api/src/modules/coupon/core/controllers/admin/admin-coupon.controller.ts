@@ -17,7 +17,8 @@ import {
   ApiStandardErrors,
   ApiPaginatedResponse,
 } from 'src/common/http/decorators/api-response.decorator';
-import { Admin } from 'src/common/auth/decorators/roles.decorator';
+import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
+import { UserRoleType } from '@prisma/client';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
@@ -47,7 +48,7 @@ import { PaginatedData } from 'src/common/http/types/pagination.types';
 
 @ApiTags('Admin Coupon')
 @Controller('admin/coupons')
-@Admin()
+@RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 @ApiStandardErrors()
 export class AdminCouponController {
   constructor(

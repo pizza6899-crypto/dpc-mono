@@ -1,7 +1,8 @@
 import { Controller, Get, Post, Put, Param, Body } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { LogType } from 'src/modules/audit-log/domain';
-import { Admin } from 'src/common/auth/decorators/roles.decorator';
+import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
+import { UserRoleType } from '@prisma/client';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { FindAggregatorsService } from '../../application/find-aggregators.service';
 import { UpdateAggregatorService } from '../../application/update-aggregator.service';
@@ -12,7 +13,7 @@ import { CasinoAggregator } from '../../domain';
 
 @ApiTags('Admin Casino Aggregator')
 @Controller('admin/casino/aggregators')
-@Admin()
+@RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class AggregatorAdminController {
   constructor(
     private readonly findAggregatorsService: FindAggregatorsService,

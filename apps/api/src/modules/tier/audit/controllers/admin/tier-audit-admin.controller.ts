@@ -9,17 +9,18 @@ import { GetTierDistributionService } from '../../application/get-tier-distribut
 import { TierDistributionResponseDto } from './dto/tier-distribution.response.dto';
 import { GetTierDistributionQueryDto } from './dto/request/get-tier-distribution.query.dto';
 import { SessionAuthGuard } from 'src/common/auth/guards/session-auth.guard';
-import { Admin } from 'src/common/auth/decorators/roles.decorator';
+import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
+import { UserRoleType } from '@prisma/client';
 
 @ApiTags('Admin Tier Audit')
 @Controller('admin/tier-audit')
 @ApiBearerAuth()
 @UseGuards(SessionAuthGuard)
-@Admin()
+@RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class TierAuditAdminController {
   constructor(
     private readonly getTierDistributionService: GetTierDistributionService,
-  ) {}
+  ) { }
 
   @Get('distribution')
   @ApiOperation({ summary: 'Get tier distribution / 티어별 유저 분포 조회' })

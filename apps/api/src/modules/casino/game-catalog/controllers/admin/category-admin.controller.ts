@@ -11,7 +11,8 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { Admin } from 'src/common/auth/decorators/roles.decorator';
+import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
+import { UserRoleType } from '@prisma/client';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 import { FindCategoriesService } from '../../application/find-categories.service';
@@ -40,7 +41,7 @@ import { CasinoGameCategory } from '../../domain';
 
 @ApiTags('Admin Casino Category')
 @Controller('admin/casino/categories')
-@Admin()
+@RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class CategoryAdminController {
   constructor(
     private readonly findCategoriesService: FindCategoriesService,

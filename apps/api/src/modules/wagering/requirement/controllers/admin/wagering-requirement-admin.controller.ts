@@ -8,7 +8,8 @@ import {
   Inject,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { Admin } from '../../../../../common/auth/decorators/roles.decorator';
+import { RequireRoles } from '../../../../../common/auth/decorators/roles.decorator';
+import { UserRoleType } from '@prisma/client';
 import {
   FindWageringRequirementsService,
   VoidWageringRequirementService,
@@ -32,7 +33,7 @@ import type { PaginatedData } from 'src/common/http/types/pagination.types';
 
 @ApiTags('Admin Wagering Requirements')
 @Controller('admin/wagering-requirements')
-@Admin()
+@RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class WageringRequirementAdminController {
   constructor(
     private readonly findService: FindWageringRequirementsService,
