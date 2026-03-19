@@ -45,3 +45,21 @@ export class CouponConfigNotFoundException extends CouponConfigException {
     this.name = 'CouponConfigNotFoundException';
   }
 }
+
+export class CouponSystemDisabledException extends CouponConfigException {
+  constructor() {
+    super('Coupon system is currently disabled', MessageCode.COUPON_DISABLED);
+    this.name = 'CouponSystemDisabledException';
+  }
+}
+
+export class CouponDailyAttemptsExceededException extends CouponConfigException {
+  constructor() {
+    super(
+      'Daily coupon redemption attempts exceeded',
+      MessageCode.COUPON_DAILY_ATTEMPT_EXCEEDED,
+      HttpStatus.TOO_MANY_REQUESTS,
+    );
+    this.name = 'CouponDailyAttemptsExceededException';
+  }
+}

@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { RewardModule } from 'src/modules/reward/reward.module';
 import { CouponCoreModule } from '../core/core.module';
+import { CouponConfigModule } from '../config/config.module';
+import { RedisModule } from 'src/infrastructure/redis/redis.module';
 import { USER_COUPON_REPOSITORY_TOKEN } from './ports/user-coupon.repository.port';
 import { PrismaUserCouponRepository } from './infrastructure/user-coupon.repository';
 import { ApplyCouponService } from './application/apply-coupon.service';
@@ -10,10 +11,11 @@ import { CouponUserController } from './controllers/user/coupon-user.controller'
 
 @Module({
   imports: [
-    PrismaModule,
     SnowflakeModule,
     RewardModule,
-    CouponCoreModule, // findByCode 및 isUserInAllowlist 호출을 위해 필요
+    RedisModule,
+    CouponCoreModule,
+    CouponConfigModule,
   ],
   controllers: [CouponUserController],
   providers: [
@@ -25,4 +27,4 @@ import { CouponUserController } from './controllers/user/coupon-user.controller'
   ],
   exports: [ApplyCouponService],
 })
-export class CouponRedemptionModule {}
+export class CouponRedemptionModule { }

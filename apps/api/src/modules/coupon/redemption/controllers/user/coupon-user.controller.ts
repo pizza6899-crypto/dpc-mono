@@ -9,8 +9,7 @@ import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorat
 import { LogType } from 'src/modules/audit-log/domain';
 import { ApplyCouponService } from '../../application/apply-coupon.service';
 import { ApplyCouponRequestDto } from './dto/request/apply-coupon.request.dto';
-import { CouponResponseDto } from '../../../core/controllers/admin/dto/response/coupon.response.dto';
-import Decimal from 'decimal.js';
+import { ApplyCouponResponseDto } from './dto/response/apply-coupon.response.dto';
 
 @ApiTags('Coupon')
 @Controller('coupons')
@@ -31,28 +30,20 @@ export class CouponUserController {
     action: 'REDEEM_COUPON',
     extractMetadata: (req) => ({ code: req.body.code }),
   })
-  @ApiStandardResponse(CouponResponseDto, {
+  @ApiStandardResponse(ApplyCouponResponseDto, {
     status: HttpStatus.OK,
     description: 'Successfully applied coupon / 쿠폰 적용 및 보상 지급 성공',
   })
   async applyCoupon(
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: ApplyCouponRequestDto,
-  ): Promise<CouponResponseDto> {
+  ): Promise<ApplyCouponResponseDto> {
     const coupon = await this.applyCouponService.execute(BigInt(user.id), dto.code);
     const props = coupon.toProps();
 
     return {
-      id: props.id.toString(),
       code: props.code,
       metadata: props.metadata,
-      isAllowlistOnly: props.isAllowlistOnly,
-      maxUsage: props.maxUsage,
-      usageCount: props.usageCount,
-      maxUsagePerUser: props.maxUsagePerUser,
-      status: props.status,
-      startsAt: props.startsAt,
-      expiresAt: props.expiresAt,
       rewards: props.rewards.map((r) => ({
         rewardType: r.rewardType,
         currency: r.currency,
@@ -60,10 +51,7 @@ export class CouponUserController {
         wageringMultiplier: r.wageringMultiplier?.toString() ?? null,
         maxCashConversion: r.maxCashConversion?.toString() ?? null,
       })),
-      createdBy: props.createdBy?.toString() ?? null,
-      updatedBy: props.updatedBy?.toString() ?? null,
-      createdAt: props.createdAt,
-      updatedAt: props.updatedAt,
+      message: 'Coupon successfully applied',
     };
   }
 }

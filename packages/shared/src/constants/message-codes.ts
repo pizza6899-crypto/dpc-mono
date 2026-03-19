@@ -271,5 +271,6 @@ export enum MessageCode {
     COUPON_ALLOWLIST_ONLY = 'COUPON_ALLOWLIST_ONLY', // 허용된 리스트의 유저만 사용 가능할 때
     COUPON_ALREADY_USED = 'COUPON_ALREADY_USED', // 이미 사용한 쿠폰일 때
     COUPON_DAILY_ATTEMPT_EXCEEDED = 'COUPON_DAILY_ATTEMPT_EXCEEDED', // 일일 쿠폰 시도 횟수를 초과했을 때
+    COUPON_DISABLED = 'COUPON_DISABLED', // 쿠폰 시스템이 전역적으로 비활성화된 경우
 }
 
