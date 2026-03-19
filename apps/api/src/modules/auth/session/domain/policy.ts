@@ -63,8 +63,8 @@ export class SessionPolicy {
     isMobile: boolean,
   ): void {
     // 다중 로그인 제한 등 정책은 HTTP 세션(로그인)을 기준으로 카운트합니다.
-    const activeHttpSessions = existingActiveSessions.filter((session) =>
-      session.isActive() && session.type === SessionType.HTTP
+    const activeHttpSessions = existingActiveSessions.filter(
+      (session) => session.isActive() && session.type === SessionType.HTTP,
     );
     const activeSessionCount = activeHttpSessions.length;
 
@@ -124,8 +124,8 @@ export class SessionPolicy {
     }
 
     // 다중 로그인이 허용된 경우, HTTP 세션(로그인) 기준으로 초과 여부를 계산합니다.
-    const activeHttpSessions = activeSessions.filter((session) =>
-      session.type === SessionType.HTTP
+    const activeHttpSessions = activeSessions.filter(
+      (session) => session.type === SessionType.HTTP,
     );
 
     // 같은 디바이스 타입의 세션 필터링 (HTTP 기준)
@@ -146,7 +146,8 @@ export class SessionPolicy {
       );
 
       // 초과하는 세션 수만큼 종료
-      const excessCount = sameDeviceTypeHttpSessions.length - maxSessionsForDeviceType + 1;
+      const excessCount =
+        sameDeviceTypeHttpSessions.length - maxSessionsForDeviceType + 1;
       httpSessionsToRevoke = sortedSessions.slice(0, excessCount);
     } else {
       // 전체 세션 수 제한 확인
@@ -165,12 +166,15 @@ export class SessionPolicy {
 
     if (httpSessionsToRevoke.length > 0) {
       // 만료시킬 HTTP 세션의 ID 목록을 추출합니다.
-      const revokeSessionIds = new Set(httpSessionsToRevoke.map(s => s.sessionId));
+      const revokeSessionIds = new Set(
+        httpSessionsToRevoke.map((s) => s.sessionId),
+      );
 
       // HTTP 세션 및 해당 HTTP 세션을 부모로 가지는 WS 세션(또는 동일 sessionId) 모두 종료 대상에 포함
-      return activeSessions.filter(s =>
-        revokeSessionIds.has(s.sessionId) ||
-        (s.parentSessionId && revokeSessionIds.has(s.parentSessionId))
+      return activeSessions.filter(
+        (s) =>
+          revokeSessionIds.has(s.sessionId) ||
+          (s.parentSessionId && revokeSessionIds.has(s.parentSessionId)),
       );
     }
 

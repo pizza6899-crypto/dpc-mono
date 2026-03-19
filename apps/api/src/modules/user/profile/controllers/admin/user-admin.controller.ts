@@ -50,8 +50,7 @@ export class UserAdminController {
     private readonly restoreUserAdminService: RestoreUserAdminService,
     private readonly expireUserSessionsService: ExpireUserSessionsService,
     private readonly revokeUserGameSessionsService: RevokeUserGameSessionsService,
-  ) { }
-
+  ) {}
 
   /**
    * 사용자 목록 조회 (관리자용)
@@ -117,7 +116,8 @@ export class UserAdminController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Update user / 사용자 정보 수정 (관리자용)',
-    description: 'Administrator updates the specific user\'s email, status, and currency settings. / 관리자가 특정 사용자의 이메일, 상태, 통화 설정을 변경합니다.',
+    description:
+      "Administrator updates the specific user's email, status, and currency settings. / 관리자가 특정 사용자의 이메일, 상태, 통화 설정을 변경합니다.",
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -172,7 +172,8 @@ export class UserAdminController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Close user account / 사용자 계정 종료/탈퇴 처리 (관리자용)',
-    description: 'Permanently close the user account and terminate all active sessions. / 사용자의 계정을 종료 처리하고 모든 활성 세션을 즉시 파기합니다.',
+    description:
+      'Permanently close the user account and terminate all active sessions. / 사용자의 계정을 종료 처리하고 모든 활성 세션을 즉시 파기합니다.',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -203,7 +204,8 @@ export class UserAdminController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Restore user account / 사용자 계정 복구 (관리자용)',
-    description: 'Restore a previously closed user account back to active status. / 이전의 종료(탈퇴)된 사용자 계정을 다시 활성 상태로 복구합니다.',
+    description:
+      'Restore a previously closed user account back to active status. / 이전의 종료(탈퇴)된 사용자 계정을 다시 활성 상태로 복구합니다.',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -232,7 +234,8 @@ export class UserAdminController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Force logout user / 사용자 강제 로그아웃 (관리자용)',
-    description: 'Imidiatly terminate all active sessions of the user. / 해당 사용자의 모든 활성 세션을 즉시 파기하여 강제 로그아웃 처리합니다.',
+    description:
+      'Imidiatly terminate all active sessions of the user. / 해당 사용자의 모든 활성 세션을 즉시 파기하여 강제 로그아웃 처리합니다.',
   })
   @AuditLog({
     type: LogType.ACTIVITY,

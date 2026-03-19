@@ -21,7 +21,7 @@ export class WageringRequirementRepository implements WageringRequirementReposit
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: WageringRequirementMapper,
-  ) { }
+  ) {}
 
   async create(
     wageringRequirement: WageringRequirement,
@@ -132,7 +132,7 @@ export class WageringRequirementRepository implements WageringRequirementReposit
     const {
       userId,
       statuses,
-    rewardId,
+      rewardId,
       currency,
       fromAt,
       toAt,

@@ -16,4 +16,6 @@ export interface CouponAllowlistRepositoryPort {
   clear(couponId: bigint): Promise<void>;
 }
 
-export const COUPON_ALLOWLIST_REPOSITORY_TOKEN = Symbol('COUPON_ALLOWLIST_REPOSITORY_TOKEN');
+export const COUPON_ALLOWLIST_REPOSITORY_TOKEN = Symbol(
+  'COUPON_ALLOWLIST_REPOSITORY_TOKEN',
+);

@@ -44,7 +44,7 @@ export class FileController {
     private readonly createFileService: CreateFileService,
     private readonly fileUrlService: FileUrlService,
     private readonly sqidsService: SqidsService,
-  ) { }
+  ) {}
 
   @Post('upload')
   @UseGuards(SessionAuthGuard)

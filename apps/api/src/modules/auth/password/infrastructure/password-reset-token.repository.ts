@@ -13,7 +13,7 @@ export class PasswordResetTokenRepository implements PasswordResetTokenRepositor
   constructor(
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
-  ) { }
+  ) {}
 
   async create(params: {
     userId: bigint;

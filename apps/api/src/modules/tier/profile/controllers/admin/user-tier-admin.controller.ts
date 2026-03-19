@@ -54,7 +54,7 @@ export class UserTierAdminController {
     private readonly forceUpdateUserTierService: ForceUpdateUserTierService,
     private readonly resetUserTierPerformanceService: ResetUserTierPerformanceService,
     private readonly updateUserTierStatusService: UpdateUserTierStatusService,
-  ) { }
+  ) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)

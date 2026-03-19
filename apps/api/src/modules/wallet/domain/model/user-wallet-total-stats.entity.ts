@@ -48,7 +48,7 @@ export class UserWalletTotalStats {
     public lastWithdrawAt: Date | null,
 
     public readonly updatedAt: Date,
-  ) { }
+  ) {}
 
   static create(params: {
     userId: bigint;

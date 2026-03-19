@@ -12,7 +12,7 @@ export class CompAccount {
     public readonly isFrozen: boolean,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
-  ) { }
+  ) {}
 
   static create(params: {
     id?: bigint;

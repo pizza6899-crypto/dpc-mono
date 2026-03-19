@@ -10,11 +10,7 @@ import type {
   DepositWithUser,
 } from '../ports/deposit-detail.repository.port';
 import { DepositDetailMapper } from './deposit-detail.mapper';
-import {
-  Prisma,
-  DepositDetailStatus,
-  DepositMethodType,
-} from '@prisma/client';
+import { Prisma, DepositDetailStatus, DepositMethodType } from '@prisma/client';
 
 /**
  * DepositDetail Repository Implementation
@@ -27,9 +23,12 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: DepositDetailMapper,
-  ) { }
+  ) {}
 
-  async findById(id: bigint, options?: { userId?: bigint }): Promise<DepositDetail | null> {
+  async findById(
+    id: bigint,
+    options?: { userId?: bigint },
+  ): Promise<DepositDetail | null> {
     const { userId } = options ?? {};
     const result = await this.tx.depositDetail.findFirst({
       where: {
@@ -130,11 +129,11 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
       ...(currency && { depositCurrency: currency }),
       ...(startDate &&
         endDate && {
-        createdAt: {
-          gte: new Date(startDate),
-          lte: new Date(endDate),
-        },
-      }),
+          createdAt: {
+            gte: new Date(startDate),
+            lte: new Date(endDate),
+          },
+        }),
     };
 
     const orderBy: Prisma.DepositDetailOrderByWithRelationInput = {
@@ -159,7 +158,6 @@ export class DepositDetailRepository implements DepositDetailRepositoryPort {
       total,
     };
   }
-
 
   async getStats(): Promise<DepositStats> {
     const today = new Date();

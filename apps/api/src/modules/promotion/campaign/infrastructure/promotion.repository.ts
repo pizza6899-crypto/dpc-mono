@@ -2,8 +2,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { Prisma, ExchangeCurrencyCode, Language, PromotionTargetType, PromotionResetType } from '@prisma/client';
-import { Promotion, UserPromotion, PromotionCurrencyRule, PromotionTranslation } from '../domain';
+import {
+  Prisma,
+  ExchangeCurrencyCode,
+  Language,
+  PromotionTargetType,
+  PromotionResetType,
+} from '@prisma/client';
+import {
+  Promotion,
+  UserPromotion,
+  PromotionCurrencyRule,
+  PromotionTranslation,
+} from '../domain';
 import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
 import { PromotionMapper } from './promotion.mapper';
 
@@ -13,7 +24,7 @@ export class PromotionRepository implements PromotionRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: PromotionMapper,
-  ) { }
+  ) {}
 
   async findActivePromotions(now: Date = new Date()): Promise<Promotion[]> {
     const results = await this.tx.promotion.findMany({
@@ -72,7 +83,9 @@ export class PromotionRepository implements PromotionRepositoryPort {
     ]);
 
     return {
-      promotions: results.map((result) => this.mapper.toDomainWithRelations(result)),
+      promotions: results.map((result) =>
+        this.mapper.toDomainWithRelations(result),
+      ),
       total,
     };
   }
@@ -85,7 +98,10 @@ export class PromotionRepository implements PromotionRepositoryPort {
     return result ? this.mapper.toDomainWithRelations(result) : null;
   }
 
-  async findByTargetType(targetType: PromotionTargetType, now: Date = new Date()): Promise<Promotion[]> {
+  async findByTargetType(
+    targetType: PromotionTargetType,
+    now: Date = new Date(),
+  ): Promise<Promotion[]> {
     const results = await this.tx.promotion.findMany({
       where: {
         isActive: true,
@@ -102,7 +118,10 @@ export class PromotionRepository implements PromotionRepositoryPort {
     return results.map((result) => this.mapper.toDomainWithRelations(result));
   }
 
-  async findUserPromotions(userId: bigint, status?: string): Promise<UserPromotion[]> {
+  async findUserPromotions(
+    userId: bigint,
+    status?: string,
+  ): Promise<UserPromotion[]> {
     const results = await this.tx.userPromotion.findMany({
       where: { userId, ...(status && { status: status as any }) },
       orderBy: { createdAt: 'desc' },
@@ -118,7 +137,14 @@ export class PromotionRepository implements PromotionRepositoryPort {
     sortOrder?: 'asc' | 'desc';
     status?: string;
   }): Promise<{ userPromotions: UserPromotion[]; total: number }> {
-    const { userId, page = 1, limit = 20, sortBy = 'createdAt', sortOrder = 'desc', status } = params;
+    const {
+      userId,
+      page = 1,
+      limit = 20,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+      status,
+    } = params;
     const skip = (page - 1) * limit;
     const where: Prisma.UserPromotionWhereInput = {
       userId,
@@ -136,12 +162,17 @@ export class PromotionRepository implements PromotionRepositoryPort {
     ]);
 
     return {
-      userPromotions: results.map((result) => this.mapper.userPromotionToDomain(result)),
+      userPromotions: results.map((result) =>
+        this.mapper.userPromotionToDomain(result),
+      ),
       total,
     };
   }
 
-  async hasUserUsedPromotion(userId: bigint, promotionId: bigint): Promise<boolean> {
+  async hasUserUsedPromotion(
+    userId: bigint,
+    promotionId: bigint,
+  ): Promise<boolean> {
     const count = await this.tx.userPromotion.count({
       where: { userId, promotionId, bonusAmount: { gt: 0 } },
     });
@@ -223,14 +254,25 @@ export class PromotionRepository implements PromotionRepositoryPort {
     startDate?: Date;
     endDate?: Date;
   }): Promise<{ promotions: Promotion[]; total: number }> {
-    const { id, page = 1, limit = 20, sortBy = 'createdAt', sortOrder = 'desc', isActive, targetType, startDate, endDate } = params;
+    const {
+      id,
+      page = 1,
+      limit = 20,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+      isActive,
+      targetType,
+      startDate,
+      endDate,
+    } = params;
     const skip = (page - 1) * limit;
     const where: Prisma.PromotionWhereInput = {
       deletedAt: null,
       ...(id && { id }),
       ...(isActive !== undefined && { isActive }),
       ...(targetType && { targetType: targetType as any }),
-      ...(startDate && endDate && { createdAt: { gte: startDate, lte: endDate } }),
+      ...(startDate &&
+        endDate && { createdAt: { gte: startDate, lte: endDate } }),
     };
 
     const [results, total] = await Promise.all([
@@ -245,7 +287,9 @@ export class PromotionRepository implements PromotionRepositoryPort {
     ]);
 
     return {
-      promotions: results.map((result) => this.mapper.toDomainWithRelations(result)),
+      promotions: results.map((result) =>
+        this.mapper.toDomainWithRelations(result),
+      ),
       total,
     };
   }
@@ -279,7 +323,10 @@ export class PromotionRepository implements PromotionRepositoryPort {
     return this.mapper.toDomain(result);
   }
 
-  async update(id: bigint, params: Partial<Prisma.PromotionUpdateInput>): Promise<Promotion> {
+  async update(
+    id: bigint,
+    params: Partial<Prisma.PromotionUpdateInput>,
+  ): Promise<Promotion> {
     const result = await this.tx.promotion.update({
       where: { id },
       data: {
@@ -290,9 +337,10 @@ export class PromotionRepository implements PromotionRepositoryPort {
     return this.mapper.toDomain(result);
   }
 
-
-
-  async getCurrencyRule(promotionId: bigint, currency: ExchangeCurrencyCode): Promise<PromotionCurrencyRule | null> {
+  async getCurrencyRule(
+    promotionId: bigint,
+    currency: ExchangeCurrencyCode,
+  ): Promise<PromotionCurrencyRule | null> {
     const result = await this.tx.promotionCurrencyRule.findUnique({
       where: { promotionId_currency: { promotionId, currency } },
     });
@@ -310,12 +358,16 @@ export class PromotionRepository implements PromotionRepositoryPort {
     wageringMultiplier?: Prisma.Decimal | null;
   }): Promise<void> {
     await this.tx.promotionCurrencyRule.upsert({
-      where: { promotionId_currency: { promotionId: params.promotionId, currency: params.currency } },
+      where: {
+        promotionId_currency: {
+          promotionId: params.promotionId,
+          currency: params.currency,
+        },
+      },
       create: { ...params },
       update: { ...params, updatedAt: new Date() },
     });
   }
-
 
   async findUserPromotionsByPromotionId(params: {
     promotionId: bigint;
@@ -332,7 +384,15 @@ export class PromotionRepository implements PromotionRepositoryPort {
     }>;
     total: number;
   }> {
-    const { promotionId, page = 1, limit = 20, sortBy = 'createdAt', sortOrder = 'desc', status, userId } = params;
+    const {
+      promotionId,
+      page = 1,
+      limit = 20,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+      status,
+      userId,
+    } = params;
     const skip = (page - 1) * limit;
     const where: Prisma.UserPromotionWhereInput = {
       promotionId,
@@ -373,7 +433,9 @@ export class PromotionRepository implements PromotionRepositoryPort {
       }),
     ]);
     const statusCounts: Record<string, number> = {};
-    statusGroups.forEach((g) => { statusCounts[g.status] = g._count; });
+    statusGroups.forEach((g) => {
+      statusCounts[g.status] = g._count;
+    });
     return { totalParticipants: total, statusCounts };
   }
 
@@ -384,11 +446,15 @@ export class PromotionRepository implements PromotionRepositoryPort {
     description?: string | null;
   }): Promise<PromotionTranslation> {
     const result = await this.tx.promotionTranslation.upsert({
-      where: { promotionId_language: { promotionId: params.promotionId, language: params.language } },
+      where: {
+        promotionId_language: {
+          promotionId: params.promotionId,
+          language: params.language,
+        },
+      },
       create: { ...params },
       update: { ...params, updatedAt: new Date() },
     });
     return result;
   }
-
 }

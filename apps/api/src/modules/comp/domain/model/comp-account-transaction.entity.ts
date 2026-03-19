@@ -13,7 +13,7 @@ export class CompAccountTransaction {
     public readonly metadata: any | null,
     public readonly description: string | null,
     public readonly createdAt: Date,
-  ) { }
+  ) {}
 
   static create(params: {
     id: bigint; // Snowflake ID inject
@@ -39,7 +39,7 @@ export class CompAccountTransaction {
       params.parentTransactionId ?? null,
       params.metadata ?? null,
       params.description ?? null,
-      params.createdAt
+      params.createdAt,
     );
   }
 

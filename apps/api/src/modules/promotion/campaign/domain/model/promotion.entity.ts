@@ -36,7 +36,7 @@ export class Promotion {
     private _deletedAt: Date | null = null,
     private _currencyRules?: PromotionCurrencyRule[],
     private _translations?: PromotionTranslation[],
-  ) { }
+  ) {}
 
   static fromPersistence(data: {
     id: bigint;

@@ -16,7 +16,7 @@ export class TierAuditRepository implements TierAuditRepositoryPort {
   constructor(
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
-  ) { }
+  ) {}
 
   // --- History ---
   async saveHistory(props: CreateTierHistoryProps): Promise<TierHistory> {
@@ -79,7 +79,7 @@ export class TierAuditRepository implements TierAuditRepositoryPort {
   ): Promise<void> {
     await this.tx.tierStats.upsert({
       where: { timestamp_tierId: { timestamp, tierId } },
-      create: { timestamp, tierId, ...data as any },
+      create: { timestamp, tierId, ...(data as any) },
       update: data as any,
     });
   }
@@ -87,7 +87,9 @@ export class TierAuditRepository implements TierAuditRepositoryPort {
   async incrementStats(
     timestamp: Date,
     tierId: bigint,
-    data: Partial<Record<keyof UpdateTierStatsProps, number | bigint | Prisma.Decimal>>,
+    data: Partial<
+      Record<keyof UpdateTierStatsProps, number | bigint | Prisma.Decimal>
+    >,
   ): Promise<void> {
     const updateData: any = {};
     for (const [key, value] of Object.entries(data)) {

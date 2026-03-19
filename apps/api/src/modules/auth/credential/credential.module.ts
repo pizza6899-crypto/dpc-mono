@@ -67,4 +67,4 @@ import { SessionSerializer } from 'src/common/auth/strategies/session.serializer
     CREDENTIAL_USER_REPOSITORY,
   ],
 })
-export class CredentialModule { }
+export class CredentialModule {}

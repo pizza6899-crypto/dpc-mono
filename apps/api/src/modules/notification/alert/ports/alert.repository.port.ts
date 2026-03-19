@@ -19,9 +19,7 @@ export interface AlertRepositoryPort {
   /**
    * 멱등성 키로 조회 (중복 방지용, 최근 3일 치 데이터 등 검색)
    */
-  findByIdempotencyKey(
-    idempotencyKey: string,
-  ): Promise<Alert | null>;
+  findByIdempotencyKey(idempotencyKey: string): Promise<Alert | null>;
 
   /**
    * Alert 업데이트

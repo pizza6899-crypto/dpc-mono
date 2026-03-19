@@ -49,7 +49,7 @@ export class WalletAdminController {
     private readonly adjustUserBalanceService: AdjustUserBalanceService,
     private readonly updateWalletStatusService: UpdateWalletStatusService,
     private readonly findWalletTransactionHistoryService: FindWalletTransactionHistoryService,
-  ) { }
+  ) {}
 
   /**
    * 1. 사용자 지갑 목록 조회
@@ -235,18 +235,18 @@ export class WalletAdminController {
           },
           adminDetail: metadata.adminId
             ? {
-              adminUserId: metadata.adminId,
-              reasonCode: metadata.reasonCode,
-              internalNote: metadata.internalNote || metadata.remark,
-            }
+                adminUserId: metadata.adminId,
+                reasonCode: metadata.reasonCode,
+                internalNote: metadata.internalNote || metadata.remark,
+              }
             : undefined,
           systemDetail: metadata.serviceName
             ? {
-              serviceName: metadata.serviceName,
-              triggerId: metadata.triggerId,
-              actionName: metadata.actionName,
-              metadata: metadata.metadata,
-            }
+                serviceName: metadata.serviceName,
+                triggerId: metadata.triggerId,
+                actionName: metadata.actionName,
+                metadata: metadata.metadata,
+              }
             : undefined,
           createdAt: tx.createdAt,
         };

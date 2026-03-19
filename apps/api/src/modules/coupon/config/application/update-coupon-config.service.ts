@@ -17,7 +17,7 @@ export class UpdateCouponConfigService {
   constructor(
     @Inject(COUPON_CONFIG_REPOSITORY_TOKEN)
     private readonly repository: CouponConfigRepositoryPort,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(command: UpdateCouponConfigCommand): Promise<CouponConfig> {

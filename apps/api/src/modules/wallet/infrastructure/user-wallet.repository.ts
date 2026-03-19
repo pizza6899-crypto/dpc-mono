@@ -19,7 +19,7 @@ export class UserWalletRepository implements UserWalletRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: UserWalletMapper,
-  ) { }
+  ) {}
 
   async findByUserIdAndCurrency(
     userId: bigint,

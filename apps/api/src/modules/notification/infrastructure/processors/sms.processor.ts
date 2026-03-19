@@ -52,7 +52,9 @@ export class SMSProcessor extends BaseProcessor<NotificationJobData, void> {
     // 지연 렌더링 처리
     if (!log.title || !log.body) {
       if (!log.templateEvent) {
-        throw new Error(`SMS sending failed: missing templateEvent for log ${log.id}`);
+        throw new Error(
+          `SMS sending failed: missing templateEvent for log ${log.id}`,
+        );
       }
 
       const renderResult = await this.renderTemplateService.execute({

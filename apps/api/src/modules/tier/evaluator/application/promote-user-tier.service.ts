@@ -10,7 +10,11 @@ import { TierRepositoryPort } from '../../config/infrastructure/tier.repository.
 import { UserTierNotFoundException } from '../../profile/domain/tier-profile.exception';
 import { GrantRewardService } from 'src/modules/reward/core/application/grant-reward.service';
 import { ClaimRewardService as CoreClaimRewardService } from 'src/modules/reward/core/application/claim-reward.service';
-import { RewardSourceType, RewardItemType, WageringTargetType } from '@prisma/client';
+import {
+  RewardSourceType,
+  RewardItemType,
+  WageringTargetType,
+} from '@prisma/client';
 
 @Injectable()
 export class PromoteUserTierService {
@@ -24,7 +28,7 @@ export class PromoteUserTierService {
     private readonly tierConfigRepository: TierConfigRepositoryPort,
     private readonly grantRewardService: GrantRewardService,
     private readonly claimRewardService: CoreClaimRewardService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(
@@ -129,7 +133,8 @@ export class PromoteUserTierService {
       compRateSnap: benefits.compRate,
       weeklyLossbackRateSnap: benefits.weeklyLossbackRate,
       monthlyLossbackRateSnap: benefits.monthlyLossbackRate,
-      upgradeBonusWageringMultiplierSnap: targetTier.upgradeBonusWageringMultiplier,
+      upgradeBonusWageringMultiplierSnap:
+        targetTier.upgradeBonusWageringMultiplier,
 
       // Limit & Flag Snapshot
       dailyWithdrawalLimitUsdSnap: benefits.dailyWithdrawalLimitUsd,

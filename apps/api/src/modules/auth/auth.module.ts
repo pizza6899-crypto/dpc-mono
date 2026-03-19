@@ -16,4 +16,4 @@ import { PhoneVerificationModule } from './phone-verification/phone-verification
   providers: [],
   exports: [],
 })
-export class AuthModule { }
+export class AuthModule {}

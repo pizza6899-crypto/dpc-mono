@@ -13,10 +13,7 @@ import {
   ArrayUnique,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import {
-  PromotionTargetType,
-  PromotionResetType,
-} from '@prisma/client';
+import { PromotionTargetType, PromotionResetType } from '@prisma/client';
 
 export class CreatePromotionRequestDto {
   @ApiPropertyOptional({

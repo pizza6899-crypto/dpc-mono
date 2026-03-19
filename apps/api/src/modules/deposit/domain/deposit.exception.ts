@@ -137,7 +137,6 @@ export class DepositAmountExceedsMaximumException extends DepositException {
   }
 }
 
-
 /**
  * 선택한 프로모션이 유효하지 않을 때 발생하는 예외
  *
@@ -149,11 +148,7 @@ export class InvalidPromotionSelectionException extends DepositException {
     const message = reason
       ? `The selected promotion is invalid or ineligible: ${reason}`
       : 'The selected promotion is invalid or ineligible';
-    super(
-      message,
-      MessageCode.PROMOTION_NOT_FOUND,
-      HttpStatus.BAD_REQUEST,
-    );
+    super(message, MessageCode.PROMOTION_NOT_FOUND, HttpStatus.BAD_REQUEST);
     this.name = 'InvalidPromotionSelectionException';
   }
 }

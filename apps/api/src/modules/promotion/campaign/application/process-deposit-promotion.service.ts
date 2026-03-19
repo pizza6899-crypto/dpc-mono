@@ -1,7 +1,13 @@
 // src/modules/promotion/campaign/application/process-deposit-promotion.service.ts
 import { Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { Prisma, ExchangeCurrencyCode, RewardSourceType, RewardItemType, WageringCalculationMethod } from '@prisma/client';
+import {
+  Prisma,
+  ExchangeCurrencyCode,
+  RewardSourceType,
+  RewardItemType,
+  WageringCalculationMethod,
+} from '@prisma/client';
 import { InstantGrantRewardService } from 'src/modules/reward/core/application/instant-grant-reward.service';
 import { RewardMetadataType } from 'src/modules/reward/core/domain/reward.types';
 import { GrantPromotionBonusService } from './grant-promotion-bonus.service';
@@ -28,15 +34,27 @@ export class ProcessDepositPromotionService {
     private readonly grantPromotionBonusService: GrantPromotionBonusService,
     private readonly instantGrantRewardService: InstantGrantRewardService,
     private readonly getPromotionConfigService: GetPromotionConfigService,
-  ) { }
+  ) {}
 
   @Transactional()
-  async execute(params: ProcessDepositPromotionParams): Promise<{ bonusAmount: Prisma.Decimal }> {
-    const { userId, depositId, amount, currency, promotionId, adminId, memo, requestInfo } = params;
+  async execute(
+    params: ProcessDepositPromotionParams,
+  ): Promise<{ bonusAmount: Prisma.Decimal }> {
+    const {
+      userId,
+      depositId,
+      amount,
+      currency,
+      promotionId,
+      adminId,
+      memo,
+      requestInfo,
+    } = params;
 
     let bonusAmount = new Prisma.Decimal(0);
     let multiplier = new Prisma.Decimal(1);
-    let calculationMethod: WageringCalculationMethod = WageringCalculationMethod.FULL;
+    let calculationMethod: WageringCalculationMethod =
+      WageringCalculationMethod.FULL;
 
     // 1. 보너스 및 배수 결정
     if (promotionId) {
@@ -80,7 +98,9 @@ export class ProcessDepositPromotionService {
       },
     });
 
-    this.logger.log(`Processed deposit promotion: userId=${userId}, depositId=${depositId}, bonus=${bonusAmount}`);
+    this.logger.log(
+      `Processed deposit promotion: userId=${userId}, depositId=${depositId}, bonus=${bonusAmount}`,
+    );
 
     return { bonusAmount };
   }

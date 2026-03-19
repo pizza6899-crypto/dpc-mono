@@ -15,7 +15,7 @@ export class AlertRepository implements AlertRepositoryPort {
     @InjectTransaction()
     private readonly tx: Transaction<TransactionalAdapterPrisma>,
     private readonly mapper: AlertMapper,
-  ) { }
+  ) {}
 
   async create<E extends AlertEvent>(alert: Alert<E>): Promise<Alert<E>> {
     const data = this.mapper.toCreateInput(alert);
@@ -43,9 +43,7 @@ export class AlertRepository implements AlertRepositoryPort {
     return alert;
   }
 
-  async findByIdempotencyKey(
-    idempotencyKey: string,
-  ): Promise<Alert | null> {
+  async findByIdempotencyKey(idempotencyKey: string): Promise<Alert | null> {
     // 파티셔닝 환경에서 전체 스캔을 방지하기 위해 최근 1일 내 데이터만 검색
     // (멱등성 보장은 통상적인 재시도 윈도우 내에서만 유효하면 충분함)
     const result = await this.tx.alert.findFirst({

@@ -40,7 +40,7 @@ export class SessionAdminController {
     private readonly listSessionsService: ListSessionsService,
     private readonly revokeSessionService: RevokeSessionService,
     private readonly expireUserSessionsService: ExpireUserSessionsService,
-  ) { }
+  ) {}
 
   /**
    * 세션 목록 조회 (관리자용)

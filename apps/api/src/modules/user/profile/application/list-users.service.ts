@@ -23,7 +23,7 @@ interface ListUsersServiceParams {
   endDate?: string;
 }
 
-interface ListUsersServiceResult extends PaginatedData<User> { }
+interface ListUsersServiceResult extends PaginatedData<User> {}
 
 /**
  * 사용자 목록 조회 Use Case
@@ -38,7 +38,7 @@ export class ListUsersService {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
-  ) { }
+  ) {}
 
   async execute(
     params: ListUsersServiceParams,

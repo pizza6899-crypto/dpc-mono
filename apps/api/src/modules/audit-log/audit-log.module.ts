@@ -75,4 +75,4 @@ import { AUDIT_QUEUES } from './infrastructure/audit-log.bullmq';
   ],
   exports: [AUDIT_LOG_REPOSITORY, DispatchLogService, AuditLogInterceptor],
 })
-export class AuditLogModule { }
+export class AuditLogModule {}

@@ -42,7 +42,7 @@ export class RevokeSessionService {
     private readonly repository: UserSessionRepositoryPort,
     private readonly sessionTracker: SessionTrackerService,
     private readonly dispatchLogService: DispatchLogService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(params: RevokeSessionParams): Promise<UserSession> {
@@ -88,13 +88,17 @@ export class RevokeSessionService {
 
     // 5. 부모 세션(HTTP)인 경우 연결된 자식 세션(WebSocket)들도 함께 종료 처리
     if (session.isHttpSession()) {
-      const childSessions = await this.repository.findActiveByParentSessionId(sessionId);
+      const childSessions =
+        await this.repository.findActiveByParentSessionId(sessionId);
       for (const child of childSessions) {
         const revokedChild = child.revoke(revokedBy);
         await this.repository.update(revokedChild);
 
         // 자식 세션 실시간 연결 해제
-        await this.terminateSessionConnection(revokedChild, revokedChild.isAdmin);
+        await this.terminateSessionConnection(
+          revokedChild,
+          revokedChild.isAdmin,
+        );
 
         this.logger.log(
           `자식 세션(소켓) 자동 종료: parentSessionId=${sessionId}, childSessionId=${child.sessionId}`,

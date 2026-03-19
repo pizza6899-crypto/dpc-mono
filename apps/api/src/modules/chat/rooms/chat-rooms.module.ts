@@ -25,67 +25,61 @@ import { WebsocketService } from 'src/infrastructure/websocket/websocket.service
 import { OnModuleInit } from '@nestjs/common';
 
 @Module({
-    imports: [
-        SqidsModule,
-        ConcurrencyModule,
-        TierModule,
-        SnowflakeModule,
-        FileModule,
-    ],
+  imports: [
+    SqidsModule,
+    ConcurrencyModule,
+    TierModule,
+    SnowflakeModule,
+    FileModule,
+  ],
 
+  controllers: [ChatRoomAdminController, ChatRoomUserController],
+  providers: [
+    {
+      provide: CHAT_ROOM_REPOSITORY_PORT,
+      useClass: ChatRoomRepository,
+    },
+    {
+      provide: CHAT_ROOM_MEMBER_REPOSITORY_PORT,
+      useClass: ChatRoomMemberRepository,
+    },
+    {
+      provide: CHAT_MESSAGE_REPOSITORY_PORT,
+      useClass: ChatMessageRepository,
+    },
+    ChatRoomMembershipHookService,
+    GetChatRoomService,
+    ListChatRoomsService,
+    SendChatMessageService,
+    GetChatMessagesService,
+    ReadChatMessagesService,
+    UpdateChatMessageService,
+    DeleteChatMessageService,
+    ChatMessagePolicy,
+  ],
 
-    controllers: [
-        ChatRoomAdminController,
-        ChatRoomUserController,
-    ],
-    providers: [
-        {
-            provide: CHAT_ROOM_REPOSITORY_PORT,
-            useClass: ChatRoomRepository,
-        },
-        {
-            provide: CHAT_ROOM_MEMBER_REPOSITORY_PORT,
-            useClass: ChatRoomMemberRepository,
-        },
-        {
-            provide: CHAT_MESSAGE_REPOSITORY_PORT,
-            useClass: ChatMessageRepository,
-        },
-        ChatRoomMembershipHookService,
-        GetChatRoomService,
-        ListChatRoomsService,
-        SendChatMessageService,
-        GetChatMessagesService,
-        ReadChatMessagesService,
-        UpdateChatMessageService,
-        DeleteChatMessageService,
-        ChatMessagePolicy,
-    ],
+  exports: [
+    GetChatRoomService,
+    ListChatRoomsService,
+    SendChatMessageService,
+    GetChatMessagesService,
+    ReadChatMessagesService,
+    UpdateChatMessageService,
+    DeleteChatMessageService,
+    ChatMessagePolicy,
+    CHAT_ROOM_REPOSITORY_PORT,
 
-
-    exports: [
-        GetChatRoomService,
-        ListChatRoomsService,
-        SendChatMessageService,
-        GetChatMessagesService,
-        ReadChatMessagesService,
-        UpdateChatMessageService,
-        DeleteChatMessageService,
-        ChatMessagePolicy,
-        CHAT_ROOM_REPOSITORY_PORT,
-
-        CHAT_ROOM_MEMBER_REPOSITORY_PORT,
-        CHAT_MESSAGE_REPOSITORY_PORT,
-    ],
+    CHAT_ROOM_MEMBER_REPOSITORY_PORT,
+    CHAT_MESSAGE_REPOSITORY_PORT,
+  ],
 })
-
 export class ChatRoomsModule implements OnModuleInit {
-    constructor(
-        private readonly websocketService: WebsocketService,
-        private readonly hook: ChatRoomMembershipHookService,
-    ) { }
+  constructor(
+    private readonly websocketService: WebsocketService,
+    private readonly hook: ChatRoomMembershipHookService,
+  ) {}
 
-    onModuleInit() {
-        this.websocketService.registerHook(this.hook);
-    }
+  onModuleInit() {
+    this.websocketService.registerHook(this.hook);
+  }
 }

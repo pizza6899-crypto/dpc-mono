@@ -7,12 +7,8 @@ import {
   PaymentProvider,
 } from '@prisma/client';
 
-import {
-  DEPOSIT_DETAIL_REPOSITORY,
-} from '../ports';
-import type {
-  DepositDetailRepositoryPort,
-} from '../ports';
+import { DEPOSIT_DETAIL_REPOSITORY } from '../ports';
+import type { DepositDetailRepositoryPort } from '../ports';
 import {
   DepositDetail,
   DepositMethod,
@@ -26,9 +22,7 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
 import { SOCKET_ROOMS } from 'src/infrastructure/websocket/constants/websocket-rooms.constant';
-import {
-  SOCKET_EVENT_TYPES,
-} from 'src/infrastructure/websocket/types/socket-payload.types';
+import { SOCKET_EVENT_TYPES } from 'src/infrastructure/websocket/types/socket-payload.types';
 
 interface CreateFiatDepositParams {
   user: AuthenticatedUser;
@@ -53,7 +47,7 @@ export class CreateFiatDepositService {
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly depositRequirementPolicy: DepositRequirementPolicy,
     private readonly websocketService: WebsocketService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(

@@ -16,7 +16,7 @@ export class MarkAllAsReadService {
   constructor(
     @Inject(NOTIFICATION_LOG_REPOSITORY)
     private readonly repository: NotificationLogRepositoryPort,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(params: MarkAllAsReadParams): Promise<number> {

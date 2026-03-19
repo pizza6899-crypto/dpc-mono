@@ -12,10 +12,7 @@ import {
   ArrayUnique,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import {
-  PromotionTargetType,
-  PromotionResetType,
-} from '@prisma/client';
+import { PromotionTargetType, PromotionResetType } from '@prisma/client';
 
 export class UpdatePromotionRequestDto {
   @ApiPropertyOptional({
@@ -49,8 +46,6 @@ export class UpdatePromotionRequestDto {
   @IsOptional()
   @IsEnum(PromotionTargetType)
   targetType?: PromotionTargetType;
-
-
 
   @ApiPropertyOptional({
     description: 'Bonus validity period (minutes) / 보너스 유효 기간 (분 단위)',

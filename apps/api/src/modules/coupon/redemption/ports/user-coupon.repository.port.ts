@@ -15,4 +15,6 @@ export interface UserCouponRepositoryPort {
   }): Promise<void>;
 }
 
-export const USER_COUPON_REPOSITORY_TOKEN = Symbol('USER_COUPON_REPOSITORY_TOKEN');
+export const USER_COUPON_REPOSITORY_TOKEN = Symbol(
+  'USER_COUPON_REPOSITORY_TOKEN',
+);

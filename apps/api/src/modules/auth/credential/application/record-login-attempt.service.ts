@@ -26,7 +26,7 @@ export class RecordLoginAttemptService {
   constructor(
     @Inject(LOGIN_ATTEMPT_REPOSITORY)
     private readonly repository: LoginAttemptRepositoryPort,
-  ) { }
+  ) {}
 
   async execute({
     userId,

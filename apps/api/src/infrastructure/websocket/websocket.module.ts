@@ -10,4 +10,4 @@ import { SessionModule } from 'src/modules/auth/session/session.module';
   providers: [UserWebsocketGateway, AdminWebsocketGateway, WebsocketService],
   exports: [WebsocketService], // 다른 모듈에서는 WebsocketService만 사용하도록 내보냄
 })
-export class WebsocketModule { }
+export class WebsocketModule {}

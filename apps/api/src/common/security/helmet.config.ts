@@ -10,10 +10,10 @@ export const helmetConfig = helmet({
   },
   hsts: isProduction
     ? {
-      maxAge: 31536000,
-      includeSubDomains: true,
-      preload: true,
-    }
+        maxAge: 31536000,
+        includeSubDomains: true,
+        preload: true,
+      }
     : false,
   contentSecurityPolicy: {
     directives: {

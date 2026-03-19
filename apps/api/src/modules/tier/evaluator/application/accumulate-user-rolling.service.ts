@@ -26,7 +26,7 @@ export class AccumulateUserRollingService {
     private readonly tierStatsService: TierStatsService,
     private readonly snowflakeService: SnowflakeService,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(
@@ -45,8 +45,7 @@ export class AccumulateUserRollingService {
 
       // 1. XP 환산 (Config 기반)
       const config = await this.tierConfigRepository.find();
-      const expGrantRollingUsd =
-        config?.expGrantRollingUsd?.toNumber() || 1.0;
+      const expGrantRollingUsd = config?.expGrantRollingUsd?.toNumber() || 1.0;
       const expToGrant = Math.floor(amountUsd / expGrantRollingUsd);
 
       if (expToGrant <= 0) {

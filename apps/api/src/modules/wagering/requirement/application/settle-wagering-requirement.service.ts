@@ -27,7 +27,7 @@ export class SettleWageringRequirementService {
     private readonly repository: WageringRequirementRepositoryPort,
     private readonly updateBalanceService: UpdateUserBalanceService,
     private readonly getUserWalletService: GetUserWalletService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(command: SettleWageringRequirementCommand): Promise<void> {

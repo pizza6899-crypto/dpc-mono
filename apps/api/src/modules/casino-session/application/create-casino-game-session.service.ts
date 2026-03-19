@@ -30,7 +30,7 @@ export class CreateCasinoGameSessionService {
     private readonly repository: CasinoGameSessionRepositoryPort,
     private readonly exchangeRateService: ExchangeRateService,
     private readonly lockService: AdvisoryLockService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(params: CreateSessionParams): Promise<CasinoGameSession> {

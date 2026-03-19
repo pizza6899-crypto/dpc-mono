@@ -1,8 +1,13 @@
-import { Coupon as PrismaCoupon, CouponReward as PrismaCouponReward } from '@prisma/client';
+import {
+  Coupon as PrismaCoupon,
+  CouponReward as PrismaCouponReward,
+} from '@prisma/client';
 import { Coupon } from '../domain/coupon.entity';
 import { CouponMetadata } from '../domain/coupon.types';
 
-export type PrismaCouponWithRewards = PrismaCoupon & { rewards: PrismaCouponReward[] };
+export type PrismaCouponWithRewards = PrismaCoupon & {
+  rewards: PrismaCouponReward[];
+};
 
 export class CouponMapper {
   /**

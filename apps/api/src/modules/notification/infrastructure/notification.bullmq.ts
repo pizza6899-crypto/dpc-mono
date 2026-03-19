@@ -1,4 +1,7 @@
-import { QueueConfig, BULLMQ_RETENTION } from 'src/infrastructure/bullmq/bullmq.types';
+import {
+  QueueConfig,
+  BULLMQ_RETENTION,
+} from 'src/infrastructure/bullmq/bullmq.types';
 
 export const NOTIFICATION_QUEUES = {
   ALERT: {
@@ -52,4 +55,3 @@ export const NOTIFICATION_QUEUES = {
     workerOptions: { concurrency: 5 },
   },
 } as const satisfies Record<string, QueueConfig>;
-

@@ -22,7 +22,6 @@ export class WageringCurrencySettingResponseDto {
 }
 
 export class WageringConfigAdminResponseDto {
-
   @ApiProperty({
     description: 'Currency specific settings / 통화별 상세 설정',
     additionalProperties: {

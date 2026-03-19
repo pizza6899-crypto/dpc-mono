@@ -4,7 +4,8 @@ import { Type } from 'class-transformer';
 
 export class ListUserSessionsQueryDto {
   @ApiPropertyOptional({
-    description: '활성 세션만 조회할지 여부 / Whether to retrieve only active sessions',
+    description:
+      '활성 세션만 조회할지 여부 / Whether to retrieve only active sessions',
     example: true,
     default: false,
   })

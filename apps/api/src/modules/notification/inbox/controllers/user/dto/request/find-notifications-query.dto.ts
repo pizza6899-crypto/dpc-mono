@@ -1,7 +1,14 @@
 // apps/api/src/modules/notification/inbox/controllers/user/dto/request/find-notifications-query.dto.ts
 
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsBoolean, IsString, IsInt, Min, Max } from 'class-validator';
+import {
+  IsOptional,
+  IsBoolean,
+  IsString,
+  IsInt,
+  Min,
+  Max,
+} from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 
 export class FindNotificationsQueryDto {
@@ -16,7 +23,8 @@ export class FindNotificationsQueryDto {
   isRead?: boolean;
 
   @ApiProperty({
-    description: 'Cursor for pagination (Encoded ID) / 페이지네이션용 커서 (난독화된 ID)',
+    description:
+      'Cursor for pagination (Encoded ID) / 페이지네이션용 커서 (난독화된 ID)',
     required: false,
   })
   @IsOptional()
@@ -24,7 +32,8 @@ export class FindNotificationsQueryDto {
   cursor?: string;
 
   @ApiProperty({
-    description: 'Maximum number of items to return (1-50) / 조회할 최대 항목 수 (최소 1, 최대 50)',
+    description:
+      'Maximum number of items to return (1-50) / 조회할 최대 항목 수 (최소 1, 최대 50)',
     example: 20,
     required: false,
     default: 20,

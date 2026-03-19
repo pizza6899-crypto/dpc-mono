@@ -1,7 +1,10 @@
 import { Controller, Get, Post, Param, Body, Query } from '@nestjs/common';
 
 import { ApiOperation, ApiTags, ApiCookieAuth } from '@nestjs/swagger';
-import { ApiStandardResponse, ApiStandardErrors } from 'src/common/http/decorators/api-response.decorator';
+import {
+  ApiStandardResponse,
+  ApiStandardErrors,
+} from 'src/common/http/decorators/api-response.decorator';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
@@ -20,78 +23,82 @@ import { ChatMessageUserResponseDto } from './dto/response/chat-message-user.res
 @ApiCookieAuth()
 @ApiStandardErrors()
 export class ChatRoomUserController {
-    constructor(
-        private readonly listRoomService: ListChatRoomsService,
-        private readonly sendMessageService: SendChatMessageService,
-        private readonly getMessagesService: GetChatMessagesService,
-        private readonly sqidsService: SqidsService,
-    ) { }
+  constructor(
+    private readonly listRoomService: ListChatRoomsService,
+    private readonly sendMessageService: SendChatMessageService,
+    private readonly getMessagesService: GetChatMessagesService,
+    private readonly sqidsService: SqidsService,
+  ) {}
 
-    @Get()
-    @ApiOperation({ summary: 'List Available Chat Rooms / 이용 가능한 채팅방 목록 조회' })
-    @ApiStandardResponse(ChatRoomUserResponseDto, { isArray: true })
-    async list(): Promise<ChatRoomUserResponseDto[]> {
-        const rooms = await this.listRoomService.execute();
+  @Get()
+  @ApiOperation({
+    summary: 'List Available Chat Rooms / 이용 가능한 채팅방 목록 조회',
+  })
+  @ApiStandardResponse(ChatRoomUserResponseDto, { isArray: true })
+  async list(): Promise<ChatRoomUserResponseDto[]> {
+    const rooms = await this.listRoomService.execute();
 
-        return rooms.map((room) => ({
-            id: this.sqidsService.encode(room.id, SqidsPrefix.CHAT_ROOM),
-        }));
+    return rooms.map((room) => ({
+      id: this.sqidsService.encode(room.id, SqidsPrefix.CHAT_ROOM),
+    }));
+  }
+
+  @Get(':id/messages')
+  @ApiOperation({ summary: 'Get Chat History / 채팅 내역 조회' })
+  @ApiStandardResponse(ChatMessageUserResponseDto, { isArray: true })
+  async listMessages(
+    @Param('id') id: string,
+    @Query() query: ChatMessageHistoryRequestDto,
+  ): Promise<ChatMessageUserResponseDto[]> {
+    const { id: roomId } = this.sqidsService.decodeAuto(id);
+
+    let lastMessageId: bigint | undefined;
+    if (query.lastMessageId) {
+      lastMessageId = this.sqidsService.decodeAuto(query.lastMessageId).id;
     }
 
-    @Get(':id/messages')
-    @ApiOperation({ summary: 'Get Chat History / 채팅 내역 조회' })
-    @ApiStandardResponse(ChatMessageUserResponseDto, { isArray: true })
-    async listMessages(
-        @Param('id') id: string,
-        @Query() query: ChatMessageHistoryRequestDto,
-    ): Promise<ChatMessageUserResponseDto[]> {
-        const { id: roomId } = this.sqidsService.decodeAuto(id);
+    const messages = await this.getMessagesService.execute({
+      roomId,
+      limit: query.limit,
+      lastMessageId,
+    });
 
-        let lastMessageId: bigint | undefined;
-        if (query.lastMessageId) {
-            lastMessageId = this.sqidsService.decodeAuto(query.lastMessageId).id;
-        }
+    return messages.map((m) => ({
+      id: this.sqidsService.encode(m.id, SqidsPrefix.CHAT_MESSAGE),
+      senderId: m.senderId
+        ? this.sqidsService.encode(m.senderId, SqidsPrefix.USER)
+        : null,
+      content: m.content,
+      type: m.type,
+      metadata: m.metadata,
+      createdAt: m.createdAt,
+    }));
+  }
 
-        const messages = await this.getMessagesService.execute({
-            roomId,
-            limit: query.limit,
-            lastMessageId,
-        });
+  @Post(':id/messages')
+  @ApiOperation({ summary: 'Send Chat Message / 채팅 메시지 전송' })
+  @ApiStandardResponse(SendMessageResponseDto)
+  async send(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id') id: string,
+    @Body() body: SendChatMessageUserRequestDto,
+  ): Promise<SendMessageResponseDto> {
+    const { id: roomId } = this.sqidsService.decodeAuto(id);
 
-        return messages.map((m) => ({
-            id: this.sqidsService.encode(m.id, SqidsPrefix.CHAT_MESSAGE),
-            senderId: m.senderId ? this.sqidsService.encode(m.senderId, SqidsPrefix.USER) : null,
-            content: m.content,
-            type: m.type,
-            metadata: m.metadata,
-            createdAt: m.createdAt,
-        }));
+    let imageIds: bigint[] | undefined;
+    if (body.imageIds && body.imageIds.length > 0) {
+      imageIds = body.imageIds.map((id) => this.sqidsService.decodeAuto(id).id);
     }
 
-    @Post(':id/messages')
-    @ApiOperation({ summary: 'Send Chat Message / 채팅 메시지 전송' })
-    @ApiStandardResponse(SendMessageResponseDto)
-    async send(
-        @CurrentUser() user: AuthenticatedUser,
-        @Param('id') id: string,
-        @Body() body: SendChatMessageUserRequestDto,
-    ): Promise<SendMessageResponseDto> {
-        const { id: roomId } = this.sqidsService.decodeAuto(id);
+    const message = await this.sendMessageService.execute({
+      roomId,
+      senderId: user.id,
+      content: body.content,
+      imageIds,
+    });
 
-        let imageIds: bigint[] | undefined;
-        if (body.imageIds && body.imageIds.length > 0) {
-            imageIds = body.imageIds.map(id => this.sqidsService.decodeAuto(id).id);
-        }
-
-        const message = await this.sendMessageService.execute({
-            roomId,
-            senderId: user.id,
-            content: body.content,
-            imageIds,
-        });
-
-        return {
-            id: this.sqidsService.encode(message.id, SqidsPrefix.CHAT_MESSAGE),
-        };
-    }
+    return {
+      id: this.sqidsService.encode(message.id, SqidsPrefix.CHAT_MESSAGE),
+    };
+  }
 }

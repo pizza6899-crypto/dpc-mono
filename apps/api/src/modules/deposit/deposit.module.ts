@@ -21,9 +21,7 @@ import { GetMyDepositsService } from './application/get-my-deposits.service';
 import { DepositDetailMapper } from './infrastructure/deposit-detail.mapper';
 import { DepositDetailRepository } from './infrastructure/deposit-detail.repository';
 import { DepositRequirementPolicy } from './domain/policy/deposit-requirement.policy';
-import {
-  DEPOSIT_DETAIL_REPOSITORY,
-} from './ports';
+import { DEPOSIT_DETAIL_REPOSITORY } from './ports';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { NotificationModule } from '../notification/notification.module';
 
@@ -75,4 +73,4 @@ import { NotificationModule } from '../notification/notification.module';
     GetMyDepositsService,
   ],
 })
-export class DepositModule { }
+export class DepositModule {}

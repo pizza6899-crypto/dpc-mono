@@ -7,15 +7,12 @@ import { AuthPasswordModule } from '../password/auth-password.module';
 import { UserProfileModule } from '../../user/profile/user-profile.module';
 
 @Module({
-    imports: [
-        CredentialModule, // Repository 상속/공유를 위해 필요 (LOGIN_ATTEMPT_REPOSITORY 등)
-        AuthPasswordModule, // ChangePasswordService 사용을 위해 필요
-        UserProfileModule,
-    ],
-    controllers: [AdminAuthManagementController],
-    providers: [
-        FindLoginAttemptsService,
-        ResetUserPasswordAdminService,
-    ],
+  imports: [
+    CredentialModule, // Repository 상속/공유를 위해 필요 (LOGIN_ATTEMPT_REPOSITORY 등)
+    AuthPasswordModule, // ChangePasswordService 사용을 위해 필요
+    UserProfileModule,
+  ],
+  controllers: [AdminAuthManagementController],
+  providers: [FindLoginAttemptsService, ResetUserPasswordAdminService],
 })
-export class AuthManagementModule { }
+export class AuthManagementModule {}

@@ -32,7 +32,7 @@ export interface ListSessionsServiceParams {
   adminUserId?: bigint;
 }
 
-interface ListSessionsServiceResult extends PaginatedData<UserSession> { }
+interface ListSessionsServiceResult extends PaginatedData<UserSession> {}
 
 /**
  * 세션 목록 조회 Use Case
@@ -48,7 +48,7 @@ export class ListSessionsService {
     @Inject(USER_SESSION_REPOSITORY)
     private readonly repository: UserSessionRepositoryPort,
     private readonly dispatchLogService: DispatchLogService,
-  ) { }
+  ) {}
 
   async execute(
     params: ListSessionsServiceParams,

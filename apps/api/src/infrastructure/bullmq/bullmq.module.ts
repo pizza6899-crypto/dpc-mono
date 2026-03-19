@@ -53,4 +53,4 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
   providers: [BullMqSchedulerService],
   exports: [BullModule],
 })
-export class BullMqModule { }
+export class BullMqModule {}

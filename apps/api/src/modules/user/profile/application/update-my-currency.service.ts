@@ -9,40 +9,45 @@ import { UserNotFoundException } from '../domain';
 
 @Injectable()
 export class UpdateMyCurrencyService {
-    constructor(
-        @Inject(USER_REPOSITORY)
-        private readonly userRepository: UserRepositoryPort,
-        private readonly getMyProfileService: GetMyProfileService,
-        private readonly synchronizeUserSessionService: SynchronizeUserSessionService,
-    ) { }
+  constructor(
+    @Inject(USER_REPOSITORY)
+    private readonly userRepository: UserRepositoryPort,
+    private readonly getMyProfileService: GetMyProfileService,
+    private readonly synchronizeUserSessionService: SynchronizeUserSessionService,
+  ) {}
 
-    async execute(userId: bigint, dto: UpdateMyCurrencyRequestDto): Promise<MyProfileResponseDto> {
-        const user = await this.userRepository.findById(userId);
+  async execute(
+    userId: bigint,
+    dto: UpdateMyCurrencyRequestDto,
+  ): Promise<MyProfileResponseDto> {
+    const user = await this.userRepository.findById(userId);
 
-        if (!user) {
-            throw new UserNotFoundException();
-        }
-
-        const updatedUser = user.updateProfile({
-            primaryCurrency: dto.primaryCurrency,
-            playCurrency: dto.playCurrency,
-        });
-
-        const savedUser = await this.userRepository.save(updatedUser);
-
-        const result = await this.getMyProfileService.execute(savedUser.id!);
-
-        // 세션 정보 실시간 동기화 (Redis)
-        await this.synchronizeUserSessionService.execute({
-            userId: savedUser.id!,
-            updateData: {
-                primaryCurrency: savedUser.getCurrency().primaryCurrency,
-                playCurrency: savedUser.getCurrency().playCurrency,
-            },
-        }).catch(err => {
-            console.error(`Failed to sync session for user ${savedUser.id}:`, err);
-        });
-
-        return result;
+    if (!user) {
+      throw new UserNotFoundException();
     }
+
+    const updatedUser = user.updateProfile({
+      primaryCurrency: dto.primaryCurrency,
+      playCurrency: dto.playCurrency,
+    });
+
+    const savedUser = await this.userRepository.save(updatedUser);
+
+    const result = await this.getMyProfileService.execute(savedUser.id!);
+
+    // 세션 정보 실시간 동기화 (Redis)
+    await this.synchronizeUserSessionService
+      .execute({
+        userId: savedUser.id!,
+        updateData: {
+          primaryCurrency: savedUser.getCurrency().primaryCurrency,
+          playCurrency: savedUser.getCurrency().playCurrency,
+        },
+      })
+      .catch((err) => {
+        console.error(`Failed to sync session for user ${savedUser.id}:`, err);
+      });
+
+    return result;
+  }
 }

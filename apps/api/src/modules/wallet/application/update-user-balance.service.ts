@@ -32,7 +32,11 @@ import { ExchangeRateService } from '../../exchange/application/exchange-rate.se
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
-import { USER_ANALYTICS_QUEUES, UserAnalyticsSyncPayload, USER_ANALYTICS_JOBS } from '../../user-analytics/infrastructure/queue/user-analytics.bullmq';
+import {
+  USER_ANALYTICS_QUEUES,
+  UserAnalyticsSyncPayload,
+  USER_ANALYTICS_JOBS,
+} from '../../user-analytics/infrastructure/queue/user-analytics.bullmq';
 
 export interface BalanceUpdateContext {
   // Admin Context
@@ -81,7 +85,7 @@ export class UpdateUserBalanceService {
     private readonly snowflakeService: SnowflakeService,
     @InjectQueue(USER_ANALYTICS_QUEUES.SYNC.name)
     private readonly analyticsQueue: Queue<UserAnalyticsSyncPayload>,
-  ) { }
+  ) {}
 
   /**
    * 잔액 변경 및 트랜잭션 기록 (Atomic Operation)
@@ -174,7 +178,8 @@ export class UpdateUserBalanceService {
     });
 
     // Generate Snowflake ID & Timestamp exactly here
-    const { id: txId, timestamp: txCreatedAt } = this.snowflakeService.generate();
+    const { id: txId, timestamp: txCreatedAt } =
+      this.snowflakeService.generate();
 
     const transaction = UserWalletTransaction.create({
       id: txId,

@@ -16,7 +16,7 @@ export class NotificationTemplateRepository implements NotificationTemplateRepos
     @InjectTransaction()
     private readonly tx: Transaction<TransactionalAdapterPrisma>,
     private readonly mapper: NotificationTemplateMapper,
-  ) { }
+  ) {}
 
   async create(template: NotificationTemplate): Promise<NotificationTemplate> {
     const data = this.mapper.toPrisma(template);
@@ -64,7 +64,9 @@ export class NotificationTemplateRepository implements NotificationTemplateRepos
     return template ? this.mapper.toDomain(template) : null;
   }
 
-  async findByEvent(event: NotificationEventType): Promise<NotificationTemplate[]> {
+  async findByEvent(
+    event: NotificationEventType,
+  ): Promise<NotificationTemplate[]> {
     const templates = await this.tx.notificationTemplate.findMany({
       where: { event },
       include: {

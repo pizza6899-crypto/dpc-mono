@@ -1,6 +1,9 @@
 // src/modules/promotion/config/application/get-promotion-config.service.ts
 import { Inject, Injectable } from '@nestjs/common';
-import { PROMOTION_CONFIG_REPOSITORY, type PromotionConfigRepositoryPort } from '../ports/promotion-config.repository.port';
+import {
+  PROMOTION_CONFIG_REPOSITORY,
+  type PromotionConfigRepositoryPort,
+} from '../ports/promotion-config.repository.port';
 import { PromotionConfig } from '../domain/promotion-config.entity';
 
 @Injectable()

@@ -87,7 +87,8 @@ export class WageringRequirementAdminResponseDto {
   totalBetAmount: string;
 
   @ApiProperty({
-    description: 'Accumulated Bet Amount / 펀드 내 발생한 필터 전 총 누적 배팅액',
+    description:
+      'Accumulated Bet Amount / 펀드 내 발생한 필터 전 총 누적 배팅액',
     example: '6000',
   })
   accumulatedBetAmount: string;

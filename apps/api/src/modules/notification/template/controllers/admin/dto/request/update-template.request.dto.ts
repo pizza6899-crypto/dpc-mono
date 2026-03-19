@@ -11,11 +11,18 @@ import { ChannelType, Language } from '@prisma/client';
 import { NOTIFICATION_EVENTS } from '../../../../../common';
 
 class UpdateTranslationDto {
-  @ApiProperty({ description: 'Locale / 언어', enum: Language, example: Language.EN })
+  @ApiProperty({
+    description: 'Locale / 언어',
+    enum: Language,
+    example: Language.EN,
+  })
   @IsEnum(Language)
   locale: Language;
 
-  @ApiProperty({ description: 'Title template / 제목 템플릿', example: 'Welcome, {{name}}!' })
+  @ApiProperty({
+    description: 'Title template / 제목 템플릿',
+    example: 'Welcome, {{name}}!',
+  })
   @IsString()
   titleTemplate: string;
 

@@ -48,7 +48,7 @@ export class AffiliateCodeAdminController {
     private readonly updateCodeService: UpdateCodeService,
     private readonly findCodeByIdAdminService: FindCodeByIdAdminService,
     private readonly deleteCodeAdminService: DeleteCodeAdminService,
-  ) { }
+  ) {}
 
   /**
    * 어플리에이트 코드 목록 조회 (관리자용)

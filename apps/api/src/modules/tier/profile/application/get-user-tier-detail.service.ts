@@ -46,7 +46,7 @@ export interface UserTierDetailResult {
 
 @Injectable()
 export class GetUserTierDetailService {
-  constructor(private readonly userTierRepository: UserTierRepositoryPort) { }
+  constructor(private readonly userTierRepository: UserTierRepositoryPort) {}
 
   async execute(userId: bigint): Promise<UserTierDetailResult> {
     const userTier = await this.userTierRepository.findByUserId(userId);

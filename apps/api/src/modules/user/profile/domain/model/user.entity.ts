@@ -40,7 +40,7 @@ export class User {
     public readonly whitecliffId: bigint | null,
     public readonly whitecliffUsername: string | null,
     public readonly dcsId: string | null,
-  ) { }
+  ) {}
 
   /**
    * DB에서 조회한 데이터로부터 엔티티 생성
@@ -168,19 +168,39 @@ export class User {
   }
 
   // Getters
-  get loginId(): string | null { return this.authInfo.loginId; }
-  get email(): string | null { return this.authInfo.email; }
+  get loginId(): string | null {
+    return this.authInfo.loginId;
+  }
+  get email(): string | null {
+    return this.authInfo.email;
+  }
 
-  getLocation(): UserLocation { return this.location; }
-  getCurrency(): UserCurrency { return this.currency; }
-  getTrust(): UserTrust { return this.trust; }
-  getAuthInfo(): UserAuth { return this.authInfo; }
+  getLocation(): UserLocation {
+    return this.location;
+  }
+  getCurrency(): UserCurrency {
+    return this.currency;
+  }
+  getTrust(): UserTrust {
+    return this.trust;
+  }
+  getAuthInfo(): UserAuth {
+    return this.authInfo;
+  }
 
   // Business Logic Methods
-  isCredentialUser(): boolean { return this.authInfo.isCredentialUser(); }
-  isAdminCreated(): boolean { return this.authInfo.isAdminCreated(); }
-  isPasswordUser(): boolean { return this.authInfo.isPasswordUser(); }
-  isSocialUser(): boolean { return this.authInfo.isSocialUser(); }
+  isCredentialUser(): boolean {
+    return this.authInfo.isCredentialUser();
+  }
+  isAdminCreated(): boolean {
+    return this.authInfo.isAdminCreated();
+  }
+  isPasswordUser(): boolean {
+    return this.authInfo.isPasswordUser();
+  }
+  isSocialUser(): boolean {
+    return this.authInfo.isSocialUser();
+  }
 
   /**
    * 관리자 도구를 통한 정보 업데이트 (불변성 유지)
@@ -209,11 +229,16 @@ export class User {
     }
 
     let newTrust = this.trust;
-    if (updates.isPhoneVerified !== undefined && updates.isPhoneVerified !== this.trust.isPhoneVerified) {
-      newTrust = updates.isPhoneVerified ? this.trust.verifyPhone() : UserTrust.fromPersistence({
-        ...this.trust.toPersistence(),
-        isPhoneVerified: false,
-      });
+    if (
+      updates.isPhoneVerified !== undefined &&
+      updates.isPhoneVerified !== this.trust.isPhoneVerified
+    ) {
+      newTrust = updates.isPhoneVerified
+        ? this.trust.verifyPhone()
+        : UserTrust.fromPersistence({
+            ...this.trust.toPersistence(),
+            isPhoneVerified: false,
+          });
     }
 
     return new User(
@@ -227,7 +252,9 @@ export class User {
       updates.role || this.role,
       this.language,
       this.birthDate,
-      updates.phoneNumber !== undefined ? updates.phoneNumber : this.phoneNumber,
+      updates.phoneNumber !== undefined
+        ? updates.phoneNumber
+        : this.phoneNumber,
       this.avatarUrl,
       this.createdAt,
       new Date(), // updatedAt

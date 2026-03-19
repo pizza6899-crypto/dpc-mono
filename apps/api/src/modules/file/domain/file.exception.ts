@@ -26,11 +26,7 @@ export class FileException extends DomainException {
  */
 export class FileNotFoundException extends FileException {
   constructor() {
-    super(
-      'File not found.',
-      MessageCode.FILE_NOT_FOUND,
-      HttpStatus.NOT_FOUND,
-    );
+    super('File not found.', MessageCode.FILE_NOT_FOUND, HttpStatus.NOT_FOUND);
     this.name = 'FileNotFoundException';
   }
 }

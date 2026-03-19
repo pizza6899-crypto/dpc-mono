@@ -1,4 +1,8 @@
-import { CouponStatus, ExchangeCurrencyCode, RewardItemType } from '@prisma/client';
+import {
+  CouponStatus,
+  ExchangeCurrencyCode,
+  RewardItemType,
+} from '@prisma/client';
 import Decimal from 'decimal.js';
 import {
   CouponAllowlistOnlyException,
@@ -116,15 +120,22 @@ export class Coupon {
     params: Partial<
       Pick<
         CouponProps,
-        'metadata' | 'isAllowlistOnly' | 'maxUsage' | 'maxUsagePerUser' | 'startsAt' | 'expiresAt'
+        | 'metadata'
+        | 'isAllowlistOnly'
+        | 'maxUsage'
+        | 'maxUsagePerUser'
+        | 'startsAt'
+        | 'expiresAt'
       >
     >,
     adminId: bigint,
   ): void {
     if (params.metadata !== undefined) this.props.metadata = params.metadata;
-    if (params.isAllowlistOnly !== undefined) this.props.isAllowlistOnly = params.isAllowlistOnly;
+    if (params.isAllowlistOnly !== undefined)
+      this.props.isAllowlistOnly = params.isAllowlistOnly;
     if (params.maxUsage !== undefined) this.props.maxUsage = params.maxUsage;
-    if (params.maxUsagePerUser !== undefined) this.props.maxUsagePerUser = params.maxUsagePerUser;
+    if (params.maxUsagePerUser !== undefined)
+      this.props.maxUsagePerUser = params.maxUsagePerUser;
     if (params.startsAt !== undefined) this.props.startsAt = params.startsAt;
     if (params.expiresAt !== undefined) this.props.expiresAt = params.expiresAt;
 
@@ -156,11 +167,19 @@ export class Coupon {
   public refreshStatus(now: Date = new Date()): void {
     if (this.props.status === CouponStatus.VOIDED) return;
 
-    if (this.props.expiresAt && now > this.props.expiresAt && this.props.status === CouponStatus.ACTIVE) {
+    if (
+      this.props.expiresAt &&
+      now > this.props.expiresAt &&
+      this.props.status === CouponStatus.ACTIVE
+    ) {
       this.props.status = CouponStatus.EXPIRED;
     }
 
-    if (this.props.maxUsage > 0 && this.props.usageCount >= this.props.maxUsage && this.props.status === CouponStatus.ACTIVE) {
+    if (
+      this.props.maxUsage > 0 &&
+      this.props.usageCount >= this.props.maxUsage &&
+      this.props.status === CouponStatus.ACTIVE
+    ) {
       this.props.status = CouponStatus.EXHAUSTED;
     }
   }
@@ -219,9 +238,12 @@ export class Coupon {
   public incrementUsage(): void {
     this.props.usageCount += 1;
 
-    // 만약 최대 횟수에 도달했다면 상태를 EXHAUSTED로 변경 고려할 수 있으나, 
+    // 만약 최대 횟수에 도달했다면 상태를 EXHAUSTED로 변경 고려할 수 있으나,
     // 보통은 조회 시점에 maxUsage와 비교하여 판단하므로 명시적 상태 변경은 비즈니스 요구사항에 따라 결정합니다.
-    if (this.props.maxUsage > 0 && this.props.usageCount >= this.props.maxUsage) {
+    if (
+      this.props.maxUsage > 0 &&
+      this.props.usageCount >= this.props.maxUsage
+    ) {
       this.props.status = CouponStatus.EXHAUSTED;
     }
   }

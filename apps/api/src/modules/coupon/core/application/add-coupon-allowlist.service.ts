@@ -1,6 +1,9 @@
 import { Transactional } from '@nestjs-cls/transactional';
 import { Inject, Injectable } from '@nestjs/common';
-import { COUPON_ALLOWLIST_REPOSITORY_TOKEN, type CouponAllowlistRepositoryPort } from '../ports/coupon-allowlist.repository.port';
+import {
+  COUPON_ALLOWLIST_REPOSITORY_TOKEN,
+  type CouponAllowlistRepositoryPort,
+} from '../ports/coupon-allowlist.repository.port';
 
 @Injectable()
 export class AddCouponAllowlistService {

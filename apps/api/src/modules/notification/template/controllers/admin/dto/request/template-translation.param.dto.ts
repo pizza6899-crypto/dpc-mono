@@ -7,7 +7,11 @@ export class TemplateTranslationParamDto {
   @IsNumberString()
   id: string;
 
-  @ApiProperty({ description: 'Locale / 언어', enum: Language, example: Language.EN })
+  @ApiProperty({
+    description: 'Locale / 언어',
+    enum: Language,
+    example: Language.EN,
+  })
   @IsEnum(Language)
   locale: Language;
 }

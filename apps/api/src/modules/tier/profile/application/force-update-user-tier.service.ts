@@ -4,7 +4,13 @@ import { RecordTierHistoryService } from '../../audit/application/record-tier-hi
 import { TierStatsService } from '../../audit/application/tier-stats.service';
 import { TierRepositoryPort } from '../../config/infrastructure/tier.repository.port';
 import { TierConfigRepositoryPort } from '../../config/infrastructure/tier-config.repository.port';
-import { TierChangeType, Prisma, RewardSourceType, RewardItemType, WageringTargetType } from '@prisma/client';
+import {
+  TierChangeType,
+  Prisma,
+  RewardSourceType,
+  RewardItemType,
+  WageringTargetType,
+} from '@prisma/client';
 import { UserTierNotFoundException } from '../domain/tier-profile.exception';
 import { TierNotFoundException } from '../../config/domain/tier-config.exception';
 import { Transactional } from '@nestjs-cls/transactional';
@@ -25,7 +31,7 @@ export class ForceUpdateUserTierService {
     private readonly grantRewardService: GrantRewardService,
     private readonly claimRewardService: CoreClaimRewardService,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(
@@ -54,7 +60,10 @@ export class ForceUpdateUserTierService {
     const previousHighestLevel = userTier.maxLevelAchieved;
 
     // 티어 이동 (레벨 증가분에 대해 지급 여부 판단)
-    const isEligibleForPromotionBonus = userTier.upgradeTier(targetTierId, targetTier.level);
+    const isEligibleForPromotionBonus = userTier.upgradeTier(
+      targetTierId,
+      targetTier.level,
+    );
 
     let earnedBonusAmount = new Prisma.Decimal(0);
     let skippedReason: string | undefined;
@@ -124,7 +133,8 @@ export class ForceUpdateUserTierService {
       compRateSnap: benefits.compRate,
       weeklyLossbackRateSnap: benefits.weeklyLossbackRate,
       monthlyLossbackRateSnap: benefits.monthlyLossbackRate,
-      upgradeBonusWageringMultiplierSnap: targetTier.upgradeBonusWageringMultiplier,
+      upgradeBonusWageringMultiplierSnap:
+        targetTier.upgradeBonusWageringMultiplier,
 
       // Limit & Flag Snapshot
       dailyWithdrawalLimitUsdSnap: benefits.dailyWithdrawalLimitUsd,
@@ -167,6 +177,8 @@ export class ForceUpdateUserTierService {
       });
     }
 
-    this.logger.log(`User ${userId} force updated to tier ${targetTier.code} with isGrantBonus=${isGrantBonus}`);
+    this.logger.log(
+      `User ${userId} force updated to tier ${targetTier.code} with isGrantBonus=${isGrantBonus}`,
+    );
   }
 }

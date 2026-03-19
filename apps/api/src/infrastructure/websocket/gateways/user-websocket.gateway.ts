@@ -6,7 +6,10 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { Logger, Injectable } from '@nestjs/common';
-import { getSocketRoom, SOCKET_ROOMS } from '../constants/websocket-rooms.constant';
+import {
+  getSocketRoom,
+  SOCKET_ROOMS,
+} from '../constants/websocket-rooms.constant';
 import type { SocketRoomType } from '../constants/websocket-rooms.constant';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { AsyncApiPub } from 'src/common/decorators/async-api.decorator';
@@ -36,7 +39,9 @@ interface UserSocket extends Socket {
   },
 })
 @Injectable()
-export class UserWebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class UserWebsocketGateway
+  implements OnGatewayConnection, OnGatewayDisconnect
+{
   @WebSocketServer()
   server: Server;
 
@@ -47,7 +52,7 @@ export class UserWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
     private readonly expireSessionService: ExpireSessionService,
     @Inject(forwardRef(() => WebsocketService))
     private readonly websocketService: WebsocketService,
-  ) { }
+  ) {}
 
   async handleConnection(client: UserSocket) {
     const user = this.extractUser(client);
@@ -58,7 +63,9 @@ export class UserWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
     if (user) {
       // 1. 인증된 유저: 유저 고유 룸 조인
       client.join(getSocketRoom.user(user.id));
-      this.logger.log(`User connected: ${client.id}, userId: ${user.id}, role: ${user.role}`);
+      this.logger.log(
+        `User connected: ${client.id}, userId: ${user.id}, role: ${user.role}`,
+      );
 
       // 2. DB 세션 생성 (WebSocket 타입)
       const req = client.request;
@@ -98,7 +105,9 @@ export class UserWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
 
   async handleDisconnect(client: UserSocket) {
     const user = client.user;
-    this.logger.log(`Client disconnected: ${client.id}${user ? `, userId: ${user.id}` : ''}`);
+    this.logger.log(
+      `Client disconnected: ${client.id}${user ? `, userId: ${user.id}` : ''}`,
+    );
 
     if (!user) return;
 
@@ -110,11 +119,11 @@ export class UserWebsocketGateway implements OnGatewayConnection, OnGatewayDisco
       });
     } catch (err) {
       // 이미 부모 세션 종료로 먼저 처리된 경우 등 — 무시
-      this.logger.debug(`WS session cleanup skipped: ${client.id} — ${err?.message}`);
+      this.logger.debug(
+        `WS session cleanup skipped: ${client.id} — ${err?.message}`,
+      );
     }
   }
-
-
 
   /**
    * 특정 사용자에게 이벤트를 전송합니다.

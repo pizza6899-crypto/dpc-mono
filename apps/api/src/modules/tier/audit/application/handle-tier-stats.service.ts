@@ -8,7 +8,7 @@ import { RecordTierSnapshotJobData } from '../infrastructure/tier-audit.types';
 
 @Injectable()
 export class HandleTierStatsService {
-  constructor(private readonly auditRepository: TierAuditRepositoryPort) { }
+  constructor(private readonly auditRepository: TierAuditRepositoryPort) {}
 
   /**
    * BullMQ 프로세서에서 호출하는 실제 통계 저장 로직입니다.

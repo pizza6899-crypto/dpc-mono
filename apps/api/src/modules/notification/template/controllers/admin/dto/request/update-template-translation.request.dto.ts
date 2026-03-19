@@ -4,7 +4,10 @@ import { IsString, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateTemplateTranslationRequestDto {
-  @ApiProperty({ description: 'Title template / 제목 템플릿', example: 'Welcome, {{name}}!' })
+  @ApiProperty({
+    description: 'Title template / 제목 템플릿',
+    example: 'Welcome, {{name}}!',
+  })
   @IsString()
   titleTemplate: string;
 

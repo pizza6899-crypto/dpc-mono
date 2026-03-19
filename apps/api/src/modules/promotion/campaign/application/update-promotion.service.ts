@@ -27,7 +27,7 @@ export class UpdatePromotionService {
   constructor(
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(params: UpdatePromotionParams): Promise<Promotion> {

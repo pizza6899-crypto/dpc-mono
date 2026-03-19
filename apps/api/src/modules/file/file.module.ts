@@ -29,6 +29,11 @@ import { FILE_USAGE_REPOSITORY } from './ports/file-usage.repository.token';
       useClass: FileUsageRepository,
     },
   ],
-  exports: [CreateFileService, AttachFileService, FileUrlService, FILE_REPOSITORY],
+  exports: [
+    CreateFileService,
+    AttachFileService,
+    FileUrlService,
+    FILE_REPOSITORY,
+  ],
 })
-export class FileModule { }
+export class FileModule {}

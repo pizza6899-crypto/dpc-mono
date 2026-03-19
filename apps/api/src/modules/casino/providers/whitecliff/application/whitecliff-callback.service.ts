@@ -33,7 +33,7 @@ export class WhitecliffCallbackService {
     private readonly processCasinoBetService: ProcessCasinoBetService,
     private readonly processCasinoCreditService: ProcessCasinoCreditService,
     private readonly dispatchLogService: DispatchLogService,
-  ) { }
+  ) {}
 
   /**
    * 통합 검증 헬퍼
@@ -469,7 +469,7 @@ export class WhitecliffCallbackService {
           currentBalance = res.balance.toNumber();
         }
       }
-    } catch (e) { }
+    } catch (e) {}
 
     const errorCode = getCasinoErrorCode(error);
 

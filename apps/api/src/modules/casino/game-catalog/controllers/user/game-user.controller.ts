@@ -8,7 +8,10 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { Public, RequireRoles } from 'src/common/auth/decorators/roles.decorator';
+import {
+  Public,
+  RequireRoles,
+} from 'src/common/auth/decorators/roles.decorator';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 import { FindGamesService } from '../../application/find-games.service';
@@ -42,7 +45,7 @@ export class GameUserController {
     private readonly getCategoryByCodeService: GetCategoryByCodeService,
     private readonly launchGameService: LaunchGameService,
     private readonly sqidsService: SqidsService,
-  ) { }
+  ) {}
 
   @Get()
   @Public()
@@ -108,7 +111,12 @@ export class GameUserController {
   }
 
   @Post('launch')
-  @RequireRoles(UserRoleType.USER, UserRoleType.AGENT, UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
+  @RequireRoles(
+    UserRoleType.USER,
+    UserRoleType.AGENT,
+    UserRoleType.ADMIN,
+    UserRoleType.SUPER_ADMIN,
+  )
   @HttpCode(HttpStatus.OK)
   @Throttle({
     limit: 30,

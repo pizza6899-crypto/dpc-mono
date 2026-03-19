@@ -41,4 +41,4 @@ import { TIER_QUEUES } from './infrastructure/tier-audit.bullmq';
     HandleTierStatsService,
   ],
 })
-export class TierAuditModule { }
+export class TierAuditModule {}

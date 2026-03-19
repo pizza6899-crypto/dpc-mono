@@ -9,7 +9,7 @@ export class WageringContributionLog {
     public readonly contributionRate: Prisma.Decimal,
     public readonly wageredAmount: Prisma.Decimal,
     public readonly createdAt: Date,
-  ) { }
+  ) {}
 
   static fromPersistence(data: {
     id: bigint;

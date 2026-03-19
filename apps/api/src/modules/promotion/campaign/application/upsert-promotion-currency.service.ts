@@ -22,7 +22,7 @@ export class UpsertPromotionCurrencyService {
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
     private readonly policy: PromotionPolicy,
-  ) { }
+  ) {}
 
   async execute(params: UpsertPromotionCurrencyParams): Promise<void> {
     const promotion = await this.repository.findById(params.promotionId);
@@ -35,8 +35,12 @@ export class UpsertPromotionCurrencyService {
       currencyRules: [
         {
           minDepositAmount: new Prisma.Decimal(params.minDepositAmount),
-          maxBonusAmount: params.maxBonusAmount ? new Prisma.Decimal(params.maxBonusAmount) : null,
-          bonusRate: params.bonusRate ? new Prisma.Decimal(params.bonusRate) : null,
+          maxBonusAmount: params.maxBonusAmount
+            ? new Prisma.Decimal(params.maxBonusAmount)
+            : null,
+          bonusRate: params.bonusRate
+            ? new Prisma.Decimal(params.bonusRate)
+            : null,
         },
       ],
     });
@@ -45,11 +49,19 @@ export class UpsertPromotionCurrencyService {
       promotionId: params.promotionId,
       currency: params.currency,
       minDepositAmount: new Prisma.Decimal(params.minDepositAmount),
-      maxDepositAmount: params.maxDepositAmount ? new Prisma.Decimal(params.maxDepositAmount) : null,
-      maxBonusAmount: params.maxBonusAmount ? new Prisma.Decimal(params.maxBonusAmount) : null,
-      maxWithdrawAmount: params.maxWithdrawAmount ? new Prisma.Decimal(params.maxWithdrawAmount) : null,
+      maxDepositAmount: params.maxDepositAmount
+        ? new Prisma.Decimal(params.maxDepositAmount)
+        : null,
+      maxBonusAmount: params.maxBonusAmount
+        ? new Prisma.Decimal(params.maxBonusAmount)
+        : null,
+      maxWithdrawAmount: params.maxWithdrawAmount
+        ? new Prisma.Decimal(params.maxWithdrawAmount)
+        : null,
       bonusRate: params.bonusRate ? new Prisma.Decimal(params.bonusRate) : null,
-      wageringMultiplier: params.wageringMultiplier ? new Prisma.Decimal(params.wageringMultiplier) : null,
+      wageringMultiplier: params.wageringMultiplier
+        ? new Prisma.Decimal(params.wageringMultiplier)
+        : null,
     });
   }
 }

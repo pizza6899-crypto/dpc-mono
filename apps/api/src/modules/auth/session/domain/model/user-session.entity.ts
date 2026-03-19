@@ -28,7 +28,7 @@ export class UserSession {
     public readonly revokedAt: Date | null, // 세션 종료 시간 (REVOKED 상태일 때)
     public readonly revokedBy: bigint | null, // 세션을 종료한 사용자 ID (관리자가 종료한 경우)
     public readonly metadata: Record<string, unknown>, // 추가 메타데이터 (JSON)
-  ) { }
+  ) {}
 
   /**
    * 새로운 활성 세션 생성

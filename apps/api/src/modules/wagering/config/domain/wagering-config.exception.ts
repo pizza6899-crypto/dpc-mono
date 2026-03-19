@@ -57,7 +57,6 @@ export class WageringConfigInvalidNumberFormatException extends WageringConfigEx
   }
 }
 
-
 export class WageringConfigNotFoundException extends WageringConfigException {
   constructor() {
     super(
@@ -68,4 +67,3 @@ export class WageringConfigNotFoundException extends WageringConfigException {
     this.name = 'WageringConfigNotFoundException';
   }
 }
-

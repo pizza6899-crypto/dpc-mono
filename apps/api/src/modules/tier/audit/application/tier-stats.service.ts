@@ -10,7 +10,7 @@ export class TierStatsService {
   constructor(
     @InjectQueue(BULLMQ_QUEUES.TIER.STATS_RECORD.name)
     private readonly recordQueue: Queue,
-  ) { }
+  ) {}
 
   /**
    * 등급별 통계(TierStats)를 기록하거나 업데이트 요청을 보냅니다.

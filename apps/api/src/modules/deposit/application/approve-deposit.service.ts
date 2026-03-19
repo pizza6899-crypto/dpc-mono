@@ -34,7 +34,7 @@ export class ApproveDepositService {
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly processDepositPromotionService: ProcessDepositPromotionService,
     private readonly createAdminMemoService: CreateAdminMemoService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(params: ApproveDepositParams): Promise<ApproveDepositResult> {
@@ -64,11 +64,7 @@ export class ApproveDepositService {
     const depositCurrency = deposit.depositCurrency;
 
     // 5. 엔티티 승인 처리 (상태 변경 및 메타데이터 업데이트)
-    deposit.approve(
-      actuallyPaid,
-      adminId,
-      transactionHash,
-    );
+    deposit.approve(actuallyPaid, adminId, transactionHash);
 
     // 6. DepositDetail 상태 업데이트 (엔티티의 변경사항 반영)
     await this.depositRepository.update(deposit);

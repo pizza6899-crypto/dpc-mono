@@ -15,7 +15,7 @@ export class GetUnreadCountService {
   constructor(
     @Inject(NOTIFICATION_LOG_REPOSITORY)
     private readonly repository: NotificationLogRepositoryPort,
-  ) { }
+  ) {}
 
   async execute(params: GetUnreadCountParams): Promise<number> {
     const { receiverId, channel } = params;

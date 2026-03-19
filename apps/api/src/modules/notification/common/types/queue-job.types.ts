@@ -7,8 +7,8 @@
  * EMAIL, SMS, INBOX 큐에서 사용됩니다.
  */
 export interface NotificationJobData {
-    logId: string;
-    logCreatedAt: string;
+  logId: string;
+  logCreatedAt: string;
 }
 
 /**
@@ -16,6 +16,6 @@ export interface NotificationJobData {
  * ALERT 큐에서 사용됩니다.
  */
 export interface AlertJobData {
-    alertId: string;
-    alertCreatedAt: string;
+  alertId: string;
+  alertCreatedAt: string;
 }

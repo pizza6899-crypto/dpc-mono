@@ -55,7 +55,7 @@ export class RequestCryptoWithdrawalService {
     private readonly updateUserBalanceService: UpdateUserBalanceService,
     private readonly getUserWalletService: GetUserWalletService,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(

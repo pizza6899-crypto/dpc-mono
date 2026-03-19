@@ -1,1 +1,1 @@
-export class AuthChangePasswordResponseDto { }
+export class AuthChangePasswordResponseDto {}

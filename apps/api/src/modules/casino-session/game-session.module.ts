@@ -27,4 +27,4 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
     CASINO_GAME_SESSION_REPOSITORY,
   ],
 })
-export class CasinoSessionModule { }
+export class CasinoSessionModule {}

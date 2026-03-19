@@ -46,7 +46,7 @@ export class UpdateWalletStatusService {
     private readonly walletPolicy: UserWalletPolicy,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly snowflakeService: SnowflakeService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute({

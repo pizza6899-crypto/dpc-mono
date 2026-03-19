@@ -12,7 +12,7 @@ export class TierRepository implements TierRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly cacheService: CacheService,
-  ) { }
+  ) {}
 
   async findAll(options?: { ignoreCache?: boolean }): Promise<Tier[]> {
     const fetcher = async () => {
@@ -62,18 +62,18 @@ export class TierRepository implements TierRepositoryPort {
         updatedBy,
         translations: translations
           ? {
-            upsert: translations.map((t) => ({
-              where: {
-                tierId_language: { tierId: tierId, language: t.language },
-              },
-              update: { name: t.name, description: t.description },
-              create: {
-                language: t.language,
-                name: t.name,
-                description: t.description,
-              },
-            })),
-          }
+              upsert: translations.map((t) => ({
+                where: {
+                  tierId_language: { tierId: tierId, language: t.language },
+                },
+                update: { name: t.name, description: t.description },
+                create: {
+                  language: t.language,
+                  name: t.name,
+                  description: t.description,
+                },
+              })),
+            }
           : undefined,
       },
       include: { translations: true, benefits: true },

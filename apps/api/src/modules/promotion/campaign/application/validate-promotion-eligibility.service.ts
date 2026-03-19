@@ -23,9 +23,11 @@ export class ValidatePromotionEligibilityService {
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
     private readonly policy: PromotionPolicy,
-  ) { }
+  ) {}
 
-  async execute(params: ValidatePromotionEligibilityParams): Promise<Promotion> {
+  async execute(
+    params: ValidatePromotionEligibilityParams,
+  ): Promise<Promotion> {
     const { userId, promotionId, depositAmount, currency } = params;
 
     // 1. 프로모션 존재 확인
@@ -35,9 +37,14 @@ export class ValidatePromotionEligibilityService {
     }
 
     // 2. 해당 통화에 대한 규칙 확인
-    const currencyRule = await this.repository.getCurrencyRule(promotionId, currency);
+    const currencyRule = await this.repository.getCurrencyRule(
+      promotionId,
+      currency,
+    );
     if (!currencyRule) {
-      throw new PromotionNotEligibleException('Currency not supported for this promotion');
+      throw new PromotionNotEligibleException(
+        'Currency not supported for this promotion',
+      );
     }
 
     const now = new Date();

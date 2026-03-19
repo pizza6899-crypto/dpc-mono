@@ -4,7 +4,10 @@ import { ModerationService } from './application/moderation.service';
 import { PrismaForbiddenWordRepository } from './infrastructure/prisma-forbidden-word.repository';
 import { PrismaAiModerationLogRepository } from './infrastructure/prisma-ai-moderation-log.repository';
 import { AiModerationAdapter } from './infrastructure/ai-moderation.adapter';
-import { FORBIDDEN_WORD_REPOSITORY, AI_MODERATION_LOG_REPOSITORY } from './ports/out/moderation-repository.port';
+import {
+  FORBIDDEN_WORD_REPOSITORY,
+  AI_MODERATION_LOG_REPOSITORY,
+} from './ports/out/moderation-repository.port';
 import { AI_MODERATION_PORT } from './ports/out/ai-moderation.port';
 import { EnvModule } from 'src/common/env/env.module';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
@@ -20,27 +23,27 @@ import { ForbiddenWordAdminController } from './controllers/admin/forbidden-word
 
 @Global()
 @Module({
-    imports: [HttpModule, EnvModule, SnowflakeModule],
-    controllers: [ForbiddenWordAdminController],
-    providers: [
-        ModerationService,
-        FindForbiddenWordsAdminService,
-        CreateForbiddenWordAdminService,
-        UpdateForbiddenWordAdminService,
-        DeleteForbiddenWordAdminService,
-        {
-            provide: FORBIDDEN_WORD_REPOSITORY,
-            useClass: PrismaForbiddenWordRepository,
-        },
-        {
-            provide: AI_MODERATION_LOG_REPOSITORY,
-            useClass: PrismaAiModerationLogRepository,
-        },
-        {
-            provide: AI_MODERATION_PORT,
-            useClass: AiModerationAdapter,
-        },
-    ],
-    exports: [ModerationService],
+  imports: [HttpModule, EnvModule, SnowflakeModule],
+  controllers: [ForbiddenWordAdminController],
+  providers: [
+    ModerationService,
+    FindForbiddenWordsAdminService,
+    CreateForbiddenWordAdminService,
+    UpdateForbiddenWordAdminService,
+    DeleteForbiddenWordAdminService,
+    {
+      provide: FORBIDDEN_WORD_REPOSITORY,
+      useClass: PrismaForbiddenWordRepository,
+    },
+    {
+      provide: AI_MODERATION_LOG_REPOSITORY,
+      useClass: PrismaAiModerationLogRepository,
+    },
+    {
+      provide: AI_MODERATION_PORT,
+      useClass: AiModerationAdapter,
+    },
+  ],
+  exports: [ModerationService],
 })
-export class ModerationModule { }
+export class ModerationModule {}

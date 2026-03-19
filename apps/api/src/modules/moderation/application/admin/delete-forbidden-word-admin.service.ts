@@ -6,18 +6,18 @@ import { ForbiddenWordNotFoundException } from '../../domain/moderation.exceptio
 
 @Injectable()
 export class DeleteForbiddenWordAdminService {
-    constructor(
-        @Inject(FORBIDDEN_WORD_REPOSITORY)
-        private readonly forbiddenWordRepository: ForbiddenWordRepositoryPort,
-    ) { }
+  constructor(
+    @Inject(FORBIDDEN_WORD_REPOSITORY)
+    private readonly forbiddenWordRepository: ForbiddenWordRepositoryPort,
+  ) {}
 
-    @Transactional()
-    async execute(id: bigint): Promise<void> {
-        const word = await this.forbiddenWordRepository.findById(id);
-        if (!word) {
-            throw new ForbiddenWordNotFoundException(id);
-        }
-
-        await this.forbiddenWordRepository.delete(id);
+  @Transactional()
+  async execute(id: bigint): Promise<void> {
+    const word = await this.forbiddenWordRepository.findById(id);
+    if (!word) {
+      throw new ForbiddenWordNotFoundException(id);
     }
+
+    await this.forbiddenWordRepository.delete(id);
+  }
 }

@@ -36,7 +36,7 @@ export class CreateSessionService {
     private readonly repository: UserSessionRepositoryPort,
     private readonly policy: SessionPolicy,
     private readonly sessionTracker: SessionTrackerService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(params: CreateSessionParams): Promise<UserSession> {
@@ -61,9 +61,9 @@ export class CreateSessionService {
     const sessionsToRevoke =
       type === SessionType.HTTP
         ? this.policy.getSessionsToRevokeForNewLogin(
-          existingActiveSessions,
-          deviceInfo.isMobile ?? false,
-        )
+            existingActiveSessions,
+            deviceInfo.isMobile ?? false,
+          )
         : [];
 
     // 3. 기존 세션 종료 처리

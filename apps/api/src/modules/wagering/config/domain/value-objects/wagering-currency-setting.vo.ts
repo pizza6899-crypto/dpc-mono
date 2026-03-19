@@ -3,7 +3,7 @@ import {
   InvalidWageringConfigException,
   WageringConfigInvalidNumberFormatException,
   WageringConfigMinGTMaxException,
-  WageringConfigNegativeValueException
+  WageringConfigNegativeValueException,
 } from '../wagering-config.exception';
 
 export interface WageringCurrencySettingProps {
@@ -42,7 +42,9 @@ export class WageringCurrencySetting {
   /**
    * 원시 데이터(JSON)로부터 설정 객체를 생성합니다.
    */
-  static fromRaw(data: Partial<WageringCurrencySettingProps>): WageringCurrencySetting {
+  static fromRaw(
+    data: Partial<WageringCurrencySettingProps>,
+  ): WageringCurrencySetting {
     try {
       return new WageringCurrencySetting(
         new Prisma.Decimal(data.cancellationThreshold ?? 0),

@@ -16,7 +16,7 @@ export class UserWalletStatsRepository implements UserWalletStatsRepositoryPort 
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: UserWalletStatsMapper,
-  ) { }
+  ) {}
 
   // --- Basic CRUD (Port Implementation) ---
 
@@ -77,8 +77,6 @@ export class UserWalletStatsRepository implements UserWalletStatsRepositoryPort 
     const withdrawCash = dto.withdrawCash?.toString() ?? '0';
     const betCash = dto.betCash?.toString() ?? '0';
     const winCash = dto.winCash?.toString() ?? '0';
-
-
 
     // Delta Calculation for Counts
     const getSign = (v: Prisma.Decimal | undefined) => {
@@ -185,8 +183,6 @@ export class UserWalletStatsRepository implements UserWalletStatsRepositoryPort 
     const withdrawCash = dto.withdrawCash?.toString() ?? '0';
     const betCash = dto.betCash?.toString() ?? '0';
     const winCash = dto.winCash?.toString() ?? '0';
-
-
 
     // Delta Calculation for Counts
     const getSign = (v: Prisma.Decimal | undefined) => {

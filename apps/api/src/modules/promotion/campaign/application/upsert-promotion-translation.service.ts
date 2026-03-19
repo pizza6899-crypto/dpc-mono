@@ -17,7 +17,7 @@ export class UpsertPromotionTranslationService {
   constructor(
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) { }
+  ) {}
 
   async execute(params: UpsertPromotionTranslationParams): Promise<void> {
     const promotion = await this.repository.findById(params.promotionId);

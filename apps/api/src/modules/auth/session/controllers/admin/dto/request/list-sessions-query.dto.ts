@@ -60,7 +60,8 @@ export class ListSessionsQueryDto extends createPaginationQueryDto<SessionSortFi
   parentSessionId?: string;
 
   @ApiPropertyOptional({
-    description: '활성 세션만 조회할지 여부 (기본값: false) / Whether to retrieve only active sessions (default: false)',
+    description:
+      '활성 세션만 조회할지 여부 (기본값: false) / Whether to retrieve only active sessions (default: false)',
     example: true,
     type: Boolean,
   })
@@ -70,7 +71,8 @@ export class ListSessionsQueryDto extends createPaginationQueryDto<SessionSortFi
   activeOnly?: boolean;
 
   @ApiPropertyOptional({
-    description: '시작 날짜 (ISO 8601 형식) - 생성일 기준 / Start date (ISO 8601 format) - based on creation date',
+    description:
+      '시작 날짜 (ISO 8601 형식) - 생성일 기준 / Start date (ISO 8601 format) - based on creation date',
     example: '2024-01-01T00:00:00Z',
   })
   @IsOptional()
@@ -78,7 +80,8 @@ export class ListSessionsQueryDto extends createPaginationQueryDto<SessionSortFi
   startDate?: string;
 
   @ApiPropertyOptional({
-    description: '종료 날짜 (ISO 8601 형식) - 생성일 기준 / End date (ISO 8601 format) - based on creation date',
+    description:
+      '종료 날짜 (ISO 8601 형식) - 생성일 기준 / End date (ISO 8601 format) - based on creation date',
     example: '2024-12-31T23:59:59Z',
   })
   @IsOptional()

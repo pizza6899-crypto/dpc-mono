@@ -1,6 +1,17 @@
 // src/modules/promotion/campaign/ports/promotion.repository.port.ts
-import type { Promotion, UserPromotion, PromotionCurrencyRule, PromotionTranslation } from '../domain';
-import type { Prisma, ExchangeCurrencyCode, Language, PromotionTargetType, PromotionResetType } from '@prisma/client';
+import type {
+  Promotion,
+  UserPromotion,
+  PromotionCurrencyRule,
+  PromotionTranslation,
+} from '../domain';
+import type {
+  Prisma,
+  ExchangeCurrencyCode,
+  Language,
+  PromotionTargetType,
+  PromotionResetType,
+} from '@prisma/client';
 
 export interface PromotionRepositoryPort {
   /**
@@ -30,7 +41,10 @@ export interface PromotionRepositoryPort {
   /**
    * 타입별 활성 프로모션 조회
    */
-  findByTargetType(targetType: PromotionTargetType, now?: Date): Promise<Promotion[]>;
+  findByTargetType(
+    targetType: PromotionTargetType,
+    now?: Date,
+  ): Promise<Promotion[]>;
 
   /**
    * 사용자의 모든 프로모션 조회
@@ -133,9 +147,10 @@ export interface PromotionRepositoryPort {
   /**
    * 프로모션 업데이트
    */
-  update(id: bigint, params: Partial<Prisma.PromotionUpdateInput>): Promise<Promotion>;
-
-
+  update(
+    id: bigint,
+    params: Partial<Prisma.PromotionUpdateInput>,
+  ): Promise<Promotion>;
 
   /**
    * 프로모션의 통화별 규칙 조회
@@ -158,7 +173,6 @@ export interface PromotionRepositoryPort {
     bonusRate?: Prisma.Decimal | null;
     wageringMultiplier?: Prisma.Decimal | null;
   }): Promise<void>;
-
 
   /**
    * 프로모션별 UserPromotion 목록 조회 (관리자용)
@@ -199,5 +213,4 @@ export interface PromotionRepositoryPort {
     title: string;
     description?: string | null;
   }): Promise<PromotionTranslation>;
-
 }

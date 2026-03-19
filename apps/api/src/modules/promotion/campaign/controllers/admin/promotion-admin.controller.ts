@@ -38,9 +38,7 @@ import { UpsertCurrencySettingsRequestDto } from './dto/request/upsert-currency-
 import { UpsertTranslationRequestDto } from './dto/request/upsert-translation.request.dto';
 import { PromotionParticipantResponseDto } from './dto/response/promotion-participant.response.dto';
 import { PromotionStatisticsResponseDto } from './dto/response/promotion-statistics.response.dto';
-import {
-  Promotion,
-} from '../../domain';
+import { Promotion } from '../../domain';
 
 @Controller('admin/promotions')
 @ApiTags('Admin Promotion')
@@ -54,7 +52,7 @@ export class PromotionAdminController {
     private readonly findPromotionParticipantsService: FindPromotionParticipantsService,
     private readonly upsertPromotionCurrencyService: UpsertPromotionCurrencyService,
     private readonly upsertPromotionTranslationService: UpsertPromotionTranslationService,
-  ) { }
+  ) {}
 
   /**
    * 관리자용 프로모션 목록 조회
@@ -145,8 +143,12 @@ export class PromotionAdminController {
       maxUsagePerUser: dto.maxUsagePerUser,
       periodicResetType: dto.periodicResetType,
       applicableDays: dto.applicableDays,
-      applicableStartTime: dto.applicableStartTime ? new Date(dto.applicableStartTime) : null,
-      applicableEndTime: dto.applicableEndTime ? new Date(dto.applicableEndTime) : null,
+      applicableStartTime: dto.applicableStartTime
+        ? new Date(dto.applicableStartTime)
+        : null,
+      applicableEndTime: dto.applicableEndTime
+        ? new Date(dto.applicableEndTime)
+        : null,
       bonusExpiryMinutes: dto.bonusExpiryMinutes,
     });
 
@@ -200,15 +202,17 @@ export class PromotionAdminController {
       maxUsagePerUser: dto.maxUsagePerUser,
       periodicResetType: dto.periodicResetType,
       applicableDays: dto.applicableDays,
-      applicableStartTime: dto.applicableStartTime ? new Date(dto.applicableStartTime) : null,
-      applicableEndTime: dto.applicableEndTime ? new Date(dto.applicableEndTime) : null,
+      applicableStartTime: dto.applicableStartTime
+        ? new Date(dto.applicableStartTime)
+        : null,
+      applicableEndTime: dto.applicableEndTime
+        ? new Date(dto.applicableEndTime)
+        : null,
       bonusExpiryMinutes: dto.bonusExpiryMinutes,
     });
 
     return this.mapToAdminResponseDto(promotion);
   }
-
-
 
   /**
    * 프로모션의 통화별 설정 생성/수정
@@ -216,8 +220,7 @@ export class PromotionAdminController {
   @Post(':id/currencies')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary:
-      'Upsert promotion currency rules / 프로모션 통화별 규칙 생성/수정',
+    summary: 'Upsert promotion currency rules / 프로모션 통화별 규칙 생성/수정',
     description:
       'Create or update currency-specific policies for a promotion. / 프로모션의 통화별 정책(금액 설정)을 생성하거나 수정합니다.',
   })
@@ -270,7 +273,8 @@ export class PromotionAdminController {
   })
   @ApiStandardResponse(Object, {
     status: HttpStatus.OK,
-    description: 'Translations upserted successfully / 다국어 정보 생성/수정 성공',
+    description:
+      'Translations upserted successfully / 다국어 정보 생성/수정 성공',
   })
   @AuditLog({
     type: LogType.ACTIVITY,

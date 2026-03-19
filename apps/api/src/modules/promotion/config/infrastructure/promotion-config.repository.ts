@@ -15,7 +15,7 @@ export class PromotionConfigRepository implements PromotionConfigRepositoryPort 
     private readonly tx: PrismaTransaction,
     private readonly mapper: PromotionConfigMapper,
     private readonly cacheService: CacheService,
-  ) { }
+  ) {}
 
   async get(): Promise<PromotionConfig> {
     return await this.cacheService.getOrSet(

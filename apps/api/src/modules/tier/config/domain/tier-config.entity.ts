@@ -16,7 +16,7 @@ export class TierConfig {
     public readonly expGrantRollingUsd: Prisma.Decimal,
     public readonly updatedAt: Date,
     public readonly updatedBy: bigint | null,
-  ) { }
+  ) {}
 
   static fromPersistence(
     data: PersistenceOf<TierConfigRawPayload>,

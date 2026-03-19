@@ -64,7 +64,9 @@ export class PromotionNotActiveException extends PromotionException {
 export class PromotionNotEligibleException extends PromotionException {
   constructor(reason?: string) {
     super(
-      reason ? `Promotion eligibility failed: ${reason}` : 'You are not eligible for this promotion',
+      reason
+        ? `Promotion eligibility failed: ${reason}`
+        : 'You are not eligible for this promotion',
       MessageCode.PROMOTION_NOT_ELIGIBLE,
       HttpStatus.BAD_REQUEST,
     );

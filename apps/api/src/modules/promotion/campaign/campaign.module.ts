@@ -53,4 +53,4 @@ import { PromotionConfigModule } from '../config/promotion-config.module';
     ProcessDepositPromotionService,
   ],
 })
-export class PromotionCampaignModule { }
+export class PromotionCampaignModule {}

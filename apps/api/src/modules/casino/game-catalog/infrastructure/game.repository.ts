@@ -11,7 +11,7 @@ export class GameRepository implements GameRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: GameMapper,
-  ) { }
+  ) {}
 
   async findById(id: bigint): Promise<CasinoGame | null> {
     const result = await this.tx.casinoGame.findUnique({

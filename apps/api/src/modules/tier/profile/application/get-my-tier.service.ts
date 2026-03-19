@@ -28,7 +28,7 @@ export interface MyTierResult {
 
 @Injectable()
 export class GetMyTierService {
-  constructor(private readonly userTierRepository: UserTierRepositoryPort) { }
+  constructor(private readonly userTierRepository: UserTierRepositoryPort) {}
 
   /**
    * 유저 아이디로 유저 티어 엔티티를 조회합니다. (Join 포함)

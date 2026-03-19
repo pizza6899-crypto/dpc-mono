@@ -11,7 +11,7 @@ export class CompConfig {
     public readonly minSettlementAmount: Prisma.Decimal,
     public readonly description: string | null,
     public readonly updatedAt: Date,
-  ) { }
+  ) {}
 
   static create(params: {
     currency: ExchangeCurrencyCode;

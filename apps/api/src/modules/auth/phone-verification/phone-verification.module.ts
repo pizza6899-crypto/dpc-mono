@@ -12,22 +12,22 @@ import { PHONE_VERIFICATION_REPOSITORY } from './ports/out/phone-verification.re
 import { PhoneVerificationRepository } from './infrastructure/persistence/phone-verification.repository';
 
 @Module({
-    imports: [
-        UserModule,
-        NotificationModule,
-        SessionModule,
-        BullMqModule,
-        BullModule.registerQueue(BULLMQ_QUEUES.NOTIFICATION.ALERT),
-    ],
-    controllers: [PhoneVerificationController],
-    providers: [
-        RequestPhoneVerificationService,
-        VerifyPhoneService,
-        {
-            provide: PHONE_VERIFICATION_REPOSITORY,
-            useClass: PhoneVerificationRepository,
-        },
-    ],
-    exports: [RequestPhoneVerificationService, VerifyPhoneService],
+  imports: [
+    UserModule,
+    NotificationModule,
+    SessionModule,
+    BullMqModule,
+    BullModule.registerQueue(BULLMQ_QUEUES.NOTIFICATION.ALERT),
+  ],
+  controllers: [PhoneVerificationController],
+  providers: [
+    RequestPhoneVerificationService,
+    VerifyPhoneService,
+    {
+      provide: PHONE_VERIFICATION_REPOSITORY,
+      useClass: PhoneVerificationRepository,
+    },
+  ],
+  exports: [RequestPhoneVerificationService, VerifyPhoneService],
 })
-export class PhoneVerificationModule { }
+export class PhoneVerificationModule {}

@@ -16,7 +16,7 @@ export class PromotionCurrencyRule {
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
     public readonly updatedBy: bigint | null,
-  ) { }
+  ) {}
 
   static fromPersistence(data: {
     id: bigint;
@@ -53,7 +53,8 @@ export class PromotionCurrencyRule {
    */
   validateDepositAmount(depositAmount: Prisma.Decimal): boolean {
     if (depositAmount.lt(this.minDepositAmount)) return false;
-    if (this.maxDepositAmount && depositAmount.gt(this.maxDepositAmount)) return false;
+    if (this.maxDepositAmount && depositAmount.gt(this.maxDepositAmount))
+      return false;
     return true;
   }
 

@@ -52,7 +52,7 @@ export class AdminDepositController {
     private readonly processDepositService: ProcessDepositService,
     private readonly approveDepositService: ApproveDepositService,
     private readonly rejectDepositService: RejectDepositService,
-  ) { }
+  ) {}
 
   // ============================================
   // 입금 관리 (Deposit Management)
@@ -67,7 +67,8 @@ export class AdminDepositController {
   })
   @ApiStandardResponse(DepositStatsResponseDto, {
     status: 200,
-    description: '입금 통화 조회 성공 / Deposit statistics retrieved successfully',
+    description:
+      '입금 통화 조회 성공 / Deposit statistics retrieved successfully',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -182,7 +183,8 @@ export class AdminDepositController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: '입금 상세 조회 / Get deposit detail',
-    description: '특정 입금의 상세 정보를 조회합니다. / Retrieve detailed information of a specific deposit.',
+    description:
+      '특정 입금의 상세 정보를 조회합니다. / Retrieve detailed information of a specific deposit.',
   })
   @ApiParam({
     name: 'id',
@@ -236,7 +238,8 @@ export class AdminDepositController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: '입금 처리 상태로 변경 (피아트 전용) / Mark deposit as processing',
-    description: '관리자가 입금을 확인 중비(처리 중) 상태로 변경하여 중복 처리를 방지합니다. / Mark a fiat deposit as processing to prevent duplicate admin actions.',
+    description:
+      '관리자가 입금을 확인 중비(처리 중) 상태로 변경하여 중복 처리를 방지합니다. / Mark a fiat deposit as processing to prevent duplicate admin actions.',
   })
   @ApiParam({
     name: 'id',
@@ -245,7 +248,8 @@ export class AdminDepositController {
   })
   @ApiStandardResponse(ProcessDepositResponseDto, {
     status: 200,
-    description: '입금 처리 상태 변경 성공 / Deposit marked as processing successfully',
+    description:
+      '입금 처리 상태 변경 성공 / Deposit marked as processing successfully',
   })
   @AuditLog({
     type: LogType.AUTH,
@@ -270,7 +274,8 @@ export class AdminDepositController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: '입금 승인 / Approve deposit',
-    description: '입금을 승인하고 사용자의 잔액을 업데이트합니다. / Approve a deposit and update user balance.',
+    description:
+      '입금을 승인하고 사용자의 잔액을 업데이트합니다. / Approve a deposit and update user balance.',
   })
   @ApiParam({
     name: 'id',
@@ -343,4 +348,3 @@ export class AdminDepositController {
     });
   }
 }
-

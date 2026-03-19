@@ -2,10 +2,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { PromotionTargetType, PromotionResetType } from '@prisma/client';
 import { Transactional } from '@nestjs-cls/transactional';
-import {
-  Promotion,
-  PromotionPolicy,
-} from '../domain';
+import { Promotion, PromotionPolicy } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports';
 import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
 
@@ -30,7 +27,7 @@ export class CreatePromotionService {
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
     private readonly policy: PromotionPolicy,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(params: CreatePromotionParams): Promise<Promotion> {
@@ -50,9 +47,7 @@ export class CreatePromotionService {
       bonusExpiryMinutes: params.bonusExpiryMinutes ?? null,
     });
 
-    this.logger.log(
-      `Promotion created: id=${promotion.id}`,
-    );
+    this.logger.log(`Promotion created: id=${promotion.id}`);
 
     return promotion;
   }

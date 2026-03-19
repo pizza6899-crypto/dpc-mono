@@ -4,7 +4,6 @@ import { ChatConfigModule } from './config/chat-config.module';
 import { ChatSupportModule } from './support/chat-support.module';
 
 @Module({
-    imports: [ChatRoomsModule, ChatConfigModule, ChatSupportModule],
+  imports: [ChatRoomsModule, ChatConfigModule, ChatSupportModule],
 })
-
-export class ChatModule { }
+export class ChatModule {}

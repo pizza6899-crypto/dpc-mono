@@ -7,69 +7,71 @@ import { ChatMessageMapper } from './chat-message.mapper';
 
 @Injectable()
 export class ChatMessageRepository implements ChatMessageRepositoryPort {
-    constructor(
-        @InjectTransaction()
-        private readonly tx: PrismaTransaction,
-    ) { }
+  constructor(
+    @InjectTransaction()
+    private readonly tx: PrismaTransaction,
+  ) {}
 
-    async findById(messageId: bigint): Promise<ChatMessage | null> {
-        const record = await this.tx.chatMessage.findFirst({
-            where: { id: messageId },
-        });
+  async findById(messageId: bigint): Promise<ChatMessage | null> {
+    const record = await this.tx.chatMessage.findFirst({
+      where: { id: messageId },
+    });
 
-        return record ? ChatMessageMapper.toDomain(record) : null;
-    }
+    return record ? ChatMessageMapper.toDomain(record) : null;
+  }
 
-    async update(message: ChatMessage): Promise<ChatMessage> {
-        const updated = await this.tx.chatMessage.update({
-            where: {
-                id_createdAt: {
-                    id: message.id,
-                    createdAt: message.createdAt,
-                },
-            },
-            data: {
-                content: message.content,
-                isDeleted: message.isDeleted,
-                metadata: message.metadata ?? undefined,
-            },
-        });
+  async update(message: ChatMessage): Promise<ChatMessage> {
+    const updated = await this.tx.chatMessage.update({
+      where: {
+        id_createdAt: {
+          id: message.id,
+          createdAt: message.createdAt,
+        },
+      },
+      data: {
+        content: message.content,
+        isDeleted: message.isDeleted,
+        metadata: message.metadata ?? undefined,
+      },
+    });
 
-        return ChatMessageMapper.toDomain(updated);
-    }
+    return ChatMessageMapper.toDomain(updated);
+  }
 
-    async save(message: ChatMessage): Promise<ChatMessage> {
-        const saved = await this.tx.chatMessage.create({
-            data: {
-                id: message.id,
-                roomId: message.roomId,
-                content: message.content,
-                type: message.type,
-                senderId: message.senderId,
+  async save(message: ChatMessage): Promise<ChatMessage> {
+    const saved = await this.tx.chatMessage.create({
+      data: {
+        id: message.id,
+        roomId: message.roomId,
+        content: message.content,
+        type: message.type,
+        senderId: message.senderId,
 
-                metadata: message.metadata ?? undefined,
-                isPinned: message.isPinned,
-                isDeleted: message.isDeleted,
-                createdAt: message.createdAt,
-            },
-        });
+        metadata: message.metadata ?? undefined,
+        isPinned: message.isPinned,
+        isDeleted: message.isDeleted,
+        createdAt: message.createdAt,
+      },
+    });
 
-        return ChatMessageMapper.toDomain(saved);
-    }
+    return ChatMessageMapper.toDomain(saved);
+  }
 
-    async findByRoomId(roomId: bigint, limit = 50, lastMessageId?: bigint): Promise<ChatMessage[]> {
-        const messages = await this.tx.chatMessage.findMany({
-            where: {
-                roomId,
-                isDeleted: false,
-                ...(lastMessageId ? { id: { lt: lastMessageId } } : {}),
-            },
-            orderBy: { id: 'desc' },
-            take: limit,
-        });
+  async findByRoomId(
+    roomId: bigint,
+    limit = 50,
+    lastMessageId?: bigint,
+  ): Promise<ChatMessage[]> {
+    const messages = await this.tx.chatMessage.findMany({
+      where: {
+        roomId,
+        isDeleted: false,
+        ...(lastMessageId ? { id: { lt: lastMessageId } } : {}),
+      },
+      orderBy: { id: 'desc' },
+      take: limit,
+    });
 
-        return messages.map(ChatMessageMapper.toDomain);
-    }
+    return messages.map(ChatMessageMapper.toDomain);
+  }
 }
-
-

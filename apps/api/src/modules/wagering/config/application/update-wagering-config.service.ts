@@ -9,7 +9,10 @@ import { InvalidWageringConfigException } from '../domain/wagering-config.except
 import { UpdateWageringCurrencySettingDto } from '../controllers/admin/dto/request/update-wagering-config.dto';
 
 interface UpdateWageringConfigCommand {
-  currencySettings?: Record<ExchangeCurrencyCode, UpdateWageringCurrencySettingDto>;
+  currencySettings?: Record<
+    ExchangeCurrencyCode,
+    UpdateWageringCurrencySettingDto
+  >;
   isWageringCheckEnabled?: boolean;
 
   isAutoCancellationEnabled?: boolean;
@@ -21,7 +24,7 @@ export class UpdateWageringConfigService {
   constructor(
     @Inject(WAGERING_CONFIG_REPOSITORY)
     private readonly repository: WageringConfigRepositoryPort,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(command: UpdateWageringConfigCommand): Promise<WageringConfig> {
@@ -32,14 +35,16 @@ export class UpdateWageringConfigService {
     if (command.currencySettings) {
       const validCurrencies = Object.values(ExchangeCurrencyCode) as string[];
 
-      for (const [currencyStr, data] of Object.entries(command.currencySettings)) {
+      for (const [currencyStr, data] of Object.entries(
+        command.currencySettings,
+      )) {
         const currency = currencyStr as ExchangeCurrencyCode;
         // 시스템 지원 통화 여부 체크
         if (!validCurrencies.includes(currency)) {
           throw new InvalidWageringConfigException(
             `Unsupported or invalid currency key: '${currency}'. ` +
-            `Expected a currency code (e.g., 'KRW'), but got a property name. ` +
-            `Please check if your JSON structure is nested correctly: { "currencySettings": { "KRW": { ... } } }`,
+              `Expected a currency code (e.g., 'KRW'), but got a property name. ` +
+              `Please check if your JSON structure is nested correctly: { "currencySettings": { "KRW": { ... } } }`,
           );
         }
 

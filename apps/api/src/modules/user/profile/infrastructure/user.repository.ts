@@ -23,7 +23,7 @@ export class UserRepository implements UserRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly mapper: UserMapper,
-  ) { }
+  ) {}
 
   async findByEmail(email: string): Promise<User | null> {
     const user = await this.tx.user.findFirst({
@@ -57,7 +57,10 @@ export class UserRepository implements UserRepositoryPort {
     return user ? this.mapper.toDomain(user) : null;
   }
 
-  async findByOAuthId(provider: OAuthProvider, oauthId: string): Promise<User | null> {
+  async findByOAuthId(
+    provider: OAuthProvider,
+    oauthId: string,
+  ): Promise<User | null> {
     const user = await this.tx.user.findFirst({
       where: {
         oauthProvider: provider,
@@ -117,11 +120,11 @@ export class UserRepository implements UserRepositoryPort {
       ...(status && { status }),
       ...(startDate &&
         endDate && {
-        createdAt: {
-          gte: startDate,
-          lte: endDate,
-        },
-      }),
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        }),
     };
 
     // 정렬 조건 구성

@@ -7,12 +7,8 @@ import {
   PaymentProvider,
 } from '@prisma/client';
 
-import {
-  DEPOSIT_DETAIL_REPOSITORY,
-} from '../ports';
-import type {
-  DepositDetailRepositoryPort,
-} from '../ports';
+import { DEPOSIT_DETAIL_REPOSITORY } from '../ports';
+import type { DepositDetailRepositoryPort } from '../ports';
 import {
   DepositDetail,
   DepositMethod,
@@ -43,7 +39,7 @@ export class CreateCryptoDepositService {
     private readonly validatePromotionService: ValidatePromotionEligibilityService,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly depositRequirementPolicy: DepositRequirementPolicy,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(params: CreateCryptoDepositParams): Promise<DepositDetail> {
@@ -85,7 +81,9 @@ export class CreateCryptoDepositService {
         await this.validatePromotionService.execute({
           userId,
           promotionId: requestedPromotionId,
-          depositAmount: amount ? new Prisma.Decimal(amount) : new Prisma.Decimal(0),
+          depositAmount: amount
+            ? new Prisma.Decimal(amount)
+            : new Prisma.Decimal(0),
           currency: payCurrency as ExchangeCurrencyCode,
         });
         promotionId = requestedPromotionId;

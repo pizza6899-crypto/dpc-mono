@@ -90,7 +90,7 @@ export class NotificationLog {
     public readonly metadata: Record<string, unknown> | null,
     public readonly createdAt: Date,
     private _updatedAt: Date,
-  ) { }
+  ) {}
 
   static create(params: CreateNotificationLogParams): NotificationLog {
     return new NotificationLog(
@@ -211,7 +211,11 @@ export class NotificationLog {
     this._updatedAt = new Date();
   }
 
-  updateContent(title: string, body: string, actionUri: string | null = null): void {
+  updateContent(
+    title: string,
+    body: string,
+    actionUri: string | null = null,
+  ): void {
     this._title = title;
     this._body = body;
     this._actionUri = actionUri;

@@ -24,7 +24,7 @@ export class RejectDepositService {
     private readonly depositRepository: DepositDetailRepositoryPort,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly createAdminMemoService: CreateAdminMemoService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(params: RejectDepositParams): Promise<RejectDepositResult> {

@@ -47,7 +47,7 @@ export class TierHistory {
     // Audit Reference
     public readonly referenceType: TierHistoryReferenceType | null,
     public readonly referenceId: bigint | null,
-  ) { }
+  ) {}
 
   static fromPersistence(data: PrismaTierHistory): TierHistory {
     return new TierHistory(

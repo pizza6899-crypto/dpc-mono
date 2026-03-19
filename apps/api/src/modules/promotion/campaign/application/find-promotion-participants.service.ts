@@ -18,7 +18,7 @@ export class FindPromotionParticipantsService {
   constructor(
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) { }
+  ) {}
 
   async execute(params: FindPromotionParticipantsParams) {
     return await this.repository.findUserPromotionsByPromotionId(params);

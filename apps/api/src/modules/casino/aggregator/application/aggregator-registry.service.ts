@@ -24,7 +24,7 @@ export class AggregatorRegistryService implements OnModuleInit {
     @Inject(CASINO_AGGREGATOR_REPOSITORY)
     private readonly repository: CasinoAggregatorRepositoryPort,
     private readonly envService: EnvService,
-  ) { }
+  ) {}
 
   async onModuleInit(): Promise<void> {
     await this.reload();

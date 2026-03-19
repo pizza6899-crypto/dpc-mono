@@ -15,7 +15,9 @@ export class ListCouponsService {
   /**
    * 필터링 및 페이징된 쿠폰 목록 조회
    */
-  async execute(query: GetAdminCouponsRequestDto): Promise<PaginatedData<Coupon>> {
+  async execute(
+    query: GetAdminCouponsRequestDto,
+  ): Promise<PaginatedData<Coupon>> {
     return await this.repository.findMany({
       id: query.id ? BigInt(query.id) : undefined,
       code: query.code,

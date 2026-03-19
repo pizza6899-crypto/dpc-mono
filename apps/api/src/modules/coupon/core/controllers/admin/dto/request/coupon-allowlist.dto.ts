@@ -3,7 +3,10 @@ import { IsArray, IsString } from 'class-validator';
 import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
 
 export class CouponAllowlistResponseDto {
-  @ApiProperty({ example: '123456789012345678', description: 'User ID / 유저 ID' })
+  @ApiProperty({
+    example: '123456789012345678',
+    description: 'User ID / 유저 ID',
+  })
   userId: string;
 
   @ApiProperty({ description: 'Registered At / 등록일' })
@@ -17,7 +20,9 @@ export class AddCouponAllowlistRequestDto {
   userIds: string[];
 }
 
-export class GetCouponAllowlistQueryDto extends createPaginationQueryDto<'createdAt'>({
-  defaultSortBy: 'createdAt',
-  allowedSortFields: ['createdAt'],
-}) {}
+export class GetCouponAllowlistQueryDto extends createPaginationQueryDto<'createdAt'>(
+  {
+    defaultSortBy: 'createdAt',
+    allowedSortFields: ['createdAt'],
+  },
+) {}

@@ -51,7 +51,7 @@ export class DepositDetail {
     private _updatedAt: Date,
     private _confirmedAt: Date | null,
     private _failedAt: Date | null,
-  ) { }
+  ) {}
 
   /**
    * 새로운 입금 요청 엔티티 생성
@@ -362,7 +362,6 @@ export class DepositDetail {
     return this._failedAt;
   }
 
-
   /**
    * 입금 승인 처리
    * @param actuallyPaid - 실제 입금 금액
@@ -384,7 +383,10 @@ export class DepositDetail {
     }
 
     // 피아트 입금 단방향 제어: 반드시 PROCESSING 상태를 거쳐야 함
-    if (this.method.methodType === DepositMethodType.BANK_TRANSFER && this._status !== DepositDetailStatus.PROCESSING) {
+    if (
+      this.method.methodType === DepositMethodType.BANK_TRANSFER &&
+      this._status !== DepositDetailStatus.PROCESSING
+    ) {
       throw new DepositFiatNotInProcessingException();
     }
 
@@ -421,7 +423,10 @@ export class DepositDetail {
     }
 
     // 피아트 입금 단방향 제어: 반드시 PROCESSING 상태를 거쳐야 함
-    if (this.method.methodType === DepositMethodType.BANK_TRANSFER && this._status !== DepositDetailStatus.PROCESSING) {
+    if (
+      this.method.methodType === DepositMethodType.BANK_TRANSFER &&
+      this._status !== DepositDetailStatus.PROCESSING
+    ) {
       throw new DepositFiatNotInProcessingException();
     }
 

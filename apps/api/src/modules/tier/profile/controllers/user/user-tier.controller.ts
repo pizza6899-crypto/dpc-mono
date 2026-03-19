@@ -33,7 +33,7 @@ export class UserTierController {
     private readonly getUserTierHistoryService: GetUserTierHistoryService,
     private readonly tierRepository: TierRepositoryPort,
     private readonly sqidsService: SqidsService,
-  ) { }
+  ) {}
 
   @Get('my')
   @ApiOperation({
@@ -87,14 +87,14 @@ export class UserTierController {
       },
       nextTierProgress: progressResult
         ? {
-          id: this.sqidsService.encode(progressResult.id, SqidsPrefix.TIER),
-          name: progressResult.name,
-          imageUrl: progressResult.imageUrl,
-          requiredExp: progressResult.requiredExp.toString(),
-          currentExp: progressResult.currentExp.toString(),
-          remainingExp: progressResult.remainingExp.toString(),
-          progressPercent: Number(progressResult.progressPercent.toFixed(2)),
-        }
+            id: this.sqidsService.encode(progressResult.id, SqidsPrefix.TIER),
+            name: progressResult.name,
+            imageUrl: progressResult.imageUrl,
+            requiredExp: progressResult.requiredExp.toString(),
+            currentExp: progressResult.currentExp.toString(),
+            remainingExp: progressResult.remainingExp.toString(),
+            progressPercent: Number(progressResult.progressPercent.toFixed(2)),
+          }
         : null,
     };
   }

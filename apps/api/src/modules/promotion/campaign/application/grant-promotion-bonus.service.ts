@@ -2,10 +2,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma, ExchangeCurrencyCode } from '@prisma/client';
-import {
-  PromotionPolicy,
-  PromotionNotFoundException,
-} from '../domain';
+import { PromotionPolicy, PromotionNotFoundException } from '../domain';
 import type { UserPromotion } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports';
 import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
@@ -28,7 +25,7 @@ export class GrantPromotionBonusService {
     private readonly repository: PromotionRepositoryPort,
     private readonly policy: PromotionPolicy,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute({
@@ -50,7 +47,10 @@ export class GrantPromotionBonusService {
       throw new PromotionNotFoundException();
     }
 
-    const currencyRule = await this.repository.getCurrencyRule(promotionId, currency);
+    const currencyRule = await this.repository.getCurrencyRule(
+      promotionId,
+      currency,
+    );
     if (!currencyRule) {
       throw new PromotionNotFoundException(); // 통화 규칙 없으면 참여 불가
     }
@@ -88,7 +88,6 @@ export class GrantPromotionBonusService {
 
     // 보너스 계산 (Rule 엔티티 내부 로직 사용)
     const bonusAmount = currencyRule.calculateBonusAmount(depositAmount);
-
 
     // 정책 스냅샷 생성
     const policySnapshot = {

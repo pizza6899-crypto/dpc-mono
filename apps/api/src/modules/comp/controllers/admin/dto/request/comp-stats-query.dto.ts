@@ -11,12 +11,20 @@ export class CompStatsQueryDto {
   @IsEnum(ExchangeCurrencyCode)
   currency: ExchangeCurrencyCode;
 
-  @ApiProperty({ example: '2024-01-01', required: false, description: 'Start date (ISO 8601) / 검색 시작일' })
+  @ApiProperty({
+    example: '2024-01-01',
+    required: false,
+    description: 'Start date (ISO 8601) / 검색 시작일',
+  })
   @IsOptional()
   @IsDateString()
   startDate?: string;
 
-  @ApiProperty({ example: '2024-01-31', required: false, description: 'End date (ISO 8601) / 검색 종료일' })
+  @ApiProperty({
+    example: '2024-01-31',
+    required: false,
+    description: 'End date (ISO 8601) / 검색 종료일',
+  })
   @IsOptional()
   @IsDateString()
   endDate?: string;

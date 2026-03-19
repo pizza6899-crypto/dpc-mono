@@ -6,4 +6,4 @@ import { PromotionConfigModule } from './config/promotion-config.module';
   imports: [PromotionCampaignModule, PromotionConfigModule],
   exports: [PromotionCampaignModule, PromotionConfigModule],
 })
-export class PromotionModule { }
+export class PromotionModule {}

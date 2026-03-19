@@ -20,7 +20,7 @@ export class GetDepositDetailService {
     @Inject(DEPOSIT_DETAIL_REPOSITORY)
     private readonly depositRepository: DepositDetailRepositoryPort,
     private readonly findAdminMemoService: FindAdminMemoService,
-  ) { }
+  ) {}
 
   async execute(params: GetDepositDetailParams): Promise<DepositWithMemo> {
     const { id } = params;
@@ -37,7 +37,10 @@ export class GetDepositDetailService {
     };
 
     // 2. 관리자 메모 조회 (배치 메서드 재활용)
-    const memoMap = await this.findAdminMemoService.findLatestByTargets('DEPOSIT', [id]);
+    const memoMap = await this.findAdminMemoService.findLatestByTargets(
+      'DEPOSIT',
+      [id],
+    );
 
     // 3. 병합하여 반환
     return {

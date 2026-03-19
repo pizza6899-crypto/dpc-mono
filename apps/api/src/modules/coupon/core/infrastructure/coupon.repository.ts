@@ -12,7 +12,7 @@ export class CouponRepository implements CouponRepositoryPort {
   constructor(
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
-  ) { }
+  ) {}
 
   async findById(id: bigint): Promise<Coupon | null> {
     const prismaCoupon = await this.tx.coupon.findUnique({
@@ -88,7 +88,17 @@ export class CouponRepository implements CouponRepositoryPort {
     sortBy: string;
     sortOrder: 'asc' | 'desc';
   }): Promise<PaginatedData<Coupon>> {
-    const { id, code, status, startsAfter, expiresBefore, page, limit, sortBy, sortOrder } = params;
+    const {
+      id,
+      code,
+      status,
+      startsAfter,
+      expiresBefore,
+      page,
+      limit,
+      sortBy,
+      sortOrder,
+    } = params;
 
     const where: any = {};
     if (id) where.id = id;
@@ -109,7 +119,9 @@ export class CouponRepository implements CouponRepositoryPort {
     ]);
 
     return {
-      data: prismaCoupons.map((c) => CouponMapper.toDomain(c as PrismaCouponWithRewards)),
+      data: prismaCoupons.map((c) =>
+        CouponMapper.toDomain(c as PrismaCouponWithRewards),
+      ),
       total,
       page,
       limit,
@@ -122,6 +134,8 @@ export class CouponRepository implements CouponRepositoryPort {
       orderBy: { createdAt: 'desc' },
     });
 
-    return prismaCoupons.map((c) => CouponMapper.toDomain(c as PrismaCouponWithRewards));
+    return prismaCoupons.map((c) =>
+      CouponMapper.toDomain(c as PrismaCouponWithRewards),
+    );
   }
 }

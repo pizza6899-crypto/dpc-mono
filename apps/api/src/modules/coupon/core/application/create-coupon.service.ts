@@ -29,7 +29,9 @@ export class CreateCouponService {
     // 1. 중복 코드 확인
     const existing = await this.repository.findByCode(command.code);
     if (existing) {
-      throw new ConflictException(`Coupon code already exists: ${command.code}`);
+      throw new ConflictException(
+        `Coupon code already exists: ${command.code}`,
+      );
     }
 
     // 2. 엔티티 생성

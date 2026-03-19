@@ -28,7 +28,7 @@ export class LoginService {
     private readonly recordService: RecordLoginAttemptService,
     private readonly createSessionService: CreateSessionService,
     private readonly envService: EnvService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute({

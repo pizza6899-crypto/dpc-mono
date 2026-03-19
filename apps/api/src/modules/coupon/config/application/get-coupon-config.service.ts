@@ -9,7 +9,7 @@ export class GetCouponConfigService {
   constructor(
     @Inject(COUPON_CONFIG_REPOSITORY_TOKEN)
     private readonly repository: CouponConfigRepositoryPort,
-  ) { }
+  ) {}
 
   async execute(): Promise<CouponConfig> {
     const config = await this.repository.find();

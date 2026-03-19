@@ -46,14 +46,16 @@ export class ListPromotionsQueryDto extends createPaginationQueryDto<PromotionSo
   targetType?: PromotionTargetType;
 
   @ApiPropertyOptional({
-    description: 'Start date (ISO 8601) - Based on creation / 시작 날짜 (ISO 8601 형식) - 생성일 기준',
+    description:
+      'Start date (ISO 8601) - Based on creation / 시작 날짜 (ISO 8601 형식) - 생성일 기준',
   })
   @IsOptional()
   @IsDateString()
   startDate?: string;
 
   @ApiPropertyOptional({
-    description: 'End date (ISO 8601) - Based on creation / 종료 날짜 (ISO 8601 형식) - 생성일 기준',
+    description:
+      'End date (ISO 8601) - Based on creation / 종료 날짜 (ISO 8601 형식) - 생성일 기준',
   })
   @IsOptional()
   @IsDateString()

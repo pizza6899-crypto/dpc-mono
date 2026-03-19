@@ -29,7 +29,7 @@ import { TierConfig } from '../../domain/tier-config.entity';
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 @ApiCookieAuth()
 export class TierConfigAdminController {
-  constructor(private readonly tierConfigService: TierConfigService) { }
+  constructor(private readonly tierConfigService: TierConfigService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)

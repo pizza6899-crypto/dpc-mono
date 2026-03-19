@@ -4,7 +4,11 @@ export class LoginAttemptResponseDto {
   @ApiProperty({ description: 'Internal ID / 내부 ID', type: 'string' })
   id: string;
 
-  @ApiProperty({ description: 'User ID / 사용자 ID', type: 'string', nullable: true })
+  @ApiProperty({
+    description: 'User ID / 사용자 ID',
+    type: 'string',
+    nullable: true,
+  })
   userId: string | null;
 
   @ApiProperty({ description: 'Result (SUCCESS/FAILED) / 결과 (성공/실패)' })

@@ -20,7 +20,6 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import { Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/client';
 
-
 // BigInt JSON 직렬화 설정
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
@@ -191,7 +190,8 @@ async function bootstrap() {
 
         const asyncApiOptions = new DynamicAsyncApiDocumentBuilder()
           .setTitle('DPC Backend WebSocket API')
-          .setDescription(`
+          .setDescription(
+            `
 실시간 이벤트 통신 시스템 가이드 (Real-time Event System Guide)
 ---
 
@@ -221,7 +221,8 @@ async function bootstrap() {
 - **Access Control (권한 제어)**
   - 🇰🇷 관리자 권한이 없는 세션이 \`/admin\`으로 연결을 시도할 경우 즉시 차단됩니다.
   - 🇺🇸 Sessions without admin privileges will be disconnected immediately from \`/admin\`.
-          `)
+          `,
+          )
           .setVersion('1.0')
           .setDefaultContentType('application/json')
           .addServer('local', {

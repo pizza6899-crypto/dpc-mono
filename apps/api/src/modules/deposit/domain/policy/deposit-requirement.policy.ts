@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { UserStatus } from '@prisma/client';
 import {
-    UserStatusNotActiveException,
-    PhoneNotVerifiedException,
-    IdentityNotVerifiedException,
-    PendingDepositExistsException,
+  UserStatusNotActiveException,
+  PhoneNotVerifiedException,
+  IdentityNotVerifiedException,
+  PendingDepositExistsException,
 } from '../deposit.exception';
 
 /**
@@ -12,12 +12,12 @@ import {
  * 유저 테이블의 모든 필드를 가져오는 대신, 검증에 필요한 필드만 정의합니다.
  */
 export interface DepositUserContext {
-    status: UserStatus;
-    isEmailVerified: boolean;
-    isPhoneVerified: boolean;
-    isIdentityVerified: boolean;
-    isKycMandatory: boolean;
-    hasPendingDeposit: boolean;
+  status: UserStatus;
+  isEmailVerified: boolean;
+  isPhoneVerified: boolean;
+  isIdentityVerified: boolean;
+  isKycMandatory: boolean;
+  hasPendingDeposit: boolean;
 }
 
 /**
@@ -26,55 +26,55 @@ export interface DepositUserContext {
  */
 @Injectable()
 export class DepositRequirementPolicy {
-    /**
-     * 공통 검증: 유저 상태가 ACTIVE인지 확인
-     */
-    private validateActiveStatus(user: DepositUserContext): void {
-        if (user.status !== UserStatus.ACTIVE) {
-            throw new UserStatusNotActiveException(user.status);
-        }
+  /**
+   * 공통 검증: 유저 상태가 ACTIVE인지 확인
+   */
+  private validateActiveStatus(user: DepositUserContext): void {
+    if (user.status !== UserStatus.ACTIVE) {
+      throw new UserStatusNotActiveException(user.status);
     }
+  }
 
-    /**
-     * 중복 입금 신청 제한 정책
-     */
-    private validateNoPendingDeposit(hasPending: boolean): void {
-        if (hasPending) {
-            throw new PendingDepositExistsException();
-        }
+  /**
+   * 중복 입금 신청 제한 정책
+   */
+  private validateNoPendingDeposit(hasPending: boolean): void {
+    if (hasPending) {
+      throw new PendingDepositExistsException();
     }
+  }
 
-    /**
-     * 피아트(Fiat/무통장) 입금 요구조건 검증
-     */
-    validateFiatRequirements(user: DepositUserContext): void {
-        // 1. 공통 상태 체크
-        this.validateActiveStatus(user);
+  /**
+   * 피아트(Fiat/무통장) 입금 요구조건 검증
+   */
+  validateFiatRequirements(user: DepositUserContext): void {
+    // 1. 공통 상태 체크
+    this.validateActiveStatus(user);
 
-        // 2. 중복 입금 신청 체크
-        this.validateNoPendingDeposit(user.hasPendingDeposit);
+    // 2. 중복 입금 신청 체크
+    this.validateNoPendingDeposit(user.hasPendingDeposit);
 
-        // // 2. 피아트 특화 조건: 휴대폰 인증 필수
-        // if (!user.isPhoneVerified) {
-        //     throw new PhoneNotVerifiedException();
-        // }
+    // // 2. 피아트 특화 조건: 휴대폰 인증 필수
+    // if (!user.isPhoneVerified) {
+    //     throw new PhoneNotVerifiedException();
+    // }
 
-        // // 3. KYC 강제 대상인 경우 인증 여부 체크
-        // if (user.isKycMandatory && !user.isIdentityVerified) {
-        //     throw new IdentityNotVerifiedException();
-        // }
-    }
+    // // 3. KYC 강제 대상인 경우 인증 여부 체크
+    // if (user.isKycMandatory && !user.isIdentityVerified) {
+    //     throw new IdentityNotVerifiedException();
+    // }
+  }
 
-    /**
-     * 크립토(Crypto) 입금 요구조건 검증
-     */
-    validateCryptoRequirements(user: DepositUserContext): void {
-        // 1. 공통 상태 체크
-        this.validateActiveStatus(user);
+  /**
+   * 크립토(Crypto) 입금 요구조건 검증
+   */
+  validateCryptoRequirements(user: DepositUserContext): void {
+    // 1. 공통 상태 체크
+    this.validateActiveStatus(user);
 
-        // 2. 중복 입금 신청 체크
-        this.validateNoPendingDeposit(user.hasPendingDeposit);
+    // 2. 중복 입금 신청 체크
+    this.validateNoPendingDeposit(user.hasPendingDeposit);
 
-        // 2. 크립토는 현재 별도의 추가 인증 없이 허용 (모든 조건 허용)
-    }
+    // 2. 크립토는 현재 별도의 추가 인증 없이 허용 (모든 조건 허용)
+  }
 }

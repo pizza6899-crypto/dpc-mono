@@ -52,14 +52,22 @@ export class Alert<E extends AlertEvent = AlertEvent> {
     public readonly createdAt: Date,
     private _updatedAt: Date,
     private _channels: ChannelType[],
-  ) { }
+  ) {}
 
   /**
    * 새 Alert 생성
    */
   static create<E extends AlertEvent>(params: CreateAlertParams<E>): Alert<E> {
-    const { id, createdAt, event, userId, targetGroup, payload, idempotencyKey, channels } =
-      params;
+    const {
+      id,
+      createdAt,
+      event,
+      userId,
+      targetGroup,
+      payload,
+      idempotencyKey,
+      channels,
+    } = params;
 
     return new Alert<E>(
       id,
@@ -78,7 +86,9 @@ export class Alert<E extends AlertEvent = AlertEvent> {
   /**
    * DB에서 조회한 데이터로부터 엔티티 생성
    */
-  static fromPersistence<E extends AlertEvent>(data: FromPersistenceParams<E>): Alert<E> {
+  static fromPersistence<E extends AlertEvent>(
+    data: FromPersistenceParams<E>,
+  ): Alert<E> {
     return new Alert<E>(
       data.id,
       data.event,

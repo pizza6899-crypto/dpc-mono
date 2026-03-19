@@ -7,9 +7,7 @@ export {
   CreateWithdrawalResponseDto,
   CancelWithdrawalResponseDto,
 } from './response/withdrawal.response.dto';
-export {
-  WithdrawalEligibilityResponseDto,
-} from './response/withdrawal-eligibility.response.dto';
+export { WithdrawalEligibilityResponseDto } from './response/withdrawal-eligibility.response.dto';
 export {
   CryptoWithdrawOptionDto,
   BankWithdrawOptionDto,

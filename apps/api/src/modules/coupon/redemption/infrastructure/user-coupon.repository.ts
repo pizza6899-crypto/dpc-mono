@@ -8,9 +8,12 @@ export class PrismaUserCouponRepository implements UserCouponRepositoryPort {
   constructor(
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
-  ) { }
+  ) {}
 
-  async countUserCouponUsage(userId: bigint, couponId: bigint): Promise<number> {
+  async countUserCouponUsage(
+    userId: bigint,
+    couponId: bigint,
+  ): Promise<number> {
     return this.tx.userCoupon.count({
       where: {
         userId,

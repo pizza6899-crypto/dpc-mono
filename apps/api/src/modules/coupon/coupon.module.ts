@@ -4,15 +4,7 @@ import { CouponCoreModule } from './core/core.module';
 import { CouponRedemptionModule } from './redemption/coupon-redemption.module';
 
 @Module({
-  imports: [
-    CouponConfigModule,
-    CouponCoreModule,
-    CouponRedemptionModule,
-  ],
-  exports: [
-    CouponConfigModule,
-    CouponCoreModule,
-    CouponRedemptionModule,
-  ],
+  imports: [CouponConfigModule, CouponCoreModule, CouponRedemptionModule],
+  exports: [CouponConfigModule, CouponCoreModule, CouponRedemptionModule],
 })
-export class CouponModule { }
+export class CouponModule {}

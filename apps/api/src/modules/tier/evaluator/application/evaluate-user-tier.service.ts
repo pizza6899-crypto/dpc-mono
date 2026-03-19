@@ -20,7 +20,7 @@ export class EvaluateUserTierService {
     private readonly demoteUserTierService: DemoteUserTierService,
     private readonly tierStatsService: TierStatsService,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) { }
+  ) {}
 
   @Transactional()
   async evaluateUser(userId: bigint, allTiers: Tier[]): Promise<void> {

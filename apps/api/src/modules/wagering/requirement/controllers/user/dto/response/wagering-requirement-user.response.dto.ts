@@ -7,7 +7,6 @@ export class WageringRequirementUserResponseDto {
   })
   id: string;
 
-
   @ApiProperty({ description: 'Currency / 통화' })
   currency: ExchangeCurrencyCode;
 

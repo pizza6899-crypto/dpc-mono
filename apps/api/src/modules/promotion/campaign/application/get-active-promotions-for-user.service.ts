@@ -32,7 +32,7 @@ export class GetActivePromotionsForUserService {
   constructor(
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) { }
+  ) {}
 
   async execute(
     params: GetActivePromotionsForUserParams & { userId?: bigint },
@@ -86,8 +86,12 @@ export class GetActivePromotionsForUserService {
 
       const translations = promotion.getTranslations();
       const currencyRules = promotion.getCurrencyRules();
-      const currentTranslation = translations?.find((t) => t.language === language);
-      const currentCurrencyRule = currencyRules?.find((c) => c.currency === currency) || currencyRules?.[0];
+      const currentTranslation = translations?.find(
+        (t) => t.language === language,
+      );
+      const currentCurrencyRule =
+        currencyRules?.find((c) => c.currency === currency) ||
+        currencyRules?.[0];
 
       if (currentTranslation && currentCurrencyRule) {
         filteredResults.push({

@@ -49,7 +49,7 @@ export class CreateWageringRequirementService {
     private readonly getConfigService: GetWageringConfigService,
     private readonly getPromotionConfigService: GetPromotionConfigService,
     private readonly dispatchLogService: DispatchLogService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(
@@ -76,10 +76,7 @@ export class CreateWageringRequirementService {
     } = command;
 
     // 1. 중복 생성 방지 (Idempotency)
-    const existing = await this.repository.findLatestByReward(
-      userId,
-      rewardId,
-    );
+    const existing = await this.repository.findLatestByReward(userId, rewardId);
     if (existing) {
       this.logger.warn(
         `Wagering requirement already exists for user ${userId}, reward ${rewardId}. Skipping creation.`,

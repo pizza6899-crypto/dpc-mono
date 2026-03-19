@@ -6,21 +6,21 @@ import { UserConfigNotFoundException } from '../domain/user-config.exception';
 
 @Injectable()
 export class GetUserConfigService {
-    constructor(
-        @Inject(USER_CONFIG_REPOSITORY)
-        private readonly userConfigRepository: UserConfigRepositoryPort,
-    ) { }
+  constructor(
+    @Inject(USER_CONFIG_REPOSITORY)
+    private readonly userConfigRepository: UserConfigRepositoryPort,
+  ) {}
 
-    /**
-     * 전역 사용자 설정 정보를 조회합니다.
-     */
-    async execute(): Promise<UserConfig> {
-        const config = await this.userConfigRepository.findConfig();
+  /**
+   * 전역 사용자 설정 정보를 조회합니다.
+   */
+  async execute(): Promise<UserConfig> {
+    const config = await this.userConfigRepository.findConfig();
 
-        if (!config) {
-            throw new UserConfigNotFoundException();
-        }
-
-        return config;
+    if (!config) {
+      throw new UserConfigNotFoundException();
     }
+
+    return config;
+  }
 }

@@ -47,7 +47,7 @@ export class UserWalletHourlyStats {
     private _endBonus: Prisma.Decimal,
 
     public readonly createdAt: Date,
-  ) { }
+  ) {}
 
   static create(params: {
     userId: bigint;

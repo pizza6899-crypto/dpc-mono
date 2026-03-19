@@ -4,7 +4,10 @@ import { ProcessCasinoBetService } from '../application/process-casino-bet.servi
 import { ProcessCasinoCreditService } from '../application/process-casino-credit.service';
 import { FindCasinoGameSessionService } from 'src/modules/casino-session/application/find-casino-game-session.service';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
-import { SimulateRoundRequestDto, SimulateRoundResponseDto } from './dto/simulate-round.dto';
+import {
+  SimulateRoundRequestDto,
+  SimulateRoundResponseDto,
+} from './dto/simulate-round.dto';
 import { CreateCasinoGameSessionService } from 'src/modules/casino-session/application/create-casino-game-session.service';
 import { UpdatePushedBetService } from '../application/update-pushed-bet.service';
 import { GAME_ROUND_REPOSITORY_TOKEN } from '../ports/game-round.repository.token';
@@ -23,7 +26,7 @@ export class CasinoSimulatorService {
     private readonly updatePushedBetService: UpdatePushedBetService,
     @Inject(GAME_ROUND_REPOSITORY_TOKEN)
     private readonly gameRoundRepository: GameRoundRepositoryPort,
-  ) { }
+  ) {}
 
   async simulateRound(
     dto: SimulateRoundRequestDto,

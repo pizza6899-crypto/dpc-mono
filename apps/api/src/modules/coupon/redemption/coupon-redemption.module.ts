@@ -27,4 +27,4 @@ import { CouponUserController } from './controllers/user/coupon-user.controller'
   ],
   exports: [ApplyCouponService],
 })
-export class CouponRedemptionModule { }
+export class CouponRedemptionModule {}

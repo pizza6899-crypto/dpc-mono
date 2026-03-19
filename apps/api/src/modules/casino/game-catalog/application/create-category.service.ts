@@ -30,7 +30,7 @@ export class CreateCategoryService {
     private readonly repository: CategoryRepositoryPort,
     private readonly attachFileService: AttachFileService,
     private readonly envService: EnvService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(params: CreateCategoryParams): Promise<CasinoGameCategory> {

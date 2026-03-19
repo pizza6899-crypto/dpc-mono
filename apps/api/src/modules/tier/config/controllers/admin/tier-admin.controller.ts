@@ -29,7 +29,7 @@ import { UpdateTierAdminRequestDto } from './dto/request/update-tier-admin.reque
 @ApiStandardErrors()
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class TierAdminController {
-  constructor(private readonly tierService: TierService) { }
+  constructor(private readonly tierService: TierService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)

@@ -9,7 +9,12 @@ import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { WhitecliffMapperService } from '../infrastructure/whitecliff-mapper.service';
 import { UserNotFoundException } from 'src/modules/user/profile/domain/user.exception';
 import { WalletNotFoundException } from 'src/modules/wallet/domain/wallet.exception';
-import { GameProvider, Language, GameAggregatorType, Prisma } from '@prisma/client';
+import {
+  GameProvider,
+  Language,
+  GameAggregatorType,
+  Prisma,
+} from '@prisma/client';
 import { CasinoGameProviderNotFoundException } from 'src/modules/casino/aggregator/domain/casino-aggregator.exception';
 import { GameNotFoundException } from 'src/modules/casino/game-catalog/domain';
 import {
@@ -36,7 +41,7 @@ export class WhitecliffGameService {
     private readonly createCasinoGameSessionService: CreateCasinoGameSessionService,
     private readonly exchangeRateService: ExchangeRateService,
     private readonly getTierBenefitsService: GetTierBenefitsService,
-  ) { }
+  ) {}
 
   /**
    * 게임 실행 (회원가입 겸용)
@@ -81,8 +86,7 @@ export class WhitecliffGameService {
     ]);
 
     if (!user) throw new UserNotFoundException();
-    if (!userBalance)
-      throw new WalletNotFoundException(walletCurrency);
+    if (!userBalance) throw new WalletNotFoundException(walletCurrency);
 
     const balance = exchangeRate
       .mul(userBalance.cash.add(userBalance.bonus))

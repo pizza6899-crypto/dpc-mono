@@ -27,7 +27,6 @@ import { WalletModule } from '../../wallet/wallet.module';
 import { PromotionConfigModule } from '../../promotion/config/promotion-config.module';
 import { RewardCoreModule } from '../../reward/core/reward-core.module';
 
-
 @Module({
   imports: [
     AuditLogModule,
@@ -36,7 +35,6 @@ import { RewardCoreModule } from '../../reward/core/reward-core.module';
     WalletModule,
     PromotionConfigModule,
     forwardRef(() => RewardCoreModule),
-
   ],
   controllers: [
     WageringRequirementAdminController,
@@ -82,4 +80,4 @@ import { RewardCoreModule } from '../../reward/core/reward-core.module';
     WAGERING_CONTRIBUTION_LOG_REPOSITORY,
   ],
 })
-export class RequirementModule { }
+export class RequirementModule {}

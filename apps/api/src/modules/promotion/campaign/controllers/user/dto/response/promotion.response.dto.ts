@@ -15,18 +15,19 @@ export class PromotionResponseDto {
   id: string;
 
   @ApiProperty({
-    description: 'Promotion title (Current language) / 프로모션 제목 (현재 언어)',
+    description:
+      'Promotion title (Current language) / 프로모션 제목 (현재 언어)',
     example: '첫 충전 100% 보너스',
   })
   title: string;
 
   @ApiPropertyOptional({
-    description: 'Promotion description (Current language) / 프로모션 설명 (현재 언어)',
+    description:
+      'Promotion description (Current language) / 프로모션 설명 (현재 언어)',
     example: '첫 충전 시 100% 보너스를 받으세요!',
     nullable: true,
   })
   description?: string | null;
-
 
   @ApiPropertyOptional({
     description: 'Minimum deposit amount / 최소 입금 금액',
@@ -50,7 +51,6 @@ export class PromotionResponseDto {
   })
   targetType: PromotionTargetType;
 
-
   @ApiProperty({
     description: 'Applicable days (0: Sunday, 1: Monday, ...) / 적용 요일',
     example: [6, 0],
@@ -71,7 +71,6 @@ export class PromotionResponseDto {
     nullable: true,
   })
   applicableEndTime: Date | null;
-
 
   @ApiPropertyOptional({
     description: 'Bonus rate / 보너스 비율',

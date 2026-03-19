@@ -23,7 +23,7 @@ export class CasinoGameProviderRepository implements CasinoGameProviderRepositor
     private readonly tx: PrismaTransaction,
     private readonly mapper: CasinoGameProviderMapper,
     private readonly cacheService: CacheService,
-  ) { }
+  ) {}
 
   async create(provider: CasinoGameProvider): Promise<CasinoGameProvider> {
     const data = this.mapper.toPrisma(provider);
@@ -44,8 +44,15 @@ export class CasinoGameProviderRepository implements CasinoGameProviderRepositor
     // 캐시 무효화
     await Promise.all([
       this.cacheService.del(CACHE_CONFIG.CASINO.PROVIDER.BY_ID(domain.id!)),
-      this.cacheService.del(CACHE_CONFIG.CASINO.PROVIDER.BY_CODE(domain.aggregatorId, domain.code)),
-      this.cacheService.del(CACHE_CONFIG.CASINO.PROVIDER.BY_EXTERNAL_ID(domain.aggregatorId, domain.externalId)),
+      this.cacheService.del(
+        CACHE_CONFIG.CASINO.PROVIDER.BY_CODE(domain.aggregatorId, domain.code),
+      ),
+      this.cacheService.del(
+        CACHE_CONFIG.CASINO.PROVIDER.BY_EXTERNAL_ID(
+          domain.aggregatorId,
+          domain.externalId,
+        ),
+      ),
     ]);
 
     return domain;

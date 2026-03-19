@@ -16,7 +16,7 @@ export class TierService {
     private readonly policy: TierConfigPolicy,
     private readonly attachFileService: AttachFileService,
     private readonly envService: EnvService,
-  ) { }
+  ) {}
 
   async findAll(): Promise<Tier[]> {
     return this.repository.findAll();

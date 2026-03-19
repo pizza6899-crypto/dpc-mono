@@ -38,7 +38,7 @@ export class LaunchGameService {
     private readonly whitecliffGameService: WhitecliffGameService,
     private readonly dcsGameService: DcsGameService,
     private readonly casinoLaunchPolicy: CasinoLaunchPolicy,
-  ) { }
+  ) {}
 
   async execute(
     user: AuthenticatedUser,

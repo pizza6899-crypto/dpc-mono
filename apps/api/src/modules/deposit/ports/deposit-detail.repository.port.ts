@@ -35,7 +35,10 @@ export interface DepositWithUser {
 }
 
 export interface DepositDetailRepositoryPort {
-  findById(id: bigint, options?: { userId?: bigint }): Promise<DepositDetail | null>;
+  findById(
+    id: bigint,
+    options?: { userId?: bigint },
+  ): Promise<DepositDetail | null>;
   update(deposit: DepositDetail): Promise<DepositDetail>;
   create(deposit: DepositDetail): Promise<DepositDetail>;
   // User queries

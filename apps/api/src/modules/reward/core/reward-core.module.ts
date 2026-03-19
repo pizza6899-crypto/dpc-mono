@@ -19,43 +19,37 @@ import { WalletModule } from 'src/modules/wallet/wallet.module';
 import { RequirementModule } from 'src/modules/wagering/requirement/requirement.module';
 
 @Module({
-    imports: [
-        PrismaModule,
-        SnowflakeModule,
-        SqidsModule,
-        ConcurrencyModule,
-        WalletModule,
-        forwardRef(() => RequirementModule),
-
-    ],
-    controllers: [
-        RewardController,
-        RewardAdminController,
-    ],
-    providers: [
-        {
-            provide: REWARD_REPOSITORY,
-            useClass: RewardRepository,
-        },
-        ClaimRewardService,
-        GrantRewardService,
-        InstantGrantRewardService,
-        GetUserRewardsService,
-        GetAdminRewardsService,
-        VoidRewardService,
-        GetRewardService,
-
-    ],
-    exports: [
-        REWARD_REPOSITORY,
-        ClaimRewardService,
-        GrantRewardService,
-        InstantGrantRewardService,
-        GetUserRewardsService,
-        GetAdminRewardsService,
-        VoidRewardService,
-        GetRewardService,
-
-    ],
+  imports: [
+    PrismaModule,
+    SnowflakeModule,
+    SqidsModule,
+    ConcurrencyModule,
+    WalletModule,
+    forwardRef(() => RequirementModule),
+  ],
+  controllers: [RewardController, RewardAdminController],
+  providers: [
+    {
+      provide: REWARD_REPOSITORY,
+      useClass: RewardRepository,
+    },
+    ClaimRewardService,
+    GrantRewardService,
+    InstantGrantRewardService,
+    GetUserRewardsService,
+    GetAdminRewardsService,
+    VoidRewardService,
+    GetRewardService,
+  ],
+  exports: [
+    REWARD_REPOSITORY,
+    ClaimRewardService,
+    GrantRewardService,
+    InstantGrantRewardService,
+    GetUserRewardsService,
+    GetAdminRewardsService,
+    VoidRewardService,
+    GetRewardService,
+  ],
 })
-export class RewardCoreModule { }
+export class RewardCoreModule {}

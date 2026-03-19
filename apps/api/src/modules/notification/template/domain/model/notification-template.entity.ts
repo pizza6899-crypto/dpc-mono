@@ -43,7 +43,7 @@ export class NotificationTemplate {
     public readonly createdAt: Date,
     private _updatedAt: Date,
     private _translations: NotificationTemplateTranslation[],
-  ) { }
+  ) {}
 
   static create(params: CreateTemplateParams): NotificationTemplate {
     return new NotificationTemplate(

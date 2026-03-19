@@ -5,7 +5,10 @@ import { COUPON_REPOSITORY_TOKEN } from '../../core/ports/coupon.repository.toke
 import { COUPON_ALLOWLIST_REPOSITORY_TOKEN } from '../../core/ports/coupon-allowlist.repository.port';
 import type { CouponRepositoryPort } from '../../core/ports/coupon.repository.port';
 import type { CouponAllowlistRepositoryPort } from '../../core/ports/coupon-allowlist.repository.port';
-import { USER_COUPON_REPOSITORY_TOKEN, type UserCouponRepositoryPort } from '../ports/user-coupon.repository.port';
+import {
+  USER_COUPON_REPOSITORY_TOKEN,
+  type UserCouponRepositoryPort,
+} from '../ports/user-coupon.repository.port';
 import { GrantRewardService } from 'src/modules/reward/core/application/grant-reward.service';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { RedisService } from 'src/infrastructure/redis/redis.service';
@@ -14,7 +17,7 @@ import { CouponNotFoundException } from '../../core/domain/coupon.exception';
 import { Coupon } from '../../core/domain/coupon.entity';
 import {
   CouponDailyAttemptsExceededException,
-  CouponSystemDisabledException
+  CouponSystemDisabledException,
 } from '../../config/domain/coupon-config.exception';
 import { Logger } from '@nestjs/common';
 
@@ -31,7 +34,7 @@ export class ApplyCouponService {
     private readonly snowflakeService: SnowflakeService,
     private readonly redisService: RedisService,
     private readonly getCouponConfigService: GetCouponConfigService,
-  ) { }
+  ) {}
 
   private readonly logger = new Logger(ApplyCouponService.name);
 
@@ -70,7 +73,9 @@ export class ApplyCouponService {
 
     if (!acquired) {
       // 락 획득 실패 시 잠시 후 재시도하게 하거나 예외 발생
-      throw new Error('Coupon is currently being processed by another request. Please try again.');
+      throw new Error(
+        'Coupon is currently being processed by another request. Please try again.',
+      );
     }
 
     try {

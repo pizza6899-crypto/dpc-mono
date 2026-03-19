@@ -41,7 +41,7 @@ export class ProcessWageringContributionService {
     private readonly dispatchLogService: DispatchLogService,
     private readonly getConfigService: GetWageringConfigService,
     private readonly settleService: SettleWageringRequirementService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(command: ProcessWageringContributionCommand): Promise<void> {
@@ -75,7 +75,7 @@ export class ProcessWageringContributionService {
     // 0.3 최대 기여 한도 적용 (Capping)
     const effectiveBetForContribution =
       !setting.maxBetAmount.isZero() &&
-        betAmount.greaterThan(setting.maxBetAmount)
+      betAmount.greaterThan(setting.maxBetAmount)
         ? setting.maxBetAmount
         : betAmount;
 
@@ -120,9 +120,8 @@ export class ProcessWageringContributionService {
               requirement.calculationMethod === 'WEIGHTED' &&
               contributionForThis.gt(0)
             ) {
-              remainingWeightedContribution = remainingWeightedContribution.sub(
-                contributionForThis,
-              );
+              remainingWeightedContribution =
+                remainingWeightedContribution.sub(contributionForThis);
             }
           }
         } else if (requirement.targetType === 'ROUND_COUNT') {
@@ -134,7 +133,6 @@ export class ProcessWageringContributionService {
       await this.repository.save(requirement);
 
       if (contributionForThis.gt(0) || incrementedCount > 0) {
-
         // 2. 기여 상세 로그 생성
         await this.logRepository.create({
           wageringRequirementId: requirement.id,

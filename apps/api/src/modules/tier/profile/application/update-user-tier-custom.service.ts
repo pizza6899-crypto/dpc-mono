@@ -17,7 +17,7 @@ export interface UpdateUserTierCustomCommand {
 
 @Injectable()
 export class UpdateUserTierCustomService {
-  constructor(private readonly userTierRepository: UserTierRepositoryPort) { }
+  constructor(private readonly userTierRepository: UserTierRepositoryPort) {}
 
   async execute(
     userId: bigint,

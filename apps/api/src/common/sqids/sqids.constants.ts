@@ -53,8 +53,6 @@ export const SqidsPrefix = {
   // 필요에 따라 추가 (기존 값 수정 금지)
 } as const;
 
-
-
 export type SqidsPrefixType = (typeof SqidsPrefix)[keyof typeof SqidsPrefix];
 
 // ═══════════════════════════════════════════════════════════════════════════════

@@ -1,4 +1,10 @@
-import type { UserRoleType, Language, UserStatus, ExchangeCurrencyCode, RegistrationMethod } from '@prisma/client';
+import type {
+  UserRoleType,
+  Language,
+  UserStatus,
+  ExchangeCurrencyCode,
+  RegistrationMethod,
+} from '@prisma/client';
 
 export interface AuthenticatedUser {
   id: bigint;

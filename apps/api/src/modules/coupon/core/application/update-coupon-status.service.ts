@@ -14,7 +14,11 @@ export class UpdateCouponStatusService {
   ) {}
 
   @Transactional()
-  async execute(id: bigint, status: CouponStatus, adminId: bigint): Promise<Coupon> {
+  async execute(
+    id: bigint,
+    status: CouponStatus,
+    adminId: bigint,
+  ): Promise<Coupon> {
     const coupon = await this.repository.findById(id);
     if (!coupon) {
       throw new CouponNotFoundException();

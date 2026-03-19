@@ -10,10 +10,14 @@ export class UpdateCouponRewardsService {
   constructor(
     @Inject(COUPON_REPOSITORY_TOKEN)
     private readonly repository: CouponRepositoryPort,
-  ) { }
+  ) {}
 
   @Transactional()
-  async execute(id: bigint, rewards: CouponRewardProps[], adminId: bigint): Promise<Coupon> {
+  async execute(
+    id: bigint,
+    rewards: CouponRewardProps[],
+    adminId: bigint,
+  ): Promise<Coupon> {
     const coupon = await this.repository.findById(id);
     if (!coupon) {
       throw new CouponNotFoundException();

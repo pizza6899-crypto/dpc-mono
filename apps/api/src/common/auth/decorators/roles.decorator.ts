@@ -15,4 +15,3 @@ export const RequireRoles = (...aud: Array<UserRoleType>) =>
 
 export const Perms = (...perms: string[]) =>
   applyDecorators(SetMetadata(PERMISSIONS_KEY, perms), ApiCookieAuth());
-

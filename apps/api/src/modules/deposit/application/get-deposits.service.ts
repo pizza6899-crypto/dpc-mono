@@ -21,7 +21,7 @@ export class GetDepositsService {
     @Inject(DEPOSIT_DETAIL_REPOSITORY)
     private readonly depositRepository: DepositDetailRepositoryPort,
     private readonly findAdminMemoService: FindAdminMemoService,
-  ) { }
+  ) {}
 
   async execute(
     params: GetDepositsParams,
@@ -44,7 +44,10 @@ export class GetDepositsService {
     const depositIds = items.map((i) => i.deposit.id!);
 
     // 배치 조회를 통해 관련된 모든 최신 메모를 Map 형태로 가져옴
-    const memoMap = await this.findAdminMemoService.findLatestByTargets('DEPOSIT', depositIds);
+    const memoMap = await this.findAdminMemoService.findLatestByTargets(
+      'DEPOSIT',
+      depositIds,
+    );
 
     // 각 예치금 항목에 메모 데이터를 병합
     const dataWithMemo: DepositWithMemo[] = items.map((item) => ({

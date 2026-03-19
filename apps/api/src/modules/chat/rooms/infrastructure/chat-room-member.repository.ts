@@ -7,71 +7,74 @@ import { ChatRoomMemberMapper } from './chat-room-member.mapper';
 
 @Injectable()
 export class ChatRoomMemberRepository implements ChatRoomMemberRepositoryPort {
-    constructor(
-        @InjectTransaction()
-        private readonly tx: PrismaTransaction,
-    ) { }
+  constructor(
+    @InjectTransaction()
+    private readonly tx: PrismaTransaction,
+  ) {}
 
-    async findByRoomIdAndUserId(roomId: bigint, userId: bigint): Promise<ChatRoomMember | null> {
-        const record = await this.tx.chatRoomMember.findUnique({
-            where: {
-                roomId_userId: {
-                    roomId,
-                    userId,
-                },
-            },
-        });
+  async findByRoomIdAndUserId(
+    roomId: bigint,
+    userId: bigint,
+  ): Promise<ChatRoomMember | null> {
+    const record = await this.tx.chatRoomMember.findUnique({
+      where: {
+        roomId_userId: {
+          roomId,
+          userId,
+        },
+      },
+    });
 
-        return record ? ChatRoomMemberMapper.toDomain(record) : null;
-    }
+    return record ? ChatRoomMemberMapper.toDomain(record) : null;
+  }
 
-    async listByUserId(userId: bigint): Promise<ChatRoomMember[]> {
-        const records = await this.tx.chatRoomMember.findMany({
-            where: { userId },
-        });
+  async listByUserId(userId: bigint): Promise<ChatRoomMember[]> {
+    const records = await this.tx.chatRoomMember.findMany({
+      where: { userId },
+    });
 
-        return records.map((record) => ChatRoomMemberMapper.toDomain(record));
-    }
+    return records.map((record) => ChatRoomMemberMapper.toDomain(record));
+  }
 
-    async listByRoomId(roomId: bigint): Promise<ChatRoomMember[]> {
-        const records = await this.tx.chatRoomMember.findMany({
-            where: { roomId },
-        });
+  async listByRoomId(roomId: bigint): Promise<ChatRoomMember[]> {
+    const records = await this.tx.chatRoomMember.findMany({
+      where: { roomId },
+    });
 
-        return records.map((record) => ChatRoomMemberMapper.toDomain(record));
-    }
+    return records.map((record) => ChatRoomMemberMapper.toDomain(record));
+  }
 
-    async save(member: ChatRoomMember): Promise<ChatRoomMember> {
-        const record = await this.tx.chatRoomMember.upsert({
-            where: {
-                roomId_userId: {
-                    roomId: member.roomId,
-                    userId: member.userId,
-                },
-            },
-            update: {
-                role: member.role,
-                lastReadMessageId: member.lastReadMessageId,
-            },
-            create: {
-                roomId: member.roomId,
-                userId: member.userId,
-                role: member.role,
-                lastReadMessageId: member.lastReadMessageId,
-            },
-        });
+  async save(member: ChatRoomMember): Promise<ChatRoomMember> {
+    const record = await this.tx.chatRoomMember.upsert({
+      where: {
+        roomId_userId: {
+          roomId: member.roomId,
+          userId: member.userId,
+        },
+      },
+      update: {
+        role: member.role,
+        lastReadMessageId: member.lastReadMessageId,
+      },
+      create: {
+        roomId: member.roomId,
+        userId: member.userId,
+        role: member.role,
+        lastReadMessageId: member.lastReadMessageId,
+      },
+    });
 
-        return ChatRoomMemberMapper.toDomain(record);
-    }
+    return ChatRoomMemberMapper.toDomain(record);
+  }
 
-    async delete(roomId: bigint, userId: bigint): Promise<void> {
-        await this.tx.chatRoomMember.delete({
-            where: {
-                roomId_userId: {
-                    roomId,
-                    userId,
-                },
-            },
-        });
-    }
+  async delete(roomId: bigint, userId: bigint): Promise<void> {
+    await this.tx.chatRoomMember.delete({
+      where: {
+        roomId_userId: {
+          roomId,
+          userId,
+        },
+      },
+    });
+  }
 }

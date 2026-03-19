@@ -69,13 +69,17 @@ export class CouponConfig {
 
   private validate(props: CouponConfigProps): void {
     if (props.id !== CouponConfig.SINGLETON_ID) {
-      throw new InvalidCouponConfigException(`Config ID must be ${CouponConfig.SINGLETON_ID}`);
+      throw new InvalidCouponConfigException(
+        `Config ID must be ${CouponConfig.SINGLETON_ID}`,
+      );
     }
     if (props.maxDailyAttemptsPerUser < 0) {
       throw new CouponConfigNegativeValueException('maxDailyAttemptsPerUser');
     }
     if (props.defaultExpiryDays <= 0) {
-      throw new InvalidCouponConfigException('defaultExpiryDays must be greater than 0');
+      throw new InvalidCouponConfigException(
+        'defaultExpiryDays must be greater than 0',
+      );
     }
   }
 

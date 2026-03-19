@@ -1,17 +1,7 @@
 // src/modules/promotion/campaign/controllers/user/promotion-user.controller.ts
-import {
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, Query } from '@nestjs/common';
 import { Language, ExchangeCurrencyCode } from '@prisma/client';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiBearerAuth,
-} from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import {
   ApiStandardErrors,
   ApiPaginatedResponse,
@@ -27,7 +17,12 @@ import { PromotionResponseDto } from './dto/response/promotion.response.dto';
 import { ListActivePromotionsQueryDto } from './dto/request/list-active-promotions-query.dto';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
-import { Promotion, PromotionTranslation, PromotionLanguageRequiredException, PromotionCurrencyRequiredException } from '../../domain';
+import {
+  Promotion,
+  PromotionTranslation,
+  PromotionLanguageRequiredException,
+  PromotionCurrencyRequiredException,
+} from '../../domain';
 import { PromotionCurrencyRule } from '../../domain/model/promotion-currency-rule.entity';
 
 @Controller('promotions')
@@ -38,7 +33,7 @@ export class PromotionUserController {
   constructor(
     private readonly getActivePromotionsForUserService: GetActivePromotionsForUserService,
     private readonly sqidsService: SqidsService,
-  ) { }
+  ) {}
 
   /**
    * 활성 프로모션 목록 조회
@@ -103,7 +98,6 @@ export class PromotionUserController {
     };
   }
 
-
   private mapPromotionToDto(
     promotion: Promotion,
     translation: PromotionTranslation,
@@ -125,5 +119,4 @@ export class PromotionUserController {
       applicableEndTime: promotion.applicableEndTime,
     };
   }
-
 }

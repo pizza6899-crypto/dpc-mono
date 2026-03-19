@@ -39,7 +39,6 @@ export class UpdateWageringCurrencySettingDto {
 }
 
 export class UpdateWageringConfigDto {
-
   @ApiPropertyOptional({
     description: 'Currency specific settings / 통화별 상세 설정',
     additionalProperties: {

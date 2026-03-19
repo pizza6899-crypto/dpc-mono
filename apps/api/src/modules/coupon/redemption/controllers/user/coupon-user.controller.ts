@@ -1,6 +1,9 @@
 import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { ApiStandardResponse, ApiStandardErrors } from 'src/common/http/decorators/api-response.decorator';
+import {
+  ApiStandardResponse,
+  ApiStandardErrors,
+} from 'src/common/http/decorators/api-response.decorator';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
@@ -16,13 +19,14 @@ import { ApplyCouponResponseDto } from './dto/response/apply-coupon.response.dto
 @RequireRoles(UserRoleType.USER)
 @ApiStandardErrors()
 export class CouponUserController {
-  constructor(private readonly applyCouponService: ApplyCouponService) { }
+  constructor(private readonly applyCouponService: ApplyCouponService) {}
 
   @Post('apply')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Apply coupon code / 쿠폰 코드 적용',
-    description: 'Validates and applies a coupon code to the current user. / 현재 유저가 입력한 쿠폰 코드의 유효성을 검사하고 보상을 지급합니다.',
+    description:
+      'Validates and applies a coupon code to the current user. / 현재 유저가 입력한 쿠폰 코드의 유효성을 검사하고 보상을 지급합니다.',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -38,7 +42,10 @@ export class CouponUserController {
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: ApplyCouponRequestDto,
   ): Promise<ApplyCouponResponseDto> {
-    const coupon = await this.applyCouponService.execute(BigInt(user.id), dto.code);
+    const coupon = await this.applyCouponService.execute(
+      BigInt(user.id),
+      dto.code,
+    );
     const props = coupon.toProps();
 
     return {

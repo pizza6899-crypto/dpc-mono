@@ -52,4 +52,4 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
   ],
   exports: [EmailSender, SMSSender],
 })
-export class NotificationInfrastructureModule { }
+export class NotificationInfrastructureModule {}

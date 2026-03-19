@@ -35,7 +35,7 @@ export class ForfeitWageringRequirementService {
     private readonly dispatchLogService: DispatchLogService,
     private readonly createWageringService: CreateWageringRequirementService,
     private readonly promotionConfigService: GetPromotionConfigService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(command: ForfeitWageringRequirementCommand): Promise<void> {
@@ -65,7 +65,6 @@ export class ForfeitWageringRequirementService {
     }
     const principalAmount = requirement.principalAmount;
 
-
     // 도메인 로직: 유저 요청에 의한 포기 처리
     requirement.cancel({
       reason: 'USER_FORFEIT',
@@ -85,8 +84,8 @@ export class ForfeitWageringRequirementService {
       await this.createWageringService.execute({
         userId,
         currency: requirement.currency,
-        rewardId: requirement.rewardId, // [!] 보너스 포기 후 원금 롤링 생성 시 어떤 rewardId를 써야할지 결정 필요. 
-        // 여기서는 원금 롤링은 별도 리워드가 없으면 기존 rewardId를 재사용하거나 0n 처리 가능하지만 
+        rewardId: requirement.rewardId, // [!] 보너스 포기 후 원금 롤링 생성 시 어떤 rewardId를 써야할지 결정 필요.
+        // 여기서는 원금 롤링은 별도 리워드가 없으면 기존 rewardId를 재사용하거나 0n 처리 가능하지만
         // 구조상 모든 웨이저링은 리워드 모듈을 거쳐야 하므로, 원금 전용 리워드를 찾거나 생성해야 함.
         // 일단 타입 에러 수정을 위해 rewardId를 넘김
         targetType: 'AMOUNT',

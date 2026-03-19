@@ -4,7 +4,12 @@ import { IsDateString, IsEnum, IsOptional, IsString } from 'class-validator';
 import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
 import { UserRoleType, UserStatus } from '@prisma/client';
 
-type UserSortFields = 'createdAt' | 'updatedAt' | 'email' | 'loginId' | 'nickname';
+type UserSortFields =
+  | 'createdAt'
+  | 'updatedAt'
+  | 'email'
+  | 'loginId'
+  | 'nickname';
 
 export class ListUsersAdminQueryDto extends createPaginationQueryDto<UserSortFields>(
   {
@@ -53,14 +58,16 @@ export class ListUsersAdminQueryDto extends createPaginationQueryDto<UserSortFie
   status?: UserStatus;
 
   @ApiPropertyOptional({
-    description: 'Start Date (ISO 8601, Based on Joined Amount) / 시작 날짜 (ISO 8601 형식) - 가입일 기준',
+    description:
+      'Start Date (ISO 8601, Based on Joined Amount) / 시작 날짜 (ISO 8601 형식) - 가입일 기준',
   })
   @IsOptional()
   @IsDateString()
   startDate?: string;
 
   @ApiPropertyOptional({
-    description: 'End Date (ISO 8601, Based on Joined Amount) / 종료 날짜 (ISO 8601 형식) - 가입일 기준',
+    description:
+      'End Date (ISO 8601, Based on Joined Amount) / 종료 날짜 (ISO 8601 형식) - 가입일 기준',
   })
   @IsOptional()
   @IsDateString()

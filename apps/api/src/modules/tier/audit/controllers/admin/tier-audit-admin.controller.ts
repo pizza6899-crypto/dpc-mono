@@ -20,7 +20,7 @@ import { UserRoleType } from '@prisma/client';
 export class TierAuditAdminController {
   constructor(
     private readonly getTierDistributionService: GetTierDistributionService,
-  ) { }
+  ) {}
 
   @Get('distribution')
   @ApiOperation({ summary: 'Get tier distribution / 티어별 유저 분포 조회' })

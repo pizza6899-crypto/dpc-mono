@@ -99,4 +99,4 @@ import { USER_ANALYTICS_QUEUES } from '../user-analytics/infrastructure/queue/us
     USER_WALLET_STATS_REPOSITORY,
   ],
 })
-export class WalletModule { }
+export class WalletModule {}

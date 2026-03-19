@@ -56,7 +56,7 @@ export class WageringRequirement {
     private _balanceAtCancellation: Prisma.Decimal | null,
     private _forfeitedAmount: Prisma.Decimal | null,
     private _accumulatedBetAmount: Prisma.Decimal,
-  ) { }
+  ) {}
 
   // Getters
   get requiredAmount(): Prisma.Decimal {

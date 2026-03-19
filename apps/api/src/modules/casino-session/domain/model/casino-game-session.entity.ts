@@ -20,7 +20,7 @@ export class CasinoGameSession {
     public readonly lastAccessedAt: Date,
     public readonly revokedAt: Date | null = null,
     public readonly revokedBy: bigint | null = null,
-  ) { }
+  ) {}
 
   static create(params: {
     id?: bigint;

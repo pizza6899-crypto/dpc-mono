@@ -34,7 +34,7 @@ export interface ProcessVaultOperationParams {
  */
 @Injectable()
 export class ProcessVaultOperationService {
-  constructor(private readonly userBalanceService: UpdateUserBalanceService) { }
+  constructor(private readonly userBalanceService: UpdateUserBalanceService) {}
 
   @Transactional()
   async execute({

@@ -9,10 +9,7 @@ import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
 import { Alert, DuplicateAlertException } from '../domain';
 import { ALERT_REPOSITORY } from '../ports';
 import type { AlertRepositoryPort } from '../ports';
-import {
-  NotificationPayloadMap,
-  NOTIFICATION_QUEUES,
-} from '../../common';
+import { NotificationPayloadMap, NOTIFICATION_QUEUES } from '../../common';
 import { SnowflakeService } from '../../../../common/snowflake/snowflake.service';
 import { NotificationChannelPolicy } from '../domain/policy/notification-channel.policy';
 
@@ -33,7 +30,7 @@ export class CreateAlertService {
     private readonly alertQueue: Queue,
     private readonly snowflakeService: SnowflakeService,
     private readonly channelPolicy: NotificationChannelPolicy,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute<T extends keyof NotificationPayloadMap>(
@@ -43,9 +40,8 @@ export class CreateAlertService {
 
     // 1. 멱등성 체크
     if (idempotencyKey) {
-      const existing = await this.alertRepository.findByIdempotencyKey(
-        idempotencyKey,
-      );
+      const existing =
+        await this.alertRepository.findByIdempotencyKey(idempotencyKey);
       if (existing) {
         throw new DuplicateAlertException(idempotencyKey);
       }

@@ -22,7 +22,7 @@ export class FindPromotionsAdminService {
   constructor(
     @Inject(PROMOTION_REPOSITORY)
     private readonly repository: PromotionRepositoryPort,
-  ) { }
+  ) {}
 
   async execute(params: FindPromotionsAdminParams = {}): Promise<{
     promotions: Array<{

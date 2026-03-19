@@ -44,4 +44,4 @@ import { DcsExceptionFilter } from './infrastructure/dcs-exception.filter';
     DcsApiService,
   ],
 })
-export class DcsModule { }
+export class DcsModule {}

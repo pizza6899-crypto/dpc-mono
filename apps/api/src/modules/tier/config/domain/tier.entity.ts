@@ -1,4 +1,8 @@
-import type { Prisma, TierEvaluationCycle, ExchangeCurrencyCode } from '@prisma/client';
+import type {
+  Prisma,
+  TierEvaluationCycle,
+  ExchangeCurrencyCode,
+} from '@prisma/client';
 import { Language } from '@prisma/client';
 import type { PersistenceOf } from 'src/infrastructure/persistence/persistence.util';
 import { Cast } from 'src/infrastructure/persistence/persistence.util';
@@ -55,7 +59,7 @@ export class Tier {
     public readonly translations: TierTranslationProps[],
     public readonly benefits: TierBenefitProps[],
     private readonly currentLanguage: Language | null = null,
-  ) { }
+  ) {}
 
   getName(language?: Language): string {
     const targetLang = language || this.currentLanguage;
@@ -83,7 +87,9 @@ export class Tier {
     return this.translations[0]?.description ?? null;
   }
 
-  getBenefitByCurrency(currency: ExchangeCurrencyCode): TierBenefitProps | null {
+  getBenefitByCurrency(
+    currency: ExchangeCurrencyCode,
+  ): TierBenefitProps | null {
     return this.benefits.find((b) => b.currency === currency) || null;
   }
 
@@ -130,7 +136,7 @@ export class Tier {
       translations,
       benefits,
       contextLanguage ??
-      (translations.length === 1 ? translations[0].language : null),
+        (translations.length === 1 ? translations[0].language : null),
     );
   }
 }

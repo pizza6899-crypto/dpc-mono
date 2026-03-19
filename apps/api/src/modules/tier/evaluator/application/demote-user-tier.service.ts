@@ -15,7 +15,7 @@ export class DemoteUserTierService {
     private readonly userTierRepository: UserTierRepositoryPort,
     private readonly recordTierHistoryService: RecordTierHistoryService,
     private readonly tierStatsService: TierStatsService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(
@@ -50,7 +50,8 @@ export class DemoteUserTierService {
       compRateSnap: benefits.compRate,
       weeklyLossbackRateSnap: benefits.weeklyLossbackRate,
       monthlyLossbackRateSnap: benefits.monthlyLossbackRate,
-      upgradeBonusWageringMultiplierSnap: targetTier.upgradeBonusWageringMultiplier,
+      upgradeBonusWageringMultiplierSnap:
+        targetTier.upgradeBonusWageringMultiplier,
 
       // Limit & Flag Snapshot
       dailyWithdrawalLimitUsdSnap: benefits.dailyWithdrawalLimitUsd,

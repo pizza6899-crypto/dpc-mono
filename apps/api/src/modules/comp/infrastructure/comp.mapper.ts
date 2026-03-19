@@ -41,7 +41,9 @@ export class CompMapper {
     };
   }
 
-  toTransactionDomain(model: PrismaCompAccountTransaction): CompAccountTransaction {
+  toTransactionDomain(
+    model: PrismaCompAccountTransaction,
+  ): CompAccountTransaction {
     return CompAccountTransaction.rehydrate({
       id: model.id,
       compAccountId: model.compAccountId,
@@ -101,7 +103,9 @@ export class CompMapper {
     };
   }
 
-  toDailySettlementDomain(model: CompDailySettlement): DomainCompDailySettlement {
+  toDailySettlementDomain(
+    model: CompDailySettlement,
+  ): DomainCompDailySettlement {
     return DomainCompDailySettlement.rehydrate({
       id: model.id,
       userId: model.userId,
@@ -117,7 +121,9 @@ export class CompMapper {
     });
   }
 
-  toDailySettlementPersistence(entity: DomainCompDailySettlement): Partial<CompDailySettlement> {
+  toDailySettlementPersistence(
+    entity: DomainCompDailySettlement,
+  ): Partial<CompDailySettlement> {
     return {
       id: entity.id === BigInt(0) ? undefined : entity.id,
       userId: entity.userId,

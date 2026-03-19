@@ -29,7 +29,7 @@ export class ResetPasswordService {
     private readonly userRepository: UserRepositoryPort,
     @Inject(PASSWORD_RESET_TOKEN_REPOSITORY)
     private readonly tokenRepository: PasswordResetTokenRepositoryPort,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(params: ResetPasswordParams): Promise<void> {

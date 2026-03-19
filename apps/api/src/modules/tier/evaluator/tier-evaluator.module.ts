@@ -45,4 +45,4 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
     DemoteUserTierService,
   ],
 })
-export class TierEvaluatorModule { }
+export class TierEvaluatorModule {}

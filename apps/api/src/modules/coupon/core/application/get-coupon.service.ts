@@ -29,7 +29,7 @@ export class GetCouponService {
     const coupon = await this.repository.findByCode(code);
     if (!coupon) {
       throw new CouponNotFoundException();
-}
+    }
     return coupon;
   }
 }

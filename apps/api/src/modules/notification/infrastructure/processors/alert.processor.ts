@@ -71,7 +71,9 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
 
     // ✅ 재시도 처리: 이미 완료되었거나 실패한 경우 처리 중단
     if (alert.isCompleted() || alert.isFailed()) {
-      this.logger.warn(`Alert ${alert.id} is already ${alert.status}. Skipping.`);
+      this.logger.warn(
+        `Alert ${alert.id} is already ${alert.status}. Skipping.`,
+      );
       return;
     }
 
@@ -109,7 +111,9 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
     }
 
     // Fetch User metadata if userId exists
-    const user: UserMetadata | null = userId ? await this.getUserService.findById(userId) : null;
+    const user: UserMetadata | null = userId
+      ? await this.getUserService.findById(userId)
+      : null;
 
     const {
       locale: localeFromPayload,
@@ -196,7 +200,9 @@ export class AlertProcessor extends BaseProcessor<AlertJobData, void> {
 
     // ✅ 에러 전파: 하나라도 채널 라우팅에 실패했다면 워커가 재시도(Backoff) 루프를 타게 던짐
     if (hasError) {
-      throw new Error(`One or more channels failed to route for alert ${alert.id}.`);
+      throw new Error(
+        `One or more channels failed to route for alert ${alert.id}.`,
+      );
     }
 
     alert.complete();

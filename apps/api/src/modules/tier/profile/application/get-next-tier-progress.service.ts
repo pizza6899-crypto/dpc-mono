@@ -33,9 +33,7 @@ export class GetNextTierProgressService {
       requiredExp > currentExp ? requiredExp - currentExp : 0n;
 
     const progress =
-      requiredExp > 0n
-        ? Number((currentExp * 100n) / requiredExp)
-        : 100;
+      requiredExp > 0n ? Number((currentExp * 100n) / requiredExp) : 100;
 
     return {
       id: nextTier.id,

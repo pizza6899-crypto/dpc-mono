@@ -39,7 +39,7 @@ export class WageringRequirementAdminController {
     private readonly findService: FindWageringRequirementsService,
     private readonly voidService: VoidWageringRequirementService,
     private readonly findLogsService: FindWageringContributionLogsService,
-  ) { }
+  ) {}
 
   @Get()
   @Paginated()

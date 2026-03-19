@@ -1,13 +1,6 @@
 // apps/api/src/modules/notification/template/controllers/admin/template-admin.controller.ts
 
-import {
-  Controller,
-  Get,
-  Put,
-  Body,
-  Param,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Get, Put, Body, Param, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
@@ -35,7 +28,7 @@ export class TemplateAdminController {
   constructor(
     private readonly findTemplatesService: FindTemplatesService,
     private readonly updateTranslationService: UpdateTemplateTranslationService,
-  ) { }
+  ) {}
 
   @Get()
   @AuditLog({
@@ -43,7 +36,9 @@ export class TemplateAdminController {
     category: 'NOTIFICATION',
     action: 'NOTIFICATION_TEMPLATE_ADMIN_LIST',
   })
-  @ApiOperation({ summary: 'List notification templates / 알림 템플릿 목록 조회' })
+  @ApiOperation({
+    summary: 'List notification templates / 알림 템플릿 목록 조회',
+  })
   @ApiStandardResponse(TemplateListItemResponseDto, {
     status: HttpStatus.OK,
     description: 'Successfully retrieved templates / 템플릿 목록 조회 성공',
@@ -65,7 +60,10 @@ export class TemplateAdminController {
       request: args[1],
     }),
   })
-  @ApiOperation({ summary: 'Update or Create translation for template / 템플릿 번역 수정 또는 생성' })
+  @ApiOperation({
+    summary:
+      'Update or Create translation for template / 템플릿 번역 수정 또는 생성',
+  })
   @ApiStandardResponse(TemplateResponseDto, {
     status: HttpStatus.OK,
     description: 'Successfully updated translation / 번역 수정 성공',

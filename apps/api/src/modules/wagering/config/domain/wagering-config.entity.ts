@@ -2,13 +2,15 @@ import { ExchangeCurrencyCode } from '@prisma/client';
 import { WageringCurrencySetting } from './value-objects/wagering-currency-setting.vo';
 import { InvalidWageringConfigException } from './wagering-config.exception';
 
-
 export class WageringConfig {
   public static readonly SINGLETON_ID = 1n;
 
   constructor(
     public readonly id: bigint,
-    public readonly currencySettings: Record<ExchangeCurrencyCode, WageringCurrencySetting>,
+    public readonly currencySettings: Record<
+      ExchangeCurrencyCode,
+      WageringCurrencySetting
+    >,
     public readonly isWageringCheckEnabled: boolean,
     public readonly isAutoCancellationEnabled: boolean,
     public readonly updatedAt: Date,

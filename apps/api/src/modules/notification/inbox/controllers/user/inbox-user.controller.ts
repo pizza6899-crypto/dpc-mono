@@ -30,9 +30,7 @@ import { DeleteNotificationService } from '../../application/delete-notification
 import { NotificationLog, InboxException } from '../../domain';
 import { FindNotificationsQueryDto } from './dto/request/find-notifications-query.dto';
 import { NotificationParamDto } from './dto/request/notification-param.dto';
-import {
-  NotificationResponseDto,
-} from './dto/response/notification.response.dto';
+import { NotificationResponseDto } from './dto/response/notification.response.dto';
 import { NotificationListResponseDto } from './dto/response/notification-list.response.dto';
 import { UnreadCountResponseDto } from './dto/response/unread-count.response.dto';
 import { MarkAllAsReadResponseDto } from './dto/response/mark-all-as-read.response.dto';
@@ -49,7 +47,7 @@ export class InboxUserController {
     private readonly deleteNotificationService: DeleteNotificationService,
     private readonly sqidsService: SqidsService,
     private readonly snowflakeService: SnowflakeService,
-  ) { }
+  ) {}
 
   @Get()
   @AuditLog({
@@ -81,9 +79,9 @@ export class InboxUserController {
       nextCursor:
         notifications.length > 0
           ? this.sqidsService.encode(
-            notifications[notifications.length - 1].id!,
-            SqidsPrefix.INBOX,
-          )
+              notifications[notifications.length - 1].id!,
+              SqidsPrefix.INBOX,
+            )
           : null,
     };
   }
@@ -94,7 +92,9 @@ export class InboxUserController {
     category: 'NOTIFICATION',
     action: 'NOTIFICATION_INBOX_UNREAD_COUNT',
   })
-  @ApiOperation({ summary: 'Get unread notification count / 읽지 않은 알림 수 조회' })
+  @ApiOperation({
+    summary: 'Get unread notification count / 읽지 않은 알림 수 조회',
+  })
   @ApiStandardResponse(UnreadCountResponseDto)
   async getUnreadCount(
     @CurrentUser() user: AuthenticatedUser,
@@ -117,7 +117,9 @@ export class InboxUserController {
     }),
   })
   @ApiOperation({ summary: 'Mark notification as read / 알림 읽음 표시' })
-  @ApiStandardResponse(Object, { description: 'Notification marked as read / 알림 읽음 처리 완료' })
+  @ApiStandardResponse(Object, {
+    description: 'Notification marked as read / 알림 읽음 처리 완료',
+  })
   async markAsRead(
     @CurrentUser() user: AuthenticatedUser,
     @Param() params: NotificationParamDto,
@@ -144,7 +146,9 @@ export class InboxUserController {
       updatedCount: result?.updatedCount ?? 0,
     }),
   })
-  @ApiOperation({ summary: 'Mark all notifications as read / 모든 알림 읽음 표시' })
+  @ApiOperation({
+    summary: 'Mark all notifications as read / 모든 알림 읽음 표시',
+  })
   @ApiStandardResponse(MarkAllAsReadResponseDto)
   async markAllAsRead(
     @CurrentUser() user: AuthenticatedUser,
@@ -167,7 +171,9 @@ export class InboxUserController {
     }),
   })
   @ApiOperation({ summary: 'Delete notification / 알림 삭제' })
-  @ApiStandardResponse(Object, { description: 'Notification deleted / 알림 삭제 완료' })
+  @ApiStandardResponse(Object, {
+    description: 'Notification deleted / 알림 삭제 완료',
+  })
   async deleteNotification(
     @CurrentUser() user: AuthenticatedUser,
     @Param() params: NotificationParamDto,
@@ -186,9 +192,7 @@ export class InboxUserController {
 
   private toResponseDto(log: NotificationLog): NotificationResponseDto {
     return {
-      id: log.id
-        ? this.sqidsService.encode(log.id, SqidsPrefix.INBOX)
-        : '',
+      id: log.id ? this.sqidsService.encode(log.id, SqidsPrefix.INBOX) : '',
       createdAt: log.createdAt.toISOString(),
       title: log.title,
       body: log.body,

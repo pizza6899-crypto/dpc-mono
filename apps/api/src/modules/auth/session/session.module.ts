@@ -66,4 +66,4 @@ import { AUTH_QUEUES } from './infrastructure/session.bullmq';
     USER_SESSION_REPOSITORY, // SessionSerializer에서 사용
   ],
 })
-export class SessionModule { }
+export class SessionModule {}

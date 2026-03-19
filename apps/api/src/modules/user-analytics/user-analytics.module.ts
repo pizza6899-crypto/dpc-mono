@@ -8,26 +8,24 @@ import { BullModule } from '@nestjs/bullmq';
 import { USER_ANALYTICS_QUEUES } from './infrastructure/queue/user-analytics.bullmq';
 
 @Module({
-    imports: [
-        // 큐 등록
-        BullModule.registerQueue(USER_ANALYTICS_QUEUES.SYNC),
-    ],
-    providers: [
-        // Persistence
-        {
-            provide: USER_ANALYTICS_REPOSITORY,
-            useClass: UserAnalyticsRepository,
-        },
-        UserAnalyticsMapper,
+  imports: [
+    // 큐 등록
+    BullModule.registerQueue(USER_ANALYTICS_QUEUES.SYNC),
+  ],
+  providers: [
+    // Persistence
+    {
+      provide: USER_ANALYTICS_REPOSITORY,
+      useClass: UserAnalyticsRepository,
+    },
+    UserAnalyticsMapper,
 
-        // Application Services
-        SyncUserAnalyticsService,
+    // Application Services
+    SyncUserAnalyticsService,
 
-        // Queue Processors
-        UserAnalyticsProcessor,
-    ],
-    exports: [
-        SyncUserAnalyticsService,
-    ],
+    // Queue Processors
+    UserAnalyticsProcessor,
+  ],
+  exports: [SyncUserAnalyticsService],
 })
-export class UserAnalyticsModule { }
+export class UserAnalyticsModule {}

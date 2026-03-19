@@ -18,7 +18,7 @@ export class UpdateCompConfigService {
   constructor(
     @Inject(COMP_CONFIG_REPOSITORY)
     private readonly compConfigRepository: CompConfigRepositoryPort,
-  ) { }
+  ) {}
 
   async execute(params: UpdateCompConfigParams): Promise<CompConfig> {
     const { currency, ...updateData } = params;
@@ -32,8 +32,10 @@ export class UpdateCompConfigService {
         currency,
         isEarnEnabled: updateData.isEarnEnabled ?? true,
         isSettlementEnabled: updateData.isSettlementEnabled ?? true,
-        minSettlementAmount: updateData.minSettlementAmount ?? new Prisma.Decimal(0),
-        maxDailyEarnPerUser: updateData.maxDailyEarnPerUser ?? new Prisma.Decimal(0),
+        minSettlementAmount:
+          updateData.minSettlementAmount ?? new Prisma.Decimal(0),
+        maxDailyEarnPerUser:
+          updateData.maxDailyEarnPerUser ?? new Prisma.Decimal(0),
         description: updateData.description,
       });
     } else {
@@ -42,9 +44,12 @@ export class UpdateCompConfigService {
         id: config.id,
         currency: config.currency,
         isEarnEnabled: updateData.isEarnEnabled ?? config.isEarnEnabled,
-        isSettlementEnabled: updateData.isSettlementEnabled ?? config.isSettlementEnabled,
-        minSettlementAmount: updateData.minSettlementAmount ?? config.minSettlementAmount,
-        maxDailyEarnPerUser: updateData.maxDailyEarnPerUser ?? config.maxDailyEarnPerUser,
+        isSettlementEnabled:
+          updateData.isSettlementEnabled ?? config.isSettlementEnabled,
+        minSettlementAmount:
+          updateData.minSettlementAmount ?? config.minSettlementAmount,
+        maxDailyEarnPerUser:
+          updateData.maxDailyEarnPerUser ?? config.maxDailyEarnPerUser,
         description: updateData.description ?? config.description,
         updatedAt: new Date(),
       });

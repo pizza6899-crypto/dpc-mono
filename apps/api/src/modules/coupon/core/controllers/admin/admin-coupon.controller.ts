@@ -41,7 +41,10 @@ import { GetAdminCouponsRequestDto } from './dto/request/get-coupons.request.dto
 import { UpdateAdminCouponRequestDto } from './dto/request/update-coupon.request.dto';
 import { UpdateAdminCouponStatusRequestDto } from './dto/request/update-coupon-status.request.dto';
 import { UpdateAdminCouponRewardsRequestDto } from './dto/request/update-coupon-rewards.request.dto';
-import { AddCouponAllowlistRequestDto, GetCouponAllowlistQueryDto } from './dto/request/coupon-allowlist.dto';
+import {
+  AddCouponAllowlistRequestDto,
+  GetCouponAllowlistQueryDto,
+} from './dto/request/coupon-allowlist.dto';
 import { CouponResponseDto } from './dto/response/coupon.response.dto';
 import { CouponAllowlistResponseDto } from './dto/response/coupon-allowlist.response.dto';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
@@ -62,7 +65,7 @@ export class AdminCouponController {
     private readonly addCouponAllowlistService: AddCouponAllowlistService,
     private readonly removeCouponAllowlistService: RemoveCouponAllowlistService,
     private readonly clearCouponAllowlistService: ClearCouponAllowlistService,
-  ) { }
+  ) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -92,8 +95,12 @@ export class AdminCouponController {
         rewardType: r.rewardType,
         currency: r.currency,
         amount: new Decimal(r.amount),
-        wageringMultiplier: r.wageringMultiplier ? new Decimal(r.wageringMultiplier) : null,
-        maxCashConversion: r.maxCashConversion ? new Decimal(r.maxCashConversion) : null,
+        wageringMultiplier: r.wageringMultiplier
+          ? new Decimal(r.wageringMultiplier)
+          : null,
+        maxCashConversion: r.maxCashConversion
+          ? new Decimal(r.maxCashConversion)
+          : null,
       })),
     });
 
@@ -107,7 +114,9 @@ export class AdminCouponController {
       'Supports code search, status filtering, date range filtering, and pagination. / 코드 검색, 상태 필터링, 기간 필터링 및 페이징 처리를 지원합니다.',
   })
   @ApiPaginatedResponse(CouponResponseDto)
-  async getCoupons(@Query() query: GetAdminCouponsRequestDto): Promise<PaginatedData<CouponResponseDto>> {
+  async getCoupons(
+    @Query() query: GetAdminCouponsRequestDto,
+  ): Promise<PaginatedData<CouponResponseDto>> {
     const result = await this.listCouponsService.execute(query);
 
     return {
@@ -132,7 +141,6 @@ export class AdminCouponController {
     const coupon = await this.getCouponService.getById(BigInt(id));
     return this.mapToResponseDto(coupon);
   }
-
 
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
@@ -186,7 +194,11 @@ export class AdminCouponController {
     @Param('id') id: string,
     @Body() dto: UpdateAdminCouponStatusRequestDto,
   ): Promise<CouponResponseDto> {
-    const coupon = await this.updateCouponStatusService.execute(BigInt(id), dto.status, admin.id);
+    const coupon = await this.updateCouponStatusService.execute(
+      BigInt(id),
+      dto.status,
+      admin.id,
+    );
 
     return this.mapToResponseDto(coupon);
   }
@@ -219,8 +231,12 @@ export class AdminCouponController {
         rewardType: r.rewardType,
         currency: r.currency,
         amount: new Decimal(r.amount),
-        wageringMultiplier: r.wageringMultiplier ? new Decimal(r.wageringMultiplier) : null,
-        maxCashConversion: r.maxCashConversion ? new Decimal(r.maxCashConversion) : null,
+        wageringMultiplier: r.wageringMultiplier
+          ? new Decimal(r.wageringMultiplier)
+          : null,
+        maxCashConversion: r.maxCashConversion
+          ? new Decimal(r.maxCashConversion)
+          : null,
       })),
       admin.id,
     );
@@ -262,7 +278,8 @@ export class AdminCouponController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Add to allowlist / 대상자 대량 등록',
-    description: 'Adds multiple user IDs to the allowlist at once. / 특정 쿠폰에 유저 ID 목록을 한꺼번에 추가합니다.',
+    description:
+      'Adds multiple user IDs to the allowlist at once. / 특정 쿠폰에 유저 ID 목록을 한꺼번에 추가합니다.',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -270,8 +287,14 @@ export class AdminCouponController {
     action: 'ADD_COUPON_ALLOWLIST',
     extractMetadata: (req) => ({ id: req.params.id }),
   })
-  @ApiStandardResponse(Object, { status: 200, description: 'Successfully added / 등록 성공' })
-  async addAllowlist(@Param('id') id: string, @Body() dto: AddCouponAllowlistRequestDto): Promise<void> {
+  @ApiStandardResponse(Object, {
+    status: 200,
+    description: 'Successfully added / 등록 성공',
+  })
+  async addAllowlist(
+    @Param('id') id: string,
+    @Body() dto: AddCouponAllowlistRequestDto,
+  ): Promise<void> {
     await this.addCouponAllowlistService.execute(
       BigInt(id),
       dto.userIds.map((uid) => BigInt(uid)),
@@ -282,16 +305,26 @@ export class AdminCouponController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Remove from allowlist / 대상자 개별 제거',
-    description: 'Removes a specific user from the allowlist. / 화이트리스트에서 특정 유저를 제외합니다.',
+    description:
+      'Removes a specific user from the allowlist. / 화이트리스트에서 특정 유저를 제외합니다.',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
     category: 'COUPON',
     action: 'REMOVE_COUPON_ALLOWLIST',
-    extractMetadata: (req) => ({ id: req.params.id, userId: req.params.userId }),
+    extractMetadata: (req) => ({
+      id: req.params.id,
+      userId: req.params.userId,
+    }),
   })
-  @ApiStandardResponse(Object, { status: 200, description: 'Successfully removed / 제거 성공' })
-  async removeAllowlist(@Param('id') id: string, @Param('userId') userId: string): Promise<void> {
+  @ApiStandardResponse(Object, {
+    status: 200,
+    description: 'Successfully removed / 제거 성공',
+  })
+  async removeAllowlist(
+    @Param('id') id: string,
+    @Param('userId') userId: string,
+  ): Promise<void> {
     await this.removeCouponAllowlistService.execute(BigInt(id), BigInt(userId));
   }
 
@@ -299,7 +332,8 @@ export class AdminCouponController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Clear allowlist / 대상자 전체 초기화',
-    description: 'Removes all users from the allowlist for this coupon. / 해당 쿠폰에 등록된 모든 화이트리스트 정보를 삭제합니다.',
+    description:
+      'Removes all users from the allowlist for this coupon. / 해당 쿠폰에 등록된 모든 화이트리스트 정보를 삭제합니다.',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -307,7 +341,10 @@ export class AdminCouponController {
     action: 'CLEAR_COUPON_ALLOWLIST',
     extractMetadata: (req) => ({ id: req.params.id }),
   })
-  @ApiStandardResponse(Object, { status: 200, description: 'Successfully cleared / 초기화 성공' })
+  @ApiStandardResponse(Object, {
+    status: 200,
+    description: 'Successfully cleared / 초기화 성공',
+  })
   async clearAllowlist(@Param('id') id: string): Promise<void> {
     await this.clearCouponAllowlistService.execute(BigInt(id));
   }

@@ -32,7 +32,7 @@ export class UpdateTemplateService {
   constructor(
     @Inject(NOTIFICATION_TEMPLATE_REPOSITORY)
     private readonly repository: NotificationTemplateRepositoryPort,
-  ) { }
+  ) {}
 
   async execute({
     id,

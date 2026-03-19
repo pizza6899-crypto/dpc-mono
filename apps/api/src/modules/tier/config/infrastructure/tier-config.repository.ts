@@ -16,7 +16,7 @@ export class TierConfigRepository implements TierConfigRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly cacheService: CacheService,
-  ) { }
+  ) {}
 
   async find(): Promise<TierConfig | null> {
     const record = await this.cacheService.getOrSet(

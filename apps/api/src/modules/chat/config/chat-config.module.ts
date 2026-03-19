@@ -7,19 +7,16 @@ import { ChatConfigAdminController } from './controllers/admin/chat-config-admin
 import { ChatConfigPublicController } from './controllers/public/chat-config-public.controller';
 
 @Module({
-    imports: [],
-    controllers: [
-        ChatConfigAdminController,
-        ChatConfigPublicController,
-    ],
-    providers: [
-        {
-            provide: CHAT_CONFIG_REPOSITORY_PORT,
-            useClass: ChatConfigRepository,
-        },
-        GetChatConfigService,
-        UpdateChatConfigService,
-    ],
-    exports: [GetChatConfigService],
+  imports: [],
+  controllers: [ChatConfigAdminController, ChatConfigPublicController],
+  providers: [
+    {
+      provide: CHAT_CONFIG_REPOSITORY_PORT,
+      useClass: ChatConfigRepository,
+    },
+    GetChatConfigService,
+    UpdateChatConfigService,
+  ],
+  exports: [GetChatConfigService],
 })
-export class ChatConfigModule { }
+export class ChatConfigModule {}

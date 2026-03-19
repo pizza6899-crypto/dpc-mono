@@ -4,11 +4,7 @@ import {
   DepositMethodType,
   ExchangeCurrencyCode,
 } from '@prisma/client';
-import {
-  IsDateString,
-  IsEnum,
-  IsOptional,
-} from 'class-validator';
+import { IsDateString, IsEnum, IsOptional } from 'class-validator';
 import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
 
 type DepositSortFields =

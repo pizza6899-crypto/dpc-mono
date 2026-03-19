@@ -13,9 +13,6 @@ import { PROMOTION_CONFIG_REPOSITORY } from './ports/promotion-config.repository
       useClass: PromotionConfigRepository,
     },
   ],
-  exports: [
-    GetPromotionConfigService,
-    PROMOTION_CONFIG_REPOSITORY,
-  ],
+  exports: [GetPromotionConfigService, PROMOTION_CONFIG_REPOSITORY],
 })
 export class PromotionConfigModule {}

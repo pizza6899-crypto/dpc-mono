@@ -23,10 +23,7 @@ import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
 const queueConfig = getQueueConfig(BULLMQ_QUEUES.NOTIFICATION.INBOX);
 
 @Processor(queueConfig.processorOptions, queueConfig.workerOptions)
-export class InboxProcessor extends BaseProcessor<
-  NotificationJobData,
-  void
-> {
+export class InboxProcessor extends BaseProcessor<NotificationJobData, void> {
   protected readonly logger = new Logger(InboxProcessor.name);
 
   constructor(
@@ -41,9 +38,7 @@ export class InboxProcessor extends BaseProcessor<
   }
 
   @Transactional()
-  protected async processJob(
-    job: Job<NotificationJobData>,
-  ): Promise<void> {
+  protected async processJob(job: Job<NotificationJobData>): Promise<void> {
     const { data } = job;
     await this.processNotification(data);
   }
@@ -66,7 +61,9 @@ export class InboxProcessor extends BaseProcessor<
       // 지연 렌더링 처리
       if (!log.title || !log.body) {
         if (!log.templateEvent) {
-          throw new Error(`Socket notification failed: missing templateEvent for log ${log.id}`);
+          throw new Error(
+            `Socket notification failed: missing templateEvent for log ${log.id}`,
+          );
         }
 
         const renderResult = await this.renderTemplateService.execute({
@@ -104,7 +101,9 @@ export class InboxProcessor extends BaseProcessor<
       log.markAsSuccess();
       await this.notificationLogRepository.update(log);
 
-      this.logger.debug(`Sent notification push: log ${log.id} → user ${log.receiverId}`);
+      this.logger.debug(
+        `Sent notification push: log ${log.id} → user ${log.receiverId}`,
+      );
     } catch (error: any) {
       log.markAsFailed(error.message || 'Socket sending failed');
       await this.notificationLogRepository.update(log);

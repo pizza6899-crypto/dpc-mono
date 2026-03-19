@@ -10,7 +10,7 @@ export class GetUserWalletService {
   constructor(
     @Inject(USER_WALLET_REPOSITORY)
     private readonly repository: UserWalletRepositoryPort,
-  ) { }
+  ) {}
 
   /**
    * 단일 통화 지갑 가져오기 (없으면 생성하거나 예외 발생)

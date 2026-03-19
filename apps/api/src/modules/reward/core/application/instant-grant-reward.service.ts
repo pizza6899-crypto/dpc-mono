@@ -19,7 +19,7 @@ export class InstantGrantRewardService {
   constructor(
     private readonly grantRewardService: GrantRewardService,
     private readonly claimRewardService: ClaimRewardService,
-  ) { }
+  ) {}
 
   /**
    * 보상을 발급함과 동시에 즉시 수령(Claim) 처리합니다.
@@ -34,7 +34,7 @@ export class InstantGrantRewardService {
     // 이 과정에서 Wallet 업데이트와 Wagering 생성이 수행됩니다.
     // 입금 보너스의 경우 원금(Principal) 정보가 포함되어야 하므로 metadata 등으로 전달하거나
     // ClaimRewardService를 보완하여 처리할 수 있습니다.
-    
+
     // TODO: ClaimRewardService가 principalAmount를 인식하도록 보완이 필요할 수 있습니다.
     // 현재는 단순 연쇄 호출로 구조를 잡습니다.
     await this.claimRewardService.execute({

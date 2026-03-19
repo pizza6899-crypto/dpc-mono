@@ -24,9 +24,6 @@ import { SnowflakeModule } from '../../../common/snowflake/snowflake.module';
     CreateAlertService,
     NotificationChannelPolicy,
   ],
-  exports: [
-    CreateAlertService,
-    ALERT_REPOSITORY,
-  ],
+  exports: [CreateAlertService, ALERT_REPOSITORY],
 })
-export class AlertModule { }
+export class AlertModule {}

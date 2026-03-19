@@ -14,7 +14,7 @@ export class WageringContributionLogRepository implements WageringContributionLo
     private readonly tx: PrismaTransaction,
     private readonly mapper: WageringRequirementMapper,
     private readonly snowflakeService: SnowflakeService,
-  ) { }
+  ) {}
 
   async create(data: {
     wageringRequirementId: bigint;

@@ -5,28 +5,28 @@ import { FORBIDDEN_WORD_REPOSITORY } from '../../ports/out/moderation-repository
 import { ForbiddenWordNotFoundException } from '../../domain/moderation.exception';
 
 export interface UpdateForbiddenWordAdminCommand {
-    id: bigint;
-    description?: string;
-    isActive?: boolean;
+  id: bigint;
+  description?: string;
+  isActive?: boolean;
 }
 
 @Injectable()
 export class UpdateForbiddenWordAdminService {
-    constructor(
-        @Inject(FORBIDDEN_WORD_REPOSITORY)
-        private readonly forbiddenWordRepository: ForbiddenWordRepositoryPort,
-    ) { }
+  constructor(
+    @Inject(FORBIDDEN_WORD_REPOSITORY)
+    private readonly forbiddenWordRepository: ForbiddenWordRepositoryPort,
+  ) {}
 
-    @Transactional()
-    async execute(command: UpdateForbiddenWordAdminCommand): Promise<void> {
-        const word = await this.forbiddenWordRepository.findById(command.id);
-        if (!word) {
-            throw new ForbiddenWordNotFoundException(command.id);
-        }
-
-        await this.forbiddenWordRepository.update(command.id, {
-            description: command.description,
-            isActive: command.isActive,
-        });
+  @Transactional()
+  async execute(command: UpdateForbiddenWordAdminCommand): Promise<void> {
+    const word = await this.forbiddenWordRepository.findById(command.id);
+    if (!word) {
+      throw new ForbiddenWordNotFoundException(command.id);
     }
+
+    await this.forbiddenWordRepository.update(command.id, {
+      description: command.description,
+      isActive: command.isActive,
+    });
+  }
 }

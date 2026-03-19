@@ -21,10 +21,10 @@ export interface RecordTierSnapshotJobData {
 
 export type TierAuditJobPayload =
   | {
-    type: TierAuditJobType.RECORD_TIER_SNAPSHOT;
-    data: RecordTierSnapshotJobData;
-  }
+      type: TierAuditJobType.RECORD_TIER_SNAPSHOT;
+      data: RecordTierSnapshotJobData;
+    }
   | {
-    type: TierAuditJobType.INCREMENT_TIER_STATS;
-    data: RecordTierSnapshotJobData;
-  };
+      type: TierAuditJobType.INCREMENT_TIER_STATS;
+      data: RecordTierSnapshotJobData;
+    };

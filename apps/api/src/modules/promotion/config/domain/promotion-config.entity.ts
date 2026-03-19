@@ -11,6 +11,5 @@ export class PromotionConfig {
     public readonly isPromotionEnabled: boolean,
     public readonly updatedAt: Date,
     public readonly updatedBy: bigint | null,
-  ) { }
-
+  ) {}
 }

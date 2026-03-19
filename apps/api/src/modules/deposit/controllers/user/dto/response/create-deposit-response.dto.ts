@@ -16,7 +16,8 @@ export class CreateDepositResponseDto {
   payCurrency?: string;
 
   @ApiPropertyOptional({
-    description: '추가 ID (태그, 메모 등) / Payment address extra ID (Tag, Memo, etc.)',
+    description:
+      '추가 ID (태그, 메모 등) / Payment address extra ID (Tag, Memo, etc.)',
     example: null,
     nullable: true,
   })

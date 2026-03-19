@@ -51,7 +51,7 @@ export class RequestBankWithdrawalService {
     private readonly getUserWalletService: GetUserWalletService,
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly checkWageringService: CheckWageringRequirementService,
-  ) { }
+  ) {}
 
   @Transactional()
   async execute(

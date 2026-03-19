@@ -32,7 +32,7 @@ export class WageringRequirementUserController {
     private readonly checkService: CheckWageringRequirementService,
     private readonly forfeitService: ForfeitWageringRequirementService,
     private readonly sqidsService: SqidsService,
-  ) { }
+  ) {}
 
   @Get()
   @ApiOperation({ summary: 'Get my wagering requirements / 내 롤링 조건 조회' })

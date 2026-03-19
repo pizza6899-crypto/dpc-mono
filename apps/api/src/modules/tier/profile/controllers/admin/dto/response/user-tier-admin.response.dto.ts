@@ -86,19 +86,22 @@ export class UserTierAdminResponseDto {
 
   @ApiProperty({
     nullable: true,
-    description: 'Custom daily withdrawal limit (USD) / 커스텀 일일 출금 한도 (USD)',
+    description:
+      'Custom daily withdrawal limit (USD) / 커스텀 일일 출금 한도 (USD)',
   })
   customDailyWithdrawalLimitUsd: string | null;
 
   @ApiProperty({
     nullable: true,
-    description: 'Custom weekly withdrawal limit (USD) / 커스텀 주간 출금 한도 (USD)',
+    description:
+      'Custom weekly withdrawal limit (USD) / 커스텀 주간 출금 한도 (USD)',
   })
   customWeeklyWithdrawalLimitUsd: string | null;
 
   @ApiProperty({
     nullable: true,
-    description: 'Custom monthly withdrawal limit (USD) / 커스텀 월간 출금 한도 (USD)',
+    description:
+      'Custom monthly withdrawal limit (USD) / 커스텀 월간 출금 한도 (USD)',
   })
   customMonthlyWithdrawalLimitUsd: string | null;
 

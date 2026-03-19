@@ -13,7 +13,7 @@ export class CouponConfigRepository implements CouponConfigRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly cacheService: CacheService,
-  ) { }
+  ) {}
 
   async find(): Promise<CouponConfig | null> {
     const singletonId = CouponConfig.SINGLETON_ID;
@@ -56,7 +56,7 @@ export class CouponConfigRepository implements CouponConfigRepositoryPort {
     });
 
     // 2. 캐시 무효화 (Set 대신 Del)
-    // 트랜잭션 중이라면 커밋 전까지는 DB값이 확정되지 않으므로, 
+    // 트랜잭션 중이라면 커밋 전까지는 DB값이 확정되지 않으므로,
     // 캐시를 아예 없애버리는 것이 데이터 불일치를 방지하는 가장 안전한 방법입니다.
     await this.cacheService.del(CACHE_CONFIG.COUPON.CONFIG);
   }

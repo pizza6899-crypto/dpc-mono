@@ -1,5 +1,8 @@
 import { Injectable, forwardRef, Inject } from '@nestjs/common';
-import { type SocketRoomType, getSocketRoom } from './constants/websocket-rooms.constant';
+import {
+  type SocketRoomType,
+  getSocketRoom,
+} from './constants/websocket-rooms.constant';
 import { UserWebsocketGateway } from './gateways/user-websocket.gateway';
 import { AdminWebsocketGateway } from './gateways/admin-websocket.gateway';
 import { SocketEventDto } from './dtos/socket-event.dto';
@@ -17,7 +20,7 @@ export class WebsocketService {
     private readonly gateway: UserWebsocketGateway,
     @Inject(forwardRef(() => AdminWebsocketGateway))
     private readonly adminGateway: AdminWebsocketGateway,
-  ) { }
+  ) {}
 
   /**
    * 외부 모듈에서 연결 시 실행할 훅을 등록합니다.
@@ -29,8 +32,14 @@ export class WebsocketService {
   /**
    * 등록된 모든 훅을 실행합니다.
    */
-  async executeConnectHooks(client: Socket, userId: bigint, isAdmin: boolean): Promise<void> {
-    await Promise.all(this.hooks.map(hook => hook.onConnect(client, userId, isAdmin)));
+  async executeConnectHooks(
+    client: Socket,
+    userId: bigint,
+    isAdmin: boolean,
+  ): Promise<void> {
+    await Promise.all(
+      this.hooks.map((hook) => hook.onConnect(client, userId, isAdmin)),
+    );
   }
 
   /** 단일 이벤트 채널 이름 (프론트엔드는 이 이벤트 하나만 리슨) */
@@ -82,9 +91,15 @@ export class WebsocketService {
   /**
    * 사용자의 모든 소켓 세션을 특정 채팅방/고객응대 룸에 가입시킵니다.
    */
-  async joinChatRoom(userId: bigint, roomId: bigint, roomType: ChatRoomType): Promise<void> {
+  async joinChatRoom(
+    userId: bigint,
+    roomId: bigint,
+    roomType: ChatRoomType,
+  ): Promise<void> {
     const isSupport = roomType === ChatRoomType.SUPPORT;
-    const roomName = isSupport ? getSocketRoom.support(roomId) : getSocketRoom.chat(roomId);
+    const roomName = isSupport
+      ? getSocketRoom.support(roomId)
+      : getSocketRoom.chat(roomId);
 
     const userRoom = getSocketRoom.user(userId);
     await this.gateway.server.in(userRoom).socketsJoin(roomName);
@@ -93,9 +108,15 @@ export class WebsocketService {
   /**
    * 사용자의 모든 소켓 세션을 특정 채팅방/고객응대 룸에서 탈퇴시킵니다.
    */
-  async leaveChatRoom(userId: bigint, roomId: bigint, roomType: ChatRoomType): Promise<void> {
+  async leaveChatRoom(
+    userId: bigint,
+    roomId: bigint,
+    roomType: ChatRoomType,
+  ): Promise<void> {
     const isSupport = roomType === ChatRoomType.SUPPORT;
-    const roomName = isSupport ? getSocketRoom.support(roomId) : getSocketRoom.chat(roomId);
+    const roomName = isSupport
+      ? getSocketRoom.support(roomId)
+      : getSocketRoom.chat(roomId);
 
     const userRoom = getSocketRoom.user(userId);
     await this.gateway.server.in(userRoom).socketsLeave(roomName);

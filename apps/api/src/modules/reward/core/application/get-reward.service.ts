@@ -5,12 +5,12 @@ import { UserReward } from '../domain/reward.entity';
 
 @Injectable()
 export class GetRewardService {
-    constructor(
-        @Inject(REWARD_REPOSITORY)
-        private readonly rewardRepository: IRewardRepository,
-    ) { }
+  constructor(
+    @Inject(REWARD_REPOSITORY)
+    private readonly rewardRepository: IRewardRepository,
+  ) {}
 
-    async execute(id: bigint): Promise<UserReward | null> {
-        return this.rewardRepository.findById(id);
-    }
+  async execute(id: bigint): Promise<UserReward | null> {
+    return this.rewardRepository.findById(id);
+  }
 }

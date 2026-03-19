@@ -31,7 +31,7 @@ export class WalletController {
     private readonly getUserWalletService: GetUserWalletService,
     private readonly findWalletTransactionHistoryService: FindWalletTransactionHistoryService,
     private readonly sqidsService: SqidsService,
-  ) { }
+  ) {}
 
   /**
    * 지원하는 통화 목록 조회

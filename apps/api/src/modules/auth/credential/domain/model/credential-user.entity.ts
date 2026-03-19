@@ -1,4 +1,10 @@
-import { UserStatus, UserRoleType, Language, ExchangeCurrencyCode, RegistrationMethod } from '@prisma/client';
+import {
+  UserStatus,
+  UserRoleType,
+  Language,
+  ExchangeCurrencyCode,
+  RegistrationMethod,
+} from '@prisma/client';
 
 export class CredentialUser {
   private constructor(
@@ -18,7 +24,7 @@ export class CredentialUser {
     public readonly timezone: string | null,
     public readonly avatarUrl: string | null,
     public readonly registrationMethod: RegistrationMethod,
-  ) { }
+  ) {}
 
   static create(params: {
     id?: bigint;

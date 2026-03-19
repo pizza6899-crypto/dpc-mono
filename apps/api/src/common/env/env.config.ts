@@ -154,23 +154,23 @@ export const depositConfig = registerAs('deposit', () => ({
   cryptoDepositEnabled: process.env.CRYPTO_DEPOSIT_ENABLED === 'true',
   cryptoDepositAllowedCurrencies: process.env.CRYPTO_DEPOSIT_ALLOWED_CURRENCIES
     ? process.env.CRYPTO_DEPOSIT_ALLOWED_CURRENCIES.split(',').map((c) =>
-      c.trim().toUpperCase(),
-    )
+        c.trim().toUpperCase(),
+      )
     : [], // 기본값: 빈 배열 (모든 통화 허용) 또는 기본 암호화폐 목록
 
   bankTransferEnabled: process.env.BANK_TRANSFER_DEPOSIT_ENABLED === 'true',
   bankTransferAllowedCurrencies: process.env.BANK_TRANSFER_ALLOWED_CURRENCIES
     ? process.env.BANK_TRANSFER_ALLOWED_CURRENCIES.split(',').map((c) =>
-      c.trim().toUpperCase(),
-    )
+        c.trim().toUpperCase(),
+      )
     : [],
 }));
 
 export const walletConfig = registerAs('wallet', () => ({
   allowedCurrencies: process.env.WALLET_ALLOWED_CURRENCIES
     ? process.env.WALLET_ALLOWED_CURRENCIES.split(',').map((c) =>
-      c.trim().toUpperCase(),
-    )
+        c.trim().toUpperCase(),
+      )
     : [], // 기본값
 }));
 

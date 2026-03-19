@@ -102,7 +102,10 @@ export class UserAuth {
    * 패스워드 기반 가입자인지 확인 (직접 가입 또는 관리자 생성)
    */
   isPasswordUser(): boolean {
-    return this.registrationMethod === 'CREDENTIAL' || this.registrationMethod === 'ADMIN';
+    return (
+      this.registrationMethod === 'CREDENTIAL' ||
+      this.registrationMethod === 'ADMIN'
+    );
   }
 
   /**

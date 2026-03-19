@@ -1,4 +1,8 @@
-import { QueueConfig, BULLMQ_RETENTION, BULLMQ_DEFAULT_TIMEZONE } from 'src/infrastructure/bullmq/bullmq.types';
+import {
+  QueueConfig,
+  BULLMQ_RETENTION,
+  BULLMQ_DEFAULT_TIMEZONE,
+} from 'src/infrastructure/bullmq/bullmq.types';
 
 export const CASINO_QUEUES = {
   GAME_POST_PROCESS: {

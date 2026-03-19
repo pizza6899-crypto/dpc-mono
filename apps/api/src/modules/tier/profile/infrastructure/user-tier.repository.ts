@@ -10,14 +10,16 @@ export class UserTierRepository implements UserTierRepositoryPort {
   constructor(
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
-  ) { }
+  ) {}
 
   async findByUserId(userId: bigint): Promise<UserTier | null> {
     const record = await this.tx.userTier.findUnique({
       where: { userId },
       include: {
         tier: { include: { translations: true, benefits: true } },
-        downgradeWarningTargetTier: { include: { translations: true, benefits: true } },
+        downgradeWarningTargetTier: {
+          include: { translations: true, benefits: true },
+        },
       },
     });
     return record ? UserTier.fromPersistence(record as any) : null;
@@ -59,7 +61,9 @@ export class UserTierRepository implements UserTierRepositoryPort {
       update: data,
       include: {
         tier: { include: { translations: true, benefits: true } },
-        downgradeWarningTargetTier: { include: { translations: true, benefits: true } },
+        downgradeWarningTargetTier: {
+          include: { translations: true, benefits: true },
+        },
       },
     });
 
@@ -102,7 +106,9 @@ export class UserTierRepository implements UserTierRepositoryPort {
       },
       include: {
         tier: { include: { translations: true, benefits: true } },
-        downgradeWarningTargetTier: { include: { translations: true, benefits: true } },
+        downgradeWarningTargetTier: {
+          include: { translations: true, benefits: true },
+        },
       },
     });
 
@@ -167,7 +173,9 @@ export class UserTierRepository implements UserTierRepositoryPort {
         where,
         include: {
           tier: { include: { translations: true, benefits: true } },
-          downgradeWarningTargetTier: { include: { translations: true, benefits: true } },
+          downgradeWarningTargetTier: {
+            include: { translations: true, benefits: true },
+          },
         },
         skip,
         take: limit,

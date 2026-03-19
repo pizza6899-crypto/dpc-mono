@@ -43,7 +43,7 @@ export interface UserTierListItemResult {
 
 @Injectable()
 export class ListUserTiersService {
-  constructor(private readonly userTierRepository: UserTierRepositoryPort) { }
+  constructor(private readonly userTierRepository: UserTierRepositoryPort) {}
 
   async execute(
     params: ListUserTiersParams,
@@ -82,7 +82,8 @@ export class ListUserTiersService {
             compRate: benefits.compRate.toString(),
             weeklyLossbackRate: benefits.weeklyLossbackRate.toString(),
             monthlyLossbackRate: benefits.monthlyLossbackRate.toString(),
-            dailyWithdrawalLimitUsd: benefits.dailyWithdrawalLimitUsd.toString(),
+            dailyWithdrawalLimitUsd:
+              benefits.dailyWithdrawalLimitUsd.toString(),
             weeklyWithdrawalLimitUsd:
               benefits.weeklyWithdrawalLimitUsd.toString(),
             monthlyWithdrawalLimitUsd:

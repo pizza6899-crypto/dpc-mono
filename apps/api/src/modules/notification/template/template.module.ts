@@ -19,9 +19,7 @@ import { TemplateAdminController } from './controllers/admin/template-admin.cont
 import { UpdateTemplateTranslationService } from './application/update-template-translation.service';
 
 @Module({
-  controllers: [
-    TemplateAdminController,
-  ],
+  controllers: [TemplateAdminController],
   providers: [
     // Mapper
     NotificationTemplateMapper,
@@ -48,4 +46,4 @@ import { UpdateTemplateTranslationService } from './application/update-template-
   ],
   exports: [RenderTemplateService, NOTIFICATION_TEMPLATE_REPOSITORY],
 })
-export class TemplateModule { }
+export class TemplateModule {}

@@ -6,59 +6,59 @@ import { DomainException } from 'src/common/exception/domain.exception';
  * 1. Reward 모듈 베이스 예외
  */
 export class RewardException extends DomainException {
-    constructor(
-        message: string,
-        errorCode: MessageCode,
-        httpStatus: HttpStatus = HttpStatus.BAD_REQUEST,
-    ) {
-        super(message, errorCode, httpStatus);
-        this.name = 'RewardException';
-    }
+  constructor(
+    message: string,
+    errorCode: MessageCode,
+    httpStatus: HttpStatus = HttpStatus.BAD_REQUEST,
+  ) {
+    super(message, errorCode, httpStatus);
+    this.name = 'RewardException';
+  }
 }
 
 /**
  * 2. 구체적인 도메인 예외들
  */
 export class RewardNotFoundException extends RewardException {
-    constructor() {
-        super(
-            'The requested reward does not exist or access is denied.',
-            MessageCode.REWARD_NOT_FOUND,
-            HttpStatus.NOT_FOUND,
-        );
-        this.name = 'RewardNotFoundException';
-    }
+  constructor() {
+    super(
+      'The requested reward does not exist or access is denied.',
+      MessageCode.REWARD_NOT_FOUND,
+      HttpStatus.NOT_FOUND,
+    );
+    this.name = 'RewardNotFoundException';
+  }
 }
 
 export class RewardCannotBeClaimedException extends RewardException {
-    constructor() {
-        super(
-            'Reward is not in a claimable state (already claimed or expired).', // 내부 ID 노출 없이 일반적 메시지
-            MessageCode.REWARD_NOT_CLAIMABLE,                                   // 프론트 다국어용 키
-            HttpStatus.BAD_REQUEST,
-        );
-        this.name = 'RewardCannotBeClaimedException';
-    }
+  constructor() {
+    super(
+      'Reward is not in a claimable state (already claimed or expired).', // 내부 ID 노출 없이 일반적 메시지
+      MessageCode.REWARD_NOT_CLAIMABLE, // 프론트 다국어용 키
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'RewardCannotBeClaimedException';
+  }
 }
 
 export class RewardOnlyPendingCanExpireException extends RewardException {
-    constructor() {
-        super(
-            'Only PENDING rewards can be marked as expired.',
-            MessageCode.REWARD_NOT_CLAIMABLE, // 적절히 매핑
-            HttpStatus.BAD_REQUEST,
-        );
-        this.name = 'RewardOnlyPendingCanExpireException';
-    }
+  constructor() {
+    super(
+      'Only PENDING rewards can be marked as expired.',
+      MessageCode.REWARD_NOT_CLAIMABLE, // 적절히 매핑
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'RewardOnlyPendingCanExpireException';
+  }
 }
 
 export class RewardOnlyPendingCanVoidException extends RewardException {
-    constructor() {
-        super(
-            'Only PENDING rewards can be voided.',
-            MessageCode.REWARD_NOT_CLAIMABLE,
-            HttpStatus.BAD_REQUEST,
-        );
-        this.name = 'RewardOnlyPendingCanVoidException';
-    }
+  constructor() {
+    super(
+      'Only PENDING rewards can be voided.',
+      MessageCode.REWARD_NOT_CLAIMABLE,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'RewardOnlyPendingCanVoidException';
+  }
 }

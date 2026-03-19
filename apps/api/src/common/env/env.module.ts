@@ -53,4 +53,4 @@ import {
   providers: [EnvService],
   exports: [EnvService, ConfigModule],
 })
-export class EnvModule { }
+export class EnvModule {}

@@ -1,7 +1,11 @@
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import { Queue } from 'bullmq';
 import { ALL_BULLMQ_QUEUES } from './bullmq.constants';
-import { QueueConfig, BULLMQ_DEFAULT_TIMEZONE, BULLMQ_PREFIX } from './bullmq.types';
+import {
+  QueueConfig,
+  BULLMQ_DEFAULT_TIMEZONE,
+  BULLMQ_PREFIX,
+} from './bullmq.types';
 import { EnvService } from 'src/common/env/env.service';
 import { ConcurrencyService, GlobalLockKey } from 'src/common/concurrency';
 import Redis from 'ioredis';
@@ -13,7 +17,7 @@ export class BullMqSchedulerService implements OnModuleInit {
   constructor(
     private readonly envService: EnvService,
     private readonly concurrencyService: ConcurrencyService,
-  ) { }
+  ) {}
 
   async onModuleInit() {
     // 분산 환경에서 한 대의 서버만 동기화 로직을 수행하도록 Global Lock 적용
@@ -29,13 +33,15 @@ export class BullMqSchedulerService implements OnModuleInit {
   private async syncSchedulers() {
     this.logger.log('🔄 Initializing BullMQ Schedulers (Repeatable Jobs)...');
 
-    const definedQueueNames = ALL_BULLMQ_QUEUES.map((q) => (q as QueueConfig).name);
+    const definedQueueNames = ALL_BULLMQ_QUEUES.map(
+      (q) => (q as QueueConfig).name,
+    );
 
     // 1. 유령 큐(코드에서 삭제되었으나 Redis에 남은 큐) 정리
     await this.purgeObsoleteQueues(definedQueueNames);
 
     // 2. 정의된 모든 큐에 대해 반복 작업(Repeatable Jobs) 동기화
-    // (예전에는 repeatableJobs가 있는 큐만 필터링했으나, 
+    // (예전에는 repeatableJobs가 있는 큐만 필터링했으나,
     // 기존에 있던 작업을 모두 삭제한 큐의 정리 작업을 위해 모든 큐를 순회합니다.)
     for (const queueConfig of ALL_BULLMQ_QUEUES) {
       const config = queueConfig as QueueConfig;
@@ -118,7 +124,9 @@ export class BullMqSchedulerService implements OnModuleInit {
   private async purgeObsoleteQueues(definedQueueNames: string[]) {
     // 안전장치: 정의된 큐 목록이 비어있으면 실행 중단 (실수로 모든 큐가 날아가는 것 방지)
     if (definedQueueNames.length === 0) {
-      this.logger.warn('⚠️ No BullMQ queues defined. Skipping purge to prevent accidental data loss.');
+      this.logger.warn(
+        '⚠️ No BullMQ queues defined. Skipping purge to prevent accidental data loss.',
+      );
       return;
     }
 
@@ -176,7 +184,10 @@ export class BullMqSchedulerService implements OnModuleInit {
             await queue.obliterate({ force: true });
             this.logger.log(`✅ Successfully obliterated queue: ${queueName}`);
           } catch (err) {
-            this.logger.error(`❌ Failed to obliterate queue ${queueName}`, err);
+            this.logger.error(
+              `❌ Failed to obliterate queue ${queueName}`,
+              err,
+            );
           } finally {
             await queue.close();
           }

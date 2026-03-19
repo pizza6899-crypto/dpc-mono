@@ -28,7 +28,7 @@ export class CreateTemplateService {
   constructor(
     @Inject(NOTIFICATION_TEMPLATE_REPOSITORY)
     private readonly repository: NotificationTemplateRepositoryPort,
-  ) { }
+  ) {}
 
   async execute(params: CreateTemplateParams): Promise<NotificationTemplate> {
     const existing = await this.repository.findByEventAndChannel(

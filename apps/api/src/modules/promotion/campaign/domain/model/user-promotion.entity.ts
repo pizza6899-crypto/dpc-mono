@@ -25,7 +25,7 @@ export class UserPromotion {
     public readonly updatedAt: Date,
     public readonly completedAt: Date | null,
     public readonly voidedAt: Date | null,
-  ) { }
+  ) {}
 
   static fromPersistence(data: {
     id: bigint;

@@ -1,12 +1,12 @@
 import {
-    Controller,
-    Post,
-    Body,
-    Param,
-    UseGuards,
-    HttpCode,
-    HttpStatus,
-    NotFoundException,
+  Controller,
+  Post,
+  Body,
+  Param,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
+  NotFoundException,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiExcludeController } from '@nestjs/swagger';
 import { UserRoleType } from '@prisma/client';
@@ -22,36 +22,40 @@ import { AdminTestTierPerformanceRequestDto } from './dto/request/admin-test-tie
 @ApiExcludeController(process.env.NODE_ENV === 'production')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class TierTestAdminController {
-    constructor(
-        private readonly envService: EnvService,
-        private readonly accumulateRollingService: AccumulateUserRollingService,
-        private readonly evaluateUserTierService: EvaluateUserTierService,
-        private readonly tierRepository: TierRepositoryPort,
-    ) { }
+  constructor(
+    private readonly envService: EnvService,
+    private readonly accumulateRollingService: AccumulateUserRollingService,
+    private readonly evaluateUserTierService: EvaluateUserTierService,
+    private readonly tierRepository: TierRepositoryPort,
+  ) {}
 
-    @Post('users/:userId/accumulate-rolling')
-    @HttpCode(HttpStatus.OK)
-    @ApiOperation({ summary: '[TEST] Accumulate rolling for user' })
-    async testAccumulateRolling(
-        @Param('userId') userId: string,
-        @Body() dto: AdminTestTierPerformanceRequestDto,
-    ): Promise<void> {
-        this.ensureNotProduction();
-        await this.accumulateRollingService.execute(BigInt(userId), dto.amountUsd);
-    }
+  @Post('users/:userId/accumulate-rolling')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: '[TEST] Accumulate rolling for user' })
+  async testAccumulateRolling(
+    @Param('userId') userId: string,
+    @Body() dto: AdminTestTierPerformanceRequestDto,
+  ): Promise<void> {
+    this.ensureNotProduction();
+    await this.accumulateRollingService.execute(BigInt(userId), dto.amountUsd);
+  }
 
-    @Post('users/:userId/evaluate')
-    @HttpCode(HttpStatus.OK)
-    @ApiOperation({ summary: '[TEST] Force evaluate maintenance/demotion for user' })
-    async testEvaluate(@Param('userId') userId: string): Promise<void> {
-        this.ensureNotProduction();
-        const allTiers = await this.tierRepository.findAll();
-        await this.evaluateUserTierService.evaluateUser(BigInt(userId), allTiers);
-    }
+  @Post('users/:userId/evaluate')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: '[TEST] Force evaluate maintenance/demotion for user',
+  })
+  async testEvaluate(@Param('userId') userId: string): Promise<void> {
+    this.ensureNotProduction();
+    const allTiers = await this.tierRepository.findAll();
+    await this.evaluateUserTierService.evaluateUser(BigInt(userId), allTiers);
+  }
 
-    private ensureNotProduction() {
-        if (this.envService.nodeEnv === 'production') {
-            throw new NotFoundException('Test endpoint is not available in production');
-        }
+  private ensureNotProduction() {
+    if (this.envService.nodeEnv === 'production') {
+      throw new NotFoundException(
+        'Test endpoint is not available in production',
+      );
     }
+  }
 }

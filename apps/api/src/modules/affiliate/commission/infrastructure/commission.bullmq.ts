@@ -1,4 +1,7 @@
-import { QueueConfig, BULLMQ_RETENTION } from 'src/infrastructure/bullmq/bullmq.types';
+import {
+  QueueConfig,
+  BULLMQ_RETENTION,
+} from 'src/infrastructure/bullmq/bullmq.types';
 
 export const AFFILIATE_QUEUES = {
   COMMISSION: {

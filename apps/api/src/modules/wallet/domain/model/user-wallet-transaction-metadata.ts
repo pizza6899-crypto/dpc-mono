@@ -118,7 +118,7 @@ export interface DepositMetadata extends BaseMetadata {
 /**
  * 기타 일반 메타데이터
  */
-export interface DefaultMetadata extends BaseMetadata { }
+export interface DefaultMetadata extends BaseMetadata {}
 
 /**
  * 모든 지갑 트랜잭션 메타데이터의 유니온 타입

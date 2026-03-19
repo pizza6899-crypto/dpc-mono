@@ -21,7 +21,7 @@ export class TierPublicController {
   constructor(
     private readonly tierService: TierService,
     private readonly sqidsService: SqidsService,
-  ) { }
+  ) {}
 
   @Get()
   @Public()

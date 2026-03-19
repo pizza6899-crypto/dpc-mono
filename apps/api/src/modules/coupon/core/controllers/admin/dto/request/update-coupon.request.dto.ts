@@ -10,23 +10,31 @@ import { Type } from 'class-transformer';
 import { CouponMetadata } from '../../../../domain/coupon.types';
 
 export class UpdateAdminCouponRequestDto {
-  @ApiPropertyOptional({ description: 'Coupon Metadata (i18n) / 쿠폰 메타데이터 (다국어)' })
+  @ApiPropertyOptional({
+    description: 'Coupon Metadata (i18n) / 쿠폰 메타데이터 (다국어)',
+  })
   @IsOptional()
   @IsObject()
   metadata?: CouponMetadata;
 
-  @ApiPropertyOptional({ description: 'Is Allowlist Only / 허용 리스트 전용 여부' })
+  @ApiPropertyOptional({
+    description: 'Is Allowlist Only / 허용 리스트 전용 여부',
+  })
   @IsOptional()
   @IsBoolean()
   isAllowlistOnly?: boolean;
 
-  @ApiPropertyOptional({ description: 'Max Total Usage (0 = unlimited) / 전체 최대 사용 횟수' })
+  @ApiPropertyOptional({
+    description: 'Max Total Usage (0 = unlimited) / 전체 최대 사용 횟수',
+  })
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
   maxUsage?: number;
 
-  @ApiPropertyOptional({ description: 'Max Usage Per User / 유저당 최대 사용 횟수' })
+  @ApiPropertyOptional({
+    description: 'Max Usage Per User / 유저당 최대 사용 횟수',
+  })
   @IsOptional()
   @IsNumber()
   @Type(() => Number)

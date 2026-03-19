@@ -15,7 +15,10 @@ import { ExchangeCurrencyCode, RewardItemType } from '@prisma/client';
 import { CouponMetadata } from '../../../../domain/coupon.types';
 
 export class CouponRewardRequestDto {
-  @ApiProperty({ enum: RewardItemType, description: 'Reward Item Type / 보상 아이템 타입' })
+  @ApiProperty({
+    enum: RewardItemType,
+    description: 'Reward Item Type / 보상 아이템 타입',
+  })
   @IsEnum(RewardItemType)
   rewardType: RewardItemType;
 
@@ -27,12 +30,16 @@ export class CouponRewardRequestDto {
   @IsNumberString()
   amount: string;
 
-  @ApiPropertyOptional({ description: 'Wagering Multiplier / 롤링 배수 (String)' })
+  @ApiPropertyOptional({
+    description: 'Wagering Multiplier / 롤링 배수 (String)',
+  })
   @IsOptional()
   @IsNumberString()
   wageringMultiplier?: string;
 
-  @ApiPropertyOptional({ description: 'Max Cash Conversion / 최대 현금 전환액 (String)' })
+  @ApiPropertyOptional({
+    description: 'Max Cash Conversion / 최대 현금 전환액 (String)',
+  })
   @IsOptional()
   @IsNumberString()
   maxCashConversion?: string;
@@ -43,22 +50,34 @@ export class CreateAdminCouponRequestDto {
   @IsString()
   code: string;
 
-  @ApiProperty({ description: 'Coupon Metadata (i18n title/desc) / 쿠폰 메타데이터 (다국어 지칭 등)' })
+  @ApiProperty({
+    description:
+      'Coupon Metadata (i18n title/desc) / 쿠폰 메타데이터 (다국어 지칭 등)',
+  })
   @IsObject()
   metadata: CouponMetadata;
 
-  @ApiPropertyOptional({ description: 'Is Allowlist Only / 허용 리스트 전용 여부', default: false })
+  @ApiPropertyOptional({
+    description: 'Is Allowlist Only / 허용 리스트 전용 여부',
+    default: false,
+  })
   @IsOptional()
   @IsBoolean()
   isAllowlistOnly?: boolean;
 
-  @ApiPropertyOptional({ description: 'Max Total Usage (0 = unlimited) / 전체 최대 사용 횟수', default: 1 })
+  @ApiPropertyOptional({
+    description: 'Max Total Usage (0 = unlimited) / 전체 최대 사용 횟수',
+    default: 1,
+  })
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
   maxUsage?: number;
 
-  @ApiPropertyOptional({ description: 'Max Usage Per User / 유저당 최대 사용 횟수', default: 1 })
+  @ApiPropertyOptional({
+    description: 'Max Usage Per User / 유저당 최대 사용 횟수',
+    default: 1,
+  })
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
@@ -76,7 +95,10 @@ export class CreateAdminCouponRequestDto {
   @IsDate()
   expiresAt?: Date;
 
-  @ApiProperty({ type: [CouponRewardRequestDto], description: 'Rewards / 지급 보상 리스트' })
+  @ApiProperty({
+    type: [CouponRewardRequestDto],
+    description: 'Rewards / 지급 보상 리스트',
+  })
   @ValidateNested({ each: true })
   @Type(() => CouponRewardRequestDto)
   rewards: CouponRewardRequestDto[];

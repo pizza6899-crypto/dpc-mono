@@ -7,16 +7,20 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { UserConfigAdminController } from './controllers/admin/user-config-admin.controller';
 
 @Module({
-    imports: [ConcurrencyModule],
-    controllers: [UserConfigAdminController],
-    providers: [
-        GetUserConfigService,
-        UpdateUserConfigAdminService,
-        {
-            provide: USER_CONFIG_REPOSITORY,
-            useClass: UserConfigRepository,
-        },
-    ],
-    exports: [USER_CONFIG_REPOSITORY, GetUserConfigService, UpdateUserConfigAdminService],
+  imports: [ConcurrencyModule],
+  controllers: [UserConfigAdminController],
+  providers: [
+    GetUserConfigService,
+    UpdateUserConfigAdminService,
+    {
+      provide: USER_CONFIG_REPOSITORY,
+      useClass: UserConfigRepository,
+    },
+  ],
+  exports: [
+    USER_CONFIG_REPOSITORY,
+    GetUserConfigService,
+    UpdateUserConfigAdminService,
+  ],
 })
-export class UserConfigModule { }
+export class UserConfigModule {}

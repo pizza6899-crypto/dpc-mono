@@ -15,7 +15,11 @@ export class CouponException extends DomainException {
 
 export class CouponNotFoundException extends CouponException {
   constructor() {
-    super('Coupon not found', MessageCode.COUPON_NOT_FOUND, HttpStatus.NOT_FOUND);
+    super(
+      'Coupon not found',
+      MessageCode.COUPON_NOT_FOUND,
+      HttpStatus.NOT_FOUND,
+    );
     this.name = 'CouponNotFoundException';
   }
 }
@@ -57,14 +61,20 @@ export class CouponVoidedException extends CouponException {
 
 export class CouponUserUsageExceededException extends CouponException {
   constructor() {
-    super('User has exceeded the usage limit for this coupon', MessageCode.COUPON_USER_USAGE_EXCEEDED);
+    super(
+      'User has exceeded the usage limit for this coupon',
+      MessageCode.COUPON_USER_USAGE_EXCEEDED,
+    );
     this.name = 'CouponUserUsageExceededException';
   }
 }
 
 export class CouponAllowlistOnlyException extends CouponException {
   constructor() {
-    super('This coupon is restricted to specific users only', MessageCode.COUPON_ALLOWLIST_ONLY);
+    super(
+      'This coupon is restricted to specific users only',
+      MessageCode.COUPON_ALLOWLIST_ONLY,
+    );
     this.name = 'CouponAllowlistOnlyException';
   }
 }

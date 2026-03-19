@@ -91,4 +91,4 @@ import { TierEvaluatorModule } from '../tier/evaluator/tier-evaluator.module';
     GAME_TRANSACTION_REPOSITORY_TOKEN,
   ],
 })
-export class CasinoModule { }
+export class CasinoModule {}

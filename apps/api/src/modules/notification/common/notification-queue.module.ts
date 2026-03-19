@@ -14,4 +14,4 @@ import { NOTIFICATION_QUEUES } from '../infrastructure/notification.bullmq';
   ],
   exports: [BullModule],
 })
-export class NotificationQueueModule { }
+export class NotificationQueueModule {}

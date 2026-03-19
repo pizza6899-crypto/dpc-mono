@@ -53,7 +53,7 @@ export class UserDepositController {
     private readonly getMyDepositsService: GetMyDepositsService,
     private readonly cancelDepositService: CancelDepositService,
     private readonly sqidsService: SqidsService,
-  ) { }
+  ) {}
 
   // ============================================
   // 입금 관리

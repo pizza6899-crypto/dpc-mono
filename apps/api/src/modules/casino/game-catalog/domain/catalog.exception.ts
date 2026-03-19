@@ -24,11 +24,7 @@ export class CategoryNotFoundException extends CatalogException {
 
 export class GameNotFoundException extends CatalogException {
   constructor() {
-    super(
-      'Game not found',
-      MessageCode.GAME_NOT_FOUND,
-      HttpStatus.NOT_FOUND,
-    );
+    super('Game not found', MessageCode.GAME_NOT_FOUND, HttpStatus.NOT_FOUND);
   }
 }
 

@@ -1,4 +1,7 @@
-import { QueueConfig, BULLMQ_RETENTION } from 'src/infrastructure/bullmq/bullmq.types';
+import {
+  QueueConfig,
+  BULLMQ_RETENTION,
+} from 'src/infrastructure/bullmq/bullmq.types';
 
 export const TIER_EVALUATOR_QUEUES = {
   // 1. 심사 트리거 큐 (매시간 정기적으로 심사 시작)

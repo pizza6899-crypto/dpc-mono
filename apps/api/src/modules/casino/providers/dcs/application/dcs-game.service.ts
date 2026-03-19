@@ -28,7 +28,7 @@ export class DcsGameService {
     private readonly dcsApiService: DcsApiService,
     private readonly createCasinoGameSessionService: CreateCasinoGameSessionService,
     private readonly getTierBenefitsService: GetTierBenefitsService,
-  ) { }
+  ) {}
 
   async launchGame({
     user: authUser,

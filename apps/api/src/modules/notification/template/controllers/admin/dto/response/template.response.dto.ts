@@ -5,7 +5,10 @@ export class TemplateTranslationResponseDto {
   @ApiProperty({ description: 'Locale / 언어', example: 'en' })
   locale: string;
 
-  @ApiProperty({ description: 'Title template / 제목 템플릿', example: 'Welcome, {{name}}!' })
+  @ApiProperty({
+    description: 'Title template / 제목 템플릿',
+    example: 'Welcome, {{name}}!',
+  })
   titleTemplate: string;
 
   @ApiProperty({
@@ -27,7 +30,10 @@ export class TemplateResponseDto {
   @ApiProperty({ description: 'Template ID / 템플릿 ID', example: 'nt_123456' })
   id: string;
 
-  @ApiProperty({ description: 'Template name / 템플릿 이름', example: 'Welcome Email' })
+  @ApiProperty({
+    description: 'Template name / 템플릿 이름',
+    example: 'Welcome Email',
+  })
   name: string;
 
   @ApiProperty({
@@ -38,7 +44,10 @@ export class TemplateResponseDto {
   })
   description: string | null;
 
-  @ApiProperty({ description: 'Event name / 이벤트 이름', example: 'user.registered' })
+  @ApiProperty({
+    description: 'Event name / 이벤트 이름',
+    example: 'user.registered',
+  })
   event: string;
 
   @ApiProperty({
@@ -57,7 +66,10 @@ export class TemplateResponseDto {
   @ApiProperty({ type: [TemplateTranslationResponseDto] })
   translations: TemplateTranslationResponseDto[];
 
-  @ApiProperty({ description: 'Updated date / 업데이트 날짜', example: '2024-01-01T00:00:00Z' })
+  @ApiProperty({
+    description: 'Updated date / 업데이트 날짜',
+    example: '2024-01-01T00:00:00Z',
+  })
   updatedAt: string;
 }
 
@@ -65,7 +77,10 @@ export class TemplateListItemResponseDto {
   @ApiProperty({ description: 'Template ID / 템플릿 ID', example: 'nt_123456' })
   id: string;
 
-  @ApiProperty({ description: 'Template name / 템플릿 이름', example: 'Welcome Email' })
+  @ApiProperty({
+    description: 'Template name / 템플릿 이름',
+    example: 'Welcome Email',
+  })
   name: string;
 
   @ApiProperty({
@@ -76,7 +91,10 @@ export class TemplateListItemResponseDto {
   })
   description: string | null;
 
-  @ApiProperty({ description: 'Event name / 이벤트 이름', example: 'user.registered' })
+  @ApiProperty({
+    description: 'Event name / 이벤트 이름',
+    example: 'user.registered',
+  })
   event: string;
 
   @ApiProperty({
@@ -98,6 +116,9 @@ export class TemplateListItemResponseDto {
   @ApiProperty({ type: [TemplateTranslationResponseDto] })
   translations: TemplateTranslationResponseDto[];
 
-  @ApiProperty({ description: 'Updated date / 업데이트 날짜', example: '2024-01-01T00:00:00Z' })
+  @ApiProperty({
+    description: 'Updated date / 업데이트 날짜',
+    example: '2024-01-01T00:00:00Z',
+  })
   updatedAt: string;
 }

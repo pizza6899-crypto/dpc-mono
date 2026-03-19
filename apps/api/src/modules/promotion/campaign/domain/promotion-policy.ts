@@ -1,8 +1,6 @@
 // src/modules/promotion/campaign/domain/promotion-policy.ts
 import type { Prisma } from '@prisma/client';
-import {
-  PromotionTargetType,
-} from '@prisma/client';
+import { PromotionTargetType } from '@prisma/client';
 import type { Promotion } from './model/promotion.entity';
 import type { UserPromotion } from './model/user-promotion.entity';
 import type { PromotionCurrencyRule } from './model/promotion-currency-rule.entity';
@@ -50,9 +48,13 @@ export class PromotionPolicy {
     activeParticipations: UserPromotion[],
   ): void {
     // 1. 현재 진행 중인 동일 프로모션이 있는지 확인 (중복 참여 방지)
-    const isAlreadyParticipating = activeParticipations.some(up => up.promotionId === promotion.id);
+    const isAlreadyParticipating = activeParticipations.some(
+      (up) => up.promotionId === promotion.id,
+    );
     if (isAlreadyParticipating) {
-      throw new PromotionAlreadyUsedException('You are already participating in this promotion');
+      throw new PromotionAlreadyUsedException(
+        'You are already participating in this promotion',
+      );
     }
 
     // 2. 누적 참여 횟수(또는 주기별 참여 횟수) 제한 확인
@@ -60,10 +62,11 @@ export class PromotionPolicy {
       promotion.maxUsagePerUser !== null &&
       participationCountInPeriod >= promotion.maxUsagePerUser
     ) {
-      throw new PromotionAlreadyUsedException('You have reached the maximum usage limit for this promotion');
+      throw new PromotionAlreadyUsedException(
+        'You have reached the maximum usage limit for this promotion',
+      );
     }
   }
-
 
   /**
    * 입금/출금 기록 기반 타겟 자격 확인
@@ -76,22 +79,30 @@ export class PromotionPolicy {
     switch (promotion.targetType) {
       case PromotionTargetType.FIRST_DEPOSIT:
         if (depositCount > 0) {
-          throw new PromotionNotEligibleException('Only for your very first deposit');
+          throw new PromotionNotEligibleException(
+            'Only for your very first deposit',
+          );
         }
         break;
       case PromotionTargetType.SECOND_DEPOSIT:
         if (depositCount !== 1) {
-          throw new PromotionNotEligibleException('Only for your second deposit');
+          throw new PromotionNotEligibleException(
+            'Only for your second deposit',
+          );
         }
         break;
       case PromotionTargetType.THIRD_DEPOSIT:
         if (depositCount !== 2) {
-          throw new PromotionNotEligibleException('Only for your third deposit');
+          throw new PromotionNotEligibleException(
+            'Only for your third deposit',
+          );
         }
         break;
       case PromotionTargetType.BEFORE_FIRST_WITHDRAWAL:
         if (withdrawalCount > 0) {
-          throw new PromotionNotEligibleException('Only available before your first withdrawal');
+          throw new PromotionNotEligibleException(
+            'Only available before your first withdrawal',
+          );
         }
         break;
       case PromotionTargetType.RELOAD_DEPOSIT:
@@ -120,13 +131,16 @@ export class PromotionPolicy {
         promotion.applicableStartTime.getHours() * 60 +
         promotion.applicableStartTime.getMinutes();
       if (currentMinutes < startMinutes) {
-        throw new PromotionNotEligibleException('Not yet available at this hour');
+        throw new PromotionNotEligibleException(
+          'Not yet available at this hour',
+        );
       }
     }
 
     if (promotion.applicableEndTime !== null) {
       const endMinutes =
-        promotion.applicableEndTime.getHours() * 60 + promotion.applicableEndTime.getMinutes();
+        promotion.applicableEndTime.getHours() * 60 +
+        promotion.applicableEndTime.getMinutes();
       if (currentMinutes >= endMinutes) {
         throw new PromotionNotEligibleException('Expired for this hour');
       }
@@ -170,7 +184,11 @@ export class PromotionPolicy {
     this.validateTargetEligibility(promotion, depositCount, withdrawalCount);
 
     // 5. 유저별 참여 횟수 및 중복 참여 확인
-    this.validateUserParticipation(promotion, participationCountInPeriod, activeParticipations);
+    this.validateUserParticipation(
+      promotion,
+      participationCountInPeriod,
+      activeParticipations,
+    );
   }
 
   /**

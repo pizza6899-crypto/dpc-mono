@@ -43,4 +43,4 @@ import { SqidsModule } from 'src/common/sqids/sqids.module';
     NOTIFICATION_LOG_REPOSITORY,
   ],
 })
-export class InboxModule { }
+export class InboxModule {}

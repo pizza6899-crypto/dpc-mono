@@ -3,15 +3,12 @@ import { ChatRoomsModule } from '../rooms/chat-rooms.module';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 
 @Module({
-    imports: [
-        ChatRoomsModule, // Repository(ChatRoom, ChatMessage) 재사용을 위해 import
-        SnowflakeModule,
-    ],
-    controllers: [
-    ],
-    providers: [
-    ],
-    exports: [
-    ],
+  imports: [
+    ChatRoomsModule, // Repository(ChatRoom, ChatMessage) 재사용을 위해 import
+    SnowflakeModule,
+  ],
+  controllers: [],
+  providers: [],
+  exports: [],
 })
-export class ChatLoungeModule { }
+export class ChatLoungeModule {}

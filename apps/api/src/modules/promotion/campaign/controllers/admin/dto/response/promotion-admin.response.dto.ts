@@ -12,7 +12,10 @@ export class PromotionCurrencyRuleResponseDto {
   @ApiProperty({ description: 'Currency code / 통화 코드', example: 'USDT' })
   currency: string;
 
-  @ApiProperty({ description: 'Minimum deposit amount / 최소 입금 금액', example: '10.00' })
+  @ApiProperty({
+    description: 'Minimum deposit amount / 최소 입금 금액',
+    example: '10.00',
+  })
   minDepositAmount: string;
 
   @ApiPropertyOptional({
@@ -67,7 +70,10 @@ export class PromotionTranslationResponseDto {
   @ApiProperty({ description: 'Language code / 언어 코드', example: 'EN' })
   language: string;
 
-  @ApiProperty({ description: 'Promotion title / 프로모션 제목', example: 'Welcome Bonus' })
+  @ApiProperty({
+    description: 'Promotion title / 프로모션 제목',
+    example: 'Welcome Bonus',
+  })
   title: string;
 
   @ApiPropertyOptional({
@@ -103,7 +109,6 @@ export class PromotionAdminResponseDto {
     example: 'FIRST_DEPOSIT',
   })
   targetType: string;
-
 
   @ApiPropertyOptional({
     description: 'Bonus expiry minutes / 보너스 만료 분',

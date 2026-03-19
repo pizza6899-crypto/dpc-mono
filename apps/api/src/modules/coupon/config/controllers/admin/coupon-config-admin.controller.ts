@@ -31,7 +31,7 @@ export class CouponConfigAdminController {
   constructor(
     private readonly getCouponConfigService: GetCouponConfigService,
     private readonly updateCouponConfigService: UpdateCouponConfigService,
-  ) { }
+  ) {}
 
   /**
    * 전역 쿠폰 설정 조회
@@ -40,7 +40,8 @@ export class CouponConfigAdminController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Get Global Coupon Config / 쿠폰 시스템 전역 설정 조회',
-    description: 'Retrieves the global settings for the coupon system. / 쿠폰 시스템의 전역 설정을 조회합니다.',
+    description:
+      'Retrieves the global settings for the coupon system. / 쿠폰 시스템의 전역 설정을 조회합니다.',
   })
   @ApiStandardResponse(CouponConfigResponseDto, {
     status: 200,
@@ -58,7 +59,8 @@ export class CouponConfigAdminController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Update Global Coupon Config / 쿠폰 시스템 전역 설정 수정',
-    description: 'Updates the settings for the coupon system. This affects the overall coupon behavior. / 쿠폰 시스템의 전역 설정을 변경합니다. 이는 데이터 전체 쿠폰 동작에 영향을 미칩니다.',
+    description:
+      'Updates the settings for the coupon system. This affects the overall coupon behavior. / 쿠폰 시스템의 전역 설정을 변경합니다. 이는 데이터 전체 쿠폰 동작에 영향을 미칩니다.',
   })
   @AuditLog({
     type: LogType.ACTIVITY,

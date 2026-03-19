@@ -15,13 +15,15 @@ export class CasinoAggregatorRepository implements CasinoAggregatorRepositoryPor
     private readonly tx: PrismaTransaction,
     private readonly mapper: CasinoAggregatorMapper,
     private readonly cacheService: CacheService,
-  ) { }
+  ) {}
 
   async findById(id: bigint): Promise<CasinoAggregator | null> {
     return this.cacheService.getOrSet(
       CACHE_CONFIG.CASINO.AGGREGATOR.BY_ID(id),
       async () => {
-        const result = await this.tx.casinoAggregator.findUnique({ where: { id } });
+        const result = await this.tx.casinoAggregator.findUnique({
+          where: { id },
+        });
         return result ? this.mapper.toDomain(result) : null;
       },
     );
@@ -80,7 +82,9 @@ export class CasinoAggregatorRepository implements CasinoAggregatorRepositoryPor
     // 캐시 무효화: ID와 Code 둘 다 삭제
     await Promise.all([
       this.cacheService.del(CACHE_CONFIG.CASINO.AGGREGATOR.BY_ID(domain.id!)),
-      this.cacheService.del(CACHE_CONFIG.CASINO.AGGREGATOR.BY_CODE(domain.code)),
+      this.cacheService.del(
+        CACHE_CONFIG.CASINO.AGGREGATOR.BY_CODE(domain.code),
+      ),
     ]);
 
     return domain;
