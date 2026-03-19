@@ -12,7 +12,6 @@ export class GetAdminCouponsRequestDto extends createPaginationQueryDto<
 }) {
   @ApiPropertyOptional({
     description: 'Coupon ID / 쿠폰 ID',
-    example: '123456789012345678',
   })
   @IsOptional()
   @IsString()
@@ -20,7 +19,6 @@ export class GetAdminCouponsRequestDto extends createPaginationQueryDto<
 
   @ApiPropertyOptional({
     description: 'Coupon Code (Exact) / 쿠폰 코드 검색',
-    example: 'GIFT-1000',
   })
   @IsOptional()
   @IsString()
