@@ -6,11 +6,14 @@ export class UserCoupon {
     public readonly usedAt: Date,
   ) { }
 
+  /**
+   * 새로운 쿠폰 사용 이력 생성
+   */
   static create(params: {
-    id: bigint; // Snowflake ID (반드시 외부에서 생성 후 주입)
+    id: bigint; // Snowflake ID
     couponId: bigint;
     userId: bigint;
-    usedAt: Date; // 파티셔닝 정합성을 위해 Snowflake 생성 시점 일자 필수 권장
+    usedAt: Date;
   }): UserCoupon {
     return new UserCoupon(
       params.id,
@@ -20,26 +23,20 @@ export class UserCoupon {
     );
   }
 
-  static fromPersistence(data: {
+  /**
+   * DB 데이터로부터 도메인 객체 재구성
+   */
+  static reconstitute(params: {
     id: bigint;
     couponId: bigint;
     userId: bigint;
     usedAt: Date;
   }): UserCoupon {
     return new UserCoupon(
-      data.id,
-      data.couponId,
-      data.userId,
-      data.usedAt,
+      params.id,
+      params.couponId,
+      params.userId,
+      params.usedAt,
     );
-  }
-
-  toPersistence() {
-    return {
-      id: this.id,
-      couponId: this.couponId,
-      userId: this.userId,
-      usedAt: this.usedAt,
-    };
   }
 }

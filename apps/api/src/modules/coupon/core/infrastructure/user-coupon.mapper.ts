@@ -3,7 +3,7 @@ import { UserCoupon } from '../domain/user-coupon.entity';
 
 export class UserCouponMapper {
   static toDomain(prismaUserCoupon: PrismaUserCoupon): UserCoupon {
-    return UserCoupon.fromPersistence({
+    return UserCoupon.reconstitute({
       id: prismaUserCoupon.id,
       couponId: prismaUserCoupon.couponId,
       userId: prismaUserCoupon.userId,
