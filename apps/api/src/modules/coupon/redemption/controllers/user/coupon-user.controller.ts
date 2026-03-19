@@ -14,19 +14,19 @@ import { ApplyCouponService } from '../../application/apply-coupon.service';
 import { ApplyCouponRequestDto } from './dto/request/apply-coupon.request.dto';
 import { ApplyCouponResponseDto } from './dto/response/apply-coupon.response.dto';
 
-@ApiTags('Coupon')
+@ApiTags('User Coupon')
 @Controller('coupons')
 @RequireRoles(UserRoleType.USER)
 @ApiStandardErrors()
 export class CouponUserController {
-  constructor(private readonly applyCouponService: ApplyCouponService) {}
+  constructor(private readonly applyCouponService: ApplyCouponService) { }
 
   @Post('apply')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Apply coupon code / 쿠폰 코드 적용',
     description:
-      'Validates and applies a coupon code to the current user. / 현재 유저가 입력한 쿠폰 코드의 유효성을 검사하고 보상을 지급합니다.',
+      'Validates the entered coupon code and provides rewards (e.g., bonus money). / 사용자가 입력한 쿠폰 코드의 유효성을 검증하고 보상(보너스 머니 등)을 지급합니다.',
   })
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -49,8 +49,6 @@ export class CouponUserController {
     const props = coupon.toProps();
 
     return {
-      code: props.code,
-      metadata: props.metadata,
       rewards: props.rewards.map((r) => ({
         rewardType: r.rewardType,
         currency: r.currency,
@@ -58,7 +56,6 @@ export class CouponUserController {
         wageringMultiplier: r.wageringMultiplier?.toString() ?? null,
         maxCashConversion: r.maxCashConversion?.toString() ?? null,
       })),
-      message: 'Coupon successfully applied',
     };
   }
 }

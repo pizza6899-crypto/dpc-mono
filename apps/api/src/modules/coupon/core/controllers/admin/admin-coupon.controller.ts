@@ -65,7 +65,7 @@ export class AdminCouponController {
     private readonly addCouponAllowlistService: AddCouponAllowlistService,
     private readonly removeCouponAllowlistService: RemoveCouponAllowlistService,
     private readonly clearCouponAllowlistService: ClearCouponAllowlistService,
-  ) {}
+  ) { }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
