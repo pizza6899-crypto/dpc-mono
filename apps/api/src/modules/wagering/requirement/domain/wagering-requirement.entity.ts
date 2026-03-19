@@ -247,6 +247,24 @@ export class WageringRequirement {
     this._updatedAt = new Date();
   }
 
+  /**
+   * 특정 게임/카테고리에 대해 이 웨이저링(보너스)이 유효한지 확인합니다.
+   * 현재는 모두 true를 반환하며, 향후 appliedConfig의 필터 설정을 기반으로 로직을 확장할 수 있습니다.
+   */
+  public isValidForGame(params: {
+    providerId?: string;
+    category?: string;
+    gameId?: string;
+  }): boolean {
+    // 1. 일시정지 상태면 사용 불가능
+    if (this._isPaused) return false;
+
+    // 2. [추후 구현] appliedConfig에 정의된 허용/차단 목록 체크
+    // 예: if (this.appliedConfig.snapshot?.excludedCategories?.includes(params.category)) return false;
+
+    return true;
+  }
+
   pause(): void {
     this._isPaused = true;
     this._updatedAt = new Date();
