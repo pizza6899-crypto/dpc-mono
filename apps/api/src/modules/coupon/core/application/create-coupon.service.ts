@@ -1,9 +1,10 @@
 import { Transactional } from '@nestjs-cls/transactional';
-import { Inject, Injectable, ConflictException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { COUPON_REPOSITORY_TOKEN } from '../ports/coupon.repository.token';
 import type { CouponRepositoryPort } from '../ports/coupon.repository.port';
 import { Coupon, CouponRewardProps } from '../domain/coupon.entity';
 import { CouponMetadata } from '../domain/coupon.types';
+import { CouponAlreadyExistsException } from '../domain/coupon.exception';
 
 export interface CreateCouponCommand {
   code: string;
@@ -29,9 +30,7 @@ export class CreateCouponService {
     // 1. 중복 코드 확인
     const existing = await this.repository.findByCode(command.code);
     if (existing) {
-      throw new ConflictException(
-        `Coupon code already exists: ${command.code}`,
-      );
+      throw new CouponAlreadyExistsException(command.code);
     }
 
     // 2. 엔티티 생성

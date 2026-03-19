@@ -85,3 +85,14 @@ export class CouponAlreadyUsedException extends CouponException {
     this.name = 'CouponAlreadyUsedException';
   }
 }
+
+export class CouponAlreadyExistsException extends CouponException {
+  constructor(code: string) {
+    super(
+      `Coupon code already exists: ${code}`,
+      MessageCode.COUPON_ALREADY_EXISTS,
+      HttpStatus.CONFLICT,
+    );
+    this.name = 'CouponAlreadyExistsException';
+  }
+}
