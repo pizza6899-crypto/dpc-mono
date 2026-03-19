@@ -43,8 +43,9 @@ export class CouponUserController {
     @Body() dto: ApplyCouponRequestDto,
   ): Promise<ApplyCouponResponseDto> {
     const coupon = await this.applyCouponService.execute(
-      BigInt(user.id),
+      user.id,
       dto.code,
+      user.primaryCurrency,
     );
     const props = coupon.toProps();
 

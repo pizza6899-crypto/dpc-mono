@@ -86,6 +86,16 @@ export class CouponAlreadyUsedException extends CouponException {
   }
 }
 
+export class CouponCurrencyMismatchException extends CouponException {
+  constructor() {
+    super(
+      'No rewards match your primary currency',
+      MessageCode.COUPON_CURRENCY_MISMATCH,
+    );
+    this.name = 'CouponCurrencyMismatchException';
+  }
+}
+
 export class CouponAlreadyExistsException extends CouponException {
   constructor(code: string) {
     super(
