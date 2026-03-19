@@ -223,7 +223,7 @@ export class Coupon {
 
     // 3. 유저당 사용 횟수 체크
     if (userUsageCount >= this.props.maxUsagePerUser) {
-      throw new CouponUserUsageExceededException();
+      throw new CouponUserUsageExceededException(this.props.maxUsagePerUser);
     }
 
     // 4. 허용 리스트 체크

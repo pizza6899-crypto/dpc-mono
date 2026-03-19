@@ -60,11 +60,11 @@ export class CouponVoidedException extends CouponException {
 }
 
 export class CouponUserUsageExceededException extends CouponException {
-  constructor() {
-    super(
-      'User has exceeded the usage limit for this coupon',
-      MessageCode.COUPON_USER_USAGE_EXCEEDED,
-    );
+  constructor(limit?: number) {
+    const message = limit
+      ? `User has exceeded the usage limit for this coupon (Max: ${limit})`
+      : 'User has exceeded the usage limit for this coupon';
+    super(message, MessageCode.COUPON_USER_USAGE_EXCEEDED);
     this.name = 'CouponUserUsageExceededException';
   }
 }

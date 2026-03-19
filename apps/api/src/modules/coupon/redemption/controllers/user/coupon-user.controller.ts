@@ -50,13 +50,15 @@ export class CouponUserController {
     const props = coupon.toProps();
 
     return {
-      rewards: props.rewards.map((r) => ({
-        rewardType: r.rewardType,
-        currency: r.currency,
-        amount: r.amount.toString(),
-        wageringMultiplier: r.wageringMultiplier?.toString() ?? null,
-        maxCashConversion: r.maxCashConversion?.toString() ?? null,
-      })),
+      rewards: props.rewards
+        .filter((r) => r.currency === user.primaryCurrency)
+        .map((r) => ({
+          rewardType: r.rewardType,
+          currency: r.currency,
+          amount: r.amount.toString(),
+          wageringMultiplier: r.wageringMultiplier?.toString() ?? null,
+          maxCashConversion: r.maxCashConversion?.toString() ?? null,
+        })),
     };
   }
 }
