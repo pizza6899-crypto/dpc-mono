@@ -7,4 +7,4 @@ import { CouponRedemptionModule } from './redemption/coupon-redemption.module';
   imports: [CouponConfigModule, CouponCoreModule, CouponRedemptionModule],
   exports: [CouponConfigModule, CouponCoreModule, CouponRedemptionModule],
 })
-export class CouponModule {}
+export class CouponModule { }

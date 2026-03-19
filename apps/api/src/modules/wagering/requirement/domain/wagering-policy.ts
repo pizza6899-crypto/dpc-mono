@@ -1,5 +1,9 @@
-import type { Prisma, WageringSourceType } from '@prisma/client';
-import { WageringRequirementException } from './wagering-requirement.exception';
+import type { Prisma } from '@prisma/client';
+import {
+  InvalidBaseAmountException,
+  InvalidWageringMultiplierException,
+  WageringExceedsLimitException,
+} from './wagering-requirement.exception';
 
 export class WageringPolicy {
   /**
@@ -8,27 +12,25 @@ export class WageringPolicy {
    */
   validateCreation(params: {
     principalAmount: Prisma.Decimal;
+    bonusAmount: Prisma.Decimal;
     multiplier: Prisma.Decimal;
   }): void {
-    const { principalAmount, multiplier } = params;
+    const { principalAmount, bonusAmount, multiplier } = params;
 
-    // 1. 원금 검증: 0 이하는 허용하지 않음
-    if (principalAmount.lte(0)) {
-      throw new WageringRequirementException(
-        'Principal amount must be greater than zero.',
-      );
+    // 1. 기초 자산 검증: 원금 또는 보너스 중 하나는 반드시 존재해야 함 기초 자산이 존재하지 않으면 안됨
+    const totalBaseAmount = principalAmount.add(bonusAmount);
+    if (totalBaseAmount.lte(0)) {
+      throw new InvalidBaseAmountException();
     }
 
     // 2. 배수 검증: 마이너스 배수 불가
     if (multiplier.lessThan(0)) {
-      throw new WageringRequirementException('Multiplier cannot be negative.');
+      throw new InvalidWageringMultiplierException();
     }
 
     // 3. 최대 배수 제한 (시스템 안전 범위 - 예: 200배 초과 비정상 데이터로 간주)
     if (multiplier.greaterThan(200)) {
-      throw new WageringRequirementException(
-        'Wagering multiplier exceeds system limit (max 200x).',
-      );
+      throw new WageringExceedsLimitException(200);
     }
   }
 

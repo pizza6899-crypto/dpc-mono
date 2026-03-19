@@ -49,7 +49,7 @@ export class CreateWageringRequirementService {
     private readonly getConfigService: GetWageringConfigService,
     private readonly getPromotionConfigService: GetPromotionConfigService,
     private readonly dispatchLogService: DispatchLogService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(
@@ -85,7 +85,7 @@ export class CreateWageringRequirementService {
     }
 
     // 2. 비즈니스 정책 검증 (Domain Policy)
-    this.policy.validateCreation({ principalAmount, multiplier });
+    this.policy.validateCreation({ principalAmount, bonusAmount, multiplier });
 
     // 0. 글로벌 설정 조회
     const [config, promotionConfig] = await Promise.all([

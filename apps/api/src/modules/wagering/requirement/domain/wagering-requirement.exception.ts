@@ -45,3 +45,73 @@ export class WageringNotForfeitableException extends WageringRequirementExceptio
     this.name = 'WageringNotForfeitableException';
   }
 }
+
+export class InvalidBaseAmountException extends WageringRequirementException {
+  constructor() {
+    super(
+      'Base amount (Principal + Bonus) must be greater than zero.',
+      MessageCode.WAGERING_INVALID_BASE_AMOUNT,
+    );
+    this.name = 'InvalidBaseAmountException';
+  }
+}
+
+export class InvalidWageringMultiplierException extends WageringRequirementException {
+  constructor() {
+    super(
+      'Multiplier cannot be negative.',
+      MessageCode.WAGERING_INVALID_MULTIPLIER,
+    );
+    this.name = 'InvalidWageringMultiplierException';
+  }
+}
+
+export class WageringExceedsLimitException extends WageringRequirementException {
+  constructor(max: number) {
+    super(
+      `Wagering multiplier exceeds system limit (max ${max}x).`,
+      MessageCode.WAGERING_EXCEEDS_LIMIT,
+    );
+    this.name = 'WageringExceedsLimitException';
+  }
+}
+
+export class AlreadyCompletedWageringException extends WageringRequirementException {
+  constructor() {
+    super(
+      'The wagering requirement is already completed.',
+      MessageCode.WAGERING_ALREADY_COMPLETED,
+    );
+    this.name = 'AlreadyCompletedWageringException';
+  }
+}
+
+export class AlreadyCancelledWageringException extends WageringRequirementException {
+  constructor() {
+    super(
+      'The wagering requirement is already cancelled.',
+      MessageCode.WAGERING_ALREADY_CANCELLED,
+    );
+    this.name = 'AlreadyCancelledWageringException';
+  }
+}
+
+export class WageringRequirementExpiredException extends WageringRequirementException {
+  constructor() {
+    super(
+      'The wagering requirement has expired.',
+      MessageCode.WAGERING_EXPIRED,
+    );
+    this.name = 'WageringRequirementExpiredException';
+  }
+}
+
+export class WageringRequirementPausedException extends WageringRequirementException {
+  constructor() {
+    super(
+      'The wagering requirement is currently paused.',
+      MessageCode.WAGERING_PAUSED,
+    );
+    this.name = 'WageringRequirementPausedException';
+  }
+}
