@@ -16,7 +16,7 @@ export interface CouponRepositoryPort {
   /**
    * 쿠폰 저장 (생성 또는 수정)
    */
-  save(coupon: Coupon): Promise<void>;
+  save(coupon: Coupon): Promise<Coupon>;
 
   /**
    * 특정 유저가 쿠폰 허용 리스트에 포함되어 있는지 확인

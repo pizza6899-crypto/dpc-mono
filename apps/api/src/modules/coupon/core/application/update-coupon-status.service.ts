@@ -26,8 +26,8 @@ export class UpdateCouponStatusService {
 
     coupon.updateStatus(status, adminId);
 
-    await this.repository.save(coupon);
+    const savedCoupon = await this.repository.save(coupon);
 
-    return coupon;
+    return savedCoupon;
   }
 }

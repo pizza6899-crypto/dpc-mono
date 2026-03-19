@@ -21,7 +21,7 @@ export class UpdateCouponService {
   constructor(
     @Inject(COUPON_REPOSITORY_TOKEN)
     private readonly repository: CouponRepositoryPort,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(id: bigint, command: UpdateCouponCommand): Promise<Coupon> {
@@ -42,8 +42,8 @@ export class UpdateCouponService {
       command.adminId,
     );
 
-    await this.repository.save(coupon);
+    const savedCoupon = await this.repository.save(coupon);
 
-    return coupon;
+    return savedCoupon;
   }
 }

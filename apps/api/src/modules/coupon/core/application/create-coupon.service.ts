@@ -23,7 +23,7 @@ export class CreateCouponService {
   constructor(
     @Inject(COUPON_REPOSITORY_TOKEN)
     private readonly repository: CouponRepositoryPort,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(command: CreateCouponCommand): Promise<Coupon> {
@@ -47,8 +47,8 @@ export class CreateCouponService {
     });
 
     // 3. 영속화
-    await this.repository.save(coupon);
+    const savedCoupon = await this.repository.save(coupon);
 
-    return coupon;
+    return savedCoupon;
   }
 }

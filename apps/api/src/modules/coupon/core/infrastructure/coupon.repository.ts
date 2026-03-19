@@ -12,7 +12,7 @@ export class CouponRepository implements CouponRepositoryPort {
   constructor(
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
-  ) {}
+  ) { }
 
   async findById(id: bigint): Promise<Coupon | null> {
     const prismaCoupon = await this.tx.coupon.findUnique({
@@ -36,23 +36,26 @@ export class CouponRepository implements CouponRepositoryPort {
     return CouponMapper.toDomain(prismaCoupon as PrismaCouponWithRewards);
   }
 
-  async save(coupon: Coupon): Promise<void> {
+  async save(coupon: Coupon): Promise<Coupon> {
     const data = CouponMapper.toPrisma(coupon);
     const rewards = CouponMapper.toPrismaRewards(coupon);
 
+    let prismaCoupon: PrismaCouponWithRewards;
+
     if (coupon.id === 0n) {
       // 신규 생성
-      await this.tx.coupon.create({
+      prismaCoupon = (await this.tx.coupon.create({
         data: {
           ...data,
           rewards: {
             create: rewards,
           },
         },
-      });
+        include: { rewards: true },
+      })) as PrismaCouponWithRewards;
     } else {
       // 기존 수정
-      await this.tx.coupon.update({
+      prismaCoupon = (await this.tx.coupon.update({
         where: { id: coupon.id },
         data: {
           ...data,
@@ -61,8 +64,11 @@ export class CouponRepository implements CouponRepositoryPort {
             create: rewards,
           },
         },
-      });
+        include: { rewards: true },
+      })) as PrismaCouponWithRewards;
     }
+
+    return CouponMapper.toDomain(prismaCoupon);
   }
 
   async isUserInAllowlist(couponId: bigint, userId: bigint): Promise<boolean> {

@@ -25,8 +25,8 @@ export class UpdateCouponRewardsService {
 
     coupon.updateRewards(rewards, adminId);
 
-    await this.repository.save(coupon);
+    const savedCoupon = await this.repository.save(coupon);
 
-    return coupon;
+    return savedCoupon;
   }
 }
