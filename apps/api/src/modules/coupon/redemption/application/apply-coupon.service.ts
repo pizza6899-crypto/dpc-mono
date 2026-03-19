@@ -8,7 +8,7 @@ import {
   USER_COUPON_REPOSITORY_TOKEN,
   type UserCouponRepositoryPort,
 } from '../ports/user-coupon.repository.port';
-import { GrantRewardService } from 'src/modules/reward/core/application/grant-reward.service';
+import { InstantGrantRewardService } from 'src/modules/reward/core/application/instant-grant-reward.service';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { RedisService } from 'src/infrastructure/redis/redis.service';
 import { GetCouponConfigService } from '../../config/application/get-coupon-config.service';
@@ -27,7 +27,7 @@ export class ApplyCouponService {
     private readonly couponRepository: CouponRepositoryPort,
     @Inject(USER_COUPON_REPOSITORY_TOKEN)
     private readonly userCouponRepository: UserCouponRepositoryPort,
-    private readonly grantRewardService: GrantRewardService,
+    private readonly instantGrantRewardService: InstantGrantRewardService,
     private readonly snowflakeService: SnowflakeService,
     private readonly redisService: RedisService,
     private readonly getCouponConfigService: GetCouponConfigService,
@@ -128,9 +128,9 @@ export class ApplyCouponService {
           usedAt: now,
         });
 
-        // 8. 보상 지급 (필터링된 보상만 지급)
+        // 8. 보상 즉시 지급 및 수령 (Reward Module - Instant Grant)
         for (const reward of matchedRewards) {
-          await this.grantRewardService.execute({
+          await this.instantGrantRewardService.execute({
             userId,
             sourceType: RewardSourceType.COUPON,
             sourceId: coupon.id,

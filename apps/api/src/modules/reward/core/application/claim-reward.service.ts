@@ -38,7 +38,7 @@ export class ClaimRewardService {
 
     private readonly updateUserBalanceService: UpdateUserBalanceService,
     private readonly createWageringRequirementService: CreateWageringRequirementService,
-  ) {}
+  ) { }
 
   /**
    * 유저가 대기(PENDING) 중인 보상을 받기(Claim) 합니다.
@@ -85,6 +85,10 @@ export class ClaimRewardService {
       case RewardSourceType.PROMOTION_BONUS:
         actionName = WalletActionName.APPROVE_DEPOSIT;
         wageringSourceType = WageringSourceType.PROMOTION_BONUS;
+        break;
+      case RewardSourceType.COUPON:
+        actionName = WalletActionName.APPLY_COUPON_PROMOTION;
+        wageringSourceType = WageringSourceType.COUPON;
         break;
       default:
         actionName = WalletActionName.GRANT_PROMOTION_BONUS;
