@@ -142,6 +142,15 @@ export class Coupon {
   }
 
   /**
+   * 보상 목록 갱신 (Admin 사용)
+   */
+  public updateRewards(rewards: CouponRewardProps[], adminId: bigint): void {
+    this.props.rewards = rewards;
+    this.props.updatedBy = adminId;
+    this.props.updatedAt = new Date();
+  }
+
+  /**
    * 시간에 따른 상태 갱신 (EXPIRED 처리 등)
    */
   public refreshStatus(now: Date = new Date()): void {
