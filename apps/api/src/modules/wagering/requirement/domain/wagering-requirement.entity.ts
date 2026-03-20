@@ -228,12 +228,51 @@ export class WageringRequirement {
   }
 
   /**
+   * 베팅 취소 시 롤링 금액이나 판수를 회수(차감)합니다.
+   */
+  reverseContribution(wagered: Prisma.Decimal, betAmount: Prisma.Decimal): void {
+    if (!this.isActive) return;
+
+    this._totalBetAmount = this._totalBetAmount.sub(betAmount);
+    if (this._totalBetAmount.isNeg()) {
+      this._totalBetAmount = new Prisma.Decimal(0);
+    }
+
+    if (this.targetType === 'AMOUNT') {
+      this._wageredAmount = this._wageredAmount.sub(wagered);
+      if (this._wageredAmount.isNeg()) {
+        this._wageredAmount = new Prisma.Decimal(0);
+      }
+    } else if (this.targetType === 'ROUND_COUNT') {
+      this._wageredCount -= 1;
+      if (this._wageredCount < 0) {
+        this._wageredCount = 0;
+      }
+    }
+
+    this._updatedAt = new Date();
+  }
+
+  /**
    * 베팅 활동을 기록하고 자금을 소모합니다. (롤링 기여 여부와 상관없이 호출 가능)
    */
   recordActivity(betAmount: Prisma.Decimal): void {
     if (!this.isActive) return;
     this._accumulatedBetAmount = this._accumulatedBetAmount.add(betAmount);
     this._currentBalance = this._currentBalance.sub(betAmount);
+    this._updatedAt = new Date();
+  }
+
+  /**
+   * 베팅 취소 시 차감되었던 자금을 다시 복원합니다.
+   */
+  reverseActivity(refundAmount: Prisma.Decimal): void {
+    if (!this.isActive) return;
+    this._accumulatedBetAmount = this._accumulatedBetAmount.sub(refundAmount);
+    if (this._accumulatedBetAmount.isNeg()) {
+      this._accumulatedBetAmount = new Prisma.Decimal(0);
+    }
+    this._currentBalance = this._currentBalance.add(refundAmount);
     this._updatedAt = new Date();
   }
 

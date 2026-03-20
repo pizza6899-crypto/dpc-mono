@@ -41,7 +41,7 @@ export class ProcessWageringWinService {
     @Inject(WAGERING_REQUIREMENT_REPOSITORY)
     private readonly requirementRepository: WageringRequirementRepositoryPort,
     private readonly settleService: SettleWageringRequirementService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(command: ProcessWageringWinCommand): Promise<ProcessWageringWinResult> {
@@ -74,7 +74,7 @@ export class ProcessWageringWinService {
     }
 
     const totalBet = originalCashBet.add(originalBonusBet);
-    
+
     // 원본 베팅이 아예 없는 경우는 전액 CASH로 처리 (프리 스핀 당첨 등 예외 케이스 처리용)
     let cashRatio = new Prisma.Decimal(1);
     let bonusRatio = new Prisma.Decimal(0);
@@ -91,7 +91,7 @@ export class ProcessWageringWinService {
     let activeRequirements: WageringRequirement[] = [];
     if (bonusDistribution.gt(0)) {
       activeRequirements = await this.requirementRepository.findActiveByUserIdAndCurrency(userId, currency);
-      
+
       // 만약 유저에게 활성(ACTIVE) 웨이저링 조건이 더 이상 없다면?
       // -> 베팅 이후 조건이 만료되거나 이미 롤링을 다 채워서 보너스가 현금화(COMPLETED)된 상태임.
       // -> 이 경우 뒤늦게 들어온 보너스 당첨금은 즉시 CASH로 전환해서 지급합니다.
@@ -148,14 +148,43 @@ export class ProcessWageringWinService {
       updatedWallet = result.wallet;
       newBonusTxId = result.txId;
 
-      // 보너스 엔티티의 가용 잔액(currentBalance) 복구
-      // 사용자가 여러 개의 보너스를 가지고 있는 시나리오에서는 우선순위가 높은 첫 번째 활성 보너스에 전액 묶는 것이 가장 안전한 복구 전략입니다.
-      if (activeRequirements.length > 0) {
-        const primaryReq = activeRequirements[0];
-        primaryReq.recordWin(bonusDistribution);
-        await this.requirementRepository.save(primaryReq);
+      // 보너스 엔티티의 가용 잔액(currentBalance) 복구 및 롤링 차감 (취소 시)
+      if (isCancel) {
+        // [CANCEL/REFUND] 1. 가장 우선순위가 높은 활성 보너스에 잔액(currentBalance) 복구
+        if (activeRequirements.length > 0) {
+          const primaryReq = activeRequirements[0];
+          primaryReq.reverseActivity(bonusDistribution);
+          await this.requirementRepository.save(primaryReq);
+        }
 
-        // ※ 참고: 취소(CANCEL) 등 특수한 경우, 롤링된 금액을 다시 깎고 싶다면 여기서 추가 로직 구현 가능.
+        // 2. 이 라운드에서 반영된 롤링 기여(wageredAmount) 정확히 회수
+        const logs = await this.tx.wageringContributionLog.findMany({
+          where: { gameRoundId: BigInt(referenceId) },
+        });
+
+        for (const log of logs) {
+          const matchingReq = await this.requirementRepository.findById(log.wageringRequirementId);
+          if (matchingReq && matchingReq.isActive) {
+            matchingReq.reverseContribution(log.wageredAmount, log.requestAmount);
+            await this.requirementRepository.save(matchingReq);
+          }
+        }
+      } else {
+        // [WIN] 승리 시에는 첫 번째 활성 보너스에 당첨금을 넣어주고 (currentBalance 증가) 확정 정산을 체크합니다.
+        if (activeRequirements.length > 0) {
+          const primaryReq = activeRequirements[0];
+          primaryReq.recordWin(bonusDistribution);
+          await this.requirementRepository.save(primaryReq);
+
+          if (primaryReq.isFulfilled) {
+            try {
+              await this.settleService.execute({ requirementId: primaryReq.id });
+              updatedWallet = await this.getUserWalletService.getWallet(userId, currency, false);
+            } catch (e) {
+              this.logger.error(`Failed to settle req ${primaryReq.id} on WIN`, e);
+            }
+          }
+        }
       }
     }
 
