@@ -13,7 +13,6 @@ import type { GameRoundRepositoryPort } from 'src/modules/game-round/ports/game-
 import { GAME_TRANSACTION_REPOSITORY_TOKEN } from 'src/modules/game-round/ports/game-transaction.repository.token';
 import type { GameTransactionRepositoryPort } from 'src/modules/game-round/ports/game-transaction.repository.port';
 import { GameTransaction } from 'src/modules/game-round/domain/game-transaction.entity';
-import { GameRound } from 'src/modules/game-round/domain/game-round.entity';
 import { ResolveGameRoundService } from 'src/modules/game-round/application/resolve-game-round.service';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { GetUserWalletService } from 'src/modules/wallet/application/get-user-wallet.service';
@@ -25,7 +24,6 @@ import { Queue } from 'bullmq';
 import { CasinoQueueNames } from '../infrastructure/queue/casino-queue.types';
 import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
-import { UserBalanceNotFoundException } from '../domain/casino.exception';
 
 export interface ProcessCasinoCreditCommand {
   session: CasinoGameSession;
