@@ -1,10 +1,14 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { GameProvider } from '@prisma/client';
+import { Transactional } from '@nestjs-cls/transactional';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { CasinoGameSession } from 'src/modules/casino-session/domain';
 import { GameRound } from '../domain/game-round.entity';
 import { GAME_ROUND_REPOSITORY_TOKEN } from '../ports/game-round.repository.token';
 import type { GameRoundRepositoryPort } from '../ports/game-round.repository.port';
+import {
+  InvalidGameRoundSessionException,
+} from '../domain/game-round.exception';
 
 export interface ResolveGameRoundCommand {
   session: CasinoGameSession;
@@ -22,11 +26,12 @@ export class ResolveGameRoundService {
     @Inject(GAME_ROUND_REPOSITORY_TOKEN)
     private readonly gameRoundRepository: GameRoundRepositoryPort,
     private readonly snowflakeService: SnowflakeService,
-  ) {}
+  ) { }
 
   /**
    * 외부 라운드 ID 기반으로 기존 라운드를 찾고, 없으면 새로 생성하여 영속화합니다.
    */
+  @Transactional()
   async execute(command: ResolveGameRoundCommand): Promise<GameRound> {
     const { session, externalRoundId, triggerTime, provider, isOrphaned } = command;
 
@@ -44,7 +49,7 @@ export class ResolveGameRoundService {
     // 2. 신규 라운드 생성
     const internalGameId = session.gameId;
     if (!internalGameId) {
-      throw new Error(`Casino Game Session has no valid gameId: ${session.id}`);
+      throw new InvalidGameRoundSessionException(session.id!);
     }
 
     const { id: newRoundId } = this.snowflakeService.generate(triggerTime);

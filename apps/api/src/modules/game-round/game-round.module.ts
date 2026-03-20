@@ -29,4 +29,4 @@ import { ResolveGameRoundService } from './application/resolve-game-round.servic
     ResolveGameRoundService,
   ],
 })
-export class GameRoundModule {}
+export class GameRoundModule { }

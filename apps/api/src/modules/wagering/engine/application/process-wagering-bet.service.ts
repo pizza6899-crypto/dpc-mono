@@ -20,7 +20,6 @@ import { SettleWageringRequirementService } from '../../requirement/application/
 import { GetUserWalletService } from 'src/modules/wallet/application/get-user-wallet.service';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
-import { type GameResultMeta } from 'src/modules/game-round/domain/game-round.entity';
 
 export interface ProcessWageringBetCommand {
   userId: bigint;

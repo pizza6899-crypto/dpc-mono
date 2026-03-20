@@ -43,3 +43,15 @@ export class GameRoundProcessingException extends GameRoundException {
     super(message, errorCode, HttpStatus.BAD_REQUEST);
   }
 }
+/**
+ * 게임 세션 정보가 부적절하여 라운드 처리가 불가능할 때 발생합니다.
+ */
+export class InvalidGameRoundSessionException extends GameRoundException {
+  constructor(sessionId: bigint | string) {
+    super(
+      `Casino Game Session (ID: ${sessionId}) has no valid gameId`,
+      MessageCode.VALIDATION_ERROR,
+      HttpStatus.BAD_REQUEST,
+    );
+  }
+}
