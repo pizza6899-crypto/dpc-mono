@@ -16,7 +16,7 @@ export class TierAuditRepository implements TierAuditRepositoryPort {
   constructor(
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
-  ) {}
+  ) { }
 
   // --- History ---
   async saveHistory(props: CreateTierHistoryProps): Promise<TierHistory> {

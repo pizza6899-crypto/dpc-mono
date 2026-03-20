@@ -58,10 +58,12 @@ export class SettleWageringRequirementService {
     const userId = requirement.userId;
     const currency = requirement.currency;
 
-    // 4. 유저 지갑 상태 조회
+    // 4. 유저 지갑 상태 조회 (정산 가능한 보너스 잔액 확인을 위해)
     const wallet = await this.getUserWalletService.getWallet(userId, currency);
 
-    const currentBonus = wallet.bonus ?? new Prisma.Decimal(0);
+    // [CRITICAL FIX] 전체 지갑 보너스가 아닌, 해당 웨이저링 조건이 소유한 "남은 보너스 잔액"을 기준으로 정산
+    const requirementBonus = requirement.currentBalance;
+    const currentBonus = Prisma.Decimal.min(requirementBonus, wallet.bonus ?? new Prisma.Decimal(0));
 
     if (currentBonus.isZero()) {
       this.logger.log(

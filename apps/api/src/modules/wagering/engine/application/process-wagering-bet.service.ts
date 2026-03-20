@@ -71,22 +71,21 @@ export class ProcessWageringBetService {
       gameContributionRate = 1.0,
     } = command;
 
-    if (betAmount.lte(0)) {
-      this.logger.warn(`[ProcessWageringBet] Zero or negative bet amount: userId=${userId}, betAmount=${betAmount}`);
-      const wallet = await this.getUserWalletService.getWallet(userId, currency, false);
-      return {
-        cashDeducted: new Prisma.Decimal(0),
-        bonusDeducted: new Prisma.Decimal(0),
-        updatedWallet: wallet,
-      };
-    }
-
     // 1. 유저 지갑 조회
     const userWallet = await this.getUserWalletService.getWallet(
       userId,
       currency,
       false,
     );
+
+    if (betAmount.lte(0)) {
+      this.logger.warn(`[ProcessWageringBet] Zero or negative bet amount: userId=${userId}, betAmount=${betAmount}`);
+      return {
+        cashDeducted: new Prisma.Decimal(0),
+        bonusDeducted: new Prisma.Decimal(0),
+        updatedWallet: userWallet,
+      };
+    }
 
     // 2. 차감 금액 계산 (믹스벳 정책 적용: Bonus First)
     const { cashDeduction, bonusDeduction } = this.policy.calculateBalanceSplit(
@@ -229,6 +228,8 @@ export class ProcessWageringBetService {
           if (requirement.isFulfilled) {
             try {
               await this.settleService.execute({ requirementId: requirement.id });
+              // [CRITICAL FIX] 정산이 발생하면 보너스가 현금으로 전환되어 지갑 잔액이 변경되므로, 최신 상태를 갱신합니다.
+              updatedWallet = await this.getUserWalletService.getWallet(userId, currency, false);
             } catch (error) {
               this.logger.error(`Failed to settle requirement ${requirement.id}`, error);
             }
