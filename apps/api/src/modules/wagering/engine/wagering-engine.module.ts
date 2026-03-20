@@ -9,9 +9,11 @@ import {
   ProcessWageringWinService,
   ProcessWageringCancelService,
 } from './application/index';
+import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 
 @Module({
-  imports: [WalletModule, RequirementModule, WageringConfigModule, AuditLogModule],
+  imports: [WalletModule, RequirementModule, WageringConfigModule, AuditLogModule, ConcurrencyModule],
+
   controllers: [],
   providers: [
     GetAvailableBalanceService,

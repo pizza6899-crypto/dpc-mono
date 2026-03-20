@@ -20,6 +20,8 @@ import { SettleWageringRequirementService } from '../../requirement/application/
 import { GetUserWalletService } from 'src/modules/wallet/application/get-user-wallet.service';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+
 
 export interface ProcessWageringBetCommand {
   userId: bigint;
@@ -55,7 +57,9 @@ export class ProcessWageringBetService {
     private readonly settleService: SettleWageringRequirementService,
     private readonly getUserWalletService: GetUserWalletService,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
+    private readonly advisoryLockService: AdvisoryLockService,
   ) { }
+
 
   @Transactional()
   async execute(command: ProcessWageringBetCommand): Promise<ProcessWageringBetResult> {
@@ -70,6 +74,14 @@ export class ProcessWageringBetService {
       metadata,
       gameContributionRate = 1.0,
     } = command;
+
+    // [CONCURRENCY FIX] Acquire user-level lock to prevent race conditions during wallet & wagering updates
+    await this.advisoryLockService.acquireLock(
+      LockNamespace.USER_WALLET,
+      userId.toString(),
+      { throwThrottleError: true },
+    );
+
 
     // 1. 유저 지갑 조회
     const userWallet = await this.getUserWalletService.getWallet(

@@ -1,10 +1,11 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Prisma, ExchangeCurrencyCode, UserWalletBalanceType, UserWalletTransactionType } from '@prisma/client';
-import { Transactional, InjectTransaction } from '@nestjs-cls/transactional';
-import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
+import { Transactional } from '@nestjs-cls/transactional';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { GetUserWalletService } from 'src/modules/wallet/application/get-user-wallet.service';
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+
 import { WAGERING_REQUIREMENT_REPOSITORY } from '../../requirement/ports';
 import type { WageringRequirementRepositoryPort } from '../../requirement/ports';
 import { SettleWageringRequirementService } from '../../requirement/application';
@@ -42,11 +43,21 @@ export class ProcessWageringWinService {
     @Inject(USER_WALLET_TRANSACTION_REPOSITORY)
     private readonly walletTxRepository: UserWalletTransactionRepositoryPort,
     private readonly settleService: SettleWageringRequirementService,
+    private readonly advisoryLockService: AdvisoryLockService,
   ) { }
+
 
   @Transactional()
   async execute(command: ProcessWageringWinCommand): Promise<ProcessWageringWinResult> {
     const { userId, currency, amount, usdExchangeRate, referenceId, actionName, metadata } = command;
+
+    // [CONCURRENCY FIX] Acquire user-level lock to prevent race conditions during wallet & wagering updates
+    await this.advisoryLockService.acquireLock(
+      LockNamespace.USER_WALLET,
+      userId.toString(),
+      { throwThrottleError: true },
+    );
+
 
     if (amount.lte(0)) {
       const wallet = await this.getUserWalletService.getWallet(userId, currency, false);
