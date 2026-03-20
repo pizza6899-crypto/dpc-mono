@@ -8,7 +8,6 @@ import {
 } from '@prisma/client';
 import { CasinoGameSession } from 'src/modules/casino-session/domain';
 import { Transactional } from '@nestjs-cls/transactional';
-import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { GAME_ROUND_REPOSITORY_TOKEN } from 'src/modules/game-round/ports/game-round.repository.token';
 import type { GameRoundRepositoryPort } from 'src/modules/game-round/ports/game-round.repository.port';
 import { GAME_TRANSACTION_REPOSITORY_TOKEN } from 'src/modules/game-round/ports/game-transaction.repository.token';
