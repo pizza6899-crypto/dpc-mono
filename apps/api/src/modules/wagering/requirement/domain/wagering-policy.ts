@@ -1,11 +1,49 @@
-import type { Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import {
   InvalidBaseAmountException,
   InvalidWageringMultiplierException,
   WageringExceedsLimitException,
 } from './wagering-requirement.exception';
+import { InsufficientBalanceException } from 'src/modules/wallet/domain';
+
+export interface BalanceSplitResult {
+  cashDeduction: Prisma.Decimal;
+  bonusDeduction: Prisma.Decimal;
+}
 
 export class WageringPolicy {
+  /**
+   * 베팅 시 지갑의 캐시/보너스 차감 비율을 결정합니다. (Bonus First Policy)
+   * 0원 베팅에 대해서는 호출 전 서비스 레벨에서 걸러내거나, 0원을 반환합니다.
+   */
+  calculateBalanceSplit(
+    betAmount: Prisma.Decimal,
+    userWallet: { cash: Prisma.Decimal; bonus: Prisma.Decimal },
+  ): BalanceSplitResult {
+    let cashDeduction = new Prisma.Decimal(0);
+    let bonusDeduction = new Prisma.Decimal(0);
+
+    // 1. Bonus 우선 차감
+    if (userWallet.bonus.gte(betAmount)) {
+      bonusDeduction = betAmount;
+    } else {
+      // Bonus가 부족할 경우 전액 소진
+      bonusDeduction = userWallet.bonus;
+      // 나머지는 Cash에서 차감
+      cashDeduction = betAmount.sub(userWallet.bonus);
+    }
+
+    // 2. 최종 잔액 검증 (전체 잔액 부족 시 체크)
+    if (cashDeduction.gt(0) && userWallet.cash.lt(cashDeduction)) {
+      throw new InsufficientBalanceException(
+        userWallet.cash.add(userWallet.bonus).toString(),
+        betAmount.toString(),
+      );
+    }
+
+    return { cashDeduction, bonusDeduction };
+  }
+
   /**
    * 웨이저링 생성 조건 검증
    * @throws WageringRequirementException

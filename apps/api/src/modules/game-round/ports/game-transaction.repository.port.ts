@@ -1,5 +1,5 @@
 import type { CasinoGameTransactionType } from '@prisma/client';
-import type { GameTransaction } from '../domain/model/game-transaction.entity';
+import type { GameTransaction } from '../domain/game-transaction.entity';
 
 export interface GameTransactionRepositoryPort {
   /**

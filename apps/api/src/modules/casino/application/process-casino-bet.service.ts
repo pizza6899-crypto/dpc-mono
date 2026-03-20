@@ -4,23 +4,20 @@ import {
   GameProvider,
   CasinoGameTransactionType,
   UserWalletBalanceType,
-  UserWalletTransactionType,
 } from '@prisma/client';
 import { CasinoGameSession } from 'src/modules/casino-session/domain';
 import { Transactional } from '@nestjs-cls/transactional';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
-import { GAME_ROUND_REPOSITORY_TOKEN } from '../ports/game-round.repository.token';
-import type { GameRoundRepositoryPort } from '../ports/game-round.repository.port';
-import { GAME_TRANSACTION_REPOSITORY_TOKEN } from '../ports/game-transaction.repository.token';
-import type { GameTransactionRepositoryPort } from '../ports/game-transaction.repository.port';
-import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
-import { GameRound } from '../domain/model/game-round.entity';
-import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
-import { GameTransaction } from '../domain/model/game-transaction.entity';
+import { GAME_ROUND_REPOSITORY_TOKEN } from 'src/modules/game-round/ports/game-round.repository.token';
+import type { GameRoundRepositoryPort } from 'src/modules/game-round/ports/game-round.repository.port';
+import { GAME_TRANSACTION_REPOSITORY_TOKEN } from 'src/modules/game-round/ports/game-transaction.repository.token';
+import type { GameTransactionRepositoryPort } from 'src/modules/game-round/ports/game-transaction.repository.port';
+import { GameTransaction } from 'src/modules/game-round/domain/game-transaction.entity';
+import { WalletActionName } from 'src/modules/wallet/domain';
+import { ResolveGameRoundService } from 'src/modules/game-round/application/resolve-game-round.service';
 import { CheckCasinoBalanceService } from './check-casino-balance.service';
-import { BettingPolicy } from '../domain/service/betting-policy.service';
-import { GetUserWalletService } from 'src/modules/wallet/application/get-user-wallet.service';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { ProcessWageringBetService } from 'src/modules/wagering/engine/application/process-wagering-bet.service';
 
 export interface ProcessCasinoBetCommand {
   session: CasinoGameSession;
@@ -48,11 +45,11 @@ export class ProcessCasinoBetService {
     private readonly gameRoundRepository: GameRoundRepositoryPort,
     @Inject(GAME_TRANSACTION_REPOSITORY_TOKEN)
     private readonly gameTransactionRepository: GameTransactionRepositoryPort,
-    private readonly updateUserBalanceService: UpdateUserBalanceService,
     private readonly checkCasinoBalanceService: CheckCasinoBalanceService,
-    private readonly getUserWalletService: GetUserWalletService,
     private readonly advisoryLockService: AdvisoryLockService,
-  ) {}
+    private readonly processWageringBetService: ProcessWageringBetService,
+    private readonly resolveGameRoundService: ResolveGameRoundService,
+  ) { }
 
   @Transactional()
   async execute(
@@ -70,7 +67,6 @@ export class ProcessCasinoBetService {
     } = command;
 
     // 1. Acquire Advisory Lock (Round Level)
-    // Serialize requests for the same round to prevent race conditions during round creation and idempotency checks.
     const lockKey = `${session.aggregatorType}:${roundId}`;
     await this.advisoryLockService.acquireLock(
       LockNamespace.GAME_ROUND,
@@ -81,57 +77,24 @@ export class ProcessCasinoBetService {
     );
 
     // 2. Resolve Game Round
-    // Find existing round within a 24-hour window or create a new one.
-    let round = await this.gameRoundRepository.findByExternalIdWithWindow(
-      roundId,
-      session.aggregatorType,
-      betTime,
-    );
-
-    const anchorTime = round ? round.startedAt : betTime;
-
-    if (!round) {
-      const internalGameId = session.gameId;
-      if (!internalGameId) {
-        throw new Error(
-          `Casino Game Session has no valid gameId: ${session.id}`,
-        );
-      }
-
-      // Use betTime for Snowflake ID generation timestamp
-      const { id: newRoundId } = this.snowflakeService.generate(betTime);
-      round = GameRound.create(
-        newRoundId,
-        session.userId,
-        session.id!,
-        internalGameId,
-        provider,
-        session.aggregatorType,
-        roundId,
-        session.walletCurrency,
-        session.gameCurrency,
-        session.exchangeRate,
-        session.usdExchangeRate,
-        session.compRate,
-        betTime,
-      );
-
-      // [FIX] 새로운 라운드인 경우, 트랜잭션 저장을 위해 라운드를 먼저 DB에 생성합니다 (외래키 제약 준수)
-      await this.gameRoundRepository.save(round);
-    }
+    const round = await this.resolveGameRoundService.execute({
+      session,
+      externalRoundId: roundId,
+      triggerTime: betTime,
+      provider,
+    });
 
     // 3. Idempotency Check
     const existingTx = await this.gameTransactionRepository.findByExternalId(
       transactionId,
       CasinoGameTransactionType.BET,
-      anchorTime,
+      round.startedAt,
     );
 
     if (existingTx) {
       this.logger.warn(
         `[ProcessCasinoBet] 중복된 베팅 요청 (Idempotency): ExternalTxId=${transactionId}`,
       );
-      // 재요청 시 현재 잔액 조회 후 반환
       const balanceResult =
         await this.checkCasinoBalanceService.execute(session);
       return {
@@ -139,112 +102,42 @@ export class ProcessCasinoBetService {
       };
     }
 
-    // 4. 차감 금액 계산 (믹스벳 정책 적용)
-    const userWallet = await this.getUserWalletService.getWallet(
-      session.userId,
-      session.walletCurrency,
-      false,
-    );
-
+    // 4. Wagering Engine을 통한 잔액 차감 및 롤링 처리
     const walletAmount = amount.div(session.exchangeRate);
-    const { cashDeduction, bonusDeduction, cashGameAmount, bonusGameAmount } =
-      BettingPolicy.calculateBalanceSplit(
-        walletAmount,
-        { cash: userWallet.cash, bonus: userWallet.bonus },
-        session.exchangeRate,
-      );
 
-    // 5. 유저 지갑 업데이트 및 트랜잭션 기록
-    let newCashTxId: bigint | undefined;
-    let newBonusTxId: bigint | undefined;
-    let updatedWallet = userWallet;
+    const wageringResult = await this.processWageringBetService.execute({
+      userId: session.userId,
+      currency: session.walletCurrency,
+      betAmount: walletAmount,
+      exchangeRate: session.exchangeRate,
+      usdExchangeRate: session.usdExchangeRate,
+      referenceId: round.id,
+      actionName: WalletActionName.CASINO_BET,
+      metadata: {
+        roundId: String(round.id),
+        gameId: String(gameId),
+        aggregatorTxId: transactionId,
+        description,
+        provider,
+      },
+      // gameContributionRate: TODO: 게임 카탈로그 정보에서 게임 기여율 연동 필요
+    });
 
-    // 5-1. 현금(Cash) 차감
-    if (cashDeduction.gt(0)) {
-      // USD 환산 금액 계산 (Session 스냅샷 환율 기준)
-      const cashDeductionUsd =
-        session.walletCurrency === 'USD'
-          ? cashDeduction
-          : session.usdExchangeRate && !session.usdExchangeRate.isZero()
-            ? cashDeduction.mul(session.usdExchangeRate)
-            : undefined;
+    const { cashDeducted, bonusDeducted, cashTxId, bonusTxId, updatedWallet } = wageringResult;
 
-      const result = await this.updateUserBalanceService.updateBalance(
-        {
-          userId: session.userId,
-          currency: session.walletCurrency,
-          amount: cashDeduction,
-          amountUsd: cashDeductionUsd, // [Inject] USD Amount
-          operation: UpdateOperation.SUBTRACT,
-          balanceType: UserWalletBalanceType.CASH,
-          transactionType: UserWalletTransactionType.BET,
-          referenceId: round.id,
-        },
-        {
-          actionName: WalletActionName.CASINO_BET,
-          metadata: {
-            roundId: String(round.id),
-            gameId: String(gameId),
-            aggregatorTxId: transactionId,
-            description,
-            provider,
-            splitType: 'CASH',
-          },
-        },
-      );
-      updatedWallet = result.wallet;
-      newCashTxId = result.txId;
-    }
-
-    // 5-2. 보너스(Bonus) 차감
-    if (bonusDeduction.gt(0)) {
-      const bonusDeductionUsd =
-        session.walletCurrency === 'USD'
-          ? bonusDeduction
-          : session.usdExchangeRate && !session.usdExchangeRate.isZero()
-            ? bonusDeduction.mul(session.usdExchangeRate)
-            : undefined;
-
-      const result = await this.updateUserBalanceService.updateBalance(
-        {
-          userId: session.userId,
-          currency: session.walletCurrency,
-          amount: bonusDeduction,
-          amountUsd: bonusDeductionUsd, // [Inject] USD Amount
-          operation: UpdateOperation.SUBTRACT,
-          balanceType: UserWalletBalanceType.BONUS,
-          transactionType: UserWalletTransactionType.BET,
-          referenceId: round.id,
-        },
-        {
-          actionName: WalletActionName.CASINO_BET,
-          metadata: {
-            roundId: String(round.id),
-            gameId: String(gameId),
-            aggregatorTxId: transactionId,
-            description,
-            provider,
-            splitType: 'BONUS',
-          },
-        },
-      );
-      updatedWallet = result.wallet;
-      newBonusTxId = result.txId;
-    }
-
-    // 6. 카지노 엔티티 영속화 (GameTransaction & 라운드 통계)
-    // 6-1. 현금 트랜잭션 저장
-    if (cashDeduction.gt(0) && newCashTxId) {
+    // 5. 카지노 엔티티 영속화 (GameTransaction & 라운드 통계)
+    // 5-1. 현금 트랜잭션 저장
+    if (cashDeducted.gt(0) && cashTxId) {
       const cashTx = GameTransaction.create(
-        newCashTxId,
+        cashTxId,
         round.id,
         round.startedAt,
         session.userId,
         CasinoGameTransactionType.BET,
         transactionId,
-        cashDeduction,
-        userWallet.cash,
-        cashGameAmount,
+        cashDeducted,
+        updatedWallet.cash.add(cashDeducted), // 차감 전 잔액 (updatedWallet은 차감 후임)
+        cashDeducted.mul(session.exchangeRate),
         UserWalletBalanceType.CASH,
         session.walletCurrency,
         betTime,
@@ -252,18 +145,18 @@ export class ProcessCasinoBetService {
       await this.gameTransactionRepository.save(cashTx);
     }
 
-    // 6-2. 보너스 트랜잭션 저장
-    if (bonusDeduction.gt(0) && newBonusTxId) {
+    // 5-2. 보너스 트랜잭션 저장
+    if (bonusDeducted.gt(0) && bonusTxId) {
       const bonusTx = GameTransaction.create(
-        newBonusTxId,
+        bonusTxId,
         round.id,
         round.startedAt,
         session.userId,
         CasinoGameTransactionType.BET,
         `${transactionId}_BONUS`,
-        bonusDeduction,
-        userWallet.bonus,
-        bonusGameAmount,
+        bonusDeducted,
+        updatedWallet.bonus.add(bonusDeducted), // 차감 전 잔액
+        bonusDeducted.mul(session.exchangeRate),
         UserWalletBalanceType.BONUS,
         session.walletCurrency,
         betTime,
@@ -271,23 +164,23 @@ export class ProcessCasinoBetService {
       await this.gameTransactionRepository.save(bonusTx);
     }
 
-    // 6-3. 라운드 통계 업데이트
-    const totalWalletAmount = cashDeduction.add(bonusDeduction);
+    // 5-3. 라운드 통계 업데이트
+    const totalWalletAmount = cashDeducted.add(bonusDeducted);
     await this.gameRoundRepository.increaseStats(round.id, round.startedAt, {
       betAmount: totalWalletAmount,
       gameBetAmount: amount,
     });
 
-    // 7. Round Completion 처리
+    // 6. Round Completion 처리
     if (command.isEndRound) {
       round.complete();
       await this.gameRoundRepository.save(round);
     }
 
-    // 8. Return Result (Total Available Balance in Game Currency)
-    const balanceInGameCurrency = updatedWallet.totalAvailableBalance.mul(
-      session.exchangeRate,
-    );
+    // 7. 결과 반환 (게임 통화 기준 잔액)
+    const balanceInGameCurrency = new Prisma.Decimal(updatedWallet.cash)
+      .add(new Prisma.Decimal(updatedWallet.bonus))
+      .mul(session.exchangeRate);
 
     return {
       balance: balanceInGameCurrency,

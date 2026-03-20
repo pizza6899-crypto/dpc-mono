@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CasinoGameTransaction as PrismaGameTransaction } from '@prisma/client';
-import { GameTransaction } from '../domain/model/game-transaction.entity';
+import { GameTransaction } from '../domain/game-transaction.entity';
 
 @Injectable()
 export class GameTransactionMapper {

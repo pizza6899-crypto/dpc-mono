@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CasinoGameRound as PrismaGameRound } from '@prisma/client';
-import { GameRound } from '../domain/model/game-round.entity';
+import { GameRound } from '../domain/game-round.entity';
 
 @Injectable()
 export class GameRoundMapper {

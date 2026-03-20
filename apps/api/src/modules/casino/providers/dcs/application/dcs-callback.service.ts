@@ -32,8 +32,8 @@ import { CasinoErrorCode } from 'src/modules/casino/constants/casino-error-codes
 import { InsufficientBalanceException } from 'src/modules/wallet/domain/wallet.exception';
 import { ProcessCasinoBetService } from 'src/modules/casino/application/process-casino-bet.service';
 import { ProcessCasinoCreditService } from 'src/modules/casino/application/process-casino-credit.service';
-import { GAME_ROUND_REPOSITORY_TOKEN } from 'src/modules/casino/ports/game-round.repository.token';
-import { type GameRoundRepositoryPort } from 'src/modules/casino/ports/game-round.repository.port';
+import { GAME_ROUND_REPOSITORY_TOKEN } from 'src/modules/game-round/ports/game-round.repository.token';
+import { type GameRoundRepositoryPort } from 'src/modules/game-round/ports/game-round.repository.port';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 import { LogType } from 'src/modules/audit-log/domain';
 

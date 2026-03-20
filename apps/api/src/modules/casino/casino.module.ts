@@ -19,12 +19,7 @@ import { CompModule } from '../comp/comp.module';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { LaunchGameService } from './application/launch-game.service';
 import { CasinoLaunchPolicy } from './domain/casino-launch.policy';
-import { GameRoundMapper } from './infrastructure/game-round.mapper';
-import { GameTransactionMapper } from './infrastructure/game-transaction.mapper';
-import { GameRoundRepository } from './infrastructure/game-round.repository';
-import { GameTransactionRepository } from './infrastructure/game-transaction.repository';
-import { GAME_ROUND_REPOSITORY_TOKEN } from './ports/game-round.repository.token';
-import { GAME_TRANSACTION_REPOSITORY_TOKEN } from './ports/game-transaction.repository.token';
+import { GameRoundModule } from '../game-round/game-round.module';
 import { CheckCasinoBalanceService } from './application/check-casino-balance.service';
 import { ProcessCasinoBetService } from './application/process-casino-bet.service';
 import { ProcessCasinoCreditService } from './application/process-casino-credit.service';
@@ -53,6 +48,7 @@ import { TierEvaluatorModule } from '../tier/evaluator/tier-evaluator.module';
     CompModule,
     SnowflakeModule,
     TierEvaluatorModule,
+    GameRoundModule,
   ],
   controllers: [
     CasinoSimulatorController, // [DEV] Simulator
@@ -62,16 +58,6 @@ import { TierEvaluatorModule } from '../tier/evaluator/tier-evaluator.module';
     GameResultFetchProcessor,
     LaunchGameService,
     CasinoLaunchPolicy,
-    GameRoundMapper,
-    GameTransactionMapper,
-    {
-      provide: GAME_ROUND_REPOSITORY_TOKEN,
-      useClass: GameRoundRepository,
-    },
-    {
-      provide: GAME_TRANSACTION_REPOSITORY_TOKEN,
-      useClass: GameTransactionRepository,
-    },
     CheckCasinoBalanceService,
     ProcessCasinoBetService,
     ProcessCasinoCreditService,
@@ -87,8 +73,7 @@ import { TierEvaluatorModule } from '../tier/evaluator/tier-evaluator.module';
     ProcessCasinoCreditService,
     UpdatePushedBetService,
     CasinoGamePostProcessService,
-    GAME_ROUND_REPOSITORY_TOKEN,
-    GAME_TRANSACTION_REPOSITORY_TOKEN,
+    GameRoundModule,
   ],
 })
-export class CasinoModule {}
+export class CasinoModule { }

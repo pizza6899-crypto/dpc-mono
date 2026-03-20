@@ -2,9 +2,11 @@ import { Injectable, Logger, Inject } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma, ExchangeCurrencyCode, ExpSourceType } from '@prisma/client'; // ExpSourceType 추가
 import { EarnCompService } from 'src/modules/comp/application/earn-comp.service';
-import { GAME_ROUND_REPOSITORY_TOKEN } from '../ports/game-round.repository.token';
-import type { GameRoundRepositoryPort } from '../ports/game-round.repository.port';
-import { GameRoundPostProcessContext } from '../ports/game-round.repository.port';
+import { GAME_ROUND_REPOSITORY_TOKEN } from 'src/modules/game-round/ports/game-round.repository.token';
+import type {
+  GameRoundRepositoryPort,
+  GameRoundPostProcessContext,
+} from 'src/modules/game-round/ports/game-round.repository.port';
 import { AccumulateUserRollingService } from 'src/modules/tier/evaluator/application/accumulate-user-rolling.service';
 import { ProcessWageringContributionService } from 'src/modules/wagering/requirement/application';
 

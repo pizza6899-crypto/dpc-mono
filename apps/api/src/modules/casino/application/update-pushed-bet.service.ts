@@ -10,11 +10,11 @@ import {
 } from '@prisma/client';
 import { CasinoErrorCode } from '../constants/casino-error-codes';
 import { CasinoGameRoundException } from '../domain/casino.exception';
-import { GameResultMeta } from '../domain/model/game-round.entity';
-import { GAME_ROUND_REPOSITORY_TOKEN } from '../ports/game-round.repository.token';
-import type { GameRoundRepositoryPort } from '../ports/game-round.repository.port';
-import { GAME_TRANSACTION_REPOSITORY_TOKEN } from '../ports/game-transaction.repository.token';
-import type { GameTransactionRepositoryPort } from '../ports/game-transaction.repository.port';
+import { type GameResultMeta } from 'src/modules/game-round/domain/game-round.entity';
+import { GAME_ROUND_REPOSITORY_TOKEN } from 'src/modules/game-round/ports/game-round.repository.token';
+import type { GameRoundRepositoryPort } from 'src/modules/game-round/ports/game-round.repository.port';
+import { GAME_TRANSACTION_REPOSITORY_TOKEN } from 'src/modules/game-round/ports/game-transaction.repository.token';
+import type { GameTransactionRepositoryPort } from 'src/modules/game-round/ports/game-transaction.repository.port';
 import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
 import { UpdateOperation } from '../../wallet/domain';
 import { CasinoRefundMetadata } from '../../wallet/domain/model/user-wallet-transaction-metadata';

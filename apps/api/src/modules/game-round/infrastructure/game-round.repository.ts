@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { GameRound, GameResultMeta } from '../domain/model/game-round.entity';
+import { GameRound, GameResultMeta } from '../domain/game-round.entity';
 import {
   GameRoundRepositoryPort,
   GameRoundPostProcessContext,
@@ -198,6 +198,7 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
       });
     }
   }
+
   async findByIdForPostProcess(
     id: bigint,
   ): Promise<GameRoundPostProcessContext | null> {

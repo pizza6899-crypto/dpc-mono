@@ -67,6 +67,7 @@ import { RewardCoreModule } from '../../reward/core/reward-core.module';
     ForfeitWageringRequirementService,
   ],
   exports: [
+    WageringPolicy,
     CheckWageringRequirementService,
     CreateWageringRequirementService,
     ProcessWageringContributionService,
@@ -80,4 +81,4 @@ import { RewardCoreModule } from '../../reward/core/reward-core.module';
     WAGERING_CONTRIBUTION_LOG_REPOSITORY,
   ],
 })
-export class RequirementModule {}
+export class RequirementModule { }

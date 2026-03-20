@@ -9,16 +9,17 @@ import {
 import { CasinoGameSession } from 'src/modules/casino-session/domain';
 import { Transactional } from '@nestjs-cls/transactional';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
-import { GAME_ROUND_REPOSITORY_TOKEN } from '../ports/game-round.repository.token';
-import type { GameRoundRepositoryPort } from '../ports/game-round.repository.port';
-import { GAME_TRANSACTION_REPOSITORY_TOKEN } from '../ports/game-transaction.repository.token';
-import type { GameTransactionRepositoryPort } from '../ports/game-transaction.repository.port';
+import { GAME_ROUND_REPOSITORY_TOKEN } from 'src/modules/game-round/ports/game-round.repository.token';
+import type { GameRoundRepositoryPort } from 'src/modules/game-round/ports/game-round.repository.port';
+import { GAME_TRANSACTION_REPOSITORY_TOKEN } from 'src/modules/game-round/ports/game-transaction.repository.token';
+import type { GameTransactionRepositoryPort } from 'src/modules/game-round/ports/game-transaction.repository.port';
+import { GameTransaction } from 'src/modules/game-round/domain/game-transaction.entity';
+import { GameRound } from 'src/modules/game-round/domain/game-round.entity';
+import { ResolveGameRoundService } from 'src/modules/game-round/application/resolve-game-round.service';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { GetUserWalletService } from 'src/modules/wallet/application/get-user-wallet.service';
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
-import { GameTransaction } from '../domain/model/game-transaction.entity';
 import { CheckCasinoBalanceService } from './check-casino-balance.service';
-import { GameRound } from '../domain/model/game-round.entity';
 import { CasinoWinMetadata } from 'src/modules/wallet/domain/model/user-wallet-transaction-metadata';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
@@ -52,7 +53,6 @@ export class ProcessCasinoCreditService {
   private readonly logger = new Logger(ProcessCasinoCreditService.name);
 
   constructor(
-    private readonly snowflakeService: SnowflakeService,
     @Inject(GAME_ROUND_REPOSITORY_TOKEN)
     private readonly gameRoundRepository: GameRoundRepositoryPort,
     @Inject(GAME_TRANSACTION_REPOSITORY_TOKEN)
@@ -64,8 +64,9 @@ export class ProcessCasinoCreditService {
     @InjectQueue(CasinoQueueNames.GAME_RESULT_FETCH)
     private readonly gameResultFetchQueue: Queue,
     private readonly advisoryLockService: AdvisoryLockService,
-    private readonly getUserWalletService: GetUserWalletService, // [Inject] Added
-  ) {}
+    private readonly getUserWalletService: GetUserWalletService,
+    private readonly resolveGameRoundService: ResolveGameRoundService,
+  ) { }
 
   @Transactional()
   async execute(
@@ -96,45 +97,13 @@ export class ProcessCasinoCreditService {
     );
 
     // 2. Resolve Game Round
-    let round = await this.gameRoundRepository.findByExternalIdWithWindow(
-      roundId,
-      session.aggregatorType,
-      winTime,
-    );
-
-    const anchorTime = round ? round.startedAt : winTime;
-
-    if (!round) {
-      this.logger.warn(
-        `WIN 요청을 위한 라운드가 존재하지 않음: ${roundId}. 새로운 라운드 생성 시도.`,
-      );
-
-      const internalGameId = session.gameId;
-      if (!internalGameId) {
-        throw new Error(
-          `Casino Game Session has no valid gameId: ${session.id}`,
-        );
-      }
-
-      const { id: newRoundId } = this.snowflakeService.generate(winTime);
-      round = GameRound.create(
-        newRoundId,
-        session.userId,
-        session.id!,
-        internalGameId,
-        provider,
-        session.aggregatorType,
-        roundId,
-        session.walletCurrency,
-        session.gameCurrency,
-        session.exchangeRate,
-        session.usdExchangeRate,
-        session.compRate,
-        winTime,
-        true, // isOrphaned
-      );
-      await this.gameRoundRepository.save(round);
-    }
+    const round = await this.resolveGameRoundService.execute({
+      session,
+      externalRoundId: roundId,
+      triggerTime: winTime,
+      provider,
+      isOrphaned: true, // WIN 시 라운드가 없으면 Orphaned로 간주
+    });
 
     // 3. Idempotency Check
     let txType: CasinoGameTransactionType = CasinoGameTransactionType.WIN;
@@ -144,7 +113,7 @@ export class ProcessCasinoCreditService {
     const existingTx = await this.gameTransactionRepository.findByExternalId(
       transactionId,
       txType,
-      anchorTime,
+      round.startedAt,
     );
 
     if (existingTx) {
@@ -162,7 +131,7 @@ export class ProcessCasinoCreditService {
       const originalBet = await this.gameTransactionRepository.findByExternalId(
         transactionId,
         CasinoGameTransactionType.BET,
-        anchorTime,
+        round.startedAt,
       );
 
       if (!originalBet) {

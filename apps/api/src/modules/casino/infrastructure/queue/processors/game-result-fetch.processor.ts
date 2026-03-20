@@ -7,8 +7,8 @@ import { WhitecliffFetchGameResultService } from '../../../providers/whitecliff/
 import { DcsFetchGameResultService } from '../../../providers/dcs/application/dcs-fetch-game-result.service';
 import { GameAggregatorType } from '@prisma/client';
 import { Inject } from '@nestjs/common';
-import { GAME_ROUND_REPOSITORY_TOKEN } from '../../../ports/game-round.repository.token';
-import type { GameRoundRepositoryPort } from '../../../ports/game-round.repository.port';
+import { GAME_ROUND_REPOSITORY_TOKEN } from 'src/modules/game-round/ports/game-round.repository.token';
+import type { GameRoundRepositoryPort } from 'src/modules/game-round/ports/game-round.repository.port';
 import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
 import {

@@ -33,7 +33,7 @@ Casino 모듈은 헥사고날 아키텍처 원칙을 따르며, 크게 다음과
 2. **Validation**: 서명(Signature) 검증, 세션 유효성 확인, 중복 요청 방지.
 3. **Processing**: `ProcessCasinoBetService` 또는 `ProcessCasinoCreditService` 호출.
     - **Wallet**: `WalletModule`을 통해 유저 잔액 차감(Debit) 또는 지급(Credit).
-    - **Persistence**: `GameTransaction` 및 `GameRound` 엔티티에 기록 저장.
+    - **Persistence**: `GameRoundModule`(`ResolveGameRoundService`)을 통해 게임 라운드 및 트랜잭션 기록 저장.
 4. **Response**: 공급사에 처리 결과 및 현재 잔액(Balance) 반환.
 5. **Async Post-Process**: 트랜잭션 성공 시 `CasinoQueueService`를 통해 후처리 작업 큐잉 (Fire-and-Forget).
 

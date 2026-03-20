@@ -1,7 +1,7 @@
 import type {
   GameRound,
   GameResultMeta,
-} from '../domain/model/game-round.entity';
+} from '../domain/game-round.entity';
 import type { GameAggregatorType, Prisma } from '@prisma/client';
 
 export interface GameRoundRepositoryPort {

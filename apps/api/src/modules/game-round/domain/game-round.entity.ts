@@ -5,8 +5,10 @@ import type {
 } from '@prisma/client';
 import { Prisma } from '@prisma/client';
 import { GameTransaction } from './game-transaction.entity';
-import { CasinoErrorCode } from '../../constants/casino-error-codes';
-import { CasinoGameRoundException } from '../casino.exception';
+import {
+  GameRoundAlreadyCompletedException,
+  InvalidGameRoundAmountException,
+} from './game-round.exception';
 
 // 게임 결과 메타데이터 타입 정의
 export type GameResultMetaUrl = { type: 'url'; value: string };
@@ -39,28 +41,28 @@ export class GameRound {
     public readonly currency: ExchangeCurrencyCode,
     public readonly gameCurrency: ExchangeCurrencyCode,
     public readonly exchangeRate: Prisma.Decimal,
-    public readonly usdExchangeRate: Prisma.Decimal, // 추가됨
-    public readonly compRate: Prisma.Decimal, // 추가됨
+    public readonly usdExchangeRate: Prisma.Decimal,
+    public readonly compRate: Prisma.Decimal,
 
     // 통계 (합계)
     public totalBetAmount: Prisma.Decimal,
     public totalWinAmount: Prisma.Decimal,
     public totalGameBetAmount: Prisma.Decimal,
     public totalGameWinAmount: Prisma.Decimal,
-    public totalRefundAmount: Prisma.Decimal, // 추가됨
-    public totalGameRefundAmount: Prisma.Decimal, // 추가됨
-    public totalJackpotAmount: Prisma.Decimal, // 추가됨
-    public totalGameJackpotAmount: Prisma.Decimal, // 추가됨
-    public jackpotContributionAmount: Prisma.Decimal, // 추가됨
-    public compEarned: Prisma.Decimal, // 추가됨
-    public resultMeta: GameResultMeta | null, // 추가됨 (GameResultMeta) (Strict Type)
+    public totalRefundAmount: Prisma.Decimal,
+    public totalGameRefundAmount: Prisma.Decimal,
+    public totalJackpotAmount: Prisma.Decimal,
+    public totalGameJackpotAmount: Prisma.Decimal,
+    public jackpotContributionAmount: Prisma.Decimal,
+    public compEarned: Prisma.Decimal,
+    public resultMeta: GameResultMeta | null,
 
     // 상태 및 시간
     public readonly startedAt: Date,
     public completedAt: Date | null,
     public isCompleted: boolean,
     public readonly isOrphaned: boolean,
-    public pushedBetCheckedAt: Date | null, // 추가됨
+    public pushedBetCheckedAt: Date | null,
 
     // 관계 (Optional)
     public readonly transactions?: GameTransaction[],
@@ -111,7 +113,7 @@ export class GameRound {
       false,
       isOrphaned,
       null, // pushedBetCheckedAt
-      undefined, // transactions (create 시점에는 트랜잭션 없음)
+      undefined,
     );
   }
 
@@ -144,7 +146,7 @@ export class GameRound {
       data.completedAt,
       data.isCompleted,
       data.isOrphaned || false,
-      data.pushedBetCheckedAt || null, // fromPersistence
+      data.pushedBetCheckedAt || null,
       data.transactions?.map((tx: any) => GameTransaction.fromPersistence(tx)),
     );
   }
@@ -161,14 +163,10 @@ export class GameRound {
     gameAmount: Prisma.Decimal | null,
   ): void {
     if (this.isCompleted) {
-      throw new CasinoGameRoundException(
-        CasinoErrorCode.ROUND_ALREADY_COMPLETED,
-        `Cannot add bet to a completed round: ${this.id}`,
-      );
+      throw new GameRoundAlreadyCompletedException(this.id);
     }
     if (amount.isNegative()) {
-      throw new CasinoGameRoundException(
-        CasinoErrorCode.INVALID_AMOUNT,
+      throw new InvalidGameRoundAmountException(
         `Bet amount cannot be negative: ${amount.toString()}`,
       );
     }
@@ -184,8 +182,7 @@ export class GameRound {
     gameAmount: Prisma.Decimal | null,
   ): void {
     if (amount.isNegative()) {
-      throw new CasinoGameRoundException(
-        CasinoErrorCode.INVALID_AMOUNT,
+      throw new InvalidGameRoundAmountException(
         `Win amount cannot be negative: ${amount.toString()}`,
       );
     }
@@ -201,8 +198,7 @@ export class GameRound {
     gameAmount: Prisma.Decimal | null,
   ): void {
     if (amount.isNegative()) {
-      throw new CasinoGameRoundException(
-        CasinoErrorCode.INVALID_AMOUNT,
+      throw new InvalidGameRoundAmountException(
         `Refund amount cannot be negative: ${amount.toString()}`,
       );
     }
@@ -217,8 +213,7 @@ export class GameRound {
     gameAmount: Prisma.Decimal | null,
   ): void {
     if (amount.isNegative()) {
-      throw new CasinoGameRoundException(
-        CasinoErrorCode.INVALID_AMOUNT,
+      throw new InvalidGameRoundAmountException(
         `Jackpot amount cannot be negative: ${amount.toString()}`,
       );
     }
@@ -230,8 +225,7 @@ export class GameRound {
 
   public addComp(amount: Prisma.Decimal): void {
     if (amount.isNegative()) {
-      throw new CasinoGameRoundException(
-        CasinoErrorCode.INVALID_AMOUNT,
+      throw new InvalidGameRoundAmountException(
         `Comp amount cannot be negative: ${amount.toString()}`,
       );
     }
@@ -240,8 +234,7 @@ export class GameRound {
 
   public addJackpotContribution(amount: Prisma.Decimal): void {
     if (amount.isNegative()) {
-      throw new CasinoGameRoundException(
-        CasinoErrorCode.INVALID_AMOUNT,
+      throw new InvalidGameRoundAmountException(
         `Jackpot contribution amount cannot be negative: ${amount.toString()}`,
       );
     }

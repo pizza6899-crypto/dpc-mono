@@ -1,9 +1,9 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
-import { type GameRoundRepositoryPort } from '../../../ports/game-round.repository.port';
-import { GAME_ROUND_REPOSITORY_TOKEN } from '../../../ports/game-round.repository.token';
+import { type GameRoundRepositoryPort } from 'src/modules/game-round/ports/game-round.repository.port';
+import { GAME_ROUND_REPOSITORY_TOKEN } from 'src/modules/game-round/ports/game-round.repository.token';
 import { WhitecliffApiService } from '../infrastructure/whitecliff-api.service';
 import { GameAggregatorType } from '@prisma/client';
-import { GameResultMeta } from '../../../domain/model/game-round.entity';
+import { type GameResultMeta } from 'src/modules/game-round/domain/game-round.entity';
 import { ClsService } from 'nestjs-cls';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class WhitecliffFetchGameResultService {
     private readonly gameRoundRepository: GameRoundRepositoryPort,
     private readonly whitecliffApiService: WhitecliffApiService,
     private readonly cls: ClsService,
-  ) {}
+  ) { }
 
   async execute(gameRoundId: bigint, startedAt: Date): Promise<void> {
     return this.cls.run(async () => {

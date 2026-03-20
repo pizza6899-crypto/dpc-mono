@@ -10,8 +10,8 @@ import {
 } from './dto/simulate-round.dto';
 import { CreateCasinoGameSessionService } from 'src/modules/casino-session/application/create-casino-game-session.service';
 import { UpdatePushedBetService } from '../application/update-pushed-bet.service';
-import { GAME_ROUND_REPOSITORY_TOKEN } from '../ports/game-round.repository.token';
-import type { GameRoundRepositoryPort } from '../ports/game-round.repository.port';
+import { GAME_ROUND_REPOSITORY_TOKEN } from 'src/modules/game-round/ports/game-round.repository.token';
+import type { GameRoundRepositoryPort } from 'src/modules/game-round/ports/game-round.repository.port';
 
 @Injectable()
 export class CasinoSimulatorService {

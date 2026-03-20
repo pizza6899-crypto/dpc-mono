@@ -1,14 +1,15 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
-import { type GameRoundRepositoryPort } from 'src/modules/casino/ports/game-round.repository.port';
-import { GAME_ROUND_REPOSITORY_TOKEN } from 'src/modules/casino/ports/game-round.repository.token';
+import { type GameRoundRepositoryPort } from 'src/modules/game-round/ports/game-round.repository.port';
+import { GAME_ROUND_REPOSITORY_TOKEN } from 'src/modules/game-round/ports/game-round.repository.token';
 import { DcsApiService } from '../infrastructure/dcs-api.service';
-import { GameAggregatorType, Prisma } from '@prisma/client';
-import { GameResultMeta } from 'src/modules/casino/domain/model/game-round.entity';
+import { GameAggregatorType } from '@prisma/client';
+import { type GameResultMeta } from 'src/modules/game-round/domain/game-round.entity';
 import { ClsService } from 'nestjs-cls';
 import { CASINO_GAME_SESSION_REPOSITORY } from 'src/modules/casino-session/ports/casino-game-session.repository.token';
 import { type CasinoGameSessionRepositoryPort } from 'src/modules/casino-session/ports/casino-game-session.repository.port';
 
 import { DcsResponseCode } from '../constants/dcs-response-codes';
+import { type GamingCurrencyCode } from 'src/utils/currency.util';
 
 @Injectable()
 export class DcsFetchGameResultService {
@@ -21,7 +22,7 @@ export class DcsFetchGameResultService {
     private readonly gameSessionRepository: CasinoGameSessionRepositoryPort,
     private readonly dcsApiService: DcsApiService,
     private readonly cls: ClsService,
-  ) {}
+  ) { }
 
   async execute(gameRoundId: bigint, startedAt: Date): Promise<void> {
     return this.cls.run(async () => {
@@ -64,10 +65,9 @@ export class DcsFetchGameResultService {
           return;
         }
 
-        // DCS API 호출 (getReplay)
         const result = await this.dcsApiService.getReplay({
           brand_uid: session.playerName,
-          gameCurrency: round.gameCurrency as any, // DcsApiService에서 GamingCurrencyCode 타입 캐스팅 필요
+          gameCurrency: round.gameCurrency as GamingCurrencyCode,
           provider: round.provider,
           round_id: aggregatorRoundId,
         });
@@ -100,14 +100,17 @@ export class DcsFetchGameResultService {
         }
 
         if (meta) {
-          // 직접 Repository의 updateResultMeta 호출하여 최적화
           await this.gameRoundRepository.updateResultMeta(
             round.id,
             round.startedAt,
             meta,
           );
           this.logger.log(
-            `Updated game result metadata for round ${gameRoundId}`,
+            `Successfully updated game result metadata for round: ${gameRoundId}`,
+          );
+        } else {
+          this.logger.debug(
+            `No meta generated for round: ${gameRoundId} (type: ${record_type})`,
           );
         }
       } catch (error) {
