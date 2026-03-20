@@ -8,7 +8,6 @@ import type {
   GameRoundPostProcessContext,
 } from 'src/modules/game-round/ports/game-round.repository.port';
 import { AccumulateUserRollingService } from 'src/modules/tier/evaluator/application/accumulate-user-rolling.service';
-import { ProcessWageringContributionService } from 'src/modules/wagering/requirement/application';
 
 interface ProcessingContext {
   betAmount: Prisma.Decimal;
@@ -24,10 +23,9 @@ export class CasinoGamePostProcessService {
   constructor(
     @Inject(GAME_ROUND_REPOSITORY_TOKEN)
     private readonly gameRoundRepository: GameRoundRepositoryPort,
-    private readonly wageringService: ProcessWageringContributionService,
     private readonly earnCompService: EarnCompService,
     private readonly accumulateUserRollingService: AccumulateUserRollingService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(gameRoundId: bigint) {
@@ -50,7 +48,6 @@ export class CasinoGamePostProcessService {
     }
 
     // 4. Processing Steps
-    await this.processWagering(gameRound, context);
     await this.processCompEarning(gameRound, context);
     await this.processTierRolling(gameRound, context);
 
@@ -101,18 +98,6 @@ export class CasinoGamePostProcessService {
     };
   }
 
-  private async processWagering(
-    gameRound: GameRoundPostProcessContext,
-    context: ProcessingContext,
-  ) {
-    await this.wageringService.execute({
-      userId: gameRound.userId,
-      currency: gameRound.currency as ExchangeCurrencyCode, // Type casting safe assertion
-      gameRoundId: gameRound.id,
-      betAmount: context.betAmount,
-      gameContributionRate: gameRound.gameContributionRate?.toNumber() ?? 1,
-    });
-  }
 
   private async processCompEarning(
     gameRound: GameRoundPostProcessContext,
