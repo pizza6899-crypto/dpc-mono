@@ -6,7 +6,7 @@ import { WageringRequirementMapper } from './infrastructure/wagering-requirement
 import {
   CheckWageringRequirementService,
   CreateWageringRequirementService,
-  ProcessWageringContributionService,
+
   CancelWageringRequirementService,
   FindWageringRequirementsService,
   SettleWageringRequirementService,
@@ -58,7 +58,7 @@ import { RewardCoreModule } from '../../reward/core/reward-core.module';
     // Application
     CheckWageringRequirementService,
     CreateWageringRequirementService,
-    ProcessWageringContributionService,
+
     CancelWageringRequirementService,
     FindWageringRequirementsService,
     SettleWageringRequirementService,
@@ -70,7 +70,7 @@ import { RewardCoreModule } from '../../reward/core/reward-core.module';
     WageringPolicy,
     CheckWageringRequirementService,
     CreateWageringRequirementService,
-    ProcessWageringContributionService,
+
     CancelWageringRequirementService,
     FindWageringRequirementsService,
     SettleWageringRequirementService,
