@@ -15,9 +15,9 @@ import { GAME_ROUND_REPOSITORY_TOKEN } from 'src/modules/game-round/ports/game-r
 import type { GameRoundRepositoryPort } from 'src/modules/game-round/ports/game-round.repository.port';
 import { GAME_TRANSACTION_REPOSITORY_TOKEN } from 'src/modules/game-round/ports/game-transaction.repository.token';
 import type { GameTransactionRepositoryPort } from 'src/modules/game-round/ports/game-transaction.repository.port';
-import { UpdateUserBalanceService } from '../../wallet/application/update-user-balance.service';
-import { UpdateOperation } from '../../wallet/domain';
-import { CasinoRefundMetadata } from '../../wallet/domain/model/user-wallet-transaction-metadata';
+import { ProcessWageringCancelService } from 'src/modules/wagering/engine/application/process-wagering-cancel.service';
+import { WalletActionName } from 'src/modules/wallet/domain';
+
 
 export type GamePushedBetUpdateDto = {
   aggregatorRoundId: string;
@@ -36,8 +36,9 @@ export class UpdatePushedBetService {
     private readonly gameRoundRepository: GameRoundRepositoryPort,
     @Inject(GAME_TRANSACTION_REPOSITORY_TOKEN)
     private readonly gameTransactionRepository: GameTransactionRepositoryPort,
-    private readonly updateUserBalanceService: UpdateUserBalanceService,
+    private readonly processWageringCancelService: ProcessWageringCancelService,
   ) {}
+
 
   /**
    * 게임 라운드의 푸시(환불) 및 타이(무승부) 베팅 금액을 업데이트합니다.
@@ -106,107 +107,27 @@ export class UpdatePushedBetService {
       }
     }
 
-    // 5. 환불 금액 배분 (보너스 우선 환불)
-    let refundBonusGame = new Prisma.Decimal(0);
-    let refundCashGame = new Prisma.Decimal(0);
-
-    if (totalPushGame.lte(totalBonusBetGame)) {
-      refundBonusGame = totalPushGame;
-    } else {
-      refundBonusGame = totalBonusBetGame;
-      refundCashGame = totalPushGame.minus(totalBonusBetGame);
-    }
-
-    // Wallet Currency 환산
+    // 5. 환불 금액 배분 (Wallet Currency 변환)
     const exchangeRate = gameRound.exchangeRate;
-    const refundBonusWallet = refundBonusGame.mul(exchangeRate);
-    const refundCashWallet = refundCashGame.mul(exchangeRate);
-    const totalRefundWallet = refundBonusWallet.add(refundCashWallet);
-
-    // 롤링 차감용 (Push 금액만 취소 처리) - Cash/Bonus 분리
-    let pushBonusGameRaw = new Prisma.Decimal(0);
-    let pushCashGameRaw = new Prisma.Decimal(0);
-
-    if (pushVal.lte(totalBonusBetGame)) {
-      pushBonusGameRaw = pushVal;
-    } else {
-      pushBonusGameRaw = totalBonusBetGame;
-      pushCashGameRaw = pushVal.minus(totalBonusBetGame);
-    }
-
-    const pushBonusStats = pushBonusGameRaw.mul(exchangeRate);
-    const pushCashStats = pushCashGameRaw.mul(exchangeRate);
-    const pushAmountWallet = pushBonusStats.add(pushCashStats);
-
+    const totalRefundWallet = totalPushGame.mul(exchangeRate);
+    
     try {
-      // 6. 지갑 업데이트 (Via Wallet Service)
+      // 6. Wagering Engine에게 환불 위임 (지갑 복구 + 웨이저링 조건 역산)
+      await this.processWageringCancelService.execute({
+        userId: gameRound.userId,
+        currency: gameRound.currency,
+        amount: totalRefundWallet,
+        referenceId: BigInt(gameRound.id.toString()), // bigint type mismatch 주의
+        actionName: WalletActionName.CASINO_REFUND,
+        metadata: {
+          roundId: gameRound.id.toString(),
+          reason: 'PUSH_OR_TIE_REFUND',
+          aggregatorRoundId,
+        },
+      });
 
-      // A. Cash Refund
-      if (refundCashWallet.gt(0)) {
-        await this.updateUserBalanceService.updateBalance(
-          {
-            userId: gameRound.userId,
-            currency: gameRound.currency,
-            amount: refundCashWallet,
-            operation: UpdateOperation.ADD,
-            balanceType: UserWalletBalanceType.CASH,
-            transactionType: UserWalletTransactionType.REFUND,
-            referenceId: gameRound.id,
-          },
-          {
-            metadata: {
-              roundId: gameRound.id.toString(),
-              reason: 'PUSH_OR_TIE_REFUND_CASH',
-              aggregatorRoundId,
-            } as CasinoRefundMetadata,
-          },
-        );
-      }
+      // 7. CasinoGameRound Update (Via Repo)
 
-      // B. Bonus Refund
-      if (refundBonusWallet.gt(0)) {
-        await this.updateUserBalanceService.updateBalance(
-          {
-            userId: gameRound.userId,
-            currency: gameRound.currency,
-            amount: refundBonusWallet,
-            operation: UpdateOperation.ADD,
-            balanceType: UserWalletBalanceType.BONUS,
-            transactionType: UserWalletTransactionType.REFUND,
-            referenceId: gameRound.id,
-          },
-          {
-            metadata: {
-              roundId: gameRound.id.toString(),
-              reason: 'PUSH_OR_TIE_REFUND_BONUS',
-              aggregatorRoundId,
-            } as CasinoRefundMetadata,
-          },
-        );
-      }
-
-      // C. Update UserBalanceStats (Decrease Total Bet for Rolling exclusion)
-      // TODO: UserBalanceStatsService/Repo 도입 필요. 현재는 직접 Prisma 사용.
-      if (pushAmountWallet.gt(0)) {
-        await this.tx.userWalletTotalStats.update({
-          where: {
-            userId_currency: {
-              userId: gameRound.userId,
-              currency: gameRound.currency,
-            },
-          },
-          data: {
-            totalBetCash: pushCashStats.gt(0)
-              ? { decrement: pushCashStats }
-              : undefined,
-            totalBetBonus: pushBonusStats.gt(0)
-              ? { decrement: pushBonusStats }
-              : undefined,
-          },
-        });
-      }
-
-      // D. CasinoGameRound Update (Via Repo)
       // 통계 증가 (환불액)
       await this.gameRoundRepository.increaseStats(
         gameRound.id,
