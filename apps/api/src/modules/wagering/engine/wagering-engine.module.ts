@@ -6,6 +6,7 @@ import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 import {
   GetAvailableBalanceService,
   ProcessWageringBetService,
+  ProcessWageringWinService,
 } from './application/index';
 
 @Module({
@@ -14,10 +15,12 @@ import {
   providers: [
     GetAvailableBalanceService,
     ProcessWageringBetService,
+    ProcessWageringWinService,
   ],
   exports: [
     GetAvailableBalanceService,
     ProcessWageringBetService,
+    ProcessWageringWinService,
   ],
 })
 export class WageringEngineModule { }
