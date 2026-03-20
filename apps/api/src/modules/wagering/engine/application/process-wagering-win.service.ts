@@ -9,6 +9,8 @@ import { WAGERING_REQUIREMENT_REPOSITORY } from '../../requirement/ports';
 import type { WageringRequirementRepositoryPort } from '../../requirement/ports';
 import { SettleWageringRequirementService } from '../../requirement/application';
 import type { WageringRequirement } from '../../requirement/domain';
+import { USER_WALLET_TRANSACTION_REPOSITORY } from 'src/modules/wallet/ports/out/user-wallet-transaction.repository.token';
+import type { UserWalletTransactionRepositoryPort } from 'src/modules/wallet/ports/out/user-wallet-transaction.repository.port';
 
 export interface ProcessWageringWinCommand {
   userId: bigint;
@@ -33,12 +35,12 @@ export class ProcessWageringWinService {
   private readonly logger = new Logger(ProcessWageringWinService.name);
 
   constructor(
-    @InjectTransaction()
-    private readonly tx: PrismaTransaction,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
     private readonly getUserWalletService: GetUserWalletService,
     @Inject(WAGERING_REQUIREMENT_REPOSITORY)
     private readonly requirementRepository: WageringRequirementRepositoryPort,
+    @Inject(USER_WALLET_TRANSACTION_REPOSITORY)
+    private readonly walletTxRepository: UserWalletTransactionRepositoryPort,
     private readonly settleService: SettleWageringRequirementService,
   ) { }
 
@@ -52,13 +54,12 @@ export class ProcessWageringWinService {
     }
 
     // 1. 원본 베팅의 현금/보너스 파악 (Wallet Transaction을 조회하여 판별)
-    const betTxs = await this.tx.userWalletTransaction.findMany({
-      where: {
-        userId,
-        referenceId, // round.id
-        type: UserWalletTransactionType.BET,
-      },
-      select: { balanceType: true, amount: true },
+    const [betTxs] = await this.walletTxRepository.listByUserId({
+      userId,
+      referenceId,
+      type: UserWalletTransactionType.BET,
+      page: 1,
+      limit: 100,
     });
 
     let originalCashBet = new Prisma.Decimal(0);

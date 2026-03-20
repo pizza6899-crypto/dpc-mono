@@ -43,6 +43,7 @@ export class UserWalletTransactionRepository implements UserWalletTransactionRep
       excludeBalanceTypes,
       startDate,
       endDate,
+      referenceId,
       page,
       limit,
     } = options;
@@ -51,6 +52,7 @@ export class UserWalletTransactionRepository implements UserWalletTransactionRep
       userId,
       currency,
       type,
+      referenceId,
       balanceType: {
         in: balanceTypes,
         notIn: excludeBalanceTypes,

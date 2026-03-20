@@ -19,8 +19,9 @@ export interface WageringContributionLogRepositoryPort {
   findByRequirementId(
     wageringRequirementId: bigint,
   ): Promise<WageringContributionLog[]>;
+  /**
+   * 특정 게임 라운드에서 생성된 기여 로그 목록을 조회합니다.
+   * 취소(Cancel/Refund) 처리 시 롤링 금액을 정확히 회수하기 위해 사용됩니다.
+   */
+  findByGameRoundId(gameRoundId: bigint): Promise<WageringContributionLog[]>;
 }
-
-export const WAGERING_CONTRIBUTION_LOG_REPOSITORY = Symbol(
-  'WAGERING_CONTRIBUTION_LOG_REPOSITORY',
-);

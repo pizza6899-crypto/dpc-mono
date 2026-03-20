@@ -97,6 +97,8 @@ import { USER_ANALYTICS_QUEUES } from '../user-analytics/infrastructure/queue/us
     FindWalletStatisticsService,
     UserWalletStatsMapper,
     USER_WALLET_STATS_REPOSITORY,
+    USER_WALLET_REPOSITORY,
+    USER_WALLET_TRANSACTION_REPOSITORY,
   ],
 })
-export class WalletModule {}
+export class WalletModule { }

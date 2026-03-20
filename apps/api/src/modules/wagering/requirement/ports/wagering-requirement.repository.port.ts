@@ -72,7 +72,3 @@ export interface WageringRequirementRepositoryPort {
     sortOrder?: 'asc' | 'desc';
   }): Promise<PaginatedData<WageringRequirement>>;
 }
-
-export const WAGERING_REQUIREMENT_REPOSITORY = Symbol(
-  'WAGERING_REQUIREMENT_REPOSITORY',
-);

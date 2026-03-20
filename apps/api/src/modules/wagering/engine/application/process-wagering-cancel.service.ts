@@ -1,12 +1,19 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Prisma, ExchangeCurrencyCode, UserWalletBalanceType, UserWalletTransactionType } from '@prisma/client';
-import { Transactional, InjectTransaction } from '@nestjs-cls/transactional';
-import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
+import { Transactional } from '@nestjs-cls/transactional';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { GetUserWalletService } from 'src/modules/wallet/application/get-user-wallet.service';
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
-import { WAGERING_REQUIREMENT_REPOSITORY } from '../../requirement/ports';
-import type { WageringRequirementRepositoryPort } from '../../requirement/ports';
+import {
+  WAGERING_REQUIREMENT_REPOSITORY,
+  WAGERING_CONTRIBUTION_LOG_REPOSITORY
+} from '../../requirement/ports';
+import type {
+  WageringRequirementRepositoryPort,
+  WageringContributionLogRepositoryPort
+} from '../../requirement/ports';
+import { USER_WALLET_TRANSACTION_REPOSITORY } from 'src/modules/wallet/ports/out/user-wallet-transaction.repository.token';
+import type { UserWalletTransactionRepositoryPort } from 'src/modules/wallet/ports/out/user-wallet-transaction.repository.port';
 import type { WageringRequirement } from '../../requirement/domain';
 
 export interface ProcessWageringCancelCommand {
@@ -32,12 +39,14 @@ export class ProcessWageringCancelService {
   private readonly logger = new Logger(ProcessWageringCancelService.name);
 
   constructor(
-    @InjectTransaction()
-    private readonly tx: PrismaTransaction,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
     private readonly getUserWalletService: GetUserWalletService,
     @Inject(WAGERING_REQUIREMENT_REPOSITORY)
     private readonly requirementRepository: WageringRequirementRepositoryPort,
+    @Inject(WAGERING_CONTRIBUTION_LOG_REPOSITORY)
+    private readonly logRepository: WageringContributionLogRepositoryPort,
+    @Inject(USER_WALLET_TRANSACTION_REPOSITORY)
+    private readonly walletTxRepository: UserWalletTransactionRepositoryPort,
   ) { }
 
   @Transactional()
@@ -50,13 +59,12 @@ export class ProcessWageringCancelService {
     }
 
     // 1. 원본 베팅의 현금/보너스 파악 (Wallet Transaction을 조회하여 판별)
-    const betTxs = await this.tx.userWalletTransaction.findMany({
-      where: {
-        userId,
-        referenceId, // round.id
-        type: UserWalletTransactionType.BET,
-      },
-      select: { balanceType: true, amount: true },
+    const [betTxs] = await this.walletTxRepository.listByUserId({
+      userId,
+      referenceId,
+      type: UserWalletTransactionType.BET,
+      page: 1,
+      limit: 100,
     });
 
     let originalCashBet = new Prisma.Decimal(0);
@@ -150,9 +158,7 @@ export class ProcessWageringCancelService {
       }
 
       // 4-2. 롤링 기여(wageredAmount) 정밀 회수: WageringContributionLog 추적
-      const logs = await this.tx.wageringContributionLog.findMany({
-        where: { gameRoundId: BigInt(referenceId) },
-      });
+      const logs = await this.logRepository.findByGameRoundId(BigInt(referenceId));
 
       for (const log of logs) {
         const matchingReq = await this.requirementRepository.findById(log.wageringRequirementId);

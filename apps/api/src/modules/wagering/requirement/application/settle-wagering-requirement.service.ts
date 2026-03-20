@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { WAGERING_REQUIREMENT_REPOSITORY } from '../ports/wagering-requirement.repository.port';
+import { WAGERING_REQUIREMENT_REPOSITORY } from '../ports';
 import type { WageringRequirementRepositoryPort } from '../ports/wagering-requirement.repository.port';
 import { UpdateUserBalanceService } from '../../../wallet/application/update-user-balance.service';
 import { GetUserWalletService } from '../../../wallet/application/get-user-wallet.service';

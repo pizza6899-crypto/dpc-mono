@@ -12,6 +12,7 @@ export interface UserWalletTransactionSearchOptions {
   excludeBalanceTypes?: UserWalletBalanceType[];
   startDate?: Date;
   endDate?: Date;
+  referenceId?: bigint;
   page: number; // 1-based
   limit: number;
 }

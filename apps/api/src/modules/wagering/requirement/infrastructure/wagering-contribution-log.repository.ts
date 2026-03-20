@@ -14,7 +14,7 @@ export class WageringContributionLogRepository implements WageringContributionLo
     private readonly tx: PrismaTransaction,
     private readonly mapper: WageringRequirementMapper,
     private readonly snowflakeService: SnowflakeService,
-  ) {}
+  ) { }
 
   async create(data: {
     wageringRequirementId: bigint;
@@ -39,6 +39,15 @@ export class WageringContributionLogRepository implements WageringContributionLo
   ): Promise<WageringContributionLog[]> {
     const results = await this.tx.wageringContributionLog.findMany({
       where: { wageringRequirementId },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return results.map((r) => this.mapper.toDomainLog(r));
+  }
+
+  async findByGameRoundId(gameRoundId: bigint): Promise<WageringContributionLog[]> {
+    const results = await this.tx.wageringContributionLog.findMany({
+      where: { gameRoundId },
       orderBy: { createdAt: 'desc' },
     });
 
