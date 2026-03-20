@@ -8,11 +8,7 @@ import {
 } from '@prisma/client';
 import { CasinoGameSession } from 'src/modules/casino-session/domain';
 import { Transactional } from '@nestjs-cls/transactional';
-import { GAME_ROUND_REPOSITORY_TOKEN } from 'src/modules/game-round/ports/game-round.repository.token';
-import type { GameRoundRepositoryPort } from 'src/modules/game-round/ports/game-round.repository.port';
-import { GAME_TRANSACTION_REPOSITORY_TOKEN } from 'src/modules/game-round/ports/game-transaction.repository.token';
-import type { GameTransactionRepositoryPort } from 'src/modules/game-round/ports/game-transaction.repository.port';
-import { GameTransaction } from 'src/modules/game-round/domain/game-transaction.entity';
+import { GameRoundHistoryService } from 'src/modules/game-round/application/game-round-history.service';
 import { ResolveGameRoundService } from 'src/modules/game-round/application/resolve-game-round.service';
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { GetUserWalletService } from 'src/modules/wallet/application/get-user-wallet.service';
@@ -50,10 +46,7 @@ export class ProcessCasinoCreditService {
   private readonly logger = new Logger(ProcessCasinoCreditService.name);
 
   constructor(
-    @Inject(GAME_ROUND_REPOSITORY_TOKEN)
-    private readonly gameRoundRepository: GameRoundRepositoryPort,
-    @Inject(GAME_TRANSACTION_REPOSITORY_TOKEN)
-    private readonly gameTransactionRepository: GameTransactionRepositoryPort,
+    private readonly gameRoundHistoryService: GameRoundHistoryService,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
     private readonly checkCasinoBalanceService: CheckCasinoBalanceService,
     @InjectQueue(CasinoQueueNames.GAME_POST_PROCESS)
@@ -107,13 +100,13 @@ export class ProcessCasinoCreditService {
     if (isCancel) txType = CasinoGameTransactionType.CANCEL;
     else if (isJackpot) txType = CasinoGameTransactionType.JACKPOT;
 
-    const existingTx = await this.gameTransactionRepository.findByExternalId(
+    const existingTxExists = await this.gameRoundHistoryService.checkTransactionExists(
       transactionId,
       txType,
       round.startedAt,
     );
 
-    if (existingTx) {
+    if (existingTxExists) {
       this.logger.warn(`중복된 ${txType} 요청 무시됨: ${transactionId}`);
       const balanceResult =
         await this.checkCasinoBalanceService.execute(session);
@@ -125,9 +118,8 @@ export class ProcessCasinoCreditService {
     // [LOGICAL FIX] 취소(CANCEL/REFUND) 요청인 경우 처리
     let finalRefundAmount = amount;
     if (isCancel) {
-      const originalBet = await this.gameTransactionRepository.findByExternalId(
+      const originalBet = await this.gameRoundHistoryService.getOriginalBet(
         transactionId,
-        CasinoGameTransactionType.BET,
         round.startedAt,
       );
 
@@ -210,22 +202,20 @@ export class ProcessCasinoCreditService {
       newTxId = result.txId;
     }
 
-    // 5. 카지노 엔티티 영속화
-    const winTx = GameTransaction.create(
-      newTxId,
-      round.id,
-      round.startedAt,
-      session.userId,
-      txType,
-      transactionId,
-      walletAmount,
-      updatedWallet.cash.sub(walletAmount), // balanceBefore
-      finalRefundAmount,
-      UserWalletBalanceType.CASH,
-      session.walletCurrency,
-      winTime,
-    );
-    await this.gameTransactionRepository.save(winTx);
+    await this.gameRoundHistoryService.recordTransaction({
+      id: newTxId,
+      gameRoundId: round.id,
+      roundStartedAt: round.startedAt,
+      userId: session.userId,
+      type: txType,
+      aggregatorTxId: transactionId,
+      amount: walletAmount,
+      balanceBefore: updatedWallet.cash.sub(walletAmount), // balanceBefore
+      gameAmount: finalRefundAmount,
+      balanceType: UserWalletBalanceType.CASH,
+      currency: session.walletCurrency,
+      createdAt: winTime,
+    });
 
     // 6. 라운드 통계 업데이트
     const statsDelta: any = {};
@@ -240,7 +230,7 @@ export class ProcessCasinoCreditService {
       statsDelta.gameWinAmount = amount;
     }
 
-    await this.gameRoundRepository.increaseStats(
+    await this.gameRoundHistoryService.increaseRoundStats(
       round.id,
       round.startedAt,
       statsDelta,
@@ -248,8 +238,7 @@ export class ProcessCasinoCreditService {
 
     // 7. Round Completion 처리
     if (command.isEndRound) {
-      round.complete();
-      await this.gameRoundRepository.save(round);
+      await this.gameRoundHistoryService.completeRound(round);
     }
 
     // [비동기] 8. 큐 처리 (결과 조회 & 후처리)
