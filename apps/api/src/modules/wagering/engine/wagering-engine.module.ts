@@ -7,6 +7,7 @@ import {
   GetAvailableBalanceService,
   ProcessWageringBetService,
   ProcessWageringWinService,
+  ProcessWageringCancelService,
 } from './application/index';
 
 @Module({
@@ -16,11 +17,13 @@ import {
     GetAvailableBalanceService,
     ProcessWageringBetService,
     ProcessWageringWinService,
+    ProcessWageringCancelService,
   ],
   exports: [
     GetAvailableBalanceService,
     ProcessWageringBetService,
     ProcessWageringWinService,
+    ProcessWageringCancelService,
   ],
 })
 export class WageringEngineModule { }
