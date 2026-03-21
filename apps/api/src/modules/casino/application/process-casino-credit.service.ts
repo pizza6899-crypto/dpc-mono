@@ -10,16 +10,15 @@ import { CasinoGameSession } from 'src/modules/casino-session/domain';
 import { Transactional } from '@nestjs-cls/transactional';
 import { GameRoundHistoryService } from 'src/modules/game-round/application/game-round-history.service';
 import { ResolveGameRoundService } from 'src/modules/game-round/application/resolve-game-round.service';
-import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
-import { GetUserWalletService } from 'src/modules/wallet/application/get-user-wallet.service';
-import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
+import { WalletActionName } from 'src/modules/wallet/domain';
 import { CheckCasinoBalanceService } from './check-casino-balance.service';
-import { CasinoWinMetadata } from 'src/modules/wallet/domain/model/user-wallet-transaction-metadata';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { CasinoQueueNames } from '../infrastructure/queue/casino-queue.types';
 import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { ProcessWageringWinService } from 'src/modules/wagering/engine/application/process-wagering-win.service';
+import { ProcessWageringCancelService } from 'src/modules/wagering/engine/application/process-wagering-cancel.service';
 
 export interface ProcessCasinoCreditCommand {
   session: CasinoGameSession;
@@ -47,15 +46,15 @@ export class ProcessCasinoCreditService {
 
   constructor(
     private readonly gameRoundHistoryService: GameRoundHistoryService,
-    private readonly updateUserBalanceService: UpdateUserBalanceService,
     private readonly checkCasinoBalanceService: CheckCasinoBalanceService,
     @InjectQueue(CasinoQueueNames.GAME_POST_PROCESS)
     private readonly gamePostProcessQueue: Queue,
     @InjectQueue(CasinoQueueNames.GAME_RESULT_FETCH)
     private readonly gameResultFetchQueue: Queue,
     private readonly advisoryLockService: AdvisoryLockService,
-    private readonly getUserWalletService: GetUserWalletService,
     private readonly resolveGameRoundService: ResolveGameRoundService,
+    private readonly processWageringWinService: ProcessWageringWinService,
+    private readonly processWageringCancelService: ProcessWageringCancelService,
   ) { }
 
   @Transactional()
@@ -116,7 +115,7 @@ export class ProcessCasinoCreditService {
     }
 
     // [LOGICAL FIX] 취소(CANCEL/REFUND) 요청인 경우 처리
-    let finalRefundAmount = amount;
+    let finalCreditAmount = amount;
     if (isCancel) {
       const originalBet = await this.gameRoundHistoryService.getOriginalBet(
         transactionId,
@@ -135,98 +134,98 @@ export class ProcessCasinoCreditService {
       }
 
       if (amount.isZero() && originalBet.gameAmount) {
-        finalRefundAmount = originalBet.gameAmount;
+        finalCreditAmount = originalBet.gameAmount;
       }
     }
 
-    // 4. 지급 처리 (현금 잔액으로 지급)
-    const walletAmount = finalRefundAmount.div(session.exchangeRate);
-    let newTxId: bigint = BigInt(0);
+    // 4. Wagering Engine을 통한 지급/취소 처리
+    // 지갑 통화로 환산 (소수점 정밀도 8자리 유지)
+    const walletAmount = finalCreditAmount.div(session.exchangeRate).toDecimalPlaces(8);
 
     let actionName: WalletActionName = WalletActionName.CASINO_WIN;
-    let walletTxType: UserWalletTransactionType = UserWalletTransactionType.WIN;
+    if (isCancel) actionName = WalletActionName.CASINO_REFUND;
+    else if (isJackpot) actionName = WalletActionName.CASINO_JACKPOT;
+    else if (isBonus) actionName = WalletActionName.CASINO_BONUS;
+
+    let wageringResult;
+    const commonWageringParams = {
+      userId: session.userId,
+      currency: session.walletCurrency,
+      amount: walletAmount,
+      usdExchangeRate: session.usdExchangeRate,
+      referenceId: round.id,
+      actionName,
+      metadata: {
+        roundId: String(round.id),
+        gameId: String(gameId),
+        aggregatorTxId: transactionId,
+        description,
+        provider,
+        isOrphaned: round.isOrphaned,
+      } as Record<string, any>,
+    };
 
     if (isCancel) {
-      actionName = WalletActionName.CASINO_REFUND;
-      walletTxType = UserWalletTransactionType.REFUND;
-    } else if (isJackpot) {
-      actionName = WalletActionName.CASINO_JACKPOT;
-      walletTxType = UserWalletTransactionType.WIN;
-    } else if (isBonus) {
-      actionName = WalletActionName.CASINO_BONUS;
-      walletTxType = UserWalletTransactionType.BONUS_IN;
-    }
-
-    let updatedWallet: any = null;
-
-    // [OPTIMIZATION] 0원일 경우 Lock/Update을 스킵하고 단순 잔액 조회만 수행
-    if (walletAmount.isZero()) {
-      updatedWallet = await this.getUserWalletService.getWallet(
-        session.userId,
-        session.walletCurrency,
-        false,
-      );
+      wageringResult = await this.processWageringCancelService.execute(commonWageringParams);
     } else {
-      // USD 환산 금액 계산 (Session 스냅샷 환율 기준)
-      const walletAmountUsd =
-        session.walletCurrency === 'USD'
-          ? walletAmount
-          : session.usdExchangeRate && !session.usdExchangeRate.isZero()
-            ? walletAmount.div(session.usdExchangeRate)
-            : undefined;
-
-      const result = await this.updateUserBalanceService.updateBalance(
-        {
-          userId: session.userId,
-          currency: session.walletCurrency,
-          amount: walletAmount,
-          amountUsd: walletAmountUsd, // [Inject] USD Amount
-          operation: UpdateOperation.ADD,
-          balanceType: UserWalletBalanceType.CASH,
-          transactionType: walletTxType,
-          referenceId: round.id,
-        },
-        {
-          actionName: actionName,
-          metadata: {
-            roundId: String(round.id),
-            gameId: String(gameId),
-            aggregatorTxId: transactionId,
-            description,
-            provider,
-            isOrphaned: round.isOrphaned,
-          } as CasinoWinMetadata,
-        },
-      );
-      updatedWallet = result.wallet;
-      newTxId = result.txId;
+      wageringResult = await this.processWageringWinService.execute(commonWageringParams);
     }
 
-    await this.gameRoundHistoryService.recordTransaction({
-      id: newTxId,
-      gameRoundId: round.id,
-      roundStartedAt: round.startedAt,
-      userId: session.userId,
-      type: txType,
-      aggregatorTxId: transactionId,
-      amount: walletAmount,
-      balanceBefore: updatedWallet.cash.sub(walletAmount), // balanceBefore
-      gameAmount: finalRefundAmount,
-      balanceType: UserWalletBalanceType.CASH,
-      currency: session.walletCurrency,
-      createdAt: winTime,
-    });
+    const { updatedWallet } = wageringResult;
+    const cashIncluded = 'cashDistributed' in wageringResult ? wageringResult.cashDistributed : wageringResult.cashRefunded;
+    const bonusIncluded = 'bonusDistributed' in wageringResult ? wageringResult.bonusDistributed : wageringResult.bonusRefunded;
+    const cashTxId = wageringResult.cashTxId;
+    const bonusTxId = wageringResult.bonusTxId;
+
+    // 5. 카지노 엔티티 영속화 (전체 지급 내역 기록)
+    // 5-1. 현금 트랜잭션 저장
+    if (cashIncluded.gt(0) && cashTxId) {
+      await this.gameRoundHistoryService.recordTransaction({
+        id: cashTxId,
+        gameRoundId: round.id,
+        roundStartedAt: round.startedAt,
+        userId: session.userId,
+        type: txType,
+        aggregatorTxId: transactionId,
+        amount: cashIncluded,
+        balanceBefore: updatedWallet.cash.sub(cashIncluded),
+        gameAmount: cashIncluded.mul(session.exchangeRate),
+        balanceType: UserWalletBalanceType.CASH,
+        currency: session.walletCurrency,
+        createdAt: winTime,
+      });
+    }
+
+    // 5-2. 보너스 트랜잭션 저장
+    if (bonusIncluded.gt(0) && bonusTxId) {
+      await this.gameRoundHistoryService.recordTransaction({
+        id: bonusTxId,
+        gameRoundId: round.id,
+        roundStartedAt: round.startedAt,
+        userId: session.userId,
+        type: txType,
+        aggregatorTxId: `${transactionId}_BONUS`, // [SAFETY] 중복 방지를 위해 접미사 추가
+        amount: bonusIncluded,
+        balanceBefore: updatedWallet.bonus.sub(bonusIncluded),
+        gameAmount: bonusIncluded.mul(session.exchangeRate),
+        balanceType: UserWalletBalanceType.BONUS,
+        currency: session.walletCurrency,
+        createdAt: winTime,
+      });
+    }
 
     // 6. 라운드 통계 업데이트
     const statsDelta: any = {};
+    const totalWalletAmount = cashIncluded.add(bonusIncluded);
+
     if (isCancel) {
-      statsDelta.refundAmount = walletAmount;
-      statsDelta.gameRefundAmount = finalRefundAmount;
+      statsDelta.refundAmount = totalWalletAmount;
+      statsDelta.gameRefundAmount = finalCreditAmount;
     } else if (isJackpot) {
-      statsDelta.jackpotAmount = walletAmount;
+      statsDelta.jackpotAmount = totalWalletAmount;
       statsDelta.gameJackpotAmount = amount;
     } else {
-      statsDelta.winAmount = walletAmount;
+      statsDelta.winAmount = totalWalletAmount;
       statsDelta.gameWinAmount = amount;
     }
 
@@ -246,7 +245,6 @@ export class ProcessCasinoCreditService {
       txType === CasinoGameTransactionType.WIN ||
       txType === CasinoGameTransactionType.CANCEL
     ) {
-      // 시뮬레이션이 아닐 때만 실제 결과 조회를 큐에 넣음
       if (!command.isSimulation) {
         await this.gameResultFetchQueue.add(
           BULLMQ_QUEUES.CASINO.GAME_RESULT_FETCH.name,
@@ -264,13 +262,11 @@ export class ProcessCasinoCreditService {
       );
     }
 
-    // 8. Return Result
-    const balanceInGameCurrency = updatedWallet.totalAvailableBalance.mul(
-      session.exchangeRate,
-    );
+    // 9. 결과 반환 (유효 잔액 산출 로직 통일)
+    const balanceResult = await this.checkCasinoBalanceService.execute(session);
 
     return {
-      balance: balanceInGameCurrency,
+      balance: balanceResult.balance,
     };
   }
 }
