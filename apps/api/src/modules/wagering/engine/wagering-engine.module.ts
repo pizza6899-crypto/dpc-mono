@@ -8,6 +8,7 @@ import {
   ProcessWageringBetService,
   ProcessWageringWinService,
   ProcessWageringCancelService,
+  RevertWageringContributionService,
 } from './application/index';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 
@@ -20,12 +21,14 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
     ProcessWageringBetService,
     ProcessWageringWinService,
     ProcessWageringCancelService,
+    RevertWageringContributionService,
   ],
   exports: [
     GetAvailableBalanceService,
     ProcessWageringBetService,
     ProcessWageringWinService,
     ProcessWageringCancelService,
+    RevertWageringContributionService,
   ],
 })
 export class WageringEngineModule { }

@@ -2,18 +2,14 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import {
   GameAggregatorType,
   Prisma,
-  CasinoGameTransactionType,
-  UserWalletBalanceType,
 } from '@prisma/client';
 import { CasinoErrorCode } from '../constants/casino-error-codes';
 import { CasinoGameRoundException } from '../domain/casino.exception';
 import { type GameResultMeta } from 'src/modules/game-round/domain/game-round.entity';
 import { GAME_ROUND_REPOSITORY_TOKEN } from 'src/modules/game-round/ports/game-round.repository.token';
 import type { GameRoundRepositoryPort } from 'src/modules/game-round/ports/game-round.repository.port';
-import { GameRoundHistoryService } from 'src/modules/game-round/application/game-round-history.service';
-import { WalletActionName } from '../../wallet/domain';
 import { Transactional } from '@nestjs-cls/transactional';
-import { ProcessWageringCancelService } from 'src/modules/wagering/engine/application/process-wagering-cancel.service';
+import { RevertWageringContributionService } from 'src/modules/wagering/engine/application/revert-wagering-contribution.service';
 
 export type GamePushedBetUpdateDto = {
   aggregatorRoundId: string;
@@ -28,13 +24,12 @@ export class UpdatePushedBetService {
   constructor(
     @Inject(GAME_ROUND_REPOSITORY_TOKEN)
     private readonly gameRoundRepository: GameRoundRepositoryPort,
-    private readonly gameRoundHistoryService: GameRoundHistoryService,
-    private readonly processWageringCancelService: ProcessWageringCancelService,
+    private readonly revertWageringContributionService: RevertWageringContributionService,
   ) { }
 
   /**
    * 게임 라운드의 푸시(환불) 및 타이(무승부) 베팅 금액을 업데이트합니다.
-   * Wagering Engine을 통해 롤링 실적을 정확히 역산하고 지갑 잔액을 복구합니다.
+   * Wagering Engine을 통해 롤링 실적을 정확히 역산(Revert)합니다. (지갑 잔액은 건드리지 않음)
    */
   @Transactional()
   async execute(
@@ -68,61 +63,19 @@ export class UpdatePushedBetService {
     }
 
     try {
-      // 3. Wagering Engine을 통한 환불 처리 (롤링 실적 및 잔액 복구 통합)
+      // 3. Wagering Engine을 통한 사후 롤링(Contribution) 삭감
       // [FIX] 환율 계산 방식 수정: Game -> Wallet 변환은 div(exchangeRate)
       const walletAmount = totalPushGame.div(gameRound.exchangeRate).toDecimalPlaces(8);
 
-      const cancelResult = await this.processWageringCancelService.execute({
+      const revertResult = await this.revertWageringContributionService.execute({
         userId: gameRound.userId,
         currency: gameRound.currency,
         amount: walletAmount,
-        usdExchangeRate: gameRound.usdExchangeRate,
         referenceId: gameRound.id,
-        actionName: WalletActionName.CASINO_REFUND,
-        metadata: {
-          roundId: gameRound.id.toString(),
-          reason: 'WHITECLIFF_PUSH_TIE_UPDATE',
-          aggregatorRoundId,
-        },
       });
 
-      const { cashRefunded, bonusRefunded, cashTxId, bonusTxId, updatedWallet } = cancelResult;
-
-      // 4. 카지노 엔티티 영속화 (트랜잭션 기록)
-      // 4-1. 현금 환불 기록
-      if (cashRefunded.gt(0) && cashTxId) {
-        await this.gameRoundHistoryService.recordTransaction({
-          id: cashTxId,
-          gameRoundId: gameRound.id,
-          roundStartedAt: gameRound.startedAt,
-          userId: gameRound.userId,
-          type: CasinoGameTransactionType.CANCEL,
-          aggregatorTxId: `${aggregatorRoundId}_PUSH_CASH`,
-          amount: cashRefunded, // [FIX] 부호 일관성 확보 (양수로 기록)
-          balanceBefore: updatedWallet.cash.sub(cashRefunded),
-          gameAmount: cashRefunded.mul(gameRound.exchangeRate),
-          balanceType: UserWalletBalanceType.CASH,
-          currency: gameRound.currency,
-          createdAt: new Date(),
-        });
-      }
-
-      // 4-2. 보너스 환불 기록
-      if (bonusRefunded.gt(0) && bonusTxId) {
-        await this.gameRoundHistoryService.recordTransaction({
-          id: bonusTxId,
-          gameRoundId: gameRound.id,
-          roundStartedAt: gameRound.startedAt,
-          userId: gameRound.userId,
-          type: CasinoGameTransactionType.CANCEL,
-          aggregatorTxId: `${aggregatorRoundId}_PUSH_BONUS`,
-          amount: bonusRefunded,
-          balanceBefore: updatedWallet.bonus.sub(bonusRefunded),
-          gameAmount: bonusRefunded.mul(gameRound.exchangeRate),
-          balanceType: UserWalletBalanceType.BONUS,
-          currency: gameRound.currency,
-          createdAt: new Date(),
-        });
+      if (revertResult.success) {
+        this.logger.debug(`Successfully reverted bonus rolling: ${revertResult.bonusReverted} for round ${gameRound.id}`);
       }
 
       // 5. 라운드 통계 및 메타데이터 업데이트
