@@ -184,6 +184,7 @@ export class ProcessWageringBetService {
         gameContributionRate,
       );
 
+      let remainingFullContribution = effectiveBetForContribution;
       let remainingWeightedContribution = weightedContribution;
 
       let remainingBonusDeduction = bonusDeduction;
@@ -206,7 +207,7 @@ export class ProcessWageringBetService {
           if (requirement.targetType === 'AMOUNT') {
             const amountToContribute =
               requirement.calculationMethod === 'FULL'
-                ? effectiveBetForContribution
+                ? remainingFullContribution
                 : remainingWeightedContribution;
 
             if (amountToContribute.gt(0)) {
@@ -215,8 +216,12 @@ export class ProcessWageringBetService {
                 betAmount,
               );
 
-              if (requirement.calculationMethod === 'WEIGHTED' && contributionForThis.gt(0)) {
-                remainingWeightedContribution = remainingWeightedContribution.sub(contributionForThis);
+              if (contributionForThis.gt(0)) {
+                if (requirement.calculationMethod === 'FULL') {
+                  remainingFullContribution = remainingFullContribution.sub(contributionForThis);
+                } else if (requirement.calculationMethod === 'WEIGHTED') {
+                  remainingWeightedContribution = remainingWeightedContribution.sub(contributionForThis);
+                }
               }
             }
           } else if (requirement.targetType === 'ROUND_COUNT') {
