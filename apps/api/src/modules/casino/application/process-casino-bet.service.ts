@@ -94,7 +94,8 @@ export class ProcessCasinoBetService {
     }
 
     // 4. Wagering Engine을 통한 잔액 차감 및 롤링 처리
-    const walletAmount = amount.div(session.exchangeRate);
+    // 지갑 통화로 환산 (게임 통화 / 환율), 소수점 8자리 정밀도 유지
+    const walletAmount = amount.div(session.exchangeRate).toDecimalPlaces(8);
 
     const wageringResult = await this.processWageringBetService.execute({
       userId: session.userId,
@@ -166,12 +167,11 @@ export class ProcessCasinoBetService {
     }
 
     // 7. 결과 반환 (게임 통화 기준 잔액)
-    const balanceInGameCurrency = new Prisma.Decimal(updatedWallet.cash)
-      .add(new Prisma.Decimal(updatedWallet.bonus))
-      .mul(session.exchangeRate);
+    // [CRITICAL] 단순 합산이 아닌 Wagering 정책이 반영된 최신 유효 잔액을 다시 조회하여 반환
+    const balanceResult = await this.checkCasinoBalanceService.execute(session);
 
     return {
-      balance: balanceInGameCurrency,
+      balance: balanceResult.balance,
     };
   }
 }
