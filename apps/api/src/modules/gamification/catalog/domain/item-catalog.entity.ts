@@ -1,5 +1,7 @@
 import type { EffectType, ExchangeCurrencyCode, ItemType, Language } from '@prisma/client';
 import { Prisma } from '@prisma/client';
+import { MessageCode } from '@repo/shared';
+import { InvalidItemParameterException } from './catalog.exception';
 
 /**
  * 아이템의 효과 상세 정의 인터페이스
@@ -21,32 +23,29 @@ export interface ItemTranslation {
 
 /**
  * [Gamification] 아이템 카탈로그 도메인 엔티티
- * 
- * 시스템 내의 모든 아이템(장비, 소모품, 버프, 바우처)의 마스터 데이터를 관리합니다.
- * 아이템의 효과(Effects), 가격, 유효 기간 등을 포함합니다.
  */
 export class ItemCatalog {
   private constructor(
-    private readonly _id: bigint,
-    private readonly _code: string,
-    private readonly _type: ItemType,
-    private readonly _effects: ItemEffect[],
-    private readonly _price: Prisma.Decimal,
-    private readonly _priceCurrency: ExchangeCurrencyCode,
-    private readonly _durationDays: number | null,
-    private readonly _createdAt: Date,
-    private readonly _updatedAt: Date,
-    private readonly _translations: ItemTranslation[],
+    private _code: string,
+    private _type: ItemType,
+    private _effects: ItemEffect[],
+    private _price: Prisma.Decimal,
+    private _priceCurrency: ExchangeCurrencyCode,
+    private _durationDays: number | null,
+    private _translations: ItemTranslation[],
+    private readonly _id: bigint = 0n,
+    private readonly _createdAt: Date = new Date(),
+    private _updatedAt: Date = new Date(),
   ) { }
 
-  /** 
+  /**
    * 영속성 계층에서 복원
    */
   static rehydrate(data: {
     id: bigint;
     code: string;
     type: ItemType;
-    effects: any; // Prisma Json
+    effects: any;
     price: Prisma.Decimal;
     priceCurrency: ExchangeCurrencyCode;
     durationDays: number | null;
@@ -55,16 +54,16 @@ export class ItemCatalog {
     translations: ItemTranslation[];
   }): ItemCatalog {
     return new ItemCatalog(
-      data.id,
       data.code,
       data.type,
       data.effects as ItemEffect[],
       data.price,
       data.priceCurrency,
       data.durationDays,
+      data.translations,
+      data.id,
       data.createdAt,
       data.updatedAt,
-      data.translations,
     );
   }
 
@@ -80,18 +79,69 @@ export class ItemCatalog {
     durationDays?: number | null;
     translations: ItemTranslation[];
   }): ItemCatalog {
-    return new ItemCatalog(
-      0n,
+    const item = new ItemCatalog(
       params.code,
       params.type,
       params.effects,
       params.price,
       params.priceCurrency ?? 'USD',
       params.durationDays ?? null,
-      new Date(),
-      new Date(),
       params.translations,
     );
+    item._validate();
+    return item;
+  }
+
+  /**
+   * 아이템 정보 업데이트
+   */
+  update(params: {
+    code?: string;
+    type?: ItemType;
+    effects?: ItemEffect[];
+    price?: Prisma.Decimal;
+    priceCurrency?: ExchangeCurrencyCode;
+    durationDays?: number | null;
+    translations?: ItemTranslation[];
+  }): void {
+    if (params.code !== undefined) this._code = params.code;
+    if (params.type !== undefined) this._type = params.type;
+    if (params.effects !== undefined) this._effects = params.effects;
+    if (params.price !== undefined) this._price = params.price;
+    if (params.priceCurrency !== undefined) this._priceCurrency = params.priceCurrency;
+    if (params.durationDays !== undefined) this._durationDays = params.durationDays;
+    if (params.translations !== undefined) this._translations = params.translations;
+
+    this._validate();
+    this._updatedAt = new Date();
+  }
+
+  /**
+   * 도메인 유효성 검사
+   */
+  private _validate(): void {
+    if (!this._code || this._code.trim() === '') {
+      throw new InvalidItemParameterException(MessageCode.ITEM_EFFECT_INVALID, 'Item code is required.');
+    }
+
+    if (this._price.isNegative()) {
+      throw new InvalidItemParameterException(MessageCode.ITEM_PRICE_NEGATIVE, 'Item price cannot be negative.');
+    }
+
+    if (this._durationDays !== null && this._durationDays < 0) {
+      throw new InvalidItemParameterException(MessageCode.ITEM_DURATION_NEGATIVE, 'Duration days cannot be negative.');
+    }
+
+    if (!this._translations || this._translations.length === 0) {
+      throw new InvalidItemParameterException(MessageCode.ITEM_TRANSLATION_REQUIRED, 'At least one translation is required.');
+    }
+
+    // 효과(Effect) 유효성 기본 체크
+    for (const effect of this._effects) {
+      if (!effect.type) {
+        throw new InvalidItemParameterException(MessageCode.ITEM_EFFECT_INVALID, 'Item effect type is required.');
+      }
+    }
   }
 
   /**
@@ -109,44 +159,14 @@ export class ItemCatalog {
   }
 
   // --- Getters ---
-
-  get id(): bigint {
-    return this._id;
-  }
-
-  get code(): string {
-    return this._code;
-  }
-
-  get type(): ItemType {
-    return this._type;
-  }
-
-  get effects(): ItemEffect[] {
-    return this._effects;
-  }
-
-  get price(): Prisma.Decimal {
-    return this._price;
-  }
-
-  get priceCurrency(): ExchangeCurrencyCode {
-    return this._priceCurrency;
-  }
-
-  get durationDays(): number | null {
-    return this._durationDays;
-  }
-
-  get createdAt(): Date {
-    return this._createdAt;
-  }
-
-  get updatedAt(): Date {
-    return this._updatedAt;
-  }
-
-  get translations(): ItemTranslation[] {
-    return this._translations;
-  }
+  get id(): bigint { return this._id; }
+  get code(): string { return this._code; }
+  get type(): ItemType { return this._type; }
+  get effects(): ItemEffect[] { return this._effects; }
+  get price(): Prisma.Decimal { return this._price; }
+  get priceCurrency(): ExchangeCurrencyCode { return this._priceCurrency; }
+  get durationDays(): number | null { return this._durationDays; }
+  get createdAt(): Date { return this._createdAt; }
+  get updatedAt(): Date { return this._updatedAt; }
+  get translations(): ItemTranslation[] { return this._translations; }
 }

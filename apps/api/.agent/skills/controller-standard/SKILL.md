@@ -27,6 +27,10 @@ description: NestJS 컨트롤러 구현 표준 (API 디자인, Sqids 난독화, 
     *   **권한**: `@Admin()` 또는 `@RequireRoles()` 데코레이터 필수.
 *   **Public API (Unauthenticated)**:
     *   경로: `/public/{resource}` (예: `/public/tiers`, `/public/notices`)
+    *   **Master Data / Catalog Pattern**: 
+        *   게이미피케이션 레벨, 티어 등급 등 비회원에게도 공개되는 마스터 데이터는 명시적으로 `controllers/public/` 폴더에 배치합니다.
+        *   파일명칭은 `{domain}-public.controller.ts` 형식을 따릅니다. (예: `level-definition-public.controller.ts`)
+        *   Swagger 태그는 반드시 `Public` 접두사를 포함합니다. (예: `@ApiTags('Public Gamification Levels')`)
 
 ### 2. ID 난독화 (Sqids)
 사용자용 API에서 ID를 노출하거나 전달받을 때 필수 적용합니다.

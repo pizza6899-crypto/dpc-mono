@@ -57,3 +57,31 @@ export class LevelDefinitionNotFoundException extends GamificationCatalogExcepti
     this.name = 'LevelDefinitionNotFoundException';
   }
 }
+
+/**
+ * 특정 아이템을 찾을 수 없을 때
+ */
+export class ItemNotFoundException extends GamificationCatalogException {
+  constructor(identifier: string | bigint) {
+    super(
+      `Item not found: ${identifier}`,
+      MessageCode.ITEM_NOT_FOUND,
+      HttpStatus.NOT_FOUND,
+    );
+    this.name = 'ItemNotFoundException';
+  }
+}
+
+/**
+ * 아이템 파라미터가 유효하지 않을 때
+ */
+export class InvalidItemParameterException extends GamificationCatalogException {
+  constructor(messageCode: MessageCode, message: string = 'Invalid item parameter.') {
+    super(
+      message,
+      messageCode,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'InvalidItemParameterException';
+  }
+}

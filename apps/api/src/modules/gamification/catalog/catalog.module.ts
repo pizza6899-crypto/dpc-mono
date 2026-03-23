@@ -15,11 +15,13 @@ import { UpdateLevelDefinitionService } from './application/update-level-definit
 
 import { GamificationConfigAdminController } from './controllers/admin/gamification-config-admin.controller';
 import { LevelDefinitionAdminController } from './controllers/admin/level-definition-admin.controller';
+import { LevelDefinitionPublicController } from './controllers/public/level-definition-public.controller';
 
 @Module({
   controllers: [
     GamificationConfigAdminController,
     LevelDefinitionAdminController,
+    LevelDefinitionPublicController,
   ],
   providers: [
     // Repositories

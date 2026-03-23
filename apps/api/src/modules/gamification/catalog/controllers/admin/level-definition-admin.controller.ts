@@ -3,8 +3,6 @@ import {
   Controller,
   Get,
   Post,
-  Param,
-  ParseIntPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserRoleType } from '@prisma/client';
@@ -12,7 +10,6 @@ import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { ApiStandardResponse } from 'src/common/http/decorators/api-response.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
-
 import { GetLevelDefinitionListService } from '../../application/get-level-definition-list.service';
 import { UpdateLevelDefinitionService } from '../../application/update-level-definition.service';
 import { SaveLevelDefinitionAdminRequestDto } from './dto/request/update-level-definition-admin.request.dto';
