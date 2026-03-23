@@ -86,10 +86,7 @@ model ItemTranslation {
 }
 
 enum ItemType {
-  EQUIPMENT // 장착형 스탯 장비 (무기, 갑옷 등)
-  CONSUMABLE // 즉시 소모성 (XP 물약 등)
-  BUFF // 기간제 효율 증가 (콤프 요율 가산 등)
-  VOUCHER // 정기 지급형 (매일 쿠폰 지급 등)
+  ARTIFACT // 특별한 효과를 지닌 수집/장착형 유물
 }
 
 /// [Gamification] 아이템 및 스켓이 가질 수 있는 효과 유형

@@ -15,6 +15,7 @@ import type {
 import { UserStats } from '../domain/user-character.entity';
 import { UserCharacterLog } from '../domain/user-character-log.entity';
 import { FindUserCharacterService } from './find-user-character.service';
+import { SyncUserTotalStatsService } from './sync-user-total-stats.service';
 
 export interface AllocateStatPointsParams {
   userId: bigint;
@@ -31,6 +32,7 @@ export class AllocateStatPointsService {
     private readonly logRepo: UserCharacterLogRepositoryPort,
     private readonly getConfigService: GetGamificationConfigService,
     private readonly findUserCharacterService: FindUserCharacterService,
+    private readonly syncTotalStatsService: SyncUserTotalStatsService,
     private readonly advisoryLockService: AdvisoryLockService,
   ) { }
 
@@ -55,6 +57,9 @@ export class AllocateStatPointsService {
 
     // 변경된 스탯 저장
     await this.characterRepo.save(character);
+
+    // [중요] 기본 스탯이 변했으므로 최종 스탯(Base + Bonus) 캐시 필드 동기화 수행
+    await this.syncTotalStatsService.execute(character.userId);
 
     // 투자 이력 로그 저장
     const log = UserCharacterLog.create({

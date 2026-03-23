@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { GamificationCatalogModule } from '../catalog/catalog.module';
+import { GamificationInventoryModule } from '../inventory/inventory.module';
 import { WalletModule } from '../../wallet/wallet.module';
 
 // Controllers
@@ -12,6 +13,7 @@ import { FindUserCharacterService } from './application/find-user-character.serv
 import { FindUserCharacterLogsService } from './application/find-user-character-logs.service';
 import { AllocateStatPointsService } from './application/allocate-stat-points.service';
 import { GainXpService } from './application/gain-xp.service';
+import { SyncUserTotalStatsService } from './application/sync-user-total-stats.service';
 import { ResetStatsAdminService } from './application/reset-stats-admin.service';
 import { ResetStatsUserService } from './application/reset-stats-user.service';
 
@@ -28,6 +30,7 @@ import { USER_CHARACTER_REPOSITORY_PORT, USER_CHARACTER_LOG_REPOSITORY_PORT } fr
   imports: [
     ConcurrencyModule,
     GamificationCatalogModule,
+    GamificationInventoryModule,
     WalletModule,
   ],
   controllers: [
@@ -40,6 +43,7 @@ import { USER_CHARACTER_REPOSITORY_PORT, USER_CHARACTER_LOG_REPOSITORY_PORT } fr
     FindUserCharacterLogsService,
     AllocateStatPointsService,
     GainXpService,
+    SyncUserTotalStatsService,
     ResetStatsAdminService,
     ResetStatsUserService,
 
@@ -61,6 +65,7 @@ import { USER_CHARACTER_REPOSITORY_PORT, USER_CHARACTER_LOG_REPOSITORY_PORT } fr
     // External modules might want to award XP
     GainXpService,
     FindUserCharacterService,
+    SyncUserTotalStatsService,
   ],
 })
 export class GamificationCharacterModule { }

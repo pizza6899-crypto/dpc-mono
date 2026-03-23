@@ -27,6 +27,7 @@ export class UserCharacter {
     private _statPoints: number,
     private _totalStatPoints: number,
     private _stats: UserStats,
+    private _totalStats: UserStats,
     private _statResetCount: number,
     private _currentTitle: string | null,
     private _lastLeveledUpAt: Date | null,
@@ -49,6 +50,12 @@ export class UserCharacter {
     wisdom: number;
     stamina: number;
     charisma: number;
+    totalStrength: number;
+    totalAgility: number;
+    totalLuck: number;
+    totalWisdom: number;
+    totalStamina: number;
+    totalCharisma: number;
     statResetCount: number;
     currentTitle: string | null;
     lastLeveledUpAt: Date | null;
@@ -69,6 +76,14 @@ export class UserCharacter {
         stamina: data.stamina,
         charisma: data.charisma,
       },
+      {
+        strength: data.totalStrength,
+        agility: data.totalAgility,
+        luck: data.totalLuck,
+        wisdom: data.totalWisdom,
+        stamina: data.totalStamina,
+        charisma: data.totalCharisma,
+      },
       data.statResetCount,
       data.currentTitle,
       data.lastLeveledUpAt,
@@ -87,6 +102,14 @@ export class UserCharacter {
       new Prisma.Decimal(0), // default xp
       0, // statPoints
       0, // totalStatPoints
+      {
+        strength: 0,
+        agility: 0,
+        luck: 0,
+        wisdom: 0,
+        stamina: 0,
+        charisma: 0,
+      },
       {
         strength: 0,
         agility: 0,
@@ -191,6 +214,24 @@ export class UserCharacter {
   }
 
   /**
+   * 최종 스탯 동기화 (기본 스탯 + 외부 보너스 합산)
+   * 
+   * 아이템 장착/해제 혹은 포인트 투자 시 호출하여 캐시 필드를 업데이트합니다.
+   * @param bonuses 아이템/유물 등에서 오는 순수 보너스 수치 합계
+   */
+  syncTotalStats(bonuses: UserStats): void {
+    this._totalStats = {
+      strength: this._stats.strength + bonuses.strength,
+      agility: this._stats.agility + bonuses.agility,
+      luck: this._stats.luck + bonuses.luck,
+      wisdom: this._stats.wisdom + bonuses.wisdom,
+      stamina: this._stats.stamina + bonuses.stamina,
+      charisma: this._stats.charisma + bonuses.charisma,
+    };
+    this._updatedAt = new Date();
+  }
+
+  /**
    * 칭호 장착
    */
   equipTitle(title: string | null): void {
@@ -212,6 +253,13 @@ export class UserCharacter {
   get wisdom(): number { return this._stats.wisdom; }
   get stamina(): number { return this._stats.stamina; }
   get charisma(): number { return this._stats.charisma; }
+
+  get totalStrength(): number { return this._totalStats.strength; }
+  get totalAgility(): number { return this._totalStats.agility; }
+  get totalLuck(): number { return this._totalStats.luck; }
+  get totalWisdom(): number { return this._totalStats.wisdom; }
+  get totalStamina(): number { return this._totalStats.stamina; }
+  get totalCharisma(): number { return this._totalStats.charisma; }
 
   get statResetCount(): number { return this._statResetCount; }
   get currentTitle(): string | null { return this._currentTitle; }

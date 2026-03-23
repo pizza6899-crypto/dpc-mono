@@ -12,13 +12,22 @@ model UserCharacter {
   statPoints      Int @default(0) @map("stat_points") // 현재 가용 스텟 포인트 (잔액)
   totalStatPoints Int @default(0) @map("total_stat_points") // 지금까지 획득한 총 스텟 포인트 (검증용)
 
-  // [6가지 핵심 스탯]
+  // [6가지 포인트 투자 스탯]
   strength Int @default(0) // STR: 카지노 콤프 적립 효율
   agility  Int @default(0) // DEX: 스포츠/미니게임 콤프 적립 효율
   luck     Int @default(0) // LUC: 윈 2배 확률 및 루즈 복구 확률
   wisdom   Int @default(0) // INT: 경험치(XP) 획득량 보정
   stamina  Int @default(0) // VIT: 아이템 지속 시간 및 버프 효율
   charisma Int @default(0) // CHA: 정기 보상(매일 쿠폰 등) 수량/확률 보정
+
+  // [6가지 최종 스탯 - 런타임 성능 최적화용 캐시 필드]
+  // 구성: 기본 스탯(포인트 투자) + 아이템/유물 보너스 수치
+  totalStrength Int @default(0) @map("total_strength")
+  totalAgility  Int @default(0) @map("total_agility")
+  totalLuck     Int @default(0) @map("total_luck")
+  totalWisdom   Int @default(0) @map("total_wisdom")
+  totalStamina  Int @default(0) @map("total_stamina")
+  totalCharisma Int @default(0) @map("total_charisma")
 
   // [메타 정보]
   statResetCount  Int       @default(0) @map("stat_reset_count") // 스텟 초기화 횟수

@@ -23,6 +23,7 @@ import {
 import { GamificationConfigNotFoundException } from '../../catalog/domain/catalog.exception';
 import { UserCharacter } from '../domain/user-character.entity';
 import { UserCharacterLog } from '../domain/user-character-log.entity';
+import { SyncUserTotalStatsService } from './sync-user-total-stats.service';
 
 /**
  * 유저 자발적 스탯 초기화 서비스
@@ -43,6 +44,8 @@ export class ResetStatsUserService {
     private readonly configRepository: GamificationConfigRepositoryPort,
 
     private readonly updateUserBalanceService: UpdateUserBalanceService,
+
+    private readonly syncTotalStatsService: SyncUserTotalStatsService,
 
     private readonly advisoryLockService: AdvisoryLockService,
   ) { }
@@ -118,6 +121,9 @@ export class ResetStatsUserService {
 
     // 6. 변경사항 영속화
     await this.repository.save(character);
+
+    // [중요] 스탯이 초기화되었으므로 최종 스탯 캐시 필드도 동기화
+    await this.syncTotalStatsService.execute(character.userId);
 
     // 7. 초기화 이력 로그 저장
     const log = UserCharacterLog.create({
