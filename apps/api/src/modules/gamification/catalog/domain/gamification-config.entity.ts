@@ -1,5 +1,5 @@
-import type { ExchangeCurrencyCode } from '@prisma/client';
-import { Prisma } from '@prisma/client';
+import { Prisma, ExchangeCurrencyCode } from '@prisma/client';
+import { MessageCode } from '@repo/shared';
 import { InvalidGamificationConfigParameterException } from './catalog.exception';
 
 /**
@@ -61,28 +61,28 @@ export class GamificationConfig {
   }): void {
     if (params.expGrantMultiplierUsd !== undefined) {
       if (params.expGrantMultiplierUsd.isNegative()) {
-        throw new InvalidGamificationConfigParameterException('XP multiplier cannot be negative.');
+        throw new InvalidGamificationConfigParameterException(MessageCode.GAMIFICATION_CONFIG_EXP_MULTIPLIER_NEGATIVE, 'XP multiplier cannot be negative.');
       }
       this._expGrantMultiplierUsd = params.expGrantMultiplierUsd;
     }
 
     if (params.statPointGrantPerLevel !== undefined) {
       if (params.statPointGrantPerLevel < 0) {
-        throw new InvalidGamificationConfigParameterException('Stat points grant per level cannot be negative.');
+        throw new InvalidGamificationConfigParameterException(MessageCode.GAMIFICATION_CONFIG_STAT_POINT_NEGATIVE, 'Stat points grant per level cannot be negative.');
       }
       this._statPointGrantPerLevel = params.statPointGrantPerLevel;
     }
 
     if (params.maxStatLimit !== undefined) {
       if (params.maxStatLimit < 1) {
-        throw new InvalidGamificationConfigParameterException('Max stat limit must be at least 1.');
+        throw new InvalidGamificationConfigParameterException(MessageCode.GAMIFICATION_CONFIG_STAT_LIMIT_NEGATIVE, 'Max stat limit must be at least 1.');
       }
       this._maxStatLimit = params.maxStatLimit;
     }
 
     if (params.statResetPrice !== undefined) {
       if (params.statResetPrice.isNegative()) {
-        throw new InvalidGamificationConfigParameterException('Stat reset price cannot be negative.');
+        throw new InvalidGamificationConfigParameterException(MessageCode.GAMIFICATION_CONFIG_PRICE_NEGATIVE, 'Stat reset price cannot be negative.');
       }
       this._statResetPrice = params.statResetPrice;
     }

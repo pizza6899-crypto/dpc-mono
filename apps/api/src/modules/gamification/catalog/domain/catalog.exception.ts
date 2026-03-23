@@ -31,15 +31,29 @@ export class GamificationConfigNotFoundException extends GamificationCatalogExce
 }
 
 /**
- * 게이미피케이션 전역 설정의 파라미터가 유효하지 않을 때 (예: 음수)
+ * 게이미피케이션 관련 설정 파라미터가 유효하지 않을 때
  */
 export class InvalidGamificationConfigParameterException extends GamificationCatalogException {
-  constructor(message: string) {
+  constructor(messageCode: MessageCode, message: string = 'Invalid gamification parameter.') {
     super(
       message,
-      MessageCode.GAMIFICATION_CONFIG_INVALID,
+      messageCode,
       HttpStatus.BAD_REQUEST,
     );
     this.name = 'InvalidGamificationConfigParameterException';
+  }
+}
+
+/**
+ * 특정 레벨 정의를 찾을 수 없을 때
+ */
+export class LevelDefinitionNotFoundException extends GamificationCatalogException {
+  constructor(level: number) {
+    super(
+      `Level definition not found for level: ${level}`,
+      MessageCode.LEVEL_DEFINITION_NOT_FOUND,
+      HttpStatus.NOT_FOUND,
+    );
+    this.name = 'LevelDefinitionNotFoundException';
   }
 }

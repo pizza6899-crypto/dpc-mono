@@ -1,20 +1,20 @@
-import type { TierCode } from '@prisma/client';
-import { Prisma } from '@prisma/client';
+import { Prisma, TierCode } from '@prisma/client';
+import { MessageCode } from '@repo/shared';
+import { InvalidGamificationConfigParameterException } from './catalog.exception';
 
 /**
- * [Gamification] 레벨 정의 마스터 데이터 도메인 엔티티
+ * [Gamification] 레벨 정의 도메인 엔티티
  * 
- * 특정 레벨에 도달하기 위한 필요 경험치(XP), 티어 정보,
- * 그리고 해당 레벨 도달 시 부여되는 보너스 스탯 포인트를 관리합니다.
+ * 특정 레벨에 도달하기 위한 필요 경험치(Required XP)와
+ * 해당 레벨 도달 시의 티어 분류 및 보상 정책을 정의합니다.
  */
 export class LevelDefinition {
   private constructor(
     private readonly _level: number,
-    private readonly _requiredXp: Prisma.Decimal,
-    private readonly _tierCode: TierCode,
-    private readonly _tierImageUrl: string | null,
-    private readonly _statPointsBoost: number,
-    private readonly _createdAt: Date,
+    private _requiredXp: Prisma.Decimal,
+    private _tierCode: TierCode,
+    private _tierImageUrl: string | null,
+    private _statPointsBoost: number,
     private readonly _updatedAt: Date,
   ) { }
 
@@ -27,7 +27,6 @@ export class LevelDefinition {
     tierCode: TierCode;
     tierImageUrl: string | null;
     statPointsBoost: number;
-    createdAt: Date;
     updatedAt: Date;
   }): LevelDefinition {
     return new LevelDefinition(
@@ -36,37 +35,40 @@ export class LevelDefinition {
       data.tierCode,
       data.tierImageUrl,
       data.statPointsBoost,
-      data.createdAt,
       data.updatedAt,
     );
   }
 
   /**
-   * 새로운 레벨 정의 생성
+   * 레벨 설정 업데이트
    */
-  static create(params: {
-    level: number;
-    requiredXp: Prisma.Decimal;
-    tierCode: TierCode;
+  update(params: {
+    requiredXp?: Prisma.Decimal;
+    tierCode?: TierCode;
     tierImageUrl?: string | null;
     statPointsBoost?: number;
-  }): LevelDefinition {
-    return new LevelDefinition(
-      params.level,
-      params.requiredXp,
-      params.tierCode,
-      params.tierImageUrl ?? null,
-      params.statPointsBoost ?? 0,
-      new Date(),
-      new Date(),
-    );
-  }
+  }): void {
+    if (params.requiredXp !== undefined) {
+      if (params.requiredXp.isNegative()) {
+        throw new InvalidGamificationConfigParameterException(MessageCode.GAMIFICATION_LEVEL_REQUIRED_XP_NEGATIVE, 'Required XP cannot be negative.');
+      }
+      this._requiredXp = params.requiredXp;
+    }
 
-  /**
-   * 주어진 XP가 이 레벨에 계속 머무를 수 있는지 확인
-   */
-  isMaintainable(currentXp: Prisma.Decimal): boolean {
-    return currentXp.greaterThanOrEqualTo(this._requiredXp);
+    if (params.tierCode !== undefined) {
+      this._tierCode = params.tierCode;
+    }
+
+    if (params.tierImageUrl !== undefined) {
+      this._tierImageUrl = params.tierImageUrl;
+    }
+
+    if (params.statPointsBoost !== undefined) {
+      if (params.statPointsBoost < 0) {
+        throw new InvalidGamificationConfigParameterException(MessageCode.GAMIFICATION_LEVEL_STAT_BOOST_NEGATIVE, 'Stat points boost cannot be negative.');
+      }
+      this._statPointsBoost = params.statPointsBoost;
+    }
   }
 
   // --- Getters ---
@@ -89,10 +91,6 @@ export class LevelDefinition {
 
   get statPointsBoost(): number {
     return this._statPointsBoost;
-  }
-
-  get createdAt(): Date {
-    return this._createdAt;
   }
 
   get updatedAt(): Date {

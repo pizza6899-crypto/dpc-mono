@@ -1,18 +1,26 @@
 import { LevelDefinition } from '../domain/level-definition.entity';
 
-/**
- * 게이미피케이션 레벨 정의 마스터 데이터를 위한 레포지토리 포트
- */
+export const LEVEL_DEFINITION_REPOSITORY_PORT = Symbol('LEVEL_DEFINITION_REPOSITORY_PORT');
+
 export interface LevelDefinitionRepositoryPort {
   /**
-   * 특정 레벨의 정의 조회
+   * 모든 레벨 정의 목록을 레벨 오름차순으로 조회합니다.
    */
-  findLevelDefinition(level: number): Promise<LevelDefinition | null>;
+  findAll(): Promise<LevelDefinition[]>;
 
   /**
-   * 모든 레벨 정의 조회 (컬렉션 순회용)
+   * 특정 레벨의 정의를 조회합니다.
    */
-  findAllLevelDefinitions(): Promise<LevelDefinition[]>;
-}
+  findByLevel(level: number): Promise<LevelDefinition | null>;
 
-export const LEVEL_DEFINITION_REPOSITORY_PORT = Symbol('LEVEL_DEFINITION_REPOSITORY_PORT');
+  /**
+   * 레벨 정의를 저장합니다 (Upsert).
+   */
+  save(levelDefinition: LevelDefinition): Promise<void>;
+
+  /**
+   * 특정 경험치(XP)에서 도달 가능한 최대 레벨을 찾습니다.
+   * (성장 로그 처리 시 사용)
+   */
+  findLevelByXp(xp: number): Promise<LevelDefinition | null>;
+}

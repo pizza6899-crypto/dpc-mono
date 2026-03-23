@@ -141,5 +141,10 @@ export const CACHE_CONFIG = {
       ttlSeconds: 60, // 1분 L1 캐시
       store: CacheStore.MEMORY,
     },
+    LEVEL_LIST: {
+      key: 'gamification:level-definition:all',
+      ttlSeconds: 300, // 5분 L1 캐시
+      store: CacheStore.MEMORY,
+    },
   },
 } as const;
