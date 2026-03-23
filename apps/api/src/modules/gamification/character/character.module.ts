@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { GamificationCatalogModule } from '../catalog/catalog.module';
 import { GamificationInventoryModule } from '../inventory/inventory.module';
@@ -30,7 +30,7 @@ import { USER_CHARACTER_REPOSITORY_PORT, USER_CHARACTER_LOG_REPOSITORY_PORT } fr
   imports: [
     ConcurrencyModule,
     GamificationCatalogModule,
-    GamificationInventoryModule,
+    forwardRef(() => GamificationInventoryModule),
     WalletModule,
   ],
   controllers: [
