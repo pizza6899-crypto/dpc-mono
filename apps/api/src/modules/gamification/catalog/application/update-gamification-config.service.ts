@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { Transactional } from '@nestjs-cls/transactional';
 import { GamificationConfigNotFoundException } from '../domain/catalog.exception';
 import { Prisma, ExchangeCurrencyCode } from '@prisma/client';
 import {
@@ -29,6 +30,7 @@ export class UpdateGamificationConfigService {
    * 전역 게이미피케이션 정책 설정을 업데이트합니다.
    * 싱글톤 엔티티를 조회한 후, 입력된 필드들만 부분적으로 수정하여 영속화합니다.
    */
+  @Transactional()
   async execute(params: UpdateGamificationConfigParams): Promise<GamificationConfig> {
     const existingConfig = await this.repository.findConfig();
 
