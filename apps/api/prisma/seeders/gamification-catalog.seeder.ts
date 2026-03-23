@@ -11,8 +11,8 @@ export async function seedGamificationConfig(prisma: PrismaClient) {
     update: {},
     create: {
       id: configId,
-      expGrantMultiplierUsd: 1.0,
-      statPointGrantPerLevel: 1,
+      xpGrantMultiplierUsd: 1.0,
+      statPointsGrantPerLevel: 1,
       maxStatLimit: 999,
       statResetPrice: 10000,
       statResetCurrency: 'KRW',

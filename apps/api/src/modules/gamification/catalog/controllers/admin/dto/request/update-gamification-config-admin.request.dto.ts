@@ -20,7 +20,7 @@ export class UpdateGamificationConfigAdminRequestDto {
   })
   @IsOptional()
   @Transform(({ value }) => new Prisma.Decimal(value))
-  expGrantMultiplierUsd?: Prisma.Decimal;
+  xpGrantMultiplierUsd?: Prisma.Decimal;
 
   @ApiPropertyOptional({
     description: 'Stat points granted per level up / 레벨업당 지급 스탯 포인트',
@@ -29,7 +29,7 @@ export class UpdateGamificationConfigAdminRequestDto {
   @IsOptional()
   @IsNumber()
   @Min(0)
-  statPointGrantPerLevel?: number;
+  statPointsGrantPerLevel?: number;
 
   @ApiPropertyOptional({
     description: 'Maximum cap for a single stat / 단일 스탯 최대 한도',

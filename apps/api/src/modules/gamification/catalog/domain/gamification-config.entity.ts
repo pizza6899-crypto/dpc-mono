@@ -15,8 +15,8 @@ export class GamificationConfig {
   static readonly CONFIG_ID = 1;
 
   private constructor(
-    private _expGrantMultiplierUsd: Prisma.Decimal,
-    private _statPointGrantPerLevel: number,
+    private _xpGrantMultiplierUsd: Prisma.Decimal,
+    private _statPointsGrantPerLevel: number,
     private _maxStatLimit: number,
     private _statResetPrice: Prisma.Decimal,
     private _statResetCurrency: ExchangeCurrencyCode,
@@ -27,16 +27,16 @@ export class GamificationConfig {
    * 영속성 계층에서 복원
    */
   static rehydrate(data: {
-    expGrantMultiplierUsd: Prisma.Decimal;
-    statPointGrantPerLevel: number;
+    xpGrantMultiplierUsd: Prisma.Decimal;
+    statPointsGrantPerLevel: number;
     maxStatLimit: number;
     statResetPrice: Prisma.Decimal;
     statResetCurrency: ExchangeCurrencyCode;
     updatedAt: Date;
   }): GamificationConfig {
     return new GamificationConfig(
-      data.expGrantMultiplierUsd,
-      data.statPointGrantPerLevel,
+      data.xpGrantMultiplierUsd,
+      data.statPointsGrantPerLevel,
       data.maxStatLimit,
       data.statResetPrice,
       data.statResetCurrency,
@@ -53,24 +53,24 @@ export class GamificationConfig {
    * 각 필드의 최소/최댓값 등 도메인 제약 조건을 검증할 수 있는 지점입니다.
    */
   update(params: {
-    expGrantMultiplierUsd?: Prisma.Decimal;
-    statPointGrantPerLevel?: number;
+    xpGrantMultiplierUsd?: Prisma.Decimal;
+    statPointsGrantPerLevel?: number;
     maxStatLimit?: number;
     statResetPrice?: Prisma.Decimal;
     statResetCurrency?: ExchangeCurrencyCode;
   }): void {
-    if (params.expGrantMultiplierUsd !== undefined) {
-      if (params.expGrantMultiplierUsd.isNegative()) {
-        throw new InvalidGamificationConfigParameterException(MessageCode.GAMIFICATION_CONFIG_EXP_MULTIPLIER_NEGATIVE, 'XP multiplier cannot be negative.');
+    if (params.xpGrantMultiplierUsd !== undefined) {
+      if (params.xpGrantMultiplierUsd.isNegative()) {
+        throw new InvalidGamificationConfigParameterException(MessageCode.GAMIFICATION_CONFIG_XP_MULTIPLIER_NEGATIVE, 'XP multiplier cannot be negative.');
       }
-      this._expGrantMultiplierUsd = params.expGrantMultiplierUsd;
+      this._xpGrantMultiplierUsd = params.xpGrantMultiplierUsd;
     }
 
-    if (params.statPointGrantPerLevel !== undefined) {
-      if (params.statPointGrantPerLevel < 0) {
-        throw new InvalidGamificationConfigParameterException(MessageCode.GAMIFICATION_CONFIG_STAT_POINT_NEGATIVE, 'Stat points grant per level cannot be negative.');
+    if (params.statPointsGrantPerLevel !== undefined) {
+      if (params.statPointsGrantPerLevel < 0) {
+        throw new InvalidGamificationConfigParameterException(MessageCode.GAMIFICATION_CONFIG_STAT_POINTS_NEGATIVE, 'Stat points grant per level cannot be negative.');
       }
-      this._statPointGrantPerLevel = params.statPointGrantPerLevel;
+      this._statPointsGrantPerLevel = params.statPointsGrantPerLevel;
     }
 
     if (params.maxStatLimit !== undefined) {
@@ -98,7 +98,7 @@ export class GamificationConfig {
    * 베팅 금액(USD)에 따른 획득 경험치 계산
    */
   calculateEarnedXp(betAmountUsd: Prisma.Decimal): Prisma.Decimal {
-    return betAmountUsd.mul(this._expGrantMultiplierUsd);
+    return betAmountUsd.mul(this._xpGrantMultiplierUsd);
   }
 
   /**
@@ -115,12 +115,12 @@ export class GamificationConfig {
     return GamificationConfig.CONFIG_ID;
   }
 
-  get expGrantMultiplierUsd(): Prisma.Decimal {
-    return this._expGrantMultiplierUsd;
+  get xpGrantMultiplierUsd(): Prisma.Decimal {
+    return this._xpGrantMultiplierUsd;
   }
 
-  get statPointGrantPerLevel(): number {
-    return this._statPointGrantPerLevel;
+  get statPointsGrantPerLevel(): number {
+    return this._statPointsGrantPerLevel;
   }
 
   get maxStatLimit(): number {

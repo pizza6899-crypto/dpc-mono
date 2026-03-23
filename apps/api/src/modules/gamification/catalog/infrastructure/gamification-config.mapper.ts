@@ -10,9 +10,9 @@ export class GamificationConfigMapper {
    */
   toDomain(prismaConfig: PersistenceOf<PrismaGamificationConfig>): GamificationConfig {
     return GamificationConfig.rehydrate({
-      expGrantMultiplierUsd: Cast.decimal(prismaConfig.expGrantMultiplierUsd),
+      xpGrantMultiplierUsd: Cast.decimal(prismaConfig.xpGrantMultiplierUsd),
       maxStatLimit: prismaConfig.maxStatLimit,
-      statPointGrantPerLevel: prismaConfig.statPointGrantPerLevel,
+      statPointsGrantPerLevel: prismaConfig.statPointsGrantPerLevel,
       statResetCurrency: prismaConfig.statResetCurrency,
       statResetPrice: Cast.decimal(prismaConfig.statResetPrice),
       updatedAt: Cast.date(prismaConfig.updatedAt),
@@ -25,9 +25,9 @@ export class GamificationConfigMapper {
   toPrismaUpsert(config: GamificationConfig): Prisma.GamificationConfigUpdateInput & Prisma.GamificationConfigCreateInput {
     return {
       id: GamificationConfig.CONFIG_ID,
-      expGrantMultiplierUsd: config.expGrantMultiplierUsd,
+      xpGrantMultiplierUsd: config.xpGrantMultiplierUsd,
       maxStatLimit: config.maxStatLimit,
-      statPointGrantPerLevel: config.statPointGrantPerLevel,
+      statPointsGrantPerLevel: config.statPointsGrantPerLevel,
       statResetCurrency: config.statResetCurrency,
       statResetPrice: config.statResetPrice,
     };

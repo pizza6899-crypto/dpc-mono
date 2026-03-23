@@ -10,10 +10,10 @@ export class GamificationConfigAdminResponseDto {
   id: number;
 
   @ApiProperty({ description: 'XP multiplier per USD rolling / 1 USD 베팅당 획득 경험치 배율', example: '1.25' })
-  expGrantMultiplierUsd: string;
+  xpGrantMultiplierUsd: string;
 
   @ApiProperty({ description: 'Stat points granted per level up / 레벨업당 지급 스탯 포인트', example: 1 })
-  statPointGrantPerLevel: number;
+  statPointsGrantPerLevel: number;
 
   @ApiProperty({ description: 'Maximum cap for a single stat / 단일 스탯 최대 한도', example: 999 })
   maxStatLimit: number;

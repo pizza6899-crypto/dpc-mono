@@ -35,8 +35,8 @@ export class GamificationConfigAdminController {
 
     return {
       id: config.id,
-      expGrantMultiplierUsd: config.expGrantMultiplierUsd.toString(),
-      statPointGrantPerLevel: config.statPointGrantPerLevel,
+      xpGrantMultiplierUsd: config.xpGrantMultiplierUsd.toString(),
+      statPointsGrantPerLevel: config.statPointsGrantPerLevel,
       maxStatLimit: config.maxStatLimit,
       statResetPrice: config.statResetPrice.toString(),
       statResetCurrency: config.statResetCurrency,
@@ -67,8 +67,8 @@ export class GamificationConfigAdminController {
 
     return {
       id: config.id,
-      expGrantMultiplierUsd: config.expGrantMultiplierUsd.toString(),
-      statPointGrantPerLevel: config.statPointGrantPerLevel,
+      xpGrantMultiplierUsd: config.xpGrantMultiplierUsd.toString(),
+      statPointsGrantPerLevel: config.statPointsGrantPerLevel,
       maxStatLimit: config.maxStatLimit,
       statResetPrice: config.statResetPrice.toString(),
       statResetCurrency: config.statResetCurrency,

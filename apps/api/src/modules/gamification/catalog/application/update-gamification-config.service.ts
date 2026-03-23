@@ -12,8 +12,8 @@ import { GamificationConfig } from '../domain/gamification-config.entity';
  * 게이미피케이션 정책 업데이트를 위한 파라미터 규격
  */
 export interface UpdateGamificationConfigParams {
-  expGrantMultiplierUsd?: Prisma.Decimal;
-  statPointGrantPerLevel?: number;
+  xpGrantMultiplierUsd?: Prisma.Decimal;
+  statPointsGrantPerLevel?: number;
   maxStatLimit?: number;
   statResetPrice?: Prisma.Decimal;
   statResetCurrency?: ExchangeCurrencyCode;

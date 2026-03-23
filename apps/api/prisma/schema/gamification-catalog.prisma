@@ -6,14 +6,14 @@ model GamificationConfig {
 
   // [XP Policy]
   // 1 USD 베팅(Rolling)당 획득할 경험치 배율
-  // 📝 계산식: 획득 XP = (베팅 USD 금액) * exp_grant_multiplier_usd
-  expGrantMultiplierUsd Decimal @default(1.0) @map("exp_grant_multiplier_usd") @db.Decimal(32, 18)
+  // 📝 계산식: 획득 XP = (베팅 USD 금액) * xp_grant_multiplier_usd
+  xpGrantMultiplierUsd Decimal @default(1.0) @map("xp_grant_multiplier_usd") @db.Decimal(32, 18)
 
   // [Stat Policy]
   // 레벨업당 지급되는 기본 스텟 포인트
-  statPointGrantPerLevel Int @default(1) @map("stat_point_grant_per_level")
+  statPointsGrantPerLevel Int @default(1) @map("stat_points_grant_per_level")
   // 한 스텟에 투자할 수 있는 최대 수량 (상한선)
-  maxStatLimit           Int @default(999) @map("max_stat_limit")
+  maxStatLimit            Int @default(999) @map("max_stat_limit")
 
   // [Reset Policy]
   // 스텟 초기화 비용 및 통화
