@@ -1,0 +1,40 @@
+/// [Gamification] 유저 인벤토리 및 장착 상태
+model UserInventory {
+  id     BigInt @id @default(autoincrement()) // Snowflake ID 호환 및 대규모 누적 고려 BigInt 유지
+  userId BigInt @map("user_id")
+  itemId BigInt @map("item_id") // ItemCatalog와 연동되는 FK 타입도 BigInt로 통일
+
+  quantity Int @default(1)
+
+  // 상태: PENDING(미사용/미장착), ACTIVE(사용중/장착중), EXPIRED(만료), CONSUMED(소모됨)
+  status InventoryStatus @default(PENDING)
+
+  // 장착 슬롯 (무기, 갑옷, 장신구 등 - 스탯 합산을 위해 필요)
+  slot ItemSlot?
+
+  activatedAt DateTime? @map("activated_at") // 아이템 사용/장착 시점
+  expiresAt   DateTime? @map("expires_at")   // 기간제 아이템 만료 시점
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user    User        @relation(fields: [userId], references: [id])
+  catalog ItemCatalog @relation(fields: [itemId], references: [id])
+
+  @@index([userId, status])
+  @@map("user_inventories")
+}
+
+enum InventoryStatus {
+  PENDING
+  ACTIVE
+  EXPIRED
+  CONSUMED
+}
+
+enum ItemSlot {
+  WEAPON
+  ARMOR
+  ACCESSORY_1
+  ACCESSORY_2
+}

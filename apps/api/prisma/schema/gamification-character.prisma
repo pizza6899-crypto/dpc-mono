@@ -1,0 +1,73 @@
+/// [Gamification] 유저 캐릭터 및 스탯 정보
+/// 
+/// 유저의 레벨, 경험치, 남은 스탯 포인트 및 6가지 핵심 능력치를 관리합니다.
+model UserCharacter {
+  userId BigInt @id @map("user_id")
+  level  Int    @default(1)
+
+  // 소수점 단위의 미세한 경험치 적립을 위해 Decimal로 관리 (정밀도 18자리)
+  xp Decimal @default(0) @db.Decimal(32, 18)
+
+  // [포인트 관리]
+  statPoints      Int @default(0) @map("stat_points") // 현재 가용 스텟 포인트 (잔액)
+  totalStatPoints Int @default(0) @map("total_stat_points") // 지금까지 획득한 총 스텟 포인트 (검증용)
+
+  // [6가지 핵심 스탯]
+  strength Int @default(10) // STR: 카지노 콤프 적립 효율
+  agility  Int @default(10) // DEX: 스포츠/미니게임 콤프 적립 효율
+  luck     Int @default(10) // LUC: 윈 2배 확률 및 루즈 복구 확률
+  wisdom   Int @default(10) // INT: 경험치(XP) 획득량 보정
+  stamina  Int @default(10) // VIT: 아이템 지속 시간 및 버프 효율
+  charisma Int @default(10) // CHA: 정기 보상(매일 쿠폰 등) 수량/확률 보정
+
+  // [메타 정보]
+  statResetCount  Int       @default(0) @map("stat_reset_count") // 스텟 초기화 횟수
+  currentTitle    String?   @map("current_title") // 현재 장착 중인 칭호 명칭
+  lastLeveledUpAt DateTime? @map("last_leveled_up_at") // 마지막 레벨업 시점
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User               @relation(fields: [userId], references: [id])
+  logs UserCharacterLog[]
+
+  @@map("user_characters")
+}
+
+/// [Gamification] 캐릭터 성장 및 스탯 변동 이력 로그
+/// 
+/// 레벨업 및 스텟 포인트 소모 내역을 상세히 기록하여 데이터 무결성을 보장합니다.
+model UserCharacterLog {
+  id     BigInt @id @default(autoincrement())
+  userId BigInt @map("user_id")
+
+  // 로그 타입: LEVEL_UP(레벨업), STAT_ALLOCATION(스텟 투자), STAT_RESET(스텟 초기화)
+  type CharacterLogType
+
+  // 변경 수치 스냅샷 (레벨)
+  beforeLevel Int @map("before_level")
+  afterLevel  Int @map("after_level")
+
+  // 변경 수치 스냅샷 (스텟 포인트)
+  beforeStatPoints Int @map("before_stat_points")
+  afterStatPoints  Int @map("after_stat_points")
+
+  // 상세 변동 내역 (JSON)
+  details Json? @map("details")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // 린트 에러 방지를 위해 명시적 맵 오버라이드 (FK 제약 조건명 충돌 해결)
+  user      User          @relation("UserLogs", fields: [userId], references: [id], map: "user_character_logs_user_ref_fkey")
+  character UserCharacter @relation(fields: [userId], references: [userId], map: "user_character_logs_char_ref_fkey")
+
+  @@index([userId, type])
+  @@index([createdAt])
+  @@map("user_character_logs")
+}
+
+enum CharacterLogType {
+  LEVEL_UP
+  STAT_ALLOCATION
+  STAT_RESET
+}

@@ -1,0 +1,114 @@
+/// [Gamification] 시스템 전역 정책 설정
+/// 
+/// 게이미피케이션 엔진의 밸런스와 비용 정책을 한곳에서 관리합니다.
+model GamificationConfig {
+  id Int @id @default(1) // 싱글톤으로 관리
+
+  // [XP Policy]
+  // 1 USD 베팅(Rolling)당 획득할 경험치 배율
+  // 📝 계산식: 획득 XP = (베팅 USD 금액) * exp_grant_multiplier_usd
+  expGrantMultiplierUsd Decimal @default(1.0) @map("exp_grant_multiplier_usd") @db.Decimal(32, 18)
+
+  // [Stat Policy]
+  // 레벨업당 지급되는 기본 스텟 포인트
+  statPointGrantPerLevel Int @default(1) @map("stat_point_grant_per_level")
+  // 한 스텟에 투자할 수 있는 최대 수량 (상한선)
+  maxStatLimit           Int @default(999) @map("max_stat_limit")
+
+  // [Reset Policy]
+  // 스텟 초기화 비용 및 통화
+  statResetPrice    Decimal              @default(10000) @map("stat_reset_price") @db.Decimal(32, 18)
+  statResetCurrency ExchangeCurrencyCode @default(KRW) @map("stat_reset_currency")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("gamification_config")
+}
+
+/// [Gamification] 레벨 정의 마스터 데이터
+/// 
+model LevelDefinition {
+  level Int @id // 레벨 그 자체가 PK
+
+  // [승급 요건]
+  requiredXp Decimal @map("required_xp") @db.Decimal(32, 18)
+
+  // [UI용 티어 보상] (Enum으로 타입 안정성 확보)
+  tierCode     TierCode @default(WHITE) @map("tier_code")
+  tierImageUrl String?  @map("tier_image_url") // 티어 뱃지 이미지 URL
+
+  // [기본 보상]
+  statPointsBoost Int @default(1) @map("stat_points_boost")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("level_definitions")
+}
+
+/// [Gamification] 아이템 카테고리 정보
+model ItemCatalog {
+  id   BigInt   @id @default(autoincrement())
+  code String   @unique // 시스템 내부 식별자 (예: "SWORD_001")
+  type ItemType
+
+  // 아이템의 효과 상세 정의 (EffectType 기반 JSON 구조)
+  effects Json @map("effects")
+
+  price         Decimal              @db.Decimal(32, 18)
+  priceCurrency ExchangeCurrencyCode @default(USD) @map("price_currency")
+
+  durationDays Int? @map("duration_days") // 기간제 아이템 여부
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  translations    ItemTranslation[]
+  userInventories UserInventory[]
+
+  @@map("item_catalog")
+}
+
+/// [Gamification] 아이템 다국어 번역 정보
+model ItemTranslation {
+  id       BigInt   @id @default(autoincrement())
+  itemId   BigInt   @map("item_id")
+  language Language // 시스템 표준 언어 Enum 사용
+
+  name        String
+  description String?
+
+  item ItemCatalog @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([itemId, language])
+  @@index([language])
+  @@map("item_translation")
+}
+
+enum ItemType {
+  EQUIPMENT // 장착형 스탯 장비 (무기, 갑옷 등)
+  CONSUMABLE // 즉시 소모성 (XP 물약 등)
+  BUFF // 기간제 효율 증가 (콤프 요율 가산 등)
+  VOUCHER // 정기 지급형 (매일 쿠폰 지급 등)
+}
+
+/// [Gamification] 아이템 및 스켓이 가질 수 있는 효과 유형
+enum EffectType {
+  STAT_BOOST // 특정 스텟(STR, LUC 등) 수치 가산
+  XP_BOOST // 경험치 획득량 가산 (%)
+  COMP_BOOST // 모든 콤프 적립 요율 가산 (%)
+  LUCKY_WIN_PROB // 윈 2배 발생 확률 가산 (%)
+  LOSS_RECOVERY_PROB // 루즈 시 복구 발생 확률 가산 (%)
+  DAILY_VOUCHER // 정기적인 쿠폰/머니 지급
+}
+
+/// [Gamification] 레벨 구간별 UI용 티어 분류 (순수 시각적 보상용)
+enum TierCode {
+  WHITE
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+  DIAMOND
+  VIP
+}
