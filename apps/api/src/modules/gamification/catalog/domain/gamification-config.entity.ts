@@ -1,5 +1,6 @@
 import type { ExchangeCurrencyCode } from '@prisma/client';
 import { Prisma } from '@prisma/client';
+import { InvalidGamificationConfigParameterException } from './catalog.exception';
 
 /**
  * [Gamification] 시스템 전역 정책 설정 도메인 엔티티
@@ -14,13 +15,13 @@ export class GamificationConfig {
   static readonly CONFIG_ID = 1;
 
   private constructor(
-    private readonly _expGrantMultiplierUsd: Prisma.Decimal,
-    private readonly _statPointGrantPerLevel: number,
-    private readonly _maxStatLimit: number,
-    private readonly _statResetPrice: Prisma.Decimal,
-    private readonly _statResetCurrency: ExchangeCurrencyCode,
-    private readonly _updatedAt: Date,
-  ) {}
+    private _expGrantMultiplierUsd: Prisma.Decimal,
+    private _statPointGrantPerLevel: number,
+    private _maxStatLimit: number,
+    private _statResetPrice: Prisma.Decimal,
+    private _statResetCurrency: ExchangeCurrencyCode,
+    private _updatedAt: Date,
+  ) { }
 
   /**
    * 영속성 계층에서 복원
@@ -44,6 +45,54 @@ export class GamificationConfig {
   }
 
   // --- Logic Methods ---
+
+  /**
+   * 도메인 필드 업데이트
+   * 
+   * 입력된 파라미터로 설정값을 부분적으로 업데이트합니다.
+   * 각 필드의 최소/최댓값 등 도메인 제약 조건을 검증할 수 있는 지점입니다.
+   */
+  update(params: {
+    expGrantMultiplierUsd?: Prisma.Decimal;
+    statPointGrantPerLevel?: number;
+    maxStatLimit?: number;
+    statResetPrice?: Prisma.Decimal;
+    statResetCurrency?: ExchangeCurrencyCode;
+  }): void {
+    if (params.expGrantMultiplierUsd !== undefined) {
+      if (params.expGrantMultiplierUsd.isNegative()) {
+        throw new InvalidGamificationConfigParameterException('XP multiplier cannot be negative.');
+      }
+      this._expGrantMultiplierUsd = params.expGrantMultiplierUsd;
+    }
+
+    if (params.statPointGrantPerLevel !== undefined) {
+      if (params.statPointGrantPerLevel < 0) {
+        throw new InvalidGamificationConfigParameterException('Stat points grant per level cannot be negative.');
+      }
+      this._statPointGrantPerLevel = params.statPointGrantPerLevel;
+    }
+
+    if (params.maxStatLimit !== undefined) {
+      if (params.maxStatLimit < 1) {
+        throw new InvalidGamificationConfigParameterException('Max stat limit must be at least 1.');
+      }
+      this._maxStatLimit = params.maxStatLimit;
+    }
+
+    if (params.statResetPrice !== undefined) {
+      if (params.statResetPrice.isNegative()) {
+        throw new InvalidGamificationConfigParameterException('Stat reset price cannot be negative.');
+      }
+      this._statResetPrice = params.statResetPrice;
+    }
+
+    if (params.statResetCurrency !== undefined) {
+      this._statResetCurrency = params.statResetCurrency;
+    }
+
+    this._updatedAt = new Date();
+  }
 
   /**
    * 베팅 금액(USD)에 따른 획득 경험치 계산

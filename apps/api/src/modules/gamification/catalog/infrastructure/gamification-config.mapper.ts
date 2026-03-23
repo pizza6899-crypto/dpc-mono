@@ -1,20 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { GamificationConfig as PrismaGamificationConfig, Prisma } from '@prisma/client';
 import { GamificationConfig } from '../domain/gamification-config.entity';
+import { Cast, PersistenceOf } from 'src/infrastructure/persistence/persistence.util';
 
 @Injectable()
 export class GamificationConfigMapper {
   /**
    * Prisma -> Domain
    */
-  toDomain(prismaConfig: PrismaGamificationConfig): GamificationConfig {
+  toDomain(prismaConfig: PersistenceOf<PrismaGamificationConfig>): GamificationConfig {
     return GamificationConfig.rehydrate({
-      expGrantMultiplierUsd: prismaConfig.expGrantMultiplierUsd,
+      expGrantMultiplierUsd: Cast.decimal(prismaConfig.expGrantMultiplierUsd),
       maxStatLimit: prismaConfig.maxStatLimit,
       statPointGrantPerLevel: prismaConfig.statPointGrantPerLevel,
       statResetCurrency: prismaConfig.statResetCurrency,
-      statResetPrice: prismaConfig.statResetPrice,
-      updatedAt: prismaConfig.updatedAt,
+      statResetPrice: Cast.decimal(prismaConfig.statResetPrice),
+      updatedAt: Cast.date(prismaConfig.updatedAt),
     });
   }
 

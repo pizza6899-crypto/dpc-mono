@@ -29,3 +29,17 @@ export class GamificationConfigNotFoundException extends GamificationCatalogExce
     this.name = 'GamificationConfigNotFoundException';
   }
 }
+
+/**
+ * 게이미피케이션 전역 설정의 파라미터가 유효하지 않을 때 (예: 음수)
+ */
+export class InvalidGamificationConfigParameterException extends GamificationCatalogException {
+  constructor(message: string) {
+    super(
+      message,
+      MessageCode.GAMIFICATION_CONFIG_INVALID,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'InvalidGamificationConfigParameterException';
+  }
+}

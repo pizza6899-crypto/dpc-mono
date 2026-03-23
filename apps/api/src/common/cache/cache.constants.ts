@@ -132,4 +132,14 @@ export const CACHE_CONFIG = {
       store: CacheStore.MEMORY,
     },
   },
+  /**
+   * 게이미피케이션 관련
+   */
+  GAMIFICATION: {
+    CONFIG: {
+      key: 'gamification:config:global',
+      ttlSeconds: 60, // 1분 L1 캐시
+      store: CacheStore.MEMORY,
+    },
+  },
 } as const;

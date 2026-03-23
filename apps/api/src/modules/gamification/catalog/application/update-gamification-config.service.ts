@@ -36,18 +36,11 @@ export class UpdateGamificationConfigService {
       throw new GamificationConfigNotFoundException();
     }
 
-    // 새로운 엔티티로 복원하면서 변경사항 적용 (Entity 내부에 update 메서드를 추가하지 않았으므로 rehydrate 활용)
-    const updatedConfig = GamificationConfig.rehydrate({
-      expGrantMultiplierUsd: params.expGrantMultiplierUsd ?? existingConfig.expGrantMultiplierUsd,
-      statPointGrantPerLevel: params.statPointGrantPerLevel ?? existingConfig.statPointGrantPerLevel,
-      maxStatLimit: params.maxStatLimit ?? existingConfig.maxStatLimit,
-      statResetPrice: params.statResetPrice ?? existingConfig.statResetPrice,
-      statResetCurrency: params.statResetCurrency ?? existingConfig.statResetCurrency,
-      updatedAt: new Date(),
-    });
+    // 도메인 엔티티의 책임으로 상태 변경 위임
+    existingConfig.update(params);
 
-    await this.repository.saveConfig(updatedConfig);
+    await this.repository.saveConfig(existingConfig);
 
-    return updatedConfig;
+    return existingConfig;
   }
 }

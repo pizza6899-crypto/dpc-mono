@@ -42,6 +42,7 @@ import { RewardModule } from './modules/reward/reward.module';
 import { UserModule } from './modules/user/user.module';
 import { ModerationModule } from './modules/moderation/moderation.module';
 import { CouponModule } from './modules/coupon/coupon.module';
+import { GamificationModule } from './modules/gamification/gamification.module';
 
 import { AdminMemoModule } from './modules/admin-memo/admin-memo.module';
 import { UserAnalyticsModule } from './modules/user-analytics/user-analytics.module';
@@ -81,6 +82,7 @@ import { ChatModule } from './modules/chat/chat.module';
     TierModule,
     RewardModule,
     CouponModule,
+    GamificationModule,
 
     UserAnalyticsModule,
     AdminMemoModule,
@@ -110,4 +112,4 @@ import { ChatModule } from './modules/chat/chat.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

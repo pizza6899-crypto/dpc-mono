@@ -284,6 +284,7 @@ export enum MessageCode {
 
     // --- 게이미피케이션 관련 (Gamification) ---
     GAMIFICATION_CONFIG_NOT_FOUND = 'GAMIFICATION_CONFIG_NOT_FOUND', // 게이미피케이션 설정을 찾을 수 없을 때
+    GAMIFICATION_CONFIG_INVALID = 'GAMIFICATION_CONFIG_INVALID', // 게이미피케이션 설정이 유효하지 않을 때
     LEVEL_DEFINITION_NOT_FOUND = 'LEVEL_DEFINITION_NOT_FOUND', // 레벨 정의를 찾을 수 없을 때
     ITEM_NOT_FOUND = 'ITEM_NOT_FOUND', // 아이템을 찾을 수 없을 때
 }
