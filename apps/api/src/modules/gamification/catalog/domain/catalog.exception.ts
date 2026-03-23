@@ -1,0 +1,31 @@
+import { HttpStatus } from '@nestjs/common';
+import { MessageCode } from '@repo/shared';
+import { DomainException } from 'src/common/exception/domain.exception';
+
+/**
+ * 게이미피케이션 카탈로그 모듈의 베이스 예외
+ */
+export class GamificationCatalogException extends DomainException {
+  constructor(
+    message: string,
+    errorCode: MessageCode,
+    httpStatus: HttpStatus = HttpStatus.BAD_REQUEST,
+  ) {
+    super(message, errorCode, httpStatus);
+    this.name = 'GamificationCatalogException';
+  }
+}
+
+/**
+ * 게이미피케이션 전역 설정을 찾을 수 없을 때 (Seeding 누락 등)
+ */
+export class GamificationConfigNotFoundException extends GamificationCatalogException {
+  constructor() {
+    super(
+      'Gamification configuration not found. Please check database seeding.',
+      MessageCode.GAMIFICATION_CONFIG_NOT_FOUND,
+      HttpStatus.NOT_FOUND,
+    );
+    this.name = 'GamificationConfigNotFoundException';
+  }
+}

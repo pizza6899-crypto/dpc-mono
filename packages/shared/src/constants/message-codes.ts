@@ -281,5 +281,10 @@ export enum MessageCode {
     COUPON_ALREADY_EXISTS = 'COUPON_ALREADY_EXISTS', // 이미 존재하는 쿠폰 코드일 때
     COUPON_DAILY_ATTEMPT_EXCEEDED = 'COUPON_DAILY_ATTEMPT_EXCEEDED', // 일일 쿠폰 시도 횟수를 초과했을 때
     COUPON_DISABLED = 'COUPON_DISABLED', // 쿠폰 시스템이 전역적으로 비활성화된 경우
+
+    // --- 게이미피케이션 관련 (Gamification) ---
+    GAMIFICATION_CONFIG_NOT_FOUND = 'GAMIFICATION_CONFIG_NOT_FOUND', // 게이미피케이션 설정을 찾을 수 없을 때
+    LEVEL_DEFINITION_NOT_FOUND = 'LEVEL_DEFINITION_NOT_FOUND', // 레벨 정의를 찾을 수 없을 때
+    ITEM_NOT_FOUND = 'ITEM_NOT_FOUND', // 아이템을 찾을 수 없을 때
 }
 

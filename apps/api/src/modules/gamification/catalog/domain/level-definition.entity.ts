@@ -16,7 +16,7 @@ export class LevelDefinition {
     private readonly _statPointsBoost: number,
     private readonly _createdAt: Date,
     private readonly _updatedAt: Date,
-  ) {}
+  ) { }
 
   /**
    * 영속성 계층에서 복원

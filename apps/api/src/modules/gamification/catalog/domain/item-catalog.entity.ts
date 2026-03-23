@@ -37,9 +37,9 @@ export class ItemCatalog {
     private readonly _createdAt: Date,
     private readonly _updatedAt: Date,
     private readonly _translations: ItemTranslation[],
-  ) {}
+  ) { }
 
-  /**
+  /** 
    * 영속성 계층에서 복원
    */
   static rehydrate(data: {
