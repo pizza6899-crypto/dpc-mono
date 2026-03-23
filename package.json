@@ -16,7 +16,6 @@
     "api:format": "pnpm -F api format",
     "api:cli": "pnpm -F api cli",
     "api:zip": "pnpm -F api zip",
-    "api:template": "pnpm -F api template:generate",
     "db:generate": "pnpm -F api db:generate",
     "db:migrate": "pnpm -F api db:migrate",
     "db:format": "pnpm -F api db:format",
