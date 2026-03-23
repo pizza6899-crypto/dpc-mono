@@ -1,14 +1,14 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { EffectType, ExchangeCurrencyCode, ItemType, Language } from '@prisma/client';
 import { Transform, Type } from 'class-transformer';
-import { 
-  IsArray, 
-  IsEnum, 
-  IsNotEmpty, 
-  IsOptional, 
-  IsString, 
-  ValidateNested, 
-  IsNumber, 
+import {
+  IsArray,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  ValidateNested,
+  IsNumber,
   Min
 } from 'class-validator';
 import { Prisma } from '@prisma/client';
