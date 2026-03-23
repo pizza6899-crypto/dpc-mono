@@ -80,7 +80,8 @@ export class UserCharacterController {
   async resetStats(
     @CurrentUser() user: AuthenticatedUser,
   ): Promise<UserCharacterResponseDto> {
-    const character = await this.resetStatsUserService.execute(user.id);
+    // 세션(AuthenticatedUser)에 있는 유저의 주 사용 통화 정보를 전달하여 결제 처리를 수행합니다.
+    const character = await this.resetStatsUserService.execute(user.id, user.primaryCurrency);
     return this.mapToResponseDto(character);
   }
 

@@ -84,7 +84,7 @@ export async function seedTiers(prisma: PrismaClient) {
 
         const tier = await prisma.tier.upsert({
             where: { code: t.code },
-            update: { ...tierFields },
+            update: {},
             create: { ...tierFields },
         });
 
@@ -99,10 +99,7 @@ export async function seedTiers(prisma: PrismaClient) {
         for (const cur of currencies) {
             await prisma.tierBenefit.upsert({
                 where: { tierId_currency: { tierId: tier.id, currency: cur.code } },
-                update: {
-                    upgradeBonus: upgradeBonusUsd * cur.multiplier,
-                    birthdayBonus: 0,
-                },
+                update: {},
                 create: {
                     tierId: tier.id,
                     currency: cur.code,
@@ -121,7 +118,7 @@ export async function seedTiers(prisma: PrismaClient) {
         for (const tr of translations) {
             await prisma.tierTranslation.upsert({
                 where: { tierId_language: { tierId: tier.id, language: tr.lang } },
-                update: { name: tr.name, description: tr.desc },
+                update: {},
                 create: { tierId: tier.id, language: tr.lang, name: tr.name, description: tr.desc },
             });
         }
@@ -130,14 +127,7 @@ export async function seedTiers(prisma: PrismaClient) {
     // 글로벌 설정 초기화
     await prisma.tierConfig.upsert({
         where: { id: 1n },
-        update: {
-            isUpgradeEnabled: true,
-            isDowngradeEnabled: false,
-            isBonusEnabled: true,
-            defaultDowngradeGracePeriodDays: 7,
-            defaultRewardExpiryDays: 30,
-            expGrantRollingUsd: 1, // 1 USD Rolling = 1 XP
-        },
+        update: {},
         create: {
             id: 1n,
             isUpgradeEnabled: true,

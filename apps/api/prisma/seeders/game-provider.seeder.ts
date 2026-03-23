@@ -37,11 +37,7 @@ export async function seedGameProviders(prisma: PrismaClient) {
                     externalId: p.externalId,
                 }
             },
-            update: {
-                code: p.code,
-                name: p.name,
-                groupCode: p.groupCode,
-            },
+            update: {}, // 이미 데이터가 있으면 변경하지 않음
             create: {
                 aggregatorId: wc.id,
                 externalId: p.externalId,
@@ -63,11 +59,7 @@ export async function seedGameProviders(prisma: PrismaClient) {
                     externalId: p.externalId,
                 }
             },
-            update: {
-                code: p.code,
-                name: p.name,
-                groupCode: p.groupCode,
-            },
+            update: {}, // 이미 데이터가 있으면 변경하지 않음
             create: {
                 aggregatorId: dcs.id,
                 externalId: p.externalId,

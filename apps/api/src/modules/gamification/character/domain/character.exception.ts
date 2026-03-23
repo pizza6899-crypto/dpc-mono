@@ -71,3 +71,17 @@ export class InvalidStatTypeException extends GamificationCharacterException {
     this.name = 'InvalidStatTypeException';
   }
 }
+
+/**
+ * 특정 통화에 대해 기 설정된 초기화 가격이 없거나 지원하지 않는 경우
+ */
+export class GamificationCurrencyNotSupportedException extends GamificationCharacterException {
+  constructor() {
+    super(
+      'The requested currency is not supported for stat reset.',
+      MessageCode.GAMIFICATION_CONFIG_CURRENCY_NOT_SUPPORTED,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'GamificationCurrencyNotSupportedException';
+  }
+}

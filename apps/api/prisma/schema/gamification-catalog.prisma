@@ -16,9 +16,9 @@ model GamificationConfig {
   maxStatLimit            Int @default(999) @map("max_stat_limit")
 
   // [Reset Policy]
-  // 스텟 초기화 비용 및 통화
-  statResetPrice    Decimal              @default(10000) @map("stat_reset_price") @db.Decimal(32, 18)
-  statResetCurrency ExchangeCurrencyCode @default(KRW) @map("stat_reset_currency")
+  // 스텟 초기화 통화별 고정 가격표
+  // 📝 데이터 예시: { "KRW": 10000, "USD": 10, "JPY": 1500 }
+  statResetPrices Json @default("{}") @map("stat_reset_prices")
 
   updatedAt DateTime @updatedAt @map("updated_at")
 

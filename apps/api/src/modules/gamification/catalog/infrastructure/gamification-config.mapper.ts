@@ -13,8 +13,7 @@ export class GamificationConfigMapper {
       xpGrantMultiplierUsd: Cast.decimal(prismaConfig.xpGrantMultiplierUsd),
       maxStatLimit: prismaConfig.maxStatLimit,
       statPointsGrantPerLevel: prismaConfig.statPointsGrantPerLevel,
-      statResetCurrency: prismaConfig.statResetCurrency,
-      statResetPrice: Cast.decimal(prismaConfig.statResetPrice),
+      statResetPrices: prismaConfig.statResetPrices,
       updatedAt: Cast.date(prismaConfig.updatedAt),
     });
   }
@@ -28,8 +27,7 @@ export class GamificationConfigMapper {
       xpGrantMultiplierUsd: config.xpGrantMultiplierUsd,
       maxStatLimit: config.maxStatLimit,
       statPointsGrantPerLevel: config.statPointsGrantPerLevel,
-      statResetCurrency: config.statResetCurrency,
-      statResetPrice: config.statResetPrice,
+      statResetPrices: config.statResetPrices as Prisma.JsonObject,
     };
   }
 }

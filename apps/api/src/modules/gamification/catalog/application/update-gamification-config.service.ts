@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { GamificationConfigNotFoundException } from '../domain/catalog.exception';
-import { Prisma, ExchangeCurrencyCode } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import {
   GAMIFICATION_CONFIG_REPOSITORY_PORT,
 } from '../ports/gamification-config.repository.port';
 import type { GamificationConfigRepositoryPort } from '../ports/gamification-config.repository.port';
-import { GamificationConfig } from '../domain/gamification-config.entity';
+import { GamificationConfig, StatResetPriceTable } from '../domain/gamification-config.entity';
 
 /**
  * 게이미피케이션 정책 업데이트를 위한 파라미터 규격
@@ -15,8 +15,7 @@ export interface UpdateGamificationConfigParams {
   xpGrantMultiplierUsd?: Prisma.Decimal;
   statPointsGrantPerLevel?: number;
   maxStatLimit?: number;
-  statResetPrice?: Prisma.Decimal;
-  statResetCurrency?: ExchangeCurrencyCode;
+  statResetPrices?: StatResetPriceTable;
 }
 
 @Injectable()

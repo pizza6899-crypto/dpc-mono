@@ -3,6 +3,11 @@ import { MessageCode } from '@repo/shared';
 import { InvalidGamificationConfigParameterException } from './catalog.exception';
 
 /**
+ * 통화별 스탯 초기화 고정 가격표 타입
+ */
+export type StatResetPriceTable = Partial<Record<ExchangeCurrencyCode, number>>;
+
+/**
  * [Gamification] 시스템 전역 정책 설정 도메인 엔티티
  * 
  * 게이미피케이션 엔진의 밸런스와 비용 정책을 관리하는 싱글톤 엔티티입니다.
@@ -18,8 +23,7 @@ export class GamificationConfig {
     private _xpGrantMultiplierUsd: Prisma.Decimal,
     private _statPointsGrantPerLevel: number,
     private _maxStatLimit: number,
-    private _statResetPrice: Prisma.Decimal,
-    private _statResetCurrency: ExchangeCurrencyCode,
+    private _statResetPrices: StatResetPriceTable,
     private _updatedAt: Date,
   ) { }
 
@@ -30,16 +34,14 @@ export class GamificationConfig {
     xpGrantMultiplierUsd: Prisma.Decimal;
     statPointsGrantPerLevel: number;
     maxStatLimit: number;
-    statResetPrice: Prisma.Decimal;
-    statResetCurrency: ExchangeCurrencyCode;
+    statResetPrices: any; // Prisma Json
     updatedAt: Date;
   }): GamificationConfig {
     return new GamificationConfig(
       data.xpGrantMultiplierUsd,
       data.statPointsGrantPerLevel,
       data.maxStatLimit,
-      data.statResetPrice,
-      data.statResetCurrency,
+      (data.statResetPrices || {}) as StatResetPriceTable,
       data.updatedAt,
     );
   }
@@ -56,8 +58,7 @@ export class GamificationConfig {
     xpGrantMultiplierUsd?: Prisma.Decimal;
     statPointsGrantPerLevel?: number;
     maxStatLimit?: number;
-    statResetPrice?: Prisma.Decimal;
-    statResetCurrency?: ExchangeCurrencyCode;
+    statResetPrices?: StatResetPriceTable;
   }): void {
     if (params.xpGrantMultiplierUsd !== undefined) {
       if (params.xpGrantMultiplierUsd.isNegative()) {
@@ -80,15 +81,17 @@ export class GamificationConfig {
       this._maxStatLimit = params.maxStatLimit;
     }
 
-    if (params.statResetPrice !== undefined) {
-      if (params.statResetPrice.isNegative()) {
-        throw new InvalidGamificationConfigParameterException(MessageCode.GAMIFICATION_CONFIG_PRICE_NEGATIVE, 'Stat reset price cannot be negative.');
+    if (params.statResetPrices !== undefined) {
+      // 값 검증: 모든 가격은 0 이상이어야 함
+      for (const [currency, price] of Object.entries(params.statResetPrices)) {
+        if (price !== undefined && price < 0) {
+          throw new InvalidGamificationConfigParameterException(
+            MessageCode.GAMIFICATION_CONFIG_PRICE_NEGATIVE,
+            `Price for ${currency} cannot be negative.`
+          );
+        }
       }
-      this._statResetPrice = params.statResetPrice;
-    }
-
-    if (params.statResetCurrency !== undefined) {
-      this._statResetCurrency = params.statResetCurrency;
+      this._statResetPrices = params.statResetPrices;
     }
 
     this._updatedAt = new Date();
@@ -102,11 +105,21 @@ export class GamificationConfig {
   }
 
   /**
+   * 특정 통화에 대한 스탯 초기화 가격 조회
+   */
+  getResetPrice(currency: ExchangeCurrencyCode): Prisma.Decimal | null {
+    const price = this._statResetPrices[currency];
+    if (price === undefined) return null;
+    return new Prisma.Decimal(price);
+  }
+
+  /**
    * 스탯 초기화가 가능한지 확인
    */
   canResetStats(heldBalance: Prisma.Decimal, currency: ExchangeCurrencyCode): boolean {
-    if (this._statResetCurrency !== currency) return false;
-    return heldBalance.greaterThanOrEqualTo(this._statResetPrice);
+    const price = this.getResetPrice(currency);
+    if (!price) return false;
+    return heldBalance.greaterThanOrEqualTo(price);
   }
 
   // --- Getters ---
@@ -127,12 +140,8 @@ export class GamificationConfig {
     return this._maxStatLimit;
   }
 
-  get statResetPrice(): Prisma.Decimal {
-    return this._statResetPrice;
-  }
-
-  get statResetCurrency(): ExchangeCurrencyCode {
-    return this._statResetCurrency;
+  get statResetPrices(): StatResetPriceTable {
+    return { ...this._statResetPrices };
   }
 
   get updatedAt(): Date {

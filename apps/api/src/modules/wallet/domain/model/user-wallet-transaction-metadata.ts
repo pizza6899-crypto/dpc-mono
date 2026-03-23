@@ -106,6 +106,23 @@ export interface WithdrawalMetadata extends BaseMetadata {
 }
 
 /**
+ * 캐릭터 스탯 초기화 메타데이터
+ */
+export interface CharacterStatsResetMetadata extends BaseMetadata {
+  cost: string;
+  currency: string;
+  reason?: string;
+  previousStats: {
+    strength: number;
+    agility: number;
+    luck: number;
+    wisdom: number;
+    stamina: number;
+    charisma: number;
+  };
+}
+
+/**
  * 입금 처리 메타데이터
  */
 export interface DepositMetadata extends BaseMetadata {
@@ -133,4 +150,5 @@ export type AnyWalletTransactionMetadata =
   | VaultOperationMetadata
   | WithdrawalMetadata
   | DepositMetadata
+  | CharacterStatsResetMetadata
   | DefaultMetadata;

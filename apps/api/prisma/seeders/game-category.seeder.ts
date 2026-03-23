@@ -83,11 +83,7 @@ export async function seedGameCategories(prisma: PrismaClient) {
         // 1. Category Upsert
         const category = await prisma.casinoGameCategory.upsert({
             where: { code: categoryData.code },
-            update: {
-                type: categoryData.type,
-                sortOrder: categoryData.sortOrder,
-                isSystem: categoryData.isSystem,
-            },
+            update: {},
             create: {
                 code: categoryData.code,
                 type: categoryData.type,
@@ -106,10 +102,7 @@ export async function seedGameCategories(prisma: PrismaClient) {
                         language: lang as Language,
                     },
                 },
-                update: {
-                    name: translation.name,
-                    description: translation.description,
-                },
+                update: {},
                 create: {
                     categoryId: category.id,
                     language: lang as Language,

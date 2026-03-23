@@ -38,8 +38,7 @@ export class GamificationConfigAdminController {
       xpGrantMultiplierUsd: config.xpGrantMultiplierUsd.toString(),
       statPointsGrantPerLevel: config.statPointsGrantPerLevel,
       maxStatLimit: config.maxStatLimit,
-      statResetPrice: config.statResetPrice.toString(),
-      statResetCurrency: config.statResetCurrency,
+      statResetPrices: config.statResetPrices,
       updatedAt: config.updatedAt,
     };
   }
@@ -70,8 +69,7 @@ export class GamificationConfigAdminController {
       xpGrantMultiplierUsd: config.xpGrantMultiplierUsd.toString(),
       statPointsGrantPerLevel: config.statPointsGrantPerLevel,
       maxStatLimit: config.maxStatLimit,
-      statResetPrice: config.statResetPrice.toString(),
-      statResetCurrency: config.statResetCurrency,
+      statResetPrices: config.statResetPrices,
       updatedAt: config.updatedAt,
     };
   }

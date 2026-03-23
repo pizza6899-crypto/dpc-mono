@@ -1,12 +1,11 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import {
-  IsEnum,
   IsNumber,
   IsOptional,
+  IsObject,
   IsPositive,
   Min,
 } from 'class-validator';
-import { ExchangeCurrencyCode } from '@prisma/client';
 import { Transform } from 'class-transformer';
 import { Prisma } from '@prisma/client';
 
@@ -19,7 +18,7 @@ export class UpdateGamificationConfigAdminRequestDto {
     example: '1.5',
   })
   @IsOptional()
-  @Transform(({ value }) => new Prisma.Decimal(value))
+  @Transform(({ value }) => (value ? new Prisma.Decimal(value) : undefined))
   xpGrantMultiplierUsd?: Prisma.Decimal;
 
   @ApiPropertyOptional({
@@ -41,19 +40,10 @@ export class UpdateGamificationConfigAdminRequestDto {
   maxStatLimit?: number;
 
   @ApiPropertyOptional({
-    description: 'Stat reset price / 스탯 초기화 비용',
-    example: '50000',
+    description: 'Fixed prices for stat reset per currency / 통화별 스탯 초기화 고정 가격표',
+    example: { KRW: 10000, USD: 10, JPY: 1500 },
   })
   @IsOptional()
-  @Transform(({ value }) => new Prisma.Decimal(value))
-  statResetPrice?: Prisma.Decimal;
-
-  @ApiPropertyOptional({
-    description: 'Currency for stat reset / 스탯 초기화 통화 코드',
-    enum: ExchangeCurrencyCode,
-    example: 'KRW',
-  })
-  @IsOptional()
-  @IsEnum(ExchangeCurrencyCode)
-  statResetCurrency?: ExchangeCurrencyCode;
+  @IsObject()
+  statResetPrices?: Record<string, number>;
 }

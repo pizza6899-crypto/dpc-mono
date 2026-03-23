@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ExchangeCurrencyCode } from '@prisma/client';
 
 /**
  * 게이미피케이션 전역 정책 설정 응답 DTO
@@ -18,11 +17,11 @@ export class GamificationConfigAdminResponseDto {
   @ApiProperty({ description: 'Maximum cap for a single stat / 단일 스탯 최대 한도', example: 999 })
   maxStatLimit: number;
 
-  @ApiProperty({ description: 'Stat reset price / 스탯 초기화 비용', example: '10000' })
-  statResetPrice: string;
-
-  @ApiProperty({ description: 'Currency for stat reset / 스탯 초기화 통화 코드', enum: ExchangeCurrencyCode, example: 'KRW' })
-  statResetCurrency: ExchangeCurrencyCode;
+  @ApiProperty({
+    description: 'Fixed prices for stat reset per currency / 통화별 스탯 초기화 고정 가격표',
+    example: { KRW: 10000, USD: 10, JPY: 1500 }
+  })
+  statResetPrices: Record<string, number>;
 
   @ApiProperty({ description: 'Last optimization timestamp / 최종 수정 시각' })
   updatedAt: Date;
