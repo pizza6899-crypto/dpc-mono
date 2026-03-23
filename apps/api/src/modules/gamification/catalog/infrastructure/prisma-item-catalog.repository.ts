@@ -1,3 +1,4 @@
+import { Prisma, type ItemType } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
@@ -14,6 +15,70 @@ export class PrismaItemCatalogRepository implements ItemCatalogRepositoryPort {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
   ) { }
+
+  /**
+   * 페이지네이션된 목록 조회
+   */
+  async findManyPaginated(params: {
+    page: number;
+    limit: number;
+    type?: ItemType;
+    search?: string;
+  }): Promise<ItemCatalog[]> {
+    const where = this._buildWhere(params.type, params.search);
+    const skip = (params.page - 1) * params.limit;
+
+    const records = await this.tx.itemCatalog.findMany({
+      where,
+      include: {
+        translations: true,
+      },
+      skip,
+      take: params.limit,
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return records.map((r) => ItemCatalogMapper.toDomain(r));
+  }
+
+  /**
+   * 전체 건수 조회
+   */
+  async count(params: {
+    type?: ItemType;
+    search?: string;
+  }): Promise<number> {
+    const where = this._buildWhere(params.type, params.search);
+    return this.tx.itemCatalog.count({ where });
+  }
+
+  /**
+   * 공통 Where 절 빌더
+   */
+  private _buildWhere(type?: ItemType, search?: string): Prisma.ItemCatalogWhereInput {
+    const where: Prisma.ItemCatalogWhereInput = {};
+
+    if (type) {
+      where.type = type;
+    }
+
+    if (search) {
+      where.OR = [
+        { code: { contains: search, mode: 'insensitive' } },
+        {
+          translations: {
+            some: {
+              name: { contains: search, mode: 'insensitive' },
+            },
+          },
+        },
+      ];
+    }
+
+    return where;
+  }
 
   /**
    * 전체 아이템 목록 조회 (번역 포함)
@@ -64,7 +129,7 @@ export class PrismaItemCatalogRepository implements ItemCatalogRepositoryPort {
    */
   async save(item: ItemCatalog): Promise<void> {
     const data = ItemCatalogMapper.toPersistence(item);
-    
+
     // 번역 정보 처리 규격
     const translations = item.translations.map((t) => ({
       where: {
