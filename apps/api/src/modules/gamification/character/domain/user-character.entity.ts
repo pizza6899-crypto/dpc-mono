@@ -106,11 +106,19 @@ export class UserCharacter {
   // --- 비즈니스 로직 메서드 ---
 
   /**
-   * 경험치 획득
+   * 경험치 획득 및 차감
+   * @param amount 가감할 경험치량 (양수: 획득, 음수: 차감)
    */
   gainXp(amount: Prisma.Decimal): void {
-    if (amount.isNegative()) return;
+    if (amount.isZero()) return;
+
     this._xp = this._xp.add(amount);
+
+    // 경험치가 0 미만으로 떨어지지 않도록 방어 (음수 보정)
+    if (this._xp.isNegative()) {
+      this._xp = new Prisma.Decimal(0);
+    }
+
     this._updatedAt = new Date();
   }
 
@@ -124,7 +132,7 @@ export class UserCharacter {
     // 1. 경험치 차감 (누적 방식이 아닌 소모/구간 방식일 경우)
     // 만약 누적 방식이라면 차감 없이 레벨만 올리고, 로직은 서비스에서 관리
     // 여기서는 차감 없는 누적 방식으로 가정하고, 필요 경험치 도달 여부는 외부에서 판단하여 이 메서드를 호출한다고 봅니다.
-    
+
     this._level += 1;
     this._statPoints += statPointsGrant;
     this._totalStatPoints += statPointsGrant;
@@ -197,18 +205,18 @@ export class UserCharacter {
   get xp(): Prisma.Decimal { return this._xp; }
   get statPoints(): number { return this._statPoints; }
   get totalStatPoints(): number { return this._totalStatPoints; }
-  
+
   get strength(): number { return this._stats.strength; }
   get agility(): number { return this._stats.agility; }
   get luck(): number { return this._stats.luck; }
   get wisdom(): number { return this._stats.wisdom; }
   get stamina(): number { return this._stats.stamina; }
   get charisma(): number { return this._stats.charisma; }
-  
+
   get statResetCount(): number { return this._statResetCount; }
   get currentTitle(): string | null { return this._currentTitle; }
   get lastLeveledUpAt(): Date | null { return this._lastLeveledUpAt; }
-  
+
   get createdAt(): Date { return this._createdAt; }
   get updatedAt(): Date { return this._updatedAt; }
 }

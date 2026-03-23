@@ -31,4 +31,10 @@ export class PrismaUserCharacterLogRepository implements UserCharacterLogReposit
 
     return records.map((record) => this.mapper.toDomain(record));
   }
+
+  async countByUserId(userId: bigint): Promise<number> {
+    return this.tx.userCharacterLog.count({
+      where: { userId },
+    });
+  }
 }

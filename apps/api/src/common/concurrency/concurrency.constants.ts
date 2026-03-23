@@ -27,6 +27,7 @@ export enum LockNamespace {
   CHAT_ROOM = 1014,
   TIER_REWARD = 1015,
   USER_CHAT_SUPPORT = 1016,
+  GAMIFICATION_CHARACTER = 1017,
 }
 
 export const CONCURRENCY_CONSTANTS = {

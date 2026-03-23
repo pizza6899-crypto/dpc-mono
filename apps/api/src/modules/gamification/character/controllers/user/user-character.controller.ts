@@ -4,11 +4,14 @@ import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { UserRoleType } from '@prisma/client';
+import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
+import { LogType } from 'src/modules/audit-log/domain';
 import { ApiStandardErrors, ApiStandardResponse } from 'src/common/http/decorators/api-response.decorator';
 
 import { FindUserCharacterService } from '../../application/find-user-character.service';
 import { AllocateStatPointsService } from '../../application/allocate-stat-points.service';
 
+import { UserCharacter } from '../../domain/user-character.entity';
 import { UserCharacterResponseDto } from './dto/response/user-character.response.dto';
 import { AllocateStatPointsRequestDto } from './dto/request/allocate-stat-points.request.dto';
 
@@ -30,10 +33,19 @@ export class UserCharacterController {
   @ApiStandardResponse(UserCharacterResponseDto)
   async getMyCharacter(@CurrentUser() user: AuthenticatedUser): Promise<UserCharacterResponseDto> {
     const character = await this.findUserCharacterService.execute(user.id);
-    return UserCharacterResponseDto.fromDomain(character);
+    return this.mapToResponseDto(character);
   }
 
   @Post('stats/allocate')
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'GAMIFICATION',
+    action: 'CHARACTER_ALLOCATE_STATS',
+    extractMetadata: (req) => ({
+      statName: req.body.statName,
+      points: req.body.points,
+    }),
+  })
   @ApiOperation({
     summary: 'Allocate Stat Points / 스탯 포인트 투자',
     description: 'Consumes remaining stat points to invest in desired attributes. / 잔여 스탯 포인트를 소모하여 원하는 능력치에 투자합니다.',
@@ -43,14 +55,32 @@ export class UserCharacterController {
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: AllocateStatPointsRequestDto,
   ): Promise<UserCharacterResponseDto> {
-    await this.allocateStatPointsService.execute({
+    const character = await this.allocateStatPointsService.execute({
       userId: user.id,
       statName: dto.statName,
       points: dto.points,
     });
 
-    // 투자 후 결과 다시 조회 응답
-    const character = await this.findUserCharacterService.execute(user.id);
-    return UserCharacterResponseDto.fromDomain(character);
+    return this.mapToResponseDto(character);
+  }
+
+  private mapToResponseDto(domain: UserCharacter): UserCharacterResponseDto {
+    return {
+      level: domain.level,
+      xp: domain.xp.toString(),
+      statPoints: domain.statPoints,
+      totalStatPoints: domain.totalStatPoints,
+      stats: {
+        strength: domain.strength,
+        agility: domain.agility,
+        luck: domain.luck,
+        wisdom: domain.wisdom,
+        stamina: domain.stamina,
+        charisma: domain.charisma,
+      },
+      statResetCount: domain.statResetCount,
+      currentTitle: domain.currentTitle,
+      lastLeveledUpAt: domain.lastLeveledUpAt,
+    };
   }
 }

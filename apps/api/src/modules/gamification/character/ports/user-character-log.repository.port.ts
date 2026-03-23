@@ -15,4 +15,9 @@ export interface UserCharacterLogRepositoryPort {
    * 특정 유저의 로그를 조회합니다.
    */
   findByUserId(userId: bigint, limit?: number, offset?: number): Promise<UserCharacterLog[]>;
+
+  /**
+   * 특정 유저의 로그 총 개수를 조회합니다.
+   */
+  countByUserId(userId: bigint): Promise<number>;
 }
