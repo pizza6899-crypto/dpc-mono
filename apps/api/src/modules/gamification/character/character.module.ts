@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { GamificationCatalogModule } from '../catalog/catalog.module';
+import { WalletModule } from '../../wallet/wallet.module';
 
 // Controllers
 import { UserCharacterController } from './controllers/user/user-character.controller';
@@ -11,6 +12,8 @@ import { FindUserCharacterService } from './application/find-user-character.serv
 import { FindUserCharacterLogsService } from './application/find-user-character-logs.service';
 import { AllocateStatPointsService } from './application/allocate-stat-points.service';
 import { GainXpService } from './application/gain-xp.service';
+import { ResetStatsAdminService } from './application/reset-stats-admin.service';
+import { ResetStatsUserService } from './application/reset-stats-user.service';
 
 // Infrastructure
 import { PrismaUserCharacterRepository } from './infrastructure/prisma-user-character.repository';
@@ -25,6 +28,7 @@ import { USER_CHARACTER_REPOSITORY_PORT, USER_CHARACTER_LOG_REPOSITORY_PORT } fr
   imports: [
     ConcurrencyModule,
     GamificationCatalogModule,
+    WalletModule,
   ],
   controllers: [
     UserCharacterController,
@@ -36,6 +40,8 @@ import { USER_CHARACTER_REPOSITORY_PORT, USER_CHARACTER_LOG_REPOSITORY_PORT } fr
     FindUserCharacterLogsService,
     AllocateStatPointsService,
     GainXpService,
+    ResetStatsAdminService,
+    ResetStatsUserService,
 
     // Mappers
     UserCharacterMapper,

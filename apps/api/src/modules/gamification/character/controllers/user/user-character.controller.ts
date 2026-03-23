@@ -10,6 +10,7 @@ import { ApiStandardErrors, ApiStandardResponse } from 'src/common/http/decorato
 
 import { FindUserCharacterService } from '../../application/find-user-character.service';
 import { AllocateStatPointsService } from '../../application/allocate-stat-points.service';
+import { ResetStatsUserService } from '../../application/reset-stats-user.service';
 
 import { UserCharacter } from '../../domain/user-character.entity';
 import { UserCharacterResponseDto } from './dto/response/user-character.response.dto';
@@ -23,6 +24,7 @@ export class UserCharacterController {
   constructor(
     private readonly findUserCharacterService: FindUserCharacterService,
     private readonly allocateStatPointsService: AllocateStatPointsService,
+    private readonly resetStatsUserService: ResetStatsUserService,
   ) { }
 
   @Get()
@@ -61,6 +63,24 @@ export class UserCharacterController {
       points: dto.points,
     });
 
+    return this.mapToResponseDto(character);
+  }
+
+  @Post('stats/reset')
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'GAMIFICATION',
+    action: 'CHARACTER_STATS_RESET_USER',
+  })
+  @ApiOperation({
+    summary: 'Reset Stat Points / 스탯 초기화 (유상)',
+    description: 'Resets all invested stats and returns points. Costs may apply based on policy. / 모든 스탯을 초기화하고 포인트를 반환합니다. 정책에 따라 비용이 발생할 수 있습니다.',
+  })
+  @ApiStandardResponse(UserCharacterResponseDto)
+  async resetStats(
+    @CurrentUser() user: AuthenticatedUser,
+  ): Promise<UserCharacterResponseDto> {
+    const character = await this.resetStatsUserService.execute(user.id);
     return this.mapToResponseDto(character);
   }
 

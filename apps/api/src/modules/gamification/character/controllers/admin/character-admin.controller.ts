@@ -10,6 +10,7 @@ import { PaginationQueryDto, PaginatedData } from 'src/common/http/types/paginat
 import { FindUserCharacterService } from '../../application/find-user-character.service';
 import { FindUserCharacterLogsService } from '../../application/find-user-character-logs.service';
 import { GainXpService } from '../../application/gain-xp.service';
+import { ResetStatsAdminService } from '../../application/reset-stats-admin.service';
 import { UserCharacterAdminResponseDto } from './dto/response/user-character-admin.response.dto';
 import { AdjustXpAdminRequestDto } from './dto/request/adjust-xp-admin.request.dto';
 import { UserCharacterLogResponseDto } from './dto/response/user-character-log-admin.response.dto';
@@ -24,6 +25,7 @@ export class CharacterAdminController {
     private readonly findUserCharacterService: FindUserCharacterService,
     private readonly findUserCharacterLogsService: FindUserCharacterLogsService,
     private readonly gainXpService: GainXpService,
+    private readonly resetStatsAdminService: ResetStatsAdminService,
   ) { }
 
   @Get(':userId')
@@ -96,6 +98,26 @@ export class CharacterAdminController {
       new Prisma.Decimal(dto.amount)
     );
 
+    return this.mapToAdminResponseDto(character);
+  }
+
+  @Post(':userId/stats/reset')
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'GAMIFICATION',
+    action: 'CHARACTER_STATS_RESET_ADMIN',
+  })
+  @ApiOperation({
+    summary: '[Admin] Force Stat Reset / 캐릭터 스탯 강제 초기화',
+    description: 'Resets all stats and returns all points for a user. (Admin only, No cost) / 특정 유저의 스탯을 초기화하고 모든 포인트를 반환합니다. (관리자 전용, 비용 없음)',
+  })
+  @ApiParam({ name: 'userId', description: 'Target User ID / 대상 유저 ID' })
+  @ApiStandardResponse(UserCharacterAdminResponseDto)
+  async resetUserStats(
+    @Param('userId') userId: string,
+    @Body('reason') reason?: string,
+  ): Promise<UserCharacterAdminResponseDto> {
+    const character = await this.resetStatsAdminService.execute(BigInt(userId), reason || 'ADMIN_RESET');
     return this.mapToAdminResponseDto(character);
   }
 
