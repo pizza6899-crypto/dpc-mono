@@ -1,19 +1,21 @@
 import { Injectable } from '@nestjs/common';
+import { InjectTransaction } from '@nestjs-cls/transactional';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { UserCharacterRepositoryPort } from '../ports/user-character.repository.port';
 import { UserCharacter } from '../domain/user-character.entity';
 import { UserCharacterMapper } from './user-character.mapper';
 
 @Injectable()
-export class UserCharacterRepository implements UserCharacterRepositoryPort {
+export class PrismaUserCharacterRepository implements UserCharacterRepositoryPort {
   constructor(
-    private readonly prisma: PrismaService,
+    @InjectTransaction()
+    private readonly tx: PrismaTransaction,
     private readonly mapper: UserCharacterMapper,
   ) { }
 
   async findByUserId(userId: bigint): Promise<UserCharacter | null> {
-    const record = await this.prisma.userCharacter.findUnique({
+    const record = await this.tx.userCharacter.findUnique({
       where: { userId },
     });
 
@@ -31,7 +33,7 @@ export class UserCharacterRepository implements UserCharacterRepositoryPort {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { userId, ...updateData } = persistenceData;
 
-    await this.prisma.userCharacter.upsert({
+    await this.tx.userCharacter.upsert({
       where: { userId: character.userId },
       create: persistenceData as Prisma.UserCharacterUncheckedCreateInput,
       update: updateData as Prisma.UserCharacterUncheckedUpdateInput,
