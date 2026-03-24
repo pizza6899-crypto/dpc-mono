@@ -78,17 +78,17 @@ export class InventoryAdminController {
   async grantItem(
     @Body() dto: GrantItemAdminRequestDto,
   ): Promise<ItemGrantAdminResponseDto> {
-    const item = await this.grantItemService.execute({
+    await this.grantItemService.execute({
       userId: BigInt(dto.userId),
       itemId: BigInt(dto.itemId),
       quantity: dto.quantity,
     });
 
     return {
-      id: item.id.toString(),
       isSuccess: true,
     };
   }
+
 
 
   @Delete(':id')
