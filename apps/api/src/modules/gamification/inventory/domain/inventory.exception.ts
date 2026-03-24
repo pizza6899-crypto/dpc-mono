@@ -99,3 +99,31 @@ export class InventoryItemInvalidSlotException extends GamificationInventoryExce
     this.name = 'InventoryItemInvalidSlotException';
   }
 }
+
+/**
+ * 아이템이 만료되어 사용할 수 없을 때
+ */
+export class InventoryItemExpiredException extends GamificationInventoryException {
+  constructor() {
+    super(
+      'This inventory item has expired.',
+      MessageCode.INVENTORY_ITEM_EXPIRED,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'InventoryItemExpiredException';
+  }
+}
+
+/**
+ * 아이템 수량을 모두 소모하여 사용할 수 없을 때
+ */
+export class InventoryItemConsumedException extends GamificationInventoryException {
+  constructor() {
+    super(
+      'This inventory item has been fully consumed.',
+      MessageCode.INVENTORY_ITEM_CONSUMED,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'InventoryItemConsumedException';
+  }
+}

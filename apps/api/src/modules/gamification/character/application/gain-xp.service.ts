@@ -59,25 +59,27 @@ export class GainXpService {
       const levelDefinitions = await this.levelDefinitionService.execute();
       const config = await this.getConfigService.execute();
 
-      // 현재 레벨보다 높은 레벨 정의들을 오름차순으로 확인하여 레벨업 가능 여부 판단
-      const nextLevels = levelDefinitions
-        .filter((l) => l.level > character.level)
-        .sort((a, b) => a.level - b.level);
+      // 빠른 조회를 위해 레벨별 Map 생성
+      const levelMap = new Map(levelDefinitions.map((def) => [def.level, def]));
 
-      for (const nextLevelDef of nextLevels) {
-        // 다음 레벨 도달에 필요한 경험치를 충족했는지 확인
-        if (character.xp.gte(nextLevelDef.requiredXp)) {
-          // 보너스 스탯 포인트: 레벨 정의에 설정된 값이 있으면 우선 사용, 없으면 전역 설정값 사용
-          const pointsToGrant = nextLevelDef.statPointsBoost > 0
-            ? nextLevelDef.statPointsBoost
-            : config.statPointsGrantPerLevel;
+      // 레벨업 가능 여부를 순차적으로 확인 (현재 레벨 + 1)
+      while (true) {
+        const nextLevel = character.level + 1;
+        const nextLevelDef = levelMap.get(nextLevel);
 
-          character.levelUp(nextLevelDef.requiredXp, pointsToGrant);
-          isLeveledUp = true;
-        } else {
-          // 다음 레벨 요건을 충족하지 못하면 중단 (레벨은 순차적이므로)
+        // 다음 레벨 정의가 없거나, 경험치 요건을 충족하지 못하면 브레이크
+        if (!nextLevelDef || character.xp.lt(nextLevelDef.requiredXp)) {
           break;
         }
+
+        // 보너스 스탯 포인트 결정
+        const pointsToGrant = nextLevelDef.statPointsBoost > 0
+          ? nextLevelDef.statPointsBoost
+          : config.statPointsGrantPerLevel;
+
+        // 실제 레벨업 수행
+        character.levelUp(nextLevelDef.requiredXp, pointsToGrant);
+        isLeveledUp = true;
       }
     }
 

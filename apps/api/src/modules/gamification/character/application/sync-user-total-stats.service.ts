@@ -78,16 +78,19 @@ export class SyncUserTotalStatsService {
   /**
    * 메타데이터의 타겟 문자열을 엔티티 스탯 키로 매핑
    */
-  private mapTargetToStatKey(target: string): string | null {
-    const targetLower = target.toLowerCase();
+  private mapTargetToStatKey(target: string): keyof UserStats | null {
+    if (!target) return null;
 
-    // 타겟 명칭 유연성 확보 (STR, Strength 등)
-    if (targetLower === 'str' || targetLower === 'strength') return 'strength';
-    if (targetLower === 'dex' || targetLower === 'agility') return 'agility';
-    if (targetLower === 'luc' || targetLower === 'luck') return 'luck';
-    if (targetLower === 'int' || targetLower === 'wisdom') return 'wisdom';
-    if (targetLower === 'vit' || targetLower === 'stamina') return 'stamina';
-    if (targetLower === 'cha' || targetLower === 'charisma') return 'charisma';
+    // 공백 제거 및 소문자 변환으로 비교 정확도 향상
+    const targetClean = target.trim().toLowerCase();
+
+    // 타겟 명칭 유연성 확보
+    if (targetClean === 'str' || targetClean === 'strength') return 'strength';
+    if (targetClean === 'dex' || targetClean === 'agility') return 'agility';
+    if (targetClean === 'luc' || targetClean === 'luck') return 'luck';
+    if (targetClean === 'int' || targetClean === 'wisdom') return 'wisdom';
+    if (targetClean === 'vit' || targetClean === 'stamina') return 'stamina';
+    if (targetClean === 'cha' || targetClean === 'charisma') return 'charisma';
 
     return null;
   }

@@ -15,6 +15,7 @@ import { FindUserInventoryService } from './application/find-user-inventory.serv
 import { EquipInventoryItemService } from './application/equip-inventory-item.service';
 import { UnequipInventoryItemService } from './application/unequip-inventory-item.service';
 import { InventoryLoggerService } from './application/inventory-logger.service';
+import { InventoryEquipPolicy } from './domain/inventory-equip.policy';
 
 // Repositories
 import { USER_INVENTORY_LOG_REPOSITORY_PORT } from './ports/user-inventory-log.repository.port';
@@ -44,14 +45,15 @@ import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
   providers: [
     UserInventoryMapper,
     // Services
-    GrantItemAdminService,
+    FindUserInventoryService,
     FindUserInventoryAdminService,
     FindInventoryLogsAdminService,
-    RevokeInventoryItemAdminService,
-    FindUserInventoryService,
-    EquipInventoryItemService,
-    UnequipInventoryItemService,
+    GrantItemAdminService,
+    InventoryEquipPolicy,
     InventoryLoggerService,
+    RevokeInventoryItemAdminService,
+    UnequipInventoryItemService,
+    EquipInventoryItemService, // This was present in the original, but not in the user's provided list for providers. Re-adding it to maintain functionality.
     {
       provide: USER_INVENTORY_REPOSITORY_PORT,
       useClass: PrismaUserInventoryRepository,

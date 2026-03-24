@@ -5,8 +5,9 @@ import { USER_INVENTORY_REPOSITORY_PORT } from '../ports/user-inventory.reposito
 import type { UserInventoryRepositoryPort } from '../ports/user-inventory.repository.port';
 import { SyncUserTotalStatsService } from '../../character/application/sync-user-total-stats.service';
 import { InventoryItemNotFoundException, InventoryItemOwnershipException } from '../domain/inventory.exception';
-import { ItemSlot, InventoryAction } from '@prisma/client';
+import { ItemSlot, InventoryStatus, InventoryAction } from '@prisma/client';
 import { InventoryLoggerService } from './inventory-logger.service';
+import { InventoryEquipPolicy } from '../domain/inventory-equip.policy';
 
 export interface EquipInventoryItemParams {
   userId: bigint;
@@ -25,6 +26,7 @@ export class EquipInventoryItemService {
 
     private readonly advisoryLockService: AdvisoryLockService,
     private readonly loggerService: InventoryLoggerService,
+    private readonly equipPolicy: InventoryEquipPolicy,
   ) { }
 
   @Transactional()
@@ -45,30 +47,30 @@ export class EquipInventoryItemService {
       throw new InventoryItemOwnershipException();
     }
 
-    // 3. 같은 슬롯에 이미 장착된 아이템이 있는지 확인
-    const existingEquippedItem = await this.inventoryRepo.findByUserIdAndSlot(
-      params.userId,
-      params.slot
-    );
-
     let needsSync = false;
 
-    // 만약 이미 장착된 아이템이 자신(`targetItem`)이라면 조기 반환.
-    if (existingEquippedItem && existingEquippedItem.id === targetItem.id) {
+    // 이미 해당 슬롯에 장착되어 있다면 작업 불필요
+    if (targetItem.status === InventoryStatus.ACTIVE && targetItem.slot === params.slot) {
       return;
     }
 
-    // 이미 다른 아이템이 같은 슬롯에 있다면 장착 해제 처리
-    if (existingEquippedItem) {
-      existingEquippedItem.unequip();
-      await this.inventoryRepo.save(existingEquippedItem);
+    // 장착 정합성 및 충돌 검사 (Policy 위임)
+    this.equipPolicy.validate(targetItem);
 
-      // 로그 기록: 해제
-      await this.loggerService.log(existingEquippedItem, InventoryAction.UNEQUIP, {
-        reason: `Replaced by item ${targetItem.id}`,
-      });
+    const activeItems = await this.inventoryRepo.findActiveBonuses(params.userId);
+    const conflictingIds = this.equipPolicy.findConflictingItems(targetItem, params.slot, activeItems);
 
-      needsSync = true;
+    // 식별된 충돌 아이템들을 모두 순차적으로 해제 처리
+    for (const conflictId of conflictingIds) {
+      const conflictItem = await this.inventoryRepo.findById(conflictId);
+      if (conflictItem) {
+        conflictItem.unequip();
+        await this.inventoryRepo.save(conflictItem);
+        await this.loggerService.log(conflictItem, InventoryAction.UNEQUIP, {
+          reason: `Auto unequipped to resolve conflict for item ${targetItem.id} in slot ${params.slot}`,
+        });
+        needsSync = true;
+      }
     }
 
     // 4. 대상 아이템 장착 처리
