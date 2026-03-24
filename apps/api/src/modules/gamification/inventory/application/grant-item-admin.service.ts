@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { ITEM_CATALOG_REPOSITORY_PORT } from '../../catalog/ports/item-catalog.repository.port';
 import type { ItemCatalogRepositoryPort } from '../../catalog/ports/item-catalog.repository.port';
 import { USER_INVENTORY_REPOSITORY_PORT } from '../ports/user-inventory.repository.port';
@@ -24,6 +25,8 @@ export class GrantItemAdminService {
 
     @Inject(USER_INVENTORY_REPOSITORY_PORT)
     private readonly inventoryRepo: UserInventoryRepositoryPort,
+
+    private readonly advisoryLockService: AdvisoryLockService,
   ) { }
 
   /**
@@ -31,21 +34,27 @@ export class GrantItemAdminService {
    */
   @Transactional()
   async execute(params: GrantItemAdminParams): Promise<UserInventory> {
-    // 1. 유효한 아이템인지 카탈로그에서 확인
+    // 1. 유저별 게이미피케이션 액션 권고락 획득 (지급 시 중복 방지 등)
+    await this.advisoryLockService.acquireLock(
+      LockNamespace.GAMIFICATION_CHARACTER,
+      params.userId.toString(),
+    );
+
+    // 2. 유효한 아이템인지 카탈로그에서 확인
     const item = await this.itemCatalogRepo.findById(params.itemId);
     if (!item) {
-      throw new ItemNotFoundException(params.itemId);
+      throw new ItemNotFoundException();
     }
 
-    // 2. 인벤토리 엔티티 생성
-    // (현재는 Snowflake 대신 DB autoincrement 전략을 따르기로 했으므로 id는 0n으로 처리됨)
+    // 3. 인벤토리 엔티티 생성
     const inventory = UserInventory.create({
       userId: params.userId,
       itemId: params.itemId,
       quantity: params.quantity ?? 1,
     });
 
-    // 3. 영속화
+    // 4. 영속화
     return this.inventoryRepo.save(inventory);
   }
 }
+

@@ -3,13 +3,12 @@ import {
   Controller,
   Delete,
   Get,
-  InternalServerErrorException,
   Param,
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags, ApiParam, ApiQuery } from '@nestjs/swagger';
-import { UserRoleType, Language } from '@prisma/client';
+import { ApiOperation, ApiTags, ApiParam } from '@nestjs/swagger';
+import { UserRoleType } from '@prisma/client';
 
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { ApiStandardResponse } from 'src/common/http/decorators/api-response.decorator';
@@ -50,7 +49,7 @@ export class InventoryAdminController {
     @Param('userId') userId: string,
     @Query() query: GetUserInventoryAdminQueryDto,
   ): Promise<UserInventoryAdminResponseDto[]> {
-    return this.findInventoryService.execute({
+    return await this.findInventoryService.execute({
       userId: BigInt(userId),
       status: query.status,
       itemType: query.itemType,
