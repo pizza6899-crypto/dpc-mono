@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { SqidsModule } from 'src/common/sqids/sqids.module';
-
 import { GAMIFICATION_CONFIG_REPOSITORY_PORT } from './ports/gamification-config.repository.port';
 import { LEVEL_DEFINITION_REPOSITORY_PORT } from './ports/level-definition.repository.port';
 import { ITEM_CATALOG_REPOSITORY_PORT } from './ports/item-catalog.repository.port';
@@ -18,28 +16,20 @@ import { UpdateGamificationConfigService } from './application/update-gamificati
 import { GetLevelDefinitionListService } from './application/get-level-definition-list.service';
 import { UpdateLevelDefinitionService } from './application/update-level-definition.service';
 import { GetItemCatalogListService } from './application/get-item-catalog-list.service';
-import { GetItemCatalogDetailService } from './application/get-item-catalog-detail.service';
 import { UpdateItemCatalogService } from './application/update-item-catalog.service';
-
 
 import { GamificationConfigAdminController } from './controllers/admin/gamification-config-admin.controller';
 import { LevelDefinitionAdminController } from './controllers/admin/level-definition-admin.controller';
 import { LevelDefinitionPublicController } from './controllers/public/level-definition-public.controller';
-import { ItemCatalogPublicController } from './controllers/public/item-catalog-public.controller';
 import { ItemCatalogAdminController } from './controllers/admin/item-catalog-admin.controller';
 
-
 @Module({
-  imports: [SqidsModule],
-
   controllers: [
     GamificationConfigAdminController,
     LevelDefinitionAdminController,
     LevelDefinitionPublicController,
-    ItemCatalogPublicController,
     ItemCatalogAdminController,
   ],
-
   providers: [
     // Repositories
     {
@@ -64,9 +54,7 @@ import { ItemCatalogAdminController } from './controllers/admin/item-catalog-adm
     GetLevelDefinitionListService,
     UpdateLevelDefinitionService,
     GetItemCatalogListService,
-    GetItemCatalogDetailService,
     UpdateItemCatalogService,
-
   ],
   exports: [
     GAMIFICATION_CONFIG_REPOSITORY_PORT,
@@ -75,9 +63,8 @@ import { ItemCatalogAdminController } from './controllers/admin/item-catalog-adm
     GetGamificationConfigService,
     GetLevelDefinitionListService,
     GetItemCatalogListService,
-    GetItemCatalogDetailService,
     UpdateItemCatalogService,
-
   ],
 })
 export class GamificationCatalogModule { }
+
