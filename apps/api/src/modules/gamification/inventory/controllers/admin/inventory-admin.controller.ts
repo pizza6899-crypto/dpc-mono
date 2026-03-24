@@ -3,10 +3,12 @@ import {
   Controller,
   Delete,
   Get,
+  InternalServerErrorException,
   Param,
   Post,
   Query,
 } from '@nestjs/common';
+
 import { ApiOperation, ApiTags, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { UserRoleType, Language } from '@prisma/client';
 
@@ -84,8 +86,13 @@ export class InventoryAdminController {
 
     // 💡 지급 후 상세 정보(카탈로그 포함)를 다시 조회하여 반환
     const enriched = await this.findInventoryService.findById(item.id);
-    return enriched ? this.mapDtoToResponse(enriched, lang) : this.mapEntityToResponse(item);
+    if (!enriched) {
+      throw new InternalServerErrorException('Failed to retrieve inventory details after grant.');
+    }
+
+    return this.mapDtoToResponse(enriched, lang);
   }
+
 
 
   @Delete(':id')
@@ -110,27 +117,6 @@ export class InventoryAdminController {
     });
   }
 
-  /**
-   * Entity -> Response DTO 매핑
-   */
-  private mapEntityToResponse(e: UserInventory): UserInventoryAdminResponseDto {
-    return {
-      id: e.id.toString(),
-      userId: e.userId.toString(),
-      itemId: e.itemId.toString(),
-      itemCode: 'UNKNOWN', // Entity에는 카탈로그 정보가 없음
-      itemType: 'CONSUMABLE' as any,
-      name: 'Unknown',
-      description: null,
-      quantity: e.quantity,
-      status: e.status,
-      slot: e.slot,
-      activatedAt: e.activatedAt,
-      expiresAt: e.expiresAt,
-      createdAt: e.createdAt,
-      updatedAt: e.updatedAt,
-    };
-  }
 
 
   /**
