@@ -22,6 +22,35 @@ export class PrismaUserInventoryRepository implements UserInventoryRepositoryPor
     return record ? this.mapper.toDomain(record) : null;
   }
 
+  async findDtoById(id: bigint): Promise<UserInventoryDto | null> {
+    const item = await this.tx.userInventory.findUnique({
+      where: { id },
+      include: {
+        catalog: {
+          include: {
+            translations: true,
+          },
+        },
+      },
+    });
+
+    if (!item) return null;
+
+    return {
+      id: item.id,
+      userId: item.userId,
+      itemId: item.itemId,
+      quantity: item.quantity,
+      status: item.status,
+      slot: item.slot,
+      effects: item.catalog.effects as unknown as ItemEffect[],
+      translations: (item.catalog as any).translations,
+      itemType: item.catalog.type,
+      itemCode: item.catalog.code,
+    };
+  }
+
+
   async findByUserId(userId: bigint): Promise<UserInventoryDto[]> {
     const list = await this.tx.userInventory.findMany({
       where: { userId },
@@ -44,7 +73,9 @@ export class PrismaUserInventoryRepository implements UserInventoryRepositoryPor
       effects: item.catalog.effects as unknown as ItemEffect[],
       translations: (item.catalog as any).translations,
       itemType: item.catalog.type,
+      itemCode: item.catalog.code,
     }));
+
 
 
   }
@@ -74,6 +105,7 @@ export class PrismaUserInventoryRepository implements UserInventoryRepositoryPor
       effects: item.catalog.effects as unknown as ItemEffect[],
       translations: (item.catalog as any).translations,
       itemType: item.catalog.type,
+      itemCode: item.catalog.code,
     }));
   }
 

@@ -5,9 +5,11 @@ import {
   Get,
   Param,
   Post,
+  Query,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags, ApiParam } from '@nestjs/swagger';
-import { UserRoleType } from '@prisma/client';
+import { ApiOperation, ApiTags, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { UserRoleType, Language } from '@prisma/client';
+
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { ApiStandardResponse } from 'src/common/http/decorators/api-response.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
@@ -42,16 +44,19 @@ export class InventoryAdminController {
     description: 'Retrieves all inventory items for a specific user. / 특정 유저의 전체 인벤토리 목록을 조회합니다.',
   })
   @ApiParam({ name: 'userId', description: 'User ID (BigInt as string)', example: '1' })
+  @ApiQuery({ name: 'lang', enum: Language, required: false, description: 'Display Language / 표시 언어' })
   @ApiStandardResponse(UserInventoryAdminResponseDto, { isArray: true })
   async getUserInventory(
     @Param('userId') userId: string,
+    @Query('lang') lang?: Language,
   ): Promise<UserInventoryAdminResponseDto[]> {
     const list = await this.findInventoryService.execute({
       userId: BigInt(userId),
     });
 
-    return list.map((i) => this.mapDtoToResponse(i));
+    return list.map((i) => this.mapDtoToResponse(i, lang));
   }
+
 
   @Post('grant')
   @AuditLog({
@@ -69,6 +74,7 @@ export class InventoryAdminController {
   @ApiStandardResponse(UserInventoryAdminResponseDto)
   async grantItem(
     @Body() dto: GrantItemAdminRequestDto,
+    @Query('lang') lang?: Language,
   ): Promise<UserInventoryAdminResponseDto> {
     const item = await this.grantItemService.execute({
       userId: BigInt(dto.userId),
@@ -76,8 +82,11 @@ export class InventoryAdminController {
       quantity: dto.quantity,
     });
 
-    return this.mapEntityToResponse(item);
+    // 💡 지급 후 상세 정보(카탈로그 포함)를 다시 조회하여 반환
+    const enriched = await this.findInventoryService.findById(item.id);
+    return enriched ? this.mapDtoToResponse(enriched, lang) : this.mapEntityToResponse(item);
   }
+
 
   @Delete(':id')
   @AuditLog({
@@ -109,6 +118,10 @@ export class InventoryAdminController {
       id: e.id.toString(),
       userId: e.userId.toString(),
       itemId: e.itemId.toString(),
+      itemCode: 'UNKNOWN', // Entity에는 카탈로그 정보가 없음
+      itemType: 'CONSUMABLE' as any,
+      name: 'Unknown',
+      description: null,
       quantity: e.quantity,
       status: e.status,
       slot: e.slot,
@@ -119,22 +132,30 @@ export class InventoryAdminController {
     };
   }
 
+
   /**
    * Repository DTO -> Response DTO 매핑 (효과 정보 포함 가능)
    */
-  private mapDtoToResponse(d: UserInventoryDto): UserInventoryAdminResponseDto {
+  private mapDtoToResponse(d: UserInventoryDto, lang?: Language): UserInventoryAdminResponseDto {
+    const translation = d.translations.find((t) => t.language === lang) || d.translations[0];
+
     return {
       id: d.id.toString(),
       userId: d.userId.toString(),
       itemId: d.itemId.toString(),
+      itemCode: d.itemCode,
+      itemType: d.itemType,
+      name: translation?.name ?? 'Unknown',
+      description: translation?.description ?? null,
       quantity: d.quantity,
       status: d.status,
       slot: d.slot as any,
-      effects: d.effects,
-      activatedAt: null, // UserInventoryDto에 추가 필드가 필요할 수 있음
+      effects: d.effects as any,
+      activatedAt: null,
       expiresAt: null,
-      createdAt: new Date(),
+      createdAt: new Date(), // 실제 엔티티 시점이 필요한 경우 Repo DTO 보강 필요
       updatedAt: new Date(),
     };
   }
 }
+

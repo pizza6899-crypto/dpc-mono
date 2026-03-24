@@ -32,4 +32,12 @@ export class FindUserInventoryAdminService {
     // 여기서는 기본적으로 ACTIVE와 PENDING 합산 또는 ACTIVE 우선 조회로 구현
     return this.inventoryRepo.findByUserIdAndStatus(params.userId, InventoryStatus.ACTIVE);
   }
+
+  /**
+   * 단일 인벤토리 아이템 조회
+   */
+  async findById(id: bigint): Promise<UserInventoryDto | null> {
+    return this.inventoryRepo.findDtoById(id);
+  }
 }
+

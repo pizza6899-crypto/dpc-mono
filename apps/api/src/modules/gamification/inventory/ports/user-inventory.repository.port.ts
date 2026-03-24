@@ -12,13 +12,21 @@ export interface UserInventoryDto {
   effects: ItemEffect[]; // ItemCatalog's effects Json
   translations: ItemTranslation[]; // Item names and descriptions
   itemType: ItemType; // From ItemCatalog
+  itemCode: string; // From ItemCatalog
 }
+
 
 export interface UserInventoryRepositoryPort {
   /**
-   * 아이템 ID로 단일 조회
+   * 인벤토리 고유 ID로 단일 조회 (엔티티)
    */
   findById(id: bigint): Promise<UserInventory | null>;
+
+  /**
+   * 인벤토리 고유 ID로 상세 조회 (DTO, 카탈로그 포함)
+   */
+  findDtoById(id: bigint): Promise<UserInventoryDto | null>;
+
 
   /**
    * 유저의 모든 인벤토리 조회 (카탈로그 포함 응답 DTO 반환)
