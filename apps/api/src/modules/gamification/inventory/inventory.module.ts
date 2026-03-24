@@ -1,4 +1,5 @@
 import { Module, forwardRef } from '@nestjs/common';
+import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { USER_INVENTORY_REPOSITORY_PORT } from './ports/user-inventory.repository.port';
 import { PrismaUserInventoryRepository } from './infrastructure/prisma-user-inventory.repository';
 import { UserInventoryMapper } from './infrastructure/user-inventory.mapper';
@@ -15,6 +16,7 @@ import { InventoryAdminController } from './controllers/admin/inventory-admin.co
 
 @Module({
   imports: [
+    ConcurrencyModule,
     GamificationCatalogModule,
     forwardRef(() => GamificationCharacterModule),
   ],

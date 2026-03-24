@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
+import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { USER_CHARACTER_REPOSITORY_PORT } from '../ports/user-character.repository.port';
 import type { UserCharacterRepositoryPort } from '../ports/user-character.repository.port';
 import { USER_INVENTORY_REPOSITORY_PORT } from '../../inventory/ports/user-inventory.repository.port';
@@ -20,6 +21,8 @@ export class SyncUserTotalStatsService {
 
     @Inject(USER_INVENTORY_REPOSITORY_PORT)
     private readonly inventoryRepository: UserInventoryRepositoryPort,
+
+    private readonly advisoryLockService: AdvisoryLockService,
   ) { }
 
   /**
@@ -29,6 +32,12 @@ export class SyncUserTotalStatsService {
    */
   @Transactional()
   async execute(userId: bigint): Promise<void> {
+    // 0. 유저별 캐릭터 뮤테이션 권고락 획득 (Read-Aggregate-Write 동시성 제어)
+    await this.advisoryLockService.acquireLock(
+      LockNamespace.GAMIFICATION_CHARACTER,
+      userId.toString(),
+    );
+
     // 1. 캐릭터 리로드 (현재 기본 스탯 정보 필요)
     const character = await this.characterRepository.findByUserId(userId);
     if (!character) return;
@@ -71,7 +80,7 @@ export class SyncUserTotalStatsService {
    */
   private mapTargetToStatKey(target: string): string | null {
     const targetLower = target.toLowerCase();
-    
+
     // 타겟 명칭 유연성 확보 (STR, Strength 등)
     if (targetLower === 'str' || targetLower === 'strength') return 'strength';
     if (targetLower === 'dex' || targetLower === 'agility') return 'agility';
@@ -79,7 +88,7 @@ export class SyncUserTotalStatsService {
     if (targetLower === 'int' || targetLower === 'wisdom') return 'wisdom';
     if (targetLower === 'vit' || targetLower === 'stamina') return 'stamina';
     if (targetLower === 'cha' || targetLower === 'charisma') return 'charisma';
-    
+
     return null;
   }
 }

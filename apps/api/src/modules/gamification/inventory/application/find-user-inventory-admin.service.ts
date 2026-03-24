@@ -25,7 +25,7 @@ export class FindUserInventoryAdminService {
     if (params.status) {
       return this.inventoryRepo.findByUserIdAndStatus(params.userId, params.status);
     }
-    
+
     // DB의 indexes([userId, status])를 활용하기 위해
     // 현재는 단일 상태 조회만 지원하거나, 전체 조회를 위한 포트 확장이 필요할 수 있음
     // 일단 전체 지원을 위해 리포지토리 메서드 하나를 더 추가하는 방향 제안 가능
