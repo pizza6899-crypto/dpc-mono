@@ -15,8 +15,9 @@ export class UserInventory {
     private _quantity: number,
     private _status: InventoryStatus,
     private _slot: ItemSlot | null,
+    private _remainingUsageCount: number | null,
     private _activatedAt: Date | null,
-    private _expiresAt: Date | null,
+    private _lastUsedAt: Date | null,
     private readonly _createdAt: Date,
     private _updatedAt: Date,
   ) { }
@@ -31,8 +32,9 @@ export class UserInventory {
     quantity: number;
     status: InventoryStatus;
     slot: ItemSlot | null;
+    remainingUsageCount: number | null;
     activatedAt: Date | null;
-    expiresAt: Date | null;
+    lastUsedAt: Date | null;
     createdAt: Date;
     updatedAt: Date;
   }): UserInventory {
@@ -43,8 +45,9 @@ export class UserInventory {
       data.quantity,
       data.status,
       data.slot,
+      data.remainingUsageCount,
       data.activatedAt,
-      data.expiresAt,
+      data.lastUsedAt,
       data.createdAt,
       data.updatedAt,
     );
@@ -57,7 +60,7 @@ export class UserInventory {
     userId: bigint;
     itemId: bigint;
     quantity?: number;
-    durationDays?: number | null;
+    maxUsageCount?: number | null;
   }): UserInventory {
     const now = new Date();
     return new UserInventory(
@@ -67,8 +70,9 @@ export class UserInventory {
       params.quantity ?? 1,
       InventoryStatus.PENDING,
       null,
+      params.maxUsageCount ?? null,
       null,
-      null, // 활성화 전까지는 만료일 없음
+      null,
       now,
       now,
     );
@@ -78,8 +82,6 @@ export class UserInventory {
 
   /**
    * 아이템 장착 (슬롯 지정)
-   * 
-   * @param slot 장착할 슬롯
    */
   equip(slot: ItemSlot): void {
     if (this._status === InventoryStatus.EXPIRED || this._status === InventoryStatus.CONSUMED) {
@@ -104,9 +106,37 @@ export class UserInventory {
   }
 
   /**
+   * 아이템 자동 데일리 소모 처리
+   * 매일 1회 한도로 사용 횟수를 차감하며, 횟수 소진 시 CONSUMED 처리합니다.
+   */
+  useDaily(): void {
+    if (this._status !== InventoryStatus.ACTIVE) {
+      throw new InventoryItemInvalidStateException('Only active items can be used daily');
+    }
+
+    // 횟수 제한이 있는 경우에만 차감
+    if (this._remainingUsageCount !== null) {
+      if (this._remainingUsageCount <= 0) {
+        this.expire();
+        return;
+      }
+
+      this._remainingUsageCount -= 1;
+      this._lastUsedAt = new Date();
+
+      if (this._remainingUsageCount === 0) {
+        this.expire();
+      }
+    } else {
+      // 무제한 아이템이라도 마지막 사용 일시는 업데이트
+      this._lastUsedAt = new Date();
+    }
+
+    this._updatedAt = new Date();
+  }
+
+  /**
    * 아이템 소모 (수량 차감)
-   * 
-   * @param amount 차감할 수량 (기본 1)
    */
   consume(amount: number = 1): void {
     if (this._quantity < amount) {
@@ -128,26 +158,18 @@ export class UserInventory {
   /**
    * 아이템 활성화 (소모품 등을 사용 개시할 때)
    */
-  activate(durationDays?: number): void {
+  activate(): void {
     if (this._status === InventoryStatus.EXPIRED || this._status === InventoryStatus.CONSUMED) {
       throw new InventoryItemInvalidStateException('Cannot activate an expired or consumed item');
     }
 
-    const now = new Date();
     this._status = InventoryStatus.ACTIVE;
-    this._activatedAt = now;
-
-    if (durationDays) {
-      const expiry = new Date(now);
-      expiry.setDate(expiry.getDate() + durationDays);
-      this._expiresAt = expiry;
-    }
-
+    this._activatedAt = new Date();
     this._updatedAt = new Date();
   }
 
   /**
-   * 만료 처리
+   * 만료 처리 (횟수 소진 등)
    */
   expire(): void {
     if (this._status === InventoryStatus.EXPIRED || this._status === InventoryStatus.CONSUMED) return;
@@ -158,12 +180,12 @@ export class UserInventory {
   }
 
   /**
-   * 만료 여부 확인
+   * 사용 가능 여부 확인
    */
-  isExpired(): boolean {
-    if (this._status === InventoryStatus.EXPIRED) return true;
-    if (!this._expiresAt) return false;
-    return new Date() > this._expiresAt;
+  canBeUsed(): boolean {
+    if (this._status === InventoryStatus.EXPIRED || this._status === InventoryStatus.CONSUMED) return false;
+    if (this._remainingUsageCount !== null && this._remainingUsageCount <= 0) return false;
+    return true;
   }
 
   // --- Getters ---
@@ -173,8 +195,9 @@ export class UserInventory {
   get quantity(): number { return this._quantity; }
   get status(): InventoryStatus { return this._status; }
   get slot(): ItemSlot | null { return this._slot; }
+  get remainingUsageCount(): number | null { return this._remainingUsageCount; }
   get activatedAt(): Date | null { return this._activatedAt; }
-  get expiresAt(): Date | null { return this._expiresAt; }
+  get lastUsedAt(): Date | null { return this._lastUsedAt; }
   get createdAt(): Date { return this._createdAt; }
   get updatedAt(): Date { return this._updatedAt; }
 }

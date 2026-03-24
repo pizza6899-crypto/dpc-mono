@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
+import { InventoryStatus } from '@prisma/client';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { ITEM_CATALOG_REPOSITORY_PORT } from '../../catalog/ports/item-catalog.repository.port';
 import type { ItemCatalogRepositoryPort } from '../../catalog/ports/item-catalog.repository.port';
@@ -47,10 +48,18 @@ export class GrantItemAdminService {
     }
 
     // 3. 인벤토리 엔티티 생성
-    const inventory = UserInventory.create({
+    const inventory = UserInventory.rehydrate({
+      id: 0n,
       userId: params.userId,
       itemId: params.itemId,
       quantity: params.quantity ?? 1,
+      status: InventoryStatus.PENDING,
+      slot: null,
+      remainingUsageCount: item.maxUsageCount,
+      activatedAt: null,
+      lastUsedAt: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
 
     // 4. 영속화

@@ -49,7 +49,8 @@ export class PrismaUserInventoryRepository implements UserInventoryRepositoryPor
       itemType: item.catalog.type,
       itemCode: item.catalog.code,
       activatedAt: item.activatedAt,
-      expiresAt: item.expiresAt,
+      lastUsedAt: item.lastUsedAt,
+      remainingUsageCount: item.remainingUsageCount,
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,
     };
@@ -83,14 +84,11 @@ export class PrismaUserInventoryRepository implements UserInventoryRepositoryPor
       itemType: item.catalog.type,
       itemCode: item.catalog.code,
       activatedAt: item.activatedAt,
-      expiresAt: item.expiresAt,
+      lastUsedAt: item.lastUsedAt,
+      remainingUsageCount: item.remainingUsageCount,
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,
     }));
-
-
-
-
   }
 
   async findByUserIdAndStatus(userId: bigint, status: InventoryStatus): Promise<UserInventoryDto[]> {
@@ -120,7 +118,8 @@ export class PrismaUserInventoryRepository implements UserInventoryRepositoryPor
       itemType: item.catalog.type,
       itemCode: item.catalog.code,
       activatedAt: item.activatedAt,
-      expiresAt: item.expiresAt,
+      lastUsedAt: item.lastUsedAt,
+      remainingUsageCount: item.remainingUsageCount,
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,
     }));

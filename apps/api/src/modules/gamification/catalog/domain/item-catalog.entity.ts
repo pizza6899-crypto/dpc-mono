@@ -1,9 +1,7 @@
-import type { EffectType, ExchangeCurrencyCode, ItemType, Language } from '@prisma/client';
-import { Prisma } from '@prisma/client';
+import type { EffectType, ExpiryType, ItemType, Language } from '@prisma/client';
 import {
   InvalidItemDurationException,
   InvalidItemEffectException,
-  InvalidItemPriceException,
   ItemTranslationRequiredException
 } from './catalog.exception';
 
@@ -33,9 +31,8 @@ export class ItemCatalog {
     private _code: string,
     private _type: ItemType,
     private _effects: ItemEffect[],
-    private _price: Prisma.Decimal,
-    private _priceCurrency: ExchangeCurrencyCode,
-    private _durationDays: number | null,
+    private _expiryType: ExpiryType,
+    private _maxUsageCount: number | null,
     private _translations: ItemTranslation[],
     private readonly _id: bigint = 0n,
     private readonly _createdAt: Date = new Date(),
@@ -50,9 +47,8 @@ export class ItemCatalog {
     code: string;
     type: ItemType;
     effects: any;
-    price: Prisma.Decimal;
-    priceCurrency: ExchangeCurrencyCode;
-    durationDays: number | null;
+    expiryType: ExpiryType;
+    maxUsageCount: number | null;
     createdAt: Date;
     updatedAt: Date;
     translations: ItemTranslation[];
@@ -61,9 +57,8 @@ export class ItemCatalog {
       data.code,
       data.type,
       data.effects as ItemEffect[],
-      data.price,
-      data.priceCurrency,
-      data.durationDays,
+      data.expiryType,
+      data.maxUsageCount,
       data.translations,
       data.id,
       data.createdAt,
@@ -78,18 +73,16 @@ export class ItemCatalog {
     code: string;
     type: ItemType;
     effects: ItemEffect[];
-    price: Prisma.Decimal;
-    priceCurrency?: ExchangeCurrencyCode;
-    durationDays?: number | null;
+    expiryType?: ExpiryType;
+    maxUsageCount?: number | null;
     translations: ItemTranslation[];
   }): ItemCatalog {
     const item = new ItemCatalog(
       params.code,
       params.type,
       params.effects,
-      params.price,
-      params.priceCurrency ?? 'USD',
-      params.durationDays ?? null,
+      params.expiryType ?? 'PERMANENT',
+      params.maxUsageCount ?? null,
       params.translations,
     );
     item._validate();
@@ -103,17 +96,15 @@ export class ItemCatalog {
     code?: string;
     type?: ItemType;
     effects?: ItemEffect[];
-    price?: Prisma.Decimal;
-    priceCurrency?: ExchangeCurrencyCode;
-    durationDays?: number | null;
+    expiryType?: ExpiryType;
+    maxUsageCount?: number | null;
     translations?: ItemTranslation[];
   }): void {
     if (params.code !== undefined) this._code = params.code;
     if (params.type !== undefined) this._type = params.type;
     if (params.effects !== undefined) this._effects = params.effects;
-    if (params.price !== undefined) this._price = params.price;
-    if (params.priceCurrency !== undefined) this._priceCurrency = params.priceCurrency;
-    if (params.durationDays !== undefined) this._durationDays = params.durationDays;
+    if (params.expiryType !== undefined) this._expiryType = params.expiryType;
+    if (params.maxUsageCount !== undefined) this._maxUsageCount = params.maxUsageCount;
     if (params.translations !== undefined) this._translations = params.translations;
 
     this._validate();
@@ -128,12 +119,11 @@ export class ItemCatalog {
       throw new InvalidItemEffectException('Item code is required.');
     }
 
-    if (this._price.isNegative()) {
-      throw new InvalidItemPriceException();
-    }
-
-    if (this._durationDays !== null && this._durationDays < 0) {
-      throw new InvalidItemDurationException();
+    // 횟수제 혹은 일일 자동 소모제일 경우 검증
+    if (this._expiryType !== 'PERMANENT') {
+      if (this._maxUsageCount === null || this._maxUsageCount < 0) {
+        throw new InvalidItemDurationException(); // 필요시 전용 예외로 변경 가능
+      }
     }
 
     if (!this._translations || this._translations.length === 0) {
@@ -156,10 +146,10 @@ export class ItemCatalog {
   }
 
   /**
-   * 기간제 아이템 여부 확인
+   * 소모성 여부 확인
    */
-  isPeriodical(): boolean {
-    return this._durationDays !== null && this._durationDays > 0;
+  isConsumable(): boolean {
+    return this._expiryType !== 'PERMANENT';
   }
 
   // --- Getters ---
@@ -167,9 +157,8 @@ export class ItemCatalog {
   get code(): string { return this._code; }
   get type(): ItemType { return this._type; }
   get effects(): ItemEffect[] { return this._effects; }
-  get price(): Prisma.Decimal { return this._price; }
-  get priceCurrency(): ExchangeCurrencyCode { return this._priceCurrency; }
-  get durationDays(): number | null { return this._durationDays; }
+  get expiryType(): ExpiryType { return this._expiryType; }
+  get maxUsageCount(): number | null { return this._maxUsageCount; }
   get createdAt(): Date { return this._createdAt; }
   get updatedAt(): Date { return this._updatedAt; }
   get translations(): ItemTranslation[] { return this._translations; }

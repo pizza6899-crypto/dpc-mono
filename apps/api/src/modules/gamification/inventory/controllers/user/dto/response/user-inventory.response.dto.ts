@@ -33,8 +33,8 @@ export class UserInventoryResponseDto {
   @ApiProperty({ description: 'Item is active or equipped since this time / 활성화 또는 장착 일시', required: false, nullable: true })
   activatedAt?: Date | null;
 
-  @ApiProperty({ description: 'Item expiry date if temporary / 기간제 아이템의 경우 만료 일시', required: false, nullable: true })
-  expiresAt?: Date | null;
+  @ApiProperty({ description: 'Remaining Usage Count / 남은 사용 횟수', required: false, nullable: true })
+  remainingUsageCount?: number | null;
 }
 
 

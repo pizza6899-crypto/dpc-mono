@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { EffectType, ExchangeCurrencyCode, ItemType, Language } from '@prisma/client';
+import { EffectType, ExpiryType, ItemType, Language } from '@prisma/client';
 import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
@@ -65,20 +65,15 @@ export class SaveItemCatalogAdminRequestDto {
   @Type(() => SaveItemEffectAdminRequestDto)
   effects: SaveItemEffectAdminRequestDto[];
 
-  @ApiProperty({ description: 'Price / 가격 (Decimal string)', example: '100.00' })
-  @Transform(({ value }) => new Prisma.Decimal(value))
-  price: Prisma.Decimal;
+  @ApiProperty({ enum: ExpiryType, description: 'Expiry Type / 만료 정책', default: 'PERMANENT' })
+  @IsEnum(ExpiryType)
+  expiryType: ExpiryType;
 
-  @ApiPropertyOptional({ enum: ExchangeCurrencyCode, description: 'Currency / 가격 통화', default: 'USD' })
-  @IsOptional()
-  @IsEnum(ExchangeCurrencyCode)
-  priceCurrency?: ExchangeCurrencyCode;
-
-  @ApiPropertyOptional({ description: 'Duration Days / 유효 기간(일)', example: 30 })
+  @ApiPropertyOptional({ description: 'Max Usage Count / 최대 사용 횟수 (횟수제일 경우 필수)', example: 30 })
   @IsOptional()
   @IsNumber()
   @Min(1)
-  durationDays?: number | null;
+  maxUsageCount?: number | null;
 
   @ApiProperty({ type: [SaveItemTranslationAdminRequestDto], description: 'Translations / 번역 목록' })
   @IsArray()

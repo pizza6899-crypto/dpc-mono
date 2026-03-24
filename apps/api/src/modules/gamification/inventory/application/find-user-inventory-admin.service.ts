@@ -60,7 +60,8 @@ export class FindUserInventoryAdminService {
       slot: d.slot as any,
       effects: d.effects as any,
       activatedAt: d.activatedAt,
-      expiresAt: d.expiresAt,
+      lastUsedAt: d.lastUsedAt,
+      remainingUsageCount: d.remainingUsageCount,
       createdAt: d.createdAt,
       updatedAt: d.updatedAt,
     };

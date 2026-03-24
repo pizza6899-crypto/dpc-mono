@@ -16,8 +16,9 @@ export class UserInventoryMapper {
       quantity: p.quantity,
       status: p.status,
       slot: p.slot,
+      remainingUsageCount: p.remainingUsageCount,
       activatedAt: Cast.date(p.activatedAt),
-      expiresAt: Cast.date(p.expiresAt),
+      lastUsedAt: Cast.date(p.lastUsedAt),
       createdAt: Cast.date(p.createdAt),
       updatedAt: Cast.date(p.updatedAt),
     });
@@ -33,8 +34,9 @@ export class UserInventoryMapper {
       quantity: domain.quantity,
       status: domain.status,
       slot: domain.slot,
+      remainingUsageCount: domain.remainingUsageCount,
       activatedAt: domain.activatedAt,
-      expiresAt: domain.expiresAt,
+      lastUsedAt: domain.lastUsedAt,
       // ID는 Prisma의 autoincrement를 따르도록 생략 (Update 시에는 where 절에서 사용)
     };
   }

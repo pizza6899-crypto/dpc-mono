@@ -15,9 +15,8 @@ export class ItemCatalogMapper {
       code: record.code,
       type: record.type,
       effects: record.effects as unknown as ItemEffect[],
-      price: Cast.decimal(record.price),
-      priceCurrency: record.priceCurrency,
-      durationDays: record.durationDays,
+      expiryType: record.expiryType,
+      maxUsageCount: record.maxUsageCount,
       createdAt: Cast.date(record.createdAt),
       updatedAt: Cast.date(record.updatedAt),
       translations: (record.translations || []).map((t) => ({
@@ -36,9 +35,8 @@ export class ItemCatalogMapper {
       code: domain.code,
       type: domain.type,
       effects: domain.effects as any, // Prisma.Json 지원
-      price: domain.price,
-      priceCurrency: domain.priceCurrency,
-      durationDays: domain.durationDays,
+      expiryType: domain.expiryType,
+      maxUsageCount: domain.maxUsageCount,
       updatedAt: domain.updatedAt,
     };
   }

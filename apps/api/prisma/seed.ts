@@ -12,7 +12,7 @@ import { seedChatRooms } from './seeders/chat-room.seeder';
 import { seedPromotionConfig } from './seeders/promotion-config.seeder';
 import { seedPromotionCampaigns } from './seeders/promotion-campaign.seeder';
 import { seedCouponConfig } from './seeders/coupon-config.seeder';
-import { seedGamificationConfig, seedLevelDefinitions } from './seeders/gamification-catalog.seeder';
+import { seedGamificationConfig, seedLevelDefinitions, seedItemCatalog } from './seeders/gamification-catalog.seeder';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
 
@@ -88,7 +88,8 @@ async function main() {
     // 게이미피케이션 설정 시딩 처리
     await seedGamificationConfig(prisma);
     await seedLevelDefinitions(prisma);
-    console.log('✅ 게이미피케이션 전역 설정 및 레벨 정의 시딩이 완료되었습니다.');
+    await seedItemCatalog(prisma);
+    console.log('✅ 게이미피케이션 전역 설정, 레벨 및 아이템 카탈로그 시딩이 완료되었습니다.');
 
   } catch (error) {
     console.error('❌ 시딩 중 오류가 발생했습니다:', error);

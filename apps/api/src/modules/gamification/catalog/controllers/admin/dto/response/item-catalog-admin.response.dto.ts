@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { EffectType, ExchangeCurrencyCode, ItemType, Language } from '@prisma/client';
+import { EffectType, ExpiryType, ItemType, Language } from '@prisma/client';
 
 export class ItemEffectAdminDto {
   @ApiProperty({ enum: EffectType, description: 'Effect Type / 효과 타입' })
@@ -36,14 +36,11 @@ export class ItemCatalogAdminResponseDto {
   @ApiProperty({ type: [ItemEffectAdminDto], description: 'Effects / 효과 목록' })
   effects: ItemEffectAdminDto[];
 
-  @ApiProperty({ description: 'Price / 가격', example: '100.00' })
-  price: string;
+  @ApiProperty({ enum: ExpiryType, description: 'Expiry Type / 만료 정책' })
+  expiryType: ExpiryType;
 
-  @ApiProperty({ enum: ExchangeCurrencyCode, description: 'Currency / 가격 통화' })
-  priceCurrency: ExchangeCurrencyCode;
-
-  @ApiPropertyOptional({ description: 'Duration Days / 유효 기간(일)', example: 30 })
-  durationDays: number | null;
+  @ApiPropertyOptional({ description: 'Max Usage Count / 최대 사용 횟수', example: 30 })
+  maxUsageCount: number | null;
 
   @ApiProperty({ type: [ItemTranslationAdminDto], description: 'Translations / 번역 목록' })
   translations: ItemTranslationAdminDto[];

@@ -12,8 +12,9 @@ model UserInventory {
   // 장착 슬롯 (무기, 갑옷, 장신구 등 - 스탯 합산을 위해 필요)
   slot ItemSlot?
 
-  activatedAt DateTime? @map("activated_at") // 아이템 사용/장착 시점
-  expiresAt   DateTime? @map("expires_at") // 기간제 아이템 만료 시점
+  remainingUsageCount Int?      @map("remaining_usage_count") // 남은 사용 횟수
+  activatedAt         DateTime? @map("activated_at") // 처음 아이템을 사용/장착한 시점
+  lastUsedAt          DateTime? @map("last_used_at") // 최근 자동으로 소모된 시점
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -22,6 +23,8 @@ model UserInventory {
   catalog ItemCatalog @relation(fields: [itemId], references: [id])
 
   @@index([userId, status])
+  @@index([userId, slot])
+  @@index([itemId])
   @@map("user_inventories")
 }
 

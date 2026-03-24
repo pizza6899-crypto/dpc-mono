@@ -84,9 +84,8 @@ export class ItemCatalogAdminController {
         value: e.value,
         target: e.target,
       })),
-      price: i.price.toString(),
-      priceCurrency: i.priceCurrency,
-      durationDays: i.durationDays,
+      expiryType: i.expiryType,
+      maxUsageCount: i.maxUsageCount,
       translations: i.translations.map((t) => ({
         language: t.language,
         name: t.name,

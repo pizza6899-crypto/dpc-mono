@@ -14,7 +14,8 @@ export interface UserInventoryDto {
   itemType: ItemType; // From ItemCatalog
   itemCode: string; // From ItemCatalog
   activatedAt: Date | null;
-  expiresAt: Date | null;
+  lastUsedAt: Date | null;
+  remainingUsageCount: number | null;
   createdAt: Date;
   updatedAt: Date;
 }

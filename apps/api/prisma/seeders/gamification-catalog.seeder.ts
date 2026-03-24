@@ -74,3 +74,56 @@ export async function seedLevelDefinitions(prisma: PrismaClient) {
 
   console.log('✅ LevelDefinitions seeding completed.');
 }
+
+/**
+ * 샘플 아이템 카탈로그 시딩 (Artifact)
+ */
+export async function seedItemCatalog(prisma: PrismaClient) {
+  const items = [
+    {
+      code: 'START_RING',
+      type: 'ARTIFACT',
+      expiryType: 'PERMANENT',
+      maxUsageCount: null,
+      effects: [
+        { type: 'STAT_BOOST', target: 'LUC', value: 5 }
+      ],
+      translations: [
+        { language: 'KO', name: '시작의 반지', description: '모험의 시작을 함께하는 소박한 반지입니다.' },
+        { language: 'EN', name: 'Ring of Beginnings', description: 'A humble ring that accompanies the start of your adventure.' }
+      ]
+    },
+    {
+      code: 'LUCKY_CHARM_30',
+      type: 'ARTIFACT',
+      expiryType: 'DAILY_AUTOMATIC',
+      maxUsageCount: 30,
+      effects: [
+        { type: 'STAT_BOOST', target: 'LUC', value: 10 }
+      ],
+      translations: [
+        { language: 'KO', name: '30일 행운 부적', description: '30일 동안 매일 행운을 가져다줍니다.' },
+        { language: 'EN', name: '30-Day Lucky Charm', description: 'Brings luck every day for 30 days.' }
+      ]
+    }
+  ];
+
+  for (const item of items) {
+    await prisma.itemCatalog.upsert({
+      where: { code: item.code },
+      update: {},
+      create: {
+        code: item.code,
+        type: item.type as any,
+        expiryType: item.expiryType as any,
+        maxUsageCount: item.maxUsageCount,
+        effects: item.effects as any,
+        translations: {
+          create: item.translations as any
+        }
+      }
+    });
+  }
+
+  console.log('✅ ItemCatalog (Artifacts) seeding completed.');
+}

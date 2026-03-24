@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { Prisma, type ItemType, type ExchangeCurrencyCode } from '@prisma/client';
+import { Prisma, type ItemType, type ExpiryType } from '@prisma/client';
 
 import {
   ITEM_CATALOG_REPOSITORY_PORT,
@@ -17,9 +17,8 @@ export interface SaveItemCatalogParams {
   code: string;
   type: ItemType;
   effects: ItemEffect[];
-  price: Prisma.Decimal;
-  priceCurrency?: ExchangeCurrencyCode;
-  durationDays?: number | null;
+  expiryType: ExpiryType;
+  maxUsageCount?: number | null;
   translations: ItemTranslation[];
 }
 

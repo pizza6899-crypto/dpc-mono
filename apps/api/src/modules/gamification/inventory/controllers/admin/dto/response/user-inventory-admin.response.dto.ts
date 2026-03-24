@@ -45,8 +45,11 @@ export class UserInventoryAdminResponseDto {
   @ApiProperty({ description: 'Activated date / 활성화 일시', required: false })
   activatedAt: Date | null;
 
-  @ApiProperty({ description: 'Expiry date / 만료 예정 일시', required: false })
-  expiresAt: Date | null;
+  @ApiProperty({ description: 'Last Used date / 최근 자동으로 소모된 일시', required: false })
+  lastUsedAt: Date | null;
+
+  @ApiProperty({ description: 'Remaining Usage Count / 남은 사용 횟수', required: false })
+  remainingUsageCount: number | null;
 
   @ApiProperty({ description: 'Created date / 생성 일시' })
   createdAt: Date;

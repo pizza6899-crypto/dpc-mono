@@ -55,10 +55,10 @@ model ItemCatalog {
   // 아이템의 효과 상세 정의 (EffectType 기반 JSON 구조)
   effects Json @map("effects")
 
-  price         Decimal              @db.Decimal(32, 18)
-  priceCurrency ExchangeCurrencyCode @default(USD) @map("price_currency")
-
-  durationDays Int? @map("duration_days") // 기간제 아이템 여부
+  // 아이템 만료/소모 정책
+  expiryType    ExpiryType @default(PERMANENT) @map("expiry_type")
+  // 총 사용 가능한 횟수 (null = 무제한, ExpiryType이 PERMANENT가 아닐 때 필수)
+  maxUsageCount Int?       @map("max_usage_count")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -67,6 +67,12 @@ model ItemCatalog {
   userInventories UserInventory[]
 
   @@map("item_catalog")
+}
+
+enum ExpiryType {
+  PERMANENT // 영구 아이템 (기본값)
+  // USAGE_COUNT // 총 사용 횟수 제한 (소모품 등)
+  // DAILY_AUTOMATIC // 총 사용 회수가 있으나, 매일 1회 자동으로만 소모
 }
 
 /// [Gamification] 아이템 다국어 번역 정보
@@ -92,11 +98,6 @@ enum ItemType {
 /// [Gamification] 아이템 및 스켓이 가질 수 있는 효과 유형
 enum EffectType {
   STAT_BOOST // 특정 스텟(STR, LUC 등) 수치 가산
-  XP_BOOST // 경험치 획득량 가산 (%)
-  COMP_BOOST // 모든 콤프 적립 요율 가산 (%)
-  LUCKY_WIN_PROB // 윈 2배 발생 확률 가산 (%)
-  LOSS_RECOVERY_PROB // 루즈 시 복구 발생 확률 가산 (%)
-  DAILY_VOUCHER // 정기적인 쿠폰/머니 지급
 }
 
 /// [Gamification] 레벨 구간별 UI용 티어 분류 (순수 시각적 보상용)

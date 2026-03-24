@@ -111,8 +111,8 @@ export class InventoryUserController {
       status: d.status,
       slot: d.slot as ItemSlot || null,
       effects: d.effects,
-      activatedAt: null, // 추후 UserInventoryDto에 포함시킬 수 있음
-      expiresAt: null,
+      activatedAt: d.activatedAt,
+      remainingUsageCount: d.remainingUsageCount,
     };
   }
 
