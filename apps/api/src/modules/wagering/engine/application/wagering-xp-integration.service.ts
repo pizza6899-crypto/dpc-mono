@@ -47,7 +47,6 @@ export class WageringXpIntegrationService {
    */
   async revertXpByTxRatio(
     userId: bigint,
-    currency: ExchangeCurrencyCode,
     revertRatio: Prisma.Decimal,
     betTxs: any[],
   ): Promise<void> {
@@ -88,10 +87,10 @@ export class WageringXpIntegrationService {
       if (amount.lte(0)) return;
 
       const config = await this.getGamificationConfigService.execute();
-      
+
       // 1. USD 환산 금액 계산
-      const amountUsd = currency === 'USD' 
-        ? amount 
+      const amountUsd = currency === 'USD'
+        ? amount
         : (usdExchangeRate && !usdExchangeRate.isZero() ? amount.mul(usdExchangeRate) : new Prisma.Decimal(0));
 
       if (amountUsd.isZero()) return;
