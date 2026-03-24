@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { InventoryStatus, ItemSlot } from '@prisma/client';
+import { InventoryStatus, ItemSlot, ItemType } from '@prisma/client';
+
+
 import { ItemEffectResponseDto } from './item-effect.response.dto';
 
 
@@ -7,11 +9,18 @@ export class UserInventoryResponseDto {
   @ApiProperty({ description: 'Inventory ID / 인벤토리 ID', example: 'inv_abc123' })
   id: string;
 
-  @ApiProperty({ description: 'Owner User ID / 소유자 유저 ID', example: 'u_12345' })
-  userId: string;
-
   @ApiProperty({ description: 'Item Catalog ID / 아이템 카탈로그 ID', example: 'itm_xyz' })
   itemId: string;
+
+  @ApiProperty({ description: 'Item Name / 아이템 이름', example: 'Sword of Light' })
+  name: string;
+
+  @ApiProperty({ description: 'Item Description / 아이템 설명', example: 'A legendary sword that glows.', nullable: true })
+  description: string | null;
+
+  @ApiProperty({ description: 'Item Type / 아이템 타입', enum: ItemType })
+  itemType: ItemType;
+
 
 
   @ApiProperty({ description: 'Category or slot if applicable / 카테고리 또는 장착 슬롯', enum: ItemSlot, nullable: true })

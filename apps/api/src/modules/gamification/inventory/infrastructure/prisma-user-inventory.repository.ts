@@ -26,7 +26,11 @@ export class PrismaUserInventoryRepository implements UserInventoryRepositoryPor
     const list = await this.tx.userInventory.findMany({
       where: { userId },
       include: {
-        catalog: true,
+        catalog: {
+          include: {
+            translations: true,
+          },
+        },
       },
     });
 
@@ -38,7 +42,11 @@ export class PrismaUserInventoryRepository implements UserInventoryRepositoryPor
       status: item.status,
       slot: item.slot,
       effects: item.catalog.effects as unknown as ItemEffect[],
+      translations: (item.catalog as any).translations,
+      itemType: item.catalog.type,
     }));
+
+
   }
 
   async findByUserIdAndStatus(userId: bigint, status: InventoryStatus): Promise<UserInventoryDto[]> {
@@ -48,7 +56,11 @@ export class PrismaUserInventoryRepository implements UserInventoryRepositoryPor
         status,
       },
       include: {
-        catalog: true,
+        catalog: {
+          include: {
+            translations: true,
+          },
+        },
       },
     });
 
@@ -60,6 +72,8 @@ export class PrismaUserInventoryRepository implements UserInventoryRepositoryPor
       status: item.status,
       slot: item.slot,
       effects: item.catalog.effects as unknown as ItemEffect[],
+      translations: (item.catalog as any).translations,
+      itemType: item.catalog.type,
     }));
   }
 

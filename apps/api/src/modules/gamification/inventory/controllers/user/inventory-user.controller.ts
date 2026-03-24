@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { InventoryStatus, ItemSlot, UserRoleType } from '@prisma/client';
+import { ApiOperation, ApiQuery, ApiTags, ApiProperty } from '@nestjs/swagger';
+import { InventoryStatus, ItemSlot, ItemType, UserRoleType, Language } from '@prisma/client';
+
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
@@ -50,7 +51,8 @@ export class InventoryUserController {
       status,
     });
 
-    return list.map(item => this.mapToResponse(item));
+    return list.map(item => this.mapToResponse(item, user.language));
+
   }
 
   @Post('equip')
@@ -96,11 +98,16 @@ export class InventoryUserController {
     });
   }
 
-  private mapToResponse(d: UserInventoryDto): UserInventoryResponseDto {
+  private mapToResponse(d: UserInventoryDto, language: Language): UserInventoryResponseDto {
+    const translation = d.translations.find(t => t.language === language) || d.translations[0];
+
     return {
       id: this.sqidsService.encode(d.id, SqidsPrefix.INVENTORY),
-      userId: this.sqidsService.encode(d.userId, SqidsPrefix.USER),
       itemId: this.sqidsService.encode(d.itemId, SqidsPrefix.ITEM),
+      name: translation?.name ?? 'Unknown',
+      description: translation?.description ?? null,
+      itemType: d.itemType,
+
       quantity: d.quantity,
       status: d.status,
       slot: d.slot as ItemSlot || null,
@@ -109,5 +116,6 @@ export class InventoryUserController {
       expiresAt: null,
     };
   }
+
 }
 
