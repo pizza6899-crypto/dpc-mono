@@ -29,12 +29,6 @@ import { ItemRevokeAdminResponseDto } from './dto/response/item-revoke-admin.res
 import { GetUserInventoryAdminQueryDto } from './dto/request/get-user-inventory-admin-query.dto';
 
 
-
-
-
-// Domain
-import { UserInventoryDto } from '../../ports/user-inventory.repository.port';
-
 @Controller('admin/gamification/inventory')
 @ApiTags('Admin Gamification Inventory Management')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
@@ -56,16 +50,13 @@ export class InventoryAdminController {
     @Param('userId') userId: string,
     @Query() query: GetUserInventoryAdminQueryDto,
   ): Promise<UserInventoryAdminResponseDto[]> {
-    const list = await this.findInventoryService.execute({
+    return this.findInventoryService.execute({
       userId: BigInt(userId),
       status: query.status,
       itemType: query.itemType,
+      lang: query.lang,
     });
-
-    return list.map((i) => this.mapDtoToResponse(i, query.lang));
   }
-
-
 
   @Post('grant')
   @AuditLog({
@@ -95,8 +86,6 @@ export class InventoryAdminController {
     };
   }
 
-
-
   @Delete(':id')
   @AuditLog({
     type: LogType.ACTIVITY,
@@ -123,32 +112,5 @@ export class InventoryAdminController {
       isSuccess: true,
     };
   }
-
-
-  /**
-   * Repository DTO -> Response DTO 매핑 (효과 정보 포함 가능)
-   */
-  private mapDtoToResponse(d: UserInventoryDto, lang?: Language): UserInventoryAdminResponseDto {
-    const translation = d.translations.find((t) => t.language === lang) || d.translations[0];
-
-    return {
-      id: d.id.toString(),
-      userId: d.userId.toString(),
-      itemId: d.itemId.toString(),
-      itemCode: d.itemCode,
-      itemType: d.itemType,
-      name: translation?.name ?? 'Unknown',
-      description: translation?.description ?? null,
-      quantity: d.quantity,
-      status: d.status,
-      slot: d.slot as any,
-      effects: d.effects as any,
-      activatedAt: d.activatedAt,
-      expiresAt: d.expiresAt,
-      createdAt: d.createdAt,
-      updatedAt: d.updatedAt,
-    };
-  }
 }
-
 

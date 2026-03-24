@@ -55,8 +55,6 @@ export class PrismaUserInventoryRepository implements UserInventoryRepositoryPor
     };
   }
 
-
-
   async findByUserId(userId: bigint, filters?: { status?: InventoryStatus; itemType?: ItemType }): Promise<UserInventoryDto[]> {
     const list = await this.tx.userInventory.findMany({
       where: {
