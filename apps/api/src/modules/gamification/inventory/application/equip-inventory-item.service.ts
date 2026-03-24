@@ -19,7 +19,7 @@ export class EquipInventoryItemService {
   constructor(
     @Inject(USER_INVENTORY_REPOSITORY_PORT)
     private readonly inventoryRepo: UserInventoryRepositoryPort,
-    
+
     @Inject(forwardRef(() => SyncUserTotalStatsService))
     private readonly syncTotalStatsService: SyncUserTotalStatsService,
 
@@ -54,7 +54,7 @@ export class EquipInventoryItemService {
 
     // 만약 이미 장착된 아이템이 자신(`targetItem`)이라면 조기 반환.
     if (existingEquippedItem && existingEquippedItem.id === targetItem.id) {
-      return; 
+      return;
     }
 
     // 이미 다른 아이템이 같은 슬롯에 있다면 장착 해제 처리

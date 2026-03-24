@@ -13,7 +13,12 @@ export interface UserInventoryDto {
   translations: ItemTranslation[]; // Item names and descriptions
   itemType: ItemType; // From ItemCatalog
   itemCode: string; // From ItemCatalog
+  activatedAt: Date | null;
+  expiresAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
+
 
 
 export interface UserInventoryRepositoryPort {

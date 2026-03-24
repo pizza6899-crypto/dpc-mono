@@ -47,8 +47,13 @@ export class PrismaUserInventoryRepository implements UserInventoryRepositoryPor
       translations: (item.catalog as any).translations,
       itemType: item.catalog.type,
       itemCode: item.catalog.code,
+      activatedAt: item.activatedAt,
+      expiresAt: item.expiresAt,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
     };
   }
+
 
 
   async findByUserId(userId: bigint): Promise<UserInventoryDto[]> {
@@ -74,7 +79,12 @@ export class PrismaUserInventoryRepository implements UserInventoryRepositoryPor
       translations: (item.catalog as any).translations,
       itemType: item.catalog.type,
       itemCode: item.catalog.code,
+      activatedAt: item.activatedAt,
+      expiresAt: item.expiresAt,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
     }));
+
 
 
 
@@ -106,6 +116,10 @@ export class PrismaUserInventoryRepository implements UserInventoryRepositoryPor
       translations: (item.catalog as any).translations,
       itemType: item.catalog.type,
       itemCode: item.catalog.code,
+      activatedAt: item.activatedAt,
+      expiresAt: item.expiresAt,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
     }));
   }
 

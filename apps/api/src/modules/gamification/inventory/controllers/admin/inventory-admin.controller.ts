@@ -138,11 +138,12 @@ export class InventoryAdminController {
       status: d.status,
       slot: d.slot as any,
       effects: d.effects as any,
-      activatedAt: null,
-      expiresAt: null,
-      createdAt: new Date(), // 실제 엔티티 시점이 필요한 경우 Repo DTO 보강 필요
-      updatedAt: new Date(),
+      activatedAt: d.activatedAt,
+      expiresAt: d.expiresAt,
+      createdAt: d.createdAt,
+      updatedAt: d.updatedAt,
     };
   }
 }
+
 
