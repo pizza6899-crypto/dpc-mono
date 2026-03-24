@@ -87,10 +87,13 @@ export class GainXpService {
       }
     }
 
-    // 3. 경험치 획득 감사 로그 기록 (항상 기록)
+    // 3. 경험치 변동 감사 로그 기록 (항상 기록)
+    const isRevert = xpAmount.isNegative();
+    const actionType = isRevert ? CharacterLogType.REVERT_XP : CharacterLogType.GAIN_XP;
+
     const gainLog = UserCharacterLog.create({
       userId: character.userId,
-      type: CharacterLogType.GAIN_XP,
+      type: actionType,
       beforeLevel,
       afterLevel: character.level, // 레벨업 확인 전 상위 스냅샷
       beforeStatPoints,
@@ -98,7 +101,7 @@ export class GainXpService {
       amount: xpAmount,
       referenceId: referenceId,
       details: {
-        type: 'GAIN_XP',
+        type: isRevert ? 'REVERT_XP' : 'GAIN_XP',
         currentXp: character.xp.toString(),
       },
     });

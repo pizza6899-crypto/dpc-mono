@@ -3,12 +3,12 @@ import { CharacterLogType, Prisma } from '@prisma/client';
 /**
  * [Gamification] 캐릭터 로그 상세 정보 Union 타입
  */
-export type UserCharacterLogDetails = 
+export type UserCharacterLogDetails =
   | { type: 'GAIN_XP'; currentXp: string }
+  | { type: 'REVERT_XP'; currentXp: string }
   | { type: 'LEVEL_UP'; totalEarnedXp: string; reason: string }
   | { type: 'STAT_ALLOCATION'; statName: string; pointsInvested: number }
   | { type: 'STAT_RESET'; resetCount: number }
-  | Record<string, any>; // 확장성을 위한 여유분
 
 /**
  * [Gamification] 캐릭터 성장 및 스탯 변동 이력 로그 엔티티
