@@ -24,6 +24,8 @@ import { RevokeInventoryItemAdminService } from '../../application/revoke-invent
 // DTOs
 import { GrantItemAdminRequestDto } from './dto/request/grant-item-admin.request.dto';
 import { UserInventoryAdminResponseDto } from './dto/response/user-inventory-admin.response.dto';
+import { ItemGrantAdminResponseDto } from './dto/response/item-grant-admin.response.dto';
+
 
 // Domain
 import { UserInventory } from '../../domain/user-inventory.entity';
@@ -72,19 +74,21 @@ export class InventoryAdminController {
     summary: 'Grant Item to User / 유저에게 아이템 지급',
     description: 'Administratively grants an item to a user. / 관리자 권한으로 유저에게 아이템을 수동 지급합니다.',
   })
-  @ApiStandardResponse()
+  @ApiStandardResponse(ItemGrantAdminResponseDto)
   async grantItem(
     @Body() dto: GrantItemAdminRequestDto,
-  ): Promise<boolean> {
-    await this.grantItemService.execute({
+  ): Promise<ItemGrantAdminResponseDto> {
+    const item = await this.grantItemService.execute({
       userId: BigInt(dto.userId),
       itemId: BigInt(dto.itemId),
       quantity: dto.quantity,
     });
 
-    return true;
+    return {
+      id: item.id.toString(),
+      isSuccess: true,
+    };
   }
-
 
 
   @Delete(':id')
@@ -108,8 +112,6 @@ export class InventoryAdminController {
       inventoryId: BigInt(id),
     });
   }
-
-
 
   /**
    * Repository DTO -> Response DTO 매핑 (효과 정보 포함 가능)
