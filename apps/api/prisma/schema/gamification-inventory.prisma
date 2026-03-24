@@ -19,13 +19,55 @@ model UserInventory {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  user    User        @relation(fields: [userId], references: [id])
-  catalog ItemCatalog @relation(fields: [itemId], references: [id])
+  user              User               @relation(fields: [userId], references: [id])
+  catalog           ItemCatalog        @relation(fields: [itemId], references: [id])
+  userInventoryLogs UserInventoryLog[]
 
   @@index([userId, status])
   @@index([userId, slot])
   @@index([itemId])
   @@map("user_inventories")
+}
+
+enum InventoryAction {
+  GRANT // 아이템 신규 지급
+  REFILL // 횟수 충전 (관리자)
+  EQUIP // 장착
+  UNEQUIP // 장착 해제
+  CONSUME // 횟수 소모 (자동/수동)
+  EXPIRE // 만료 (횟수 소진 등)
+  DISCARD // 파기
+}
+
+model UserInventoryLog {
+  id          BigInt
+  inventoryId BigInt @map("inventory_id")
+  userId      BigInt @map("user_id")
+  itemId      BigInt @map("item_id")
+
+  action InventoryAction
+  slot   ItemSlot?
+
+  previousUsageCount Int? @map("previous_usage_count")
+  currentUsageCount  Int? @map("current_usage_count")
+
+  actorId  String? @map("actor_id")
+  reason   String?
+  metadata Json?
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // 관계 설정
+  user      User          @relation(fields: [userId], references: [id])
+  inventory UserInventory @relation(fields: [inventoryId], references: [id])
+  catalog   ItemCatalog   @relation(fields: [itemId], references: [id])
+
+  // 파티셔닝을 뒷받침하기 위해 (id, createdAt) 복합 기본키 설정
+  @@id([id, createdAt])
+  @@index([userId, createdAt])
+  @@index([inventoryId])
+  @@index([action])
+  @@map("user_inventory_logs")
 }
 
 enum InventoryStatus {

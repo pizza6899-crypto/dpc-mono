@@ -65,6 +65,7 @@ model ItemCatalog {
 
   translations    ItemTranslation[]
   userInventories UserInventory[]
+  inventoryLogs   UserInventoryLog[]
 
   @@map("item_catalog")
 }
