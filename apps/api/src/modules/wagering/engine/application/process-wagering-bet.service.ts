@@ -21,8 +21,7 @@ import { GetUserWalletService } from 'src/modules/wallet/application/get-user-wa
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
-import { GainXpService } from 'src/modules/gamification/character/application/gain-xp.service';
-import { GetGamificationConfigService } from 'src/modules/gamification/catalog/application/get-gamification-config.service';
+import { WageringXpIntegrationService } from './wagering-xp-integration.service';
 
 
 export interface ProcessWageringBetCommand {
@@ -60,8 +59,7 @@ export class ProcessWageringBetService {
     private readonly getUserWalletService: GetUserWalletService,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
     private readonly advisoryLockService: AdvisoryLockService,
-    private readonly gainXpService: GainXpService,
-    private readonly getGamificationConfigService: GetGamificationConfigService,
+    private readonly xpIntegrationService: WageringXpIntegrationService,
   ) { }
 
 
@@ -259,28 +257,8 @@ export class ProcessWageringBetService {
       }
     }
 
-    // [Gamification] 경험치(XP) 지급 연동
-    // 베팅액(Rolling)을 USD 기준으로 환산하여 설정된 배율(Multiplier)만큼 경험치 부여
-    try {
-      if (betAmount.gt(0)) {
-        const gamificationConfig = await this.getGamificationConfigService.execute();
-        
-        // USD 환산 금액 계산 (usdExchangeRate가 없는 경우 local 1:1 가정 혹은 0 처리)
-        const amountUsd = currency === 'USD' 
-          ? betAmount 
-          : (usdExchangeRate && !usdExchangeRate.isZero() ? betAmount.mul(usdExchangeRate) : new Prisma.Decimal(0));
-
-        if (amountUsd.gt(0)) {
-          const xpToGrant = amountUsd.mul(gamificationConfig.xpGrantMultiplierUsd);
-          if (xpToGrant.gt(0)) {
-            await this.gainXpService.execute(userId, xpToGrant);
-          }
-        }
-      }
-    } catch (error) {
-      // 게이미피케이션 오류가 전체 베팅 흐름을 방해하지 않도록 로그 처리 (필요시 트랜잭션 포함 가능)
-      this.logger.error(`[Gamification Integration] Failed to grant XP for user ${userId}`, error);
-    }
+    // [Gamification] 경험치(XP) 지급 연동 (통합 서비스 위임)
+    await this.xpIntegrationService.grantXpByBet(userId, betAmount, currency, usdExchangeRate);
 
     return {
       cashDeducted: cashDeduction,

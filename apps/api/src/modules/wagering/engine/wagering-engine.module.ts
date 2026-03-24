@@ -9,6 +9,7 @@ import {
   ProcessWageringWinService,
   ProcessWageringCancelService,
   RevertWageringContributionService,
+  WageringXpIntegrationService,
 } from './application/index';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { GamificationCatalogModule } from 'src/modules/gamification/catalog/catalog.module';
@@ -32,6 +33,7 @@ import { GamificationCharacterModule } from 'src/modules/gamification/character/
     ProcessWageringWinService,
     ProcessWageringCancelService,
     RevertWageringContributionService,
+    WageringXpIntegrationService,
   ],
   exports: [
     GetAvailableBalanceService,
@@ -39,6 +41,7 @@ import { GamificationCharacterModule } from 'src/modules/gamification/character/
     ProcessWageringWinService,
     ProcessWageringCancelService,
     RevertWageringContributionService,
+    WageringXpIntegrationService,
   ],
 })
 export class WageringEngineModule { }
