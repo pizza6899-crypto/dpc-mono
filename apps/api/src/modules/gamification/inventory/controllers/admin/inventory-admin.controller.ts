@@ -8,7 +8,6 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-
 import { ApiOperation, ApiTags, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { UserRoleType, Language } from '@prisma/client';
 
@@ -73,26 +72,15 @@ export class InventoryAdminController {
     summary: 'Grant Item to User / 유저에게 아이템 지급',
     description: 'Administratively grants an item to a user. / 관리자 권한으로 유저에게 아이템을 수동 지급합니다.',
   })
-  @ApiStandardResponse(UserInventoryAdminResponseDto)
   async grantItem(
     @Body() dto: GrantItemAdminRequestDto,
-    @Query('lang') lang?: Language,
-  ): Promise<UserInventoryAdminResponseDto> {
-    const item = await this.grantItemService.execute({
+  ): Promise<void> {
+    await this.grantItemService.execute({
       userId: BigInt(dto.userId),
       itemId: BigInt(dto.itemId),
       quantity: dto.quantity,
     });
-
-    // 💡 지급 후 상세 정보(카탈로그 포함)를 다시 조회하여 반환
-    const enriched = await this.findInventoryService.findById(item.id);
-    if (!enriched) {
-      throw new InternalServerErrorException('Failed to retrieve inventory details after grant.');
-    }
-
-    return this.mapDtoToResponse(enriched, lang);
   }
-
 
 
   @Delete(':id')
