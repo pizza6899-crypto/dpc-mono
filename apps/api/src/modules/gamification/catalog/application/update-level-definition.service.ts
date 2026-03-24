@@ -31,24 +31,16 @@ export class UpdateLevelDefinitionService {
    */
   @Transactional()
   async execute(params: SaveLevelDefinitionParams): Promise<LevelDefinition> {
-    let levelDefinition = await this.repository.findByLevel(params.level);
+    const levelDefinition = await this.repository.findByLevel(params.level);
 
     if (!levelDefinition) {
-      // 새로운 레벨 정의 생성 (최소 필수 필드인 requiredXp 보장)
-      levelDefinition = LevelDefinition.rehydrate({
-        level: params.level,
-        requiredXp: params.requiredXp ?? new Prisma.Decimal(0),
-        tierCode: params.tierCode ?? TierCode.WHITE,
-        tierImageUrl: params.tierImageUrl ?? null,
-        statPointsBoost: params.statPointsBoost ?? 1,
-        updatedAt: new Date(),
-      });
-    } else {
-      // 기존 레벨 정보 업데이트
-      levelDefinition.update({
-        ...params,
-      });
+      throw new LevelDefinitionNotFoundException();
     }
+
+    // 기존 레벨 정보 업데이트
+    levelDefinition.update({
+      ...params,
+    });
 
     await this.repository.save(levelDefinition);
 

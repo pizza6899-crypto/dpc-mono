@@ -5,20 +5,16 @@ import { DomainException } from 'src/common/exception/domain.exception';
 /**
  * 게이미피케이션 카탈로그 모듈의 베이스 예외
  */
-export class GamificationCatalogException extends DomainException {
-  constructor(
-    message: string,
-    errorCode: MessageCode,
-    httpStatus: HttpStatus = HttpStatus.BAD_REQUEST,
-  ) {
+export abstract class GamificationCatalogException extends DomainException {
+  constructor(message: string, errorCode: MessageCode, httpStatus: HttpStatus = HttpStatus.BAD_REQUEST) {
     super(message, errorCode, httpStatus);
     this.name = 'GamificationCatalogException';
   }
 }
 
-/**
- * 게이미피케이션 전역 설정을 찾을 수 없을 때 (Seeding 누락 등)
- */
+// --- Not Found 계열 (ID 노출 지양) ---
+
+/** 게이미피케이션 전역 설정을 찾을 수 없을 때 (Seeding 누락 등) */
 export class GamificationConfigNotFoundException extends GamificationCatalogException {
   constructor() {
     super(
@@ -30,39 +26,7 @@ export class GamificationConfigNotFoundException extends GamificationCatalogExce
   }
 }
 
-/**
- * 게이미피케이션 관련 설정 파라미터가 유효하지 않을 때
- */
-export class InvalidGamificationConfigParameterException extends GamificationCatalogException {
-  constructor(messageCode: MessageCode, message: string = 'Invalid gamification parameter.') {
-    super(
-      message,
-      messageCode,
-      HttpStatus.BAD_REQUEST,
-    );
-    this.name = 'InvalidGamificationConfigParameterException';
-  }
-}
-
-/**
- * 특정 레벨 정의를 찾을 수 없을 때
- */
-export class LevelDefinitionNotFoundException extends GamificationCatalogException {
-  constructor() {
-    super(
-      'Level definition not found.',
-      MessageCode.LEVEL_DEFINITION_NOT_FOUND,
-      HttpStatus.NOT_FOUND,
-    );
-    this.name = 'LevelDefinitionNotFoundException';
-  }
-}
-
-
-
-/**
- * 특정 아이템을 찾을 수 없을 때
- */
+/** 특정 아이템을 찾을 수 없을 때 */
 export class ItemNotFoundException extends GamificationCatalogException {
   constructor() {
     super(
@@ -74,18 +38,138 @@ export class ItemNotFoundException extends GamificationCatalogException {
   }
 }
 
-
-
-/**
- * 아이템 파라미터가 유효하지 않을 때
- */
-export class InvalidItemParameterException extends GamificationCatalogException {
-  constructor(messageCode: MessageCode, message: string = 'Invalid item parameter.') {
+/** 특정 레벨 정의를 찾을 수 없을 때 */
+export class LevelDefinitionNotFoundException extends GamificationCatalogException {
+  constructor() {
     super(
-      message,
-      messageCode,
+      'Level definition not found.',
+      MessageCode.LEVEL_DEFINITION_NOT_FOUND,
+      HttpStatus.NOT_FOUND,
+    );
+    this.name = 'LevelDefinitionNotFoundException';
+  }
+}
+
+// --- Validation 계열 (상세 사유 중심) ---
+
+/** 아이템 코드가 중복되었을 때 */
+export class ItemCodeDuplicatedException extends GamificationCatalogException {
+  constructor(code?: string) {
+    super(
+      code ? `Item code already exists: ${code}` : 'Item code already exists.',
+      MessageCode.ITEM_CODE_DUPLICATED,
       HttpStatus.BAD_REQUEST,
     );
-    this.name = 'InvalidItemParameterException';
+    this.name = 'ItemCodeDuplicatedException';
+  }
+}
+
+/** 아이템 가격 정보가 잘못되었을 때 (예: 음수) */
+export class InvalidItemPriceException extends GamificationCatalogException {
+  constructor(reason: string = 'Item price cannot be negative.') {
+    super(reason, MessageCode.ITEM_PRICE_NEGATIVE, HttpStatus.BAD_REQUEST);
+    this.name = 'InvalidItemPriceException';
+  }
+}
+
+/** 아이템 효과(Effect) 설정이 유효하지 않을 때 */
+export class InvalidItemEffectException extends GamificationCatalogException {
+  constructor(reason?: string) {
+    super(
+      reason ? `Invalid item effect: ${reason}` : 'Item effect configuration is invalid.',
+      MessageCode.ITEM_EFFECT_INVALID,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'InvalidItemEffectException';
+  }
+}
+
+/** 기간제 아이템 설정이 유효하지 않을 때 */
+export class InvalidItemDurationException extends GamificationCatalogException {
+  constructor(reason?: string) {
+    super(
+      reason ? `Invalid item duration: ${reason}` : 'Item duration is invalid.',
+      MessageCode.ITEM_DURATION_NEGATIVE,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'InvalidItemDurationException';
+  }
+}
+
+/** 필수 번역 정보가 누락되었을 때 */
+export class ItemTranslationRequiredException extends GamificationCatalogException {
+  constructor() {
+    super(
+      'At least one translation is required for the item.',
+      MessageCode.ITEM_TRANSLATION_REQUIRED,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'ItemTranslationRequiredException';
+  }
+}
+
+// --- Gamification Config 계열 ---
+
+/** 게이미피케이션 설정 파라미터가 유효하지 않을 때 */
+export class InvalidGamificationConfigException extends GamificationCatalogException {
+  constructor(messageCode: MessageCode, reason: string) {
+    super(reason, messageCode, HttpStatus.BAD_REQUEST);
+    this.name = 'InvalidGamificationConfigException';
+  }
+}
+
+/** 경험치 배율 설정이 잘못되었을 때 */
+export class InvalidXPMultiplierException extends InvalidGamificationConfigException {
+  constructor(reason: string = 'XP multiplier cannot be negative.') {
+    super(MessageCode.GAMIFICATION_CONFIG_XP_MULTIPLIER_NEGATIVE, reason);
+    this.name = 'InvalidXPMultiplierException';
+  }
+}
+
+/** 레벨당 지급 스탯 포인트 설정이 잘못되었을 때 */
+export class InvalidStatPointsPerLevelException extends InvalidGamificationConfigException {
+  constructor(reason: string = 'Stat points grant per level cannot be negative.') {
+    super(MessageCode.GAMIFICATION_CONFIG_STAT_POINTS_NEGATIVE, reason);
+    this.name = 'InvalidStatPointsPerLevelException';
+  }
+}
+
+/** 최대 스탯 제한 설정이 잘못되었을 때 */
+export class InvalidMaxStatLimitException extends InvalidGamificationConfigException {
+  constructor(reason: string = 'Max stat limit must be at least 1.') {
+    super(MessageCode.GAMIFICATION_CONFIG_STAT_LIMIT_NEGATIVE, reason);
+    this.name = 'InvalidMaxStatLimitException';
+  }
+}
+
+/** 스탯 초기화 가격 설정이 잘못되었을 때 */
+export class InvalidResetPriceException extends InvalidGamificationConfigException {
+  constructor(reason: string) {
+    super(MessageCode.GAMIFICATION_CONFIG_PRICE_NEGATIVE, reason);
+    this.name = 'InvalidResetPriceException';
+  }
+}
+
+/** 레벨 정의 파라미터가 유효하지 않을 때 */
+export class InvalidLevelDefinitionException extends GamificationCatalogException {
+  constructor(messageCode: MessageCode, reason: string) {
+    super(reason, messageCode, HttpStatus.BAD_REQUEST);
+    this.name = 'InvalidLevelDefinitionException';
+  }
+}
+
+/** 레벨당 필요 경험치 설정이 잘못되었을 때 */
+export class InvalidLevelRequiredXPException extends InvalidLevelDefinitionException {
+  constructor(reason: string = 'Required XP cannot be negative.') {
+    super(MessageCode.GAMIFICATION_LEVEL_REQUIRED_XP_NEGATIVE, reason);
+    this.name = 'InvalidLevelRequiredXPException';
+  }
+}
+
+/** 레벨당 지급 스탯 포인트 설정이 잘못되었을 때 */
+export class InvalidLevelStatBoostException extends InvalidLevelDefinitionException {
+  constructor(reason: string = 'Stat points boost cannot be negative.') {
+    super(MessageCode.GAMIFICATION_LEVEL_STAT_BOOST_NEGATIVE, reason);
+    this.name = 'InvalidLevelStatBoostException';
   }
 }

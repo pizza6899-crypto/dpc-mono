@@ -1,6 +1,8 @@
 import { Prisma, TierCode } from '@prisma/client';
-import { MessageCode } from '@repo/shared';
-import { InvalidGamificationConfigParameterException } from './catalog.exception';
+import {
+  InvalidLevelRequiredXPException,
+  InvalidLevelStatBoostException
+} from './catalog.exception';
 
 /**
  * [Gamification] 레벨 정의 도메인 엔티티
@@ -48,26 +50,24 @@ export class LevelDefinition {
     tierImageUrl?: string | null;
     statPointsBoost?: number;
   }): void {
-    if (params.requiredXp !== undefined) {
-      if (params.requiredXp.isNegative()) {
-        throw new InvalidGamificationConfigParameterException(MessageCode.GAMIFICATION_LEVEL_REQUIRED_XP_NEGATIVE, 'Required XP cannot be negative.');
-      }
-      this._requiredXp = params.requiredXp;
+    if (params.requiredXp !== undefined) this._requiredXp = params.requiredXp;
+    if (params.tierCode !== undefined) this._tierCode = params.tierCode;
+    if (params.tierImageUrl !== undefined) this._tierImageUrl = params.tierImageUrl;
+    if (params.statPointsBoost !== undefined) this._statPointsBoost = params.statPointsBoost;
+
+    this._validate();
+  }
+
+  /**
+   * 도메인 유효성 검사
+   */
+  private _validate(): void {
+    if (this._requiredXp.isNegative()) {
+      throw new InvalidLevelRequiredXPException();
     }
 
-    if (params.tierCode !== undefined) {
-      this._tierCode = params.tierCode;
-    }
-
-    if (params.tierImageUrl !== undefined) {
-      this._tierImageUrl = params.tierImageUrl;
-    }
-
-    if (params.statPointsBoost !== undefined) {
-      if (params.statPointsBoost < 0) {
-        throw new InvalidGamificationConfigParameterException(MessageCode.GAMIFICATION_LEVEL_STAT_BOOST_NEGATIVE, 'Stat points boost cannot be negative.');
-      }
-      this._statPointsBoost = params.statPointsBoost;
+    if (this._statPointsBoost < 0) {
+      throw new InvalidLevelStatBoostException();
     }
   }
 

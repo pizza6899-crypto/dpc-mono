@@ -120,6 +120,7 @@ export class UserInventory {
     this._quantity -= amount;
     if (this._quantity === 0) {
       this._status = InventoryStatus.CONSUMED;
+      this._slot = null;
     }
     this._updatedAt = new Date();
   }
@@ -149,7 +150,10 @@ export class UserInventory {
    * 만료 처리
    */
   expire(): void {
+    if (this._status === InventoryStatus.EXPIRED || this._status === InventoryStatus.CONSUMED) return;
+
     this._status = InventoryStatus.EXPIRED;
+    this._slot = null;
     this._updatedAt = new Date();
   }
 

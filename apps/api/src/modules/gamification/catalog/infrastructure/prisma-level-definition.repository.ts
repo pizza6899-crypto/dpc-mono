@@ -61,10 +61,9 @@ export class PrismaLevelDefinitionRepository implements LevelDefinitionRepositor
   async save(levelDefinition: LevelDefinition): Promise<void> {
     const data = this.mapper.toPrisma(levelDefinition);
 
-    await this.tx.levelDefinition.upsert({
+    await this.tx.levelDefinition.update({
       where: { level: levelDefinition.level },
-      update: data,
-      create: data,
+      data,
     });
 
     // 상태 변경 시 목록 캐시 삭제

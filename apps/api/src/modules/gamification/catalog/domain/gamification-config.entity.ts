@@ -1,6 +1,10 @@
 import { Prisma, ExchangeCurrencyCode } from '@prisma/client';
-import { MessageCode } from '@repo/shared';
-import { InvalidGamificationConfigParameterException } from './catalog.exception';
+import { 
+  InvalidMaxStatLimitException, 
+  InvalidResetPriceException, 
+  InvalidStatPointsPerLevelException, 
+  InvalidXPMultiplierException 
+} from './catalog.exception';
 
 /**
  * 통화별 스탯 초기화 고정 가격표 타입
@@ -62,21 +66,21 @@ export class GamificationConfig {
   }): void {
     if (params.xpGrantMultiplierUsd !== undefined) {
       if (params.xpGrantMultiplierUsd.isNegative()) {
-        throw new InvalidGamificationConfigParameterException(MessageCode.GAMIFICATION_CONFIG_XP_MULTIPLIER_NEGATIVE, 'XP multiplier cannot be negative.');
+        throw new InvalidXPMultiplierException();
       }
       this._xpGrantMultiplierUsd = params.xpGrantMultiplierUsd;
     }
 
     if (params.statPointsGrantPerLevel !== undefined) {
       if (params.statPointsGrantPerLevel < 0) {
-        throw new InvalidGamificationConfigParameterException(MessageCode.GAMIFICATION_CONFIG_STAT_POINTS_NEGATIVE, 'Stat points grant per level cannot be negative.');
+        throw new InvalidStatPointsPerLevelException();
       }
       this._statPointsGrantPerLevel = params.statPointsGrantPerLevel;
     }
 
     if (params.maxStatLimit !== undefined) {
       if (params.maxStatLimit < 1) {
-        throw new InvalidGamificationConfigParameterException(MessageCode.GAMIFICATION_CONFIG_STAT_LIMIT_NEGATIVE, 'Max stat limit must be at least 1.');
+        throw new InvalidMaxStatLimitException();
       }
       this._maxStatLimit = params.maxStatLimit;
     }
@@ -85,10 +89,7 @@ export class GamificationConfig {
       // 값 검증: 모든 가격은 0 이상이어야 함
       for (const [currency, price] of Object.entries(params.statResetPrices)) {
         if (price !== undefined && price < 0) {
-          throw new InvalidGamificationConfigParameterException(
-            MessageCode.GAMIFICATION_CONFIG_PRICE_NEGATIVE,
-            `Price for ${currency} cannot be negative.`
-          );
+          throw new InvalidResetPriceException(`Price for ${currency} cannot be negative.`);
         }
       }
       this._statResetPrices = params.statResetPrices;

@@ -53,8 +53,8 @@ export class LevelDefinitionAdminController {
     }),
   })
   @ApiOperation({
-    summary: 'Create or Update Level Definition / 레벨 정의 생성 및 수정',
-    description: 'Stores mastery data for a level. / 특정 레벨의 마스터 데이터를 저장합니다.',
+    summary: 'Update Level Definition / 레벨 정의 수정',
+    description: 'Updates mastery data for an existing level. / 기등록된 특정 레벨의 마스터 데이터를 수정합니다.',
   })
   @ApiStandardResponse(LevelDefinitionAdminResponseDto)
   async saveLevel(

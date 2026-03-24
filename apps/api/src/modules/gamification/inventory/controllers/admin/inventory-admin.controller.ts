@@ -98,7 +98,7 @@ export class InventoryAdminController {
     summary: 'Revoke Inventory Item / 인벤토리 아이템 회수',
     description: 'Administratively expires or removes an item from a users inventory. / 관리자 권한으로 유저의 아이템을 회수(만료) 처리합니다.',
   })
-  @ApiParam({ name: 'id', description: 'Inventory Entry ID (BigInt as string)', example: '1' })
+  @ApiParam({ name: 'id', description: 'Inventory Entry ID (BigInt as string)' })
   @ApiStandardResponse(ItemRevokeAdminResponseDto)
   async revokeItem(
     @Param('id') id: string,

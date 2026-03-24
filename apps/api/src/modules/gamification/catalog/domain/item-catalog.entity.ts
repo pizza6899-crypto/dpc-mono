@@ -1,7 +1,11 @@
 import type { EffectType, ExchangeCurrencyCode, ItemType, Language } from '@prisma/client';
 import { Prisma } from '@prisma/client';
-import { MessageCode } from '@repo/shared';
-import { InvalidItemParameterException } from './catalog.exception';
+import { 
+  InvalidItemDurationException, 
+  InvalidItemEffectException, 
+  InvalidItemPriceException, 
+  ItemTranslationRequiredException 
+} from './catalog.exception';
 
 /**
  * 아이템의 효과 상세 정의 인터페이스
@@ -121,25 +125,25 @@ export class ItemCatalog {
    */
   private _validate(): void {
     if (!this._code || this._code.trim() === '') {
-      throw new InvalidItemParameterException(MessageCode.ITEM_EFFECT_INVALID, 'Item code is required.');
+      throw new InvalidItemEffectException('Item code is required.');
     }
 
     if (this._price.isNegative()) {
-      throw new InvalidItemParameterException(MessageCode.ITEM_PRICE_NEGATIVE, 'Item price cannot be negative.');
+      throw new InvalidItemPriceException();
     }
 
     if (this._durationDays !== null && this._durationDays < 0) {
-      throw new InvalidItemParameterException(MessageCode.ITEM_DURATION_NEGATIVE, 'Duration days cannot be negative.');
+      throw new InvalidItemDurationException();
     }
 
     if (!this._translations || this._translations.length === 0) {
-      throw new InvalidItemParameterException(MessageCode.ITEM_TRANSLATION_REQUIRED, 'At least one translation is required.');
+      throw new ItemTranslationRequiredException();
     }
 
     // 효과(Effect) 유효성 기본 체크
     for (const effect of this._effects) {
       if (!effect.type) {
-        throw new InvalidItemParameterException(MessageCode.ITEM_EFFECT_INVALID, 'Item effect type is required.');
+        throw new InvalidItemEffectException('Item effect type is required.');
       }
     }
   }

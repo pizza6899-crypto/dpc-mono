@@ -2,13 +2,12 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma, type ItemType, type ExchangeCurrencyCode } from '@prisma/client';
 
-import { 
-  ITEM_CATALOG_REPOSITORY_PORT, 
-  type ItemCatalogRepositoryPort 
+import {
+  ITEM_CATALOG_REPOSITORY_PORT,
+  type ItemCatalogRepositoryPort
 } from '../ports/item-catalog.repository.port';
 import { ItemCatalog, type ItemEffect, type ItemTranslation } from '../domain/item-catalog.entity';
-import { InvalidItemParameterException, ItemNotFoundException } from '../domain/catalog.exception';
-import { MessageCode } from '@repo/shared';
+import { ItemCodeDuplicatedException, ItemNotFoundException } from '../domain/catalog.exception';
 
 /**
  * 아이템 정보 저장 파라미터 규격
@@ -42,18 +41,26 @@ export class UpdateItemCatalogService {
       // 1. 기존 아이템 수정
       item = await this.repository.findById(params.id);
       if (!item) {
-        throw new ItemNotFoundException(params.id);
+        throw new ItemNotFoundException();
       }
-      
+
+      // 코드 변경 시 중복 체크
+      if (params.code !== item.code) {
+        const existing = await this.repository.findByCode(params.code);
+        if (existing) {
+          throw new ItemCodeDuplicatedException(params.code);
+        }
+      }
+
       item.update({
         ...params,
       });
     } else {
       // 2. 신규 아이템 생성
-      // 코드 중복 체크
+      // 코드 중복 체크 (신규)
       const existing = await this.repository.findByCode(params.code);
       if (existing) {
-        throw new InvalidItemParameterException(MessageCode.ITEM_CODE_DUPLICATED, `Item code already exists: ${params.code}`);
+        throw new ItemCodeDuplicatedException(params.code);
       }
 
       item = ItemCatalog.create({
