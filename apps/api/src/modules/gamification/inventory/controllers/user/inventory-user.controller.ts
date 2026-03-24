@@ -52,7 +52,6 @@ export class InventoryUserController {
     });
 
     return list.map(item => this.mapToResponse(item, user.language));
-
   }
 
   @Post('equip')
