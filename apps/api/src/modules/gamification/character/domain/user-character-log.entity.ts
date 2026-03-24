@@ -1,4 +1,14 @@
-import { CharacterLogType } from '@prisma/client';
+import { CharacterLogType, Prisma } from '@prisma/client';
+
+/**
+ * [Gamification] 캐릭터 로그 상세 정보 Union 타입
+ */
+export type UserCharacterLogDetails = 
+  | { type: 'GAIN_XP'; currentXp: string }
+  | { type: 'LEVEL_UP'; totalEarnedXp: string; reason: string }
+  | { type: 'STAT_ALLOCATION'; statName: string; pointsInvested: number }
+  | { type: 'STAT_RESET'; resetCount: number }
+  | Record<string, any>; // 확장성을 위한 여유분
 
 /**
  * [Gamification] 캐릭터 성장 및 스탯 변동 이력 로그 엔티티
@@ -15,7 +25,9 @@ export class UserCharacterLog {
     private readonly _afterLevel: number,
     private readonly _beforeStatPoints: number,
     private readonly _afterStatPoints: number,
-    private readonly _details: any | null,
+    private readonly _amount: Prisma.Decimal | null,
+    private readonly _referenceId: bigint | null,
+    private readonly _details: UserCharacterLogDetails | null,
     private readonly _createdAt: Date,
   ) { }
 
@@ -30,7 +42,9 @@ export class UserCharacterLog {
     afterLevel: number;
     beforeStatPoints: number;
     afterStatPoints: number;
-    details: any | null;
+    amount: Prisma.Decimal | null;
+    referenceId: bigint | null;
+    details: UserCharacterLogDetails | null;
     createdAt: Date;
   }): UserCharacterLog {
     return new UserCharacterLog(
@@ -41,6 +55,8 @@ export class UserCharacterLog {
       data.afterLevel,
       data.beforeStatPoints,
       data.afterStatPoints,
+      data.amount,
+      data.referenceId,
       data.details,
       data.createdAt,
     );
@@ -56,7 +72,9 @@ export class UserCharacterLog {
     afterLevel: number;
     beforeStatPoints: number;
     afterStatPoints: number;
-    details?: any;
+    amount?: Prisma.Decimal | null;
+    referenceId?: bigint | null;
+    details?: UserCharacterLogDetails;
   }): UserCharacterLog {
     return new UserCharacterLog(
       0n, // DB 저장 시 자동 생성되므로 0n으로 초기화
@@ -66,6 +84,8 @@ export class UserCharacterLog {
       params.afterLevel,
       params.beforeStatPoints,
       params.afterStatPoints,
+      params.amount ?? null,
+      params.referenceId ?? null,
       params.details ?? null,
       new Date(),
     );
@@ -80,6 +100,8 @@ export class UserCharacterLog {
   get afterLevel(): number { return this._afterLevel; }
   get beforeStatPoints(): number { return this._beforeStatPoints; }
   get afterStatPoints(): number { return this._afterStatPoints; }
-  get details(): any | null { return this._details; }
+  get amount(): Prisma.Decimal | null { return this._amount; }
+  get referenceId(): bigint | null { return this._referenceId; }
+  get details(): UserCharacterLogDetails | null { return this._details; }
   get createdAt(): Date { return this._createdAt; }
 }

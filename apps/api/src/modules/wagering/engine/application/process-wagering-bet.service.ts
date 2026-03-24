@@ -258,7 +258,7 @@ export class ProcessWageringBetService {
     }
 
     // [Gamification] 경험치(XP) 지급 연동 (통합 서비스 위임)
-    await this.xpIntegrationService.grantXpByBet(userId, betAmount, currency, usdExchangeRate);
+    await this.xpIntegrationService.grantXpByBet(userId, betAmount, currency, usdExchangeRate, BigInt(referenceId));
 
     return {
       cashDeducted: cashDeduction,

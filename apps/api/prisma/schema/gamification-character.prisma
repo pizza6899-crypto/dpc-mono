@@ -61,6 +61,10 @@ model UserCharacterLog {
   beforeStatPoints Int @map("before_stat_points")
   afterStatPoints  Int @map("after_stat_points")
 
+  // 경험치 변동 상세 (XP Audit)
+  amount      Decimal? @db.Decimal(32, 18) // 경험치 획득/차감량
+  referenceId BigInt?  @map("reference_id") // 원인이 된 베팅 라운드 ID 등
+
   // 상세 변동 내역 (JSON)
   details Json? @map("details")
 
@@ -79,4 +83,6 @@ enum CharacterLogType {
   LEVEL_UP
   STAT_ALLOCATION
   STAT_RESET
+  GAIN_XP // 경험치 획득
+  REVERT_XP // 경험치 회수 (취소/푸쉬)
 }

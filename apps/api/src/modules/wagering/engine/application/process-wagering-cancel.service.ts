@@ -184,7 +184,7 @@ export class ProcessWageringCancelService {
     }
 
     // [Gamification] 경험치(XP) 회수 연동 (통합 서비스 위임)
-    await this.xpIntegrationService.revertXpByRefund(userId, amount, currency, usdExchangeRate);
+    await this.xpIntegrationService.revertXpByRefund(userId, amount, currency, usdExchangeRate, BigInt(referenceId));
 
     return {
       cashRefunded: cashRefund,

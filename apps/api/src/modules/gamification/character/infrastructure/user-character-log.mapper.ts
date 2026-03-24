@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserCharacterLog as PrismaUserCharacterLog, Prisma } from '@prisma/client';
-import { UserCharacterLog } from '../domain/user-character-log.entity';
+import { UserCharacterLog, UserCharacterLogDetails } from '../domain/user-character-log.entity';
 import { Cast, PersistenceOf } from 'src/infrastructure/persistence/persistence.util';
 
 @Injectable()
@@ -17,7 +17,9 @@ export class UserCharacterLogMapper {
       afterLevel: p.afterLevel,
       beforeStatPoints: p.beforeStatPoints,
       afterStatPoints: p.afterStatPoints,
-      details: p.details,
+      amount: p.amount ? new Prisma.Decimal(p.amount as any) : null,
+      referenceId: p.referenceId ? Cast.bigint(p.referenceId) : null,
+      details: p.details as UserCharacterLogDetails,
       createdAt: Cast.date(p.createdAt),
     });
   }
@@ -33,6 +35,8 @@ export class UserCharacterLogMapper {
       afterLevel: domain.afterLevel,
       beforeStatPoints: domain.beforeStatPoints,
       afterStatPoints: domain.afterStatPoints,
+      amount: domain.amount,
+      referenceId: domain.referenceId,
       details: domain.details as any,
       createdAt: domain.createdAt,
     };

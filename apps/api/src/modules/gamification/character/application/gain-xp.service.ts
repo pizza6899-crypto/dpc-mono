@@ -34,7 +34,11 @@ export class GainXpService {
    * 레벨업 시 도메인 엔티티를 통해 보너스 스탯 포인트를 지급하고 로그를 기록합니다.
    */
   @Transactional()
-  async execute(userId: bigint, xpAmount: Prisma.Decimal): Promise<UserCharacter> {
+  async execute(
+    userId: bigint, 
+    xpAmount: Prisma.Decimal, 
+    referenceId?: bigint
+  ): Promise<UserCharacter> {
     // 1. 유저별 캐릭터 뮤테이션 권고락 획득 (동시성 제어)
     await this.advisoryLockService.acquireLock(
       LockNamespace.GAMIFICATION_CHARACTER,
@@ -83,9 +87,26 @@ export class GainXpService {
       }
     }
 
-    // 3. 레벨업이 실제로 일어났다면 로그 기록
+    // 3. 경험치 획득 감사 로그 기록 (항상 기록)
+    const gainLog = UserCharacterLog.create({
+      userId: character.userId,
+      type: CharacterLogType.GAIN_XP,
+      beforeLevel,
+      afterLevel: character.level, // 레벨업 확인 전 상위 스냅샷
+      beforeStatPoints,
+      afterStatPoints: character.statPoints,
+      amount: xpAmount,
+      referenceId: referenceId,
+      details: {
+        type: 'GAIN_XP',
+        currentXp: character.xp.toString(),
+      },
+    });
+    await this.logRepo.save(gainLog);
+
+    // 4. 실제로 레벨업이 일어났다면 추가 로그 기록
     if (isLeveledUp) {
-      const log = UserCharacterLog.create({
+      const levelUpLog = UserCharacterLog.create({
         userId: character.userId,
         type: CharacterLogType.LEVEL_UP,
         beforeLevel,
@@ -93,11 +114,12 @@ export class GainXpService {
         beforeStatPoints,
         afterStatPoints: character.statPoints,
         details: {
+          type: 'LEVEL_UP',
           totalEarnedXp: xpAmount.toString(),
-          reason: 'XP_GAIN_AND_LEVEL_UP',
+          reason: 'LEVEL_UP_REACHED',
         },
       });
-      await this.logRepo.save(log);
+      await this.logRepo.save(levelUpLog);
     }
 
     // 4. 최종 영속화

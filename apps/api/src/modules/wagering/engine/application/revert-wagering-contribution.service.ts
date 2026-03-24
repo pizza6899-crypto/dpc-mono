@@ -92,7 +92,7 @@ export class RevertWageringContributionService {
     }
 
     // [Gamification] 경험치(XP) 정밀 회수 연동 (통합 서비스 위임)
-    await this.xpIntegrationService.revertXpByTxRatio(userId, revertRatio, betTxs);
+    await this.xpIntegrationService.revertXpByTxRatio(userId, revertRatio, betTxs, BigInt(referenceId));
 
     // 실제 취소해야 하는 보너스 금액 분량
     const bonusRevertAmount = amount.mul(bonusRatio);
