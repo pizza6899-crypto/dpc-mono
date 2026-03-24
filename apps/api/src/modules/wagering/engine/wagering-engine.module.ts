@@ -11,9 +11,19 @@ import {
   RevertWageringContributionService,
 } from './application/index';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { GamificationCatalogModule } from 'src/modules/gamification/catalog/catalog.module';
+import { GamificationCharacterModule } from 'src/modules/gamification/character/character.module';
 
 @Module({
-  imports: [WalletModule, RequirementModule, WageringConfigModule, AuditLogModule, ConcurrencyModule],
+  imports: [
+    WalletModule, 
+    RequirementModule, 
+    WageringConfigModule, 
+    AuditLogModule, 
+    ConcurrencyModule,
+    GamificationCatalogModule,
+    GamificationCharacterModule,
+  ],
 
   controllers: [],
   providers: [

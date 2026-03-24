@@ -2,6 +2,8 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Prisma, ExchangeCurrencyCode, UserWalletBalanceType, UserWalletTransactionType } from '@prisma/client';
 import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { GainXpService } from 'src/modules/gamification/character/application/gain-xp.service';
+import { GetGamificationConfigService } from 'src/modules/gamification/catalog/application/get-gamification-config.service';
 
 import {
   WAGERING_REQUIREMENT_REPOSITORY,
@@ -38,6 +40,8 @@ export class RevertWageringContributionService {
     @Inject(USER_WALLET_TRANSACTION_REPOSITORY)
     private readonly walletTxRepository: UserWalletTransactionRepositoryPort,
     private readonly advisoryLockService: AdvisoryLockService,
+    private readonly gainXpService: GainXpService,
+    private readonly getGamificationConfigService: GetGamificationConfigService,
   ) { }
 
   /**
@@ -89,6 +93,10 @@ export class RevertWageringContributionService {
       revertRatio = amount.div(totalBet); // 전체 베팅 중 현재 취소(푸쉬)되는 금액의 비율
     }
 
+    // [Gamification] 경험치(XP) 정밀 회수 연동
+    // 원본 베팅 트랜잭션의 USD 금액 비율을 계산하여 경험치 차약 회수
+    await this.revertExperience(userId, currency, revertRatio, betTxs);
+
     // 실제 취소해야 하는 보너스 금액 분량
     const bonusRevertAmount = amount.mul(bonusRatio);
 
@@ -130,5 +138,41 @@ export class RevertWageringContributionService {
       success: true, 
       bonusReverted: bonusRevertAmount 
     };
+  }
+
+  /**
+   * 게이미피케이션 경험치 회수 처리
+   */
+  private async revertExperience(
+    userId: bigint,
+    currency: ExchangeCurrencyCode,
+    revertRatio: Prisma.Decimal,
+    betTxs: any[],
+  ): Promise<void> {
+    try {
+      // 1. 원본 베팅의 총 USD 금액 합산
+      let totalBetUsd = new Prisma.Decimal(0);
+      for (const tx of betTxs) {
+        if (tx.amountUsd) {
+          totalBetUsd = totalBetUsd.add(new Prisma.Decimal(tx.amountUsd as any).abs());
+        }
+      }
+
+      if (totalBetUsd.isZero()) return;
+
+      // 2. 취소 비율만큼의 USD 금액 산출
+      const revertUsd = totalBetUsd.mul(revertRatio);
+
+      if (revertUsd.gt(0)) {
+        const config = await this.getGamificationConfigService.execute();
+        const xpToRevert = revertUsd.mul(config.xpGrantMultiplierUsd);
+
+        if (xpToRevert.gt(0)) {
+          await this.gainXpService.execute(userId, xpToRevert.negated());
+        }
+      }
+    } catch (error) {
+      this.logger.error(`[Gamification Integration] Failed to revert XP during wagering revert for user ${userId}`, error);
+    }
   }
 }

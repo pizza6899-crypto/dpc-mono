@@ -5,6 +5,8 @@ import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-
 import { GetUserWalletService } from 'src/modules/wallet/application/get-user-wallet.service';
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { GainXpService } from 'src/modules/gamification/character/application/gain-xp.service';
+import { GetGamificationConfigService } from 'src/modules/gamification/catalog/application/get-gamification-config.service';
 
 import {
   WAGERING_REQUIREMENT_REPOSITORY,
@@ -50,6 +52,8 @@ export class ProcessWageringCancelService {
     @Inject(USER_WALLET_TRANSACTION_REPOSITORY)
     private readonly walletTxRepository: UserWalletTransactionRepositoryPort,
     private readonly advisoryLockService: AdvisoryLockService,
+    private readonly gainXpService: GainXpService,
+    private readonly getGamificationConfigService: GetGamificationConfigService,
   ) { }
 
 
@@ -179,6 +183,29 @@ export class ProcessWageringCancelService {
           await this.requirementRepository.save(matchingReq);
         }
       }
+    }
+
+    // [Gamification] 경험치(XP) 회수 연동
+    // 베팅 취소 시 획득했던 경험치를 마이너스로 상쇄
+    try {
+      if (amount.gt(0)) {
+        const gamificationConfig = await this.getGamificationConfigService.execute();
+        
+        // USD 환산 금액 계산
+        const amountUsd = currency === 'USD' 
+          ? amount 
+          : (usdExchangeRate && !usdExchangeRate.isZero() ? amount.mul(usdExchangeRate) : new Prisma.Decimal(0));
+
+        if (amountUsd.gt(0)) {
+          const xpToRevert = amountUsd.mul(gamificationConfig.xpGrantMultiplierUsd);
+          if (xpToRevert.gt(0)) {
+            // 마이너스 정산 (어뷰징 방지)
+            await this.gainXpService.execute(userId, xpToRevert.negated());
+          }
+        }
+      }
+    } catch (error) {
+      this.logger.error(`[Gamification Integration] Failed to revert XP for user ${userId}`, error);
     }
 
     return {
