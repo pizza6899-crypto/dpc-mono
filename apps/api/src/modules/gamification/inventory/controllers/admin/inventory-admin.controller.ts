@@ -25,10 +25,11 @@ import { RevokeInventoryItemAdminService } from '../../application/revoke-invent
 import { GrantItemAdminRequestDto } from './dto/request/grant-item-admin.request.dto';
 import { UserInventoryAdminResponseDto } from './dto/response/user-inventory-admin.response.dto';
 import { ItemGrantAdminResponseDto } from './dto/response/item-grant-admin.response.dto';
+import { ItemRevokeAdminResponseDto } from './dto/response/item-revoke-admin.response.dto';
+
 
 
 // Domain
-import { UserInventory } from '../../domain/user-inventory.entity';
 import { UserInventoryDto } from '../../ports/user-inventory.repository.port';
 
 @Controller('admin/gamification/inventory')
@@ -105,13 +106,19 @@ export class InventoryAdminController {
     description: 'Administratively expires or removes an item from a users inventory. / 관리자 권한으로 유저의 아이템을 회수(만료) 처리합니다.',
   })
   @ApiParam({ name: 'id', description: 'Inventory Entry ID (BigInt as string)', example: '1' })
+  @ApiStandardResponse(ItemRevokeAdminResponseDto)
   async revokeItem(
     @Param('id') id: string,
-  ): Promise<void> {
+  ): Promise<ItemRevokeAdminResponseDto> {
     await this.revokeItemService.execute({
       inventoryId: BigInt(id),
     });
+
+    return {
+      isSuccess: true,
+    };
   }
+
 
   /**
    * Repository DTO -> Response DTO 매핑 (효과 정보 포함 가능)
