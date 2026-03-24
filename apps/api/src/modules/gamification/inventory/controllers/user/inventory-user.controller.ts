@@ -8,6 +8,10 @@ import { ApiStandardResponse } from 'src/common/http/decorators/api-response.dec
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 
+// Sqids
+import { SqidsService } from 'src/common/sqids/sqids.service';
+import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+
 // Services
 import { FindUserInventoryService } from '../../application/find-user-inventory.service';
 import { EquipInventoryItemService } from '../../application/equip-inventory-item.service';
@@ -27,6 +31,7 @@ export class InventoryUserController {
     private readonly findInventoryService: FindUserInventoryService,
     private readonly equipItemService: EquipInventoryItemService,
     private readonly unequipItemService: UnequipInventoryItemService,
+    private readonly sqidsService: SqidsService,
   ) { }
 
   @Get('me')
@@ -65,7 +70,7 @@ export class InventoryUserController {
   ): Promise<void> {
     await this.equipItemService.execute({
       userId: user.id,
-      inventoryId: BigInt(dto.inventoryId),
+      inventoryId: this.sqidsService.decode(dto.inventoryId, SqidsPrefix.INVENTORY),
       slot: dto.slot,
     });
   }
@@ -87,15 +92,15 @@ export class InventoryUserController {
   ): Promise<void> {
     await this.unequipItemService.execute({
       userId: user.id,
-      inventoryId: BigInt(dto.inventoryId),
+      inventoryId: this.sqidsService.decode(dto.inventoryId, SqidsPrefix.INVENTORY),
     });
   }
 
   private mapToResponse(d: UserInventoryDto): UserInventoryResponseDto {
     return {
-      id: d.id.toString(),
-      userId: d.userId.toString(),
-      itemId: d.itemId.toString(),
+      id: this.sqidsService.encode(d.id, SqidsPrefix.INVENTORY),
+      userId: this.sqidsService.encode(d.userId, SqidsPrefix.USER),
+      itemId: this.sqidsService.encode(d.itemId, SqidsPrefix.ITEM),
       quantity: d.quantity,
       status: d.status,
       slot: d.slot as ItemSlot || null,
@@ -105,3 +110,4 @@ export class InventoryUserController {
     };
   }
 }
+

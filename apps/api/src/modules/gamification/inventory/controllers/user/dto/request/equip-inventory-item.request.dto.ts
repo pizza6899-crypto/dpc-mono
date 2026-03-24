@@ -3,7 +3,8 @@ import { ItemSlot } from '@prisma/client';
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
 export class EquipInventoryItemRequestDto {
-  @ApiProperty({ description: 'Inventory ID of the item to equip / 장착할 아이템의 인벤토리 ID', example: '1' })
+  @ApiProperty({ description: 'Inventory ID of the item to equip / 장착할 아이템의 인벤토리 ID', example: 'inv_abc123' })
+
   @IsString()
   @IsNotEmpty()
   inventoryId: string;

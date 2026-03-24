@@ -18,10 +18,14 @@ import { UnequipInventoryItemService } from './application/unequip-inventory-ite
 import { InventoryAdminController } from './controllers/admin/inventory-admin.controller';
 import { InventoryUserController } from './controllers/user/inventory-user.controller';
 
+import { SqidsModule } from 'src/common/sqids/sqids.module';
+
 @Module({
   imports: [
     ConcurrencyModule,
+    SqidsModule,
     GamificationCatalogModule,
+
     forwardRef(() => GamificationCharacterModule),
   ],
   controllers: [

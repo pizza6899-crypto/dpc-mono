@@ -4,14 +4,15 @@ import { ItemEffectResponseDto } from './item-effect.response.dto';
 
 
 export class UserInventoryResponseDto {
-  @ApiProperty({ description: 'Inventory ID / 인벤토리 ID', example: '1' })
+  @ApiProperty({ description: 'Inventory ID / 인벤토리 ID', example: 'inv_abc123' })
   id: string;
 
-  @ApiProperty({ description: 'Owner User ID / 소유자 유저 ID', example: '1' })
+  @ApiProperty({ description: 'Owner User ID / 소유자 유저 ID', example: 'u_12345' })
   userId: string;
 
-  @ApiProperty({ description: 'Item Catalog ID / 아이템 카탈로그 ID', example: '1' })
+  @ApiProperty({ description: 'Item Catalog ID / 아이템 카탈로그 ID', example: 'itm_xyz' })
   itemId: string;
+
 
   @ApiProperty({ description: 'Category or slot if applicable / 카테고리 또는 장착 슬롯', enum: ItemSlot, nullable: true })
   slot: ItemSlot | null;
