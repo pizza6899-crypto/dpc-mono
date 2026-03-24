@@ -4,9 +4,9 @@ import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { USER_INVENTORY_REPOSITORY_PORT } from '../ports/user-inventory.repository.port';
 import type { UserInventoryRepositoryPort } from '../ports/user-inventory.repository.port';
 import { SyncUserTotalStatsService } from '../../character/application/sync-user-total-stats.service';
-import { InventoryItemNotFoundException } from '../domain/inventory.exception';
-import { ItemSlot } from '@prisma/client';
-import { UnauthorizedException } from '@nestjs/common';
+import { InventoryItemNotFoundException, InventoryItemOwnershipException } from '../domain/inventory.exception';
+import { ItemSlot, InventoryAction } from '@prisma/client';
+import { InventoryLoggerService } from './inventory-logger.service';
 
 export interface EquipInventoryItemParams {
   userId: bigint;
@@ -24,6 +24,7 @@ export class EquipInventoryItemService {
     private readonly syncTotalStatsService: SyncUserTotalStatsService,
 
     private readonly advisoryLockService: AdvisoryLockService,
+    private readonly loggerService: InventoryLoggerService,
   ) { }
 
   @Transactional()
@@ -41,7 +42,7 @@ export class EquipInventoryItemService {
     }
 
     if (targetItem.userId !== params.userId) {
-      throw new UnauthorizedException('This item does not belong to you.');
+      throw new InventoryItemOwnershipException();
     }
 
     // 3. 같은 슬롯에 이미 장착된 아이템이 있는지 확인
@@ -61,6 +62,12 @@ export class EquipInventoryItemService {
     if (existingEquippedItem) {
       existingEquippedItem.unequip();
       await this.inventoryRepo.save(existingEquippedItem);
+
+      // 로그 기록: 해제
+      await this.loggerService.log(existingEquippedItem, InventoryAction.UNEQUIP, {
+        reason: `Replaced by item ${targetItem.id}`,
+      });
+
       needsSync = true;
     }
 
@@ -68,6 +75,12 @@ export class EquipInventoryItemService {
     // 현재 targetItem이 다른 슬롯에 장착되어 있는 경우 equip() 내에서 slot을 덮어씀.
     targetItem.equip(params.slot);
     await this.inventoryRepo.save(targetItem);
+
+    // 로그 기록: 장착
+    await this.loggerService.log(targetItem, InventoryAction.EQUIP, {
+      reason: `Equipped to slot ${params.slot}`,
+    });
+
     needsSync = true;
 
     // 5. 스탯 리스펙 처리 (장착/해제가 일어났으므로 동기화)

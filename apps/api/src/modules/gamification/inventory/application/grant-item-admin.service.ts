@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { InventoryStatus } from '@prisma/client';
+import { InventoryAction, InventoryStatus } from '@prisma/client';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { ITEM_CATALOG_REPOSITORY_PORT } from '../../catalog/ports/item-catalog.repository.port';
 import type { ItemCatalogRepositoryPort } from '../../catalog/ports/item-catalog.repository.port';
@@ -8,6 +8,7 @@ import { USER_INVENTORY_REPOSITORY_PORT } from '../ports/user-inventory.reposito
 import type { UserInventoryRepositoryPort } from '../ports/user-inventory.repository.port';
 import { UserInventory } from '../domain/user-inventory.entity';
 import { ItemNotFoundException } from '../../catalog/domain/catalog.exception';
+import { InventoryLoggerService } from './inventory-logger.service';
 
 export interface GrantItemAdminParams {
   userId: bigint;
@@ -28,6 +29,7 @@ export class GrantItemAdminService {
     private readonly inventoryRepo: UserInventoryRepositoryPort,
 
     private readonly advisoryLockService: AdvisoryLockService,
+    private readonly loggerService: InventoryLoggerService,
   ) { }
 
   /**
@@ -63,7 +65,18 @@ export class GrantItemAdminService {
     });
 
     // 4. 영속화
-    return this.inventoryRepo.save(inventory);
+    const savedInventory = await this.inventoryRepo.save(inventory);
+
+    // 5. 로깅 기록 (트랜잭션에 포함)
+    await this.loggerService.log(savedInventory, InventoryAction.GRANT, {
+      actorId: 'ADMIN', // 혹은 실제 어드민 ID 주입 필요
+      reason: 'Admin hand granted',
+      metadata: {
+        adminId: 'ADMIN', // 실제 context에서 가져오는 로직 추가 권장
+      },
+    });
+
+    return savedInventory;
   }
 }
 

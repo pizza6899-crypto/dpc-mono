@@ -5,7 +5,8 @@ import { USER_INVENTORY_REPOSITORY_PORT } from '../ports/user-inventory.reposito
 import type { UserInventoryRepositoryPort } from '../ports/user-inventory.repository.port';
 import { SyncUserTotalStatsService } from '../../character/application/sync-user-total-stats.service';
 import { InventoryItemNotFoundException } from '../domain/inventory.exception';
-import { InventoryStatus } from '@prisma/client';
+import { InventoryStatus, InventoryAction } from '@prisma/client';
+import { InventoryLoggerService } from './inventory-logger.service';
 
 export interface RevokeInventoryItemAdminParams {
   inventoryId: bigint;
@@ -25,6 +26,7 @@ export class RevokeInventoryItemAdminService {
     private readonly syncTotalStatsService: SyncUserTotalStatsService,
 
     private readonly advisoryLockService: AdvisoryLockService,
+    private readonly loggerService: InventoryLoggerService,
   ) { }
 
   /**
@@ -57,6 +59,12 @@ export class RevokeInventoryItemAdminService {
 
     // 4. 영속화
     await this.inventoryRepo.save(latestInventory);
+
+    // 로그 기록
+    await this.loggerService.log(latestInventory, InventoryAction.EXPIRE, {
+      actorId: 'ADMIN',
+      reason: 'Admin hand revoked (expired)',
+    });
 
     // 5. [중요] 만약 장착 중이던 유물/아이템을 회수했다면, 유저 스탯 동기화 재수행
     if (wasActive) {

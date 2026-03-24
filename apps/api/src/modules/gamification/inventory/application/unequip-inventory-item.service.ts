@@ -1,11 +1,12 @@
-import { Inject, Injectable, forwardRef, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { USER_INVENTORY_REPOSITORY_PORT } from '../ports/user-inventory.repository.port';
 import type { UserInventoryRepositoryPort } from '../ports/user-inventory.repository.port';
 import { SyncUserTotalStatsService } from '../../character/application/sync-user-total-stats.service';
-import { InventoryItemNotFoundException } from '../domain/inventory.exception';
-import { InventoryStatus } from '@prisma/client';
+import { InventoryItemNotFoundException, InventoryItemOwnershipException } from '../domain/inventory.exception';
+import { InventoryStatus, InventoryAction } from '@prisma/client';
+import { InventoryLoggerService } from './inventory-logger.service';
 
 export interface UnequipInventoryItemParams {
   userId: bigint;
@@ -22,6 +23,7 @@ export class UnequipInventoryItemService {
     private readonly syncTotalStatsService: SyncUserTotalStatsService,
 
     private readonly advisoryLockService: AdvisoryLockService,
+    private readonly loggerService: InventoryLoggerService,
   ) { }
 
   @Transactional()
@@ -37,7 +39,7 @@ export class UnequipInventoryItemService {
     }
 
     if (targetItem.userId !== params.userId) {
-      throw new UnauthorizedException('This item does not belong to you.');
+      throw new InventoryItemOwnershipException();
     }
 
     // 아이템이 이미 장착 해제된 상태면 작업을 수행할 필요가 없음
@@ -47,6 +49,11 @@ export class UnequipInventoryItemService {
 
     targetItem.unequip();
     await this.inventoryRepo.save(targetItem);
+
+    // 로그 기록
+    await this.loggerService.log(targetItem, InventoryAction.UNEQUIP, {
+      reason: 'User manual unequip',
+    });
 
     // 스탯 동기화 수행
     await this.syncTotalStatsService.execute(params.userId);
