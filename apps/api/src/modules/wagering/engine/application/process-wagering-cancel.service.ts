@@ -5,7 +5,7 @@ import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-
 import { GetUserWalletService } from 'src/modules/wallet/application/get-user-wallet.service';
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
-import { WageringXpIntegrationService } from './wagering-xp-integration.service';
+import { WageringProgressionService } from 'src/modules/gamification/character/application/wagering-progression.service';
 
 import {
   WAGERING_REQUIREMENT_REPOSITORY,
@@ -51,7 +51,7 @@ export class ProcessWageringCancelService {
     @Inject(USER_WALLET_TRANSACTION_REPOSITORY)
     private readonly walletTxRepository: UserWalletTransactionRepositoryPort,
     private readonly advisoryLockService: AdvisoryLockService,
-    private readonly xpIntegrationService: WageringXpIntegrationService,
+    private readonly progressionService: WageringProgressionService,
   ) { }
 
 
@@ -183,8 +183,9 @@ export class ProcessWageringCancelService {
       }
     }
 
-    // [Gamification] 경험치(XP) 회수 연동 (통합 서비스 위임)
-    await this.xpIntegrationService.revertXpByRefund(userId, amount, currency, usdExchangeRate, BigInt(referenceId));
+    // [Gamification] 경험치(XP) 회수 연동 (로그 기반 정밀 회수)
+    // 과거 GAIN_XP 로그를 추적하여 지급된 만큼 정확히 차감합니다.
+    await this.progressionService.revertXpByRefund(userId, BigInt(referenceId));
 
     return {
       cashRefunded: cashRefund,

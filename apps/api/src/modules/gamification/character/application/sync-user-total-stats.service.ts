@@ -5,7 +5,7 @@ import { USER_CHARACTER_REPOSITORY_PORT } from '../ports/user-character.reposito
 import type { UserCharacterRepositoryPort } from '../ports/user-character.repository.port';
 import { USER_INVENTORY_REPOSITORY_PORT } from '../../inventory/ports/user-inventory.repository.port';
 import type { UserInventoryRepositoryPort } from '../../inventory/ports/user-inventory.repository.port';
-import { UserStats } from '../domain/user-character.entity';
+import { UserCharacter, UserStats } from '../domain/user-character.entity';
 import { EffectType } from '@prisma/client';
 
 /**
@@ -42,10 +42,20 @@ export class SyncUserTotalStatsService {
     const character = await this.characterRepository.findByUserId(userId);
     if (!character) return;
 
-    // 2. 현재 활성 상태(장착중 등)인 아이템 효과 목록 조회
-    const activeItems = await this.inventoryRepository.findActiveBonuses(userId);
+    // 2. 내부 동기화 로직 호출
+    await this.sync(character);
+  }
 
-    // 3. STAT_BOOST 유형의 효과를 스탯별 합산
+  /**
+   * 이미 로드된 캐릭터 엔티티를 사용하여 스탯을 동기화하고 영속화합니다.
+   * 엔티티가 이미 존재하는 상황에서 중복 쿼리 없이 처리하기 위해 사용합니다.
+   */
+  @Transactional()
+  async sync(character: UserCharacter): Promise<void> {
+    // 1. 현재 활성 상태(장착중 등)인 아이템 효과 목록 조회
+    const activeItems = await this.inventoryRepository.findActiveBonuses(character.userId);
+
+    // 2. STAT_BOOST 유형의 효과를 스탯별 합산
     const bonuses: UserStats = {
       strength: 0,
       agility: 0,
@@ -68,10 +78,10 @@ export class SyncUserTotalStatsService {
       }
     }
 
-    // 4. 엔티티 내부에 보너스 적용 및 캐시 필드 업데이트
+    // 3. 엔티티 내부에 보너스 적용 및 캐시 필드 업데이트
     character.syncTotalStats(bonuses);
 
-    // 5. 저장
+    // 4. 저장
     await this.characterRepository.save(character);
   }
 

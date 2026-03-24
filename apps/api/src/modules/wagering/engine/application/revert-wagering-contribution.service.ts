@@ -2,7 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Prisma, ExchangeCurrencyCode, UserWalletBalanceType, UserWalletTransactionType } from '@prisma/client';
 import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
-import { WageringXpIntegrationService } from './wagering-xp-integration.service';
+import { WageringProgressionService } from 'src/modules/gamification/character/application/wagering-progression.service';
 
 import {
   WAGERING_REQUIREMENT_REPOSITORY,
@@ -39,7 +39,7 @@ export class RevertWageringContributionService {
     @Inject(USER_WALLET_TRANSACTION_REPOSITORY)
     private readonly walletTxRepository: UserWalletTransactionRepositoryPort,
     private readonly advisoryLockService: AdvisoryLockService,
-    private readonly xpIntegrationService: WageringXpIntegrationService,
+    private readonly progressionService: WageringProgressionService,
   ) { }
 
   /**
@@ -92,7 +92,7 @@ export class RevertWageringContributionService {
     }
 
     // [Gamification] 경험치(XP) 정밀 회수 연동 (통합 서비스 위임)
-    await this.xpIntegrationService.revertXpByTxRatio(userId, revertRatio, betTxs, BigInt(referenceId));
+    await this.progressionService.revertXpByTxRatio(userId, revertRatio, betTxs, BigInt(referenceId));
 
     // 실제 취소해야 하는 보너스 금액 분량
     const bonusRevertAmount = amount.mul(bonusRatio);

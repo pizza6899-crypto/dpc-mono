@@ -3,11 +3,9 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { CharacterLogType, ExchangeCurrencyCode, Prisma, UserWalletBalanceType, UserWalletTransactionType } from '@prisma/client';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import {
-  USER_CHARACTER_REPOSITORY_PORT,
   USER_CHARACTER_LOG_REPOSITORY_PORT,
 } from '../ports';
 import type {
-  UserCharacterRepositoryPort,
   UserCharacterLogRepositoryPort,
 } from '../ports';
 import {
@@ -17,12 +15,12 @@ import type { GamificationConfigRepositoryPort } from '../../catalog/ports/gamif
 import { UpdateUserBalanceService } from '../../../wallet/application/update-user-balance.service';
 import { CharacterStatsResetMetadata, UpdateOperation, WalletActionName } from '../../../wallet/domain';
 import {
-  UserCharacterNotFoundException,
   GamificationCurrencyNotSupportedException
 } from '../domain/character.exception';
 import { GamificationConfigNotFoundException } from '../../catalog/domain/catalog.exception';
 import { UserCharacter } from '../domain/user-character.entity';
 import { UserCharacterLog } from '../domain/user-character-log.entity';
+import { FindUserCharacterService } from './find-user-character.service';
 import { SyncUserTotalStatsService } from './sync-user-total-stats.service';
 
 /**
@@ -34,19 +32,13 @@ import { SyncUserTotalStatsService } from './sync-user-total-stats.service';
 @Injectable()
 export class ResetStatsUserService {
   constructor(
-    @Inject(USER_CHARACTER_REPOSITORY_PORT)
-    private readonly repository: UserCharacterRepositoryPort,
-
     @Inject(USER_CHARACTER_LOG_REPOSITORY_PORT)
     private readonly logRepo: UserCharacterLogRepositoryPort,
-
     @Inject(GAMIFICATION_CONFIG_REPOSITORY_PORT)
     private readonly configRepository: GamificationConfigRepositoryPort,
-
+    private readonly findUserCharacterService: FindUserCharacterService,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
-
     private readonly syncTotalStatsService: SyncUserTotalStatsService,
-
     private readonly advisoryLockService: AdvisoryLockService,
   ) { }
 
@@ -66,10 +58,7 @@ export class ResetStatsUserService {
     );
 
     // 2. 캐릭터 정보 및 설정을 조회
-    const character = await this.repository.findByUserId(userId);
-    if (!character) {
-      throw new UserCharacterNotFoundException();
-    }
+    const character = await this.findUserCharacterService.execute(userId);
 
     const config = await this.configRepository.findConfig();
     if (!config) {
@@ -119,21 +108,19 @@ export class ResetStatsUserService {
     // 5. 캐릭터 스탯 초기화 수행
     character.resetStats();
 
-    // 6. 변경사항 영속화
-    await this.repository.save(character);
-
-    // [중요] 스탯이 초기화되었으므로 최종 스탯 캐시 필드도 동기화
-    await this.syncTotalStatsService.execute(character.userId);
+    // 6. [최적화 & 동기화] 변경 사항 영속화 및 최종 스탯 캐시 업데이트
+    await this.syncTotalStatsService.sync(character);
 
     // 7. 초기화 이력 로그 저장
     const log = UserCharacterLog.create({
       userId: character.userId,
       type: CharacterLogType.STAT_RESET,
       beforeLevel,
-      afterLevel: character.level, // 초기화 시 레벨은 변하지 않음
+      afterLevel: character.level,
       beforeStatPoints,
       afterStatPoints: character.statPoints,
       details: {
+        type: 'STAT_RESET',
         cost: price.toString(),
         currency,
         previousStats: beforeStats,

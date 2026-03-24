@@ -35,8 +35,8 @@ export class GainXpService {
    */
   @Transactional()
   async execute(
-    userId: bigint, 
-    xpAmount: Prisma.Decimal, 
+    userId: bigint,
+    xpAmount: Prisma.Decimal,
     referenceId?: bigint
   ): Promise<UserCharacter> {
     // 1. 유저별 캐릭터 뮤테이션 권고락 획득 (동시성 제어)

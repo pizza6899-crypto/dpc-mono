@@ -4,12 +4,10 @@ import { CharacterLogType } from '@prisma/client';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { GetGamificationConfigService } from '../../catalog/application/get-gamification-config.service';
 import { UserCharacter } from '../domain/user-character.entity';
-import { 
-  USER_CHARACTER_REPOSITORY_PORT, 
+import {
   USER_CHARACTER_LOG_REPOSITORY_PORT,
 } from '../ports';
-import type { 
-  UserCharacterRepositoryPort,
+import type {
   UserCharacterLogRepositoryPort
 } from '../ports';
 import { UserStats } from '../domain/user-character.entity';
@@ -26,8 +24,6 @@ export interface AllocateStatPointsParams {
 @Injectable()
 export class AllocateStatPointsService {
   constructor(
-    @Inject(USER_CHARACTER_REPOSITORY_PORT)
-    private readonly characterRepo: UserCharacterRepositoryPort,
     @Inject(USER_CHARACTER_LOG_REPOSITORY_PORT)
     private readonly logRepo: UserCharacterLogRepositoryPort,
     private readonly getConfigService: GetGamificationConfigService,
@@ -55,24 +51,24 @@ export class AllocateStatPointsService {
     // 도메인 엔티티 내 투자 로직 실행 (한도 및 가용포인트 검증 포함)
     character.allocateStatPoint(params.statName, params.points, config.maxStatLimit);
 
-    // 변경된 스탯 저장
-    await this.characterRepo.save(character);
-
-    // [중요] 기본 스탯이 변했으므로 최종 스탯(Base + Bonus) 캐시 필드 동기화 수행
-    await this.syncTotalStatsService.execute(character.userId);
+    // [최적화] 기본 스탯이 변했으므로 최종 스탯(Base + Bonus)을 동기화하고 영속화합니다.
+    // 기존에는 save() 후 다시 execute(userId)를 호출하여 2번 저장했으나, 
+    // 이제 sync(character)를 통해 1번의 UPDATE 쿼리로 통합 처리합니다.
+    await this.syncTotalStatsService.sync(character);
 
     // 투자 이력 로그 저장
     const log = UserCharacterLog.create({
       userId: character.userId,
       type: CharacterLogType.STAT_ALLOCATION,
       beforeLevel,
-      afterLevel: character.level, // 이 액션에서는 변하지 않음
+      afterLevel: character.level,
       beforeStatPoints,
       afterStatPoints: character.statPoints,
       details: {
+        type: 'STAT_ALLOCATION',
         statName: params.statName,
         investedPoints: params.points,
-        totalStatIncrse: character[params.statName as keyof UserStats], // 조회용
+        afterBaseStat: character[params.statName as keyof UserStats], // 명칭 개선
       },
     });
 

@@ -20,4 +20,9 @@ export interface UserCharacterLogRepositoryPort {
    * 특정 유저의 로그 총 개수를 조회합니다.
    */
   countByUserId(userId: bigint): Promise<number>;
+
+  /**
+   * 특정 도메인(베팅 등)의 식별자(referenceId)로 로그를 조회합니다.
+   */
+  findByReferenceId(referenceId: bigint): Promise<UserCharacterLog[]>;
 }

@@ -37,4 +37,13 @@ export class PrismaUserCharacterLogRepository implements UserCharacterLogReposit
       where: { userId },
     });
   }
+
+  async findByReferenceId(referenceId: bigint): Promise<UserCharacterLog[]> {
+    const records = await this.tx.userCharacterLog.findMany({
+      where: { referenceId },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return records.map((record) => this.mapper.toDomain(record));
+  }
 }

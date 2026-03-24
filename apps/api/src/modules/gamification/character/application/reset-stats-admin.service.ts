@@ -4,24 +4,22 @@ import { CharacterLogType } from '@prisma/client';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { FindUserCharacterService } from './find-user-character.service';
 import {
-  USER_CHARACTER_REPOSITORY_PORT,
   USER_CHARACTER_LOG_REPOSITORY_PORT,
 } from '../ports';
 import type {
-  UserCharacterRepositoryPort,
   UserCharacterLogRepositoryPort
 } from '../ports';
 import { UserCharacter } from '../domain/user-character.entity';
 import { UserCharacterLog } from '../domain/user-character-log.entity';
+import { SyncUserTotalStatsService } from './sync-user-total-stats.service';
 
 @Injectable()
 export class ResetStatsAdminService {
   constructor(
-    @Inject(USER_CHARACTER_REPOSITORY_PORT)
-    private readonly characterRepo: UserCharacterRepositoryPort,
     @Inject(USER_CHARACTER_LOG_REPOSITORY_PORT)
     private readonly logRepo: UserCharacterLogRepositoryPort,
     private readonly findUserCharacterService: FindUserCharacterService,
+    private readonly syncTotalStatsService: SyncUserTotalStatsService,
     private readonly advisoryLockService: AdvisoryLockService,
   ) { }
 
@@ -44,8 +42,8 @@ export class ResetStatsAdminService {
     // 2. 도메인 로직 실행 (스탯 초기화 및 포인트 반환)
     character.resetStats();
 
-    // 3. 변경 사항 저장
-    await this.characterRepo.save(character);
+    // 3. [최적화 & 동기화] 변경 사항 영속화 및 최종 스탯 캐시 업데이트
+    await this.syncTotalStatsService.sync(character);
 
     // 4. 로그 기록
     const log = UserCharacterLog.create({
@@ -56,6 +54,8 @@ export class ResetStatsAdminService {
       beforeStatPoints,
       afterStatPoints: character.statPoints,
       details: {
+        type: 'STAT_RESET',
+        resetCount: character.statResetCount,
         reason: reason || 'ADMIN_FORCED_RESET',
         adminTriggered: true,
       },

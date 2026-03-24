@@ -16,6 +16,7 @@ import { GainXpService } from './application/gain-xp.service';
 import { SyncUserTotalStatsService } from './application/sync-user-total-stats.service';
 import { ResetStatsAdminService } from './application/reset-stats-admin.service';
 import { ResetStatsUserService } from './application/reset-stats-user.service';
+import { WageringProgressionService } from './application/wagering-progression.service';
 
 // Infrastructure
 import { PrismaUserCharacterRepository } from './infrastructure/prisma-user-character.repository';
@@ -46,6 +47,7 @@ import { USER_CHARACTER_REPOSITORY_PORT, USER_CHARACTER_LOG_REPOSITORY_PORT } fr
     SyncUserTotalStatsService,
     ResetStatsAdminService,
     ResetStatsUserService,
+    WageringProgressionService,
 
     // Mappers
     UserCharacterMapper,
@@ -66,6 +68,7 @@ import { USER_CHARACTER_REPOSITORY_PORT, USER_CHARACTER_LOG_REPOSITORY_PORT } fr
     GainXpService,
     FindUserCharacterService,
     SyncUserTotalStatsService,
+    WageringProgressionService,
   ],
 })
 export class GamificationCharacterModule { }

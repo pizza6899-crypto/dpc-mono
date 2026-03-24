@@ -21,7 +21,7 @@ import { GetUserWalletService } from 'src/modules/wallet/application/get-user-wa
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
-import { WageringXpIntegrationService } from './wagering-xp-integration.service';
+import { WageringProgressionService } from 'src/modules/gamification/character/application/wagering-progression.service';
 
 
 export interface ProcessWageringBetCommand {
@@ -59,7 +59,7 @@ export class ProcessWageringBetService {
     private readonly getUserWalletService: GetUserWalletService,
     private readonly updateUserBalanceService: UpdateUserBalanceService,
     private readonly advisoryLockService: AdvisoryLockService,
-    private readonly xpIntegrationService: WageringXpIntegrationService,
+    private readonly progressionService: WageringProgressionService,
   ) { }
 
 
@@ -257,8 +257,13 @@ export class ProcessWageringBetService {
       }
     }
 
-    // [Gamification] 경험치(XP) 지급 연동 (통합 서비스 위임)
-    await this.xpIntegrationService.grantXpByBet(userId, betAmount, currency, usdExchangeRate, BigInt(referenceId));
+    // [Gamification] 경험치(XP) 지급 연동 (USD 기반 정산)
+    // 원본 통화와 환율을 기반으로 확정된 USD 가치를 전달합니다.
+    const betUsd = currency === 'USD'
+      ? betAmount
+      : (usdExchangeRate ? betAmount.mul(usdExchangeRate) : new Prisma.Decimal(0));
+
+    await this.progressionService.grantXpByBet(userId, betUsd, BigInt(referenceId));
 
     return {
       cashDeducted: cashDeduction,
