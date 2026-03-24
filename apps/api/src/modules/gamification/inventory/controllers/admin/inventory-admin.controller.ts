@@ -26,6 +26,9 @@ import { GrantItemAdminRequestDto } from './dto/request/grant-item-admin.request
 import { UserInventoryAdminResponseDto } from './dto/response/user-inventory-admin.response.dto';
 import { ItemGrantAdminResponseDto } from './dto/response/item-grant-admin.response.dto';
 import { ItemRevokeAdminResponseDto } from './dto/response/item-revoke-admin.response.dto';
+import { GetUserInventoryAdminQueryDto } from './dto/request/get-user-inventory-admin-query.dto';
+
+
 
 
 
@@ -48,18 +51,20 @@ export class InventoryAdminController {
     description: 'Retrieves all inventory items for a specific user. / 특정 유저의 전체 인벤토리 목록을 조회합니다.',
   })
   @ApiParam({ name: 'userId', description: 'User ID (BigInt as string)', example: '1' })
-  @ApiQuery({ name: 'lang', enum: Language, required: false, description: 'Display Language / 표시 언어' })
   @ApiStandardResponse(UserInventoryAdminResponseDto, { isArray: true })
   async getUserInventory(
     @Param('userId') userId: string,
-    @Query('lang') lang?: Language,
+    @Query() query: GetUserInventoryAdminQueryDto,
   ): Promise<UserInventoryAdminResponseDto[]> {
     const list = await this.findInventoryService.execute({
       userId: BigInt(userId),
+      status: query.status,
+      itemType: query.itemType,
     });
 
-    return list.map((i) => this.mapDtoToResponse(i, lang));
+    return list.map((i) => this.mapDtoToResponse(i, query.lang));
   }
+
 
 
   @Post('grant')

@@ -36,7 +36,8 @@ export interface UserInventoryRepositoryPort {
   /**
    * 유저의 모든 인벤토리 조회 (카탈로그 포함 응답 DTO 반환)
    */
-  findByUserId(userId: bigint): Promise<UserInventoryDto[]>;
+  findByUserId(userId: bigint, filters?: { status?: InventoryStatus; itemType?: ItemType }): Promise<UserInventoryDto[]>;
+
 
   /**
    * 유저의 특정 상태의 아이템 목록 조회 (카탈로그 정보 포함)

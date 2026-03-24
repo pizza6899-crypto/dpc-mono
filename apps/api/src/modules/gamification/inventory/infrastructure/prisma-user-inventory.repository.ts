@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { InventoryStatus, ItemSlot } from '@prisma/client';
+import { InventoryStatus, ItemSlot, ItemType } from '@prisma/client';
+
 import { UserInventoryDto, UserInventoryRepositoryPort } from '../ports/user-inventory.repository.port';
 import { UserInventory } from '../domain/user-inventory.entity';
 import { UserInventoryMapper } from './user-inventory.mapper';
@@ -56,9 +57,13 @@ export class PrismaUserInventoryRepository implements UserInventoryRepositoryPor
 
 
 
-  async findByUserId(userId: bigint): Promise<UserInventoryDto[]> {
+  async findByUserId(userId: bigint, filters?: { status?: InventoryStatus; itemType?: ItemType }): Promise<UserInventoryDto[]> {
     const list = await this.tx.userInventory.findMany({
-      where: { userId },
+      where: {
+        userId,
+        status: filters?.status,
+        catalog: filters?.itemType ? { type: filters.itemType } : undefined,
+      },
       include: {
         catalog: {
           include: {
