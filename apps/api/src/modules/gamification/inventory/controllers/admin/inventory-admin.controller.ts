@@ -19,6 +19,7 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { GrantItemAdminService } from '../../application/grant-item-admin.service';
 import { FindUserInventoryAdminService } from '../../application/find-user-inventory-admin.service';
 import { RevokeInventoryItemAdminService } from '../../application/revoke-inventory-item-admin.service';
+import { FindInventoryLogsAdminService } from '../../application/find-inventory-logs-admin.service';
 
 // DTOs
 import { GrantItemAdminRequestDto } from './dto/request/grant-item-admin.request.dto';
@@ -26,6 +27,10 @@ import { UserInventoryAdminResponseDto } from './dto/response/user-inventory-adm
 import { ItemGrantAdminResponseDto } from './dto/response/item-grant-admin.response.dto';
 import { ItemRevokeAdminResponseDto } from './dto/response/item-revoke-admin.response.dto';
 import { GetUserInventoryAdminQueryDto } from './dto/request/get-user-inventory-admin-query.dto';
+import { GetInventoryLogsAdminRequestDto } from './dto/request/get-inventory-logs-admin.request.dto';
+import { InventoryLogAdminResponseDto } from './dto/response/inventory-log-admin.response.dto';
+import { ApiPaginatedResponse } from 'src/common/http/decorators/api-response.decorator';
+import { PaginatedData } from 'src/common/http/types/pagination.types';
 
 
 @Controller('admin/gamification/inventory')
@@ -36,6 +41,7 @@ export class InventoryAdminController {
     private readonly grantItemService: GrantItemAdminService,
     private readonly findInventoryService: FindUserInventoryAdminService,
     private readonly revokeItemService: RevokeInventoryItemAdminService,
+    private readonly findLogsService: FindInventoryLogsAdminService,
   ) { }
 
   @Get('user/:userId')
@@ -110,6 +116,28 @@ export class InventoryAdminController {
     return {
       isSuccess: true,
     };
+  }
+
+  @Get('logs')
+  @ApiOperation({
+    summary: 'Get Inventory Logs / 인벤토리 로그 조회',
+    description: 'Retrieves activity logs for inventory items with filters and pagination. / 필터 및 페이지네이션을 적용하여 인벤토리 활동 로그 목록을 조회합니다.',
+  })
+  @ApiPaginatedResponse(InventoryLogAdminResponseDto)
+  async getInventoryLogs(
+    @Query() query: GetInventoryLogsAdminRequestDto,
+  ): Promise<PaginatedData<InventoryLogAdminResponseDto>> {
+    return await this.findLogsService.execute({
+      userId: query.userId ? BigInt(query.userId) : undefined,
+      inventoryId: query.inventoryId ? BigInt(query.inventoryId) : undefined,
+      itemId: query.itemId ? BigInt(query.itemId) : undefined,
+      action: query.action,
+      slot: query.slot,
+      from: query.from ? new Date(query.from) : undefined,
+      to: query.to ? new Date(query.to) : undefined,
+      page: query.page,
+      limit: query.limit,
+    });
   }
 }
 

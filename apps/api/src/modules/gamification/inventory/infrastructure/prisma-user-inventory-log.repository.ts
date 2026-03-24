@@ -77,10 +77,9 @@ export class PrismaUserInventoryLogRepository implements UserInventoryLogReposit
     if (params.slot !== undefined) where.slot = params.slot;
 
     if (params.from !== undefined || params.to !== undefined) {
-      where.createdAt = {
-        gte: params.from,
-        lte: params.to,
-      };
+      where.createdAt = {};
+      if (params.from !== undefined) where.createdAt.gte = params.from;
+      if (params.to !== undefined) where.createdAt.lte = params.to;
     }
 
     return where;

@@ -9,6 +9,7 @@ import { GamificationCharacterModule } from '../character/character.module';
 // Application Services
 import { GrantItemAdminService } from './application/grant-item-admin.service';
 import { FindUserInventoryAdminService } from './application/find-user-inventory-admin.service';
+import { FindInventoryLogsAdminService } from './application/find-inventory-logs-admin.service';
 import { RevokeInventoryItemAdminService } from './application/revoke-inventory-item-admin.service';
 import { FindUserInventoryService } from './application/find-user-inventory.service';
 import { EquipInventoryItemService } from './application/equip-inventory-item.service';
@@ -25,11 +26,13 @@ import { InventoryAdminController } from './controllers/admin/inventory-admin.co
 import { InventoryUserController } from './controllers/user/inventory-user.controller';
 
 import { SqidsModule } from 'src/common/sqids/sqids.module';
+import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 
 @Module({
   imports: [
     ConcurrencyModule,
     SqidsModule,
+    SnowflakeModule,
     GamificationCatalogModule,
 
     forwardRef(() => GamificationCharacterModule),
@@ -43,6 +46,7 @@ import { SqidsModule } from 'src/common/sqids/sqids.module';
     // Services
     GrantItemAdminService,
     FindUserInventoryAdminService,
+    FindInventoryLogsAdminService,
     RevokeInventoryItemAdminService,
     FindUserInventoryService,
     EquipInventoryItemService,
