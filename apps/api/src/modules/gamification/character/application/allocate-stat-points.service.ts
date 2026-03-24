@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { CharacterLogType } from '@prisma/client';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { GetGamificationConfigService } from '../../catalog/application/get-gamification-config.service';
 import { UserCharacter } from '../domain/user-character.entity';
 import {
@@ -30,6 +31,7 @@ export class AllocateStatPointsService {
     private readonly findUserCharacterService: FindUserCharacterService,
     private readonly syncTotalStatsService: SyncUserTotalStatsService,
     private readonly advisoryLockService: AdvisoryLockService,
+    private readonly snowflakeService: SnowflakeService,
   ) { }
 
   @Transactional()
@@ -57,7 +59,10 @@ export class AllocateStatPointsService {
     await this.syncTotalStatsService.sync(character);
 
     // 투자 이력 로그 저장
+    const { id: logId, timestamp: logTime } = this.snowflakeService.generate();
     const log = UserCharacterLog.create({
+      id: logId,
+      createdAt: logTime,
       userId: character.userId,
       type: CharacterLogType.STAT_ALLOCATION,
       beforeLevel,

@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { Prisma, CharacterLogType } from '@prisma/client';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { GetGamificationConfigService } from '../../catalog/application/get-gamification-config.service';
 import { GetLevelDefinitionListService } from '../../catalog/application/get-level-definition-list.service';
 import { FindUserCharacterService } from './find-user-character.service';
@@ -27,6 +28,7 @@ export class GainXpService {
     private readonly findUserCharacterService: FindUserCharacterService,
     private readonly levelDefinitionService: GetLevelDefinitionListService,
     private readonly advisoryLockService: AdvisoryLockService,
+    private readonly snowflakeService: SnowflakeService,
   ) { }
 
   /**
@@ -91,7 +93,10 @@ export class GainXpService {
     const isRevert = xpAmount.isNegative();
     const actionType = isRevert ? CharacterLogType.REVERT_XP : CharacterLogType.GAIN_XP;
 
+    const { id: logId, timestamp: logTime } = this.snowflakeService.generate();
     const gainLog = UserCharacterLog.create({
+      id: logId,
+      createdAt: logTime,
       userId: character.userId,
       type: actionType,
       beforeLevel,
@@ -109,7 +114,10 @@ export class GainXpService {
 
     // 4. 실제로 레벨업이 일어났다면 추가 로그 기록
     if (isLeveledUp) {
+      const { id: lvLogId, timestamp: lvLogTime } = this.snowflakeService.generate();
       const levelUpLog = UserCharacterLog.create({
+        id: lvLogId,
+        createdAt: lvLogTime,
         userId: character.userId,
         type: CharacterLogType.LEVEL_UP,
         beforeLevel,

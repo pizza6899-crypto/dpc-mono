@@ -72,9 +72,10 @@ export class UserCharacterLog {
   }
 
   /**
-   * 새로운 로그 생성 (도메인 이벤트 발생 시점 용도)
+   * 새로운 로그 생성
    */
   static create(params: {
+    id: bigint; // Snowflake ID 등 애플리케이션에서 생성한 ID
     userId: bigint;
     type: CharacterLogType;
     beforeLevel: number;
@@ -84,9 +85,10 @@ export class UserCharacterLog {
     amount?: Prisma.Decimal | null;
     referenceId?: bigint | null;
     details?: UserCharacterLogDetails;
+    createdAt: Date; // 파티셔닝을위해 명시적으로 지정 가능 (기본값 now)
   }): UserCharacterLog {
     return new UserCharacterLog(
-      0n, // DB 저장 시 자동 생성되므로 0n으로 초기화
+      params.id,
       params.userId,
       params.type,
       params.beforeLevel,
@@ -96,7 +98,7 @@ export class UserCharacterLog {
       params.amount ?? null,
       params.referenceId ?? null,
       params.details ?? null,
-      new Date(),
+      params.createdAt,
     );
   }
 

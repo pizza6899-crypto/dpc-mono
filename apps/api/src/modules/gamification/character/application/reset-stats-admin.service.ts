@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { CharacterLogType } from '@prisma/client';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import { FindUserCharacterService } from './find-user-character.service';
 import {
   USER_CHARACTER_LOG_REPOSITORY_PORT,
@@ -21,6 +22,7 @@ export class ResetStatsAdminService {
     private readonly findUserCharacterService: FindUserCharacterService,
     private readonly syncTotalStatsService: SyncUserTotalStatsService,
     private readonly advisoryLockService: AdvisoryLockService,
+    private readonly snowflakeService: SnowflakeService,
   ) { }
 
   /**
@@ -46,7 +48,10 @@ export class ResetStatsAdminService {
     await this.syncTotalStatsService.sync(character);
 
     // 4. 로그 기록
+    const { id: logId, timestamp: logTime } = this.snowflakeService.generate();
     const log = UserCharacterLog.create({
+      id: logId,
+      createdAt: logTime,
       userId: character.userId,
       type: CharacterLogType.STAT_RESET,
       beforeLevel,

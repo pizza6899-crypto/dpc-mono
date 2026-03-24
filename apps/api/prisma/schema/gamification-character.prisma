@@ -47,7 +47,7 @@ model UserCharacter {
 /// 
 /// 레벨업 및 스텟 포인트 소모 내역을 상세히 기록하여 데이터 무결성을 보장합니다.
 model UserCharacterLog {
-  id     BigInt @id @default(autoincrement())
+  id     BigInt
   userId BigInt @map("user_id")
 
   // 로그 타입: LEVEL_UP(레벨업), STAT_ALLOCATION(스텟 투자), STAT_RESET(스텟 초기화)
@@ -68,13 +68,15 @@ model UserCharacterLog {
   // 상세 변동 내역 (JSON)
   details Json? @map("details")
 
-  createdAt DateTime @default(now()) @map("created_at")
+  createdAt DateTime @map("created_at")
 
   // 린트 에러 방지를 위해 명시적 맵 오버라이드 (FK 제약 조건명 충돌 해결)
   user      User          @relation("UserLogs", fields: [userId], references: [id], map: "user_character_logs_user_ref_fkey")
   character UserCharacter @relation(fields: [userId], references: [userId], map: "user_character_logs_char_ref_fkey")
 
-  @@index([userId, type])
+  // [Partitioning] 시간 기반 파티셔닝을 위해 PK에 시간 포함
+  @@id([id, createdAt])
+  @@index([userId, type, createdAt])
   @@index([createdAt])
   @@map("user_character_logs")
 }

@@ -29,6 +29,7 @@ export class UserCharacterLogMapper {
    */
   toPersistence(domain: UserCharacterLog): Prisma.UserCharacterLogUncheckedCreateInput {
     return {
+      id: domain.id, // 파티셔닝을위해 애플리케이션 생성 ID 명시
       userId: domain.userId,
       type: domain.type,
       beforeLevel: domain.beforeLevel,

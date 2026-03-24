@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { CharacterLogType, ExchangeCurrencyCode, Prisma, UserWalletBalanceType, UserWalletTransactionType } from '@prisma/client';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
 import {
   USER_CHARACTER_LOG_REPOSITORY_PORT,
 } from '../ports';
@@ -34,12 +35,19 @@ export class ResetStatsUserService {
   constructor(
     @Inject(USER_CHARACTER_LOG_REPOSITORY_PORT)
     private readonly logRepo: UserCharacterLogRepositoryPort,
+
     @Inject(GAMIFICATION_CONFIG_REPOSITORY_PORT)
     private readonly configRepository: GamificationConfigRepositoryPort,
+
     private readonly findUserCharacterService: FindUserCharacterService,
+
     private readonly updateUserBalanceService: UpdateUserBalanceService,
+
     private readonly syncTotalStatsService: SyncUserTotalStatsService,
+
     private readonly advisoryLockService: AdvisoryLockService,
+
+    private readonly snowflakeService: SnowflakeService,
   ) { }
 
   /**
@@ -112,7 +120,10 @@ export class ResetStatsUserService {
     await this.syncTotalStatsService.sync(character);
 
     // 7. 초기화 이력 로그 저장
+    const { id: logId, timestamp: logTime } = this.snowflakeService.generate();
     const log = UserCharacterLog.create({
+      id: logId,
+      createdAt: logTime,
       userId: character.userId,
       type: CharacterLogType.STAT_RESET,
       beforeLevel,
