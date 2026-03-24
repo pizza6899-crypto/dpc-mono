@@ -1,8 +1,6 @@
 import { InventoryStatus, ItemSlot, ItemType } from '@prisma/client';
-
 import { UserInventory } from '../domain/user-inventory.entity';
 import { ItemEffect, ItemTranslation } from '../../catalog/domain/item-catalog.entity';
-
 
 export interface UserInventoryDto {
   id: bigint;
@@ -15,10 +13,6 @@ export interface UserInventoryDto {
   translations: ItemTranslation[]; // Item names and descriptions
   itemType: ItemType; // From ItemCatalog
 }
-
-
-
-
 
 export interface UserInventoryRepositoryPort {
   /**
