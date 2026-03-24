@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { InventoryStatus } from '@prisma/client';
+import { InventoryStatus, ItemSlot } from '@prisma/client';
 import { UserInventoryDto, UserInventoryRepositoryPort } from '../ports/user-inventory.repository.port';
 import { UserInventory } from '../domain/user-inventory.entity';
 import { UserInventoryMapper } from './user-inventory.mapper';
+import { ItemEffect } from '../../catalog/domain/item-catalog.entity';
 
 @Injectable()
 export class PrismaUserInventoryRepository implements UserInventoryRepositoryPort {
@@ -19,6 +20,25 @@ export class PrismaUserInventoryRepository implements UserInventoryRepositoryPor
       where: { id },
     });
     return record ? this.mapper.toDomain(record) : null;
+  }
+
+  async findByUserId(userId: bigint): Promise<UserInventoryDto[]> {
+    const list = await this.tx.userInventory.findMany({
+      where: { userId },
+      include: {
+        catalog: true,
+      },
+    });
+
+    return list.map(item => ({
+      id: item.id,
+      userId: item.userId,
+      itemId: item.itemId,
+      quantity: item.quantity,
+      status: item.status,
+      slot: item.slot,
+      effects: item.catalog.effects as unknown as ItemEffect[],
+    }));
   }
 
   async findByUserIdAndStatus(userId: bigint, status: InventoryStatus): Promise<UserInventoryDto[]> {
@@ -39,8 +59,20 @@ export class PrismaUserInventoryRepository implements UserInventoryRepositoryPor
       quantity: item.quantity,
       status: item.status,
       slot: item.slot,
-      effects: item.catalog.effects,
+      effects: item.catalog.effects as unknown as ItemEffect[],
     }));
+  }
+
+  async findByUserIdAndSlot(userId: bigint, slot: ItemSlot): Promise<UserInventory | null> {
+    const record = await this.tx.userInventory.findFirst({
+      where: {
+        userId,
+        slot,
+        status: InventoryStatus.ACTIVE, // 장착된 상태여야 함
+      },
+    });
+
+    return record ? this.mapper.toDomain(record) : null;
   }
 
   async findActiveBonuses(userId: bigint): Promise<UserInventoryDto[]> {

@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { InventoryStatus, ItemSlot } from '@prisma/client';
+import { ItemEffectAdminResponseDto } from './item-effect-admin.response.dto';
 
 /**
  * [Admin] 유저 인벤토리 상세 응답 DTO
@@ -23,8 +24,9 @@ export class UserInventoryAdminResponseDto {
   @ApiProperty({ description: 'Equipped Slot / 장착 슬롯', enum: ItemSlot, required: false })
   slot: ItemSlot | null;
 
-  @ApiProperty({ description: 'Effect data (from catalog) / 아이템 효과 데이터', example: [{ type: 'STAT_BOOST', value: 5, target: 'STR' }] })
-  effects?: any;
+  @ApiProperty({ type: [ItemEffectAdminResponseDto], description: 'Effect data (from catalog) / 아이템 효과 데이터' })
+  effects?: ItemEffectAdminResponseDto[];
+
 
   @ApiProperty({ description: 'Activated date / 활성화 일시', required: false })
   activatedAt: Date | null;
@@ -38,3 +40,4 @@ export class UserInventoryAdminResponseDto {
   @ApiProperty({ description: 'Updated date / 최근 수정 일시' })
   updatedAt: Date;
 }
+

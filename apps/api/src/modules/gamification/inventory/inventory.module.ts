@@ -10,9 +10,13 @@ import { GamificationCharacterModule } from '../character/character.module';
 import { GrantItemAdminService } from './application/grant-item-admin.service';
 import { FindUserInventoryAdminService } from './application/find-user-inventory-admin.service';
 import { RevokeInventoryItemAdminService } from './application/revoke-inventory-item-admin.service';
+import { FindUserInventoryService } from './application/find-user-inventory.service';
+import { EquipInventoryItemService } from './application/equip-inventory-item.service';
+import { UnequipInventoryItemService } from './application/unequip-inventory-item.service';
 
 // Controllers
 import { InventoryAdminController } from './controllers/admin/inventory-admin.controller';
+import { InventoryUserController } from './controllers/user/inventory-user.controller';
 
 @Module({
   imports: [
@@ -22,6 +26,7 @@ import { InventoryAdminController } from './controllers/admin/inventory-admin.co
   ],
   controllers: [
     InventoryAdminController,
+    InventoryUserController,
   ],
   providers: [
     UserInventoryMapper,
@@ -29,6 +34,9 @@ import { InventoryAdminController } from './controllers/admin/inventory-admin.co
     GrantItemAdminService,
     FindUserInventoryAdminService,
     RevokeInventoryItemAdminService,
+    FindUserInventoryService,
+    EquipInventoryItemService,
+    UnequipInventoryItemService,
     {
       provide: USER_INVENTORY_REPOSITORY_PORT,
       useClass: PrismaUserInventoryRepository,

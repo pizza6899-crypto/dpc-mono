@@ -1,5 +1,6 @@
-import { InventoryStatus } from '@prisma/client';
+import { InventoryStatus, ItemSlot } from '@prisma/client';
 import { UserInventory } from '../domain/user-inventory.entity';
+import { ItemEffect } from '../../catalog/domain/item-catalog.entity';
 
 export interface UserInventoryDto {
   id: bigint;
@@ -8,8 +9,9 @@ export interface UserInventoryDto {
   quantity: number;
   status: InventoryStatus;
   slot: string | null;
-  effects: any; // ItemCatalog's effects Json
+  effects: ItemEffect[]; // ItemCatalog's effects Json
 }
+
 
 export interface UserInventoryRepositoryPort {
   /**
@@ -18,9 +20,19 @@ export interface UserInventoryRepositoryPort {
   findById(id: bigint): Promise<UserInventory | null>;
 
   /**
+   * 유저의 모든 인벤토리 조회 (카탈로그 포함 응답 DTO 반환)
+   */
+  findByUserId(userId: bigint): Promise<UserInventoryDto[]>;
+
+  /**
    * 유저의 특정 상태의 아이템 목록 조회 (카탈로그 정보 포함)
    */
   findByUserIdAndStatus(userId: bigint, status: InventoryStatus): Promise<UserInventoryDto[]>;
+
+  /**
+   * 유저의 특정 슬롯에 장착된 아이템 단일 조회 (엔티티 반환)
+   */
+  findByUserIdAndSlot(userId: bigint, slot: ItemSlot): Promise<UserInventory | null>;
 
   /**
    * 유저의 모든 활성 보너스 효과 조회
