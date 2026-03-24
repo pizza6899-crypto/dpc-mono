@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { UserInventoryLog } from '../domain/user-inventory-log.entity';
 import { Cast, PersistenceOf } from 'src/infrastructure/persistence/persistence.util';
+import type { AnyInventoryLogMetadata } from '../domain/user-inventory-log-metadata';
 
 /**
  * 인벤토리 로그 엔티티 매퍼
@@ -22,7 +23,7 @@ export class UserInventoryLogMapper {
       currentUsageCount: record.currentUsageCount,
       actorId: record.actorId,
       reason: record.reason,
-      metadata: record.metadata,
+      metadata: record.metadata as any as AnyInventoryLogMetadata,
     });
   }
 

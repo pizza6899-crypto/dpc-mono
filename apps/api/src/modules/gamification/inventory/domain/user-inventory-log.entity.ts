@@ -1,4 +1,5 @@
 import type { InventoryAction, ItemSlot } from '@prisma/client';
+import type { AnyInventoryLogMetadata } from './user-inventory-log-metadata';
 
 /**
  * 인벤토리 로그 생성을 위한 파라미터 인터페이스
@@ -15,7 +16,7 @@ export interface CreateUserInventoryLogParams {
   currentUsageCount?: number | null;
   actorId?: string | null;
   reason?: string | null;
-  metadata?: any;
+  metadata?: AnyInventoryLogMetadata | null;
 }
 
 /**
@@ -34,7 +35,7 @@ export class UserInventoryLog {
     private readonly _currentUsageCount: number | null,
     private readonly _actorId: string | null,
     private readonly _reason: string | null,
-    private readonly _metadata: any,
+    private readonly _metadata: AnyInventoryLogMetadata | null,
   ) { }
 
   /**
@@ -52,7 +53,7 @@ export class UserInventoryLog {
     currentUsageCount: number | null;
     actorId: string | null;
     reason: string | null;
-    metadata: any;
+    metadata: AnyInventoryLogMetadata | null;
   }): UserInventoryLog {
     return new UserInventoryLog(
       data.id,
@@ -101,6 +102,6 @@ export class UserInventoryLog {
   get currentUsageCount(): number | null { return this._currentUsageCount; }
   get actorId(): string | null { return this._actorId; }
   get reason(): string | null { return this._reason; }
-  get metadata(): any { return this._metadata; }
+  get metadata(): AnyInventoryLogMetadata | null { return this._metadata; }
   get createdAt(): Date { return this._createdAt; }
 }

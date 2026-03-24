@@ -1,6 +1,8 @@
 import type { InventoryAction, ItemSlot } from '@prisma/client';
 import type { UserInventoryLog } from '../domain/user-inventory-log.entity';
 
+export const USER_INVENTORY_LOG_REPOSITORY_PORT = Symbol('USER_INVENTORY_LOG_REPOSITORY_PORT');
+
 /**
  * 인벤토리 로그 검색 파라미터
  */
@@ -22,9 +24,9 @@ export interface FindInventoryLogsParams {
  */
 export interface UserInventoryLogRepositoryPort {
   /**
-   * 새로운 인벤토리 로그 삽입 (수정 불가)
+   * 새로운 인벤토리 로그 생성 (불변 데이터)
    */
-  insert(log: UserInventoryLog): Promise<void>;
+  create(log: UserInventoryLog): Promise<void>;
 
   /**
    * 고유 ID와 생성 시각(파티셔닝 키)으로 상세 조회

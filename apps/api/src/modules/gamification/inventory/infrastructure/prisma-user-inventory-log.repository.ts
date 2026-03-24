@@ -17,9 +17,9 @@ export class PrismaUserInventoryLogRepository implements UserInventoryLogReposit
   ) { }
 
   /**
-   * 새로운 로그 삽입
+   * 새로운 로그 생성
    */
-  async insert(log: UserInventoryLog): Promise<void> {
+  async create(log: UserInventoryLog): Promise<void> {
     const data = UserInventoryLogMapper.toPersistence(log);
     await this.tx.userInventoryLog.create({
       data: data,

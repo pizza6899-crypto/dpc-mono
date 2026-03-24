@@ -13,6 +13,12 @@ import { RevokeInventoryItemAdminService } from './application/revoke-inventory-
 import { FindUserInventoryService } from './application/find-user-inventory.service';
 import { EquipInventoryItemService } from './application/equip-inventory-item.service';
 import { UnequipInventoryItemService } from './application/unequip-inventory-item.service';
+import { InventoryLoggerService } from './application/inventory-logger.service';
+
+// Repositories
+import { USER_INVENTORY_LOG_REPOSITORY_PORT } from './ports/user-inventory-log.repository.port';
+import { PrismaUserInventoryLogRepository } from './infrastructure/prisma-user-inventory-log.repository';
+
 
 // Controllers
 import { InventoryAdminController } from './controllers/admin/inventory-admin.controller';
@@ -41,15 +47,22 @@ import { SqidsModule } from 'src/common/sqids/sqids.module';
     FindUserInventoryService,
     EquipInventoryItemService,
     UnequipInventoryItemService,
+    InventoryLoggerService,
     {
       provide: USER_INVENTORY_REPOSITORY_PORT,
       useClass: PrismaUserInventoryRepository,
     },
+    {
+      provide: USER_INVENTORY_LOG_REPOSITORY_PORT,
+      useClass: PrismaUserInventoryLogRepository,
+    },
   ],
   exports: [
     USER_INVENTORY_REPOSITORY_PORT,
+    USER_INVENTORY_LOG_REPOSITORY_PORT,
     UserInventoryMapper,
     GrantItemAdminService,
+    InventoryLoggerService,
   ],
 })
 export class GamificationInventoryModule { }
