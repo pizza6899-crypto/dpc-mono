@@ -72,15 +72,19 @@ export class InventoryAdminController {
     summary: 'Grant Item to User / 유저에게 아이템 지급',
     description: 'Administratively grants an item to a user. / 관리자 권한으로 유저에게 아이템을 수동 지급합니다.',
   })
+  @ApiStandardResponse()
   async grantItem(
     @Body() dto: GrantItemAdminRequestDto,
-  ): Promise<void> {
+  ): Promise<boolean> {
     await this.grantItemService.execute({
       userId: BigInt(dto.userId),
       itemId: BigInt(dto.itemId),
       quantity: dto.quantity,
     });
+
+    return true;
   }
+
 
 
   @Delete(':id')
