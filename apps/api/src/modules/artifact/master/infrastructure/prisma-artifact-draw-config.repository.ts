@@ -28,4 +28,18 @@ export class PrismaArtifactDrawConfigRepository implements ArtifactDrawConfigRep
 
     return rawList.map((m) => this.mapper.toEntity(m));
   }
+
+  async updateMany(configs: ArtifactDrawConfig[]): Promise<void> {
+    for (const config of configs) {
+      await this.tx.artifactDrawConfig.update({
+        where: { grade: config.grade },
+        data: {
+          probability: config.probability,
+          updatedAt: config.updatedAt,
+        },
+      });
+    }
+
+    await this.cacheService.del(CACHE_CONFIG.ARTIFACT.DRAW_CONFIG_LIST);
+  }
 }

@@ -41,16 +41,51 @@ export class ArtifactCatalogNotFoundException extends ArtifactMasterException {
 }
 
 /**
- * [Artifact] 뽑기 확률 설정 오류
+ * [Artifact] 뽑기 확률 설정 오류 (Base/Legacy)
  */
 export class InvalidArtifactDrawProbabilityException extends ArtifactMasterException {
-  constructor(reason: string = 'Invalid artifact draw probability configuration.') {
-    super(
-      reason,
-      MessageCode.ARTIFACT_INVALID_PROBABILITY,
-      HttpStatus.BAD_REQUEST,
-    );
+  constructor(reason: string = 'Invalid artifact draw probability configuration.', code: MessageCode = MessageCode.ARTIFACT_INVALID_PROBABILITY) {
+    super(reason, code, HttpStatus.BAD_REQUEST);
     this.name = 'InvalidArtifactDrawProbabilityException';
+  }
+}
+
+/**
+ * [Artifact] 개별 확률 범위 오류 (0.0 ~ 1.0)
+ */
+export class ArtifactProbabilityOutOfRangeException extends InvalidArtifactDrawProbabilityException {
+  constructor(grade: string, value: number) {
+    super(
+      `Probability for grade ${grade} is out of range: ${value} (must be 0.0 ~ 1.0)`,
+      MessageCode.ARTIFACT_PROBABILITY_OUT_OF_RANGE,
+    );
+    this.name = 'ArtifactProbabilityOutOfRangeException';
+  }
+}
+
+/**
+ * [Artifact] 확률 총합 오류 (반드시 1.0)
+ */
+export class ArtifactProbabilitySumException extends InvalidArtifactDrawProbabilityException {
+  constructor(sum: number) {
+    super(
+      `Total probability must be 1.0 (Current: ${sum.toFixed(6)})`,
+      MessageCode.ARTIFACT_PROBABILITY_SUM_INVALID,
+    );
+    this.name = 'ArtifactProbabilitySumException';
+  }
+}
+
+/**
+ * [Artifact] 모든 등급이 포함되지 않았거나 중복인 경우
+ */
+export class ArtifactGradesIncompleteException extends InvalidArtifactDrawProbabilityException {
+  constructor(expected: number, received: number) {
+    super(
+      `All artifact grades must be included uniquely. (Expected: ${expected}, Received Unique: ${received})`,
+      MessageCode.ARTIFACT_GRADES_INCOMPLETE,
+    );
+    this.name = 'ArtifactGradesIncompleteException';
   }
 }
 

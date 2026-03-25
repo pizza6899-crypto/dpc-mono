@@ -1,4 +1,5 @@
 import { ArtifactGrade, Prisma } from '@prisma/client';
+import { ArtifactProbabilityOutOfRangeException } from './master.exception';
 
 /**
  * [Artifact] 유물 등급별 뽑기(Gacha) 확률 설정 엔티티
@@ -19,6 +20,17 @@ export class ArtifactDrawConfig {
     updatedAt: Date;
   }): ArtifactDrawConfig {
     return new ArtifactDrawConfig(data.grade, data.probability, data.updatedAt);
+  }
+
+  /**
+   * 확률 업데이트
+   */
+  updateProbability(probability: number): void {
+    if (probability < 0 || probability > 1) {
+      throw new ArtifactProbabilityOutOfRangeException(this._grade, probability);
+    }
+    this._probability = new Prisma.Decimal(probability);
+    this._updatedAt = new Date();
   }
 
   // --- Getters ---

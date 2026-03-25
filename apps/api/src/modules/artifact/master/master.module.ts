@@ -11,13 +11,18 @@ import { ArtifactPolicyMapper } from './infrastructure/artifact-policy.mapper';
 import { ArtifactDrawConfigMapper } from './infrastructure/artifact-draw-config.mapper';
 import { ArtifactDrawConfigAdminController } from './controllers/admin/artifact-draw-config-admin.controller';
 import { GetDrawConfigAdminService } from './application/get-draw-config-admin.service';
+import { UpdateDrawConfigsAdminService } from './application/update-draw-configs-admin.service';
+import { ArtifactDrawConfigPolicy } from './domain/artifact-draw-config.policy';
+import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 
 @Module({
+  imports: [ConcurrencyModule],
   controllers: [ArtifactDrawConfigAdminController],
   providers: [
     ArtifactCatalogMapper,
     ArtifactPolicyMapper,
     ArtifactDrawConfigMapper,
+    ArtifactDrawConfigPolicy,
     {
       provide: ArtifactCatalogRepositoryPort,
       useClass: PrismaArtifactCatalogRepository,
@@ -32,6 +37,7 @@ import { GetDrawConfigAdminService } from './application/get-draw-config-admin.s
     },
     PickRandomArtifactService,
     GetDrawConfigAdminService,
+    UpdateDrawConfigsAdminService,
   ],
   exports: [
     ArtifactCatalogRepositoryPort,
@@ -39,6 +45,7 @@ import { GetDrawConfigAdminService } from './application/get-draw-config-admin.s
     ArtifactDrawConfigRepositoryPort,
     PickRandomArtifactService,
     GetDrawConfigAdminService,
+    UpdateDrawConfigsAdminService,
   ],
 })
 export class ArtifactMasterModule { }

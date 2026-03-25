@@ -8,6 +8,7 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { ArtifactDrawConfigAdminResponseDto } from './dto/response/artifact-draw-config-admin.response.dto';
 import { UpdateDrawConfigsAdminRequestDto } from './dto/request/update-draw-configs-admin.request.dto';
 import { GetDrawConfigAdminService } from '../../application/get-draw-config-admin.service';
+import { UpdateDrawConfigsAdminService } from '../../application/update-draw-configs-admin.service';
 
 @ApiTags('Admin Artifact Draw Configurations')
 @Controller('admin/artifact/draw-configs')
@@ -15,7 +16,7 @@ import { GetDrawConfigAdminService } from '../../application/get-draw-config-adm
 export class ArtifactDrawConfigAdminController {
   constructor(
     private readonly getService: GetDrawConfigAdminService,
-    // private readonly updateService: UpdateDrawConfigAdminService,
+    private readonly updateService: UpdateDrawConfigsAdminService,
   ) { }
 
   @Get()
@@ -45,14 +46,24 @@ export class ArtifactDrawConfigAdminController {
   })
   @ApiOperation({
     summary: 'Update Draw Configurations / 유물 뽑기 확률 일괄 수정',
-    description: 'Updates multiple draw probabilities at once. / 등급별 유물 뽑기 확률을 일괄적으로 수정합니다.',
+    description: `
+      Updates multiple draw probabilities at once. / 등급별 유물 뽑기 확률을 일괄적으로 수정합니다.
+      
+      [Constraints / 제약사항]
+      1. All grades must be included in the request. / 모든 등급의 확률 설정이 배열에 포함되어야 합니다.
+      2. The sum of all probabilities must be exactly 1.0. / 모든 확률의 총합은 반드시 1.0(100%)이어야 합니다.
+    `,
   })
   @ApiStandardResponse(ArtifactDrawConfigAdminResponseDto, { isArray: true })
   async updateDrawConfigs(
     @Body() dto: UpdateDrawConfigsAdminRequestDto,
   ): Promise<ArtifactDrawConfigAdminResponseDto[]> {
-    // TODO: 서비스 구현 시 연동 (업데이트 서비스 미구현)
-    console.log('Update Draw Configs Payload:', dto);
-    return [];
+    const updatedList = await this.updateService.execute(dto);
+
+    return updatedList.map((item) => ({
+      grade: item.grade,
+      probability: item.probability.toNumber(),
+      updatedAt: item.updatedAt,
+    }));
   }
 }
