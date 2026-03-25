@@ -1,11 +1,12 @@
 /// [Artifact] 유물 등급 정의
 enum ArtifactGrade {
-  UNIQUE // 유일
-  MYTHIC // 신화
-  LEGENDARY // 전설
-  EPIC // 영웅
-  RARE // 희귀
   COMMON // 일반
+  UNCOMMON // 고급
+  RARE // 희귀
+  EPIC // 영웅
+  LEGENDARY // 전설
+  MYTHIC // 신화
+  UNIQUE // 유일
 }
 
 /// [Artifact] 유물 뽑기(Gacha) 확률 설정
@@ -25,8 +26,19 @@ model ArtifactPolicy {
   /// - 할인 정책: 10회 뽑기 진행 시 10% 기본 할인율 권장
   /// - 멀티 커런시 대응: 통화별 가격 설정 가능
   /// - 예시 데이터 구조: { "SINGLE": { "USD": 10, "KRW": 13000 }, "TEN": { "USD": 90, "KRW": 117000 } }
-  drawPrices    Json @map("draw_prices")
-  maxEquipLimit Int  @default(3) @map("max_equip_limit")
+  drawPrices Json @map("draw_prices")
+
+  /// [Artifact] 유물 등급별 상세 합성 정책 설정 (JSON)
+  /// - 지원 범위: 등급별 필요 개수, 합성 성공 확률 등
+  /// - 예시 데이터 구조: { "COMMON": { "requiredCount": 3, "successRate": 1.0 }, "RARE": { "requiredCount": 3, "successRate": 0.7 } }
+  synthesisConfigs Json @default("{}") @map("synthesis_configs")
+
+  /// [Artifact] 레벨별 유물 슬롯 해금 설정 (JSON)
+  /// - 기본 2칸 제공, 특정 레벨 도달 시 추가 해금
+  /// - 예시 데이터 구조: { "unlockLevels": [1, 1, 50, 100] } (1번 1레벨, 2번 1레벨, 3번 50레벨, 4번 100레벨 해금)
+  slotUnlockConfigs Json @default("{}") @map("slot_unlock_configs")
+
+  maxEquipLimit Int @default(3) @map("max_equip_limit")
 
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -84,7 +96,9 @@ enum ArtifactLogType {
   DRAW // 유물 뽑기
   EQUIP // 유물 장착
   UNEQUIP // 유물 해제
-  // 추후 필요시 추가 (DISMANTLE, UPGRADE 등)
+  SYNTHESIS // 유물 합성
+  DISTRIBUTION // 보너스 분배
+  ADMIN_ADJUST // 관리자 조정
 }
 
 /// [Artifact] 유물 활동 로그
@@ -107,4 +121,34 @@ model UserArtifactLog {
   @@index([userId, type, createdAt])
   @@index([artifactId])
   @@map("user_artifact_logs")
+}
+
+/// [Artifact] 보너스 풀 집계 상태 (Snapshot) - Singleton 
+model ArtifactBonusPool {
+  id                  Int       @id @default(1)
+  currentBalanceUsd   Decimal   @default(0) @map("current_balance_usd") @db.Decimal(32, 18) // 현재 잔액
+  totalAccumulatedUsd Decimal   @default(0) @map("total_accumulated_usd") @db.Decimal(32, 18) // 역대 총 누적액
+  totalDistributedUsd Decimal   @default(0) @map("total_distributed_usd") @db.Decimal(32, 18) // 역대 총 분배액
+  lastDistributedAt   DateTime? @map("last_distributed_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+
+  @@map("artifact_bonus_pools")
+}
+
+/// [Artifact] 보너스 풀 통합 로그 (적립 및 분배 내역 원장)
+model ArtifactBonusPoolLog {
+  id        BigInt          @id // Snowflake ID
+  userId    BigInt?         @map("user_id") // 적립 시 유저 ID, 분배 시 null 가능
+  amountUsd Decimal         @map("amount_usd") @db.Decimal(32, 18) // 금액 변동 (+: 적립, -: 분배/차감)
+  type      ArtifactLogType @map("type")
+
+  /// 상세 현황 (JSON)
+  /// - DISTRIBUTION 시: { "eligibleUserCount": 100, "targetGrade": "EPIC", "perUserAmountUsd": 1.5 }
+  details Json? @map("details")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([createdAt])
+  @@index([userId])
+  @@map("artifact_bonus_pool_logs")
 }
