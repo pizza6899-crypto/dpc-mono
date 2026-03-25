@@ -82,7 +82,7 @@ export async function seedArtifactCatalog(prisma: PrismaClient) {
   };
 
   await prisma.artifactPolicy.upsert({
-    where: { id: 1 },
+    where: { id: 1n },
     update: {
       drawPrices: drawPrices as any,
       synthesisConfigs: synthesisConfigs as any,
@@ -90,7 +90,7 @@ export async function seedArtifactCatalog(prisma: PrismaClient) {
       maxEquipLimit: 4,
     },
     create: {
-      id: 1,
+      id: 1n,
       drawPrices: drawPrices as any,
       synthesisConfigs: synthesisConfigs as any,
       slotUnlockConfigs: slotUnlockConfigs as any,
@@ -207,10 +207,10 @@ export async function seedArtifactCatalog(prisma: PrismaClient) {
 
   // 4. 보너스 풀 초기 설정 (Singleton ID: 1)
   await prisma.artifactBonusPool.upsert({
-    where: { id: 1 },
+    where: { id: 1n },
     update: {},
     create: {
-      id: 1,
+      id: 1n,
       currentBalanceUsd: 0,
       totalAccumulatedUsd: 0,
       totalDistributedUsd: 0,
