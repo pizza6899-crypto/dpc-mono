@@ -5,7 +5,7 @@ import { StatResetPriceTable } from '../../src/modules/gamification/catalog/doma
  * 게이미피케이션 전역 설정 초기 데이터 시딩
  * (XP 획득 배율, 스탯 초기화 가격 등)
  */
-export async function seedGamificationConfig(prisma: PrismaClient) {
+export async function seedCharacterConfig(prisma: PrismaClient) {
   const configId = 1;
 
   const resetPrices: StatResetPriceTable = {
@@ -39,7 +39,7 @@ export async function seedGamificationConfig(prisma: PrismaClient) {
     },
   });
 
-  console.log('✅ Gamification seeder: Global config seeding completed.');
+  console.log('✅ Character seeder: Global config seeding completed.');
 }
 
 /**
@@ -72,5 +72,5 @@ export async function seedLevelDefinitions(prisma: PrismaClient) {
     });
   }
 
-  console.log('✅ Gamification seeder: Level definitions seeding completed.');
+  console.log('✅ Character seeder: Level definitions seeding completed.');
 }
