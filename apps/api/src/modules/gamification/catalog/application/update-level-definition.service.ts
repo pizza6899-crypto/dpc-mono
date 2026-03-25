@@ -27,7 +27,7 @@ export class UpdateLevelDefinitionService {
   ) { }
 
   /**
-   * 레벨 정의를 업데이트하거나, 해당 레벨이 없으면 새로 생성합니다 (Admin).
+   * 레벨 정의를 업데이트합니다 (Admin).
    */
   @Transactional()
   async execute(params: SaveLevelDefinitionParams): Promise<LevelDefinition> {

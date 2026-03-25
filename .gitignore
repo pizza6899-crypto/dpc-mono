@@ -39,5 +39,8 @@ Thumbs.db
 deploy-package
 packages/database/src
 
+# Test/Rolling folders
+apps/05 롤링 테스트/
+
 # Deploy Artifacts
 output-deploy.zip

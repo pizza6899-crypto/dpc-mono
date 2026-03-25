@@ -17,7 +17,7 @@ export class LevelDefinition {
     private _tierCode: TierCode,
     private _tierImageUrl: string | null,
     private _statPointsBoost: number,
-    private readonly _updatedAt: Date,
+    private _updatedAt: Date, // readonly 제거
   ) { }
 
   /**
@@ -56,6 +56,7 @@ export class LevelDefinition {
     if (params.statPointsBoost !== undefined) this._statPointsBoost = params.statPointsBoost;
 
     this._validate();
+    this._updatedAt = new Date(); // updatedAt 갱신
   }
 
   /**
