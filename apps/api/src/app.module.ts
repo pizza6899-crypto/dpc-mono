@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './modules/auth/auth.module';
-import { BullModule } from '@nestjs/bullmq';
 import { EnvModule } from './common/env/env.module';
-import { EnvService } from './common/env/env.service';
 import {
   APP_FILTER,
   APP_GUARD,
@@ -43,6 +41,7 @@ import { UserModule } from './modules/user/user.module';
 import { ModerationModule } from './modules/moderation/moderation.module';
 import { CouponModule } from './modules/coupon/coupon.module';
 import { CharacterModule } from './modules/character/character.module';
+import { ArtifactModule } from './modules/artifact/artifact.module';
 
 import { AdminMemoModule } from './modules/admin-memo/admin-memo.module';
 import { UserAnalyticsModule } from './modules/user-analytics/user-analytics.module';
@@ -83,6 +82,7 @@ import { ChatModule } from './modules/chat/chat.module';
     RewardModule,
     CouponModule,
     CharacterModule,
+    ArtifactModule,
 
     UserAnalyticsModule,
     AdminMemoModule,
