@@ -19,7 +19,7 @@ model ArtifactDrawConfig {
 
 /// [Artifact] 유물 정책
 model ArtifactPolicy {
-  id Int @id @default(1)
+  id BigInt @id @default(1)
 
   /// [Artifact] 유물 뽑기 비용 설정 (JSON)
   /// - 지원 범위: 1회 뽑기(SINGLE), 10회 뽑기(TEN) 구분
@@ -30,7 +30,7 @@ model ArtifactPolicy {
 
   /// [Artifact] 유물 등급별 상세 합성 정책 설정 (JSON)
   /// - 지원 범위: 등급별 필요 개수, 합성 성공 확률 등
-  /// - 예시 데이터 구조: { "COMMON": { "requiredCount": 3, "successRate": 1.0 }, "RARE": { "requiredCount": 3, "successRate": 0.7 } }
+  /// - 예시 데이터 구조: { "COMMON": { "requiredCount": 3, "successRate": 1.0 }, "RARE": { "requiredCount": 3, "successRate": 0.7, "guaranteedCount": 5 } }
   synthesisConfigs Json @default("{}") @map("synthesis_configs")
 
   /// [Artifact] 레벨별 유물 슬롯 해금 설정 (JSON)
@@ -69,13 +69,53 @@ model ArtifactCatalog {
   @@map("artifact_catalogs")
 }
 
+/// [Artifact] 유저별 유물 관련 상태 정보 (Pity/스택 등)
+model UserArtifactStatus {
+  userId BigInt @id @map("user_id")
+
+  /// 현재 활성화된(해금된) 유물 슬롯 개수 (기본 2개 제공)
+  activeSlotCount Int @default(2) @map("active_slot_count")
+
+  /// 전체 누적 뽑기 횟수
+  totalDrawCount BigInt @default(0) @map("total_draw_count")
+
+  /// 전체 누적 합성 시도 횟수
+  totalSynthesisCount BigInt @default(0) @map("total_synthesis_count")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("user_artifact_statuses")
+}
+
+/// [Artifact] 유저별 등급별 유물 획득 및 합성 통계 (Pity/History)
+model UserArtifactPity {
+  userId BigInt        @map("user_id")
+  grade  ArtifactGrade @map("grade")
+
+  /// [Synthesis] 해당 등급으로의 합성 시도 중 연속 실패 횟수 (성공 시 0으로 초기화)
+  synthesisFailureCount Int @default(0) @map("synthesis_failure_count")
+
+  /// [Synthesis] 해당 등급으로의 합성 시도 중 누적 실패 횟수 (초기화 없음)
+  synthesisTotalFailureCount Int @default(0) @map("synthesis_total_failure_count")
+
+  /// [Draw] 해당 등급 유물을 뽑기로 획득한 누적 횟수 (초기화 없음)
+  drawTotalObtainCount Int @default(0) @map("draw_total_obtain_count")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@id([userId, grade])
+  @@map("user_artifact_pity")
+}
+
 /// [Artifact] 유물 소유 내역
 model UserArtifact {
   id         BigInt @id @default(autoincrement())
   userId     BigInt @map("user_id")
   artifactId BigInt @map("artifact_id")
 
-  // 장착 슬롯 번호 (null = 미장착, 1~3 = 장착 슬롯 번호)
+  // 장착 슬롯 번호 (null = 미장착, 1~n = 장착 슬롯 번호)
   slotNo     Int?    @map("slot_no")
   isEquipped Boolean @default(false) @map("is_equipped")
 
@@ -125,7 +165,7 @@ model UserArtifactLog {
 
 /// [Artifact] 보너스 풀 집계 상태 (Snapshot) - Singleton 
 model ArtifactBonusPool {
-  id                  Int       @id @default(1)
+  id                  BigInt    @id @default(1)
   currentBalanceUsd   Decimal   @default(0) @map("current_balance_usd") @db.Decimal(32, 18) // 현재 잔액
   totalAccumulatedUsd Decimal   @default(0) @map("total_accumulated_usd") @db.Decimal(32, 18) // 역대 총 누적액
   totalDistributedUsd Decimal   @default(0) @map("total_distributed_usd") @db.Decimal(32, 18) // 역대 총 분배액

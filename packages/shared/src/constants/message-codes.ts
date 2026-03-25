@@ -317,5 +317,11 @@ export enum MessageCode {
     INVENTORY_ACCESS_DENIED = 'INVENTORY_ACCESS_DENIED', // 인벤토리 접근 권한이 없을 때
     INVENTORY_ITEM_EXPIRED = 'INVENTORY_ITEM_EXPIRED', // 아이템이 만료되었을 때
     INVENTORY_ITEM_CONSUMED = 'INVENTORY_ITEM_CONSUMED', // 아이템 수량을 모두 소모했을 때
+
+    // --- 유물 관련 (Artifact) ---
+    ARTIFACT_POLICY_NOT_FOUND = 'ARTIFACT_POLICY_NOT_FOUND', // 유물 정책을 찾을 수 없을 때
+    ARTIFACT_NOT_FOUND = 'ARTIFACT_NOT_FOUND', // 해당 유물을 찾을 수 없을 때
+    ARTIFACT_DRAW_CONFIG_NOT_FOUND = 'ARTIFACT_DRAW_CONFIG_NOT_FOUND', // 뽑기 확률 설정을 찾을 수 없을 때
+    ARTIFACT_INVALID_PROBABILITY = 'ARTIFACT_INVALID_PROBABILITY', // 뽑기 확률 합계가 유효하지 않을 때
 }
 

@@ -5,6 +5,7 @@ export type ArtifactDrawPriceTable = Record<'SINGLE' | 'TEN', Partial<Record<Exc
 export interface ArtifactSynthesisConfig {
   requiredCount: number;
   successRate: number; // 0.0 ~ 1.0
+  guaranteedCount?: number; // 확정 지급을 위한 실패 횟수 임계치 (Pity)
 }
 
 export type ArtifactSynthesisConfigTable = Partial<Record<ArtifactGrade, ArtifactSynthesisConfig>>;
@@ -28,6 +29,9 @@ export class ArtifactPolicy {
     private _updatedAt: Date,
   ) { }
 
+  /**
+   * DB 데이터를 엔티티 객체로 복원
+   */
   static rehydrate(data: {
     id: number;
     drawPrices: any; // Prisma Json
@@ -47,7 +51,7 @@ export class ArtifactPolicy {
   }
 
   /**
-   * 뽑기 비용 조회
+   * 뽑기 비용 조회 (지정된 통화 기준)
    */
   getDrawPrice(type: 'SINGLE' | 'TEN', currency: ExchangeCurrencyCode): Prisma.Decimal | null {
     const price = this._drawPrices[type]?.[currency];
@@ -65,10 +69,30 @@ export class ArtifactPolicy {
   /**
    * 합성 성공 여부 판단
    */
-  isSynthesisSuccessful(grade: ArtifactGrade): boolean {
+  isSynthesisSuccessful(grade: ArtifactGrade, currentFailCount: number = 0): boolean {
     const config = this.getSynthesisConfig(grade);
     if (!config) return false;
+
+    // 1. 확정 지급 조건 확인 (Pity)
+    if (config.guaranteedCount && currentFailCount >= config.guaranteedCount) {
+      return true;
+    }
+
+    // 2. 확률 기반 성공 여부 반환
     return Math.random() < config.successRate;
+  }
+
+  /**
+   * 유저의 현재 레벨에 따라 사용 가능한 슬롯 개수 계산
+   */
+  getAvailableSlotCount(userLevel: number): number {
+    const unlockLevels = this._slotUnlockConfigs.unlockLevels || [1, 1];
+    
+    // 유저 레벨이 해금 레벨보다 크거나 같은 슬롯들만 필터링
+    const unlockedCount = unlockLevels.filter(lvl => userLevel >= lvl).length;
+    
+    // maxEquipLimit(시스템 최대 상한)을 넘지 않도록 제한
+    return Math.min(unlockedCount, this._maxEquipLimit);
   }
 
   /**
@@ -87,19 +111,6 @@ export class ArtifactPolicy {
     const currentIndex = grades.indexOf(currentGrade);
     if (currentIndex === -1 || currentIndex === grades.length - 1) return null;
     return grades[currentIndex + 1];
-  }
-
-  /**
-   * 유저의 현재 레벨에 따라 사용 가능한 슬롯 개수 계산
-   */
-  getAvailableSlotCount(userLevel: number): number {
-    const unlockLevels = this._slotUnlockConfigs.unlockLevels || [1, 1];
-    
-    // 유저 레벨이 해금 레벨보다 크거나 같은 슬롯들만 필터링
-    const unlockedCount = unlockLevels.filter(lvl => userLevel >= lvl).length;
-    
-    // maxEquipLimit(시스템 최대 상한)을 넘지 않도록 제한
-    return Math.min(unlockedCount, this._maxEquipLimit);
   }
 
   // --- Getters ---
