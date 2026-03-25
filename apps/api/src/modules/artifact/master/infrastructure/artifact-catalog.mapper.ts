@@ -6,7 +6,7 @@ import { ArtifactCatalog } from '../domain/artifact-catalog.entity';
 export class ArtifactCatalogMapper {
   toEntity(model: PrismaArtifactCatalog): ArtifactCatalog {
     return ArtifactCatalog.rehydrate({
-      id: model.id,
+      id: BigInt(model.id),
       code: model.code,
       grade: model.grade,
       drawWeight: model.drawWeight,
@@ -17,8 +17,8 @@ export class ArtifactCatalogMapper {
       badBeatJackpot: model.badBeatJackpot,
       criticalJackpot: model.criticalJackpot,
       imageUrl: model.imageUrl,
-      createdAt: model.createdAt,
-      updatedAt: model.updatedAt,
+      createdAt: new Date(model.createdAt),
+      updatedAt: new Date(model.updatedAt),
     });
   }
 }

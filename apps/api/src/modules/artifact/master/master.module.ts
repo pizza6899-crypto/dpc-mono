@@ -10,6 +10,7 @@ import { ArtifactCatalogMapper } from './infrastructure/artifact-catalog.mapper'
 import { ArtifactPolicyMapper } from './infrastructure/artifact-policy.mapper';
 import { ArtifactDrawConfigMapper } from './infrastructure/artifact-draw-config.mapper';
 import { ArtifactDrawConfigAdminController } from './controllers/admin/artifact-draw-config-admin.controller';
+import { GetDrawConfigAdminService } from './application/get-draw-config-admin.service';
 
 @Module({
   controllers: [ArtifactDrawConfigAdminController],
@@ -30,12 +31,14 @@ import { ArtifactDrawConfigAdminController } from './controllers/admin/artifact-
       useClass: PrismaArtifactDrawConfigRepository,
     },
     PickRandomArtifactService,
+    GetDrawConfigAdminService,
   ],
   exports: [
     ArtifactCatalogRepositoryPort,
     ArtifactPolicyRepositoryPort,
     ArtifactDrawConfigRepositoryPort,
     PickRandomArtifactService,
+    GetDrawConfigAdminService,
   ],
 })
 export class ArtifactMasterModule { }

@@ -6,11 +6,11 @@ import { ArtifactPolicy } from '../domain/artifact-policy.entity';
 export class ArtifactPolicyMapper {
   toEntity(model: PrismaArtifactPolicy): ArtifactPolicy {
     return ArtifactPolicy.rehydrate({
-      id: model.id,
+      id: BigInt(model.id),
       drawPrices: model.drawPrices,
       synthesisConfigs: model.synthesisConfigs,
       slotUnlockConfigs: model.slotUnlockConfigs,
-      updatedAt: model.updatedAt,
+      updatedAt: new Date(model.updatedAt),
     });
   }
 }

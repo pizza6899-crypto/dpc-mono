@@ -72,13 +72,13 @@ export class PickRandomArtifactService {
    */
   private pickGrade(configs: ArtifactDrawConfig[]): ArtifactGrade {
     const totalProbability = configs.reduce(
-      (sum, config) => sum + config.probabilityValue,
+      (sum, config) => sum + config.probability.toNumber(),
       0,
     );
     let random = Math.random() * totalProbability;
 
     for (const config of configs) {
-      random -= config.probabilityValue;
+      random -= config.probability.toNumber();
       if (random <= 0) {
         return config.grade;
       }

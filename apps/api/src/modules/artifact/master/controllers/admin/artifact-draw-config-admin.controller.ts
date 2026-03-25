@@ -7,13 +7,14 @@ import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 import { ArtifactDrawConfigAdminResponseDto } from './dto/response/artifact-draw-config-admin.response.dto';
 import { UpdateDrawConfigsAdminRequestDto } from './dto/request/update-draw-configs-admin.request.dto';
+import { GetDrawConfigAdminService } from '../../application/get-draw-config-admin.service';
 
 @ApiTags('Admin Artifact Draw Configurations')
 @Controller('admin/artifact/draw-configs')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class ArtifactDrawConfigAdminController {
   constructor(
-    // private readonly getService: GetDrawConfigAdminService,
+    private readonly getService: GetDrawConfigAdminService,
     // private readonly updateService: UpdateDrawConfigAdminService,
   ) { }
 
@@ -24,8 +25,13 @@ export class ArtifactDrawConfigAdminController {
   })
   @ApiStandardResponse(ArtifactDrawConfigAdminResponseDto, { isArray: true })
   async getDrawConfigs(): Promise<ArtifactDrawConfigAdminResponseDto[]> {
-    // TODO: 서비스 구현 시 연동 (현재 목업 응답)
-    return [];
+    const list = await this.getService.execute();
+
+    return list.map((item) => ({
+      grade: item.grade,
+      probability: item.probability.toNumber(),
+      updatedAt: item.updatedAt,
+    }));
   }
 
   @Patch()
@@ -45,7 +51,7 @@ export class ArtifactDrawConfigAdminController {
   async updateDrawConfigs(
     @Body() dto: UpdateDrawConfigsAdminRequestDto,
   ): Promise<ArtifactDrawConfigAdminResponseDto[]> {
-    // TODO: 서비스 구현 시 연동 (현재 목업 응답)
+    // TODO: 서비스 구현 시 연동 (업데이트 서비스 미구현)
     console.log('Update Draw Configs Payload:', dto);
     return [];
   }
