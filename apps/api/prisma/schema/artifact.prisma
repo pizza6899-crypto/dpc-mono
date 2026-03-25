@@ -1,5 +1,6 @@
 /// [Artifact] 유물 등급 정의
 enum ArtifactGrade {
+  UNIQUE // 유일
   MYTHIC // 신화
   LEGENDARY // 전설
   EPIC // 영웅

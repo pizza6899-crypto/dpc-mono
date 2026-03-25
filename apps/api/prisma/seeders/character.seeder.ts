@@ -1,5 +1,5 @@
-import { PrismaClient, ExchangeCurrencyCode } from '@prisma/client';
-import { StatResetPriceTable } from '../../src/modules/gamification/catalog/domain/gamification-config.entity';
+import { PrismaClient, ExchangeCurrencyCode, TierCode } from '@prisma/client';
+import { StatResetPriceTable } from '../../src/modules/character/master/domain/character-config.entity';
 
 /**
  * 게이미피케이션 전역 설정 초기 데이터 시딩
@@ -27,7 +27,7 @@ export async function seedCharacterConfig(prisma: PrismaClient) {
     [ExchangeCurrencyCode.TRX]: 85,
   };
 
-  await prisma.gamificationConfig.upsert({
+  await prisma.characterConfig.upsert({
     where: { id: configId },
     update: {},
     create: {
@@ -47,16 +47,16 @@ export async function seedCharacterConfig(prisma: PrismaClient) {
  */
 export async function seedLevelDefinitions(prisma: PrismaClient) {
   const levels = [
-    { level: 1, requiredXp: 0, tierCode: 'WHITE', levelUpStatPoints: 0 },
-    { level: 2, requiredXp: 100, tierCode: 'WHITE', levelUpStatPoints: 1 },
-    { level: 3, requiredXp: 300, tierCode: 'WHITE', levelUpStatPoints: 1 },
-    { level: 4, requiredXp: 600, tierCode: 'WHITE', levelUpStatPoints: 1 },
-    { level: 5, requiredXp: 1000, tierCode: 'WHITE', levelUpStatPoints: 5 },
-    { level: 6, requiredXp: 1500, tierCode: 'BRONZE', levelUpStatPoints: 2 },
-    { level: 7, requiredXp: 2200, tierCode: 'BRONZE', levelUpStatPoints: 2 },
-    { level: 8, requiredXp: 3000, tierCode: 'BRONZE', levelUpStatPoints: 2 },
-    { level: 9, requiredXp: 4000, tierCode: 'BRONZE', levelUpStatPoints: 2 },
-    { level: 10, requiredXp: 5500, tierCode: 'BRONZE', levelUpStatPoints: 10 },
+    { level: 1, requiredXp: 0, tierCode: TierCode.WHITE, levelUpStatPoints: 0 },
+    { level: 2, requiredXp: 100, tierCode: TierCode.WHITE, levelUpStatPoints: 1 },
+    { level: 3, requiredXp: 300, tierCode: TierCode.WHITE, levelUpStatPoints: 1 },
+    { level: 4, requiredXp: 600, tierCode: TierCode.WHITE, levelUpStatPoints: 1 },
+    { level: 5, requiredXp: 1000, tierCode: TierCode.WHITE, levelUpStatPoints: 5 },
+    { level: 6, requiredXp: 1500, tierCode: TierCode.BRONZE, levelUpStatPoints: 2 },
+    { level: 7, requiredXp: 2200, tierCode: TierCode.BRONZE, levelUpStatPoints: 2 },
+    { level: 8, requiredXp: 3000, tierCode: TierCode.BRONZE, levelUpStatPoints: 2 },
+    { level: 9, requiredXp: 4000, tierCode: TierCode.BRONZE, levelUpStatPoints: 2 },
+    { level: 10, requiredXp: 5500, tierCode: TierCode.BRONZE, levelUpStatPoints: 10 },
   ];
 
   for (const l of levels) {
@@ -66,7 +66,7 @@ export async function seedLevelDefinitions(prisma: PrismaClient) {
       create: {
         level: l.level,
         requiredXp: l.requiredXp,
-        tierCode: l.tierCode as any,
+        tierCode: l.tierCode,
         levelUpStatPoints: l.levelUpStatPoints,
       },
     });

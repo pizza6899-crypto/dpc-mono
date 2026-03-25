@@ -21,7 +21,7 @@ import { GetUserWalletService } from 'src/modules/wallet/application/get-user-wa
 import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-user-balance.service';
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
-import { WageringProgressionService } from 'src/modules/gamification/character/application/wagering-progression.service';
+import { WageringProgressionService } from 'src/modules/character/status/application/wagering-progression.service';
 
 
 export interface ProcessWageringBetCommand {

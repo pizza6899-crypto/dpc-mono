@@ -1,7 +1,7 @@
-/// [Gamification] 시스템 전역 정책 설정
+/// [Character] 시스템 전역 정책 설정
 /// 
-/// 게이미피케이션 엔진의 밸런스와 비용 정책을 한곳에서 관리합니다.
-model GamificationConfig {
+/// 캐릭터 성장 엔진의 밸런스와 비용 정책을 한곳에서 관리합니다.
+model CharacterConfig {
   id Int @id @default(1) // 싱글톤으로 관리
 
   // [XP Policy]
@@ -22,7 +22,7 @@ model GamificationConfig {
 
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@map("gamification_configs")
+  @@map("character_configs")
 }
 
 /// [Gamification] 레벨 정의 마스터 데이터

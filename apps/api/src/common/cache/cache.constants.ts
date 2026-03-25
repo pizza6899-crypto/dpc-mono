@@ -133,16 +133,16 @@ export const CACHE_CONFIG = {
     },
   },
   /**
-   * 게이미피케이션 관련
+   * 캐릭터 모듈 관련
    */
-  GAMIFICATION: {
+  CHARACTER: {
     CONFIG: {
-      key: 'gamification:config:global',
+      key: 'character:config:global',
       ttlSeconds: 60, // 1분 L1 캐시
       store: CacheStore.MEMORY,
     },
     LEVEL_LIST: {
-      key: 'gamification:level-definition:all',
+      key: 'character:level-definition:all',
       ttlSeconds: 300, // 5분 L1 캐시
       store: CacheStore.MEMORY,
     },
