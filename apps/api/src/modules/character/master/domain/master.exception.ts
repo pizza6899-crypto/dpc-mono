@@ -99,9 +99,9 @@ export class InvalidLevelRequiredXPException extends InvalidLevelDefinitionExcep
 }
 
 /** 레벨당 지급 스탯 포인트 설정이 잘못되었을 때 */
-export class InvalidLevelStatBoostException extends InvalidLevelDefinitionException {
+export class InvalidLevelUpStatPointsException extends InvalidLevelDefinitionException {
   constructor(reason: string = 'Stat points boost cannot be negative.') {
     super(MessageCode.CHARACTER_LEVEL_STAT_BOOST_NEGATIVE, reason);
-    this.name = 'InvalidLevelStatBoostException';
+    this.name = 'InvalidLevelUpStatPointsException';
   }
 }

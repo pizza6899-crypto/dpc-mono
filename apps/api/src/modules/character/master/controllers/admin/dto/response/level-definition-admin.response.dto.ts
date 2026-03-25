@@ -17,8 +17,8 @@ export class LevelDefinitionAdminResponseDto {
   @ApiPropertyOptional({ description: 'Tier image URL / 티어 뱃지 이미지 URL', example: 'https://...' })
   tierImageUrl: string | null;
 
-  @ApiProperty({ description: 'Bonus stat points granted / 부여되는 기본 보너스 스탯', example: 1 })
-  statPointsBoost: number;
+  @ApiProperty({ description: 'Bonus stat points granted when achieving this level / 부여되는 기본 보너스 스탯', example: 1 })
+  levelUpStatPoints: number;
 
   @ApiProperty({ description: 'Last update time / 최종 수정 시간' })
   updatedAt: Date;

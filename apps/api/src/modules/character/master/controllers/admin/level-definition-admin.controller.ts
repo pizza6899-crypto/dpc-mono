@@ -38,7 +38,7 @@ export class LevelDefinitionAdminController {
       requiredXp: l.requiredXp.toString(),
       tierCode: l.tierCode,
       tierImageUrl: l.tierImageUrl,
-      statPointsBoost: l.statPointsBoost,
+      levelUpStatPoints: l.levelUpStatPoints,
       updatedAt: l.updatedAt,
     }));
   }
@@ -69,7 +69,7 @@ export class LevelDefinitionAdminController {
       requiredXp: l.requiredXp.toString(),
       tierCode: l.tierCode,
       tierImageUrl: l.tierImageUrl,
-      statPointsBoost: l.statPointsBoost,
+      levelUpStatPoints: l.levelUpStatPoints,
       updatedAt: l.updatedAt,
     };
   }

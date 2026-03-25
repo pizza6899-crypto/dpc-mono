@@ -40,13 +40,13 @@ export class SaveLevelDefinitionAdminRequestDto {
   tierCode?: TierCode;
 
   @ApiPropertyOptional({
-    description: 'Stat points boost granted at this level / 해당 레벨 도달 시의 스탯 가산 보상',
-    example: 5,
+    description: 'Bonus stat points granted when achieving this level / 해당 레벨 도달 시의 스탯 가산 보상',
+    example: 1,
   })
   @IsOptional()
   @IsInt()
   @Min(0)
-  statPointsBoost?: number;
+  levelUpStatPoints?: number;
 
   @ApiPropertyOptional({
     description: 'Custom tier badge image URL / 커스텀 티어 뱃지 이미지 URL',

@@ -16,7 +16,7 @@ export interface SaveLevelDefinitionParams {
   requiredXp?: Prisma.Decimal;
   tierCode?: TierCode;
   tierImageUrl?: string | null;
-  statPointsBoost?: number;
+  levelUpStatPoints?: number;
 }
 
 @Injectable()

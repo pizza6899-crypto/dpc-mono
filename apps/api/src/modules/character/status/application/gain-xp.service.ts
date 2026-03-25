@@ -79,8 +79,8 @@ export class GainXpService {
         }
 
         // 보너스 스탯 포인트 결정
-        const pointsToGrant = nextLevelDef.statPointsBoost > 0
-          ? nextLevelDef.statPointsBoost
+        const pointsToGrant = nextLevelDef.levelUpStatPoints > 0
+          ? nextLevelDef.levelUpStatPoints
           : config.statPointsGrantPerLevel;
 
         // 실제 레벨업 수행

@@ -1,7 +1,7 @@
 import { Prisma, TierCode } from '@prisma/client';
 import {
   InvalidLevelRequiredXPException,
-  InvalidLevelStatBoostException
+  InvalidLevelUpStatPointsException
 } from './master.exception';
 
 /**
@@ -16,7 +16,7 @@ export class LevelDefinition {
     private _requiredXp: Prisma.Decimal,
     private _tierCode: TierCode,
     private _tierImageUrl: string | null,
-    private _statPointsBoost: number,
+    private _levelUpStatPoints: number,
     private _updatedAt: Date, // readonly 제거
   ) { }
 
@@ -28,7 +28,7 @@ export class LevelDefinition {
     requiredXp: Prisma.Decimal;
     tierCode: TierCode;
     tierImageUrl: string | null;
-    statPointsBoost: number;
+    levelUpStatPoints: number;
     updatedAt: Date;
   }): LevelDefinition {
     return new LevelDefinition(
@@ -36,7 +36,7 @@ export class LevelDefinition {
       data.requiredXp,
       data.tierCode,
       data.tierImageUrl,
-      data.statPointsBoost,
+      data.levelUpStatPoints,
       data.updatedAt,
     );
   }
@@ -48,12 +48,12 @@ export class LevelDefinition {
     requiredXp?: Prisma.Decimal;
     tierCode?: TierCode;
     tierImageUrl?: string | null;
-    statPointsBoost?: number;
+    levelUpStatPoints?: number;
   }): void {
     if (params.requiredXp !== undefined) this._requiredXp = params.requiredXp;
     if (params.tierCode !== undefined) this._tierCode = params.tierCode;
     if (params.tierImageUrl !== undefined) this._tierImageUrl = params.tierImageUrl;
-    if (params.statPointsBoost !== undefined) this._statPointsBoost = params.statPointsBoost;
+    if (params.levelUpStatPoints !== undefined) this._levelUpStatPoints = params.levelUpStatPoints;
 
     this._validate();
     this._updatedAt = new Date(); // updatedAt 갱신
@@ -67,8 +67,8 @@ export class LevelDefinition {
       throw new InvalidLevelRequiredXPException();
     }
 
-    if (this._statPointsBoost < 0) {
-      throw new InvalidLevelStatBoostException();
+    if (this._levelUpStatPoints < 0) {
+      throw new InvalidLevelUpStatPointsException();
     }
   }
 
@@ -90,8 +90,8 @@ export class LevelDefinition {
     return this._tierImageUrl;
   }
 
-  get statPointsBoost(): number {
-    return this._statPointsBoost;
+  get levelUpStatPoints(): number {
+    return this._levelUpStatPoints;
   }
 
   get updatedAt(): Date {
