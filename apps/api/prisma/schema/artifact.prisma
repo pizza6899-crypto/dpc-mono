@@ -50,7 +50,8 @@ model ArtifactCatalog {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  userArtifacts UserArtifact[]
+  userArtifacts    UserArtifact[]
+  userArtifactLogs UserArtifactLog[]
 
   @@map("artifact_catalogs")
 }
@@ -73,6 +74,7 @@ model UserArtifact {
 
   @@unique([userId, slotNo]) // 동일한 슬롯에 중복 장착 방지 (null 제외)
   @@index([userId])
+  @@index([artifactId])
   @@map("user_artifacts")
 }
 
@@ -95,11 +97,13 @@ model UserArtifactLog {
   currency   ExchangeCurrencyCode?
   details    Json?                 @map("details")
 
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now()) @map("created_at")
+  user      User            @relation(fields: [userId], references: [id])
+  artifact  ArtifactCatalog @relation(fields: [artifactId], references: [id])
+  createdAt DateTime        @default(now()) @map("created_at")
 
   // [Partitioning] 시간 기반 파티셔닝을 위해 PK에 시간 포함
   @@id([id, createdAt])
   @@index([userId, type, createdAt])
+  @@index([artifactId])
   @@map("user_artifact_logs")
 }
