@@ -29,8 +29,8 @@ export class UserCharacterController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get My Character Info / 내 캐릭터 기초 정보 조회',
-    description: 'Retrieves current level, XP, remaining stat points, and core stats (STR, DEX, etc.). / 현재 레벨, 경험치, 남은 스탯포인트 및 핵심 스탯(STR, DEX 등)을 조회합니다.',
+    summary: 'Get My Character Info / 내 캐릭터 정보 조회',
+    description: 'Retrieves current level, XP, remaining stat points, and core stats (Casino, Slot, Sports Benefit, etc.). / 현재 레벨, 경험치, 남은 스탯포인트 및 비즈니스 핵심 능력치(카지노, 슬롯, 스포츠 혜택 등)를 조회합니다.',
   })
   @ApiStandardResponse(UserCharacterResponseDto)
   async getMyCharacter(@CurrentUser() user: AuthenticatedUser): Promise<UserCharacterResponseDto> {
@@ -74,8 +74,8 @@ export class UserCharacterController {
     action: 'CHARACTER_STATS_RESET_USER',
   })
   @ApiOperation({
-    summary: 'Reset Stat Points / 스탯 초기화 (유상)',
-    description: 'Resets all invested stats and returns points. Costs may apply based on policy. / 모든 스탯을 초기화하고 포인트를 반환합니다. 정책에 따라 비용이 발생할 수 있습니다.',
+    summary: 'Reset Stat Points / 스탯 초기화 (임시 무상)',
+    description: 'Resets all invested stats and returns points. Currently free for a limited time. / 모든 스탯을 초기화하고 포인트를 반환합니다. 현재 임시로 무상으로 제공됩니다.',
   })
   @ApiStandardResponse(UserCharacterResponseDto)
   async resetStats(

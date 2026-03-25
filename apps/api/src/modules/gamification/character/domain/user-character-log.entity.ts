@@ -17,6 +17,7 @@ export type UserCharacterLogDetails =
     cost?: string;
     currency?: string;
     previousStats?: Partial<UserStats>;
+    isFreePromo?: boolean;
   }
 
 /**

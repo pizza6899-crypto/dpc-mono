@@ -79,6 +79,10 @@ export class ResetStatsUserService {
       throw new GamificationCurrencyNotSupportedException();
     }
 
+    // [임시 무상 정책] 프로모션 기간 동안 비용을 0으로 처리하거나 차감 로직을 스킵합니다.
+    const isFreePromotion = true;
+    const finalPrice = isFreePromotion ? new Prisma.Decimal(0) : new Prisma.Decimal(price);
+
     // 초기화 전 스냅샷 저장 (로그용)
     const beforeLevel = character.level;
     const beforeStatPoints = character.statPoints;
@@ -92,26 +96,28 @@ export class ResetStatsUserService {
     };
 
     // 4. 자산 차감 시도 (월렛 서비스 호출)
-    // 월렛 서비스가 내부적으로 잔액 부족 검증 및 차감을 수행합니다.
-    await this.updateUserBalanceService.updateBalance(
-      {
-        userId,
-        currency,
-        amount: new Prisma.Decimal(price),
-        operation: UpdateOperation.SUBTRACT,
-        balanceType: UserWalletBalanceType.CASH,
-        transactionType: UserWalletTransactionType.ADJUSTMENT,
-      },
-      {
-        actionName: WalletActionName.CHARACTER_STATS_RESET,
-        metadata: {
-          reason: 'User Paid Stat Reset',
-          cost: price.toString(),
+    // 무상 프로모션 중이 아닐 때만 실제 잔액 차감을 진행합니다.
+    if (!isFreePromotion) {
+      await this.updateUserBalanceService.updateBalance(
+        {
+          userId,
           currency,
-          previousStats: beforeStats,
-        } as CharacterStatsResetMetadata,
-      },
-    );
+          amount: finalPrice,
+          operation: UpdateOperation.SUBTRACT,
+          balanceType: UserWalletBalanceType.CASH,
+          transactionType: UserWalletTransactionType.ADJUSTMENT,
+        },
+        {
+          actionName: WalletActionName.CHARACTER_STATS_RESET,
+          metadata: {
+            reason: 'User Paid Stat Reset',
+            cost: finalPrice.toString(),
+            currency,
+            previousStats: beforeStats,
+          } as CharacterStatsResetMetadata,
+        },
+      );
+    }
 
     // 5. 캐릭터 스탯 초기화 수행
     character.resetStats();
@@ -132,10 +138,11 @@ export class ResetStatsUserService {
       afterStatPoints: character.statPoints,
       details: {
         type: 'STAT_RESET',
-        cost: price.toString(),
+        cost: finalPrice.toString(),
         currency,
         previousStats: beforeStats,
         resetCount: character.statResetCount,
+        isFreePromo: isFreePromotion, // 무상 여부 기록
       },
     });
 
