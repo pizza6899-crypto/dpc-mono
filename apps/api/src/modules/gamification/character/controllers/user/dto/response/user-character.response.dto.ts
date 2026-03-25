@@ -22,7 +22,4 @@ export class UserCharacterResponseDto {
   @ApiProperty({ description: 'Available Stat Points / 사용 가능한 스탯 포인트', example: 5 }) statPoints: number;
   @ApiProperty({ description: 'Total Earned Stat Points / 획득한 총 스탯 포인트', example: 50 }) totalStatPoints: number;
   @ApiProperty({ description: 'Core Stats / 핵심 스탯' }) stats: UserCharacterStatsResponseDto;
-  @ApiProperty({ description: 'Stat Reset Count / 스탯 초기화 횟수', example: 0 }) statResetCount: number;
-  @ApiProperty({ nullable: true, description: 'Currently Equipped Title / 현재 장착 중인 칭호', example: 'Novice / 초보자' }) currentTitle: string | null;
-  @ApiProperty({ nullable: true, description: 'Last Leveled Up At / 마지막 레벨업 일시', example: '2026-03-23T10:00:00Z' }) lastLeveledUpAt: Date | null;
 }

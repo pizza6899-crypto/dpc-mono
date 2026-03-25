@@ -100,9 +100,6 @@ export class UserCharacterController {
         badBeatJackpot: domain.badBeatJackpot,
         criticalJackpot: domain.criticalJackpot,
       },
-      statResetCount: domain.statResetCount,
-      currentTitle: domain.currentTitle,
-      lastLeveledUpAt: domain.lastLeveledUpAt,
     };
   }
 }
