@@ -191,6 +191,49 @@ export class UserCharacter {
   }
 
   /**
+   * 스탯 포인트 1 감소
+   */
+  decrementStatPoint(statName: keyof UserStats): void {
+    // 1. 해당 스탯 존재 여부 및 0보다 큰지 확인
+    if (!(statName in this._stats)) {
+      throw new InvalidStatTypeException(statName);
+    }
+
+    if (this._stats[statName] <= 0) return;
+
+    // 2. 감소 및 포인트 반환
+    this._stats[statName] -= 1;
+    this._statPoints += 1;
+    this._updatedAt = new Date();
+  }
+
+  /**
+   * 스탯 포인트 최대 투자 (올인)
+   * 가용 포인트와 상한선 중 더 작은 값만큼 투자합니다.
+   */
+  allocateMaxStatPoint(statName: keyof UserStats, maxLimit: number): void {
+    if (this._statPoints <= 0) return;
+
+    // 1. 해당 스탯 존재 여부 확인
+    if (!(statName in this._stats)) {
+      throw new InvalidStatTypeException(statName);
+    }
+
+    const currentVal = this._stats[statName];
+    const roomLeft = maxLimit - currentVal;
+    
+    if (roomLeft <= 0) return;
+
+    // 2. 투자할 포인트 결정 (가용 포인트 vs 남은 상한선)
+    const pointsToInvest = Math.min(this._statPoints, roomLeft);
+
+    // 3. 투자 적용
+    this._stats[statName] += pointsToInvest;
+    this._statPoints -= pointsToInvest;
+    this._updatedAt = new Date();
+  }
+
+  /**
    * 스탯 초기화
    * 
    * 모든 6가지 능력치를 기본값(0)으로 되돌리고, 

@@ -8,7 +8,7 @@ export type UserCharacterLogDetails =
   | { type: 'GAIN_XP'; currentXp: string }
   | { type: 'REVERT_XP'; currentXp: string }
   | { type: 'LEVEL_UP'; totalEarnedXp: string; reason: string }
-  | { type: 'STAT_ALLOCATION'; statName: string; investedPoints: number; afterBaseStat: number }
+  | { type: 'STAT_ALLOCATION'; mode: string; statName: string; beforeBaseStat: number; investedPoints: number; afterBaseStat: number }
   | {
     type: 'STAT_RESET';
     resetCount: number;

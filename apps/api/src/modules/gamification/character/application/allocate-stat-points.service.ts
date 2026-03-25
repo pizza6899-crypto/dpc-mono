@@ -20,6 +20,7 @@ export interface AllocateStatPointsParams {
   userId: bigint;
   statName: keyof UserStats;
   points: number;
+  mode: 'INC' | 'DEC' | 'MAX';
 }
 
 @Injectable()
@@ -49,9 +50,25 @@ export class AllocateStatPointsService {
 
     const beforeLevel = character.level;
     const beforeStatPoints = character.statPoints;
+    const beforeBaseStat = character[params.statName as keyof UserStats];
 
-    // 도메인 엔티티 내 투자 로직 실행 (한도 및 가용포인트 검증 포함)
-    character.allocateStatPoint(params.statName, params.points, config.maxStatLimit);
+    // 투자 모드에 따른 분기 처리
+    switch (params.mode) {
+      case 'DEC':
+        character.decrementStatPoint(params.statName);
+        break;
+      case 'MAX':
+        character.allocateMaxStatPoint(params.statName, config.maxStatLimit);
+        break;
+      case 'INC':
+      default:
+        character.allocateStatPoint(params.statName, params.points, config.maxStatLimit);
+        break;
+    }
+
+    // 실제 변동된 포인트 계산 (로그용)
+    const afterStatPoints = character.statPoints;
+    const actualInvestedPoints = beforeStatPoints - afterStatPoints;
 
     // [최적화] 기본 스탯이 변했으므로 최종 스탯(Base + Bonus)을 동기화하고 영속화합니다.
     // 기존에는 save() 후 다시 execute(userId)를 호출하여 2번 저장했으나, 
@@ -71,9 +88,11 @@ export class AllocateStatPointsService {
       afterStatPoints: character.statPoints,
       details: {
         type: 'STAT_ALLOCATION',
+        mode: params.mode,
         statName: params.statName,
-        investedPoints: params.points,
-        afterBaseStat: character[params.statName as keyof UserStats], // 명칭 개선
+        beforeBaseStat: beforeBaseStat,
+        investedPoints: actualInvestedPoints,
+        afterBaseStat: character[params.statName as keyof UserStats],
       },
     });
 

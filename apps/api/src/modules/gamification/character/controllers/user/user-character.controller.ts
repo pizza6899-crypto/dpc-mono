@@ -49,8 +49,8 @@ export class UserCharacterController {
     }),
   })
   @ApiOperation({
-    summary: 'Allocate Stat Points / 스탯 포인트 투자',
-    description: 'Consumes remaining stat points to invest in desired attributes. / 잔여 스탯 포인트를 소모하여 원하는 능력치에 투자합니다.',
+    summary: 'Allocate/Adjust Stat Points / 스탯 포인트 투자 및 조정',
+    description: 'Adjusts character stats based on the mode. INC: increase by points, DEC: decrease by 1 and return point, MAX: invest all possible points. / 투자 모드에 따라 능력치를 조정합니다. INC: 지정된 수치만큼 증가, DEC: 1 감소 및 포인트 반환, MAX: 가용 포인트 내 최대치 투자.',
   })
   @ApiStandardResponse(UserCharacterResponseDto)
   async allocateStatPoints(
@@ -61,6 +61,7 @@ export class UserCharacterController {
       userId: user.id,
       statName: dto.statName,
       points: dto.points,
+      mode: dto.mode,
     });
 
     return this.mapToResponseDto(character);
