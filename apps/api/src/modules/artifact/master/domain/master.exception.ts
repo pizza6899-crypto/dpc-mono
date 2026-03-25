@@ -53,3 +53,17 @@ export class InvalidArtifactDrawProbabilityException extends ArtifactMasterExcep
     this.name = 'InvalidArtifactDrawProbabilityException';
   }
 }
+
+/**
+ * [Artifact] 특정 등급에 유물이 하나도 없는 경우 (가중치 랜덤 불가)
+ */
+export class NoArtifactsForGradeException extends ArtifactMasterException {
+  constructor(grade: string) {
+    super(
+      `No artifacts found for grade: ${grade}. Check master data configuration.`,
+      MessageCode.ARTIFACT_NOT_FOUND,
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
+    this.name = 'NoArtifactsForGradeException';
+  }
+}
