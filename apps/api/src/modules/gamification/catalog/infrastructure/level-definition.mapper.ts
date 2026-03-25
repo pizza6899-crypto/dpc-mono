@@ -12,9 +12,9 @@ export class LevelDefinitionMapper {
     return LevelDefinition.rehydrate({
       level: data.level,
       requiredXp: Cast.decimal(data.requiredXp),
-      tierCode: data.tierCode,
+      tierCode: data.tierCode as any,
       tierImageUrl: data.tierImageUrl,
-      statPointsBoost: data.statPointsBoost,
+      statPointsBoost: data.levelUpStatPoints,
       updatedAt: Cast.date(data.updatedAt),
     });
   }
@@ -28,7 +28,7 @@ export class LevelDefinitionMapper {
       requiredXp: domain.requiredXp,
       tierCode: domain.tierCode,
       tierImageUrl: domain.tierImageUrl,
-      statPointsBoost: domain.statPointsBoost,
+      levelUpStatPoints: domain.statPointsBoost,
     };
   }
 }
