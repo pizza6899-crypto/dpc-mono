@@ -15,5 +15,5 @@ export class UpdateArtifactDrawPricesAdminRequestDto {
   })
   @IsObject()
   @IsNotEmpty()
-  drawPrices: ArtifactDrawPriceTable;
+  drawPrices: Partial<ArtifactDrawPriceTable>;
 }

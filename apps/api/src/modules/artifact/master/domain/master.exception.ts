@@ -116,3 +116,36 @@ export class ArtifactDrawConfigNotFoundException extends ArtifactMasterException
     this.name = 'ArtifactDrawConfigNotFoundException';
   }
 }
+
+/**
+ * [Artifact] 유물 정책 설정 오류 (Base)
+ */
+export class InvalidArtifactPolicyException extends ArtifactMasterException {
+  constructor(reason: string = 'Invalid artifact policy configuration.', code: MessageCode = MessageCode.ARTIFACT_INVALID_POLICY) {
+    super(reason, code, HttpStatus.BAD_REQUEST);
+    this.name = 'InvalidArtifactPolicyException';
+  }
+}
+
+/**
+ * [Artifact] 유물 뽑기 비용 설정 오류
+ */
+export class InvalidArtifactDrawPriceException extends InvalidArtifactPolicyException {
+  constructor(reason: string) {
+    super(reason, MessageCode.ARTIFACT_INVALID_DRAW_PRICE);
+    this.name = 'InvalidArtifactDrawPriceException';
+  }
+}
+
+/**
+ * [Artifact] 유물 정책 필수 설정 누락
+ */
+export class ArtifactPolicyIncompleteException extends InvalidArtifactPolicyException {
+  constructor(missingType: string) {
+    super(
+      `Required artifact policy type '${missingType}' is missing or has no currency price defined.`,
+      MessageCode.ARTIFACT_POLICY_INCOMPLETE,
+    );
+    this.name = 'ArtifactPolicyIncompleteException';
+  }
+}

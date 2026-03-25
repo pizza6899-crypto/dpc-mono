@@ -107,6 +107,24 @@ export class ArtifactPolicy {
     return grades[currentIndex + 1];
   }
 
+  /**
+   * 뽑기 비용 테이블 부분 수정 (Deep Merge)
+   */
+  updateDrawPrices(newPrices: Partial<ArtifactDrawPriceTable>): void {
+    this._drawPrices = {
+      ...this._drawPrices,
+      SINGLE: {
+        ...this._drawPrices.SINGLE,
+        ...(newPrices.SINGLE || {}),
+      },
+      TEN: {
+        ...this._drawPrices.TEN,
+        ...(newPrices.TEN || {}),
+      },
+    };
+    this._updatedAt = new Date();
+  }
+
   // --- Getters ---
   get id(): bigint { return this._id; }
   get drawPrices(): ArtifactDrawPriceTable { return { ...this._drawPrices }; }

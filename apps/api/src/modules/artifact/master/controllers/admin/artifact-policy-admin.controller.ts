@@ -9,6 +9,7 @@ import { ArtifactPolicyAdminResponseDto } from './dto/response/artifact-policy-a
 import { UpdateArtifactDrawPricesAdminRequestDto } from './dto/request/update-artifact-draw-prices-admin.request.dto';
 import { UpdateArtifactSynthesisConfigsAdminRequestDto } from './dto/request/update-artifact-synthesis-configs-admin.request.dto';
 import { GetArtifactPolicyAdminService } from '../../application/get-artifact-policy-admin.service';
+import { UpdateArtifactDrawPricesAdminService } from '../../application/update-artifact-draw-prices-admin.service';
 
 @ApiTags('Admin Artifact Configurations')
 @Controller('admin/artifact/policy')
@@ -16,6 +17,7 @@ import { GetArtifactPolicyAdminService } from '../../application/get-artifact-po
 export class ArtifactPolicyAdminController {
   constructor(
     private readonly getPolicyService: GetArtifactPolicyAdminService,
+    private readonly updateDrawPricesService: UpdateArtifactDrawPricesAdminService,
   ) { }
   /**
    * [GET] 유물 정책 조회
@@ -59,8 +61,14 @@ export class ArtifactPolicyAdminController {
   async updateDrawPrices(
     @Body() dto: UpdateArtifactDrawPricesAdminRequestDto,
   ): Promise<ArtifactPolicyAdminResponseDto> {
-    // TODO: implement service
-    return this.getPolicy();
+    const policy = await this.updateDrawPricesService.execute(dto);
+
+    return {
+      drawPrices: policy.drawPrices,
+      synthesisConfigs: policy.synthesisConfigs,
+      slotUnlockConfigs: policy.slotUnlockConfigs,
+      updatedAt: policy.updatedAt,
+    };
   }
 
   /**

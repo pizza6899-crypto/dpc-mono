@@ -37,4 +37,26 @@ export class PrismaArtifactPolicyRepository implements ArtifactPolicyRepositoryP
       id: BigInt(raw.id),
     });
   }
+
+  async save(policy: ArtifactPolicy): Promise<void> {
+    await this.tx.artifactPolicy.upsert({
+      where: { id: policy.id },
+      create: {
+        id: policy.id,
+        drawPrices: policy.drawPrices as any,
+        synthesisConfigs: policy.synthesisConfigs as any,
+        slotUnlockConfigs: policy.slotUnlockConfigs as any,
+        updatedAt: policy.updatedAt,
+      },
+      update: {
+        drawPrices: policy.drawPrices as any,
+        synthesisConfigs: policy.synthesisConfigs as any,
+        slotUnlockConfigs: policy.slotUnlockConfigs as any,
+        updatedAt: policy.updatedAt,
+      },
+    });
+
+    // 캐시 무효화
+    await this.cacheService.del(CACHE_CONFIG.ARTIFACT.POLICY);
+  }
 }
