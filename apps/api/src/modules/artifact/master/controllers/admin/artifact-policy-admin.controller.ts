@@ -8,11 +8,15 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { ArtifactPolicyAdminResponseDto } from './dto/response/artifact-policy-admin.response.dto';
 import { UpdateArtifactDrawPricesAdminRequestDto } from './dto/request/update-artifact-draw-prices-admin.request.dto';
 import { UpdateArtifactSynthesisConfigsAdminRequestDto } from './dto/request/update-artifact-synthesis-configs-admin.request.dto';
+import { GetArtifactPolicyAdminService } from '../../application/get-artifact-policy-admin.service';
 
-@ApiTags('Admin Artifact Policy')
+@ApiTags('Admin Artifact Configurations')
 @Controller('admin/artifact/policy')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class ArtifactPolicyAdminController {
+  constructor(
+    private readonly getPolicyService: GetArtifactPolicyAdminService,
+  ) { }
   /**
    * [GET] 유물 정책 조회
    * Retrieves global artifact policies (draw prices, synthesis configs, etc.).
@@ -24,20 +28,13 @@ export class ArtifactPolicyAdminController {
   })
   @ApiStandardResponse(ArtifactPolicyAdminResponseDto)
   async getPolicy(): Promise<ArtifactPolicyAdminResponseDto> {
-    // Mock 데이터 응답
+    const policy = await this.getPolicyService.execute();
+
     return {
-      drawPrices: {
-        SINGLE: { USDT: 100 },
-        TEN: { USDT: 900 },
-      },
-      synthesisConfigs: {
-        COMMON: { requiredCount: 3, successRate: 0.8 },
-        UNCOMMON: { requiredCount: 3, successRate: 0.6, guaranteedCount: 10 },
-      },
-      slotUnlockConfigs: {
-        unlockLevels: [1, 1, 10, 50],
-      },
-      updatedAt: new Date(),
+      drawPrices: policy.drawPrices,
+      synthesisConfigs: policy.synthesisConfigs,
+      slotUnlockConfigs: policy.slotUnlockConfigs,
+      updatedAt: policy.updatedAt,
     };
   }
 

@@ -10,7 +10,7 @@ import { UpdateDrawConfigsAdminRequestDto } from './dto/request/update-draw-conf
 import { GetDrawConfigAdminService } from '../../application/get-draw-config-admin.service';
 import { UpdateDrawConfigsAdminService } from '../../application/update-draw-configs-admin.service';
 
-@ApiTags('Admin Artifact Draw Configurations')
+@ApiTags('Admin Artifact Configurations')
 @Controller('admin/artifact/draw-configs')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class ArtifactDrawConfigAdminController {
