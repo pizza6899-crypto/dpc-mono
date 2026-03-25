@@ -38,8 +38,6 @@ model ArtifactPolicy {
   /// - 예시 데이터 구조: { "unlockLevels": [1, 1, 50, 100] } (1번 1레벨, 2번 1레벨, 3번 50레벨, 4번 100레벨 해금)
   slotUnlockConfigs Json @default("{}") @map("slot_unlock_configs")
 
-  maxEquipLimit Int @default(3) @map("max_equip_limit")
-
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("artifact_policies")

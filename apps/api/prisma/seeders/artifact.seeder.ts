@@ -69,12 +69,12 @@ export async function seedArtifactCatalog(prisma: PrismaClient) {
   };
 
   const synthesisConfigs: ArtifactSynthesisConfigTable = {
-    [ArtifactGrade.COMMON]: { requiredCount: 3, successRate: 0.2, guaranteedCount: 15 },
-    [ArtifactGrade.UNCOMMON]: { requiredCount: 3, successRate: 0.1667, guaranteedCount: 20 },
-    [ArtifactGrade.RARE]: { requiredCount: 3, successRate: 0.125, guaranteedCount: 30 },
-    [ArtifactGrade.EPIC]: { requiredCount: 3, successRate: 0.1111, guaranteedCount: 40 },
-    [ArtifactGrade.LEGENDARY]: { requiredCount: 3, successRate: 0.1, guaranteedCount: 50 },
-    [ArtifactGrade.MYTHIC]: { requiredCount: 3, successRate: 1.0, guaranteedCount: 1 },
+    [ArtifactGrade.COMMON]: { requiredCount: 3, successRate: 0.2 },
+    [ArtifactGrade.UNCOMMON]: { requiredCount: 3, successRate: 0.1667 },
+    [ArtifactGrade.RARE]: { requiredCount: 3, successRate: 0.125, guaranteedCount: 20 },
+    [ArtifactGrade.EPIC]: { requiredCount: 3, successRate: 0.1111, guaranteedCount: 20 },
+    [ArtifactGrade.LEGENDARY]: { requiredCount: 3, successRate: 0.1, guaranteedCount: 20 },
+    [ArtifactGrade.MYTHIC]: { requiredCount: 3, successRate: 1.0 },
   };
 
   const slotUnlockConfigs: ArtifactSlotUnlockConfig = {
@@ -87,14 +87,12 @@ export async function seedArtifactCatalog(prisma: PrismaClient) {
       drawPrices: drawPrices as any,
       synthesisConfigs: synthesisConfigs as any,
       slotUnlockConfigs: slotUnlockConfigs as any,
-      maxEquipLimit: 4,
     },
     create: {
       id: 1n,
       drawPrices: drawPrices as any,
       synthesisConfigs: synthesisConfigs as any,
       slotUnlockConfigs: slotUnlockConfigs as any,
-      maxEquipLimit: 4,
     },
   });
 
