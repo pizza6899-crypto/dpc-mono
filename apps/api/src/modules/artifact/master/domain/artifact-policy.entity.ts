@@ -18,14 +18,13 @@ export interface ArtifactSlotUnlockConfig {
  * [Artifact] 유물 정책 및 가챠/합성/해금 설정 엔티티
  */
 export class ArtifactPolicy {
-  static readonly POLICY_ID = 1;
+  static readonly POLICY_ID: bigint = 1n;
 
   private constructor(
-    private readonly _id: number,
+    private readonly _id: bigint,
     private _drawPrices: ArtifactDrawPriceTable,
     private _synthesisConfigs: ArtifactSynthesisConfigTable,
     private _slotUnlockConfigs: ArtifactSlotUnlockConfig,
-    private _maxEquipLimit: number,
     private _updatedAt: Date,
   ) { }
 
@@ -33,11 +32,10 @@ export class ArtifactPolicy {
    * DB 데이터를 엔티티 객체로 복원
    */
   static rehydrate(data: {
-    id: number;
+    id: bigint;
     drawPrices: any; // Prisma Json
     synthesisConfigs: any; // Prisma Json
     slotUnlockConfigs: any; // Prisma Json
-    maxEquipLimit: number;
     updatedAt: Date;
   }): ArtifactPolicy {
     return new ArtifactPolicy(
@@ -45,7 +43,6 @@ export class ArtifactPolicy {
       (data.drawPrices || {}) as ArtifactDrawPriceTable,
       (data.synthesisConfigs || {}) as ArtifactSynthesisConfigTable,
       (data.slotUnlockConfigs || { unlockLevels: [1, 1] }) as ArtifactSlotUnlockConfig,
-      data.maxEquipLimit,
       data.updatedAt,
     );
   }
@@ -87,12 +84,9 @@ export class ArtifactPolicy {
    */
   getAvailableSlotCount(userLevel: number): number {
     const unlockLevels = this._slotUnlockConfigs.unlockLevels || [1, 1];
-    
+
     // 유저 레벨이 해금 레벨보다 크거나 같은 슬롯들만 필터링
-    const unlockedCount = unlockLevels.filter(lvl => userLevel >= lvl).length;
-    
-    // maxEquipLimit(시스템 최대 상한)을 넘지 않도록 제한
-    return Math.min(unlockedCount, this._maxEquipLimit);
+    return unlockLevels.filter(lvl => userLevel >= lvl).length;
   }
 
   /**
@@ -114,8 +108,7 @@ export class ArtifactPolicy {
   }
 
   // --- Getters ---
-  get id(): number { return this._id; }
-  get maxEquipLimit(): number { return this._maxEquipLimit; }
+  get id(): bigint { return this._id; }
   get drawPrices(): ArtifactDrawPriceTable { return { ...this._drawPrices }; }
   get synthesisConfigs(): ArtifactSynthesisConfigTable { return { ...this._synthesisConfigs }; }
   get slotUnlockConfigs(): ArtifactSlotUnlockConfig { return { ...this._slotUnlockConfigs }; }
