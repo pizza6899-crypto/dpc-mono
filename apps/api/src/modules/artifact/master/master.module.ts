@@ -9,8 +9,10 @@ import { PickRandomArtifactService } from './application/pick-random-artifact.se
 import { ArtifactCatalogMapper } from './infrastructure/artifact-catalog.mapper';
 import { ArtifactPolicyMapper } from './infrastructure/artifact-policy.mapper';
 import { ArtifactDrawConfigMapper } from './infrastructure/artifact-draw-config.mapper';
+import { ArtifactDrawConfigAdminController } from './controllers/admin/artifact-draw-config-admin.controller';
 
 @Module({
+  controllers: [ArtifactDrawConfigAdminController],
   providers: [
     ArtifactCatalogMapper,
     ArtifactPolicyMapper,
@@ -36,4 +38,4 @@ import { ArtifactDrawConfigMapper } from './infrastructure/artifact-draw-config.
     PickRandomArtifactService,
   ],
 })
-export class ArtifactMasterModule {}
+export class ArtifactMasterModule { }
