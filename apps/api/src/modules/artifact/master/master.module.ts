@@ -10,6 +10,7 @@ import { ArtifactCatalogMapper } from './infrastructure/artifact-catalog.mapper'
 import { ArtifactPolicyMapper } from './infrastructure/artifact-policy.mapper';
 import { ArtifactDrawConfigMapper } from './infrastructure/artifact-draw-config.mapper';
 import { ArtifactDrawConfigAdminController } from './controllers/admin/artifact-draw-config-admin.controller';
+import { ArtifactPolicyAdminController } from './controllers/admin/artifact-policy-admin.controller';
 import { GetDrawConfigAdminService } from './application/get-draw-config-admin.service';
 import { UpdateDrawConfigsAdminService } from './application/update-draw-configs-admin.service';
 import { ArtifactDrawConfigPolicy } from './domain/artifact-draw-config.policy';
@@ -17,7 +18,10 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 
 @Module({
   imports: [ConcurrencyModule],
-  controllers: [ArtifactDrawConfigAdminController],
+  controllers: [
+    ArtifactDrawConfigAdminController,
+    ArtifactPolicyAdminController,
+  ],
   providers: [
     ArtifactCatalogMapper,
     ArtifactPolicyMapper,
