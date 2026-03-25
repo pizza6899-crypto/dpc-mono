@@ -1,0 +1,105 @@
+/// [Artifact] 유물 등급 정의
+enum ArtifactGrade {
+  MYTHIC // 신화
+  LEGENDARY // 전설
+  EPIC // 영웅
+  RARE // 희귀
+  COMMON // 일반
+}
+
+/// [Artifact] 유물 뽑기(Gacha) 확률 설정
+model ArtifactDrawConfig {
+  grade       ArtifactGrade @id
+  probability Decimal       @map("probability") @db.Decimal(10, 8)
+
+  @@map("artifact_draw_configs")
+}
+
+/// [Artifact] 유물 정책
+model ArtifactPolicy {
+  id Int @id @default(1)
+
+  /// [Artifact] 유물 뽑기 비용 설정 (JSON)
+  /// - 지원 범위: 1회 뽑기(SINGLE), 10회 뽑기(TEN) 구분
+  /// - 할인 정책: 10회 뽑기 진행 시 10% 기본 할인율 권장
+  /// - 멀티 커런시 대응: 통화별 가격 설정 가능
+  /// - 예시 데이터 구조: { "SINGLE": { "USD": 10, "KRW": 13000 }, "TEN": { "USD": 90, "KRW": 117000 } }
+  drawPrices    Json @map("draw_prices")
+  maxEquipLimit Int  @default(3) @map("max_equip_limit")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("artifact_policies")
+}
+
+/// [Artifact] 유물 마스터 데이터 (독립 시스템)
+model ArtifactCatalog {
+  id              BigInt        @id @default(autoincrement())
+  code            String        @unique // 유물 고유 코드
+  grade           ArtifactGrade
+  drawWeight      Int           @default(1000) @map("draw_weight") // 동일 등급 내 당첨 가중치
+  // [Stats Bonus] 장착 시 합산되는 캐릭터 능력치 (Fixed Value)
+  casinoBenefit   Int           @default(0) @map("casino_benefit")
+  slotBenefit     Int           @default(0) @map("slot_benefit")
+  sportsBenefit   Int           @default(0) @map("sports_benefit")
+  minigameBenefit Int           @default(0) @map("minigame_benefit")
+  badBeatJackpot  Int           @default(0) @map("bad_beat_jackpot")
+  criticalJackpot Int           @default(0) @map("critical_jackpot")
+  imageUrl        String?       @map("image_url")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userArtifacts UserArtifact[]
+
+  @@map("artifact_catalogs")
+}
+
+/// [Artifact] 유물 소유 내역
+model UserArtifact {
+  id         BigInt @id @default(autoincrement())
+  userId     BigInt @map("user_id")
+  artifactId BigInt @map("artifact_id")
+
+  // 장착 슬롯 번호 (null = 미장착, 1~3 = 장착 슬롯 번호)
+  slotNo     Int?    @map("slot_no")
+  isEquipped Boolean @default(false) @map("is_equipped")
+
+  acquiredAt DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  user     User            @relation(fields: [userId], references: [id])
+  artifact ArtifactCatalog @relation(fields: [artifactId], references: [id])
+
+  @@unique([userId, slotNo]) // 동일한 슬롯에 중복 장착 방지 (null 제외)
+  @@index([userId])
+  @@map("user_artifacts")
+}
+
+/// [Artifact] 유물 활동 타입
+enum ArtifactLogType {
+  DRAW // 유물 뽑기
+  EQUIP // 유물 장착
+  UNEQUIP // 유물 해제
+  // 추후 필요시 추가 (DISMANTLE, UPGRADE 등)
+}
+
+/// [Artifact] 유물 활동 로그
+model UserArtifactLog {
+  id         BigInt
+  userId     BigInt                @map("user_id")
+  artifactId BigInt                @map("artifact_id")
+  type       ArtifactLogType
+  grade      ArtifactGrade
+  cost       Decimal?              @db.Decimal(32, 18)
+  currency   ExchangeCurrencyCode?
+  details    Json?                 @map("details")
+
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // [Partitioning] 시간 기반 파티셔닝을 위해 PK에 시간 포함
+  @@id([id, createdAt])
+  @@index([userId, type, createdAt])
+  @@map("user_artifact_logs")
+}

@@ -165,6 +165,13 @@ model User {
   globalTotalStats  UserGlobalTotalStats?
   globalHourlyStats UserGlobalHourlyStats[]
 
+  // [Gamification]
+  character        UserCharacter?
+  characterLogs    UserCharacterLog[] @relation("UserLogs")
+  // [Artifact]
+  userArtifacts    UserArtifact[]
+  userArtifactLogs UserArtifactLog[]
+
   @@map("users")
 }
 
