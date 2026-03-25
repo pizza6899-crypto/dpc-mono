@@ -20,12 +20,44 @@ export class PickRandomArtifactService {
    * 유물 1개 랜덤 추첨
    */
   async execute(): Promise<ArtifactCatalog> {
+    const [drawConfigs, candidates] = await Promise.all([
+      this.drawConfigRepo.findAll(),
+      this.catalogRepo.findAll(),
+    ]);
+
+    return this.pickInternal(drawConfigs, candidates);
+  }
+
+  /**
+   * 유물 다건 랜덤 추첨 (e.g. 10연속 뽑기)
+   * 데이터를 단 1회만 조회하여 대량 추첨 성능을 최적화함
+   */
+  async executeMany(count: number): Promise<ArtifactCatalog[]> {
+    if (count <= 0) return [];
+
+    const [drawConfigs, candidates] = await Promise.all([
+      this.drawConfigRepo.findAll(),
+      this.catalogRepo.findAll(),
+    ]);
+
+    const results: ArtifactCatalog[] = [];
+    for (let i = 0; i < count; i++) {
+      results.push(this.pickInternal(drawConfigs, candidates));
+    }
+    return results;
+  }
+
+  /**
+   * 확률 및 가중치를 기반으로 최종 유물 1종 결정
+   */
+  private pickInternal(
+    drawConfigs: ArtifactDrawConfig[],
+    candidates: ArtifactCatalog[],
+  ): ArtifactCatalog {
     // 1. 등급(Grade) 추첨
-    const drawConfigs = await this.drawConfigRepo.findAll();
     const selectedGrade = this.pickGrade(drawConfigs);
 
     // 2. 등급 내 유물(Artifact) 추첨
-    const candidates = await this.catalogRepo.findAll();
     const gradeCandidates = candidates.filter((a) => a.grade === selectedGrade);
 
     if (gradeCandidates.length === 0) {
@@ -33,17 +65,6 @@ export class PickRandomArtifactService {
     }
 
     return this.pickArtifact(gradeCandidates);
-  }
-
-  /**
-   * 유물 다건 랜덤 추첨 (e.g. 10연속 뽑기)
-   */
-  async executeMany(count: number): Promise<ArtifactCatalog[]> {
-    const results: ArtifactCatalog[] = [];
-    for (let i = 0; i < count; i++) {
-      results.push(await this.execute());
-    }
-    return results;
   }
 
   /**

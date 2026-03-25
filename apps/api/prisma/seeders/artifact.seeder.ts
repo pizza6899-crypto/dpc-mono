@@ -101,7 +101,7 @@ export async function seedArtifactCatalog(prisma: PrismaClient) {
     {
       code: 'WOODEN_CIRCLE',
       grade: ArtifactGrade.COMMON,
-      drawWeight: 1000,
+      drawWeight: 100,
       casinoBenefit: 1,
       slotBenefit: 1,
       imageUrl: 'https://placehold.co/200x200?text=Wooden+Circle',
@@ -109,7 +109,7 @@ export async function seedArtifactCatalog(prisma: PrismaClient) {
     {
       code: 'IRON_SHIELD',
       grade: ArtifactGrade.UNCOMMON,
-      drawWeight: 800,
+      drawWeight: 100,
       casinoBenefit: 3,
       slotBenefit: 3,
       sportsBenefit: 3,
@@ -118,7 +118,7 @@ export async function seedArtifactCatalog(prisma: PrismaClient) {
     {
       code: 'SILVER_CROWN',
       grade: ArtifactGrade.RARE,
-      drawWeight: 500,
+      drawWeight: 100,
       casinoBenefit: 7,
       slotBenefit: 7,
       sportsBenefit: 7,
@@ -128,7 +128,7 @@ export async function seedArtifactCatalog(prisma: PrismaClient) {
     {
       code: 'GOLDEN_SCEPTRE',
       grade: ArtifactGrade.EPIC,
-      drawWeight: 300,
+      drawWeight: 100,
       casinoBenefit: 15,
       slotBenefit: 15,
       sportsBenefit: 15,
@@ -151,7 +151,7 @@ export async function seedArtifactCatalog(prisma: PrismaClient) {
     {
       code: 'ETERNAL_FLAME',
       grade: ArtifactGrade.MYTHIC,
-      drawWeight: 20,
+      drawWeight: 100,
       casinoBenefit: 70,
       slotBenefit: 70,
       sportsBenefit: 70,
@@ -163,7 +163,7 @@ export async function seedArtifactCatalog(prisma: PrismaClient) {
     {
       code: 'COSMIC_VOID',
       grade: ArtifactGrade.UNIQUE,
-      drawWeight: 5,
+      drawWeight: 100,
       casinoBenefit: 150,
       slotBenefit: 150,
       sportsBenefit: 150,
