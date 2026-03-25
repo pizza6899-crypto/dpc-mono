@@ -26,18 +26,6 @@ export class GamificationConfigNotFoundException extends GamificationCatalogExce
   }
 }
 
-/** 특정 아이템을 찾을 수 없을 때 */
-export class ItemNotFoundException extends GamificationCatalogException {
-  constructor() {
-    super(
-      'Item not found.',
-      MessageCode.ITEM_NOT_FOUND,
-      HttpStatus.NOT_FOUND,
-    );
-    this.name = 'ItemNotFoundException';
-  }
-}
-
 /** 특정 레벨 정의를 찾을 수 없을 때 */
 export class LevelDefinitionNotFoundException extends GamificationCatalogException {
   constructor() {
@@ -51,62 +39,6 @@ export class LevelDefinitionNotFoundException extends GamificationCatalogExcepti
 }
 
 // --- Validation 계열 (상세 사유 중심) ---
-
-/** 아이템 코드가 중복되었을 때 */
-export class ItemCodeDuplicatedException extends GamificationCatalogException {
-  constructor(code?: string) {
-    super(
-      code ? `Item code already exists: ${code}` : 'Item code already exists.',
-      MessageCode.ITEM_CODE_DUPLICATED,
-      HttpStatus.BAD_REQUEST,
-    );
-    this.name = 'ItemCodeDuplicatedException';
-  }
-}
-
-/** 아이템 가격 정보가 잘못되었을 때 (예: 음수) */
-export class InvalidItemPriceException extends GamificationCatalogException {
-  constructor(reason: string = 'Item price cannot be negative.') {
-    super(reason, MessageCode.ITEM_PRICE_NEGATIVE, HttpStatus.BAD_REQUEST);
-    this.name = 'InvalidItemPriceException';
-  }
-}
-
-/** 아이템 효과(Effect) 설정이 유효하지 않을 때 */
-export class InvalidItemEffectException extends GamificationCatalogException {
-  constructor(reason?: string) {
-    super(
-      reason ? `Invalid item effect: ${reason}` : 'Item effect configuration is invalid.',
-      MessageCode.ITEM_EFFECT_INVALID,
-      HttpStatus.BAD_REQUEST,
-    );
-    this.name = 'InvalidItemEffectException';
-  }
-}
-
-/** 기간제 아이템 설정이 유효하지 않을 때 */
-export class InvalidItemDurationException extends GamificationCatalogException {
-  constructor(reason?: string) {
-    super(
-      reason ? `Invalid item duration: ${reason}` : 'Item duration is invalid.',
-      MessageCode.ITEM_DURATION_NEGATIVE,
-      HttpStatus.BAD_REQUEST,
-    );
-    this.name = 'InvalidItemDurationException';
-  }
-}
-
-/** 필수 번역 정보가 누락되었을 때 */
-export class ItemTranslationRequiredException extends GamificationCatalogException {
-  constructor() {
-    super(
-      'At least one translation is required for the item.',
-      MessageCode.ITEM_TRANSLATION_REQUIRED,
-      HttpStatus.BAD_REQUEST,
-    );
-    this.name = 'ItemTranslationRequiredException';
-  }
-}
 
 // --- Gamification Config 계열 ---
 

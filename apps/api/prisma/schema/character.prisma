@@ -1,0 +1,152 @@
+/// [Gamification] 시스템 전역 정책 설정
+/// 
+/// 게이미피케이션 엔진의 밸런스와 비용 정책을 한곳에서 관리합니다.
+model GamificationConfig {
+  id Int @id @default(1) // 싱글톤으로 관리
+
+  // [XP Policy]
+  // 1 USD 베팅(Rolling)당 획득할 경험치 배율
+  // 📝 계산식: 획득 XP = (베팅 USD 금액) * xp_grant_multiplier_usd
+  xpGrantMultiplierUsd Decimal @default(1.0) @map("xp_grant_multiplier_usd") @db.Decimal(32, 18)
+
+  // [Stat Policy]
+  // 레벨업당 지급되는 기본 스탯 포인트
+  statPointsGrantPerLevel Int @default(1) @map("stat_points_grant_per_level")
+  // 한 스텟에 투자할 수 있는 최대 수량 (상한선)
+  maxStatLimit            Int @default(999) @map("max_stat_limit")
+
+  // [Reset Policy]
+  // 스텟 초기화 통화별 고정 가격표
+  // 📝 데이터 예시: { "KRW": 10000, "USD": 10, "JPY": 1500 }
+  statResetPrices Json @default("{}") @map("stat_reset_prices")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("gamification_configs")
+}
+
+/// [Gamification] 레벨 정의 마스터 데이터
+/// 
+model LevelDefinition {
+  level Int @id // 레벨 그 자체가 PK
+
+  // [승급 요건]
+  requiredXp Decimal @map("required_xp") @db.Decimal(32, 18)
+
+  // [UI용 티어 보상] (Enum으로 타입 안정성 확보)
+  tierCode     TierCode @default(WHITE) @map("tier_code")
+  tierImageUrl String?  @map("tier_image_url") // 티어 뱃지 이미지 URL
+
+  // [기본 보상]
+  // 해당 레벨 달성 시 보너스로 지급되는 스탯 포인트 (영구)
+  levelUpStatPoints Int @default(1) @map("level_up_stat_points")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("level_definitions")
+}
+
+/// [Gamification] 레벨 구간별 UI용 티어 분류 (순수 시각적 보상용)
+enum TierCode {
+  WHITE
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+  DIAMOND
+  VIP
+}
+
+/// [Gamification] 유저 캐릭터 및 스탯 정보
+/// 
+/// 유저의 레벨, 경험치, 남은 스탯 포인트 및 6가지 핵심 능력치를 관리합니다.
+model UserCharacter {
+  userId BigInt @id @map("user_id")
+  level  Int    @default(1)
+
+  // 소수점 단위의 미세한 경험치 적립을 위해 Decimal로 관리 (정밀도 18자리)
+  xp Decimal @default(0) @db.Decimal(32, 18)
+
+  // [포인트 관리]
+  statPoints      Int @default(0) @map("stat_points") // 현재 가용 스탯 포인트 (잔여분)
+  totalStatPoints Int @default(0) @map("total_stat_points") // 지금까지 획득한 총 스탯 포인트 (누적분)
+
+  // [6가지 기본 투자 스탯 (Base Stats)]
+  // 유저가 직접 포인트를 투자하여 올린 수치
+  baseCasinoBenefit   Int @default(0) @map("base_casino_benefit")
+  baseSlotBenefit     Int @default(0) @map("base_slot_benefit")
+  baseSportsBenefit   Int @default(0) @map("base_sports_benefit")
+  baseMinigameBenefit Int @default(0) @map("base_minigame_benefit")
+  baseBadBeatJackpot  Int @default(0) @map("base_bad_beat_jackpot")
+  baseCriticalJackpot Int @default(0) @map("base_critical_jackpot")
+
+  // [6가지 최종 적용 스탯 (Total Stats)]
+  // 구성: 기본 투자 스탯(Base) + 유물/아이템 보너스 합계
+  // 런타임 성능 최적화를 위한 캐시 필드입니다.
+  totalCasinoBenefit   Int @default(0) @map("total_casino_benefit")
+  totalSlotBenefit     Int @default(0) @map("total_slot_benefit")
+  totalSportsBenefit   Int @default(0) @map("total_sports_benefit")
+  totalMinigameBenefit Int @default(0) @map("total_minigame_benefit")
+  totalBadBeatJackpot  Int @default(0) @map("total_bad_beat_jackpot")
+  totalCriticalJackpot Int @default(0) @map("total_critical_jackpot")
+
+  // [메타 정보]
+  statResetCount  Int       @default(0) @map("stat_reset_count") // 스탯 초기화 횟수
+  currentTitle    String?   @map("current_title") // 현재 장착 중인 칭호 명칭
+  lastLeveledUpAt DateTime? @map("last_leveled_up_at") // 마지막 레벨업 시점
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User               @relation(fields: [userId], references: [id])
+  logs UserCharacterLog[]
+
+  @@map("user_characters")
+}
+
+/// [Gamification] 캐릭터 성장 및 스탯 변동 이력 로그
+/// 
+/// 레벨업 및 스탯 포인트 소모 내역을 상세히 기록하여 데이터 무결성을 보장합니다.
+model UserCharacterLog {
+  id     BigInt
+  userId BigInt @map("user_id")
+
+  // 로그 타입: LEVEL_UP(레벨업), STAT_ALLOCATION(스탯 투자), STAT_RESET(스탯 초기화)
+  type CharacterLogType
+
+  // 변경 수치 스냅샷 (레벨)
+  beforeLevel Int @map("before_level")
+  afterLevel  Int @map("after_level")
+
+  // 변경 수치 스냅샷 (스탯 포인트)
+  beforeStatPoints Int @map("before_stat_points")
+  afterStatPoints  Int @map("after_stat_points")
+
+  // 경험치 변동 상세 (XP Audit)
+  amount      Decimal? @db.Decimal(32, 18) // 경험치 획득/차감량 (GAIN_XP, REVERT_XP용)
+  referenceId BigInt?  @map("reference_id") // 원인이 된 베팅 라운드 ID 등
+
+  // 상세 변동 내역 (JSON)
+  details Json? @map("details")
+
+  createdAt DateTime @map("created_at")
+
+  // 린트 에러 방지를 위해 명시적 맵 오버라이드 (FK 제약 조건명 충돌 해결)
+  user      User          @relation("UserLogs", fields: [userId], references: [id], map: "user_character_logs_user_ref_fkey")
+  character UserCharacter @relation(fields: [userId], references: [userId], map: "user_character_logs_char_ref_fkey")
+
+  // [Partitioning] 시간 기반 파티셔닝을 위해 PK에 시간 포함
+  @@id([id, createdAt])
+  @@index([userId, type, createdAt])
+  @@index([createdAt])
+  @@map("user_character_logs")
+}
+
+enum CharacterLogType {
+  LEVEL_UP
+  STAT_ALLOCATION
+  STAT_RESET
+  GAIN_XP // 경험치 획득
+  REVERT_XP // 경험치 회수 (취소/푸쉬)
+}

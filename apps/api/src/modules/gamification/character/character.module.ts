@@ -2,7 +2,6 @@ import { Module, forwardRef } from '@nestjs/common';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
 import { GamificationCatalogModule } from '../catalog/catalog.module';
-import { GamificationInventoryModule } from '../inventory/inventory.module';
 import { WalletModule } from '../../wallet/wallet.module';
 
 // Controllers
@@ -33,7 +32,6 @@ import { USER_CHARACTER_REPOSITORY_PORT, USER_CHARACTER_LOG_REPOSITORY_PORT } fr
     ConcurrencyModule,
     SnowflakeModule,
     GamificationCatalogModule,
-    forwardRef(() => GamificationInventoryModule),
     WalletModule,
   ],
   controllers: [

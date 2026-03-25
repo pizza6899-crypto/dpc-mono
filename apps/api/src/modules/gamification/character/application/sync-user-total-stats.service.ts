@@ -3,24 +3,18 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { USER_CHARACTER_REPOSITORY_PORT } from '../ports/user-character.repository.port';
 import type { UserCharacterRepositoryPort } from '../ports/user-character.repository.port';
-import { USER_INVENTORY_REPOSITORY_PORT } from '../../inventory/ports/user-inventory.repository.port';
-import type { UserInventoryRepositoryPort } from '../../inventory/ports/user-inventory.repository.port';
 import { UserCharacter, UserStats } from '../domain/user-character.entity';
-import { EffectType } from '@prisma/client';
 
 /**
  * 유저의 최종 스탯(기본 + 보너스 합산)을 재계산하고 캐시 필드를 업데이트합니다.
  * 
- * 아이템 장착/해제, 레벨업 후 포인트 투자 등 스탯에 변화가 생겼을 때 호출합니다.
+ * 아이템 장착/해제(또는 유물 활성), 레벨업 후 포인트 투자 등 스탯에 변화가 생겼을 때 호출합니다.
  */
 @Injectable()
 export class SyncUserTotalStatsService {
   constructor(
     @Inject(USER_CHARACTER_REPOSITORY_PORT)
     private readonly characterRepository: UserCharacterRepositoryPort,
-
-    @Inject(USER_INVENTORY_REPOSITORY_PORT)
-    private readonly inventoryRepository: UserInventoryRepositoryPort,
 
     private readonly advisoryLockService: AdvisoryLockService,
   ) { }
@@ -52,8 +46,8 @@ export class SyncUserTotalStatsService {
    */
   @Transactional()
   async sync(character: UserCharacter): Promise<void> {
-    // 1. 현재 활성 상태(장착중 등)인 아이템 효과 목록 조회
-    const activeItems = await this.inventoryRepository.findActiveBonuses(character.userId);
+    // 1. 현재 활성 상태(장착중 등)인 보너스 목록 조회 (TODO: Artifact 시스템 통합)
+    // const activeBonuses = await this.artifactRepository.findActiveBonuses(character.userId);
 
     // 2. STAT_BOOST 유형의 효과를 스탯별 합산
     const bonuses: UserStats = {
@@ -65,18 +59,7 @@ export class SyncUserTotalStatsService {
       criticalJackpot: 0,
     };
 
-    for (const item of activeItems) {
-      if (!Array.isArray(item.effects)) continue;
-
-      for (const effect of item.effects) {
-        if (effect.type === EffectType.STAT_BOOST && effect.target) {
-          const statKey = this.mapTargetToStatKey(effect.target);
-          if (statKey && statKey in bonuses) {
-            bonuses[statKey as keyof UserStats] += Number(effect.value || 0);
-          }
-        }
-      }
-    }
+    // TODO: Artifact 통합 시 보너스 계산 로직 추가
 
     // 3. 엔티티 내부에 보너스 적용 및 캐시 필드 업데이트
     character.syncTotalStats(bonuses);

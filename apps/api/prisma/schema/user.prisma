@@ -168,8 +168,6 @@ model User {
   // [Gamification]
   character         UserCharacter?
   characterLogs     UserCharacterLog[] @relation("UserLogs")
-  userInventories   UserInventory[]
-  userInventoryLogs UserInventoryLog[]
 
   // [Artifact]
   userArtifacts    UserArtifact[]
