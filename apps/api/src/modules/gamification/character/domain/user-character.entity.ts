@@ -5,12 +5,12 @@ import { InsufficientStatPointsException, StatLimitExceededException, InvalidSta
  * 6가지 핵심 스탯을 나타내는 타입
  */
 export interface UserStats {
-  strength: number;
-  agility: number;
-  luck: number;
-  wisdom: number;
-  stamina: number;
-  charisma: number;
+  casinoBenefit: number;
+  slotBenefit: number;
+  sportsBenefit: number;
+  minigameBenefit: number;
+  badBeatJackpot: number;
+  criticalJackpot: number;
 }
 
 /**
@@ -44,18 +44,18 @@ export class UserCharacter {
     xp: Prisma.Decimal;
     statPoints: number;
     totalStatPoints: number;
-    strength: number;
-    agility: number;
-    luck: number;
-    wisdom: number;
-    stamina: number;
-    charisma: number;
-    totalStrength: number;
-    totalAgility: number;
-    totalLuck: number;
-    totalWisdom: number;
-    totalStamina: number;
-    totalCharisma: number;
+    casinoBenefit: number;
+    slotBenefit: number;
+    sportsBenefit: number;
+    minigameBenefit: number;
+    badBeatJackpot: number;
+    criticalJackpot: number;
+    totalCasinoBenefit: number;
+    totalSlotBenefit: number;
+    totalSportsBenefit: number;
+    totalMinigameBenefit: number;
+    totalBadBeatJackpot: number;
+    totalCriticalJackpot: number;
     statResetCount: number;
     currentTitle: string | null;
     lastLeveledUpAt: Date | null;
@@ -69,20 +69,20 @@ export class UserCharacter {
       data.statPoints,
       data.totalStatPoints,
       {
-        strength: data.strength,
-        agility: data.agility,
-        luck: data.luck,
-        wisdom: data.wisdom,
-        stamina: data.stamina,
-        charisma: data.charisma,
+        casinoBenefit: data.casinoBenefit,
+        slotBenefit: data.slotBenefit,
+        sportsBenefit: data.sportsBenefit,
+        minigameBenefit: data.minigameBenefit,
+        badBeatJackpot: data.badBeatJackpot,
+        criticalJackpot: data.criticalJackpot,
       },
       {
-        strength: data.totalStrength,
-        agility: data.totalAgility,
-        luck: data.totalLuck,
-        wisdom: data.totalWisdom,
-        stamina: data.totalStamina,
-        charisma: data.totalCharisma,
+        casinoBenefit: data.totalCasinoBenefit,
+        slotBenefit: data.totalSlotBenefit,
+        sportsBenefit: data.totalSportsBenefit,
+        minigameBenefit: data.totalMinigameBenefit,
+        badBeatJackpot: data.totalBadBeatJackpot,
+        criticalJackpot: data.totalCriticalJackpot,
       },
       data.statResetCount,
       data.currentTitle,
@@ -103,20 +103,20 @@ export class UserCharacter {
       0, // statPoints
       0, // totalStatPoints
       {
-        strength: 0,
-        agility: 0,
-        luck: 0,
-        wisdom: 0,
-        stamina: 0,
-        charisma: 0,
+        casinoBenefit: 0,
+        slotBenefit: 0,
+        sportsBenefit: 0,
+        minigameBenefit: 0,
+        badBeatJackpot: 0,
+        criticalJackpot: 0,
       },
       {
-        strength: 0,
-        agility: 0,
-        luck: 0,
-        wisdom: 0,
-        stamina: 0,
-        charisma: 0,
+        casinoBenefit: 0,
+        slotBenefit: 0,
+        sportsBenefit: 0,
+        minigameBenefit: 0,
+        badBeatJackpot: 0,
+        criticalJackpot: 0,
       },
       0, // statResetCount
       null, // currentTitle
@@ -199,12 +199,12 @@ export class UserCharacter {
   resetStats(): void {
     // 모든 스탯을 0으로 초기화
     this._stats = {
-      strength: 0,
-      agility: 0,
-      luck: 0,
-      wisdom: 0,
-      stamina: 0,
-      charisma: 0,
+      casinoBenefit: 0,
+      slotBenefit: 0,
+      sportsBenefit: 0,
+      minigameBenefit: 0,
+      badBeatJackpot: 0,
+      criticalJackpot: 0,
     };
 
     // 남은 스탯 포인트를 총 획득 포인트와 동일하게 맞춤 (초기화)
@@ -221,12 +221,12 @@ export class UserCharacter {
    */
   syncTotalStats(bonuses: UserStats): void {
     this._totalStats = {
-      strength: this._stats.strength + bonuses.strength,
-      agility: this._stats.agility + bonuses.agility,
-      luck: this._stats.luck + bonuses.luck,
-      wisdom: this._stats.wisdom + bonuses.wisdom,
-      stamina: this._stats.stamina + bonuses.stamina,
-      charisma: this._stats.charisma + bonuses.charisma,
+      casinoBenefit: this._stats.casinoBenefit + bonuses.casinoBenefit,
+      slotBenefit: this._stats.slotBenefit + bonuses.slotBenefit,
+      sportsBenefit: this._stats.sportsBenefit + bonuses.sportsBenefit,
+      minigameBenefit: this._stats.minigameBenefit + bonuses.minigameBenefit,
+      badBeatJackpot: this._stats.badBeatJackpot + bonuses.badBeatJackpot,
+      criticalJackpot: this._stats.criticalJackpot + bonuses.criticalJackpot,
     };
     this._updatedAt = new Date();
   }
@@ -247,19 +247,19 @@ export class UserCharacter {
   get statPoints(): number { return this._statPoints; }
   get totalStatPoints(): number { return this._totalStatPoints; }
 
-  get strength(): number { return this._stats.strength; }
-  get agility(): number { return this._stats.agility; }
-  get luck(): number { return this._stats.luck; }
-  get wisdom(): number { return this._stats.wisdom; }
-  get stamina(): number { return this._stats.stamina; }
-  get charisma(): number { return this._stats.charisma; }
+  get casinoBenefit(): number { return this._stats.casinoBenefit; }
+  get slotBenefit(): number { return this._stats.slotBenefit; }
+  get sportsBenefit(): number { return this._stats.sportsBenefit; }
+  get minigameBenefit(): number { return this._stats.minigameBenefit; }
+  get badBeatJackpot(): number { return this._stats.badBeatJackpot; }
+  get criticalJackpot(): number { return this._stats.criticalJackpot; }
 
-  get totalStrength(): number { return this._totalStats.strength; }
-  get totalAgility(): number { return this._totalStats.agility; }
-  get totalLuck(): number { return this._totalStats.luck; }
-  get totalWisdom(): number { return this._totalStats.wisdom; }
-  get totalStamina(): number { return this._totalStats.stamina; }
-  get totalCharisma(): number { return this._totalStats.charisma; }
+  get totalCasinoBenefit(): number { return this._totalStats.casinoBenefit; }
+  get totalSlotBenefit(): number { return this._totalStats.slotBenefit; }
+  get totalSportsBenefit(): number { return this._totalStats.sportsBenefit; }
+  get totalMinigameBenefit(): number { return this._totalStats.minigameBenefit; }
+  get totalBadBeatJackpot(): number { return this._totalStats.badBeatJackpot; }
+  get totalCriticalJackpot(): number { return this._totalStats.criticalJackpot; }
 
   get statResetCount(): number { return this._statResetCount; }
   get currentTitle(): string | null { return this._currentTitle; }

@@ -2,12 +2,12 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsInt, IsPositive, Max } from 'class-validator';
 
 export enum StatType {
-  STRENGTH = 'strength',
-  AGILITY = 'agility',
-  LUCK = 'luck',
-  WISDOM = 'wisdom',
-  STAMINA = 'stamina',
-  CHARISMA = 'charisma',
+  CASINO_BENEFIT = 'casinoBenefit',
+  SLOT_BENEFIT = 'slotBenefit',
+  SPORTS_BENEFIT = 'sportsBenefit',
+  MINIGAME_BENEFIT = 'minigameBenefit',
+  BAD_BEAT_JACKPOT = 'badBeatJackpot',
+  CRITICAL_JACKPOT = 'criticalJackpot',
 }
 
 export class AllocateStatPointsRequestDto {

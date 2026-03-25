@@ -57,12 +57,12 @@ export class SyncUserTotalStatsService {
 
     // 2. STAT_BOOST 유형의 효과를 스탯별 합산
     const bonuses: UserStats = {
-      strength: 0,
-      agility: 0,
-      luck: 0,
-      wisdom: 0,
-      stamina: 0,
-      charisma: 0,
+      casinoBenefit: 0,
+      slotBenefit: 0,
+      sportsBenefit: 0,
+      minigameBenefit: 0,
+      badBeatJackpot: 0,
+      criticalJackpot: 0,
     };
 
     for (const item of activeItems) {
@@ -95,12 +95,12 @@ export class SyncUserTotalStatsService {
     const targetClean = target.trim().toLowerCase();
 
     // 타겟 명칭 유연성 확보
-    if (targetClean === 'str' || targetClean === 'strength') return 'strength';
-    if (targetClean === 'dex' || targetClean === 'agility') return 'agility';
-    if (targetClean === 'luc' || targetClean === 'luck') return 'luck';
-    if (targetClean === 'int' || targetClean === 'wisdom') return 'wisdom';
-    if (targetClean === 'vit' || targetClean === 'stamina') return 'stamina';
-    if (targetClean === 'cha' || targetClean === 'charisma') return 'charisma';
+    if (targetClean === 'casino' || targetClean === 'casinobenefit') return 'casinoBenefit';
+    if (targetClean === 'slot' || targetClean === 'slotbenefit') return 'slotBenefit';
+    if (targetClean === 'sports' || targetClean === 'sportsbenefit') return 'sportsBenefit';
+    if (targetClean === 'minigame' || targetClean === 'minigamebenefit') return 'minigameBenefit';
+    if (targetClean === 'badbeat' || targetClean === 'badbeatjackpot') return 'badBeatJackpot';
+    if (targetClean === 'critical' || targetClean === 'criticaljackpot') return 'criticalJackpot';
 
     return null;
   }

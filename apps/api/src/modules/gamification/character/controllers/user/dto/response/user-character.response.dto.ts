@@ -4,12 +4,12 @@ import { ApiProperty } from '@nestjs/swagger';
  * 캐릭터 핵심 능력치 응답 DTO
  */
 export class UserCharacterStatsResponseDto {
-  @ApiProperty({ example: 10, description: 'Strength / 근력' }) strength: number;
-  @ApiProperty({ example: 10, description: 'Agility / 민첩' }) agility: number;
-  @ApiProperty({ example: 10, description: 'Luck / 행운' }) luck: number;
-  @ApiProperty({ example: 10, description: 'Wisdom / 지혜' }) wisdom: number;
-  @ApiProperty({ example: 10, description: 'Stamina / 체력' }) stamina: number;
-  @ApiProperty({ example: 10, description: 'Charisma / 매력' }) charisma: number;
+  @ApiProperty({ example: 10, description: 'Casino Benefit / 카지노 혜택' }) casinoBenefit: number;
+  @ApiProperty({ example: 10, description: 'Slot Benefit / 슬롯 혜택' }) slotBenefit: number;
+  @ApiProperty({ example: 10, description: 'Sports Benefit / 스포츠 혜택' }) sportsBenefit: number;
+  @ApiProperty({ example: 10, description: 'Minigame Benefit / 미니게임 혜택' }) minigameBenefit: number;
+  @ApiProperty({ example: 10, description: 'Bad Beat Jackpot / 배드빗 잭팟' }) badBeatJackpot: number;
+  @ApiProperty({ example: 10, description: 'Critical Jackpot / 크리티컬 잭팟' }) criticalJackpot: number;
 }
 
 /**

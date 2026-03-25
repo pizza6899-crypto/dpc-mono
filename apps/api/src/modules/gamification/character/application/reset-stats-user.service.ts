@@ -83,12 +83,12 @@ export class ResetStatsUserService {
     const beforeLevel = character.level;
     const beforeStatPoints = character.statPoints;
     const beforeStats = {
-      strength: character.strength,
-      agility: character.agility,
-      luck: character.luck,
-      wisdom: character.wisdom,
-      stamina: character.stamina,
-      charisma: character.charisma,
+      casinoBenefit: character.casinoBenefit,
+      slotBenefit: character.slotBenefit,
+      sportsBenefit: character.sportsBenefit,
+      minigameBenefit: character.minigameBenefit,
+      badBeatJackpot: character.badBeatJackpot,
+      criticalJackpot: character.criticalJackpot,
     };
 
     // 4. 자산 차감 시도 (월렛 서비스 호출)

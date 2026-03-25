@@ -96,9 +96,9 @@ enum ItemType {
   ARTIFACT // 특별한 효과를 지닌 수집/장착형 유물
 }
 
-/// [Gamification] 아이템 및 스켓이 가질 수 있는 효과 유형
+/// [Gamification] 아이템 및 스탯이 가질 수 있는 효과 유형
 enum EffectType {
-  STAT_BOOST // 특정 스텟(STR, LUC 등) 수치 가산
+  STAT_BOOST // 특정 스탯(카지노 혜택, 잭팟 등) 수치 가산
 }
 
 /// [Gamification] 레벨 구간별 UI용 티어 분류 (순수 시각적 보상용)

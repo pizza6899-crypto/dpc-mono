@@ -113,12 +113,12 @@ export interface CharacterStatsResetMetadata extends BaseMetadata {
   currency: string;
   reason?: string;
   previousStats: {
-    strength: number;
-    agility: number;
-    luck: number;
-    wisdom: number;
-    stamina: number;
-    charisma: number;
+    casinoBenefit: number;
+    slotBenefit: number;
+    sportsBenefit: number;
+    minigameBenefit: number;
+    badBeatJackpot: number;
+    criticalJackpot: number;
   };
 }
 
