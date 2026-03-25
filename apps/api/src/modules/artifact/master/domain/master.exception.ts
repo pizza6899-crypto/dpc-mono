@@ -102,3 +102,17 @@ export class NoArtifactsForGradeException extends ArtifactMasterException {
     this.name = 'NoArtifactsForGradeException';
   }
 }
+
+/**
+ * [Artifact] 뽑기 확률 설정을 찾을 수 없는 경우
+ */
+export class ArtifactDrawConfigNotFoundException extends ArtifactMasterException {
+  constructor(grade: string) {
+    super(
+      `Artifact draw configuration for grade ${grade} not found.`,
+      MessageCode.ARTIFACT_DRAW_CONFIG_NOT_FOUND,
+      HttpStatus.NOT_FOUND,
+    );
+    this.name = 'ArtifactDrawConfigNotFoundException';
+  }
+}

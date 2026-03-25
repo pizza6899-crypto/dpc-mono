@@ -3,7 +3,9 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { ArtifactDrawConfigRepositoryPort } from '../ports/artifact-draw-config.repository.port';
 import { UpdateDrawConfigsAdminRequestDto } from '../controllers/admin/dto/request/update-draw-configs-admin.request.dto';
 import { ArtifactDrawConfig } from '../domain/artifact-draw-config.entity';
-import { InvalidArtifactDrawProbabilityException } from '../domain/master.exception';
+import {
+  ArtifactDrawConfigNotFoundException,
+} from '../domain/master.exception';
 import { ArtifactDrawConfigPolicy } from '../domain/artifact-draw-config.policy';
 import { AdvisoryLockService } from 'src/common/concurrency/advisory-lock.service';
 import { LockNamespace } from 'src/common/concurrency/concurrency.constants';
@@ -43,7 +45,7 @@ export class UpdateDrawConfigsAdminService {
     for (const itemDto of dto.configs) {
       const config = configMap.get(itemDto.grade);
       if (!config) {
-        throw new InvalidArtifactDrawProbabilityException(`Grade ${itemDto.grade} configuration not found.`);
+        throw new ArtifactDrawConfigNotFoundException(itemDto.grade);
       }
 
       config.updateProbability(itemDto.probability);
