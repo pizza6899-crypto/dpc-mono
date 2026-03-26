@@ -5,7 +5,6 @@ import { ArtifactPolicyRepositoryPort } from './ports/artifact-policy.repository
 import { PrismaArtifactPolicyRepository } from './infrastructure/prisma-artifact-policy.repository';
 import { ArtifactDrawConfigRepositoryPort } from './ports/artifact-draw-config.repository.port';
 import { PrismaArtifactDrawConfigRepository } from './infrastructure/prisma-artifact-draw-config.repository';
-import { PickRandomArtifactService } from './application/pick-random-artifact.service';
 import { ArtifactCatalogMapper } from './infrastructure/artifact-catalog.mapper';
 import { ArtifactPolicyMapper } from './infrastructure/artifact-policy.mapper';
 import { ArtifactDrawConfigMapper } from './infrastructure/artifact-draw-config.mapper';
@@ -52,7 +51,6 @@ import { UpdateArtifactCatalogAdminService } from './application/update-artifact
       provide: ArtifactDrawConfigRepositoryPort,
       useClass: PrismaArtifactDrawConfigRepository,
     },
-    PickRandomArtifactService,
     GetDrawConfigAdminService,
     GetArtifactPolicyAdminService,
     UpdateArtifactDrawPricesAdminService,
@@ -66,7 +64,6 @@ import { UpdateArtifactCatalogAdminService } from './application/update-artifact
     ArtifactCatalogRepositoryPort,
     ArtifactPolicyRepositoryPort,
     ArtifactDrawConfigRepositoryPort,
-    PickRandomArtifactService,
     GetDrawConfigAdminService,
     GetArtifactPolicyAdminService,
     UpdateArtifactDrawPricesAdminService,
