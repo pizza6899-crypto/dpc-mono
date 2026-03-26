@@ -8,12 +8,15 @@ import { ArtifactBonusPoolLogRepositoryPort } from './ports/artifact-bonus-pool-
 import { PrismaArtifactBonusPoolLogRepository } from './infrastructure/prisma-artifact-bonus-pool-log.repository';
 import { UserArtifactLogMapper } from './infrastructure/user-artifact-log.mapper';
 import { ArtifactBonusPoolLogMapper } from './infrastructure/artifact-bonus-pool-log.mapper';
+import { ArtifactAuditAdminController } from './controllers/admin/artifact-audit-admin.controller';
 
 @Module({
   imports: [
     SnowflakeModule,
   ],
-  controllers: [],
+  controllers: [
+    ArtifactAuditAdminController,
+  ],
   providers: [
     CreateUserArtifactLogService,
     CreateArtifactBonusPoolLogService,
