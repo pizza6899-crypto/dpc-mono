@@ -1,6 +1,6 @@
 /**
  * ╔═══════════════════════════════════════════════════════════════════════════════╗
- * ║  ⚠️⚠️⚠️  CRITICAL WARNING - DO NOT MODIFY THIS FILE  ⚠️⚠️⚠️                      ║
+ * ║  ⚠️⚠️⚠️  CRITICAL WARNING - DO NOT MODIFY THIS FILE  ⚠️═══════════════════════════║
  * ╠═══════════════════════════════════════════════════════════════════════════════╣
  * ║  이 파일에는 Sqids 인코딩/디코딩의 핵심 상수와 알고리즘이 포함되어 있습니다.     ║
  * ║  아래 항목들을 수정하면 기존에 생성된 모든 Sqid를 복구할 수 없습니다:           ║
@@ -21,41 +21,44 @@ export const SQIDS_DELIMITER = '_';
 
 /**
  * Sqids 인코딩 시 사용할 접두사 라벨 정의
- *
- * 새 prefix 추가는 안전하지만, 기존 prefix 값 변경은 금지됩니다.
+ * 
+ * [표준 규칙 (3-letter Code Rule)]
+ * 1. 모든 접두사는 명확한 식별을 위해 '고정 3글자' 축약어를 사용합니다.
+ * 2. 마스터 데이터: 일반적인 명사 축약 (e.g. usr, ter, art, fil)
+ * 3. 유저 종속 데이터: 유저(u) + 속성 약어(2자) (e.g. uti, uar, upr)
+ * 4. 내역/트랜잭션: 도메인 약어(3자) (e.g. wtx, ctx, uth)
  */
 export const SqidsPrefix = {
-  USER: 'u',
-  DEPOSIT: 'd',
-  WITHDRAWAL: 'w',
+  USER: 'usr',
+  DEPOSIT: 'dep',
+  WITHDRAWAL: 'wit',
   WALLET_TRANSACTION: 'wtx',
-  AFFILIATE_CODE: 'ac',
-  USER_TIER: 'ut',
-  TIER: 't',
-  CASINO_GAME: 'cg',
-  WAGERING_REQUIREMENT: 'wr',
-  PROMOTION: 'p',
-  USER_PROMOTION: 'up',
+  AFFILIATE_CODE: 'afc',
+  USER_TIER: 'uti',
+  TIER: 'ter',
+  CASINO_GAME: 'csg',
+  WAGERING_REQUIREMENT: 'wgr',
+  PROMOTION: 'prm',
+  USER_PROMOTION: 'upr',
   WITHDRAW_BANK_CONFIG: 'wbc',
   WITHDRAW_CRYPTO_CONFIG: 'wcc',
   COMMISSION: 'com',
-  COM_WALLET: 'cw',
+  COM_WALLET: 'cow',
   COM_TRANSACTION: 'ctx',
-  INBOX: 'i',
-  FILE: 'f',
+  INBOX: 'ibx',
+  FILE: 'fil',
   USER_TIER_HISTORY: 'uth',
-  TIER_REWARD: 'tr',
-  REWARD: 'r',
-  CHAT_ROOM: 'cr',
-  CHAT_TICKET: 'ct',
-  CHAT_MESSAGE: 'cm',
-  SUPPORT_ROOM: 'sr',
+  TIER_REWARD: 'trw',
+  REWARD: 'rwd',
+  CHAT_ROOM: 'chr',
+  CHAT_TICKET: 'cht',
+  CHAT_MESSAGE: 'chm',
+  SUPPORT_ROOM: 'spr',
   ITEM: 'itm',
   INVENTORY: 'inv',
-  ARTIFACT_CATALOG: 'artc',  // 유물 도감 (Master Data)
-  USER_ARTIFACT: 'uart',     // 유저 소유 유물 인스턴스
+  ARTIFACT_CATALOG: 'atc',
+  USER_ARTIFACT: 'uar',
 } as const;
-
 
 export type SqidsPrefixType = (typeof SqidsPrefix)[keyof typeof SqidsPrefix];
 

@@ -38,6 +38,12 @@ description: NestJS 컨트롤러 구현 표준 (API 디자인, Sqids 난독화, 
 *   **Request (Param)**: `this.sqidsService.decode(id, SqidsPrefix.PREFIX)`
 *   **중요**: `SqidsPrefix` 상수를 확인하여 도메인에 맞는 접두어를 사용하십시오.
 
+#### **Sqids 접두사 명명 표준 (3-letter Rule)**
+모든 접두사는 아래 규칙에 따라 **고정 3글자**로 정의합니다:
+1.  **핵심 마스터**: 주요 엔티티의 명사 축약 (예: `usr`, `ter`, `art`, `fil`)
+2.  **유저 종속 데이터**: `u` + 속성 약어 2자 (예: `uti` = User Tier, `uar` = User Artifact, `upr` = User Promotion)
+3.  **내역 및 복합어**: 도메인 약어 3자 (예: `wtx` = Wallet Transaction, `trw` = Tier Reward)
+
 ### 3. 감사 로그 (AuditLog)
 상태 변경(생성, 수정, 삭제)이 발생하는 모든 엔드포인트에 적용합니다.
 *   **Decorator**: `@AuditLog({ type, category, action, extractMetadata })`
