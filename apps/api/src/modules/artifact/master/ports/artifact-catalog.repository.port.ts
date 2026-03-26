@@ -26,4 +26,5 @@ export abstract class ArtifactCatalogRepositoryPort {
   abstract findManyAndCount(
     options: ArtifactCatalogSearchOptions,
   ): Promise<{ items: ArtifactCatalog[]; total: number }>;
+  abstract save(artifact: ArtifactCatalog): Promise<ArtifactCatalog>;
 }

@@ -41,6 +41,20 @@ export class ArtifactCatalogNotFoundException extends ArtifactMasterException {
 }
 
 /**
+ * [Artifact] 유물 코드가 이미 존재하는 경우 (중복 등록 방지)
+ */
+export class ArtifactCatalogAlreadyExistsException extends ArtifactMasterException {
+  constructor(code: string) {
+    super(
+      `Artifact catalog with code '${code}' already exists.`,
+      MessageCode.ARTIFACT_CODE_DUPLICATED,
+      HttpStatus.CONFLICT,
+    );
+    this.name = 'ArtifactCatalogAlreadyExistsException';
+  }
+}
+
+/**
  * [Artifact] 뽑기 확률 설정 오류 (Base/Legacy)
  */
 export class InvalidArtifactDrawProbabilityException extends ArtifactMasterException {

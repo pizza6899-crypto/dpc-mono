@@ -85,6 +85,12 @@ export class FilePolicy {
       uploadRoles: ['USER', 'ADMIN', 'SUPER_ADMIN'],
       maxSize: 10 * 1024 * 1024, // 10MB
     },
+    [FileUsageType.ARTIFACT_CATALOG_IMAGE]: {
+      folder: 'artifact/catalog',
+      accessType: FileAccessType.PUBLIC,
+      uploadRoles: ['ADMIN', 'SUPER_ADMIN'],
+      maxSize: 5 * 1024 * 1024, // 5MB
+    },
   };
 
   static getConfig(usageType: FileUsageType): FilePolicyConfig {

@@ -111,4 +111,43 @@ export class PrismaArtifactCatalogRepository implements ArtifactCatalogRepositor
       total,
     };
   }
+
+  async save(artifact: ArtifactCatalog): Promise<ArtifactCatalog> {
+    const stats = artifact.statsSummary;
+    const data = {
+      code: artifact.code,
+      grade: artifact.grade,
+      drawWeight: artifact.drawWeight,
+      imageUrl: artifact.imageUrl,
+      casinoBenefit: stats.casinoBenefit,
+      slotBenefit: stats.slotBenefit,
+      sportsBenefit: stats.sportsBenefit,
+      minigameBenefit: stats.minigameBenefit,
+      badBeatBenefit: stats.badBeatBenefit,
+      criticalBenefit: stats.criticalBenefit,
+      updatedAt: new Date(),
+    };
+
+    let record;
+    if (artifact.id === 0n) {
+      // 신규 생성 (ID 지정 안 함 -> DB에서 자동 생성)
+      record = await this.tx.artifactCatalog.create({
+        data: {
+          ...data,
+          createdAt: artifact.createdAt,
+        },
+      });
+    } else {
+      // 수정
+      record = await this.tx.artifactCatalog.update({
+        where: { id: artifact.id },
+        data,
+      });
+    }
+
+    // 데이터가 변경되었으므로 캐시 무효화
+    await this.cacheService.del(CACHE_CONFIG.ARTIFACT.CATALOG_LIST);
+
+    return this.mapper.toEntity(record);
+  }
 }

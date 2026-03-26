@@ -52,6 +52,7 @@ export const SqidsPrefix = {
   SUPPORT_ROOM: 'sr',
   ITEM: 'itm',
   INVENTORY: 'inv',
+  ARTIFACT: 'art',
   // 필요에 따라 추가 (기존 값 수정 금지)
 } as const;
 

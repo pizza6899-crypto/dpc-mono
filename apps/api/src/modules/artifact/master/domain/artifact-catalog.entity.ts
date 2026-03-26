@@ -62,10 +62,42 @@ export class ArtifactCatalog {
   }
 
   /**
+   * 신규 유물 데이터 생성
+   */
+  static create(data: {
+    code: string;
+    grade: ArtifactGrade;
+    drawWeight: number;
+    stats: ArtifactStatsSummary;
+    imageUrl?: string | null;
+  }): ArtifactCatalog {
+    const now = new Date();
+    // 신규 생성 시 ID는 0n으로 초기화 (DB 저장 시 생성됨)
+    return new ArtifactCatalog(
+      0n,
+      data.code,
+      data.grade,
+      data.drawWeight,
+      data.stats,
+      data.imageUrl ?? null,
+      now,
+      now,
+    );
+  }
+
+  /**
    * 모든 능력치 합산 정보 제공
    */
   get statsSummary(): ArtifactStatsSummary {
     return { ...this._stats };
+  }
+
+  /**
+   * 이미지 URL 업데이트
+   */
+  updateImageUrl(url: string | null): void {
+    this._imageUrl = url;
+    this._updatedAt = new Date();
   }
 
   // --- Getters ---

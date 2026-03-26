@@ -38,6 +38,10 @@ export const FILE_USAGE_CONFIGS: Record<FileUsageType, FileUsageConfig> = {
     accessType: FileAccessType.PRIVATE,
     sqidsPrefix: SqidsPrefix.CHAT_MESSAGE,
   },
+  [FileUsageType.ARTIFACT_CATALOG_IMAGE]: {
+    accessType: FileAccessType.PUBLIC,
+    sqidsPrefix: SqidsPrefix.ARTIFACT,
+  },
 };
 
 export function getFileUsageConfig(type: FileUsageType): FileUsageConfig {
