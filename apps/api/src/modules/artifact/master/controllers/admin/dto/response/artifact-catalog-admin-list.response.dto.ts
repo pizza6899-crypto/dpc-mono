@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ArtifactGrade } from '@prisma/client';
+import { ArtifactGrade, ArtifactCatalogStatus } from '@prisma/client';
 
 /**
  * [Artifact Admin] 유물 카탈로그 목록 요약 응답 DTO
@@ -13,6 +13,9 @@ export class ArtifactCatalogAdminSummaryResponseDto {
 
   @ApiProperty({ description: 'Artifact Grade / 유물 등급', enum: ArtifactGrade, example: ArtifactGrade.COMMON })
   grade: ArtifactGrade;
+
+  @ApiProperty({ description: '유물 마스터 데이터 상태', enum: ArtifactCatalogStatus, example: ArtifactCatalogStatus.ACTIVE })
+  status: ArtifactCatalogStatus;
 
   @ApiProperty({ description: 'Draw Weight / 동일 등급 내 가중치', example: 1000 })
   drawWeight: number;

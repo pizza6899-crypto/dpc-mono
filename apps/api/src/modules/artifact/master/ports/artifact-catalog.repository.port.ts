@@ -1,5 +1,5 @@
 import { ArtifactCatalog } from '../domain/artifact-catalog.entity';
-import { ArtifactGrade } from '@prisma/client';
+import { ArtifactGrade, ArtifactCatalogStatus } from '@prisma/client';
 
 /**
  * [Artifact Admin] 유물 카탈로그 조회를 위한 검색 조건 옵션
@@ -11,10 +11,9 @@ export interface ArtifactCatalogSearchOptions {
   sortOrder?: 'asc' | 'desc';
   code?: string;
   grades?: ArtifactGrade[];
+  statuses?: ArtifactCatalogStatus[];
   minWeight?: number;
   maxWeight?: number;
-  benefitTypes?: string[];
-  minBenefitValue?: number;
   startDate?: string;
   endDate?: string;
 }

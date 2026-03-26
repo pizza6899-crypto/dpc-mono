@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { ArtifactGrade } from '@prisma/client';
+import { ArtifactGrade, ArtifactCatalogStatus } from '@prisma/client';
 import {
   IsArray,
   IsDateString,
@@ -51,6 +51,17 @@ export class GetArtifactCatalogAdminQueryDto extends createPaginationQueryDto<Ar
   @Transform(({ value }) => (Array.isArray(value) ? value : value.split(',')))
   grades?: ArtifactGrade[];
 
+  @ApiPropertyOptional({
+    description: 'Artifact Status Filter List / 유물 상태 필터 목록 (다중 선택 가능)',
+    enum: ArtifactCatalogStatus,
+    isArray: true,
+  })
+  @IsOptional()
+  @IsArray()
+  @IsEnum(ArtifactCatalogStatus, { each: true })
+  @Transform(({ value }) => (Array.isArray(value) ? value : value.split(',')))
+  statuses?: ArtifactCatalogStatus[];
+
   @ApiPropertyOptional({ description: 'Min Draw Weight / 최소 가중치' })
   @IsOptional()
   @Type(() => Number)
@@ -64,23 +75,6 @@ export class GetArtifactCatalogAdminQueryDto extends createPaginationQueryDto<Ar
   @IsInt()
   @Min(0)
   maxWeight?: number;
-
-  @ApiPropertyOptional({
-    description: 'Benefit Types Filter / 혜택 종류 필터 (다중 선택 가능)',
-    example: 'casinoBenefit,slotBenefit',
-  })
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  @Transform(({ value }) => (Array.isArray(value) ? value : value.split(',')))
-  benefitTypes?: string[];
-
-  @ApiPropertyOptional({ description: 'Min Benefit Value / 최소 혜택 수치' })
-  @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  @Min(0)
-  minBenefitValue?: number;
 
   @ApiPropertyOptional({ description: 'Start Date (ISO 8601) / 시작 날짜 (등록일 기준)' })
   @IsOptional()

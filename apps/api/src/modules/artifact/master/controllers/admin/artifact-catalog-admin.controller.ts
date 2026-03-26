@@ -189,6 +189,7 @@ export class ArtifactCatalogAdminController {
       id: item.id.toString(),
       code: item.code,
       grade: item.grade,
+      status: item.status,
       drawWeight: item.drawWeight,
       imageUrl: item.imageUrl ?? undefined,
       casinoBenefit: item.statsSummary.casinoBenefit,

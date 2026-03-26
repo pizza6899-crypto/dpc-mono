@@ -45,10 +45,9 @@ export class PrismaArtifactCatalogRepository implements ArtifactCatalogRepositor
       sortOrder = 'desc',
       code,
       grades,
+      statuses,
       minWeight,
       maxWeight,
-      benefitTypes,
-      minBenefitValue,
       startDate,
       endDate
     } = options;
@@ -59,6 +58,7 @@ export class PrismaArtifactCatalogRepository implements ArtifactCatalogRepositor
     const where: Prisma.ArtifactCatalogWhereInput = {
       ...(code && { code: { contains: code, mode: 'insensitive' as Prisma.QueryMode } }),
       ...(grades && grades.length > 0 && { grade: { in: grades } }),
+      ...(statuses && statuses.length > 0 && { status: { in: statuses } }),
       ...((minWeight !== undefined || maxWeight !== undefined) && {
         drawWeight: {
           ...(minWeight !== undefined && { gte: minWeight }),
@@ -72,13 +72,6 @@ export class PrismaArtifactCatalogRepository implements ArtifactCatalogRepositor
         }
       } : {}),
     };
-
-    // 혜택 상세 필터링 (OR 조건)
-    if (benefitTypes && benefitTypes.length > 0 && minBenefitValue !== undefined) {
-      where.OR = benefitTypes.map(type => ({
-        [type]: { gte: minBenefitValue }
-      }));
-    }
 
     const [total, records] = await Promise.all([
       this.tx.artifactCatalog.count({ where }),
