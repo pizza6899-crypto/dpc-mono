@@ -26,5 +26,4 @@ export abstract class ArtifactCatalogRepositoryPort {
     options: ArtifactCatalogSearchOptions,
   ): Promise<{ items: ArtifactCatalog[]; total: number }>;
   abstract save(artifact: ArtifactCatalog): Promise<ArtifactCatalog>;
-  abstract delete(id: bigint): Promise<void>;
 }

@@ -113,11 +113,13 @@ export class ArtifactCatalog {
     grade: ArtifactGrade;
     drawWeight: number;
     stats: ArtifactStatsSummary;
+    status: ArtifactCatalogStatus;
   }): void {
     this._code = data.code;
     this._grade = data.grade;
     this._drawWeight = data.drawWeight;
     this._stats = { ...data.stats };
+    this._status = data.status;
     this._updatedAt = new Date();
   }
 

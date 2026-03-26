@@ -7,7 +7,7 @@ import { FileUrlService } from 'src/modules/file/application/file-url.service';
 import { FileUsageType } from 'src/modules/file/domain/model/file-usage.type';
 import { ArtifactCatalogAlreadyExistsException, ArtifactCatalogNotFoundException } from '../domain/master.exception';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
-import { ArtifactGrade } from '@prisma/client';
+import { ArtifactGrade, ArtifactCatalogStatus } from '@prisma/client';
 
 export interface UpdateArtifactCatalogAdminCommand {
   id: bigint;
@@ -20,6 +20,7 @@ export interface UpdateArtifactCatalogAdminCommand {
   minigameBenefit?: number;
   badBeatBenefit?: number;
   criticalBenefit?: number;
+  status?: ArtifactCatalogStatus;
   fileId?: string;
 }
 
@@ -60,6 +61,7 @@ export class UpdateArtifactCatalogAdminService {
       code: finalCode,
       grade: command.grade ?? artifact.grade,
       drawWeight: command.drawWeight ?? artifact.drawWeight,
+      status: command.status ?? artifact.status,
       stats: {
         casinoBenefit: command.casinoBenefit ?? artifact.statsSummary.casinoBenefit,
         slotBenefit: command.slotBenefit ?? artifact.statsSummary.slotBenefit,

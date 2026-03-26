@@ -125,13 +125,4 @@ export class PrismaArtifactCatalogRepository implements ArtifactCatalogRepositor
 
     return this.mapper.toEntity(record);
   }
-
-  async delete(id: bigint): Promise<void> {
-    // 논리 삭제 (Soft Delete) 처리
-    const artifact = await this.findById(id);
-    if (artifact) {
-      artifact.deactivate();
-      await this.save(artifact);
-    }
-  }
 }

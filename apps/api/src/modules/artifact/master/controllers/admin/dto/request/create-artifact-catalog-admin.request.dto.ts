@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ArtifactGrade } from '@prisma/client';
+import { ArtifactGrade, ArtifactCatalogStatus } from '@prisma/client';
 import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
 
 /**
@@ -57,6 +57,15 @@ export class CreateArtifactCatalogAdminRequestDto {
   @Min(0)
   @IsOptional()
   criticalBenefit?: number;
+
+  @ApiProperty({
+    description: 'Artifact Catalog Status / 유물 도감 데이터 상태',
+    enum: ArtifactCatalogStatus,
+    default: ArtifactCatalogStatus.ACTIVE,
+  })
+  @IsEnum(ArtifactCatalogStatus)
+  @IsOptional()
+  status?: ArtifactCatalogStatus;
 
   @ApiProperty({ description: 'Ref File ID / 유물 이미지 파일 ID (Service에서 URL로 변환)' })
   @IsString()

@@ -17,7 +17,6 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { GetArtifactCatalogAdminService } from '../../application/get-artifact-catalog-admin.service';
 import { CreateArtifactCatalogAdminService } from '../../application/create-artifact-catalog-admin.service';
 import { UpdateArtifactCatalogAdminService } from '../../application/update-artifact-catalog-admin.service';
-import { DeleteArtifactCatalogAdminService } from '../../application/delete-artifact-catalog-admin.service';
 import { ArtifactCatalogAdminSummaryResponseDto } from './dto/response/artifact-catalog-admin-list.response.dto';
 import { ArtifactCatalogAdminDetailResponseDto } from './dto/response/artifact-catalog-admin-detail.response.dto';
 import { CreateArtifactCatalogAdminRequestDto } from './dto/request/create-artifact-catalog-admin.request.dto';
@@ -26,6 +25,7 @@ import { ApiPaginatedResponse } from 'src/common/http/decorators/api-response.de
 import { PaginatedData } from 'src/common/http/types/pagination.types';
 import { GetArtifactCatalogAdminQueryDto } from './dto/request/get-artifact-catalog-admin-query.dto';
 import { ArtifactCatalog } from '../../domain/artifact-catalog.entity';
+import { ParseBigIntPipe } from '../../../../../common/http/pipes/parse-bigint.pipe';
 
 @ApiTags('Admin Artifact Catalog')
 @Controller('admin/artifact/catalog')
@@ -35,7 +35,6 @@ export class ArtifactCatalogAdminController {
     private readonly getService: GetArtifactCatalogAdminService,
     private readonly createService: CreateArtifactCatalogAdminService,
     private readonly updateService: UpdateArtifactCatalogAdminService,
-    private readonly deleteService: DeleteArtifactCatalogAdminService,
   ) { }
 
   /**
@@ -50,13 +49,12 @@ export class ArtifactCatalogAdminController {
   async getCatalogs(
     @Query() query: GetArtifactCatalogAdminQueryDto,
   ): Promise<PaginatedData<ArtifactCatalogAdminSummaryResponseDto>> {
-    const { data, total, page, limit } = await this.getService.getCatalogs(query);
-
+    const result = await this.getService.getCatalogs(query);
     return {
-      total,
-      page,
-      limit,
-      data: data.map(item => this.mapToSummaryDto(item))
+      data: result.data.map((item) => this.mapToSummaryDto(item)),
+      total: result.total,
+      page: result.page,
+      limit: result.limit,
     };
   }
 
@@ -102,19 +100,20 @@ export class ArtifactCatalogAdminController {
     type: ArtifactCatalogAdminDetailResponseDto
   })
   async createCatalog(
-    @Body() dto: CreateArtifactCatalogAdminRequestDto,
+    @Body() body: CreateArtifactCatalogAdminRequestDto,
   ): Promise<ArtifactCatalogAdminDetailResponseDto> {
     const item = await this.createService.execute({
-      code: dto.code.trim().toUpperCase(),
-      grade: dto.grade,
-      drawWeight: dto.drawWeight ?? 1000,
-      casinoBenefit: dto.casinoBenefit ?? 0,
-      slotBenefit: dto.slotBenefit ?? 0,
-      sportsBenefit: dto.sportsBenefit ?? 0,
-      minigameBenefit: dto.minigameBenefit ?? 0,
-      badBeatBenefit: dto.badBeatBenefit ?? 0,
-      criticalBenefit: dto.criticalBenefit ?? 0,
-      fileId: dto.fileId,
+      ...body,
+      // 가중치 및 혜택 값들 기본값 처리
+      drawWeight: body.drawWeight ?? 1000,
+      casinoBenefit: body.casinoBenefit ?? 0,
+      slotBenefit: body.slotBenefit ?? 0,
+      sportsBenefit: body.sportsBenefit ?? 0,
+      minigameBenefit: body.minigameBenefit ?? 0,
+      badBeatBenefit: body.badBeatBenefit ?? 0,
+      criticalBenefit: body.criticalBenefit ?? 0,
+      // 코드 정규화
+      code: body.code.trim().toUpperCase(),
     });
     return this.mapToDetailDto(item);
   }
@@ -139,46 +138,16 @@ export class ArtifactCatalogAdminController {
     type: ArtifactCatalogAdminDetailResponseDto
   })
   async updateCatalog(
-    @Param('id') id: string,
-    @Body() dto: UpdateArtifactCatalogAdminRequestDto,
+    @Param('id', ParseBigIntPipe) id: bigint,
+    @Body() body: UpdateArtifactCatalogAdminRequestDto,
   ): Promise<ArtifactCatalogAdminDetailResponseDto> {
     const item = await this.updateService.execute({
-      id: BigInt(id),
-      code: dto.code?.trim().toUpperCase(),
-      grade: dto.grade,
-      drawWeight: dto.drawWeight,
-      casinoBenefit: dto.casinoBenefit,
-      slotBenefit: dto.slotBenefit,
-      sportsBenefit: dto.sportsBenefit,
-      minigameBenefit: dto.minigameBenefit,
-      badBeatBenefit: dto.badBeatBenefit,
-      criticalBenefit: dto.criticalBenefit,
-      fileId: dto.fileId,
+      id,
+      ...body,
+      // 코드 수정 시 정규화
+      code: body.code?.trim().toUpperCase(),
     });
     return this.mapToDetailDto(item);
-  }
-
-  /**
-   * [DELETE] 유물 삭제
-   */
-  @Delete(':id')
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    category: 'ARTIFACT',
-    action: 'DELETE_ARTIFACT_CATALOG',
-    extractMetadata: (req) => ({ id: req.params.id }),
-  })
-  @ApiOperation({
-    summary: 'Delete artifact catalog / 유물 삭제',
-    description: 'Permanently delete an artifact catalog. / 유물 카탈로그를 영구 삭제합니다.'
-  })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Successfully deleted / 유물 삭제 성공'
-  })
-  async deleteCatalog(@Param('id') id: string): Promise<{ success: boolean }> {
-    await this.deleteService.execute(BigInt(id));
-    return { success: true };
   }
 
   /**
