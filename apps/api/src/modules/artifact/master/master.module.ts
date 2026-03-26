@@ -9,6 +9,7 @@ import { PickRandomArtifactService } from './application/pick-random-artifact.se
 import { ArtifactCatalogMapper } from './infrastructure/artifact-catalog.mapper';
 import { ArtifactPolicyMapper } from './infrastructure/artifact-policy.mapper';
 import { ArtifactDrawConfigMapper } from './infrastructure/artifact-draw-config.mapper';
+import { ArtifactCatalogAdminController } from './controllers/admin/artifact-catalog-admin.controller';
 import { ArtifactDrawConfigAdminController } from './controllers/admin/artifact-draw-config-admin.controller';
 import { ArtifactPolicyAdminController } from './controllers/admin/artifact-policy-admin.controller';
 import { GetDrawConfigAdminService } from './application/get-draw-config-admin.service';
@@ -19,10 +20,12 @@ import { UpdateDrawConfigsAdminService } from './application/update-draw-configs
 import { ArtifactDrawConfigPolicy } from './domain/artifact-draw-config.policy';
 import { ArtifactPolicyPolicy } from './domain/artifact-policy.policy';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { GetArtifactCatalogAdminService } from './application/get-artifact-catalog-admin.service';
 
 @Module({
   imports: [ConcurrencyModule],
   controllers: [
+    ArtifactCatalogAdminController,
     ArtifactDrawConfigAdminController,
     ArtifactPolicyAdminController,
   ],
@@ -50,6 +53,7 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
     UpdateArtifactDrawPricesAdminService,
     UpdateArtifactSynthesisConfigsAdminService,
     UpdateDrawConfigsAdminService,
+    GetArtifactCatalogAdminService,
   ],
   exports: [
     ArtifactCatalogRepositoryPort,
@@ -61,6 +65,7 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
     UpdateArtifactDrawPricesAdminService,
     UpdateArtifactSynthesisConfigsAdminService,
     UpdateDrawConfigsAdminService,
+    GetArtifactCatalogAdminService,
   ],
 })
 export class ArtifactMasterModule { }

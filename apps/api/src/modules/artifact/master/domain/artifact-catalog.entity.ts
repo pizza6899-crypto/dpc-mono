@@ -5,8 +5,8 @@ export interface ArtifactStatsSummary {
   slotBenefit: number;
   sportsBenefit: number;
   minigameBenefit: number;
-  badBeatJackpot: number;
-  criticalJackpot: number;
+  badBeatBenefit: number;
+  criticalBenefit: number;
 }
 
 /**
@@ -36,8 +36,8 @@ export class ArtifactCatalog {
     slotBenefit: number;
     sportsBenefit: number;
     minigameBenefit: number;
-    badBeatJackpot: number;
-    criticalJackpot: number;
+    badBeatBenefit: number;
+    criticalBenefit: number;
     imageUrl: string | null;
     createdAt: Date;
     updatedAt: Date;
@@ -52,8 +52,8 @@ export class ArtifactCatalog {
         slotBenefit: data.slotBenefit,
         sportsBenefit: data.sportsBenefit,
         minigameBenefit: data.minigameBenefit,
-        badBeatJackpot: data.badBeatJackpot,
-        criticalJackpot: data.criticalJackpot,
+        badBeatBenefit: data.badBeatBenefit,
+        criticalBenefit: data.criticalBenefit,
       },
       data.imageUrl,
       data.createdAt,

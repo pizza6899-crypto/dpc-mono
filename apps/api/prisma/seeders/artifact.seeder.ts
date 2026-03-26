@@ -23,7 +23,7 @@ export async function seedArtifactCatalog(prisma: PrismaClient) {
   for (const config of drawConfigs) {
     await prisma.artifactDrawConfig.upsert({
       where: { grade: config.grade },
-      update: { probability: config.probability },
+      update: {},
       create: { grade: config.grade, probability: config.probability },
     });
   }
@@ -83,11 +83,7 @@ export async function seedArtifactCatalog(prisma: PrismaClient) {
 
   await prisma.artifactPolicy.upsert({
     where: { id: 1n },
-    update: {
-      drawPrices: drawPrices as any,
-      synthesisConfigs: synthesisConfigs as any,
-      slotUnlockConfigs: slotUnlockConfigs as any,
-    },
+    update: {},
     create: {
       id: 1n,
       drawPrices: drawPrices as any,
@@ -133,7 +129,7 @@ export async function seedArtifactCatalog(prisma: PrismaClient) {
       slotBenefit: 15,
       sportsBenefit: 15,
       minigameBenefit: 15,
-      badBeatJackpot: 5,
+      badBeatBenefit: 5,
       imageUrl: 'https://placehold.co/200x200?text=Golden+Sceptre',
     },
     {
@@ -144,8 +140,8 @@ export async function seedArtifactCatalog(prisma: PrismaClient) {
       slotBenefit: 30,
       sportsBenefit: 30,
       minigameBenefit: 30,
-      badBeatJackpot: 15,
-      criticalJackpot: 10,
+      badBeatBenefit: 15,
+      criticalBenefit: 10,
       imageUrl: 'https://placehold.co/200x200?text=Dragon+Heart',
     },
     {
@@ -156,8 +152,8 @@ export async function seedArtifactCatalog(prisma: PrismaClient) {
       slotBenefit: 70,
       sportsBenefit: 70,
       minigameBenefit: 70,
-      badBeatJackpot: 50,
-      criticalJackpot: 50,
+      badBeatBenefit: 50,
+      criticalBenefit: 50,
       imageUrl: 'https://placehold.co/200x200?text=Eternal+Flame',
     },
     {
@@ -168,8 +164,8 @@ export async function seedArtifactCatalog(prisma: PrismaClient) {
       slotBenefit: 150,
       sportsBenefit: 150,
       minigameBenefit: 150,
-      badBeatJackpot: 100,
-      criticalJackpot: 100,
+      badBeatBenefit: 100,
+      criticalBenefit: 100,
       imageUrl: 'https://placehold.co/200x200?text=Cosmic+Void',
     }
   ];
@@ -177,17 +173,7 @@ export async function seedArtifactCatalog(prisma: PrismaClient) {
   for (const artifact of artifacts) {
     await prisma.artifactCatalog.upsert({
       where: { code: artifact.code },
-      update: {
-        grade: artifact.grade,
-        drawWeight: artifact.drawWeight,
-        casinoBenefit: artifact.casinoBenefit ?? 0,
-        slotBenefit: artifact.slotBenefit ?? 0,
-        sportsBenefit: artifact.sportsBenefit ?? 0,
-        minigameBenefit: artifact.minigameBenefit ?? 0,
-        badBeatJackpot: artifact.badBeatJackpot ?? 0,
-        criticalJackpot: artifact.criticalJackpot ?? 0,
-        imageUrl: artifact.imageUrl,
-      },
+      update: {},
       create: {
         code: artifact.code,
         grade: artifact.grade,
@@ -196,8 +182,8 @@ export async function seedArtifactCatalog(prisma: PrismaClient) {
         slotBenefit: artifact.slotBenefit ?? 0,
         sportsBenefit: artifact.sportsBenefit ?? 0,
         minigameBenefit: artifact.minigameBenefit ?? 0,
-        badBeatJackpot: artifact.badBeatJackpot ?? 0,
-        criticalJackpot: artifact.criticalJackpot ?? 0,
+        badBeatBenefit: (artifact as any).badBeatBenefit ?? 0,
+        criticalBenefit: (artifact as any).criticalBenefit ?? 0,
         imageUrl: artifact.imageUrl,
       }
     });

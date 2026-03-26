@@ -11,6 +11,7 @@ import {
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { createPaginationQueryDto } from 'src/common/http/types/pagination.types';
+import { ArtifactCatalogSearchOptions } from '../../../../ports/artifact-catalog.repository.port';
 
 /**
  * [Artifact Admin] 유물 카탈로그 목록 조회 쿼리 DTO
@@ -31,7 +32,7 @@ export class GetArtifactCatalogAdminQueryDto extends createPaginationQueryDto<Ar
     defaultSortOrder: 'desc',
   },
   ['id', 'code', 'grade', 'drawWeight', 'createdAt', 'updatedAt'],
-) {
+) implements ArtifactCatalogSearchOptions {
   @ApiPropertyOptional({
     description: 'Artifact Codes (Partial Match, Comma separated) / 유물 고유 코드 검색 (부분 일치, 콤마 구분 가능)',
   })

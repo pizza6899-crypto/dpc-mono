@@ -3,9 +3,10 @@ import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from '../../../../infrastructure/prisma/prisma.module';
 import { CacheService } from '../../../../common/cache/cache.service';
 import { CACHE_CONFIG } from '../../../../common/cache/cache.constants';
-import { ArtifactCatalogRepositoryPort } from '../ports/artifact-catalog.repository.port';
+import { ArtifactCatalogRepositoryPort, ArtifactCatalogSearchOptions } from '../ports/artifact-catalog.repository.port';
 import { ArtifactCatalog } from '../domain/artifact-catalog.entity';
 import { ArtifactCatalogMapper } from './artifact-catalog.mapper';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class PrismaArtifactCatalogRepository implements ArtifactCatalogRepositoryPort {
@@ -44,7 +45,70 @@ export class PrismaArtifactCatalogRepository implements ArtifactCatalogRepositor
   }
 
   async findById(id: bigint): Promise<ArtifactCatalog | null> {
-    const all = await this.findAll();
-    return all.find((a) => a.id === id) || null;
+    const item = await this.tx.artifactCatalog.findUnique({
+      where: { id: id },
+    });
+    return item ? this.mapper.toEntity(item) : null;
+  }
+
+  async findManyAndCount(
+    options: ArtifactCatalogSearchOptions,
+  ): Promise<{ items: ArtifactCatalog[]; total: number }> {
+    const { 
+      page = 1, 
+      limit = 20, 
+      sortBy = 'createdAt', 
+      sortOrder = 'desc',
+      code,
+      grades,
+      minWeight,
+      maxWeight,
+      benefitTypes,
+      minBenefitValue,
+      startDate,
+      endDate 
+    } = options;
+
+    const skip = (page - 1) * limit;
+
+    // 동적 검색 조건 구성
+    const where: Prisma.ArtifactCatalogWhereInput = {
+      ...(code && { code: { contains: code, mode: 'insensitive' as Prisma.QueryMode } }),
+      ...(grades && grades.length > 0 && { grade: { in: grades } }),
+      ...( (minWeight !== undefined || maxWeight !== undefined) && {
+        drawWeight: {
+          ...(minWeight !== undefined && { gte: minWeight }),
+          ...(maxWeight !== undefined && { lte: maxWeight }),
+        }
+      }),
+      ...(startDate || endDate ? {
+        createdAt: {
+          ...(startDate && { gte: new Date(startDate) }),
+          ...(endDate && { lte: new Date(endDate) }),
+        }
+      } : {}),
+    };
+
+    // 혜택 상세 필터링 (OR 조건)
+    if (benefitTypes && benefitTypes.length > 0 && minBenefitValue !== undefined) {
+      where.OR = benefitTypes.map(type => ({
+        [type]: { gte: minBenefitValue }
+      }));
+    }
+
+    const [total, records] = await Promise.all([
+      this.tx.artifactCatalog.count({ where }),
+      this.tx.artifactCatalog.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { [sortBy]: sortOrder },
+      }),
+    ]);
+
+    return {
+      items: records.map(r => this.mapper.toEntity(r)),
+      total,
+    };
   }
 }

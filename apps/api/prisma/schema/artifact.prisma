@@ -56,8 +56,8 @@ model ArtifactCatalog {
   slotBenefit     Int           @default(0) @map("slot_benefit")
   sportsBenefit   Int           @default(0) @map("sports_benefit")
   minigameBenefit Int           @default(0) @map("minigame_benefit")
-  badBeatJackpot  Int           @default(0) @map("bad_beat_jackpot")
-  criticalJackpot Int           @default(0) @map("critical_jackpot")
+  badBeatBenefit  Int           @default(0) @map("bad_beat_benefit")
+  criticalBenefit Int           @default(0) @map("critical_benefit")
   imageUrl        String?       @map("image_url")
 
   createdAt DateTime @default(now()) @map("created_at")

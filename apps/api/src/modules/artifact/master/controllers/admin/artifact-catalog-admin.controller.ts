@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, HttpStatus } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserRoleType } from '@prisma/client';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
+import { GetArtifactCatalogAdminService } from '../../application/get-artifact-catalog-admin.service';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 import { ArtifactCatalogAdminSummaryResponseDto } from './dto/response/artifact-catalog-admin-list.response.dto';
@@ -12,84 +13,84 @@ import { ArtifactGrade } from '@prisma/client';
 import { ApiPaginatedResponse } from 'src/common/http/decorators/api-response.decorator';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
 import { GetArtifactCatalogAdminQueryDto } from './dto/request/get-artifact-catalog-admin-query.dto';
+import { ArtifactCatalog } from '../../domain/artifact-catalog.entity';
 
 @ApiTags('Admin Artifact Catalog')
 @Controller('admin/artifact/catalog')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
 export class ArtifactCatalogAdminController {
+  constructor(private readonly getService: GetArtifactCatalogAdminService) { }
 
   /**
    * [GET] 유물 카탈로그 목록 조회
    */
   @Get()
   @ApiOperation({
-    summary: 'Get artifact catalogs list / 유물 카탈로그 목록 조회',
-    description: 'Retrieve a paginated list of all artifact catalogs. Supports filtering by grade.\n전체 유물 카탈로그 목록을 페이지네이션하여 조회합니다. 등급별 필터링을 지원합니다.'
+    summary: 'Get Artifact Catalog List / 유물 카탈로그 목록 조회',
+    description: 'Retrieve a list of artifact catalogs with filtering and pagination. / 필터링 및 페이지네이션을 지원하는 유물 카탈로그 목록 조회'
   })
-  @ApiPaginatedResponse(ArtifactCatalogAdminSummaryResponseDto, {
-    description: 'Successfully retrieved paginated list / 페이지네이션 목록 조회 성공'
-  })
+  @ApiPaginatedResponse(ArtifactCatalogAdminSummaryResponseDto)
   async getCatalogs(
     @Query() query: GetArtifactCatalogAdminQueryDto,
   ): Promise<PaginatedData<ArtifactCatalogAdminSummaryResponseDto>> {
-    const { page = 1, limit = 20, grades } = query;
-    const grade = grades?.[0]; // Use the first grade from the filter for mock data
+    const { data, total, page, limit } = await this.getService.getCatalogs(query);
 
-    // Mock response with pagination structure
     return {
-      data: [
-        {
-          id: '1',
-          code: 'ART_001',
-          grade: grade || ArtifactGrade.COMMON,
-          drawWeight: 1000,
-          casinoBenefit: 10,
-          slotBenefit: 0,
-          sportsBenefit: 0,
-          minigameBenefit: 0,
-          badBeatBenefit: 0,
-          criticalBenefit: 0,
-          imageUrl: undefined,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        }
-      ],
-      total: 1,
+      total,
       page,
       limit,
+      data: data.map(item => this.mapToSummaryDto(item))
     };
   }
 
   /**
-   * [GET] 유물 상세 조회
+   * [GET] 유물 카탈로그 단건 조회
    */
   @Get(':id')
   @ApiOperation({
-    summary: 'Get artifact catalog detail / 유물 상세 조회',
-    description: 'Retrieve detailed information of a specific artifact catalog by its ID.\nID를 기반으로 특정 유물의 상세 정보를 조회합니다.'
+    summary: 'Get Artifact Catalog Detail / 유물 카탈로그 단건 상세 조회',
+    description: 'Retrieve detailed information of a specific artifact catalog. / 특정 유물 카탈로그의 상세 정보를 조회합니다.'
   })
   @ApiResponse({
-    status: 200,
-    description: 'Successfully retrieved detail / 상세 정보 조회 성공',
+    status: HttpStatus.OK,
+    description: 'Success / 조회 성공',
     type: ArtifactCatalogAdminDetailResponseDto
   })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Not Found / 해당 유물을 찾을 수 없음'
+  })
   async getCatalog(@Param('id') id: string): Promise<ArtifactCatalogAdminDetailResponseDto> {
-    // Mock response
+    const item = await this.getService.getCatalog(id);
+    return this.mapToDetailDto(item);
+  }
+
+  /**
+   * Entity를 Summary DTO로 변환 (인라인 매핑 메서드)
+   */
+  private mapToSummaryDto(item: ArtifactCatalog): ArtifactCatalogAdminSummaryResponseDto {
     return {
-      id,
-      code: 'ART_001',
-      grade: ArtifactGrade.COMMON,
-      drawWeight: 1000,
-      casinoBenefit: 10,
-      slotBenefit: 0,
-      sportsBenefit: 0,
-      minigameBenefit: 0,
-      badBeatBenefit: 0,
-      criticalBenefit: 0,
-      imageUrl: undefined,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      id: item.id.toString(),
+      code: item.code,
+      grade: item.grade,
+      drawWeight: item.drawWeight,
+      imageUrl: item.imageUrl ?? undefined,
+      casinoBenefit: item.statsSummary.casinoBenefit,
+      slotBenefit: item.statsSummary.slotBenefit,
+      sportsBenefit: item.statsSummary.sportsBenefit,
+      minigameBenefit: item.statsSummary.minigameBenefit,
+      badBeatBenefit: item.statsSummary.badBeatBenefit,
+      criticalBenefit: item.statsSummary.criticalBenefit,
+      createdAt: item.createdAt,
+      updatedAt: item.updatedAt,
     };
+  }
+
+  /**
+   * Entity를 Detail DTO로 변환
+   */
+  private mapToDetailDto(item: ArtifactCatalog): ArtifactCatalogAdminDetailResponseDto {
+    return this.mapToSummaryDto(item);
   }
 
   /**
