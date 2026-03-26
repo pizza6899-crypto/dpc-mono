@@ -40,7 +40,7 @@ export const FILE_USAGE_CONFIGS: Record<FileUsageType, FileUsageConfig> = {
   },
   [FileUsageType.ARTIFACT_CATALOG_IMAGE]: {
     accessType: FileAccessType.PUBLIC,
-    sqidsPrefix: SqidsPrefix.ARTIFACT,
+    sqidsPrefix: SqidsPrefix.ARTIFACT_CATALOG,
   },
 };
 

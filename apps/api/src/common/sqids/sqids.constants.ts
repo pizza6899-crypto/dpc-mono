@@ -52,8 +52,8 @@ export const SqidsPrefix = {
   SUPPORT_ROOM: 'sr',
   ITEM: 'itm',
   INVENTORY: 'inv',
-  ARTIFACT: 'art',
-  // 필요에 따라 추가 (기존 값 수정 금지)
+  ARTIFACT_CATALOG: 'artc',  // 유물 도감 (Master Data)
+  USER_ARTIFACT: 'uart',     // 유저 소유 유물 인스턴스
 } as const;
 
 
