@@ -54,10 +54,10 @@ export class PrismaArtifactCatalogRepository implements ArtifactCatalogRepositor
   async findManyAndCount(
     options: ArtifactCatalogSearchOptions,
   ): Promise<{ items: ArtifactCatalog[]; total: number }> {
-    const { 
-      page = 1, 
-      limit = 20, 
-      sortBy = 'createdAt', 
+    const {
+      page = 1,
+      limit = 20,
+      sortBy = 'createdAt',
       sortOrder = 'desc',
       code,
       grades,
@@ -66,7 +66,7 @@ export class PrismaArtifactCatalogRepository implements ArtifactCatalogRepositor
       benefitTypes,
       minBenefitValue,
       startDate,
-      endDate 
+      endDate
     } = options;
 
     const skip = (page - 1) * limit;
@@ -75,7 +75,7 @@ export class PrismaArtifactCatalogRepository implements ArtifactCatalogRepositor
     const where: Prisma.ArtifactCatalogWhereInput = {
       ...(code && { code: { contains: code, mode: 'insensitive' as Prisma.QueryMode } }),
       ...(grades && grades.length > 0 && { grade: { in: grades } }),
-      ...( (minWeight !== undefined || maxWeight !== undefined) && {
+      ...((minWeight !== undefined || maxWeight !== undefined) && {
         drawWeight: {
           ...(minWeight !== undefined && { gte: minWeight }),
           ...(maxWeight !== undefined && { lte: maxWeight }),

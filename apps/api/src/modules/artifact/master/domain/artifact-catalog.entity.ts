@@ -100,6 +100,22 @@ export class ArtifactCatalog {
     this._updatedAt = new Date();
   }
 
+  /**
+   * 유물 카탈로그 정보 업데이트
+   */
+  update(data: {
+    code: string;
+    grade: ArtifactGrade;
+    drawWeight: number;
+    stats: ArtifactStatsSummary;
+  }): void {
+    this._code = data.code;
+    this._grade = data.grade;
+    this._drawWeight = data.drawWeight;
+    this._stats = { ...data.stats };
+    this._updatedAt = new Date();
+  }
+
   // --- Getters ---
   get id(): bigint { return this._id; }
   get code(): string { return this._code; }

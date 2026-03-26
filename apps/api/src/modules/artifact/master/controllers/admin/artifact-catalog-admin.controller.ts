@@ -16,6 +16,7 @@ import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 import { GetArtifactCatalogAdminService } from '../../application/get-artifact-catalog-admin.service';
 import { CreateArtifactCatalogAdminService } from '../../application/create-artifact-catalog-admin.service';
+import { UpdateArtifactCatalogAdminService } from '../../application/update-artifact-catalog-admin.service';
 import { ArtifactCatalogAdminSummaryResponseDto } from './dto/response/artifact-catalog-admin-list.response.dto';
 import { ArtifactCatalogAdminDetailResponseDto } from './dto/response/artifact-catalog-admin-detail.response.dto';
 import { CreateArtifactCatalogAdminRequestDto } from './dto/request/create-artifact-catalog-admin.request.dto';
@@ -32,6 +33,7 @@ export class ArtifactCatalogAdminController {
   constructor(
     private readonly getService: GetArtifactCatalogAdminService,
     private readonly createService: CreateArtifactCatalogAdminService,
+    private readonly updateService: UpdateArtifactCatalogAdminService,
   ) { }
 
   /**
@@ -122,11 +124,11 @@ export class ArtifactCatalogAdminController {
   @AuditLog({
     type: LogType.ACTIVITY,
     category: 'ARTIFACT',
-    action: 'UPDATE_CATALOG',
+    action: 'UPDATE_ARTIFACT_CATALOG',
     extractMetadata: (req) => ({ id: req.params.id, payload: req.body }),
   })
   @ApiOperation({
-    summary: 'Update artifact catalog / 유물 정보 수정',
+    summary: 'Update artifact catalog / 유물 카탈로그 정보 수정',
     description: 'Update existing artifact catalog data. Only provided fields will be updated.\n기존 유물 카탈로그 정보를 수정합니다. 전달된 필드만 업데이트됩니다.'
   })
   @ApiResponse({
@@ -138,8 +140,20 @@ export class ArtifactCatalogAdminController {
     @Param('id') id: string,
     @Body() dto: UpdateArtifactCatalogAdminRequestDto,
   ): Promise<ArtifactCatalogAdminDetailResponseDto> {
-    // TODO: Implement update service
-    return {} as any;
+    const item = await this.updateService.execute({
+      id: BigInt(id),
+      code: dto.code?.trim().toUpperCase(),
+      grade: dto.grade,
+      drawWeight: dto.drawWeight,
+      casinoBenefit: dto.casinoBenefit,
+      slotBenefit: dto.slotBenefit,
+      sportsBenefit: dto.sportsBenefit,
+      minigameBenefit: dto.minigameBenefit,
+      badBeatBenefit: dto.badBeatBenefit,
+      criticalBenefit: dto.criticalBenefit,
+      fileId: dto.fileId,
+    });
+    return this.mapToDetailDto(item);
   }
 
   /**

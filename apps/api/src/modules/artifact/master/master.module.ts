@@ -23,6 +23,7 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { FileModule } from '../../file/file.module';
 import { GetArtifactCatalogAdminService } from './application/get-artifact-catalog-admin.service';
 import { CreateArtifactCatalogAdminService } from './application/create-artifact-catalog-admin.service';
+import { UpdateArtifactCatalogAdminService } from './application/update-artifact-catalog-admin.service';
 
 @Module({
   imports: [ConcurrencyModule, FileModule],
@@ -57,6 +58,7 @@ import { CreateArtifactCatalogAdminService } from './application/create-artifact
     UpdateDrawConfigsAdminService,
     GetArtifactCatalogAdminService,
     CreateArtifactCatalogAdminService,
+    UpdateArtifactCatalogAdminService,
   ],
   exports: [
     ArtifactCatalogRepositoryPort,

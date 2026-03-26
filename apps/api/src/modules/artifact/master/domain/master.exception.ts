@@ -32,7 +32,7 @@ export class ArtifactPolicyNotFoundException extends ArtifactMasterException {
 export class ArtifactCatalogNotFoundException extends ArtifactMasterException {
   constructor() {
     super(
-      'Artifact catalog not found.',
+      `Artifact catalog not found.`,
       MessageCode.ARTIFACT_NOT_FOUND,
       HttpStatus.NOT_FOUND,
     );
