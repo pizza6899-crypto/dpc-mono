@@ -36,4 +36,14 @@ export class PrismaUserArtifactStatusRepository implements UserArtifactStatusRep
     });
     return this.mapper.toEntity(updated);
   }
+
+  async upsert(status: UserArtifactStatus): Promise<UserArtifactStatus> {
+    const data = this.mapper.toPersistence(status);
+    const updated = await this.tx.userArtifactStatus.upsert({
+      where: { userId: status.userId },
+      create: data,
+      update: data,
+    });
+    return this.mapper.toEntity(updated);
+  }
 }

@@ -18,4 +18,9 @@ export abstract class UserArtifactStatusRepositoryPort {
    * 상태 업데이트 (횟수 증가, 슬롯 해금 등)
    */
   abstract update(status: UserArtifactStatus): Promise<UserArtifactStatus>;
+
+  /**
+   * 있으면 업데이트, 없으면 생성 (Upsert)
+   */
+  abstract upsert(status: UserArtifactStatus): Promise<UserArtifactStatus>;
 }
