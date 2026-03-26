@@ -152,11 +152,6 @@ export const CACHE_CONFIG = {
    * 유물 모듈 관련
    */
   ARTIFACT: {
-    CATALOG_LIST: {
-      key: 'artifact:catalog:all',
-      ttlSeconds: 600, // 10분 L2 캐시
-      store: CacheStore.REDIS,
-    },
     POLICY: {
       key: 'artifact:policy:global',
       ttlSeconds: 300, // 5분 L2 캐시

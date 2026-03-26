@@ -17,6 +17,7 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { GetArtifactCatalogAdminService } from '../../application/get-artifact-catalog-admin.service';
 import { CreateArtifactCatalogAdminService } from '../../application/create-artifact-catalog-admin.service';
 import { UpdateArtifactCatalogAdminService } from '../../application/update-artifact-catalog-admin.service';
+import { DeleteArtifactCatalogAdminService } from '../../application/delete-artifact-catalog-admin.service';
 import { ArtifactCatalogAdminSummaryResponseDto } from './dto/response/artifact-catalog-admin-list.response.dto';
 import { ArtifactCatalogAdminDetailResponseDto } from './dto/response/artifact-catalog-admin-detail.response.dto';
 import { CreateArtifactCatalogAdminRequestDto } from './dto/request/create-artifact-catalog-admin.request.dto';
@@ -34,6 +35,7 @@ export class ArtifactCatalogAdminController {
     private readonly getService: GetArtifactCatalogAdminService,
     private readonly createService: CreateArtifactCatalogAdminService,
     private readonly updateService: UpdateArtifactCatalogAdminService,
+    private readonly deleteService: DeleteArtifactCatalogAdminService,
   ) { }
 
   /**
@@ -163,7 +165,7 @@ export class ArtifactCatalogAdminController {
   @AuditLog({
     type: LogType.ACTIVITY,
     category: 'ARTIFACT',
-    action: 'DELETE_CATALOG',
+    action: 'DELETE_ARTIFACT_CATALOG',
     extractMetadata: (req) => ({ id: req.params.id }),
   })
   @ApiOperation({
@@ -175,7 +177,7 @@ export class ArtifactCatalogAdminController {
     description: 'Successfully deleted / 유물 삭제 성공'
   })
   async deleteCatalog(@Param('id') id: string): Promise<{ success: boolean }> {
-    // TODO: Implement delete service
+    await this.deleteService.execute(BigInt(id));
     return { success: true };
   }
 

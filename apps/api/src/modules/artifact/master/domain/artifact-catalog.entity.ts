@@ -1,4 +1,4 @@
-import { ArtifactGrade } from '@prisma/client';
+import { ArtifactGrade, ArtifactCatalogStatus } from '@prisma/client';
 
 export interface ArtifactStatsSummary {
   casinoBenefit: number;
@@ -15,10 +15,11 @@ export interface ArtifactStatsSummary {
 export class ArtifactCatalog {
   private constructor(
     private readonly _id: bigint,
-    private _code: string, // String -> string 수정
+    private _code: string,
     private _grade: ArtifactGrade,
     private _drawWeight: number,
     private _stats: ArtifactStatsSummary,
+    private _status: ArtifactCatalogStatus,
     private _imageUrl: string | null,
     private _createdAt: Date,
     private _updatedAt: Date,
@@ -32,6 +33,7 @@ export class ArtifactCatalog {
     code: string;
     grade: ArtifactGrade;
     drawWeight: number;
+    status: ArtifactCatalogStatus;
     casinoBenefit: number;
     slotBenefit: number;
     sportsBenefit: number;
@@ -55,6 +57,7 @@ export class ArtifactCatalog {
         badBeatBenefit: data.badBeatBenefit,
         criticalBenefit: data.criticalBenefit,
       },
+      data.status,
       data.imageUrl,
       data.createdAt,
       data.updatedAt,
@@ -69,6 +72,7 @@ export class ArtifactCatalog {
     grade: ArtifactGrade;
     drawWeight: number;
     stats: ArtifactStatsSummary;
+    status?: ArtifactCatalogStatus;
     imageUrl?: string | null;
   }): ArtifactCatalog {
     const now = new Date();
@@ -79,6 +83,7 @@ export class ArtifactCatalog {
       data.grade,
       data.drawWeight,
       data.stats,
+      data.status ?? ArtifactCatalogStatus.ACTIVE,
       data.imageUrl ?? null,
       now,
       now,
@@ -116,11 +121,20 @@ export class ArtifactCatalog {
     this._updatedAt = new Date();
   }
 
+  /**
+   * 유물 비활성화 (논리 삭제 대응)
+   */
+  deactivate(): void {
+    this._status = ArtifactCatalogStatus.INACTIVE;
+    this._updatedAt = new Date();
+  }
+
   // --- Getters ---
   get id(): bigint { return this._id; }
   get code(): string { return this._code; }
   get grade(): ArtifactGrade { return this._grade; }
   get drawWeight(): number { return this._drawWeight; }
+  get status(): ArtifactCatalogStatus { return this._status; }
   get imageUrl(): string | null { return this._imageUrl; }
   get createdAt(): Date { return this._createdAt; }
   get updatedAt(): Date { return this._updatedAt; }

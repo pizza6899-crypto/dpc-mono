@@ -10,6 +10,7 @@ export class ArtifactCatalogMapper {
       code: model.code,
       grade: model.grade,
       drawWeight: model.drawWeight,
+      status: model.status,
       casinoBenefit: model.casinoBenefit,
       slotBenefit: model.slotBenefit,
       sportsBenefit: model.sportsBenefit,

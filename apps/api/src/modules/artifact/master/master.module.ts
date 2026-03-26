@@ -24,6 +24,7 @@ import { FileModule } from '../../file/file.module';
 import { GetArtifactCatalogAdminService } from './application/get-artifact-catalog-admin.service';
 import { CreateArtifactCatalogAdminService } from './application/create-artifact-catalog-admin.service';
 import { UpdateArtifactCatalogAdminService } from './application/update-artifact-catalog-admin.service';
+import { DeleteArtifactCatalogAdminService } from './application/delete-artifact-catalog-admin.service';
 
 @Module({
   imports: [ConcurrencyModule, FileModule],
@@ -59,6 +60,7 @@ import { UpdateArtifactCatalogAdminService } from './application/update-artifact
     GetArtifactCatalogAdminService,
     CreateArtifactCatalogAdminService,
     UpdateArtifactCatalogAdminService,
+    DeleteArtifactCatalogAdminService,
   ],
   exports: [
     ArtifactCatalogRepositoryPort,

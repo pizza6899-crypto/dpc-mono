@@ -9,6 +9,13 @@ enum ArtifactGrade {
   UNIQUE // 유일
 }
 
+/// [Artifact] 유물 마스터 데이터 상태
+enum ArtifactCatalogStatus {
+  ACTIVE // 활성 (뽑기 노출 및 획득 가능)
+  INACTIVE // 비활성 (데이터 유지, 신규 획득 불가)
+  HIDDEN // 숨김 (시스템 점검 또는 예정 데이터)
+}
+
 /// [Artifact] 유물 뽑기(Gacha) 확률 설정
 model ArtifactDrawConfig {
   grade       ArtifactGrade @id
@@ -47,18 +54,19 @@ model ArtifactPolicy {
 
 /// [Artifact] 유물 마스터 데이터 (독립 시스템)
 model ArtifactCatalog {
-  id              BigInt        @id @default(autoincrement())
-  code            String        @unique // 유물 고유 코드
+  id              BigInt                @id @default(autoincrement())
+  code            String                @unique // 유물 고유 코드
   grade           ArtifactGrade
-  drawWeight      Int           @default(1000) @map("draw_weight") // 동일 등급 내 당첨 가중치
+  drawWeight      Int                   @default(1000) @map("draw_weight") // 동일 등급 내 당첨 가중치
   // [Stats Bonus] 장착 시 합산되는 캐릭터 능력치 (Fixed Value)
-  casinoBenefit   Int           @default(0) @map("casino_benefit")
-  slotBenefit     Int           @default(0) @map("slot_benefit")
-  sportsBenefit   Int           @default(0) @map("sports_benefit")
-  minigameBenefit Int           @default(0) @map("minigame_benefit")
-  badBeatBenefit  Int           @default(0) @map("bad_beat_benefit")
-  criticalBenefit Int           @default(0) @map("critical_benefit")
-  imageUrl        String?       @map("image_url")
+  casinoBenefit   Int                   @default(0) @map("casino_benefit")
+  slotBenefit     Int                   @default(0) @map("slot_benefit")
+  sportsBenefit   Int                   @default(0) @map("sports_benefit")
+  minigameBenefit Int                   @default(0) @map("minigame_benefit")
+  badBeatBenefit  Int                   @default(0) @map("bad_beat_benefit")
+  criticalBenefit Int                   @default(0) @map("critical_benefit")
+  status          ArtifactCatalogStatus @default(ACTIVE) @map("status")
+  imageUrl        String?               @map("image_url")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
