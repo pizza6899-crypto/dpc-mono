@@ -14,6 +14,7 @@ import { ArtifactPolicyAdminController } from './controllers/admin/artifact-poli
 import { GetDrawConfigAdminService } from './application/get-draw-config-admin.service';
 import { GetArtifactPolicyAdminService } from './application/get-artifact-policy-admin.service';
 import { UpdateArtifactDrawPricesAdminService } from './application/update-artifact-draw-prices-admin.service';
+import { UpdateArtifactSynthesisConfigsAdminService } from './application/update-artifact-synthesis-configs-admin.service';
 import { UpdateDrawConfigsAdminService } from './application/update-draw-configs-admin.service';
 import { ArtifactDrawConfigPolicy } from './domain/artifact-draw-config.policy';
 import { ArtifactPolicyPolicy } from './domain/artifact-policy.policy';
@@ -47,6 +48,7 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
     GetDrawConfigAdminService,
     GetArtifactPolicyAdminService,
     UpdateArtifactDrawPricesAdminService,
+    UpdateArtifactSynthesisConfigsAdminService,
     UpdateDrawConfigsAdminService,
   ],
   exports: [
@@ -57,6 +59,7 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
     GetDrawConfigAdminService,
     GetArtifactPolicyAdminService,
     UpdateArtifactDrawPricesAdminService,
+    UpdateArtifactSynthesisConfigsAdminService,
     UpdateDrawConfigsAdminService,
   ],
 })

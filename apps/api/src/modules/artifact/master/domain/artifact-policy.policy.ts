@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { ArtifactDrawPriceTable } from './artifact-policy.entity';
-import { ArtifactPolicyIncompleteException, InvalidArtifactDrawPriceException } from './master.exception';
+import { ArtifactDrawPriceTable, ArtifactSynthesisConfigTable } from './artifact-policy.entity';
+import { ArtifactPolicyIncompleteException, InvalidArtifactDrawPriceValueException, InvalidArtifactSynthesisGuaranteedCountException, InvalidArtifactSynthesisRequiredCountException, InvalidArtifactSynthesisSuccessRateException } from './master.exception';
 
 /**
  * [Artifact] 유물 기본 정책과 관련된 도메인 비즈니스 로직 처리 정책 (Rule)
@@ -25,10 +25,32 @@ export class ArtifactPolicyPolicy {
 
       for (const [currency, amount] of Object.entries(typePrices)) {
         if (amount === undefined || amount === null || amount < 0) {
-          throw new InvalidArtifactDrawPriceException(
-            `Invalid price for ${type} in ${currency}: ${amount}. Price must be 0 or greater.`,
-          );
+          throw new InvalidArtifactDrawPriceValueException(type, currency, amount as number);
         }
+      }
+    }
+  }
+
+  /**
+   * 합성 설정 테이블 유효성 검증
+   * - requiredCount > 0
+   * - successRate 0.0 ~ 1.0
+   * - guaranteedCount > 0 (값이 있을 경우)
+   */
+  validateSynthesisConfigs(configs: ArtifactSynthesisConfigTable): void {
+    for (const [grade, config] of Object.entries(configs)) {
+      if (!config) continue;
+
+      if (config.requiredCount <= 0) {
+        throw new InvalidArtifactSynthesisRequiredCountException(grade, config.requiredCount);
+      }
+
+      if (config.successRate < 0 || config.successRate > 1.0) {
+        throw new InvalidArtifactSynthesisSuccessRateException(grade, config.successRate);
+      }
+
+      if (config.guaranteedCount !== undefined && config.guaranteedCount <= 0) {
+        throw new InvalidArtifactSynthesisGuaranteedCountException(grade, config.guaranteedCount);
       }
     }
   }

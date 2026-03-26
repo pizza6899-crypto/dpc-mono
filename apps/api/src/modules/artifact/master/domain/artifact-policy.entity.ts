@@ -125,6 +125,17 @@ export class ArtifactPolicy {
     this._updatedAt = new Date();
   }
 
+  /**
+   * 합성 설정 테이블 부분 수정 (Deep Merge)
+   */
+  updateSynthesisConfigs(newConfigs: Partial<ArtifactSynthesisConfigTable>): void {
+    this._synthesisConfigs = {
+      ...this._synthesisConfigs,
+      ...newConfigs,
+    };
+    this._updatedAt = new Date();
+  }
+
   // --- Getters ---
   get id(): bigint { return this._id; }
   get drawPrices(): ArtifactDrawPriceTable { return { ...this._drawPrices }; }

@@ -131,9 +131,71 @@ export class InvalidArtifactPolicyException extends ArtifactMasterException {
  * [Artifact] 유물 뽑기 비용 설정 오류
  */
 export class InvalidArtifactDrawPriceException extends InvalidArtifactPolicyException {
-  constructor(reason: string) {
-    super(reason, MessageCode.ARTIFACT_INVALID_DRAW_PRICE);
+  constructor(reason: string, code: MessageCode = MessageCode.ARTIFACT_INVALID_DRAW_PRICE) {
+    super(reason, code);
     this.name = 'InvalidArtifactDrawPriceException';
+  }
+}
+
+/**
+ * [Artifact] 유물 뽑기 비용 수치 오류
+ */
+export class InvalidArtifactDrawPriceValueException extends InvalidArtifactDrawPriceException {
+  constructor(type: string, currency: string, amount: number) {
+    super(
+      `Invalid price for ${type} in ${currency}: ${amount}. Price must be 0 or greater.`,
+      MessageCode.ARTIFACT_INVALID_DRAW_PRICE_VALUE,
+    );
+    this.name = 'InvalidArtifactDrawPriceValueException';
+  }
+}
+
+/**
+ * [Artifact] 유물 합성 설정 오류
+ */
+export class InvalidArtifactSynthesisConfigException extends InvalidArtifactPolicyException {
+  constructor(reason: string, code: MessageCode = MessageCode.ARTIFACT_INVALID_SYNTHESIS_CONFIG) {
+    super(reason, code);
+    this.name = 'InvalidArtifactSynthesisConfigException';
+  }
+}
+
+/**
+ * [Artifact] 유물 합성 필요 수량 오류
+ */
+export class InvalidArtifactSynthesisRequiredCountException extends InvalidArtifactSynthesisConfigException {
+  constructor(grade: string, count: number) {
+    super(
+      `Required count for ${grade} must be greater than 0 (Received: ${count}).`,
+      MessageCode.ARTIFACT_INVALID_SYNTHESIS_REQUIRED_COUNT,
+    );
+    this.name = 'InvalidArtifactSynthesisRequiredCountException';
+  }
+}
+
+/**
+ * [Artifact] 유물 합성 확률 오류
+ */
+export class InvalidArtifactSynthesisSuccessRateException extends InvalidArtifactSynthesisConfigException {
+  constructor(grade: string, rate: number) {
+    super(
+      `Success rate for ${grade} must be between 0.0 and 1.0 (Received: ${rate}).`,
+      MessageCode.ARTIFACT_INVALID_SYNTHESIS_SUCCESS_RATE,
+    );
+    this.name = 'InvalidArtifactSynthesisSuccessRateException';
+  }
+}
+
+/**
+ * [Artifact] 유물 합성 확정 획득 횟수(Pity) 오류
+ */
+export class InvalidArtifactSynthesisGuaranteedCountException extends InvalidArtifactSynthesisConfigException {
+  constructor(grade: string, count: number) {
+    super(
+      `Guaranteed count (Pity) for ${grade} must be greater than 0 (Received: ${count}). To disable Pity, please omit the field.`,
+      MessageCode.ARTIFACT_INVALID_SYNTHESIS_GUARANTEED_COUNT,
+    );
+    this.name = 'InvalidArtifactSynthesisGuaranteedCountException';
   }
 }
 

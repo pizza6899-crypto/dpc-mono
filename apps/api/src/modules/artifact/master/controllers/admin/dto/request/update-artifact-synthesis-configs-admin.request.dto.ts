@@ -15,5 +15,5 @@ export class UpdateArtifactSynthesisConfigsAdminRequestDto {
   })
   @IsObject()
   @IsNotEmpty()
-  synthesisConfigs: ArtifactSynthesisConfigTable;
+  synthesisConfigs: Partial<ArtifactSynthesisConfigTable>;
 }
