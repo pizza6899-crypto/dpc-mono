@@ -30,5 +30,5 @@ export class DrawArtifactRequestDto {
   })
   @IsString()
   @IsOptional()
-  ticketType?: 'ALL' | ArtifactGrade;
+  ticketType: 'ALL' | ArtifactGrade = 'ALL';
 }

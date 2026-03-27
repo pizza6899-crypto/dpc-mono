@@ -82,13 +82,58 @@ model UserArtifactStatus {
   userId BigInt @id @map("user_id")
 
   /// 현재 활성화된(해금된) 유물 슬롯 개수 (기본 2개 제공)
-  activeSlotCount Int @default(2) @map("active_slot_count")
+  activeSlotCount Int @default(0) @map("active_slot_count")
 
-  /// 전체 누적 뽑기 횟수
-  totalDrawCount BigInt @default(0) @map("total_draw_count")
+  /// 전체 누적 뽑기 횟수 (합산)
+  totalDrawCount Int @default(0) @map("total_draw_count")
+
+  /// 티켓을 사용한 누적 뽑기 횟수 (전체 합산)
+  totalTicketDrawCount Int @default(0) @map("total_ticket_draw_count")
+
+  /// [Stats] 등급별 티켓 사용 누적 횟수
+  drawCountTicketAll       Int @default(0) @map("draw_count_ticket_all")
+  drawCountTicketCommon    Int @default(0) @map("draw_count_ticket_common")
+  drawCountTicketUncommon  Int @default(0) @map("draw_count_ticket_uncommon")
+  drawCountTicketRare      Int @default(0) @map("draw_count_ticket_rare")
+  drawCountTicketEpic      Int @default(0) @map("draw_count_ticket_epic")
+  drawCountTicketLegendary Int @default(0) @map("draw_count_ticket_legendary")
+  drawCountTicketMythic    Int @default(0) @map("draw_count_ticket_mythic")
+  drawCountTicketUnique    Int @default(0) @map("draw_count_ticket_unique")
+
+  /// 재화를 사용한 누적 뽑기 횟수
+  totalCurrencyDrawCount Int @default(0) @map("total_currency_draw_count")
 
   /// 전체 누적 합성 시도 횟수
-  totalSynthesisCount BigInt @default(0) @map("total_synthesis_count")
+  totalSynthesisCount Int @default(0) @map("total_synthesis_count")
+
+  /// [Stats] 등급별 합성 통계 (성공, 실패, 연속 실패 스택)
+  /// COMMON
+  synthesisCommonSuccessCount Int @default(0) @map("synthesis_common_success_count")
+  synthesisCommonFailCount    Int @default(0) @map("synthesis_common_fail_count")
+
+  /// UNCOMMON
+  synthesisUncommonSuccessCount Int @default(0) @map("synthesis_uncommon_success_count")
+  synthesisUncommonFailCount    Int @default(0) @map("synthesis_uncommon_fail_count")
+
+  /// RARE
+  synthesisRareSuccessCount Int @default(0) @map("synthesis_rare_success_count")
+  synthesisRareFailCount    Int @default(0) @map("synthesis_rare_fail_count")
+
+  /// EPIC
+  synthesisEpicSuccessCount Int @default(0) @map("synthesis_epic_success_count")
+  synthesisEpicFailCount    Int @default(0) @map("synthesis_epic_fail_count")
+
+  /// LEGENDARY
+  synthesisLegendarySuccessCount Int @default(0) @map("synthesis_legendary_success_count")
+  synthesisLegendaryFailCount    Int @default(0) @map("synthesis_legendary_fail_count")
+
+  /// MYTHIC
+  synthesisMythicSuccessCount Int @default(0) @map("synthesis_mythic_success_count")
+  synthesisMythicFailCount    Int @default(0) @map("synthesis_mythic_fail_count")
+
+  /// UNIQUE
+  synthesisUniqueSuccessCount Int @default(0) @map("synthesis_unique_success_count")
+  synthesisUniqueFailCount    Int @default(0) @map("synthesis_unique_fail_count")
 
   /// [Artifact] 보유 중인 일반 뽑기권 수량 (등급 제한 없음)
   ticketAllCount Int @default(0) @map("ticket_all_count")
@@ -106,27 +151,6 @@ model UserArtifactStatus {
   user      User     @relation(fields: [userId], references: [id])
 
   @@map("user_artifact_statuses")
-}
-
-/// [Artifact] 유저별 등급별 유물 획득 및 합성 통계 (Pity/History)
-model UserArtifactPity {
-  userId BigInt        @map("user_id")
-  grade  ArtifactGrade @map("grade")
-
-  /// [Synthesis] 해당 등급으로의 합성 시도 중 연속 실패 횟수 (성공 시 0으로 초기화)
-  synthesisFailureCount Int @default(0) @map("synthesis_failure_count")
-
-  /// [Synthesis] 해당 등급으로의 합성 시도 중 누적 실패 횟수 (초기화 없음)
-  synthesisTotalFailureCount Int @default(0) @map("synthesis_total_failure_count")
-
-  /// [Draw] 해당 등급 유물을 뽑기로 획득한 누적 횟수 (초기화 없음)
-  drawTotalObtainCount Int @default(0) @map("draw_total_obtain_count")
-
-  updatedAt DateTime @updatedAt @map("updated_at")
-  user      User     @relation(fields: [userId], references: [id])
-
-  @@id([userId, grade])
-  @@map("user_artifact_pity")
 }
 
 /// [Artifact] 유물 소유 내역
