@@ -340,5 +340,6 @@ export enum MessageCode {
 
     // --- 사용자 지능형 평가 (User Intelligence) ---
     USER_INTELLIGENCE_POLICY_NOT_FOUND = 'USER_INTELLIGENCE_POLICY_NOT_FOUND', // 활성 지능형 평가 정책을 찾을 수 없을 때
+    USER_INTELLIGENCE_SCORE_NOT_FOUND = 'USER_INTELLIGENCE_SCORE_NOT_FOUND', // 사용자의 지능형 평가 점수를 찾을 수 없을 때
 }
 

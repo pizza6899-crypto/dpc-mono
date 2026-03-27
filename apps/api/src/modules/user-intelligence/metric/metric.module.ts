@@ -6,13 +6,15 @@ import {
   CASINO_METRIC_PORT,
   USER_ACTIVITY_METRIC_PORT,
   USER_INTELLIGENCE_SCORE_PORT,
+  USER_METRIC_REPOSITORY_PORT,
   WALLET_METRIC_PORT,
 } from './ports';
 import { PolicyModule } from '../policy/policy.module';
 import { HistoryModule } from '../history/history.module';
+import { ScoringModule } from '../scoring/scoring.module';
 
 @Module({
-  imports: [PolicyModule, HistoryModule],
+  imports: [PolicyModule, HistoryModule, ScoringModule],
   providers: [
     UserIntelligenceCalculatorService,
     RefreshUserIntelligenceService,
@@ -30,6 +32,10 @@ import { HistoryModule } from '../history/history.module';
     },
     {
       provide: USER_INTELLIGENCE_SCORE_PORT,
+      useClass: PrismaMetricRepository,
+    },
+    {
+      provide: USER_METRIC_REPOSITORY_PORT,
       useClass: PrismaMetricRepository,
     },
   ],

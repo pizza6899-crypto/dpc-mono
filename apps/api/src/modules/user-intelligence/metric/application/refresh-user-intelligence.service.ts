@@ -3,18 +3,20 @@ import { UserIntelligenceMath as MathUtils } from '../../common/math/user-intell
 import {
   CASINO_METRIC_PORT,
   USER_ACTIVITY_METRIC_PORT,
-  USER_INTELLIGENCE_SCORE_PORT,
   WALLET_METRIC_PORT,
 } from '../ports';
 import type {
   ICasinoMetricPort,
   IUserActivityMetricPort,
-  IUserIntelligenceScorePort,
   IWalletMetricPort,
 } from '../ports';
 import { GetActivePolicyService } from '../../policy/application/get-active-policy.service';
 import { RecordScoreHistoryService } from '../../history/application/record-score-history.service';
+import { UpdateUserScoreService } from '../../scoring/application/update-user-score.service';
+import { GetUserScoreService } from '../../scoring/application/get-user-score.service';
 import { UserIntelligenceCalculatorService } from './user-intelligence-calculator.service';
+import { USER_METRIC_REPOSITORY_PORT } from '../ports';
+import type { IUserMetricRepositoryPort } from '../ports';
 
 /**
  * [User Intelligence] 특정 유저의 지능형 점수 및 지표를 강제 갱신하는 서비스 (Command)
@@ -30,10 +32,12 @@ export class RefreshUserIntelligenceService {
     private readonly casinoPort: ICasinoMetricPort,
     @Inject(WALLET_METRIC_PORT)
     private readonly walletPort: IWalletMetricPort,
-    @Inject(USER_INTELLIGENCE_SCORE_PORT)
-    private readonly scorePort: IUserIntelligenceScorePort,
+    @Inject(USER_METRIC_REPOSITORY_PORT)
+    private readonly metricRepo: IUserMetricRepositoryPort,
     private readonly calculator: UserIntelligenceCalculatorService,
     private readonly getActivePolicyService: GetActivePolicyService,
+    private readonly getScoreService: GetUserScoreService,
+    private readonly updateScoreService: UpdateUserScoreService,
     private readonly recordScoreHistoryService: RecordScoreHistoryService,
   ) { }
 
@@ -75,7 +79,6 @@ export class RefreshUserIntelligenceService {
         netLossCV,
         policy.valueIndex,
       );
-
       const valScoreDepositAmount = this.calculator.calculateDepositAmountScore(
         d30.totalUsd.toNumber(),
         d180.totalUsd.toNumber(),
@@ -84,21 +87,13 @@ export class RefreshUserIntelligenceService {
         totalD.count,
         policy.depositAmount,
       );
-
       const valScoreDepositCount = this.calculator.calculateDepositCountScore(
-        d30.count,
-        d90.count,
-        intervalCV,
-        policy.depositCount,
+        d30.count, d90.count, intervalCV, policy.depositCount,
       );
-
       const valScoreRolling = this.calculator.calculateRollingScore(
-        rolling.excessBettingFactor,
-        rolling.excessBettingFactor,
-        rolling.bonusBettingRatio * 100,
-        policy.rolling,
+        rolling.excessBettingFactor, rolling.excessBettingFactor,
+        rolling.bonusBettingRatio * 100, policy.rolling,
       );
-
       const valScoreBehavior = this.calculator.calculateBehaviorScore(
         {
           activeDays: activity.activeDays,
@@ -113,47 +108,32 @@ export class RefreshUserIntelligenceService {
         },
         policy.behavior,
       );
-
       const riskPromotion = this.calculator.calculateRiskPromotionScore(
-        {
-          bonusDepositRatio: 20,
-          rollingCoverageThreshold: 50,
-          extractionRate: 0.1,
-        },
+        { bonusDepositRatio: 20, rollingCoverageThreshold: 50, extractionRate: 0.1 },
         policy.riskPromotion,
       );
-
       const riskTechnical = this.calculator.calculateRiskTechnicalScore(
-        {
-          ipOverlap: false,
-          fingerprintOverlap: false,
-          inconsistency: false,
-          fingerprintChanges30d: 0,
-        },
+        { ipOverlap: false, fingerprintOverlap: false, inconsistency: false, fingerprintChanges30d: 0 },
         policy.riskTechnical,
       );
-
       const riskBehavior = this.calculator.calculateRiskBehaviorScore(
-        {
-          lowValueReferralCount: 0,
-          maliciousPostCount: 0,
-        },
+        { lowValueReferralCount: 0, maliciousPostCount: 0 },
         policy.riskBehavior,
       );
 
       // 최종 합산
       const valueTotal = valScoreIndex + valScoreDepositAmount + valScoreDepositCount + valScoreRolling + valScoreBehavior;
       const riskTotal = riskPromotion + riskTechnical + riskBehavior;
-
       const baseValue = 1000;
       const finalValuation = MathUtils.clamp(baseValue + valueTotal, 1000, 2000);
       const finalTotalScore = finalValuation - riskTotal;
 
-      // 4. 기존 점수 조회 및 저장
-      const currentScore = await this.scorePort.findCurrentScore(userId);
+      // 4. 기존 점수 조회
+      const currentScore = await this.getScoreService.findOrNull(userId);
 
+      // 5. 점수 저장 (ScoringModule 위임) + 지표 원천 저장 (MetricRepo 위임)
       await Promise.all([
-        this.scorePort.upsertScore({
+        this.updateScoreService.execute({
           userId,
           totalScore: finalTotalScore,
           valueScore: finalValuation,
@@ -168,7 +148,7 @@ export class RefreshUserIntelligenceService {
           scoreRiskBehavior: riskBehavior,
           details: { netLossCV, depositCV, gatheredAt: new Date().toISOString() },
         }),
-        this.scorePort.upsertMetric({
+        this.metricRepo.upsertMetric({
           userId,
           totalDepositUsd: totalD.totalUsd,
           recent30dDepositUsd: d30.totalUsd,
@@ -182,7 +162,7 @@ export class RefreshUserIntelligenceService {
         }),
       ]);
 
-      // 5. 이력 기록 (HistoryModule 위임)
+      // 6. 이력 기록 (HistoryModule 위임)
       await this.recordScoreHistoryService.execute({
         userId,
         prevTotalScore: currentScore?.totalScore ?? 1000,
