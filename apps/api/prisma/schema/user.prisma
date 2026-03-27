@@ -166,14 +166,14 @@ model User {
   globalHourlyStats UserGlobalHourlyStats[]
 
   // [Gamification]
-  character         UserCharacter?
-  characterLogs     UserCharacterLog[] @relation("UserLogs")
+  character     UserCharacter?
+  characterLogs UserCharacterLog[] @relation("UserLogs")
 
   // [Artifact]
-  userArtifacts              UserArtifact[]
-  userArtifactLogs           UserArtifactLog[]
-  userArtifactStatus   UserArtifactStatus?
-  userArtifactPities   UserArtifactPity[]
+  userArtifacts      UserArtifact[]
+  userArtifactLogs   UserArtifactLog[]
+  userArtifactStatus UserArtifactStatus?
+  userArtifactPities UserArtifactPity[]
 
   @@map("users")
 }
@@ -197,6 +197,7 @@ enum OAuthProvider {
 }
 
 enum UserRoleType {
+  GUEST
   USER
   AGENT
   ADMIN
