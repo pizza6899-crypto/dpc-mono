@@ -189,18 +189,6 @@ export async function seedArtifactCatalog(prisma: PrismaClient) {
     });
   }
 
-  // 4. 보너스 풀 초기 설정 (Singleton ID: 1)
-  await prisma.artifactBonusPool.upsert({
-    where: { id: 1n },
-    update: {},
-    create: {
-      id: 1n,
-      currentBalanceUsd: 0,
-      totalAccumulatedUsd: 0,
-      totalDistributedUsd: 0,
-    },
-  });
-
   console.log('✅ Artifact seeder: Catalog, policies, and bonus pool seeding completed.');
 }
 
