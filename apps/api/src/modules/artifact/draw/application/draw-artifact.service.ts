@@ -27,9 +27,7 @@ export class DrawArtifactService {
         id: `mock_sqid_${i}`,
         artifactId: '101',
         grade: ArtifactGrade.COMMON,
-        isPity: false,
       })),
-      currentPityCount: 15, // Mock pity stack after draw
     };
   }
 }

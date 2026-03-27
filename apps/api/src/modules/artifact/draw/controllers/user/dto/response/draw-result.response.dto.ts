@@ -23,12 +23,6 @@ export class DrawResultItemResponseDto {
     example: ArtifactGrade.RARE,
   })
   grade: ArtifactGrade;
-
-  @ApiProperty({
-    description: 'Whether pity was applied / 천장(Pity) 적용 여부',
-    example: false,
-  })
-  isPity: boolean;
 }
 
 /**
@@ -40,10 +34,4 @@ export class DrawResultResponseDto {
     type: [DrawResultItemResponseDto],
   })
   items: DrawResultItemResponseDto[];
-
-  @ApiProperty({
-    description: 'Current Pity Stack Count (after draw) / 현재 누적 천장 스택',
-    example: 25,
-  })
-  currentPityCount: number;
 }
