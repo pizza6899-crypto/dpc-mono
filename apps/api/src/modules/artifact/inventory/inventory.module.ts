@@ -1,11 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ArtifactMasterModule } from '../master/master.module';
+import { ArtifactStatusModule } from '../status/status.module'; // Status 모듈 리소스 참조
+import { UserArtifactInventoryController } from './controllers/user/user-artifact-inventory.controller';
 
 @Module({
   imports: [
-    ArtifactMasterModule, // 마스터 정책 및 도감 데이터 참조를 위해 임포트
+    ArtifactMasterModule,
+    ArtifactStatusModule,
   ],
-  controllers: [],
+  controllers: [
+    UserArtifactInventoryController,
+  ],
   providers: [],
   exports: [],
 })
