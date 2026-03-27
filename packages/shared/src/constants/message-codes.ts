@@ -337,5 +337,8 @@ export enum MessageCode {
     ARTIFACT_INVALID_SYNTHESIS_GUARANTEED_COUNT = 'ARTIFACT_INVALID_SYNTHESIS_GUARANTEED_COUNT', // 유물 합성 확정 개수(Pity)가 유효하지 않을 때
     ARTIFACT_STATUS_NOT_FOUND = 'ARTIFACT_STATUS_NOT_FOUND', // 유물 상태 정보를 찾을 수 없을 때
     ARTIFACT_CODE_DUPLICATED = 'ARTIFACT_CODE_DUPLICATED', // 이미 존재하는 유물 코드일 때
+
+    // --- 사용자 지능형 평가 (User Intelligence) ---
+    USER_INTELLIGENCE_POLICY_NOT_FOUND = 'USER_INTELLIGENCE_POLICY_NOT_FOUND', // 활성 지능형 평가 정책을 찾을 수 없을 때
 }
 

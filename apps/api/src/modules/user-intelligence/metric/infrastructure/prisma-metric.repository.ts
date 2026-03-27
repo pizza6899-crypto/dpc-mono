@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { InjectTransaction } from '@nestjs-cls/transactional';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from '../../../../infrastructure/prisma/prisma.service';
+import type { PrismaTransaction } from '../../../../infrastructure/prisma/prisma.module';
 import {
   ICasinoMetricPort,
   IUserActivityMetricPort,
@@ -16,14 +17,17 @@ export class PrismaMetricRepository
     IWalletMetricPort,
     IUserIntelligenceScorePort
 {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    @InjectTransaction()
+    private readonly tx: PrismaTransaction,
+  ) {}
 
   // --- IUserActivityMetricPort ---
 
   async getSessionStats(userId: bigint, days: number = 30): Promise<{ activeDays: number; avgMinutes: number }> {
     const since = this.getDateAgo(days);
 
-    const sessions = await this.prisma.userSession.findMany({
+    const sessions = await this.tx.userSession.findMany({
       where: {
         userId,
         createdAt: { gte: since },
@@ -57,7 +61,7 @@ export class PrismaMetricRepository
     missionCompletionCount: number;
     missionCompletionRate: number;
   }> {
-    const chatCount = await this.prisma.chatMessage.count({ where: { senderId: userId } });
+    const chatCount = await this.tx.chatMessage.count({ where: { senderId: userId } });
     
     // 타 테이블(게시글 등)은 현재 스키마에 명시되지 않았으므로 0 처리
     return {
@@ -70,7 +74,7 @@ export class PrismaMetricRepository
   }
 
   async getDailySessionMinutes(userId: bigint, days: number): Promise<number[]> {
-    const dailyMetrics = await this.prisma.userIntelligenceDailyMetric.findMany({
+    const dailyMetrics = await this.tx.userIntelligenceDailyMetric.findMany({
       where: { userId, date: { gte: this.getDateAgo(days) } },
       orderBy: { date: 'asc' },
       select: { sessionMinutes: true },
@@ -86,7 +90,7 @@ export class PrismaMetricRepository
       where.startedAt = { gte: this.getDateAgo(days) };
     }
 
-    const aggregate = await this.prisma.casinoGameRound.aggregate({
+    const aggregate = await this.tx.casinoGameRound.aggregate({
       where,
       _sum: { tierContributionUsd: true },
     });
@@ -104,7 +108,7 @@ export class PrismaMetricRepository
   }
 
   async getDailyRollingAmounts(userId: bigint, days: number): Promise<Prisma.Decimal[]> {
-    const dailyMetrics = await this.prisma.userIntelligenceDailyMetric.findMany({
+    const dailyMetrics = await this.tx.userIntelligenceDailyMetric.findMany({
       where: { userId, date: { gte: this.getDateAgo(days) } },
       orderBy: { date: 'asc' },
       select: { rollingAmount: true },
@@ -120,7 +124,7 @@ export class PrismaMetricRepository
       where.createdAt = { gte: this.getDateAgo(days) };
     }
 
-    const aggregate = await this.prisma.depositDetail.aggregate({
+    const aggregate = await this.tx.depositDetail.aggregate({
       where,
       _sum: { actuallyPaid: true },
       _count: { _all: true },
@@ -135,12 +139,12 @@ export class PrismaMetricRepository
   async getNetLossStats(userId: bigint, days?: number): Promise<Prisma.Decimal> {
     const dateGte = days ? this.getDateAgo(days) : undefined;
 
-    const depositSum = await this.prisma.depositDetail.aggregate({
+    const depositSum = await this.tx.depositDetail.aggregate({
       where: { userId, status: 'COMPLETED', createdAt: { gte: dateGte } },
       _sum: { actuallyPaid: true },
     });
 
-    const withdrawalSum = await this.prisma.withdrawalDetail.aggregate({
+    const withdrawalSum = await this.tx.withdrawalDetail.aggregate({
       where: { userId, status: 'COMPLETED', createdAt: { gte: dateGte } },
       _sum: { netAmount: true },
     });
@@ -152,7 +156,7 @@ export class PrismaMetricRepository
   }
 
   async getDailyWalletMetrics(userId: bigint, days: number): Promise<{ depositAmount: Prisma.Decimal; netLossAmount: Prisma.Decimal }[]> {
-    const dailyMetrics = await this.prisma.userIntelligenceDailyMetric.findMany({
+    const dailyMetrics = await this.tx.userIntelligenceDailyMetric.findMany({
       where: { userId, date: { gte: this.getDateAgo(days) } },
       orderBy: { date: 'asc' },
       select: { depositAmount: true, netLossAmount: true },
@@ -163,7 +167,7 @@ export class PrismaMetricRepository
   // --- IUserIntelligenceScorePort ---
 
   async upsertScore(data: Prisma.UserIntelligenceScoreUncheckedCreateInput) {
-    return this.prisma.userIntelligenceScore.upsert({
+    return this.tx.userIntelligenceScore.upsert({
       where: { userId: data.userId },
       create: data,
       update: data,
@@ -171,7 +175,7 @@ export class PrismaMetricRepository
   }
 
   async upsertMetric(data: Prisma.UserIntelligenceMetricUncheckedCreateInput) {
-    return this.prisma.userIntelligenceMetric.upsert({
+    return this.tx.userIntelligenceMetric.upsert({
       where: { userId: data.userId },
       create: data,
       update: data,
@@ -179,11 +183,11 @@ export class PrismaMetricRepository
   }
 
   async addHistory(data: Prisma.UserIntelligenceHistoryUncheckedCreateInput) {
-    return this.prisma.userIntelligenceHistory.create({ data });
+    return this.tx.userIntelligenceHistory.create({ data });
   }
 
   async findCurrentScore(userId: bigint) {
-    return this.prisma.userIntelligenceScore.findUnique({ where: { userId } });
+    return this.tx.userIntelligenceScore.findUnique({ where: { userId } });
   }
 
   // --- Helpers ---

@@ -14,6 +14,7 @@ import { seedPromotionCampaigns } from './seeders/promotion-campaign.seeder';
 import { seedCouponConfig } from './seeders/coupon-config.seeder';
 import { seedCharacterConfig, seedLevelDefinitions } from './seeders/character.seeder';
 import { seedArtifactCatalog } from './seeders/artifact.seeder';
+import { seedUserIntelligencePolicy } from './seeders/user-intelligence-policy.seeder';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
 
@@ -92,6 +93,10 @@ async function main() {
     await seedLevelDefinitions(prisma);
     await seedArtifactCatalog(prisma);
     console.log('✅ 게이미피케이션 및 유물 카탈로그 시딩이 완료되었습니다.');
+
+    // 사용자 지능형 평가 정책 시딩 처리
+    await seedUserIntelligencePolicy(prisma);
+    console.log('✅ 사용자 지능형 평가 정책 시딩이 완료되었습니다.');
 
   } catch (error) {
     console.error('❌ 시딩 중 오류가 발생했습니다:', error);

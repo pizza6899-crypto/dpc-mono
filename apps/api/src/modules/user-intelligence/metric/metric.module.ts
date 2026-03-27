@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { UserIntelligenceCalculatorService } from './application/user-intelligence-calculator.service';
-import { UserIntelligenceMetricService } from './application/user-intelligence-metric.service';
+import { RefreshUserIntelligenceService } from './application/refresh-user-intelligence.service';
 import { PrismaMetricRepository } from './infrastructure/prisma-metric.repository';
 import {
   CASINO_METRIC_PORT,
@@ -8,11 +8,13 @@ import {
   USER_INTELLIGENCE_SCORE_PORT,
   WALLET_METRIC_PORT,
 } from './ports';
+import { PolicyModule } from '../policy/policy.module';
 
 @Module({
+  imports: [PolicyModule],
   providers: [
     UserIntelligenceCalculatorService,
-    UserIntelligenceMetricService,
+    RefreshUserIntelligenceService,
     {
       provide: USER_ACTIVITY_METRIC_PORT,
       useClass: PrismaMetricRepository,
@@ -30,6 +32,6 @@ import {
       useClass: PrismaMetricRepository,
     },
   ],
-  exports: [UserIntelligenceMetricService],
+  exports: [RefreshUserIntelligenceService, UserIntelligenceCalculatorService],
 })
 export class MetricModule { }
