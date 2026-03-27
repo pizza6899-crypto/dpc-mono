@@ -42,6 +42,13 @@ export class PrismaUserArtifactPityRepository implements UserArtifactPityReposit
     return this.mapper.toEntity(updated);
   }
 
+  async findAllByUserId(userId: bigint): Promise<UserArtifactPity[]> {
+    const records = await this.tx.userArtifactPity.findMany({
+      where: { userId },
+    });
+    return records.map(record => this.mapper.toEntity(record));
+  }
+
   async upsert(pity: UserArtifactPity): Promise<UserArtifactPity> {
     const data = this.mapper.toPersistence(pity);
     const updated = await this.tx.userArtifactPity.upsert({

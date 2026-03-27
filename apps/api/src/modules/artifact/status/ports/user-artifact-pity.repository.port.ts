@@ -21,6 +21,11 @@ export abstract class UserArtifactPityRepositoryPort {
   abstract update(pity: UserArtifactPity): Promise<UserArtifactPity>;
 
   /**
+   * 유저의 모든 등급 Pity 정보 조회
+   */
+  abstract findAllByUserId(userId: bigint): Promise<UserArtifactPity[]>;
+
+  /**
    * 있으면 업데이트, 없으면 생성 (Upsert)
    */
   abstract upsert(pity: UserArtifactPity): Promise<UserArtifactPity>;

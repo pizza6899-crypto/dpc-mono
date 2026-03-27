@@ -5,9 +5,11 @@ import { UserArtifactPityRepositoryPort } from './ports/user-artifact-pity.repos
 import { PrismaUserArtifactPityRepository } from './infrastructure/prisma-user-artifact-pity.repository';
 import { UserArtifactStatusMapper } from './infrastructure/user-artifact-status.mapper';
 import { UserArtifactPityMapper } from './infrastructure/user-artifact-pity.mapper';
-import { InitializeUserArtifactStatusService } from './application/initialize-user-artifact-status.service';
 import { InitializeUserArtifactPityService } from './application/initialize-user-artifact-pity.service';
 import { SyncArtifactSlotService } from './application/sync-artifact-slot.service';
+import { GetUserArtifactStatusService } from './application/get-user-artifact-status.service';
+import { GetUserArtifactPityService } from './application/get-user-artifact-pity.service';
+import { InitializeUserArtifactStatusService } from './application/initialize-user-artifact-status.service';
 import { ArtifactMasterModule } from '../master/master.module';
 import { CharacterStatusModule } from 'src/modules/character/status/status.module';
 
@@ -20,8 +22,10 @@ import { CharacterStatusModule } from 'src/modules/character/status/status.modul
   providers: [
     UserArtifactStatusMapper,
     UserArtifactPityMapper,
-    InitializeUserArtifactStatusService,
+    GetUserArtifactStatusService,
+    GetUserArtifactPityService,
     InitializeUserArtifactPityService,
+    InitializeUserArtifactStatusService,
     SyncArtifactSlotService,
     {
       provide: UserArtifactStatusRepositoryPort,
@@ -35,8 +39,10 @@ import { CharacterStatusModule } from 'src/modules/character/status/status.modul
   exports: [
     UserArtifactStatusRepositoryPort,
     UserArtifactPityRepositoryPort,
-    InitializeUserArtifactStatusService,
+    GetUserArtifactStatusService,
+    GetUserArtifactPityService,
     InitializeUserArtifactPityService,
+    InitializeUserArtifactStatusService,
     SyncArtifactSlotService,
   ],
 })

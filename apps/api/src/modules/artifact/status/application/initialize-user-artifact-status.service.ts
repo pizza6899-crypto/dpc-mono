@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { UserArtifactStatusRepositoryPort } from '../ports/user-artifact-status.repository.port';
 import { UserArtifactStatus } from '../domain/user-artifact-status.entity';
-
 import { SyncArtifactSlotService } from './sync-artifact-slot.service';
 
 /**
  * [Artifact Status] 유저의 유물 시스템 상태 초기화 서비스
- * - 유입 시 최초 1회 기본 슬롯 및 통계 정보를 생성합니다.
+ * - 유저의 최초 유입 시 (가입/튜토리얼 등) 한 번 호출됩니다.
+ * - 레코드를 생성하고 현재 레벨에 맞는 슬롯 동기화를 "최초 1회" 수행합니다.
  */
 @Injectable()
 export class InitializeUserArtifactStatusService {
@@ -17,7 +17,7 @@ export class InitializeUserArtifactStatusService {
   ) { }
 
   /**
-   * 유저의 초기 상태 생성 (이미 존재하면 기존 상태 반환)
+   * 유저의 초기 상태 생성 및 슬롯 레벨 최신화
    */
   @Transactional()
   async execute(userId: bigint): Promise<UserArtifactStatus> {
@@ -27,7 +27,7 @@ export class InitializeUserArtifactStatusService {
       status = await this.statusRepo.upsert(UserArtifactStatus.create(userId));
     }
 
-    // 생성/조회 직후 항상 최신 레벨에 맞춰 슬롯 동기화 수행
+    // 초기화 시점에 현재 캐릭터 레벨에 매칭되는 슬롯 수를 강제 동기화
     return await this.syncSlotService.execute(userId);
   }
 }
