@@ -71,8 +71,8 @@ model ArtifactCatalog {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  userArtifacts    UserArtifact[]
-  userArtifactLogs UserArtifactLog[]
+  userArtifacts     UserArtifact[]
+  artifactAuditLogs ArtifactAuditLog[]
 
   @@map("artifact_catalogs")
 }
@@ -89,6 +89,18 @@ model UserArtifactStatus {
 
   /// 전체 누적 합성 시도 횟수
   totalSynthesisCount BigInt @default(0) @map("total_synthesis_count")
+
+  /// [Artifact] 보유 중인 일반 뽑기권 수량 (등급 제한 없음)
+  ticketAllCount Int @default(0) @map("ticket_all_count")
+
+  /// [Artifact] 등급 확정권 수량 (등급별 각 1개 컬럼)
+  ticketCommonCount    Int @default(0) @map("ticket_common_count")
+  ticketUncommonCount  Int @default(0) @map("ticket_uncommon_count")
+  ticketRareCount      Int @default(0) @map("ticket_rare_count")
+  ticketEpicCount      Int @default(0) @map("ticket_epic_count")
+  ticketLegendaryCount Int @default(0) @map("ticket_legendary_count")
+  ticketMythicCount    Int @default(0) @map("ticket_mythic_count")
+  ticketUniqueCount    Int @default(0) @map("ticket_unique_count")
 
   updatedAt DateTime @updatedAt @map("updated_at")
   user      User     @relation(fields: [userId], references: [id])
@@ -142,33 +154,12 @@ model UserArtifact {
 /// [Artifact] 유물 활동 타입
 enum ArtifactLogType {
   DRAW // 유물 뽑기
+  COUPON_DRAW // 쿠폰을 사용한 유물 뽑기
   EQUIP // 유물 장착
   UNEQUIP // 유물 해제
   SYNTHESIS // 유물 합성
   DISTRIBUTION // 보너스 분배
   ADMIN_ADJUST // 관리자 조정
-}
-
-/// [Artifact] 유물 활동 로그
-model UserArtifactLog {
-  id         BigInt
-  userId     BigInt                @map("user_id")
-  artifactId BigInt                @map("artifact_id")
-  type       ArtifactLogType
-  grade      ArtifactGrade
-  cost       Decimal?              @db.Decimal(32, 18)
-  currency   ExchangeCurrencyCode?
-  details    Json?                 @map("details")
-
-  user      User            @relation(fields: [userId], references: [id])
-  artifact  ArtifactCatalog @relation(fields: [artifactId], references: [id])
-  createdAt DateTime        @default(now()) @map("created_at")
-
-  // [Partitioning] 시간 기반 파티셔닝을 위해 PK에 시간 포함
-  @@id([id, createdAt])
-  @@index([userId, type, createdAt])
-  @@index([artifactId])
-  @@map("user_artifact_logs")
 }
 
 /// [Artifact] 보너스 풀 집계 상태 (Snapshot) - Singleton 
@@ -183,20 +174,29 @@ model ArtifactBonusPool {
   @@map("artifact_bonus_pools")
 }
 
-/// [Artifact] 보너스 풀 통합 로그 (적립 및 분배 내역 원장)
-model ArtifactBonusPoolLog {
-  id        BigInt          @id // Snowflake ID
-  userId    BigInt?         @map("user_id") // 적립 시 유저 ID, 분배 시 null 가능
-  amountUsd Decimal         @map("amount_usd") @db.Decimal(32, 18) // 금액 변동 (+: 적립, -: 분배/차감)
-  type      ArtifactLogType @map("type")
+/// [Artifact] 유물 도메인 감사 로그 (유저 활동 + 보너스 풀 변동 통합)
+model ArtifactAuditLog {
+  id     BigInt          @id // Snowflake ID (또는 시간 기반 PK)
+  userId BigInt?         @map("user_id") // 유저 활동일 경우 필수, 시스템 활동일 경우 null
+  type   ArtifactLogType @map("type")
+
+  artifactId BigInt?        @map("artifact_id") // 유물 관련 시 필요
+  grade      ArtifactGrade? @map("grade") // 유물/쿠폰 관련 시 필요
+
+  /// 금액 변동 (비용 지불, 보너스 적립/분배 등)
+  amountUsd Decimal? @map("amount_usd") @db.Decimal(32, 18)
 
   /// 상세 현황 (JSON)
+  /// - DRAW 시: { "isTicketUsed": true, "pityApplied": false }
   /// - DISTRIBUTION 시: { "eligibleUserCount": 100, "targetGrade": "EPIC", "perUserAmountUsd": 1.5 }
   details Json? @map("details")
 
   createdAt DateTime @default(now()) @map("created_at")
 
+  user     User?            @relation(fields: [userId], references: [id])
+  artifact ArtifactCatalog? @relation(fields: [artifactId], references: [id])
+
   @@index([createdAt])
-  @@index([userId])
-  @@map("artifact_bonus_pool_logs")
+  @@index([userId, type])
+  @@map("artifact_audit_logs")
 }
