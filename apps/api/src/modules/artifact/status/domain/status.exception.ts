@@ -25,3 +25,17 @@ export class ArtifactStatusNotFoundException extends ArtifactStatusException {
     this.name = 'ArtifactStatusNotFoundException';
   }
 }
+
+/**
+ * [Artifact Status] 티켓 잔액이 부족한 경우
+ */
+export class InsufficientArtifactTicketsException extends ArtifactStatusException {
+  constructor(message: string) {
+    super(
+      message,
+      MessageCode.VALIDATION_ERROR,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.name = 'InsufficientArtifactTicketsException';
+  }
+}
