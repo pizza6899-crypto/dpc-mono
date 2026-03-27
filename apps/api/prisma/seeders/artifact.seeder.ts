@@ -48,24 +48,6 @@ export async function seedArtifactCatalog(prisma: PrismaClient) {
       [ExchangeCurrencyCode.EOS]: 12,
       [ExchangeCurrencyCode.TRX]: 80,
     },
-    TEN: {
-      [ExchangeCurrencyCode.KRW]: 90000,
-      [ExchangeCurrencyCode.USD]: 90,
-      [ExchangeCurrencyCode.USDT]: 90,
-      [ExchangeCurrencyCode.JPY]: 13500,
-      [ExchangeCurrencyCode.PHP]: 4500,
-      [ExchangeCurrencyCode.IDR]: 1350000,
-      [ExchangeCurrencyCode.VND]: 2250000,
-      [ExchangeCurrencyCode.BTC]: 0.0018,
-      [ExchangeCurrencyCode.ETH]: 0.027,
-      [ExchangeCurrencyCode.SOL]: 0.54,
-      [ExchangeCurrencyCode.XRP]: 135,
-      [ExchangeCurrencyCode.DOGE]: 540,
-      [ExchangeCurrencyCode.LTC]: 1.08,
-      [ExchangeCurrencyCode.BCH]: 0.18,
-      [ExchangeCurrencyCode.EOS]: 108,
-      [ExchangeCurrencyCode.TRX]: 720,
-    },
   };
 
   const synthesisConfigs: ArtifactSynthesisConfigTable = {

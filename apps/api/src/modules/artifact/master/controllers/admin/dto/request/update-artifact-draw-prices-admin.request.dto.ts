@@ -10,7 +10,6 @@ export class UpdateArtifactDrawPricesAdminRequestDto {
     description: 'Draw prices table / 유물 뽑기 비용 설정 테이블',
     example: {
       SINGLE: { USDT: 100 },
-      TEN: { USDT: 1000 },
     },
   })
   @IsObject()

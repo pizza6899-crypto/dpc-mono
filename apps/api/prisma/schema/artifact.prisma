@@ -32,9 +32,9 @@ model ArtifactPolicy {
 
   /// [Artifact] 유물 뽑기 비용 설정 (JSON)
   /// - 지원 범위: 1회 뽑기(SINGLE), 10회 뽑기(TEN) 구분
-  /// - 할인 정책: 10회 뽑기 진행 시 10% 기본 할인율 권장
+  /// - 보너스 정책: 10회 뽑기 진행 시 1회 추가 지급 (총 11회 뽑기)
   /// - 멀티 커런시 대응: 통화별 가격 설정 가능
-  /// - 예시 데이터 구조: { "SINGLE": { "USD": 10, "KRW": 13000 }, "TEN": { "USD": 90, "KRW": 117000 } }
+  /// - 예시 데이터 구조: { "SINGLE": { "USD": 10, "KRW": 10000 }, "TEN": { "USD": 100, "KRW": 100000 } }
   drawPrices Json @map("draw_prices")
 
   /// [Artifact] 유물 등급별 상세 합성 정책 설정 (JSON)
@@ -44,7 +44,7 @@ model ArtifactPolicy {
 
   /// [Artifact] 레벨별 유물 슬롯 해금 설정 (JSON)
   /// - 기본 2칸 제공, 특정 레벨 도달 시 추가 해금
-  /// - 예시 데이터 구조: { "unlockLevels": [1, 1, 50, 100] } (1번 1레벨, 2번 1레벨, 3번 50레벨, 4번 100레벨 해금)
+  /// - 예시 데이터 구조: { "unlockLevels": [1, 1] } (1번 1레벨, 2번 1레벨 해금)
   slotUnlockConfigs Json @default("{}") @map("slot_unlock_configs")
 
   updatedAt DateTime @updatedAt @map("updated_at")
