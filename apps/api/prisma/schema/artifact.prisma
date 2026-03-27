@@ -159,19 +159,10 @@ enum ArtifactLogType {
   UNEQUIP // 유물 해제
   SYNTHESIS // 유물 합성
   DISTRIBUTION // 보너스 분배
-  ADMIN_ADJUST // 관리자 조정
-}
-
-/// [Artifact] 보너스 풀 집계 상태 (Snapshot) - Singleton 
-model ArtifactBonusPool {
-  id                  BigInt    @id @default(1)
-  currentBalanceUsd   Decimal   @default(0) @map("current_balance_usd") @db.Decimal(32, 18) // 현재 잔액
-  totalAccumulatedUsd Decimal   @default(0) @map("total_accumulated_usd") @db.Decimal(32, 18) // 역대 총 누적액
-  totalDistributedUsd Decimal   @default(0) @map("total_distributed_usd") @db.Decimal(32, 18) // 역대 총 분배액
-  lastDistributedAt   DateTime? @map("last_distributed_at")
-  updatedAt           DateTime  @updatedAt @map("updated_at")
-
-  @@map("artifact_bonus_pools")
+  ADMIN_GRANT // 유물 강제 지급 (CS 대응 등)
+  ADMIN_REVOKE // 유물 회수 (오지급 회수 등)
+  ADMIN_TICKET_MODIFY // 티켓 수량 수동 조정 (지급/차감)
+  ADMIN_POOL_ADJUST // 보너스 풀 잔액 수동 조정
 }
 
 /// [Artifact] 유물 도메인 감사 로그 (유저 활동 + 보너스 풀 변동 통합)
