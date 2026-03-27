@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { ArtifactGrade, ExchangeCurrencyCode } from '@prisma/client';
-import { InjectTransaction, Transactional } from '@nestjs-cls/transactional';
+import { Transactional } from '@nestjs-cls/transactional';
 import { AdvisoryLockService } from 'src/common/concurrency/advisory-lock.service';
 import { LockNamespace } from 'src/common/concurrency/concurrency.constants';
-import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { UserArtifactStatusRepositoryPort } from '../../status/ports/user-artifact-status.repository.port';
 import { ArtifactDrawConfigRepositoryPort } from '../../master/ports/artifact-draw-config.repository.port';
 import { ArtifactCatalogRepositoryPort } from '../../master/ports/artifact-catalog.repository.port';
+import { UserArtifactRepositoryPort } from '../../inventory/ports/user-artifact.repository.port';
+import { UserArtifact } from '../../inventory/domain/user-artifact.entity';
 import { CreateUserArtifactLogService } from '../../audit/application/create-user-artifact-log.service';
 import { ArtifactStatusNotFoundException } from '../../status/domain/status.exception';
 import { ArtifactDrawPolicy } from '../domain/artifact-draw.policy';
@@ -27,9 +28,8 @@ export interface DrawArtifactCommand {
 export class DrawArtifactService {
   constructor(
     private readonly lockService: AdvisoryLockService,
-    @InjectTransaction()
-    private readonly tx: PrismaTransaction,
     private readonly userStatusRepo: UserArtifactStatusRepositoryPort,
+    private readonly userInventoryRepo: UserArtifactRepositoryPort,
     private readonly drawConfigRepo: ArtifactDrawConfigRepositoryPort,
     private readonly catalogRepo: ArtifactCatalogRepositoryPort,
     private readonly auditLogService: CreateUserArtifactLogService,
@@ -78,16 +78,12 @@ export class DrawArtifactService {
       // 유물 선택
       const selectedArtifact = this.drawPolicy.selectArtifactFromPool(activeArtifacts, grade);
 
-      // 인벤토리(UserArtifact) 저장
-      const userArtifact = await this.tx.userArtifact.create({
-        data: {
-          userId,
-          artifactId: selectedArtifact.id,
-        },
-      });
+      // 인벤토리(UserArtifact) 저장 (Repository Port 활용)
+      const newUserArtifact = UserArtifact.create(userId, selectedArtifact.id);
+      const savedArtifact = await this.userInventoryRepo.save(newUserArtifact);
 
       results.push({
-        id: userArtifact.id.toString(),
+        id: savedArtifact.id.toString(),
         artifactId: selectedArtifact.code,
         grade: selectedArtifact.grade,
       });

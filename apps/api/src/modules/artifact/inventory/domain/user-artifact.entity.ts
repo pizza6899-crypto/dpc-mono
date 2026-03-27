@@ -1,5 +1,5 @@
 /**
- * [Artifact] 유저가 소유한 개별 유물 인스턴스 엔티티
+ * [Artifact] 유저가 보유한 개별 유물 인스턴스 엔티티
  */
 export class UserArtifact {
   private constructor(
@@ -8,8 +8,8 @@ export class UserArtifact {
     private readonly _artifactId: bigint,
     private _slotNo: number | null,
     private _isEquipped: boolean,
-    private readonly _acquiredAt: Date,
-    private _updatedAt: Date,
+    private readonly _createdAt: Date,
+    private readonly _updatedAt: Date,
   ) { }
 
   /**
@@ -21,7 +21,7 @@ export class UserArtifact {
     artifactId: bigint;
     slotNo: number | null;
     isEquipped: boolean;
-    acquiredAt: Date;
+    createdAt: Date;
     updatedAt: Date;
   }): UserArtifact {
     return new UserArtifact(
@@ -30,48 +30,25 @@ export class UserArtifact {
       data.artifactId,
       data.slotNo,
       data.isEquipped,
-      data.acquiredAt,
+      data.createdAt,
       data.updatedAt,
     );
   }
 
   /**
-   * 신규 유물 획득 생성
+   * 신규 획득 유물 생성용 팩토리 메서드
    */
-  static create(params: {
-    userId: bigint;
-    artifactId: bigint;
-  }): UserArtifact {
+  static create(userId: bigint, artifactId: bigint): UserArtifact {
     const now = new Date();
     return new UserArtifact(
-      0n, // DB 저장 전 ID
-      params.userId,
-      params.artifactId,
-      null, // 초기 획득 시 미장착
+      0n, // DB 저장 시 자동 생성
+      userId,
+      artifactId,
+      null,
       false,
       now,
       now,
     );
-  }
-
-  /**
-   * 특정 슬롯에 유물 장착
-   * @param slotNo 장착할 슬롯 번호 (1~N)
-   */
-  equip(slotNo: number): void {
-    if (slotNo < 1) return;
-    this._slotNo = slotNo;
-    this._isEquipped = true;
-    this._updatedAt = new Date();
-  }
-
-  /**
-   * 유물 장착 해제
-   */
-  unequip(): void {
-    this._slotNo = null;
-    this._isEquipped = false;
-    this._updatedAt = new Date();
   }
 
   // --- Getters ---
@@ -80,6 +57,6 @@ export class UserArtifact {
   get artifactId(): bigint { return this._artifactId; }
   get slotNo(): number | null { return this._slotNo; }
   get isEquipped(): boolean { return this._isEquipped; }
-  get acquiredAt(): Date { return this._acquiredAt; }
+  get createdAt(): Date { return this._createdAt; }
   get updatedAt(): Date { return this._updatedAt; }
 }

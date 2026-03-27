@@ -163,8 +163,8 @@ model UserArtifact {
   slotNo     Int?    @map("slot_no")
   isEquipped Boolean @default(false) @map("is_equipped")
 
-  acquiredAt DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   user     User            @relation(fields: [userId], references: [id])
   artifact ArtifactCatalog @relation(fields: [artifactId], references: [id])

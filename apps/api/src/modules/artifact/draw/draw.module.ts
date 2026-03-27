@@ -6,6 +6,7 @@ import { ArtifactDrawPolicy } from './domain/artifact-draw.policy';
 import { ArtifactStatusModule } from '../status/status.module';
 import { ArtifactMasterModule } from '../master/master.module';
 import { ArtifactAuditModule } from '../audit/audit.module';
+import { ArtifactInventoryModule } from '../inventory/inventory.module';
 import { WalletModule } from 'src/modules/wallet/wallet.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 
@@ -17,6 +18,7 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
     ArtifactStatusModule,
     ArtifactMasterModule,
     ArtifactAuditModule,
+    ArtifactInventoryModule,
     WalletModule,
     ConcurrencyModule,
   ],
