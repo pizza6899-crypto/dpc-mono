@@ -9,9 +9,10 @@ import {
   WALLET_METRIC_PORT,
 } from './ports';
 import { PolicyModule } from '../policy/policy.module';
+import { HistoryModule } from '../history/history.module';
 
 @Module({
-  imports: [PolicyModule],
+  imports: [PolicyModule, HistoryModule],
   providers: [
     UserIntelligenceCalculatorService,
     RefreshUserIntelligenceService,

@@ -1,6 +1,20 @@
 import { Module } from '@nestjs/common';
+import { SnowflakeModule } from '../../../common/snowflake/snowflake.module';
+import { RecordScoreHistoryService } from './application/record-score-history.service';
+import { GetUserIntelligenceHistoryService } from './application/get-user-intelligence-history.service';
+import { PrismaHistoryRepository } from './infrastructure/prisma-history.repository';
+import { HISTORY_REPOSITORY_PORT } from './ports/history-repository.port';
 
 @Module({
-  providers: [],
+  imports: [SnowflakeModule],
+  providers: [
+    RecordScoreHistoryService,
+    GetUserIntelligenceHistoryService,
+    {
+      provide: HISTORY_REPOSITORY_PORT,
+      useClass: PrismaHistoryRepository,
+    },
+  ],
+  exports: [RecordScoreHistoryService, GetUserIntelligenceHistoryService],
 })
-export class HistoryModule {}
+export class HistoryModule { }

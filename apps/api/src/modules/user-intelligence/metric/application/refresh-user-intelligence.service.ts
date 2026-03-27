@@ -13,6 +13,7 @@ import type {
   IWalletMetricPort,
 } from '../ports';
 import { GetActivePolicyService } from '../../policy/application/get-active-policy.service';
+import { RecordScoreHistoryService } from '../../history/application/record-score-history.service';
 import { UserIntelligenceCalculatorService } from './user-intelligence-calculator.service';
 
 /**
@@ -33,6 +34,7 @@ export class RefreshUserIntelligenceService {
     private readonly scorePort: IUserIntelligenceScorePort,
     private readonly calculator: UserIntelligenceCalculatorService,
     private readonly getActivePolicyService: GetActivePolicyService,
+    private readonly recordScoreHistoryService: RecordScoreHistoryService,
   ) { }
 
   /**
@@ -180,15 +182,13 @@ export class RefreshUserIntelligenceService {
         }),
       ]);
 
-      // 5. 이력 기록
-      if (!currentScore || currentScore.totalScore !== finalTotalScore) {
-        await this.scorePort.addHistory({
-          userId,
-          prevTotalScore: currentScore?.totalScore ?? 1000,
-          nextTotalScore: finalTotalScore,
-          reason: 'Intelligence automated update',
-        });
-      }
+      // 5. 이력 기록 (HistoryModule 위임)
+      await this.recordScoreHistoryService.execute({
+        userId,
+        prevTotalScore: currentScore?.totalScore ?? 1000,
+        nextTotalScore: finalTotalScore,
+        reason: 'Intelligence automated update',
+      });
 
       this.logger.log(`[User Intelligence] Refreshed score for User ${userId}: ${finalTotalScore}`);
     } catch (e) {

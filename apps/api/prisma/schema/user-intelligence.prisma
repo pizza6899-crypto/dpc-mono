@@ -84,7 +84,7 @@ model UserIntelligenceDailyMetric {
 
 /// [User Intelligence] 점수 변화 이력
 model UserIntelligenceHistory {
-  id             BigInt   @id @default(autoincrement())
+  id             BigInt   @id
   userId         BigInt   @map("user_id")
   prevTotalScore Int      @map("prev_total_score")
   nextTotalScore Int      @map("next_total_score")
