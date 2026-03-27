@@ -175,6 +175,11 @@ model User {
   userArtifactStatus UserArtifactStatus?
   userArtifactPities UserArtifactPity[]
 
+  // [User Intelligence]
+  userIntelligenceScore     UserIntelligenceScore?
+  userIntelligenceMetric    UserIntelligenceMetric?
+  userIntelligenceHistories UserIntelligenceHistory[]
+
   @@map("users")
 }
 

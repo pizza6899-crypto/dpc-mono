@@ -1,0 +1,98 @@
+/// [User Intelligence] 스코어링 정책 설정 (가중치 및 기준값)
+model UserIntelligencePolicy {
+  id Int @id @default(autoincrement())
+
+  // 예: { "valueIndex": { "maxScore": 250, "totalNetLossWeight": 0.4, "unitAmount": 15 }, ... }
+  config Json @map("config")
+
+  adminNote String?  @map("admin_note")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("user_intelligence_policies")
+}
+
+/// [User Intelligence] 유저별 지능형 점수 및 프로필 (가치/리스크 평가 통합)
+model UserIntelligenceScore {
+  userId     BigInt @id @map("user_id")
+  totalScore Int    @default(1000) @map("total_score") // 최종 통합 점수 (Value - Risk)
+  valueScore Int    @default(1000) @map("value_score") // 가치 평가 합계
+  riskScore  Int    @default(0) @map("risk_score") // 리스크 평가 합계
+
+  // --- 가치 평가 주요 항목 (Value Scores) ---
+  scoreValueIndex    Int @default(0) @map("score_value_index") // [가치] 손익 및 안정성 (250)
+  scoreDepositAmount Int @default(0) @map("score_deposit_amount") // [입금액] 금액 가중치 (200)
+  scoreDepositCount  Int @default(0) @map("score_deposit_count") // [입금횟수] 빈도 및 간격 (100)
+  scoreRolling       Int @default(0) @map("score_rolling") // [롤링] 기여도 및 의존도 (250)
+  scoreBehavior      Int @default(0) @map("score_behavior") // [행동패턴] 활동성 및 커뮤니티 (200)
+
+  // --- 리스크 평가 주요 항목 (Risk Scores) ---
+  scoreRiskPromotion Int @default(0) @map("score_risk_promotion") // [리스크] 프로모션 및 롤링 (400)
+  scoreRiskTechnical Int @default(0) @map("score_risk_technical") // [리스크] 리소스 및 계정 (250)
+  scoreRiskBehavior  Int @default(0) @map("score_risk_behavior") // [리스크] 행동 및 커뮤니티 (200)
+
+  /// 점수 산출 시 발생한 상세 메타데이터 (JSON)
+  /// - 예: 계산에 쓰인 CV값, 특정 플래그 임계값 등 보조 데이터
+  details Json? @map("details")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([totalScore])
+  @@map("user_intelligence_scores")
+}
+
+/// [User Intelligence] 유저별 원천 지표 통계 (계산 근거 스냅샷)
+model UserIntelligenceMetric {
+  userId BigInt @id @map("user_id")
+
+  // 입금 가중치 계산용
+  totalDepositUsd      Decimal @default(0) @map("total_deposit_usd") @db.Decimal(32, 18)
+  recent30dDepositUsd  Decimal @default(0) @map("recent_30d_deposit_usd") @db.Decimal(32, 18)
+  recent180dDepositUsd Decimal @default(0) @map("recent_180d_deposit_usd") @db.Decimal(32, 18)
+  depositCount         Int     @default(0) @map("deposit_count")
+
+  // 가치 평점 계산용 (Net Loss 등)
+  lifetimeNetLossUsd  Decimal @default(0) @map("lifetime_net_loss_usd") @db.Decimal(32, 18)
+  recent30dNetLossUsd Decimal @default(0) @map("recent_30d_net_loss_usd") @db.Decimal(32, 18)
+
+  // 활동성/기여도 지표
+  totalRollingUsd   Decimal @default(0) @map("total_rolling_usd") @db.Decimal(32, 18)
+  avgSessionMinutes Int     @default(0) @map("avg_session_minutes")
+  activeDays30d     Int     @default(0) @map("active_days_30d")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("user_intelligence_metrics")
+}
+
+/// [User Intelligence] 시계열 통계 (CV 및 트렌드 계산용 일일 스냅샷)
+model UserIntelligenceDailyMetric {
+  userId BigInt   @map("user_id")
+  date   DateTime @db.Date // 통계 대상 날짜
+
+  depositAmount  Decimal @default(0) @map("deposit_amount") @db.Decimal(32, 18)
+  depositCount   Int     @default(0) @map("deposit_count")
+  rollingAmount  Decimal @default(0) @map("rolling_amount") @db.Decimal(32, 18)
+  netLossAmount  Decimal @default(0) @map("net_loss_amount") @db.Decimal(32, 18)
+  sessionMinutes Int     @default(0) @map("session_minutes")
+
+  @@id([userId, date])
+  @@map("user_intelligence_daily_metrics")
+}
+
+/// [User Intelligence] 점수 변화 이력
+model UserIntelligenceHistory {
+  id             BigInt   @id @default(autoincrement())
+  userId         BigInt   @map("user_id")
+  prevTotalScore Int      @map("prev_total_score")
+  nextTotalScore Int      @map("next_total_score")
+  reason         String?  @map("reason")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  @@map("user_intelligence_histories")
+}
