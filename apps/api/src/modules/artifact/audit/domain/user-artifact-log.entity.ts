@@ -18,11 +18,6 @@ export interface SynthesisLogDetails {
   isSuccess: boolean;
 }
 
-export interface DistributionLogDetails {
-  distributionId: bigint;
-  poolBalanceBefore: number;
-}
-
 export interface AdminAdjustLogDetails {
   reason: string;
   adminId: bigint;
@@ -35,7 +30,6 @@ export type UserArtifactLogDetails =
   | DrawLogDetails
   | EquipLogDetails
   | SynthesisLogDetails
-  | DistributionLogDetails
   | AdminAdjustLogDetails;
 
 /**
