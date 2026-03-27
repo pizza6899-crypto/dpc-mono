@@ -14,7 +14,6 @@ export class UserArtifactLogMapper {
       artifactId: record.artifactId,
       type: record.type,
       grade: record.grade,
-      amountUsd: record.amountUsd,
       details: record.details as any,
       createdAt: record.createdAt,
     });
@@ -30,7 +29,6 @@ export class UserArtifactLogMapper {
       artifactId: entity.artifactId,
       type: entity.type,
       grade: entity.grade,
-      amountUsd: entity.amountUsd,
       details: entity.details as any,
       createdAt: entity.createdAt,
     };

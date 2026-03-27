@@ -50,7 +50,6 @@ export class ArtifactAuditAdminController {
         artifactId: log.artifactId?.toString(),
         type: log.type,
         grade: log.grade ?? undefined,
-        amountUsd: log.amountUsd?.toString(),
         details: log.details,
         createdAt: log.createdAt,
       })),

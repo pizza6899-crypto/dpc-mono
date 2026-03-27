@@ -6,6 +6,7 @@ import { ArtifactGrade, ArtifactLogType, ExchangeCurrencyCode, Prisma } from '@p
 export interface DrawLogDetails {
   drawCount: number;
   isPity: boolean;
+  costUsd?: number;
 }
 
 export interface EquipLogDetails {
@@ -16,6 +17,7 @@ export interface SynthesisLogDetails {
   consumedIds: bigint[];
   resultArtifactId?: bigint;
   isSuccess: boolean;
+  costUsd?: number;
 }
 
 export interface AdminAdjustLogDetails {
@@ -42,7 +44,6 @@ export class UserArtifactLog {
     private readonly _artifactId: bigint | null,
     private readonly _type: ArtifactLogType,
     private readonly _grade: ArtifactGrade | null,
-    private readonly _amountUsd: Prisma.Decimal | null,
     private readonly _details: UserArtifactLogDetails | null,
     private readonly _createdAt: Date,
   ) { }
@@ -56,7 +57,6 @@ export class UserArtifactLog {
     artifactId: bigint | null;
     type: ArtifactLogType;
     grade: ArtifactGrade | null;
-    amountUsd: Prisma.Decimal | null;
     details: UserArtifactLogDetails | null;
     createdAt: Date;
   }): UserArtifactLog {
@@ -66,7 +66,6 @@ export class UserArtifactLog {
       data.artifactId,
       data.type,
       data.grade,
-      data.amountUsd,
       data.details,
       data.createdAt,
     );
@@ -82,7 +81,6 @@ export class UserArtifactLog {
     type: ArtifactLogType;
     grade?: ArtifactGrade | null;
     createdAt: Date;
-    amountUsd?: Prisma.Decimal | null;
     details?: UserArtifactLogDetails | null;
   }): UserArtifactLog {
     return new UserArtifactLog(
@@ -91,7 +89,6 @@ export class UserArtifactLog {
       params.artifactId ?? null,
       params.type,
       params.grade ?? null,
-      params.amountUsd ?? null,
       params.details ?? null,
       params.createdAt,
     );
@@ -103,7 +100,6 @@ export class UserArtifactLog {
   get artifactId(): bigint | null { return this._artifactId; }
   get type(): ArtifactLogType { return this._type; }
   get grade(): ArtifactGrade | null { return this._grade; }
-  get amountUsd(): Prisma.Decimal | null { return this._amountUsd; }
   get details(): UserArtifactLogDetails | null { return this._details; }
   get createdAt(): Date { return this._createdAt; }
 }

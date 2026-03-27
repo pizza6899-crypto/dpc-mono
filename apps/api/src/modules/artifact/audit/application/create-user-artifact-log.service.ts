@@ -9,7 +9,6 @@ export interface CreateUserArtifactLogCommand {
   artifactId?: bigint | null;
   type: ArtifactLogType;
   grade?: ArtifactGrade | null;
-  amountUsd?: Prisma.Decimal | null;
   details?: UserArtifactLogDetails | null;
 }
 

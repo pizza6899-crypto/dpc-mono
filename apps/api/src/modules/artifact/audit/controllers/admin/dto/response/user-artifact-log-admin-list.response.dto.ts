@@ -38,12 +38,6 @@ export class UserArtifactLogAdminSummaryResponseDto {
   })
   grade?: ArtifactGrade;
 
-  @ApiPropertyOptional({
-    description: 'Amount in USD / 금액 (USD)',
-    example: '5.25',
-  })
-  amountUsd?: string;
-
   @ApiProperty({
     description: 'Details / 활동 상세 정보',
     example: { isTicketUsed: true, pityApplied: false },

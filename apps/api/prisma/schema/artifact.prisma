@@ -174,9 +174,6 @@ model ArtifactAuditLog {
   artifactId BigInt?        @map("artifact_id") // 유물 관련 시 필요
   grade      ArtifactGrade? @map("grade") // 유물/쿠폰 관련 시 필요
 
-  /// 금액 변동 (비용 지불 등)
-  amountUsd Decimal? @map("amount_usd") @db.Decimal(32, 18)
-
   /// 상세 현황 (JSON)
   /// - DRAW 시: { "isTicketUsed": true, "pityApplied": false }
   details Json? @map("details")
