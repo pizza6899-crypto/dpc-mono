@@ -5,7 +5,6 @@ import { AdvisoryLockService } from 'src/common/concurrency/advisory-lock.servic
 import { LockNamespace } from 'src/common/concurrency/concurrency.constants';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { UserArtifactStatusRepositoryPort } from '../../status/ports/user-artifact-status.repository.port';
-import { UserArtifactPityRepositoryPort } from '../../status/ports/user-artifact-pity.repository.port';
 import { ArtifactDrawConfigRepositoryPort } from '../../master/ports/artifact-draw-config.repository.port';
 import { ArtifactCatalogRepositoryPort } from '../../master/ports/artifact-catalog.repository.port';
 import { CreateUserArtifactLogService } from '../../audit/application/create-user-artifact-log.service';
@@ -31,7 +30,6 @@ export class DrawArtifactService {
     @InjectTransaction()
     private readonly tx: PrismaTransaction,
     private readonly userStatusRepo: UserArtifactStatusRepositoryPort,
-    private readonly userPityRepo: UserArtifactPityRepositoryPort,
     private readonly drawConfigRepo: ArtifactDrawConfigRepositoryPort,
     private readonly catalogRepo: ArtifactCatalogRepositoryPort,
     private readonly auditLogService: CreateUserArtifactLogService,
@@ -56,14 +54,17 @@ export class DrawArtifactService {
 
     const count = this.drawPolicy.getDrawCount(type);
 
-    // 3. 지불 처리 (현재는 티켓 방식만 기본 로직 포함, 통화 결제는 Wallet 서비스 연동 필요)
+    // 3. 지불 처리 및 통계 업데이트
     if (paymentType === 'TICKET') {
       userStatus.spendTickets(ticketType, type === 'SINGLE' ? 1 : 10);
-      await this.userStatusRepo.update(userStatus);
     } else {
-      // TODO: WalletModule 연동하여 재화 차감 로직 구현
+      userStatus.recordCurrencyDraw(type === 'SINGLE' ? 1 : 10);
+      // TODO: WalletModule 연동하여 실제 재화 차감 로직 구현
       console.log(`[TODO] Currency payment logic for ${userId}: ${command.currency}`);
     }
+    
+    // 상태 변경 내역 저장
+    await this.userStatusRepo.update(userStatus);
 
     // 4. 뽑기 실행 (확률 기반 등급 결정 및 유물 선택)
     const drawConfigs = await this.drawConfigRepo.findAll();
@@ -73,10 +74,11 @@ export class DrawArtifactService {
     for (let i = 0; i < count; i++) {
       // 등급 결정
       const grade = this.drawPolicy.rollGrade(drawConfigs);
-
+      
       // 유물 선택
       const selectedArtifact = this.drawPolicy.selectArtifactFromPool(activeArtifacts, grade);
 
+      // 인벤토리(UserArtifact) 저장
       const userArtifact = await this.tx.userArtifact.create({
         data: {
           userId,
@@ -90,17 +92,8 @@ export class DrawArtifactService {
         grade: selectedArtifact.grade,
       });
 
-      // Pity 및 통계 업데이트
-      const pity = await this.userPityRepo.findByUserIdAndGrade(userId, grade);
-      if (pity) {
-        pity.increaseDrawObtainCount();
-        await this.userPityRepo.update(pity);
-      }
+      // TODO: 등급별 획득 횟수(ObtainCount) 기록 여부 결정 후 추가 예정
     }
-
-    // 전체 누적 뽑기 횟수 업데이트
-    userStatus.increaseTotalDrawCount(count);
-    await this.userStatusRepo.update(userStatus);
 
     // 5. 감사 로그 기록
     await this.auditLogService.execute({

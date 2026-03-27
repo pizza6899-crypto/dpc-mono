@@ -8,10 +8,15 @@ export class UserArtifactStatus {
   private constructor(
     private readonly _userId: bigint,
     private _activeSlotCount: number,
-    private _totalDrawCount: bigint,
-    private _totalSynthesisCount: bigint,
+    private _totalDrawCount: number,
+    private _totalTicketDrawCount: number,
+    private _totalCurrencyDrawCount: number,
+    private _totalSynthesisCount: number,
     private _ticketAllCount: number,
     private _gradeTickets: Record<ArtifactGrade, number>,
+    private _drawCountTickets: Record<ArtifactGrade | 'ALL', number>,
+    private _synthesisSuccessCounts: Record<ArtifactGrade, number>,
+    private _synthesisFailCounts: Record<ArtifactGrade, number>,
     private _updatedAt: Date,
   ) { }
 
@@ -21,8 +26,10 @@ export class UserArtifactStatus {
   static rehydrate(data: {
     userId: bigint;
     activeSlotCount: number;
-    totalDrawCount: bigint;
-    totalSynthesisCount: bigint;
+    totalDrawCount: number;
+    totalTicketDrawCount: number;
+    totalCurrencyDrawCount: number;
+    totalSynthesisCount: number;
     ticketAllCount: number;
     ticketCommonCount: number;
     ticketUncommonCount: number;
@@ -31,12 +38,36 @@ export class UserArtifactStatus {
     ticketLegendaryCount: number;
     ticketMythicCount: number;
     ticketUniqueCount: number;
+    drawCountTicketAll: number;
+    drawCountTicketCommon: number;
+    drawCountTicketUncommon: number;
+    drawCountTicketRare: number;
+    drawCountTicketEpic: number;
+    drawCountTicketLegendary: number;
+    drawCountTicketMythic: number;
+    drawCountTicketUnique: number;
+    synthesisCommonSuccessCount: number;
+    synthesisCommonFailCount: number;
+    synthesisUncommonSuccessCount: number;
+    synthesisUncommonFailCount: number;
+    synthesisRareSuccessCount: number;
+    synthesisRareFailCount: number;
+    synthesisEpicSuccessCount: number;
+    synthesisEpicFailCount: number;
+    synthesisLegendarySuccessCount: number;
+    synthesisLegendaryFailCount: number;
+    synthesisMythicSuccessCount: number;
+    synthesisMythicFailCount: number;
+    synthesisUniqueSuccessCount: number;
+    synthesisUniqueFailCount: number;
     updatedAt: Date;
   }): UserArtifactStatus {
     return new UserArtifactStatus(
       data.userId,
       data.activeSlotCount,
       data.totalDrawCount,
+      data.totalTicketDrawCount,
+      data.totalCurrencyDrawCount,
       data.totalSynthesisCount,
       data.ticketAllCount,
       {
@@ -48,6 +79,34 @@ export class UserArtifactStatus {
         [ArtifactGrade.MYTHIC]: data.ticketMythicCount,
         [ArtifactGrade.UNIQUE]: data.ticketUniqueCount,
       },
+      {
+        ALL: data.drawCountTicketAll,
+        [ArtifactGrade.COMMON]: data.drawCountTicketCommon,
+        [ArtifactGrade.UNCOMMON]: data.drawCountTicketUncommon,
+        [ArtifactGrade.RARE]: data.drawCountTicketRare,
+        [ArtifactGrade.EPIC]: data.drawCountTicketEpic,
+        [ArtifactGrade.LEGENDARY]: data.drawCountTicketLegendary,
+        [ArtifactGrade.MYTHIC]: data.drawCountTicketMythic,
+        [ArtifactGrade.UNIQUE]: data.drawCountTicketUnique,
+      },
+      {
+        [ArtifactGrade.COMMON]: data.synthesisCommonSuccessCount,
+        [ArtifactGrade.UNCOMMON]: data.synthesisUncommonSuccessCount,
+        [ArtifactGrade.RARE]: data.synthesisRareSuccessCount,
+        [ArtifactGrade.EPIC]: data.synthesisEpicSuccessCount,
+        [ArtifactGrade.LEGENDARY]: data.synthesisLegendarySuccessCount,
+        [ArtifactGrade.MYTHIC]: data.synthesisMythicSuccessCount,
+        [ArtifactGrade.UNIQUE]: data.synthesisUniqueSuccessCount,
+      },
+      {
+        [ArtifactGrade.COMMON]: data.synthesisCommonFailCount,
+        [ArtifactGrade.UNCOMMON]: data.synthesisUncommonFailCount,
+        [ArtifactGrade.RARE]: data.synthesisRareFailCount,
+        [ArtifactGrade.EPIC]: data.synthesisEpicFailCount,
+        [ArtifactGrade.LEGENDARY]: data.synthesisLegendaryFailCount,
+        [ArtifactGrade.MYTHIC]: data.synthesisMythicFailCount,
+        [ArtifactGrade.UNIQUE]: data.synthesisUniqueFailCount,
+      },
       data.updatedAt,
     );
   }
@@ -56,27 +115,34 @@ export class UserArtifactStatus {
    * 신규 유저를 위한 초기 상태 생성
    */
   static create(userId: bigint): UserArtifactStatus {
+    const defaultGradeMap = {
+      [ArtifactGrade.COMMON]: 0,
+      [ArtifactGrade.UNCOMMON]: 0,
+      [ArtifactGrade.RARE]: 0,
+      [ArtifactGrade.EPIC]: 0,
+      [ArtifactGrade.LEGENDARY]: 0,
+      [ArtifactGrade.MYTHIC]: 0,
+      [ArtifactGrade.UNIQUE]: 0,
+    };
+
     return new UserArtifactStatus(
       userId,
       0,
-      0n,
-      0n,
       0,
-      {
-        [ArtifactGrade.COMMON]: 0,
-        [ArtifactGrade.UNCOMMON]: 0,
-        [ArtifactGrade.RARE]: 0,
-        [ArtifactGrade.EPIC]: 0,
-        [ArtifactGrade.LEGENDARY]: 0,
-        [ArtifactGrade.MYTHIC]: 0,
-        [ArtifactGrade.UNIQUE]: 0,
-      },
+      0,
+      0,
+      0,
+      0,
+      { ...defaultGradeMap },
+      { ALL: 0, ...defaultGradeMap },
+      { ...defaultGradeMap },
+      { ...defaultGradeMap },
       new Date(),
     );
   }
 
   /**
-   * 티켓 차감 실행 (뽑기 시 사용)
+   * 티켓 차감 및 통계 증가 (뽑기 시 사용)
    */
   spendTickets(type: 'ALL' | ArtifactGrade, count: number): void {
     if (type === 'ALL') {
@@ -84,28 +150,44 @@ export class UserArtifactStatus {
         throw new InsufficientArtifactTicketsException(`Not enough common tickets. Available: ${this._ticketAllCount}, Required: ${count}`);
       }
       this._ticketAllCount -= count;
+      this._drawCountTickets.ALL += count;
     } else {
       if (this._gradeTickets[type] < count) {
         throw new InsufficientArtifactTicketsException(`Not enough ${type} grade tickets. Available: ${this._gradeTickets[type]}, Required: ${count}`);
       }
       this._gradeTickets[type] -= count;
+      this._drawCountTickets[type] += count;
     }
+
+    this._totalTicketDrawCount += count;
+    this._totalDrawCount += count;
     this._updatedAt = new Date();
   }
 
   /**
-   * 누적 뽑기 횟수 증가
+   * 재화 사용 뽑기 시 통계 증가
    */
-  increaseTotalDrawCount(count: number = 1): void {
-    this._totalDrawCount += BigInt(count);
+  recordCurrencyDraw(count: number): void {
+    this._totalCurrencyDrawCount += count;
+    this._totalDrawCount += count;
     this._updatedAt = new Date();
   }
 
   /**
-   * 누적 합성 시도 횟수 증가
+   * 합성 성공 기록
    */
-  increaseTotalSynthesisCount(): void {
-    this._totalSynthesisCount += 1n;
+  recordSynthesisSuccess(grade: ArtifactGrade): void {
+    this._synthesisSuccessCounts[grade] += 1;
+    this._totalSynthesisCount += 1;
+    this._updatedAt = new Date();
+  }
+
+  /**
+   * 합성 실패 기록
+   */
+  recordSynthesisFail(grade: ArtifactGrade): void {
+    this._synthesisFailCounts[grade] += 1;
+    this._totalSynthesisCount += 1;
     this._updatedAt = new Date();
   }
 
@@ -113,7 +195,7 @@ export class UserArtifactStatus {
    * 활성화된(해금된) 슬롯 개수 업데이트
    */
   updateActiveSlotCount(count: number): void {
-    if (count < 1) return;
+    if (count < 0) return;
     this._activeSlotCount = count;
     this._updatedAt = new Date();
   }
@@ -121,9 +203,14 @@ export class UserArtifactStatus {
   // --- Getters ---
   get userId(): bigint { return this._userId; }
   get activeSlotCount(): number { return this._activeSlotCount; }
-  get totalDrawCount(): bigint { return this._totalDrawCount; }
-  get totalSynthesisCount(): bigint { return this._totalSynthesisCount; }
+  get totalDrawCount(): number { return this._totalDrawCount; }
+  get totalTicketDrawCount(): number { return this._totalTicketDrawCount; }
+  get totalCurrencyDrawCount(): number { return this._totalCurrencyDrawCount; }
+  get totalSynthesisCount(): number { return this._totalSynthesisCount; }
   get ticketAllCount(): number { return this._ticketAllCount; }
   getGradeTicketCount(grade: ArtifactGrade): number { return this._gradeTickets[grade]; }
+  getGradeTicketDrawCount(grade: ArtifactGrade | 'ALL'): number { return this._drawCountTickets[grade]; }
+  getSynthesisSuccessCount(grade: ArtifactGrade): number { return this._synthesisSuccessCounts[grade]; }
+  getSynthesisFailCount(grade: ArtifactGrade): number { return this._synthesisFailCounts[grade]; }
   get updatedAt(): Date { return this._updatedAt; }
 }

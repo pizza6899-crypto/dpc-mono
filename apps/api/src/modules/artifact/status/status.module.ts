@@ -1,14 +1,9 @@
 import { Module } from '@nestjs/common';
 import { UserArtifactStatusRepositoryPort } from './ports/user-artifact-status.repository.port';
 import { PrismaUserArtifactStatusRepository } from './infrastructure/prisma-user-artifact-status.repository';
-import { UserArtifactPityRepositoryPort } from './ports/user-artifact-pity.repository.port';
-import { PrismaUserArtifactPityRepository } from './infrastructure/prisma-user-artifact-pity.repository';
 import { UserArtifactStatusMapper } from './infrastructure/user-artifact-status.mapper';
-import { UserArtifactPityMapper } from './infrastructure/user-artifact-pity.mapper';
-import { InitializeUserArtifactPityService } from './application/initialize-user-artifact-pity.service';
 import { SyncArtifactSlotService } from './application/sync-artifact-slot.service';
 import { GetUserArtifactStatusService } from './application/get-user-artifact-status.service';
-import { GetUserArtifactPityService } from './application/get-user-artifact-pity.service';
 import { InitializeUserArtifactStatusService } from './application/initialize-user-artifact-status.service';
 import { ArtifactMasterModule } from '../master/master.module';
 import { CharacterStatusModule } from 'src/modules/character/status/status.module';
@@ -21,27 +16,17 @@ import { CharacterStatusModule } from 'src/modules/character/status/status.modul
   controllers: [],
   providers: [
     UserArtifactStatusMapper,
-    UserArtifactPityMapper,
     GetUserArtifactStatusService,
-    GetUserArtifactPityService,
-    InitializeUserArtifactPityService,
     InitializeUserArtifactStatusService,
     SyncArtifactSlotService,
     {
       provide: UserArtifactStatusRepositoryPort,
       useClass: PrismaUserArtifactStatusRepository,
     },
-    {
-      provide: UserArtifactPityRepositoryPort,
-      useClass: PrismaUserArtifactPityRepository,
-    },
   ],
   exports: [
     UserArtifactStatusRepositoryPort,
-    UserArtifactPityRepositoryPort,
     GetUserArtifactStatusService,
-    GetUserArtifactPityService,
-    InitializeUserArtifactPityService,
     InitializeUserArtifactStatusService,
     SyncArtifactSlotService,
   ],
