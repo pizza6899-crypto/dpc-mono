@@ -83,7 +83,7 @@ export class ArtifactPolicy {
    * 유저의 현재 레벨에 따라 사용 가능한 슬롯 개수 계산
    */
   getAvailableSlotCount(userLevel: number): number {
-    const unlockLevels = this._slotUnlockConfigs.unlockLevels || [1, 1];
+    const { unlockLevels } = this._slotUnlockConfigs;
 
     // 유저 레벨이 해금 레벨보다 크거나 같은 슬롯들만 필터링
     return unlockLevels.filter(lvl => userLevel >= lvl).length;

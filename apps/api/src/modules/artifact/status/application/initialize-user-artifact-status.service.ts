@@ -3,6 +3,8 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { UserArtifactStatusRepositoryPort } from '../ports/user-artifact-status.repository.port';
 import { UserArtifactStatus } from '../domain/user-artifact-status.entity';
 
+import { SyncArtifactSlotService } from './sync-artifact-slot.service';
+
 /**
  * [Artifact Status] 유저의 유물 시스템 상태 초기화 서비스
  * - 유입 시 최초 1회 기본 슬롯 및 통계 정보를 생성합니다.
@@ -11,6 +13,7 @@ import { UserArtifactStatus } from '../domain/user-artifact-status.entity';
 export class InitializeUserArtifactStatusService {
   constructor(
     private readonly statusRepo: UserArtifactStatusRepositoryPort,
+    private readonly syncSlotService: SyncArtifactSlotService,
   ) { }
 
   /**
@@ -18,12 +21,13 @@ export class InitializeUserArtifactStatusService {
    */
   @Transactional()
   async execute(userId: bigint): Promise<UserArtifactStatus> {
-    const existingStatus = await this.statusRepo.findByUserId(userId);
-    if (existingStatus) {
-      return existingStatus;
+    let status = await this.statusRepo.findByUserId(userId);
+
+    if (!status) {
+      status = await this.statusRepo.upsert(UserArtifactStatus.create(userId));
     }
 
-    const newStatus = UserArtifactStatus.create(userId);
-    return await this.statusRepo.upsert(newStatus);
+    // 생성/조회 직후 항상 최신 레벨에 맞춰 슬롯 동기화 수행
+    return await this.syncSlotService.execute(userId);
   }
 }

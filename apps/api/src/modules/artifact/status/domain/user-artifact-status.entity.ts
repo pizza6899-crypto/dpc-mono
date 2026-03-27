@@ -35,7 +35,7 @@ export class UserArtifactStatus {
   static create(userId: bigint): UserArtifactStatus {
     return new UserArtifactStatus(
       userId,
-      2, // 기본 슬롯 2개 제공
+      0, // 기본 0으로 생성 후 SyncArtifactSlotService에 의해 동기화됨
       0n,
       0n,
       new Date(),
