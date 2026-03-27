@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { ArtifactGrade, ArtifactLogType, ExchangeCurrencyCode } from '@prisma/client';
+import { ArtifactGrade, ArtifactLogType } from '@prisma/client';
 import { UserArtifactLogDetails } from '../../../../domain/user-artifact-log.entity';
 
 /**
@@ -12,17 +12,17 @@ export class UserArtifactLogAdminSummaryResponseDto {
   })
   id: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'User ID / 유저 식별자',
     example: '20001',
   })
-  userId: string;
+  userId?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Artifact ID / 유물 식별자',
     example: '30001',
   })
-  artifactId: string;
+  artifactId?: string;
 
   @ApiProperty({
     description: 'Log Type / 로그 타입',
@@ -31,29 +31,22 @@ export class UserArtifactLogAdminSummaryResponseDto {
   })
   type: ArtifactLogType;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Artifact Grade / 유물 등급',
     enum: ArtifactGrade,
     example: ArtifactGrade.UNCOMMON,
   })
-  grade: ArtifactGrade;
+  grade?: ArtifactGrade;
 
   @ApiPropertyOptional({
-    description: 'Cost / 소모 비용 (Decimal)',
+    description: 'Amount in USD / 금액 (USD)',
     example: '5.25',
   })
-  cost?: string;
-
-  @ApiPropertyOptional({
-    description: 'Currency / 비용 통화',
-    enum: ExchangeCurrencyCode,
-    example: ExchangeCurrencyCode.USD,
-  })
-  currency?: ExchangeCurrencyCode;
+  amountUsd?: string;
 
   @ApiProperty({
     description: 'Details / 활동 상세 정보',
-    example: { previousGrade: 'COMMON', currentGrade: 'UNCOMMON' },
+    example: { isTicketUsed: true, pityApplied: false },
   })
   details: UserArtifactLogDetails | null;
 

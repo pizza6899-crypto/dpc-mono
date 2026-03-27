@@ -38,27 +38,25 @@ export type UserArtifactLogDetails =
 export class UserArtifactLog {
   private constructor(
     private readonly _id: bigint,
-    private readonly _userId: bigint,
-    private readonly _artifactId: bigint,
+    private readonly _userId: bigint | null,
+    private readonly _artifactId: bigint | null,
     private readonly _type: ArtifactLogType,
-    private readonly _grade: ArtifactGrade,
-    private readonly _cost: Prisma.Decimal | null,
-    private readonly _currency: ExchangeCurrencyCode | null,
+    private readonly _grade: ArtifactGrade | null,
+    private readonly _amountUsd: Prisma.Decimal | null,
     private readonly _details: UserArtifactLogDetails | null,
     private readonly _createdAt: Date,
   ) { }
 
   /**
-   * DB 데이터를 엔티티 객체로 복원 (Partition Column 포함)
+   * DB 데이터를 엔티티 객체로 복원
    */
   static rehydrate(data: {
     id: bigint;
-    userId: bigint;
-    artifactId: bigint;
+    userId: bigint | null;
+    artifactId: bigint | null;
     type: ArtifactLogType;
-    grade: ArtifactGrade;
-    cost: Prisma.Decimal | null;
-    currency: ExchangeCurrencyCode | null;
+    grade: ArtifactGrade | null;
+    amountUsd: Prisma.Decimal | null;
     details: UserArtifactLogDetails | null;
     createdAt: Date;
   }): UserArtifactLog {
@@ -68,8 +66,7 @@ export class UserArtifactLog {
       data.artifactId,
       data.type,
       data.grade,
-      data.cost,
-      data.currency,
+      data.amountUsd,
       data.details,
       data.createdAt,
     );
@@ -80,23 +77,21 @@ export class UserArtifactLog {
    */
   static create(params: {
     id: bigint;
-    userId: bigint;
-    artifactId: bigint;
+    userId?: bigint | null;
+    artifactId?: bigint | null;
     type: ArtifactLogType;
-    grade: ArtifactGrade;
+    grade?: ArtifactGrade | null;
     createdAt: Date;
-    cost?: Prisma.Decimal | null;
-    currency?: ExchangeCurrencyCode | null;
+    amountUsd?: Prisma.Decimal | null;
     details?: UserArtifactLogDetails | null;
   }): UserArtifactLog {
     return new UserArtifactLog(
       params.id,
-      params.userId,
-      params.artifactId,
+      params.userId ?? null,
+      params.artifactId ?? null,
       params.type,
-      params.grade,
-      params.cost ?? null,
-      params.currency ?? null,
+      params.grade ?? null,
+      params.amountUsd ?? null,
       params.details ?? null,
       params.createdAt,
     );
@@ -104,12 +99,11 @@ export class UserArtifactLog {
 
   // --- Getters ---
   get id(): bigint { return this._id; }
-  get userId(): bigint { return this._userId; }
-  get artifactId(): bigint { return this._artifactId; }
+  get userId(): bigint | null { return this._userId; }
+  get artifactId(): bigint | null { return this._artifactId; }
   get type(): ArtifactLogType { return this._type; }
-  get grade(): ArtifactGrade { return this._grade; }
-  get cost(): Prisma.Decimal | null { return this._cost; }
-  get currency(): ExchangeCurrencyCode | null { return this._currency; }
+  get grade(): ArtifactGrade | null { return this._grade; }
+  get amountUsd(): Prisma.Decimal | null { return this._amountUsd; }
   get details(): UserArtifactLogDetails | null { return this._details; }
   get createdAt(): Date { return this._createdAt; }
 }

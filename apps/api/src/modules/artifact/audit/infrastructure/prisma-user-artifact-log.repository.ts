@@ -17,7 +17,7 @@ export class PrismaUserArtifactLogRepository implements UserArtifactLogRepositor
 
   async create(log: UserArtifactLog): Promise<UserArtifactLog> {
     const data = this.mapper.toPersistence(log);
-    const created = await this.tx.userArtifactLog.create({
+    const created = await this.tx.artifactAuditLog.create({
       data,
     });
 
@@ -27,7 +27,7 @@ export class PrismaUserArtifactLogRepository implements UserArtifactLogRepositor
   async findAndCount(options: UserArtifactLogFindOptions): Promise<[UserArtifactLog[], number]> {
     const { userId, artifactId, types, grades, startDate, endDate, skip, take, orderBy } = options;
 
-    const where: Prisma.UserArtifactLogWhereInput = {
+    const where: Prisma.ArtifactAuditLogWhereInput = {
       userId,
       artifactId,
       type: types ? { in: types } : undefined,
@@ -39,13 +39,13 @@ export class PrismaUserArtifactLogRepository implements UserArtifactLogRepositor
     };
 
     const [logs, count] = await Promise.all([
-      this.tx.userArtifactLog.findMany({
+      this.tx.artifactAuditLog.findMany({
         where,
         skip,
         take,
         orderBy,
       }),
-      this.tx.userArtifactLog.count({ where }),
+      this.tx.artifactAuditLog.count({ where }),
     ]);
 
     return [logs.map((log) => this.mapper.toEntity(log)), count];
