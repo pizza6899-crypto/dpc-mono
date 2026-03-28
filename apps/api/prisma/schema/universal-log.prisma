@@ -1,0 +1,102 @@
+/// 범용 통합 로그 모델 (Universal Log Table)
+/// 모든 도메인의 활동 기록과 감사 로그를 단일 테이블에서 관리합니다.
+enum LogLevel {
+  DEBUG
+  INFO
+  WARN
+  ERROR
+  FATAL
+}
+
+enum ActorType {
+  USER // 유저 본인
+  ADMIN // 관리자/운영자
+  SYSTEM // 시스템 자동 처리 (배치 등)
+}
+
+enum HttpMethod {
+  GET
+  POST
+  PUT
+  DELETE
+  PATCH
+  HEAD
+  OPTIONS
+}
+
+/// User-Agent 통합 카탈로그
+/// 중복되는 긴 브라우저 정보를 단일화하여 저장 공간을 최적화합니다.
+model UserAgentCatalog {
+  id       BigInt @id @default(autoincrement())
+  uaHash   String @unique @db.Char(64) // UA 문자열의 SHA-256 해시값 (빠른 조회용)
+  uaString String @db.Text // 실제 전체 UA 문자열
+
+  // 파싱된 보조 정보 (필요시 업데이트)
+  browser String?
+  os      String?
+  device  String?
+
+  logs UniversalLog[]
+
+  createdAt DateTime @default(now())
+
+  // uaHash는 @unique이므로 자동 인덱싱됨 (별도 인덱스 제거)
+  @@map("user_agent_catalogs")
+}
+
+model UniversalLog {
+  id     BigInt
+  userId BigInt? // 행위 대상 또는 주체가 되는 유저 ID (User.id)
+
+  // 행위 주체 정보 (누가 실행했는가?)
+  actorType ActorType @default(USER)
+  actorId   BigInt? // ADMIN/USER인 경우 고유 ID, SYSTEM인 경우 null
+
+  // 로그 분류 (3단 계층 구조)
+  domain  String // 대분류 도메인 (FINANCE, GAME, IAM, SYSTEM 등)
+  service String // 중분류 서비스 (artifact, user, deposit, casino 등)
+  event   String // 소분류 구체적 행위 (synthesize, login, round_end 등)
+
+  /// 타겟 식별 ID (무엇을 조작했는가?)
+  /// 특정 객체의 전 생애주기(히스토리)를 추적할 때 사용합니다.
+  /// 예: 아티팩트 ID, 거래 ID, 카지노 라운드 ID 등 가변적인 대상 식별자
+  targetId BigInt?
+
+  // 요청 및 세션 상관 관계 추적
+  traceId   String?
+  sessionId String?
+  deviceId  String?
+
+  level     LogLevel @default(INFO)
+  isSuccess Boolean  @default(true) // 성공여부
+  errorCode String? // 실패 시 에러 코드
+
+  // 성능 지표
+  durationMs Int? // 처리에 소요된 시간 (ms)
+
+  payload Json // 도메인별 가변 상세 데이터 (prev/next state 등)
+
+  // 보안 및 컨텍스트 정보
+  ipAddress     String?     @db.Inet
+  userAgentId   BigInt? // Catalog ID 사용
+  countryCode   String?     @db.Char(2)
+  requestPath   String? // API 경로
+  requestMethod HttpMethod? // HTTP 메서드 (Enum)
+
+  createdAt DateTime @default(now())
+
+  // 관계 설정
+  userAgent UserAgentCatalog? @relation(fields: [userAgentId], references: [id])
+  // [최소주의 인덱스 전략 (Write 성능 우선)]
+  // 필수 조회 요건만 남기고, 쓰기 부하를 최소화합니다. (향후 병목 발생 시 추가)
+
+  // (Partition Key 포함) PK
+  @@id([id, createdAt])
+  // 1. 유저 본인의 활동 내역 조회 (가장 빈번함)
+  @@index([userId, createdAt])
+  // 2. 특정 객체(아티팩트, 카지노 기판/라운드 등)의 히스토리 추적 (Audit Trail)
+  @@index([targetId, createdAt])
+  // 3. 어드민의 도메인별 로그 기본 필터링
+  @@index([domain, service, createdAt])
+  @@map("universal_logs")
+}
