@@ -4,21 +4,28 @@ import { ArtifactGrade, ArtifactLogType } from '@prisma/client';
  * [Audit] 유물 활동 상세 내역 (타입별 전용 인터페이스)
  */
 
-// 1. 뽑기 및 쿠폰 (DRAW, COUPON_DRAW)
+// 1. 일반 뽑기 (DRAW)
 export interface DrawLogDetails {
-  isTicketUsed: boolean;
-  pityApplied: boolean;
-  costUsd?: number;
-  couponCode?: string;
+  currencyCode?: string; // 소모한 재화 종류 (예: DIAMOND)
+  costAmount?: number;   // 소모한 재화량
+  items?: { id: string; grade: ArtifactGrade }[];
 }
 
-// 2. 장착 및 해제 (EQUIP, UNEQUIP)
+// 2. 티켓 및 쿠폰 뽑기 (COUPON_DRAW)
+export interface CouponDrawLogDetails {
+  ticketType: 'ALL' | ArtifactGrade;
+  beforeCount: number;
+  afterCount: number;
+  items?: { id: string; grade: ArtifactGrade }[];
+}
+
+// 3. 장착 및 해제 (EQUIP, UNEQUIP)
 export interface EquipLogDetails {
   slotNo: number;
   previousArtifactId?: bigint | null;
 }
 
-// 3. 합성 (SYNTHESIS)
+// 4. 합성 (SYNTHESIS)
 export interface SynthesisLogDetails {
   consumedArtifactIds: bigint[];
   isSuccess: boolean;
@@ -26,13 +33,13 @@ export interface SynthesisLogDetails {
   costUsd?: number;
 }
 
-// 4. 관리자 유물 지급/회수 (ADMIN_GRANT, ADMIN_REVOKE)
+// 5. 관리자 유물 지급/회수 (ADMIN_GRANT, ADMIN_REVOKE)
 export interface AdminArtifactActionDetails {
   adminId: bigint;
   reason: string;
 }
 
-// 5. 관리자 티켓 수량 조정 (ADMIN_TICKET_MODIFY)
+// 6. 관리자 티켓 수량 조정 (ADMIN_TICKET_MODIFY)
 export interface AdminTicketModifyDetails {
   adminId: bigint;
   reason: string;
@@ -46,6 +53,7 @@ export interface AdminTicketModifyDetails {
  */
 export type UserArtifactLogDetails =
   | DrawLogDetails
+  | CouponDrawLogDetails
   | EquipLogDetails
   | SynthesisLogDetails
   | AdminArtifactActionDetails

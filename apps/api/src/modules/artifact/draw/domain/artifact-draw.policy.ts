@@ -18,13 +18,17 @@ export class ArtifactDrawPolicy {
 
   /**
    * [Rule] 설정된 확률(Gacha Config)에 따라 당첨 등급을 결정합니다.
+   * 특정 등급 확정권 사용 시 guaranteedGrade를 인자로 전달합니다.
    */
-  rollGrade(configs: ArtifactDrawConfig[]): ArtifactGrade {
+  rollGrade(configs: ArtifactDrawConfig[], guaranteedGrade?: ArtifactGrade): ArtifactGrade {
+    if (guaranteedGrade) {
+      return guaranteedGrade;
+    }
     // 등급 순서대로 정렬 (가시적인 누적 확률 계산을 위해)
     const order = Object.values(ArtifactGrade);
     const sortedConfigs = [...configs].sort((a, b) => order.indexOf(a.grade) - order.indexOf(b.grade));
 
-    const roll = Math.random(); 
+    const roll = Math.random();
     let cumulative = 0;
 
     for (const config of sortedConfigs) {
@@ -53,7 +57,7 @@ export class ArtifactDrawPolicy {
     // TODO: ArtifactCatalog.drawWeight 필드를 활용한 가중치 랜덤 로직 적용 가능
     const totalWeight = gradePool.reduce((sum, item) => sum + (item.drawWeight || 1000), 0);
     const roll = Math.random() * totalWeight;
-    
+
     let currentWeight = 0;
     for (const item of gradePool) {
       currentWeight += (item.drawWeight || 1000);

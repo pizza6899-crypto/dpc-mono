@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 
 import { UserArtifactDrawController } from './controllers/user/user-artifact-draw.controller';
 import { DrawArtifactService } from './application/draw-artifact.service';
+import { DrawArtifactByTicketService } from './application/draw-artifact-by-ticket.service';
+import { DrawArtifactByCurrencyService } from './application/draw-artifact-by-currency.service';
 import { ArtifactDrawPolicy } from './domain/artifact-draw.policy';
 import { ArtifactStatusModule } from '../status/status.module';
 import { ArtifactMasterModule } from '../master/master.module';
@@ -23,6 +25,11 @@ import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
     ConcurrencyModule,
   ],
   controllers: [UserArtifactDrawController],
-  providers: [DrawArtifactService, ArtifactDrawPolicy],
+  providers: [
+    DrawArtifactService,
+    DrawArtifactByTicketService,
+    DrawArtifactByCurrencyService,
+    ArtifactDrawPolicy,
+  ],
 })
 export class ArtifactDrawModule { }
