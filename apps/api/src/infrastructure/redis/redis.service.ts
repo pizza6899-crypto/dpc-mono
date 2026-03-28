@@ -26,20 +26,38 @@ export class RedisService {
     try {
       const value = await this.redisClient.get(key);
       if (!value) return null;
-
-      // 직렬화된 데이터 복구 (Date 객체 등)
-      return JSON.parse(value, (key, v) => {
-        // Date 패턴 (ISO String) 복구
-        const isoDatePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
-        if (typeof v === 'string' && isoDatePattern.test(v)) {
-          return new Date(v);
-        }
-        return v;
-      }) as T;
+      return this.deserialize<T>(value);
     } catch (error) {
       this.logger.error(error, `Redis GET 에러: ${key}`);
       return null;
     }
+  }
+
+  /**
+   * 캐시 조회와 동시에 만료 시간 연장 (Sliding Expiry)
+   * Redis 6.2+ GETEX 명령어 활용
+   */
+  async getAndExpire<T>(key: string, ttl_sec: number): Promise<T | null> {
+    try {
+      // @ts-ignore: ioredis may not have latest GETEX typings depending on version
+      const value = await this.redisClient.getex(key, 'EX', ttl_sec);
+      if (!value) return null;
+      return this.deserialize<T>(value);
+    } catch (error) {
+      this.logger.error(error, `Redis GETEX 에러: ${key}`);
+      return null;
+    }
+  }
+
+  private deserialize<T>(value: string): T {
+    return JSON.parse(value, (key, v) => {
+      // Date 패턴 (ISO String) 복구
+      const isoDatePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
+      if (typeof v === 'string' && isoDatePattern.test(v)) {
+        return new Date(v);
+      }
+      return v;
+    }) as T;
   }
 
   // 캐시에 데이터 저장

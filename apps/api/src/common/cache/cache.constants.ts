@@ -163,4 +163,15 @@ export const CACHE_CONFIG = {
       store: CacheStore.REDIS,
     },
   },
+
+  /**
+   * 통합 로그 모듈 관련
+   */
+  UNIVERSAL_LOG: {
+    USER_AGENT: (hash: string) => ({
+      key: `universal-log:ua:hash:${hash}`,
+      ttlSeconds: 1800, // 30분 캐시 (Sliding Expiry 적용)
+      store: CacheStore.REDIS,
+    }),
+  },
 } as const;

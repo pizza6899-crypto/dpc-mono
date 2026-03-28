@@ -48,6 +48,8 @@ import { UserAnalyticsModule } from './modules/user-analytics/user-analytics.mod
 import { WebsocketModule } from './infrastructure/websocket/websocket.module';
 import { ChatModule } from './modules/chat/chat.module';
 
+import { UniversalLogModule } from './modules/universal-log/universal-log.module';
+
 @Module({
   imports: [
     EnvModule,
@@ -57,6 +59,7 @@ import { ChatModule } from './modules/chat/chat.module';
     CommonLoggerModule,
     NodeIdentityModule,
     SnowflakeModule,
+    UniversalLogModule,
     SqidsModule,
     BullMqModule,
     ScheduleModule.forRoot(),
