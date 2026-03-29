@@ -90,7 +90,7 @@ export class UniversalLogProcessor extends BaseProcessor<any, void> {
             level: data.level,
             isSuccess: data.isSuccess,
             errorCode: data.errorCode,
-            durationMs: data.durationMs,
+            durationMs: data.durationMs != null ? Number(data.durationMs) : null,
             payload: data.payload,
             ipAddress: data.ipAddress,
             userAgentId: data.userAgentId ? BigInt(data.userAgentId) : null,
@@ -109,10 +109,10 @@ export class UniversalLogProcessor extends BaseProcessor<any, void> {
         try {
           // DB Bulk Insert
           await this.logRepository.saveMany(logs);
-          
+
           // 성공 시 처리 리스트 삭제 (Reliable Queue 완료)
           await client.del(UNIVERSAL_LOG_KEYS.PROCESSING);
-          
+
           this.logger.log(`[UniversalLog] 배치 저장 완료: ${logs.length}건`);
         } catch (error) {
           this.logger.error(`[UniversalLog] DB 배치 저장 실패. ${logs.length}건 데이터는 Processing 리스트에 유지됨`, error);
