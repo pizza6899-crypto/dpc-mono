@@ -23,6 +23,16 @@ export class PrismaUniversalLogRepository implements UniversalLogRepositoryPort 
     });
   }
 
+  async saveMany(logs: UniversalLog[]): Promise<void> {
+    const data = logs.map(log => UniversalLogMapper.toPersistence(log));
+
+    // Prisma createMany (PostgreSQL) 는 매우 빠르며 원자적임
+    await this.tx.universalLog.createMany({
+      data: data as any[],
+      skipDuplicates: true, // 만에 하나 중복 인입될 경우 대비
+    });
+  }
+
   async findById<K extends LogActionKey = LogActionKey>(id: bigint, createdAt: Date): Promise<UniversalLog<K> | null> {
     const log = await this.tx.universalLog.findUnique({
       where: {

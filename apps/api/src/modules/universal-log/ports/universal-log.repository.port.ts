@@ -6,9 +6,14 @@ import { LogActionKey } from '../domain/types';
  */
 export abstract class UniversalLogRepositoryPort {
   /**
-   * 새로운 로그 저장
+   * 단건 저장
    */
   abstract save<K extends LogActionKey>(log: UniversalLog<K>): Promise<void>;
+
+  /**
+   * 대량 저장 (배치)
+   */
+  abstract saveMany(logs: UniversalLog[]): Promise<void>;
 
   /**
    * ID로 로그 단건 조회

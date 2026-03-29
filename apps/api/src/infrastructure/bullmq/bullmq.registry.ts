@@ -10,6 +10,7 @@ import { EXCHANGE_QUEUES } from 'src/modules/exchange/infrastructure/exchange.bu
 import { AUTH_QUEUES } from 'src/modules/auth/session/infrastructure/session.bullmq';
 import { COMP_QUEUES } from 'src/modules/comp/infrastructure/comp.bullmq';
 import { USER_ANALYTICS_QUEUES } from 'src/modules/user-analytics/infrastructure/queue/user-analytics.bullmq';
+import { UNIVERSAL_LOG_QUEUES } from 'src/modules/universal-log/infrastructure/universal-log.bullmq';
 
 /**
  * 전역 BullMQ 큐 설정 레지스트리 (Aggregation)
@@ -26,6 +27,7 @@ export const BULLMQ_REGISTRY = {
   AUTH: AUTH_QUEUES,
   COMP: COMP_QUEUES,
   USER_ANALYTICS: USER_ANALYTICS_QUEUES,
+  UNIVERSAL_LOG: UNIVERSAL_LOG_QUEUES,
 } as const;
 
 /**

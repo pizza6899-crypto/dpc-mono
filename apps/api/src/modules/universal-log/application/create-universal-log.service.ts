@@ -2,10 +2,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ActorType, HttpMethod, LogLevel } from '@prisma/client';
 import { SnowflakeService } from '../../../common/snowflake/snowflake.service';
 import { LogActionKey, LogEvent, LogService, PayloadFor } from '../domain/types';
-import { UniversalLog } from '../domain/universal-log.entity';
 import { UserAgentCatalog } from '../domain/user-agent-catalog.entity';
-import { UNIVERSAL_LOG_REPOSITORY_PORT, UniversalLogRepositoryPort } from '../ports/universal-log.repository.port';
 import { USER_AGENT_CATALOG_REPOSITORY_PORT, UserAgentCatalogRepositoryPort } from '../ports/user-agent-catalog.repository.port';
+import { UNIVERSAL_LOG_KEYS } from '../infrastructure/universal-log.bullmq';
+import { RedisService } from 'src/infrastructure/redis/redis.service';
 
 /**
  * 로그 생성 명령 인터페이스
@@ -53,46 +53,47 @@ export interface CreateLogCommand<K extends LogActionKey> {
 
 /**
  * [UniversalLog] 로그 생성 애플리케이션 서비스
- * 도메인 엔티티 생성, ID 채번(Snowflake), UA 정규화 및 영속화를 담당합니다.
+ * Redis List를 버퍼로 사용하여 초고성능 로깅을 처리합니다.
  */
 @Injectable()
 export class CreateUniversalLogService {
   constructor(
-    @Inject(UNIVERSAL_LOG_REPOSITORY_PORT)
-    private readonly logRepository: UniversalLogRepositoryPort,
+    private readonly redis: RedisService,
     @Inject(USER_AGENT_CATALOG_REPOSITORY_PORT)
     private readonly userAgentRepository: UserAgentCatalogRepositoryPort,
     private readonly snowflakeService: SnowflakeService,
   ) { }
 
   /**
-   * 로그를 생성하고 저장합니다.
+   * 로그 생성 실행 (버퍼 적재)
    */
   async execute<K extends LogActionKey>(command: CreateLogCommand<K>): Promise<void> {
-    // 1. Action Key 분리 (service.event)
-    const [service, event] = command.action.split('.') as [LogService, LogEvent];
+    const { action, userAgent } = command;
 
-    // 2. User Agent ID 확보 (있을 경우만)
+    // 1. 서비스/이벤트 분리 (ActionKey: 'SERVICE.EVENT')
+    const [service, event] = action.split('.') as [LogService, LogEvent];
+
+    // 2. UserAgent ID 확인/생성 (고중복 데이터 최적화)
     let userAgentId: bigint | null = null;
-    if (command.userAgent) {
-      const uaCatalog = UserAgentCatalog.fromRaw(command.userAgent);
-      userAgentId = await this.userAgentRepository.upsert(uaCatalog);
+    if (userAgent) {
+      const uaEntity = UserAgentCatalog.fromRaw(userAgent);
+      userAgentId = await this.userAgentRepository.upsert(uaEntity);
     }
 
-    // 3. ID 및 생성 시각 생성 (Snowflake)
+    // 3. Snowflake ID 채번 (정적 시간 제어 포함)
     const { id, timestamp } = this.snowflakeService.generate(command.createdAt);
 
-    // 4. 도메인 엔티티 생성
-    const log = UniversalLog.create<K>({
-      id,
+    // 4. Redis List 버퍼 적재 (RPUSH)
+    await this.redis.rpush(UNIVERSAL_LOG_KEYS.BUFFER, {
+      id: id.toString(), // BigInt -> string
       service,
       event,
-      createdAt: command.createdAt ?? timestamp,
+      createdAt: (command.createdAt ?? timestamp).toISOString(),
       payload: command.payload,
-      userId: command.userId,
+      userId: command.userId?.toString(),
       actorType: command.actorType,
-      actorId: command.actorId,
-      targetId: command.targetId,
+      actorId: command.actorId?.toString(),
+      targetId: command.targetId?.toString(),
       traceId: command.traceId,
       sessionId: command.sessionId,
       deviceId: command.deviceId,
@@ -101,13 +102,10 @@ export class CreateUniversalLogService {
       errorCode: command.errorCode,
       durationMs: command.durationMs,
       ipAddress: command.ipAddress,
-      userAgentId,
+      userAgentId: userAgentId?.toString(),
       countryCode: command.countryCode,
       requestPath: command.requestPath,
       requestMethod: command.requestMethod,
     });
-
-    // 5. 저장 도구 호출
-    await this.logRepository.save(log);
   }
 }
