@@ -22,7 +22,7 @@ export class TierStats {
     public readonly periodRewardClaimedUsd: Prisma.Decimal,
 
     public readonly updatedAt: Date,
-  ) {}
+  ) { }
 
   static fromPersistence(data: PrismaTierStats): TierStats {
     return new TierStats(

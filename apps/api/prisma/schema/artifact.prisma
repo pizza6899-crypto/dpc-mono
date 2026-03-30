@@ -71,8 +71,7 @@ model ArtifactCatalog {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  userArtifacts     UserArtifact[]
-  artifactAuditLogs ArtifactAuditLog[]
+  userArtifacts UserArtifact[]
 
   @@map("artifact_catalogs")
 }
@@ -173,41 +172,4 @@ model UserArtifact {
   @@index([userId])
   @@index([artifactId])
   @@map("user_artifacts")
-}
-
-/// [Artifact] 유물 활동 타입
-enum ArtifactLogType {
-  DRAW // 유물 뽑기
-  COUPON_DRAW // 쿠폰을 사용한 유물 뽑기
-  EQUIP // 유물 장착
-  UNEQUIP // 유물 해제
-  SYNTHESIS // 유물 합성
-  DISTRIBUTION // 보너스 분배 (삭제됨)
-  ADMIN_GRANT // 유물 강제 지급 (CS 대응 등)
-  ADMIN_REVOKE // 유물 회수 (오지급 회수 등)
-  ADMIN_TICKET_MODIFY // 티켓 수량 수동 조정 (지급/차감)
-  ADMIN_POOL_ADJUST // 보너스 풀 잔액 수동 조정 (삭제됨)
-}
-
-/// [Artifact] 유물 도메인 감사 로그 (유저 활동 감사)
-model ArtifactAuditLog {
-  id     BigInt          @id // Snowflake ID (또는 시간 기반 PK)
-  userId BigInt?         @map("user_id") // 유저 활동일 경우 필수, 시스템 활동일 경우 null
-  type   ArtifactLogType @map("type")
-
-  artifactId BigInt?        @map("artifact_id") // 유물 관련 시 필요
-  grade      ArtifactGrade? @map("grade") // 유물/쿠폰 관련 시 필요
-
-  /// 상세 현황 (JSON)
-  /// - DRAW 시: { "isTicketUsed": true, "pityApplied": false }
-  details Json? @map("details")
-
-  createdAt DateTime @default(now()) @map("created_at")
-
-  user     User?            @relation(fields: [userId], references: [id])
-  artifact ArtifactCatalog? @relation(fields: [artifactId], references: [id])
-
-  @@index([createdAt])
-  @@index([userId, type])
-  @@map("artifact_audit_logs")
 }

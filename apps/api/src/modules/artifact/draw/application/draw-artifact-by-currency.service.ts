@@ -8,7 +8,7 @@ import { ArtifactDrawConfigRepositoryPort } from '../../master/ports/artifact-dr
 import { ArtifactCatalogRepositoryPort } from '../../master/ports/artifact-catalog.repository.port';
 import { UserArtifactRepositoryPort } from '../../inventory/ports/user-artifact.repository.port';
 import { UserArtifact } from '../../inventory/domain/user-artifact.entity';
-import { CreateUserArtifactLogService } from '../../audit/application/create-user-artifact-log.service';
+import { CreateUniversalLogService } from '../../../universal-log/application/create-universal-log.service';
 import { ArtifactStatusNotFoundException } from '../../status/domain/status.exception';
 import { ArtifactDrawPolicy } from '../domain/artifact-draw.policy';
 import { DrawnArtifact } from './draw-artifact.service';
@@ -30,7 +30,7 @@ export class DrawArtifactByCurrencyService {
     private readonly userInventoryRepo: UserArtifactRepositoryPort,
     private readonly drawConfigRepo: ArtifactDrawConfigRepositoryPort,
     private readonly catalogRepo: ArtifactCatalogRepositoryPort,
-    private readonly auditLogService: CreateUserArtifactLogService,
+    private readonly auditLogService: CreateUniversalLogService,
     private readonly drawPolicy: ArtifactDrawPolicy,
   ) { }
 
@@ -51,7 +51,7 @@ export class DrawArtifactByCurrencyService {
     userStatus.recordCurrencyDraw(type === 'SINGLE' ? 1 : 10);
     // TODO: WalletModule 연동하여 실제 재화 차감 (예: walletService.debit(...))
     console.log(`[TODO] Currency payment logic for ${userId}: ${currency}`);
-    
+
     await this.userStatusRepo.update(userStatus);
 
     // 2. 뽑기 실행
@@ -81,12 +81,12 @@ export class DrawArtifactByCurrencyService {
 
     // 3. 감사 로그 기록 (일괄 기록)
     await this.auditLogService.execute({
+      action: 'artifact.draw',
       userId,
-      type: 'DRAW',
-      details: {
-        currencyCode: currency, // 사용한 재화 코드
+      payload: {
+        currencyCode: currency,
         costAmount: count === 1 ? 100 : 1000, // TODO: 실제 가격 정책 연동 필요
-        items: logItems,
+        items: logItems.map(item => ({ id: item.id, grade: item.grade })),
       },
     });
 

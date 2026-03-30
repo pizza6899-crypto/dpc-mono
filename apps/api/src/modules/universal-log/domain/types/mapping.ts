@@ -4,8 +4,8 @@ import * as Payloads from './payloads';
  * [핵심] 액션 키(서비스.이벤트)와 페이로드 타입의 매핑
  */
 export interface LogPayloadMap {
-  'artifact.synthesize': Payloads.ArtifactSynthesizePayload;
-  'user.login': Payloads.UserLoginPayload;
+  'artifact.draw': Payloads.ArtifactDrawPayload;
+  'artifact.reward': Payloads.ArtifactRewardPayload;
   // 여기에 새로운 액션과 페이로드 타입을 계속 추가합니다.
 }
 

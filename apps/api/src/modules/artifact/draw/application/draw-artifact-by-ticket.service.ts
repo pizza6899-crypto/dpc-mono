@@ -8,7 +8,7 @@ import { ArtifactDrawConfigRepositoryPort } from '../../master/ports/artifact-dr
 import { ArtifactCatalogRepositoryPort } from '../../master/ports/artifact-catalog.repository.port';
 import { UserArtifactRepositoryPort } from '../../inventory/ports/user-artifact.repository.port';
 import { UserArtifact } from '../../inventory/domain/user-artifact.entity';
-import { CreateUserArtifactLogService } from '../../audit/application/create-user-artifact-log.service';
+import { CreateUniversalLogService } from '../../../universal-log/application/create-universal-log.service';
 import { ArtifactStatusNotFoundException } from '../../status/domain/status.exception';
 import { ArtifactDrawPolicy } from '../domain/artifact-draw.policy';
 import { DrawnArtifact } from './draw-artifact.service';
@@ -30,7 +30,7 @@ export class DrawArtifactByTicketService {
     private readonly userInventoryRepo: UserArtifactRepositoryPort,
     private readonly drawConfigRepo: ArtifactDrawConfigRepositoryPort,
     private readonly catalogRepo: ArtifactCatalogRepositoryPort,
-    private readonly auditLogService: CreateUserArtifactLogService,
+    private readonly auditLogService: CreateUniversalLogService,
     private readonly drawPolicy: ArtifactDrawPolicy,
   ) { }
 
@@ -93,13 +93,12 @@ export class DrawArtifactByTicketService {
 
     // 3. 감사 로그 기록 (일괄 기록)
     await this.auditLogService.execute({
+      action: 'artifact.draw',
       userId,
-      type: 'COUPON_DRAW',
-      details: {
-        ticketType: ticketType,
-        beforeCount,
-        afterCount,
-        items: logItems,
+      payload: {
+        currencyCode: 'TICKET',
+        costAmount: count,
+        items: logItems.map(item => ({ id: item.id, grade: item.grade })),
       },
     });
 

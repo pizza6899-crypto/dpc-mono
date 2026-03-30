@@ -171,7 +171,6 @@ model User {
 
   // [Artifact]
   userArtifacts      UserArtifact[]
-  artifactAuditLogs  ArtifactAuditLog[]
   userArtifactStatus UserArtifactStatus?
 
   // [User Intelligence]
