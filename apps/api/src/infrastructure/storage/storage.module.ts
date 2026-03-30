@@ -4,7 +4,7 @@ import { EnvModule } from 'src/infrastructure/env/env.module';
 
 @Global()
 @Module({
-  imports: [EnvModule],
+  imports: [],
   providers: [StorageService],
   exports: [StorageService],
 })

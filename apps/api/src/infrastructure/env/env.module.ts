@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { EnvService } from './env.service';
 import {
@@ -24,6 +24,7 @@ import {
   solanaConfig,
 } from './env.config';
 
+@Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
