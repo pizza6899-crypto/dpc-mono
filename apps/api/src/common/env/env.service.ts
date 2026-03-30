@@ -21,11 +21,12 @@ import {
   SqidsConfig,
   StorageConfig,
   CloudflareAiConfig,
+  SolanaConfig,
 } from './env.types';
 
 @Injectable()
 export class EnvService {
-  constructor(private configService: ConfigService) {}
+  constructor(private configService: ConfigService) { }
 
   get nodeEnv(): string {
     return this.configService.get<string>('NODE_ENV', 'development');
@@ -117,6 +118,10 @@ export class EnvService {
     return this.configService.get<CloudflareAiConfig>('cloudflareAi')!;
   }
 
+  get solana(): SolanaConfig {
+    return this.configService.get<SolanaConfig>('solana')!;
+  }
+
   get all(): EnvironmentConfig {
     return {
       app: this.app,
@@ -138,6 +143,7 @@ export class EnvService {
       sqids: this.sqids,
       storage: this.storage,
       cloudflareAi: this.cloudflareAi,
+      solana: this.solana,
     };
   }
 }

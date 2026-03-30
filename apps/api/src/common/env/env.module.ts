@@ -21,6 +21,7 @@ import {
   sqidsConfig,
   storageConfig,
   cloudflareAiConfig,
+  solanaConfig,
 } from './env.config';
 
 @Module({
@@ -47,6 +48,7 @@ import {
         sqidsConfig,
         storageConfig,
         cloudflareAiConfig,
+        solanaConfig,
       ],
     }),
   ],

@@ -2,7 +2,7 @@ import { CacheStore } from './cache.service';
 
 export interface CacheDefinition {
   key: string;
-  ttlSeconds: number;
+  ttlSeconds: number; // 초 단위 (소수점 지원 가능)
   store: CacheStore;
 }
 
@@ -173,5 +173,15 @@ export const CACHE_CONFIG = {
       ttlSeconds: 1800, // 30분 캐시 (Sliding Expiry 적용)
       store: CacheStore.REDIS,
     }),
+  },
+  /**
+   * 블록체인 관련
+   */
+  BLOCKCHAIN: {
+    SOLANA_CURRENT_SLOT: {
+      key: 'blockchain:solana:current-slot',
+      ttlSeconds: 0.7, // 700ms (슬롯은 약 400ms마다 변경되므로 아주 짧게 캐시)
+      store: CacheStore.REDIS,
+    },
   },
 } as const;

@@ -49,12 +49,14 @@ import { WebsocketModule } from './infrastructure/websocket/websocket.module';
 import { ChatModule } from './modules/chat/chat.module';
 
 import { UniversalLogModule } from './modules/universal-log/universal-log.module';
+import { SolanaBlockchainModule } from './common/blockchain/solana/solana-blockchain.module';
 
 @Module({
   imports: [
     EnvModule,
     PrismaModule,
     CacheModule,
+    SolanaBlockchainModule,
     ThrottleModule,
     CommonLoggerModule,
     NodeIdentityModule,

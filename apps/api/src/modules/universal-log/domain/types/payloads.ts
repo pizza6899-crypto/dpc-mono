@@ -4,9 +4,15 @@
 export interface ArtifactDrawPayload {
   currencyCode: string;
   costAmount: number;
+  provablyFair?: {
+    blockhash: string;
+    nonce: number;
+  };
   items: Array<{
     id: string;
     grade: string;
+    gradeRoll?: number;
+    selectRoll?: number;
   }>;
 }
 

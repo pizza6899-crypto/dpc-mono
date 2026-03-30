@@ -157,6 +157,10 @@ export interface CloudflareAiConfig {
   model: string;
 }
 
+export interface SolanaConfig {
+  rpcUrl: string;
+}
+
 export interface EnvironmentConfig {
   app: AppConfig;
   jwt: JwtConfig;
@@ -177,4 +181,5 @@ export interface EnvironmentConfig {
   sqids: SqidsConfig;
   storage: StorageConfig;
   cloudflareAi: CloudflareAiConfig;
+  solana: SolanaConfig;
 }

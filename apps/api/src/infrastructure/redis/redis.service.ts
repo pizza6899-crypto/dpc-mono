@@ -35,12 +35,13 @@ export class RedisService {
 
   /**
    * 캐시 조회와 동시에 만료 시간 연장 (Sliding Expiry)
-   * Redis 6.2+ GETEX 명령어 활용
+   * Redis 6.2+ GETEX 명령어 활용 (밀리초 단위 PX 사용)
    */
   async getAndExpire<T>(key: string, ttl_sec: number): Promise<T | null> {
     try {
+      const ttl_ms = Math.floor(ttl_sec * 1000);
       // @ts-ignore: ioredis may not have latest GETEX typings depending on version
-      const value = await this.redisClient.getex(key, 'EX', ttl_sec);
+      const value = await this.redisClient.getex(key, 'PX', ttl_ms);
       if (!value) return null;
       return this.deserialize<T>(value);
     } catch (error) {
@@ -60,16 +61,18 @@ export class RedisService {
     }) as T;
   }
 
-  // 캐시에 데이터 저장
-  async set<T>(key: string, value: T, ttl_sec = 30): Promise<boolean> {
+  // 캐시에 데이터 저장 (밀리초 단위 PX 사용으로 소수점 TTL 지원)
+  async set<T>(key: string, value: T, ttl_sec: number): Promise<boolean> {
     try {
       const serializedValue = this.serialize(value);
-      // TTL Jitter: 동시 만료 방지를 위해 랜덤 시간 추가
-      const maxJitter = Math.min(ttl_sec * 0.05, 120);
-      const jitter = Math.floor(maxJitter * Math.random());
+      const ttl_ms = ttl_sec * 1000;
 
-      const finalTtl = ttl_sec + jitter;
-      await this.redisClient.set(key, serializedValue, 'EX', finalTtl);
+      // TTL Jitter: 동시 만료 방지를 위해 랜덤 시간 추가 (밀리초 단위)
+      const maxJitterMs = Math.min(ttl_ms * 0.05, 120 * 1000);
+      const jitterMs = Math.floor(maxJitterMs * Math.random());
+
+      const finalTtlMs = Math.floor(ttl_ms + jitterMs);
+      await this.redisClient.set(key, serializedValue, 'PX', finalTtlMs);
       return true;
     } catch (error) {
       this.logger.error(error, `Redis SET 에러: ${key}`);
