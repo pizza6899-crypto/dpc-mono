@@ -10,7 +10,7 @@ import {
 } from './ports/out/moderation-repository.port';
 import { AI_MODERATION_PORT } from './ports/out/ai-moderation.port';
 import { EnvModule } from 'src/common/env/env.module';
-import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
 
 // Admin Services
 import { FindForbiddenWordsAdminService } from './application/admin/find-forbidden-words-admin.service';

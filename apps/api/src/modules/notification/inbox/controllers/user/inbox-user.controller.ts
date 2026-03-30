@@ -21,7 +21,7 @@ import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { SqidsService } from 'src/common/sqids/sqids.service';
 import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
-import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+import { SnowflakeService } from 'src/infrastructure/snowflake/snowflake.service';
 import { FindNotificationsService } from '../../application/find-notifications.service';
 import { GetUnreadCountService } from '../../application/get-unread-count.service';
 import { MarkAsReadService } from '../../application/mark-as-read.service';

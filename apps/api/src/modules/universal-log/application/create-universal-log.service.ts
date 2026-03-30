@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ActorType, HttpMethod, LogLevel } from '@prisma/client';
-import { SnowflakeService } from '../../../common/snowflake/snowflake.service';
+import { SnowflakeService } from '../../../infrastructure/snowflake/snowflake.service';
 import { LogActionKey, LogEvent, LogService, PayloadFor } from '../domain/types';
 import { UserAgentCatalog } from '../domain/user-agent-catalog.entity';
 import { USER_AGENT_CATALOG_REPOSITORY_PORT, UserAgentCatalogRepositoryPort } from '../ports/user-agent-catalog.repository.port';

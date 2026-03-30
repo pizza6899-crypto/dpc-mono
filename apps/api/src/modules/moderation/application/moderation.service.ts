@@ -19,7 +19,7 @@ import {
   ForbiddenWordException,
   AiModerationRejectedException,
 } from '../domain/moderation.exception';
-import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+import { SnowflakeService } from 'src/infrastructure/snowflake/snowflake.service';
 
 @Injectable()
 export class ModerationService {

@@ -20,7 +20,7 @@ import {
 } from '../domain';
 import { Prisma } from '@prisma/client';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
-import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+import { SnowflakeService } from 'src/infrastructure/snowflake/snowflake.service';
 
 export interface UpdateWalletStatusParams {
   userId: bigint;

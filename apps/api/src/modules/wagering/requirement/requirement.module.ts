@@ -21,7 +21,7 @@ import {
 } from './ports';
 import { WageringRequirementAdminController } from './controllers/admin/wagering-requirement-admin.controller';
 import { WageringRequirementUserController } from './controllers/user/wagering-requirement-user.controller';
-import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
 import { WageringConfigModule } from '../config/wagering-config.module';
 import { WalletModule } from '../../wallet/wallet.module';
 import { PromotionConfigModule } from '../../promotion/config/promotion-config.module';

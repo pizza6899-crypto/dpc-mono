@@ -23,7 +23,7 @@ import {
   CompPolicyViolationException,
 } from '../domain';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
-import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+import { SnowflakeService } from 'src/infrastructure/snowflake/snowflake.service';
 
 interface EarnCompParams {
   userId: bigint;

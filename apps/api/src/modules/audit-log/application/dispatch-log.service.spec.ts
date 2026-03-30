@@ -2,7 +2,7 @@ import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import { getQueueToken } from '@nestjs/bullmq';
 import { DispatchLogService } from './dispatch-log.service';
-import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+import { SnowflakeService } from 'src/infrastructure/snowflake/snowflake.service';
 import { LogType } from '../domain';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';

@@ -15,7 +15,7 @@ import { TierEvaluationTriggerProcessor } from './infrastructure/tier-evaluation
 import { TierUserEvaluationProcessor } from './infrastructure/tier-user-evaluation.processor';
 import { TierConfigModule } from '../config/tier-config.module';
 import { RewardCoreModule } from 'src/modules/reward/core/reward-core.module';
-import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
 
 @Module({
   imports: [

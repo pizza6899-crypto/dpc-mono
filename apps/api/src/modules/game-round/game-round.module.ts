@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
 import { GameRoundRepository } from './infrastructure/game-round.repository';
 import { GameTransactionRepository } from './infrastructure/game-transaction.repository';
 import { GameRoundMapper } from './infrastructure/game-round.mapper';

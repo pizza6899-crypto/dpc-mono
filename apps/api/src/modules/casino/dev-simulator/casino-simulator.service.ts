@@ -3,7 +3,7 @@ import { Prisma, GameAggregatorType, GameProvider } from '@prisma/client';
 import { ProcessCasinoBetService } from '../application/process-casino-bet.service';
 import { ProcessCasinoCreditService } from '../application/process-casino-credit.service';
 import { FindCasinoGameSessionService } from 'src/modules/casino-session/application/find-casino-game-session.service';
-import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+import { SnowflakeService } from 'src/infrastructure/snowflake/snowflake.service';
 import {
   SimulateRoundRequestDto,
   SimulateRoundResponseDto,

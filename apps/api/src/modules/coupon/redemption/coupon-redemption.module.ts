@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
 import { RewardModule } from 'src/modules/reward/reward.module';
 import { CouponCoreModule } from '../core/core.module';
 import { CouponConfigModule } from '../config/config.module';

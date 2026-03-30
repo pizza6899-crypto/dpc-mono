@@ -4,7 +4,7 @@ import { Queue } from 'bullmq';
 import type { LogJobData } from '../domain';
 import { LogType } from '../domain';
 import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
-import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+import { SnowflakeService } from 'src/infrastructure/snowflake/snowflake.service';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { sanitizeAndTruncate } from 'src/utils/log-sanitizer.util';
 

@@ -7,7 +7,7 @@ import { UserWalletTransaction } from '../domain';
 import { UserWalletTransactionSearchOptions } from '../ports/out/user-wallet-transaction.search-options';
 import { Prisma } from '@prisma/client';
 import { UserWalletTransactionMapper } from './user-wallet-transaction.mapper';
-import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+import { SnowflakeService } from 'src/infrastructure/snowflake/snowflake.service';
 
 @Injectable()
 export class UserWalletTransactionRepository implements UserWalletTransactionRepositoryPort {

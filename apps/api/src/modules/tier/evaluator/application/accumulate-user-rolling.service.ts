@@ -10,7 +10,7 @@ import { UserTier } from '../../profile/domain/user-tier.entity';
 import { TierConfigRepositoryPort } from '../../config/infrastructure/tier-config.repository.port';
 import { TierAuditRepositoryPort } from '../../audit/infrastructure/tier-audit.repository.port';
 import { ExpSourceType, Prisma } from '@prisma/client';
-import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+import { SnowflakeService } from 'src/infrastructure/snowflake/snowflake.service';
 
 @Injectable()
 export class AccumulateUserRollingService {

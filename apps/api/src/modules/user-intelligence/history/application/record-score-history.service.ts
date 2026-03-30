@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { SnowflakeService } from '../../../../common/snowflake/snowflake.service';
+import { SnowflakeService } from '../../../../infrastructure/snowflake/snowflake.service';
 import { UserIntelligenceHistory } from '../domain/user-intelligence-history.entity';
 import {
   HISTORY_REPOSITORY_PORT,

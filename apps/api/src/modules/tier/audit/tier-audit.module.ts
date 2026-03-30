@@ -1,6 +1,6 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { BullModule } from '@nestjs/bullmq';
-import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
 import { TierAuditRepositoryPort } from './infrastructure/tier-audit.repository.port';
 import { TierAuditRepository } from './infrastructure/tier-audit.repository';
 import { RecordTierHistoryService } from './application/record-tier-history.service';

@@ -50,7 +50,7 @@ import { DispatchLogService } from './application/dispatch-log.service';
 import { AuditLogInterceptor } from './infrastructure/audit-log.interceptor';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { AUDIT_LOG_REPOSITORY } from './ports/out';
-import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
 import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
 import { BullModule } from '@nestjs/bullmq';
 import { AUDIT_QUEUES } from './infrastructure/audit-log.bullmq';

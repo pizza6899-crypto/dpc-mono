@@ -25,7 +25,7 @@ import {
 } from '../domain';
 import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
 import { GrantRewardService } from 'src/modules/reward/core/application/grant-reward.service';
-import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+import { SnowflakeService } from 'src/infrastructure/snowflake/snowflake.service';
 
 @Injectable()
 export class SettleDailyCompService {

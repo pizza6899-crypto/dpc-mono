@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import { MessageCode } from '@repo/shared';
-import { DomainException } from '../exception/domain.exception';
+import { DomainException } from 'src/common/exception/domain.exception';
 
 /**
  * Snowflake 관련 기본 예외

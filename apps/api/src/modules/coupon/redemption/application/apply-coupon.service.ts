@@ -9,7 +9,7 @@ import {
   type UserCouponRepositoryPort,
 } from '../ports/user-coupon.repository.port';
 import { InstantGrantRewardService } from 'src/modules/reward/core/application/instant-grant-reward.service';
-import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+import { SnowflakeService } from 'src/infrastructure/snowflake/snowflake.service';
 import { RedisService } from 'src/infrastructure/redis/redis.service';
 import { GetCouponConfigService } from '../../config/application/get-coupon-config.service';
 import { CouponNotFoundException, CouponCurrencyMismatchException } from '../../core/domain/coupon.exception';

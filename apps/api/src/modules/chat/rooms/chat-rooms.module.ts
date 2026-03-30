@@ -12,7 +12,7 @@ import { ChatRoomUserController } from './controllers/user/chat-room-user.contro
 import { SqidsModule } from 'src/common/sqids/sqids.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
 import { TierModule } from '../../tier/tier.module';
-import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
 import { FileModule } from '../../file/file.module';
 import { SendChatMessageService } from './application/send-chat-message.service';
 import { GetChatMessagesService } from './application/get-chat-messages.service';

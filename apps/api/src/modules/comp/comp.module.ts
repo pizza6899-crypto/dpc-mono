@@ -21,7 +21,7 @@ import { UpdateCompAccountStatusService } from './application/update-comp-accoun
 import { CompAdminController } from './controllers/admin/comp-admin.controller';
 import { WalletModule } from '../wallet/wallet.module';
 import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
-import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
 import { RewardCoreModule } from '../reward/core/reward-core.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { SettleDailyCompService } from './application/settle-daily-comp.service';

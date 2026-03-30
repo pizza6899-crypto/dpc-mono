@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+import { SnowflakeService } from 'src/infrastructure/snowflake/snowflake.service';
 import {
   TierAuditRepositoryPort,
   CreateTierHistoryProps,

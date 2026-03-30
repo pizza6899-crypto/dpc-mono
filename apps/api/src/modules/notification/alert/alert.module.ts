@@ -5,7 +5,7 @@ import { AlertMapper } from './infrastructure/alert.mapper';
 import { AlertRepository } from './infrastructure/alert.repository';
 import { NotificationChannelPolicy } from './domain/policy/notification-channel.policy';
 import { ALERT_REPOSITORY } from './ports';
-import { SnowflakeModule } from '../../../common/snowflake/snowflake.module';
+import { SnowflakeModule } from '../../../infrastructure/snowflake/snowflake.module';
 
 @Module({
   imports: [NotificationQueueModule, SnowflakeModule],

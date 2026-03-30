@@ -1,7 +1,7 @@
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
-import { SnowflakeService, GeneratedSnowflake } from './snowflake.service';
-import { NodeIdentityService } from '../node-identity/node-identity.service';
+import { SnowflakeService } from './snowflake.service';
+import { NodeIdentityService } from 'src/infrastructure/node-identity/node-identity.service';
 import { SnowflakeClockBackwardsException } from './snowflake.exception';
 
 describe('SnowflakeService', () => {

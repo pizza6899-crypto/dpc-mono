@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ChatRoomsModule } from '../rooms/chat-rooms.module';
-import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
 
 @Module({
   imports: [

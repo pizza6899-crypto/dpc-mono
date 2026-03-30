@@ -7,7 +7,7 @@ import {
   ChatMessage,
   type ChatMessageMetadata,
 } from '../domain/chat-message.entity';
-import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+import { SnowflakeService } from 'src/infrastructure/snowflake/snowflake.service';
 import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
 
 import {

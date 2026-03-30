@@ -10,7 +10,7 @@ import { Alert, DuplicateAlertException } from '../domain';
 import { ALERT_REPOSITORY } from '../ports';
 import type { AlertRepositoryPort } from '../ports';
 import { NotificationPayloadMap, NOTIFICATION_QUEUES } from '../../common';
-import { SnowflakeService } from '../../../../common/snowflake/snowflake.service';
+import { SnowflakeService } from '../../../../infrastructure/snowflake/snowflake.service';
 import { NotificationChannelPolicy } from '../domain/policy/notification-channel.policy';
 
 interface CreateAlertParams<T extends keyof NotificationPayloadMap> {

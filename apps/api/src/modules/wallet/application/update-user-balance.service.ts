@@ -29,7 +29,7 @@ import type {
   UpdateWalletStatsDto,
 } from '../ports/out/user-wallet-stats.repository.port';
 import { ExchangeRateService } from '../../exchange/application/exchange-rate.service';
-import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+import { SnowflakeService } from 'src/infrastructure/snowflake/snowflake.service';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import {

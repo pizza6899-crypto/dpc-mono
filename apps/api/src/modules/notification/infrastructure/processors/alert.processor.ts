@@ -12,7 +12,7 @@ import {
 } from '../../inbox/ports';
 import { NotificationLog } from '../../inbox/domain';
 import { Alert } from '../../alert/domain';
-import { SnowflakeService } from '../../../../common/snowflake/snowflake.service';
+import { SnowflakeService } from '../../../../infrastructure/snowflake/snowflake.service';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
 import {
   getQueueConfig,

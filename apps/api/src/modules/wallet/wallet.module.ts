@@ -23,7 +23,7 @@ import { SqidsModule } from 'src/common/sqids/sqids.module';
 import { USER_WALLET_STATS_REPOSITORY } from './ports/out/user-wallet-stats.repository.token';
 import { UserWalletStatsRepository } from './infrastructure/user-wallet-stats.repository';
 import { ExchangeModule } from '../exchange/exchange.module';
-import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
 import { BullModule } from '@nestjs/bullmq';
 import { USER_ANALYTICS_QUEUES } from '../user-analytics/infrastructure/queue/user-analytics.bullmq';
 

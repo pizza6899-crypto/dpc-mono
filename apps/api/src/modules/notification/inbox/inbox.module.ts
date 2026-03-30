@@ -11,7 +11,7 @@ import { NotificationLogRepository } from './infrastructure/notification-log.rep
 import { InboxUserController } from './controllers/user/inbox-user.controller';
 import { NOTIFICATION_LOG_REPOSITORY } from './ports';
 
-import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
 import { SqidsModule } from 'src/common/sqids/sqids.module';
 
 @Module({

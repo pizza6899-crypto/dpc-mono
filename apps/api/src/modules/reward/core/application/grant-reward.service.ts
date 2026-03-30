@@ -7,7 +7,7 @@ import {
   WageringTargetType,
 } from '@prisma/client';
 import Decimal from 'decimal.js';
-import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+import { SnowflakeService } from 'src/infrastructure/snowflake/snowflake.service';
 import {
   type IRewardRepository,
   REWARD_REPOSITORY,

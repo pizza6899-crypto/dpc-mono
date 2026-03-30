@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
 import { PaymentModule } from 'src/modules/payment/payment.module';
 import { WalletModule } from 'src/modules/wallet/wallet.module';
 import { WageringModule } from 'src/modules/wagering/wagering.module';

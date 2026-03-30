@@ -16,7 +16,7 @@ import { AuditLogModule } from '../audit-log/audit-log.module';
 import { WalletModule } from '../wallet/wallet.module';
 import { WageringModule } from '../wagering/wagering.module';
 import { CompModule } from '../comp/comp.module';
-import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
 import { LaunchGameService } from './application/launch-game.service';
 import { CasinoLaunchPolicy } from './domain/casino-launch.policy';
 import { GameRoundModule } from '../game-round/game-round.module';

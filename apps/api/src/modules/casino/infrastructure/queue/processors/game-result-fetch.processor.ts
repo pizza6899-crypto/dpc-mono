@@ -9,7 +9,7 @@ import { GameAggregatorType } from '@prisma/client';
 import { Inject } from '@nestjs/common';
 import { GAME_ROUND_REPOSITORY_TOKEN } from 'src/modules/game-round/ports/game-round.repository.token';
 import type { GameRoundRepositoryPort } from 'src/modules/game-round/ports/game-round.repository.port';
-import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+import { SnowflakeService } from 'src/infrastructure/snowflake/snowflake.service';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
 import {
   BULLMQ_QUEUES,

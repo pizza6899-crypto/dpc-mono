@@ -21,7 +21,7 @@ import { TelegramProcessor } from './processors/telegram.processor';
 import { AlertProcessor } from './processors/alert.processor';
 import { EnvModule } from 'src/common/env/env.module';
 import { UserProfileModule } from 'src/modules/user/profile/user-profile.module';
-import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
 
 @Module({
   imports: [

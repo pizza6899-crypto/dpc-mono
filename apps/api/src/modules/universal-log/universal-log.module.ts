@@ -4,7 +4,7 @@ import { UNIVERSAL_LOG_REPOSITORY_PORT } from './ports/universal-log.repository.
 import { PrismaUniversalLogRepository } from './infrastructure/prisma-universal-log.repository';
 import { USER_AGENT_CATALOG_REPOSITORY_PORT } from './ports/user-agent-catalog.repository.port';
 import { PrismaUserAgentCatalogRepository } from './infrastructure/prisma-user-agent-catalog.repository';
-import { SnowflakeModule } from '../../common/snowflake/snowflake.module';
+import { SnowflakeModule } from '../../infrastructure/snowflake/snowflake.module';
 import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
 import { BullModule } from '@nestjs/bullmq';
 import { UNIVERSAL_LOG_QUEUES } from './infrastructure/universal-log.bullmq';

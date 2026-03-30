@@ -27,7 +27,7 @@ import { PromotionModule } from './modules/promotion/promotion.module';
 import { WageringModule } from './modules/wagering/wagering.module';
 import { CompModule } from './modules/comp/comp.module';
 import { NodeIdentityModule } from './infrastructure/node-identity/node-identity.module';
-import { SnowflakeModule } from './common/snowflake/snowflake.module';
+import { SnowflakeModule } from './infrastructure/snowflake/snowflake.module';
 import { WithdrawalModule } from './modules/withdrawal/withdrawal.module';
 import { SqidsModule } from './common/sqids/sqids.module';
 import { NotificationModule } from './modules/notification/notification.module';

@@ -5,7 +5,7 @@ import type { WageringContributionLogRepositoryPort } from '../ports';
 import { WageringContributionLog } from '../domain';
 import { WageringRequirementMapper } from './wagering-requirement.mapper';
 import { Prisma } from '@prisma/client';
-import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+import { SnowflakeService } from 'src/infrastructure/snowflake/snowflake.service';
 
 @Injectable()
 export class WageringContributionLogRepository implements WageringContributionLogRepositoryPort {

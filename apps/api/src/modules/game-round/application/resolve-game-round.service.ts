@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { GameProvider } from '@prisma/client';
 import { Transactional } from '@nestjs-cls/transactional';
-import { SnowflakeService } from 'src/common/snowflake/snowflake.service';
+import { SnowflakeService } from 'src/infrastructure/snowflake/snowflake.service';
 import { CasinoGameSession } from 'src/modules/casino-session/domain';
 import { GameRound } from '../domain/game-round.entity';
 import { GAME_ROUND_REPOSITORY_TOKEN } from '../ports/game-round.repository.token';

@@ -12,7 +12,7 @@ import { GetRewardService } from './application/get-reward.service';
 
 import { RewardController } from './controllers/user/reward.controller';
 import { RewardAdminController } from './controllers/admin/reward-admin.controller';
-import { SnowflakeModule } from 'src/common/snowflake/snowflake.module';
+import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
 import { SqidsModule } from 'src/common/sqids/sqids.module';
 import { ConcurrencyModule } from 'src/common/concurrency';
 import { WalletModule } from 'src/modules/wallet/wallet.module';
