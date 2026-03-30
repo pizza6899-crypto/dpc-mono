@@ -1,6 +1,6 @@
 import { ArtifactGrade, ExchangeCurrencyCode, Prisma } from '@prisma/client';
 
-export type ArtifactDrawPriceTable = Record<'SINGLE' | 'TEN', Partial<Record<ExchangeCurrencyCode, number>>>;
+export type ArtifactDrawPriceTable = { SINGLE: Partial<Record<ExchangeCurrencyCode, number>> };
 
 export interface ArtifactSynthesisConfig {
   requiredCount: number;
@@ -40,7 +40,7 @@ export class ArtifactPolicy {
   }): ArtifactPolicy {
     return new ArtifactPolicy(
       data.id,
-      (data.drawPrices || {}) as ArtifactDrawPriceTable,
+      (data.drawPrices || { SINGLE: {} }) as ArtifactDrawPriceTable,
       (data.synthesisConfigs || {}) as ArtifactSynthesisConfigTable,
       (data.slotUnlockConfigs || { unlockLevels: [1, 1] }) as ArtifactSlotUnlockConfig,
       data.updatedAt,
@@ -51,9 +51,12 @@ export class ArtifactPolicy {
    * 뽑기 비용 조회 (지정된 통화 기준)
    */
   getDrawPrice(type: 'SINGLE' | 'TEN', currency: ExchangeCurrencyCode): Prisma.Decimal | null {
-    const price = this._drawPrices[type]?.[currency];
-    if (price === undefined) return null;
-    return new Prisma.Decimal(price);
+    const singlePrice = this._drawPrices.SINGLE[currency];
+    if (singlePrice === undefined) return null;
+
+    const basePrice = new Prisma.Decimal(singlePrice);
+    // TEN일 경우 10배 적용 (보너스 10+1 정책이므로 가격 할인은 없음)
+    return type === 'TEN' ? basePrice.mul(10) : basePrice;
   }
 
   /**
@@ -116,10 +119,6 @@ export class ArtifactPolicy {
       SINGLE: {
         ...this._drawPrices.SINGLE,
         ...(newPrices.SINGLE || {}),
-      },
-      TEN: {
-        ...this._drawPrices.TEN,
-        ...(newPrices.TEN || {}),
       },
     };
     this._updatedAt = new Date();

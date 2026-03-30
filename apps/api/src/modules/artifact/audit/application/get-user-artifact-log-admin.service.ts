@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ArtifactGrade, ArtifactLogType, Prisma } from '@prisma/client';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
-import { UserArtifactLogRepositoryPort } from '../../ports/user-artifact-log.repository.port';
-import { UserArtifactLog } from '../../domain/user-artifact-log.entity';
+import { UserArtifactLogRepositoryPort } from '../ports/user-artifact-log.repository.port';
+import { UserArtifactLog } from '../domain/user-artifact-log.entity';
 
 /**
  * [Artifact Audit Admin] 유물 관련 활동 로그 조회 파라미터

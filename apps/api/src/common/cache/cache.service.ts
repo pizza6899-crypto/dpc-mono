@@ -15,7 +15,7 @@ export class CacheService {
     { value: any; expiry: number }
   >();
 
-  constructor(private readonly redisService: RedisService) {}
+  constructor(private readonly redisService: RedisService) { }
 
   /**
    * 캐시 데이터를 조회하거나, 없으면 source 함수를 통해 데이터를 가져와 저장합니다.
@@ -51,6 +51,21 @@ export class CacheService {
       return entry.value as T;
     }
     return await this.redisService.get<T>(key);
+  }
+
+  /**
+   * 캐시를 조회하면서 동시에 만료 시간을 갱신합니다. (Sliding Expiry)
+   */
+  async getAndTouch<T>(config: CacheDefinition): Promise<T | null> {
+    const { key, store, ttlSeconds } = config;
+    if (store === CacheStore.MEMORY) {
+      const entry = this.memoryCache.get(key);
+      if (!entry || Date.now() > entry.expiry) return null;
+      // Memory Store: 수명 연장
+      entry.expiry = Date.now() + ttlSeconds * 1000;
+      return entry.value as T;
+    }
+    return await this.redisService.getAndExpire<T>(key, ttlSeconds);
   }
 
   async set<T>(config: CacheDefinition, value: T): Promise<void> {

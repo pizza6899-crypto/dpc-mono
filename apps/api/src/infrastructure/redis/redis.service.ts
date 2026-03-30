@@ -26,33 +26,45 @@ export class RedisService {
     try {
       const value = await this.redisClient.get(key);
       if (!value) return null;
-
-      // 직렬화된 데이터 복구 (Date 객체 등)
-      return JSON.parse(value, (key, v) => {
-        // Date 패턴 (ISO String) 복구
-        const isoDatePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
-        if (typeof v === 'string' && isoDatePattern.test(v)) {
-          return new Date(v);
-        }
-        return v;
-      }) as T;
+      return this.deserialize<T>(value);
     } catch (error) {
       this.logger.error(error, `Redis GET 에러: ${key}`);
       return null;
     }
   }
 
+  /**
+   * 캐시 조회와 동시에 만료 시간 연장 (Sliding Expiry)
+   * Redis 6.2+ GETEX 명령어 활용
+   */
+  async getAndExpire<T>(key: string, ttl_sec: number): Promise<T | null> {
+    try {
+      // @ts-ignore: ioredis may not have latest GETEX typings depending on version
+      const value = await this.redisClient.getex(key, 'EX', ttl_sec);
+      if (!value) return null;
+      return this.deserialize<T>(value);
+    } catch (error) {
+      this.logger.error(error, `Redis GETEX 에러: ${key}`);
+      return null;
+    }
+  }
+
+  private deserialize<T>(value: string): T {
+    return JSON.parse(value, (key, v) => {
+      // Date 패턴 (ISO String) 복구
+      const isoDatePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
+      if (typeof v === 'string' && isoDatePattern.test(v)) {
+        return new Date(v);
+      }
+      return v;
+    }) as T;
+  }
+
   // 캐시에 데이터 저장
   async set<T>(key: string, value: T, ttl_sec = 30): Promise<boolean> {
     try {
-      // BigInt 및 Decimal(Prisma) 보수 처리가 가능하도록 직렬화 환경 개선
-      const serializedValue = JSON.stringify(value, (_, v) => {
-        if (typeof v === 'bigint') return v.toString();
-        if (v?.constructor?.name === 'Decimal') return v.toString(); // Prisma.Decimal 대응
-        return v;
-      });
+      const serializedValue = this.serialize(value);
       // TTL Jitter: 동시 만료 방지를 위해 랜덤 시간 추가
-      // 비율 5%, 최대 120초 제한 (긴 TTL에도 과도하게 늘어나지 않도록 함)
       const maxJitter = Math.min(ttl_sec * 0.05, 120);
       const jitter = Math.floor(maxJitter * Math.random());
 
@@ -63,6 +75,25 @@ export class RedisService {
       this.logger.error(error, `Redis SET 에러: ${key}`);
       return false;
     }
+  }
+
+  // 리스트의 마지막에 데이터 추가
+  async rpush<T>(key: string, value: T): Promise<number> {
+    try {
+      const serializedValue = this.serialize(value);
+      return await this.redisClient.rpush(key, serializedValue);
+    } catch (error) {
+      this.logger.error(error, `Redis RPUSH 에러: ${key}`);
+      return 0;
+    }
+  }
+
+  private serialize<T>(value: T): string {
+    return JSON.stringify(value, (_, v) => {
+      if (typeof v === 'bigint') return v.toString();
+      if (v?.constructor?.name === 'Decimal') return v.toString(); // Prisma.Decimal 대응
+      return v;
+    });
   }
 
   // 캐시 삭제

@@ -3,14 +3,13 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
-import { UserRoleType, ArtifactGrade } from '@prisma/client';
+import { UserRoleType } from '@prisma/client';
 import { ApiPaginatedResponse, ApiStandardErrors, ApiStandardResponse } from 'src/common/http/decorators/api-response.decorator';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
 
-// Status & Pity Services (Injection)
+// Status Services (Injection)
 import { GetUserArtifactStatusService } from '../../../status/application/get-user-artifact-status.service';
-import { GetUserArtifactPityService } from '../../../status/application/get-user-artifact-pity.service';
 
 // DTOs
 import { UserArtifactResponseDto } from './dto/response/user-artifact.response.dto';
@@ -26,7 +25,6 @@ import { GetMyArtifactsQueryDto } from './dto/request/get-my-artifacts.query.dto
 export class UserArtifactInventoryController {
   constructor(
     private readonly statusService: GetUserArtifactStatusService,
-    private readonly pityService: GetUserArtifactPityService,
   ) { }
 
   /**
@@ -40,10 +38,7 @@ export class UserArtifactInventoryController {
   @ApiStandardResponse(UserArtifactProfileResponseDto)
   async getMyProfile(@CurrentUser() user: AuthenticatedUser): Promise<UserArtifactProfileResponseDto> {
     // 실제 서비스 구현 대신 목업 및 Status 모듈 서비스 조합
-    const [status, pities] = await Promise.all([
-      this.statusService.execute(user.id),
-      this.pityService.execute(user.id),
-    ]);
+    const status = await this.statusService.execute(user.id);
 
     // TODO: 인벤토리 모듈의 장착 유물 조회 서비스 구현 필요
     return {
