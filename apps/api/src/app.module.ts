@@ -26,7 +26,7 @@ import { RequestInfoInterceptor } from './common/http/interceptors/request-info.
 import { PromotionModule } from './modules/promotion/promotion.module';
 import { WageringModule } from './modules/wagering/wagering.module';
 import { CompModule } from './modules/comp/comp.module';
-import { NodeIdentityModule } from './common/node-identity/node-identity.module';
+import { NodeIdentityModule } from './infrastructure/node-identity/node-identity.module';
 import { SnowflakeModule } from './common/snowflake/snowflake.module';
 import { WithdrawalModule } from './modules/withdrawal/withdrawal.module';
 import { SqidsModule } from './common/sqids/sqids.module';
@@ -49,7 +49,7 @@ import { WebsocketModule } from './infrastructure/websocket/websocket.module';
 import { ChatModule } from './modules/chat/chat.module';
 
 import { UniversalLogModule } from './modules/universal-log/universal-log.module';
-import { SolanaBlockchainModule } from './common/blockchain/solana/solana-blockchain.module';
+import { SolanaBlockchainModule } from './infrastructure/blockchain/solana/solana-blockchain.module';
 
 @Module({
   imports: [

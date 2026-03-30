@@ -1,8 +1,8 @@
 import { Module, Global } from '@nestjs/common';
 import { SolanaService } from './solana.service';
 import { SolanaBlockchainController } from './solana-blockchain.controller';
-import { CacheModule } from '../../cache/cache.module';
-import { EnvModule } from '../../env/env.module';
+import { CacheModule } from 'src/common/cache/cache.module';
+import { EnvModule } from 'src/common/env/env.module';
 
 /**
  * [Support] Solana 블록체인 연동 유틸리티 모듈

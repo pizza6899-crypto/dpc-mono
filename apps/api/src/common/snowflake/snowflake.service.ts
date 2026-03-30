@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { NodeIdentityService } from '../node-identity/node-identity.service';
+import { NodeIdentityService } from 'src/infrastructure/node-identity/node-identity.service';
 import { SnowflakeClockBackwardsException } from './snowflake.exception';
 
 export interface GeneratedSnowflake {

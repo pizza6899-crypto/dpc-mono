@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { sql } from 'kysely';
 import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
-import { NodeIdentityService } from 'src/common/node-identity/node-identity.service';
+import { NodeIdentityService } from 'src/infrastructure/node-identity/node-identity.service';
 import { GlobalLockKey } from './concurrency.constants';
 
 export interface LockOptions {
@@ -15,7 +15,7 @@ export class ConcurrencyService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly nodeIdentityService: NodeIdentityService,
-  ) {}
+  ) { }
 
   /**
    * 인스턴스 식별자 (NodeIdentityService의 고유 ID 기반)
