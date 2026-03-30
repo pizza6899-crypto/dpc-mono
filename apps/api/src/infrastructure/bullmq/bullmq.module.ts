@@ -17,11 +17,8 @@ import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.mo
  */
 @Module({
   imports: [
-    EnvModule,
-    ConcurrencyModule,
     // 1. 인큐용 커넥션 (기본)
     BullModule.forRootAsync({
-      imports: [EnvModule],
       useFactory: (envService: EnvService) => ({
         prefix: BULLMQ_PREFIX,
         connection: {
@@ -34,7 +31,6 @@ import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.mo
     }),
     // 2. 디큐용 커넥션 (워커 전용) - 이름만 'WORKER'로 지정
     BullModule.forRootAsync('WORKER', {
-      imports: [EnvModule],
       useFactory: (envService: EnvService) => ({
         prefix: BULLMQ_PREFIX,
         connection: {
