@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './modules/auth/auth.module';
-import { EnvModule } from './common/env/env.module';
+import { EnvModule } from './infrastructure/env/env.module';
 import {
   APP_FILTER,
   APP_GUARD,

@@ -1,6 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';
 import { RedisModule } from 'src/infrastructure/redis/redis.module';
 import { DcsMapperService } from './infrastructure/dcs-mapper.service';

@@ -2,7 +2,7 @@
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 import { CreateCodeService } from './create-code.service';
 import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repository.token';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';

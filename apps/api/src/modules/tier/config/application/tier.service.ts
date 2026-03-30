@@ -5,7 +5,7 @@ import { Tier } from '../domain/tier.entity';
 import { TierNotFoundException } from '../domain/tier-config.exception';
 import { TierConfigPolicy } from '../domain/tier-config.policy';
 import { AttachFileService } from '../../../file/application/attach-file.service';
-import { EnvService } from 'src/common/env/env.service';
+import { EnvService } from 'src/infrastructure/env/env.service';
 import { FileUsageType } from '../../../file/domain';
 import { Transactional } from '@nestjs-cls/transactional';
 

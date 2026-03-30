@@ -23,7 +23,7 @@ import { WalletModule } from '../wallet/wallet.module';
 import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';
 import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
 import { RewardCoreModule } from '../reward/core/reward-core.module';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 import { SettleDailyCompService } from './application/settle-daily-comp.service';
 import { CompDailySettlementProcessor } from './infrastructure/processors/comp-daily-settlement.processor';
 

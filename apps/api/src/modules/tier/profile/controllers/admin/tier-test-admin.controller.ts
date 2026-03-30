@@ -11,7 +11,7 @@ import {
 import { ApiTags, ApiOperation, ApiExcludeController } from '@nestjs/swagger';
 import { UserRoleType } from '@prisma/client';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
-import { EnvService } from 'src/common/env/env.service';
+import { EnvService } from 'src/infrastructure/env/env.service';
 import { AccumulateUserRollingService } from '../../../evaluator/application/accumulate-user-rolling.service';
 import { EvaluateUserTierService } from '../../../evaluator/application/evaluate-user-tier.service';
 import { TierRepositoryPort } from '../../../config/infrastructure/tier.repository.port';

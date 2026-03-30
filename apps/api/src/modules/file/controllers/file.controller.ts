@@ -12,7 +12,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { UploadFileRequestDto } from './dto/request/upload-file.request.dto';
 import { FileResponseDto } from './dto/response/file.response.dto';
-import { EnvService } from 'src/common/env/env.service';
+import { EnvService } from 'src/infrastructure/env/env.service';
 import { CreateFileService } from '../application/create-file.service';
 import { FileUrlService } from '../application/file-url.service';
 import {

@@ -7,7 +7,7 @@ import { AFFILIATE_WALLET_REPOSITORY } from '../ports/out/affiliate-wallet.repos
 import type { AffiliateWalletRepositoryPort } from '../ports/out/affiliate-wallet.repository.port';
 import { AffiliateWallet } from '../domain';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('GetWalletBalanceService', () => {

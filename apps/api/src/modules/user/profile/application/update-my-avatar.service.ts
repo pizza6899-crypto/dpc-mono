@@ -3,7 +3,7 @@ import { USER_REPOSITORY } from '../ports/out/user.repository.token';
 import type { UserRepositoryPort } from '../ports/out/user.repository.port';
 import { AttachFileService } from 'src/modules/file/application/attach-file.service';
 import { FileUsageType } from 'src/modules/file/domain';
-import { EnvService } from 'src/common/env/env.service';
+import { EnvService } from 'src/infrastructure/env/env.service';
 import { UserNotFoundException } from '../domain';
 import { MyProfileResponseDto } from '../controllers/user/dto/response/my-profile.response.dto';
 import { GetMyProfileService } from './get-my-profile.service';

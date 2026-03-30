@@ -13,7 +13,7 @@ import {
   WalletNotFoundException,
 } from '../domain/commission.exception';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 
 describe('WithdrawCommissionService', () => {

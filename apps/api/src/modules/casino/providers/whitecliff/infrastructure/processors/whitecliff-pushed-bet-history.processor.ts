@@ -17,7 +17,7 @@ import { CACHE_CONFIG } from 'src/common/cache/cache.constants';
 import { UpdatePushedBetService } from '../../../../application/update-pushed-bet.service';
 import { GameAggregatorType, Prisma } from '@prisma/client';
 import { GamingCurrencyCode } from 'src/utils/currency.util';
-import { EnvService } from 'src/common/env/env.service';
+import { EnvService } from 'src/infrastructure/env/env.service';
 import { BaseProcessor } from 'src/infrastructure/bullmq/base.processor';
 import {
   BULLMQ_QUEUES,

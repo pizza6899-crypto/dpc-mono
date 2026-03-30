@@ -16,7 +16,7 @@ import { UserSessionMapper } from './infrastructure/user-session.mapper';
 import { USER_SESSION_REPOSITORY } from './ports/out';
 import { ExpireSessionsProcessor } from '../infrastructure/processors/expire-sessions.processor';
 import { BullModule } from '@nestjs/bullmq';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
 import { AUTH_QUEUES } from './infrastructure/session.bullmq';

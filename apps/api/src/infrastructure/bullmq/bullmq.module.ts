@@ -2,8 +2,8 @@
 
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bullmq';
-import { EnvModule } from 'src/common/env/env.module';
-import { EnvService } from 'src/common/env/env.service';
+import { EnvModule } from 'src/infrastructure/env/env.module';
+import { EnvService } from 'src/infrastructure/env/env.service';
 import { BullMqSchedulerService } from './bullmq.scheduler.service';
 import { BULLMQ_PREFIX } from './bullmq.types';
 import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';

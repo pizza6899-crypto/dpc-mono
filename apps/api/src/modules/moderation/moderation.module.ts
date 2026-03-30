@@ -9,7 +9,7 @@ import {
   AI_MODERATION_LOG_REPOSITORY,
 } from './ports/out/moderation-repository.port';
 import { AI_MODERATION_PORT } from './ports/out/ai-moderation.port';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
 
 // Admin Services

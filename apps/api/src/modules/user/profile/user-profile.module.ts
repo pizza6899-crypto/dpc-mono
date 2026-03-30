@@ -25,7 +25,7 @@ import { UserMapper } from './infrastructure/user.mapper';
 import { USER_REPOSITORY } from './ports/out/user.repository.token';
 import { UserAdminController } from './controllers/admin/user-admin.controller';
 import { UserProfileController } from './controllers/user/user-profile.controller';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 
 @Module({
   imports: [

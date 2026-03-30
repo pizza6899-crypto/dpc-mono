@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import Sqids from 'sqids';
-import { EnvService } from 'src/common/env/env.service';
+import { EnvService } from 'src/infrastructure/env/env.service';
 import {
   SQIDS_DELIMITER,
   SqidsPrefixType,

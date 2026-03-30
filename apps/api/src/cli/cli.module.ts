@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { BaseCommand } from './commands/base.command';
-import { EnvModule } from '../common/env/env.module';
+import { EnvModule } from '../infrastructure/env/env.module';
 import { RedisModule } from 'src/infrastructure/redis/redis.module';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { PaymentModule } from 'src/modules/payment/payment.module';

@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { EnvService } from 'src/common/env/env.service';
+import { EnvService } from 'src/infrastructure/env/env.service';
 import { GameAggregatorType, Prisma, GameProvider } from '@prisma/client';
 import { WhitecliffMapperService } from '../infrastructure/whitecliff-mapper.service';
 import { getCasinoErrorCode } from '../utils/whitecliff-error-response.util';

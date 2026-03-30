@@ -2,9 +2,9 @@
 
 import { Injectable, Provider } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { EnvService } from 'src/common/env/env.service';
+import { EnvService } from 'src/infrastructure/env/env.service';
 import { firstValueFrom } from 'rxjs';
-import { DcsConfig } from 'src/common/env/env.types';
+import { DcsConfig } from 'src/infrastructure/env/env.types';
 import * as crypto from 'crypto';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from 'src/common/http/types';

@@ -6,7 +6,7 @@ import {
   BULLMQ_DEFAULT_TIMEZONE,
   BULLMQ_PREFIX,
 } from './bullmq.types';
-import { EnvService } from 'src/common/env/env.service';
+import { EnvService } from 'src/infrastructure/env/env.service';
 import { ConcurrencyService, GlobalLockKey } from 'src/infrastructure/concurrency';
 import Redis from 'ioredis';
 

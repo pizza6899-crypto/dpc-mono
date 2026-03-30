@@ -2,7 +2,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { WhitecliffCallbackService } from './application/whitecliff-callback.service';
 import { WhitecliffApiService } from './infrastructure/whitecliff-api.service';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 import { WhitecliffCallbackController } from './controllers/whitecliff-callback.controller';
 import { WhitecliffGameService } from './application/whitecliff-game.service';
 import { WhitecliffFetchGameResultService } from './application/whitecliff-fetch-game-result.service';

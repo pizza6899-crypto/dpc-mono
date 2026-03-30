@@ -19,7 +19,7 @@ import {
   CREDENTIAL_USER_REPOSITORY,
 } from './ports/out';
 import { SessionModule } from '../session/session.module';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 import { PassportModule } from '@nestjs/passport';
 import { SessionSerializer } from 'src/common/auth/strategies/session.serializer';
 

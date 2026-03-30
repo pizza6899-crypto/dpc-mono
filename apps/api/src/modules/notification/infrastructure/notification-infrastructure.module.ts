@@ -19,7 +19,7 @@ import { EmailProcessor } from './processors/email.processor';
 import { SMSProcessor } from './processors/sms.processor';
 import { TelegramProcessor } from './processors/telegram.processor';
 import { AlertProcessor } from './processors/alert.processor';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 import { UserProfileModule } from 'src/modules/user/profile/user-profile.module';
 import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
 

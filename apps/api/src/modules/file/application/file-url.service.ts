@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { StorageService } from 'src/infrastructure/storage/storage.service';
-import { EnvService } from 'src/common/env/env.service';
+import { EnvService } from 'src/infrastructure/env/env.service';
 import { FileEntity, FileAccessType } from '../domain';
 import { FILE_REPOSITORY } from '../ports/file.repository.token';
 import type { FileRepositoryPort } from '../ports/file.repository.port';

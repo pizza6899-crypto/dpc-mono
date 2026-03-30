@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { SqidsService } from './sqids.service';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 import { SqidsAdminController } from './controllers/admin/sqids-admin.controller';
 
 @Global()

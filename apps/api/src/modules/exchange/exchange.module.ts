@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ExchangeRateService } from './application/exchange-rate.service';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { RedisModule } from 'src/infrastructure/redis/redis.module';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 import { HttpModule } from '@nestjs/axios';
 import { AuditLogModule } from '../audit-log/audit-log.module';
 import { OpenExchangeRatesApiService } from './infrastructure/open-exchange-rates-api.service';

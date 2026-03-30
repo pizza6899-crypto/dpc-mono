@@ -6,7 +6,7 @@ import { AccumulateCommissionService } from './accumulate-commission.service';
 import { CalculateCommissionService } from './calculate-commission.service';
 import { AffiliateCommission } from '../domain';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 
 describe('AccumulateCommissionService', () => {
   let module: TestingModule;

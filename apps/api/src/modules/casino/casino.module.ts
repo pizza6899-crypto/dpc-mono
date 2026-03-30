@@ -10,7 +10,7 @@ import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
 import { CASINO_QUEUES } from './infrastructure/casino.bullmq';
 import { GamePostProcessProcessor } from './infrastructure/queue/processors/game-post-process.processor';
 import { GameResultFetchProcessor } from './infrastructure/queue/processors/game-result-fetch.processor';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 import { ExchangeModule } from '../exchange/exchange.module';
 import { AuditLogModule } from '../audit-log/audit-log.module';
 import { WalletModule } from '../wallet/wallet.module';

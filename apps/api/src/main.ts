@@ -6,7 +6,7 @@ import { corsConfig } from './common/security/cors.config';
 import { helmetConfig } from './common/security/helmet.config';
 import { TransformInterceptor } from './common/http/interceptors/transform.interceptor';
 import { CustomValidationPipe } from './common/http/pipes/validation.pipe';
-import { EnvService } from './common/env/env.service';
+import { EnvService } from './infrastructure/env/env.service';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import { Reflector } from '@nestjs/core';

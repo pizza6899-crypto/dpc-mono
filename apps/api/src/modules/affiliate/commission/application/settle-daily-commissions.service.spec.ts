@@ -9,7 +9,7 @@ import { AFFILIATE_WALLET_REPOSITORY } from '../ports/out/affiliate-wallet.repos
 import type { AffiliateWalletRepositoryPort } from '../ports/out/affiliate-wallet.repository.port';
 import { AffiliateCommission, AffiliateWallet } from '../domain';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 
 // currency.util 모킹
 jest.mock('src/utils/currency.util', () => ({

@@ -5,7 +5,7 @@ import { CASINO_GAME_PROVIDER_REPOSITORY } from '../../ports/casino-game-provide
 import { type CasinoGameProviderRepositoryPort } from '../../ports/casino-game-provider.repository.port';
 import { AttachFileService } from '../../../../file/application/attach-file.service';
 import { FileUsageType } from '../../../../file/domain';
-import { EnvService } from 'src/common/env/env.service';
+import { EnvService } from 'src/infrastructure/env/env.service';
 
 interface UpdateGameProviderParams {
   id: bigint;

@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { UserDepositController } from './controllers/user/deposit.controller';
 import { AdminDepositController } from './controllers/admin/deposit.controller';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 import { PaymentModule } from '../payment/payment.module';
 import { PromotionModule } from '../promotion/promotion.module';
 import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';

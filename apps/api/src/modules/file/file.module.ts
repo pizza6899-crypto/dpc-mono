@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 import { FileController } from './controllers/file.controller';
 import { CreateFileService } from './application/create-file.service';
 import { AttachFileService } from './application/attach-file.service';

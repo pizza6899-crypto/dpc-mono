@@ -4,7 +4,7 @@ import { NowPaymentCallbackService } from './application/now-payment-callback.se
 import { NowPaymentCallbackController } from './controllers/now-payment-callback.controller';
 import { ConcurrencyModule } from '../../infrastructure/concurrency/concurrency.module';
 import { RedisModule } from 'src/infrastructure/redis/redis.module';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 
 import { HttpModule } from '@nestjs/axios';

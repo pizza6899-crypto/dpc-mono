@@ -6,7 +6,7 @@ import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repositor
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
 import { AffiliateCode } from '../domain';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 import { DispatchLogService } from 'src/modules/audit-log/application/dispatch-log.service';
 
 describe('FindCodesAdminService', () => {

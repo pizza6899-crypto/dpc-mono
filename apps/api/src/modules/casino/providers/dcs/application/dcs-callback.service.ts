@@ -1,5 +1,5 @@
 import { Injectable, Logger, Inject } from '@nestjs/common';
-import { EnvService } from 'src/common/env/env.service';
+import { EnvService } from 'src/infrastructure/env/env.service';
 import {
   WagerRequestDto,
   WagerResponseDto,
@@ -17,7 +17,7 @@ import {
   PromoPayoutResponseDto,
   DcsCommonResponseDto,
 } from '../dtos';
-import { DcsConfig } from 'src/common/env/env.types';
+import { DcsConfig } from 'src/infrastructure/env/env.types';
 import * as crypto from 'crypto';
 import {
   DcsResponseCode,

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { EnvService } from 'src/common/env/env.service';
+import { EnvService } from 'src/infrastructure/env/env.service';
 import { firstValueFrom } from 'rxjs';
-import { WhitecliffConfig } from 'src/common/env/env.types';
+import { WhitecliffConfig } from 'src/infrastructure/env/env.types';
 
 import { GameProvider, Language } from '@prisma/client';
 import { WhitecliffMapperService } from './whitecliff-mapper.service';

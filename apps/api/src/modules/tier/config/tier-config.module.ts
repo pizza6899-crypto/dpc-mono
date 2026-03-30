@@ -10,7 +10,7 @@ import { TierConfigAdminController } from './controllers/admin/tier-config-admin
 import { TierAdminController } from './controllers/admin/tier-admin.controller';
 import { TierPublicController } from './controllers/public/tier-public.controller';
 import { FileModule } from '../../file/file.module';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 
 @Global()
 @Module({

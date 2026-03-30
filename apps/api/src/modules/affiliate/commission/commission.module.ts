@@ -29,7 +29,7 @@ import { AdminCommissionController } from './controllers/admin/commission.contro
 // Schedulers
 import { SettleDailyCommissionsProcessor } from '../infrastructure/processors/settle-daily-commissions.processor';
 import { BullModule } from '@nestjs/bullmq';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
 import { AFFILIATE_QUEUES } from './infrastructure/commission.bullmq';
 

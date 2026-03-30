@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import * as path from 'path';
 import { nanoid } from 'nanoid';
 import { StorageService } from 'src/infrastructure/storage/storage.service';
-import { EnvService } from 'src/common/env/env.service';
+import { EnvService } from 'src/infrastructure/env/env.service';
 import {
   FileEntity,
   FileStatus,

@@ -7,7 +7,7 @@ import {
   CasinoAggregatorInactiveException,
   CasinoAggregatorMaintenanceException,
 } from '../domain';
-import { EnvService } from 'src/common/env/env.service';
+import { EnvService } from 'src/infrastructure/env/env.service';
 import {
   DcsAggregatorConfig,
   WhitecliffAggregatorConfig,

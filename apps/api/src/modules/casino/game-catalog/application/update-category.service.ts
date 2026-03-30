@@ -6,7 +6,7 @@ import { Language } from '@prisma/client';
 import { AttachFileService } from '../../../file/application/attach-file.service';
 import { FileUsageType } from '../../../file/domain';
 import { Transactional } from '@nestjs-cls/transactional';
-import { EnvService } from 'src/common/env/env.service';
+import { EnvService } from 'src/infrastructure/env/env.service';
 
 interface UpdateCategoryParams {
   id: bigint;

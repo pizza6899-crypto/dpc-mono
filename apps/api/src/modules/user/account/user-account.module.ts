@@ -3,7 +3,7 @@ import { AffiliateCodeModule } from '../../affiliate/code/code.module';
 import { AffiliateReferralModule } from '../../affiliate/referral/referral.module';
 import { AuditLogModule } from 'src/modules/audit-log/audit-log.module';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 import { UserProfileModule } from '../profile/user-profile.module';
 import { UserConfigModule } from '../config/user-config.module';
 import { ThrottleModule } from 'src/common/throttle/throttle.module';

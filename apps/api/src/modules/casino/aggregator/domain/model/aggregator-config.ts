@@ -1,4 +1,4 @@
-import type { DcsConfig, WhitecliffConfig } from 'src/common/env/env.types';
+import type { DcsConfig, WhitecliffConfig } from 'src/infrastructure/env/env.types';
 
 /**
  * DCS 애그리게이터 통합 설정

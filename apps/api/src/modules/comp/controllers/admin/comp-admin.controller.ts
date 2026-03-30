@@ -45,7 +45,7 @@ import { AdminCompConfigResponseDto } from './dto/response/admin-comp-config.res
 import { AdminUpdateCompConfigDto } from './dto/request/admin-update-comp-config.dto';
 import { AdminUpdateCompAccountStatusDto } from './dto/request/admin-update-comp-account-status.dto';
 import { AdminTestCompEarnDto } from './dto/request/admin-test-comp-earn.dto';
-import { EnvService } from 'src/common/env/env.service';
+import { EnvService } from 'src/infrastructure/env/env.service';
 
 @ApiTags('Admin Comp')
 @Controller('admin/comp')

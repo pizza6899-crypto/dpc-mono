@@ -6,7 +6,7 @@ import { FindAggregatorsService } from './application/find-aggregators.service';
 import { UpdateAggregatorService } from './application/update-aggregator.service';
 import { AggregatorRegistryService } from './application/aggregator-registry.service';
 import { AggregatorAdminController } from './controllers/admin/aggregator-admin.controller';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 import { FileModule } from '../../file/file.module';
 
 import { CASINO_GAME_PROVIDER_REPOSITORY } from './ports/casino-game-provider.repository.token';

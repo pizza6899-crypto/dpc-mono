@@ -28,7 +28,7 @@ import { GameAdminController } from './controllers/admin/game-admin.controller';
 import { CategoryUserController } from './controllers/user/category-user.controller';
 import { GameUserController } from './controllers/user/game-user.controller';
 import { FileModule } from '../../file/file.module';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 
 import { AggregatorModule } from '../aggregator/aggregator.module';
 import { SyncAdminController } from './controllers/admin/sync.admin.controller';

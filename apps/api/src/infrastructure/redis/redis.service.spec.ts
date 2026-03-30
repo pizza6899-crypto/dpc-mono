@@ -1,7 +1,7 @@
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import { RedisService } from './redis.service';
-import { EnvService } from '../../common/env/env.service';
+import { EnvService } from '../../infrastructure/env/env.service';
 import Redis from 'ioredis';
 
 // ioredis 모킹

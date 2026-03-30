@@ -18,7 +18,7 @@ import { UserTierAdminController } from './controllers/admin/user-tier-admin.con
 import { TierAuditModule } from '../audit/tier-audit.module';
 import { TierConfigModule } from '../config/tier-config.module';
 import { TierEvaluatorModule } from '../evaluator/tier-evaluator.module';
-import { EnvModule } from 'src/common/env/env.module';
+import { EnvModule } from 'src/infrastructure/env/env.module';
 import { TierTestAdminController } from './controllers/admin/tier-test-admin.controller';
 import { RewardCoreModule } from 'src/modules/reward/core/reward-core.module';
 import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';

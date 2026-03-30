@@ -6,7 +6,7 @@ import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { CreateSessionService } from '../../session/application/create-session.service';
 import { SessionType, DeviceInfo } from '../../session/domain';
-import { EnvService } from 'src/common/env/env.service';
+import { EnvService } from 'src/infrastructure/env/env.service';
 
 export interface LoginParams {
   user: AuthenticatedUser;
