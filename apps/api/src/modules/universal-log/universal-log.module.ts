@@ -10,7 +10,7 @@ import { BullModule } from '@nestjs/bullmq';
 import { UNIVERSAL_LOG_QUEUES } from './infrastructure/universal-log.bullmq';
 import { UniversalLogProcessor } from './infrastructure/universal-log.processor';
 import { RedisModule } from 'src/infrastructure/redis/redis.module';
-import { CacheModule } from 'src/common/cache/cache.module';
+import { CacheModule } from 'src/infrastructure/cache/cache.module';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 
 @Global()

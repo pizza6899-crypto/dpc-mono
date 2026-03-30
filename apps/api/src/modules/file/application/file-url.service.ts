@@ -4,8 +4,8 @@ import { EnvService } from 'src/infrastructure/env/env.service';
 import { FileEntity, FileAccessType } from '../domain';
 import { FILE_REPOSITORY } from '../ports/file.repository.token';
 import type { FileRepositoryPort } from '../ports/file.repository.port';
-import { CACHE_CONFIG } from 'src/common/cache/cache.constants';
-import { CacheService } from 'src/common/cache/cache.service';
+import { CACHE_CONFIG } from 'src/infrastructure/cache/cache.constants';
+import { CacheService } from 'src/infrastructure/cache/cache.service';
 
 @Injectable()
 export class FileUrlService {

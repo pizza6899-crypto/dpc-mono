@@ -1,7 +1,7 @@
 import { Module, Global } from '@nestjs/common';
 import { SolanaService } from './solana.service';
 import { SolanaBlockchainController } from './solana-blockchain.controller';
-import { CacheModule } from 'src/common/cache/cache.module';
+import { CacheModule } from 'src/infrastructure/cache/cache.module';
 import { EnvModule } from 'src/infrastructure/env/env.module';
 
 /**

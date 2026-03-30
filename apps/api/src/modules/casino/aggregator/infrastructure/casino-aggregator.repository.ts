@@ -5,8 +5,8 @@ import { CasinoAggregatorRepositoryPort } from '../ports/casino-aggregator.repos
 import { CasinoAggregator, CasinoAggregatorNotFoundException } from '../domain';
 import { CasinoAggregatorMapper } from './casino-aggregator.mapper';
 import { AggregatorStatus } from '@prisma/client';
-import { CacheService } from 'src/common/cache/cache.service';
-import { CACHE_CONFIG } from 'src/common/cache/cache.constants';
+import { CacheService } from 'src/infrastructure/cache/cache.service';
+import { CACHE_CONFIG } from 'src/infrastructure/cache/cache.constants';
 
 @Injectable()
 export class CasinoAggregatorRepository implements CasinoAggregatorRepositoryPort {

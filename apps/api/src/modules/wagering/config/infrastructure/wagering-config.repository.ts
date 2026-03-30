@@ -4,8 +4,8 @@ import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module'
 import { WageringConfigRepositoryPort } from '../ports/wagering-config.repository.port';
 import { WageringConfig } from '../domain/wagering-config.entity';
 import { WageringConfigMapper } from './wagering-config.mapper';
-import { CacheService } from 'src/common/cache/cache.service';
-import { CACHE_CONFIG } from 'src/common/cache/cache.constants';
+import { CacheService } from 'src/infrastructure/cache/cache.service';
+import { CACHE_CONFIG } from 'src/infrastructure/cache/cache.constants';
 import type { WageringConfig as PrismaWageringConfig } from '@prisma/client';
 import { WageringConfigNotFoundException } from '../domain/wagering-config.exception';
 

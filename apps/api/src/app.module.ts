@@ -34,7 +34,7 @@ import { NotificationModule } from './modules/notification/notification.module';
 import { StorageModule } from './infrastructure/storage/storage.module';
 import { FileModule } from './modules/file/file.module';
 import { TierModule } from './modules/tier/tier.module';
-import { CacheModule } from './common/cache/cache.module';
+import { CacheModule } from './infrastructure/cache/cache.module';
 import { BullMqModule } from './infrastructure/bullmq/bullmq.module';
 import { RewardModule } from './modules/reward/reward.module';
 import { UserModule } from './modules/user/user.module';

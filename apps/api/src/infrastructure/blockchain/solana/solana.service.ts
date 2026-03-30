@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Connection } from '@solana/web3.js';
-import { CacheService } from 'src/common/cache/cache.service';
-import { CACHE_CONFIG } from 'src/common/cache/cache.constants';
+import { CacheService } from 'src/infrastructure/cache/cache.service';
+import { CACHE_CONFIG } from 'src/infrastructure/cache/cache.constants';
 import { EnvService } from 'src/infrastructure/env/env.service';
 
 @Injectable()

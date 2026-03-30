@@ -6,7 +6,7 @@ import { GetWageringConfigService } from './application/get-wagering-config.serv
 import { UpdateWageringConfigService } from './application/update-wagering-config.service';
 import { WageringConfigAdminController } from './controllers/admin/wagering-config-admin.controller';
 import { AuditLogModule } from '../../audit-log/audit-log.module';
-import { CacheModule } from 'src/common/cache/cache.module';
+import { CacheModule } from 'src/infrastructure/cache/cache.module';
 
 @Module({
   imports: [AuditLogModule, CacheModule],

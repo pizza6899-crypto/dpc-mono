@@ -4,8 +4,8 @@ import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module'
 import { UserConfigRepositoryPort } from '../ports/out/user-config.repository.port';
 import { UserConfig } from '../domain/model/user-config.entity';
 import { UserConfigMapper } from './user-config.mapper';
-import { CacheService } from 'src/common/cache/cache.service';
-import { CACHE_CONFIG } from 'src/common/cache/cache.constants';
+import { CacheService } from 'src/infrastructure/cache/cache.service';
+import { CACHE_CONFIG } from 'src/infrastructure/cache/cache.constants';
 
 @Injectable()
 export class UserConfigRepository implements UserConfigRepositoryPort {

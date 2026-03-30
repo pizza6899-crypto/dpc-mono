@@ -13,8 +13,8 @@ import {
   CasinoGameProvider,
   CasinoGameProviderNotFoundException,
 } from '../domain';
-import { CacheService } from 'src/common/cache/cache.service';
-import { CACHE_CONFIG } from 'src/common/cache/cache.constants';
+import { CacheService } from 'src/infrastructure/cache/cache.service';
+import { CACHE_CONFIG } from 'src/infrastructure/cache/cache.constants';
 
 @Injectable()
 export class CasinoGameProviderRepository implements CasinoGameProviderRepositoryPort {

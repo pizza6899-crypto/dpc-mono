@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { CacheService } from 'src/common/cache/cache.service';
-import { CACHE_CONFIG } from 'src/common/cache/cache.constants';
+import { CacheService } from 'src/infrastructure/cache/cache.service';
+import { CACHE_CONFIG } from 'src/infrastructure/cache/cache.constants';
 import { CharacterConfig } from '../domain/character-config.entity';
 import { CharacterConfigRepositoryPort } from '../ports/character-config.repository.port';
 import { CharacterConfigMapper } from './character-config.mapper';
