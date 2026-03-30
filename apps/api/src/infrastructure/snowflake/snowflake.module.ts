@@ -1,4 +1,4 @@
-import { Global, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { SnowflakeService } from './snowflake.service';
 
 /**
@@ -8,15 +8,14 @@ import { SnowflakeService } from './snowflake.service';
  *
  * @example
  * // 다른 모듈에서 사용하기
- * // @Global() 설정으로 imports 불필요
  * @Module({
+ *   imports: [SnowflakeModule],
  *   providers: [YourService],
  * })
  * export class YourModule {}
  */
-@Global()
 @Module({
   providers: [SnowflakeService],
   exports: [SnowflakeService],
 })
-export class SnowflakeModule {}
+export class SnowflakeModule { }

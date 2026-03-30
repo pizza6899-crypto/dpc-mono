@@ -4,8 +4,8 @@ import { EnvModule } from 'src/infrastructure/env/env.module';
 
 @Global()
 @Module({
-  imports: [],
+  imports: [EnvModule],
   providers: [StorageService],
   exports: [StorageService],
 })
-export class StorageModule {}
+export class StorageModule { }

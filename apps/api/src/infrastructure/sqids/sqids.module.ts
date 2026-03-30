@@ -5,7 +5,7 @@ import { SqidsAdminController } from './controllers/admin/sqids-admin.controller
 
 @Global()
 @Module({
-  imports: [],
+  imports: [EnvModule],
   controllers: [SqidsAdminController],
   providers: [SqidsService],
   exports: [SqidsService],

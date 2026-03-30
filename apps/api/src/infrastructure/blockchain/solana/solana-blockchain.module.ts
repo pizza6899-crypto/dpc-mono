@@ -9,7 +9,7 @@ import { EnvModule } from 'src/infrastructure/env/env.module';
  */
 @Global()
 @Module({
-  imports: [],
+  imports: [CacheModule, EnvModule],
   controllers: [SolanaBlockchainController],
   providers: [SolanaService],
   exports: [SolanaService],
