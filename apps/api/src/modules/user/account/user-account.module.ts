@@ -6,7 +6,7 @@ import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/infrastructure/env/env.module';
 import { UserProfileModule } from '../profile/user-profile.module';
 import { UserConfigModule } from '../config/user-config.module';
-import { ThrottleModule } from 'src/common/throttle/throttle.module';
+import { ThrottleModule } from 'src/infrastructure/throttle/throttle.module';
 import { UserAccountController } from './controllers/user/account.controller';
 import { UserAccountAdminController } from './controllers/admin/account-admin.controller';
 import { RegisterUserService } from './application/register-user.service';

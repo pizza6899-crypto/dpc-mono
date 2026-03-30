@@ -15,7 +15,7 @@ import {
 import { ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import { Public } from 'src/common/auth/decorators/roles.decorator';
 import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
-import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
+import { ThrottleScope } from 'src/infrastructure/throttle/types/throttle.types';
 import { PaginatedData, PaginatedResponseDto } from 'src/common/http/types';
 
 @ApiTags('Public Exchange')

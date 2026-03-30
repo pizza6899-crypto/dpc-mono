@@ -5,7 +5,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { GetUserConfigService } from '../../config/application/get-user-config.service';
-import { ThrottleService } from 'src/common/throttle/throttle.service';
+import { ThrottleService } from 'src/infrastructure/throttle/throttle.service';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from '@repo/shared';
 

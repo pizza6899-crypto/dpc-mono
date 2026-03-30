@@ -13,7 +13,7 @@ import {
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from '@repo/shared';
 import { FindCodeByCodeService } from 'src/modules/affiliate/code/application/find-code-by-code.service';
-import { ThrottleService } from 'src/common/throttle/throttle.service';
+import { ThrottleService } from 'src/infrastructure/throttle/throttle.service';
 import { IdUtil } from 'src/utils/id.util';
 import { LinkReferralService } from 'src/modules/affiliate/referral/application/link-referral.service';
 import {

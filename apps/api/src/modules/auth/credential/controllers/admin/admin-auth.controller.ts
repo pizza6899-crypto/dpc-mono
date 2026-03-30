@@ -9,7 +9,7 @@ import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
-import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
+import { ThrottleScope } from 'src/infrastructure/throttle/types/throttle.types';
 import { AuthenticateIdentityService } from '../../application/authenticate-identity.service';
 import { LoginService } from '../../application/login.service';
 import { LogoutService } from '../../application/logout.service';

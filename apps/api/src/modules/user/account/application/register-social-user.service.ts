@@ -7,7 +7,7 @@ import {
 } from '@prisma/client';
 import { CreateUserService } from 'src/modules/user/profile/application/create-user.service';
 import { GetUserConfigService } from 'src/modules/user/config/application/get-user-config.service';
-import { ThrottleService } from 'src/common/throttle/throttle.service';
+import { ThrottleService } from 'src/infrastructure/throttle/throttle.service';
 import { ApiException } from 'src/common/http/exception/api.exception';
 import { MessageCode } from '@repo/shared';
 import { CountryUtil } from 'src/utils/country.util';

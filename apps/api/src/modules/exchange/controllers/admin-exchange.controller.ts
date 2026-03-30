@@ -4,7 +4,7 @@ import { ExchangeRateService } from '../application/exchange-rate.service';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@prisma/client';
 import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
-import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
+import { ThrottleScope } from 'src/infrastructure/throttle/types/throttle.types';
 
 @ApiTags('Admin Exchange Management')
 @Controller('admin/exchange')

@@ -5,7 +5,7 @@ import { RequestHandler } from 'express';
 import { createAdapter } from '@socket.io/redis-adapter';
 import Redis from 'ioredis';
 import { ClsService } from 'nestjs-cls';
-import { ThrottleService } from 'src/common/throttle/throttle.service';
+import { ThrottleService } from 'src/infrastructure/throttle/throttle.service';
 import { Logger } from '@nestjs/common';
 
 export interface SessionMiddlewares {

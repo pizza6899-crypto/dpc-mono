@@ -17,7 +17,7 @@ import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.decorator';
 import type { RequestClientInfo } from 'src/common/http/types/client-info.types';
 import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
-import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
+import { ThrottleScope } from 'src/infrastructure/throttle/types/throttle.types';
 import { ChangePasswordService } from '../application/change-password.service';
 import { RequestPasswordResetService } from '../application/request-password-reset.service';
 import { ResetPasswordService } from '../application/reset-password.service';

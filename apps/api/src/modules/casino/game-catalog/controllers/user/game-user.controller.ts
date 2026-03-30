@@ -28,7 +28,7 @@ import { Language, UserRoleType } from '@prisma/client';
 import { GetCategoryByCodeService } from '../../application/get-category-by-code.service';
 import { LaunchGameService } from '../../../application/launch-game.service';
 import { Throttle } from 'src/common/throttle/decorators/throttle.decorator';
-import { ThrottleScope } from 'src/common/throttle/types/throttle.types';
+import { ThrottleScope } from 'src/infrastructure/throttle/types/throttle.types';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 import { LaunchGameRequestDto } from './dto/request/launch-game.request.dto';

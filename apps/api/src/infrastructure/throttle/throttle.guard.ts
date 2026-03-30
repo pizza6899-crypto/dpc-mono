@@ -9,10 +9,10 @@ import {
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { ThrottleService } from './throttle.service';
-import { THROTTLE_KEY } from './decorators/throttle.decorator';
+import { THROTTLE_KEY } from 'src/common/throttle/decorators/throttle.decorator';
 import { ThrottleOptions, ThrottleScope } from './types/throttle.types';
-import { ApiException } from '../http/exception/api.exception';
-import { MessageCode } from '../http/types/message-codes';
+import { ApiException } from 'src/common/http/exception/api.exception';
+import { MessageCode } from 'src/common/http/types/message-codes';
 
 @Injectable()
 export class ThrottleGuard implements CanActivate {
