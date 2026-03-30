@@ -12,8 +12,8 @@ import { GetMyWageringRequirementsQueryDto } from './dto/request/get-my-wagering
 import { GetWageringSummaryQueryDto } from './dto/request/get-wagering-summary-query.dto';
 import { WageringRequirementUserResponseDto } from './dto/response/wagering-requirement-user.response.dto';
 import { WageringSummaryUserResponseDto } from './dto/response/wagering-summary-user.response.dto';
-import { SqidsService } from '../../../../../common/sqids/sqids.service';
-import { SqidsPrefix } from '../../../../../common/sqids/sqids.constants';
+import { SqidsService } from '../../../../../infrastructure/sqids/sqids.service';
+import { SqidsPrefix } from '../../../../../infrastructure/sqids/sqids.constants';
 import {
   ApiStandardResponse,
   ApiStandardErrors,

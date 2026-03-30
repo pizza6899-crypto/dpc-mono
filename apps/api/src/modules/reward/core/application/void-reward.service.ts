@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { AdvisoryLockService } from 'src/common/concurrency/advisory-lock.service';
-import { LockNamespace } from 'src/common/concurrency/concurrency.constants';
+import { AdvisoryLockService } from 'src/infrastructure/concurrency/advisory-lock.service';
+import { LockNamespace } from 'src/infrastructure/concurrency/concurrency.constants';
 import {
   type IRewardRepository,
   REWARD_REPOSITORY,

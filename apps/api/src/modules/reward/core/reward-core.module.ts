@@ -13,8 +13,8 @@ import { GetRewardService } from './application/get-reward.service';
 import { RewardController } from './controllers/user/reward.controller';
 import { RewardAdminController } from './controllers/admin/reward-admin.controller';
 import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
-import { SqidsModule } from 'src/common/sqids/sqids.module';
-import { ConcurrencyModule } from 'src/common/concurrency';
+import { SqidsModule } from 'src/infrastructure/sqids/sqids.module';
+import { ConcurrencyModule } from 'src/infrastructure/concurrency';
 import { WalletModule } from 'src/modules/wallet/wallet.module';
 import { RequirementModule } from 'src/modules/wagering/requirement/requirement.module';
 

@@ -12,7 +12,7 @@ import { InboxUserController } from './controllers/user/inbox-user.controller';
 import { NOTIFICATION_LOG_REPOSITORY } from './ports';
 
 import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
-import { SqidsModule } from 'src/common/sqids/sqids.module';
+import { SqidsModule } from 'src/infrastructure/sqids/sqids.module';
 
 @Module({
   imports: [SnowflakeModule, SqidsModule],

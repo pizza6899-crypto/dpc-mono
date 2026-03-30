@@ -1,6 +1,6 @@
 // src/modules/promotion/campaign/campaign/campaign.module.ts
 import { Module } from '@nestjs/common';
-import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';
 import { PromotionPolicy } from './domain';
 import { ValidatePromotionEligibilityService } from './application/validate-promotion-eligibility.service';
 import { GrantPromotionBonusService } from './application/grant-promotion-bonus.service';

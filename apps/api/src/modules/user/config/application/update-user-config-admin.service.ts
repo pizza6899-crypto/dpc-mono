@@ -4,8 +4,8 @@ import { USER_CONFIG_REPOSITORY } from '../ports/out/user-config.repository.toke
 import type { UserConfigRepositoryPort } from '../ports/out/user-config.repository.port';
 import { UserConfig } from '../domain/model/user-config.entity';
 import { UserConfigNotFoundException } from '../domain/user-config.exception';
-import { AdvisoryLockService } from 'src/common/concurrency/advisory-lock.service';
-import { LockNamespace } from 'src/common/concurrency/concurrency.constants';
+import { AdvisoryLockService } from 'src/infrastructure/concurrency/advisory-lock.service';
+import { LockNamespace } from 'src/infrastructure/concurrency/concurrency.constants';
 import {
   ExchangeCurrencyCode,
   Language,

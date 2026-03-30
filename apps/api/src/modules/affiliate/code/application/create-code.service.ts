@@ -10,7 +10,7 @@ import {
 import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repository.token';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
 import { generateUid } from 'src/utils/id.util';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 
 interface CreateCodeParams {
   userId: bigint;

@@ -8,7 +8,7 @@ import { PromoteUserTierService } from './application/promote-user-tier.service'
 import { DemoteUserTierService } from './application/demote-user-tier.service';
 import { AccumulateUserRollingService } from './application/accumulate-user-rolling.service';
 import { EvaluateUserTierService } from './application/evaluate-user-tier.service';
-import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';
 import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
 import { TIER_EVALUATOR_QUEUES } from './infrastructure/tier-evaluator.bullmq';
 import { TierEvaluationTriggerProcessor } from './infrastructure/tier-evaluation-trigger.processor';

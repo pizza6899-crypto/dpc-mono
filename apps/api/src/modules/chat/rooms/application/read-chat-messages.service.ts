@@ -13,8 +13,8 @@ import {
   type SocketChatMessagesReadPayload,
 } from 'src/infrastructure/websocket/types/socket-payload.types';
 import { getSocketRoom } from 'src/infrastructure/websocket/constants/websocket-rooms.constant';
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 import {
   CHAT_ROOM_REPOSITORY_PORT,
   type ChatRoomRepositoryPort,

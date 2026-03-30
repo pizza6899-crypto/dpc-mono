@@ -22,7 +22,7 @@ import {
   CompPolicy,
   CompPolicyViolationException,
 } from '../domain';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 import { SnowflakeService } from 'src/infrastructure/snowflake/snowflake.service';
 
 interface EarnCompParams {

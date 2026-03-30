@@ -17,7 +17,7 @@ import {
   ChatMemberRole,
   SupportCategory,
 } from '@prisma/client';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 import { SupportInquiryPolicy } from '../domain/support-inquiry.policy';
 import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
 

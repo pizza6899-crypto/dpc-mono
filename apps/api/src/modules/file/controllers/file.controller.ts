@@ -29,8 +29,8 @@ import {
   ApiStandardResponse,
   ApiStandardErrors,
 } from 'src/common/http/decorators/api-response.decorator';
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 import { FileSizeExceptionFilter } from '../filters/file-size.filter';

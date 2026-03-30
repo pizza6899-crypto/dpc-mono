@@ -19,7 +19,7 @@ import { DepositRequirementPolicy } from '../domain/policy/deposit-requirement.p
 import { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { ValidatePromotionEligibilityService } from '../../promotion/campaign/application/validate-promotion-eligibility.service';
 import { Transactional } from '@nestjs-cls/transactional';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
 import { SOCKET_ROOMS } from 'src/infrastructure/websocket/constants/websocket-rooms.constant';
 import { SOCKET_EVENT_TYPES } from 'src/infrastructure/websocket/types/socket-payload.types';

@@ -2,8 +2,8 @@ import { Injectable, Inject } from '@nestjs/common';
 import { USER_REPOSITORY } from '../ports/out/user.repository.token';
 import type { UserRepositoryPort } from '../ports/out/user.repository.port';
 import { MyProfileResponseDto } from '../controllers/user/dto/response/my-profile.response.dto';
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 import { UserNotFoundException } from '../domain';
 
 @Injectable()

@@ -12,7 +12,7 @@ import {
 import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';
 import { WithdrawalMetadata } from 'src/modules/wallet/domain/model/user-wallet-transaction-metadata';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 
 export interface ProcessWithdrawalParams {
   withdrawalId: bigint;

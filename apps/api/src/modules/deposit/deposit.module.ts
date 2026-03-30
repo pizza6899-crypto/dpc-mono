@@ -6,7 +6,7 @@ import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { EnvModule } from 'src/common/env/env.module';
 import { PaymentModule } from '../payment/payment.module';
 import { PromotionModule } from '../promotion/promotion.module';
-import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';
 import { AdminMemoModule } from '../admin-memo/admin-memo.module';
 import { GetDepositStatsService } from './application/get-deposit-stats.service';
 import { GetDepositsService } from './application/get-deposits.service';

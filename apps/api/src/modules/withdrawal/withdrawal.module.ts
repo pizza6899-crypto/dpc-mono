@@ -3,7 +3,7 @@ import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
 import { PaymentModule } from 'src/modules/payment/payment.module';
 import { WalletModule } from 'src/modules/wallet/wallet.module';
 import { WageringModule } from 'src/modules/wagering/wagering.module';
-import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';
 import { WithdrawalPolicy } from './domain';
 import { WITHDRAWAL_REPOSITORY } from './ports';
 import { WithdrawalRepository } from './infrastructure/withdrawal.repository';

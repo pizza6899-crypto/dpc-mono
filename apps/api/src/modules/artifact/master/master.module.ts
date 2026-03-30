@@ -19,7 +19,7 @@ import { UpdateArtifactSynthesisConfigsAdminService } from './application/update
 import { UpdateDrawConfigsAdminService } from './application/update-draw-configs-admin.service';
 import { ArtifactDrawConfigPolicy } from './domain/artifact-draw-config.policy';
 import { ArtifactPolicyPolicy } from './domain/artifact-policy.policy';
-import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';
 import { FileModule } from '../../file/file.module';
 import { GetArtifactCatalogAdminService } from './application/get-artifact-catalog-admin.service';
 import { CreateArtifactCatalogAdminService } from './application/create-artifact-catalog-admin.service';

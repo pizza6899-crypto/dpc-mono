@@ -4,7 +4,7 @@ import { Job } from 'bullmq';
 import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
 import { SOCKET_EVENT_TYPES } from 'src/infrastructure/websocket/types/socket-payload.types';
 import { type NotificationJobData } from '../../common';
-import { SqidsService } from 'src/common/sqids/sqids.service';
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
 import { ClsService } from 'nestjs-cls';
 import { Transactional } from '@nestjs-cls/transactional';
 import {
@@ -18,7 +18,7 @@ import {
   BULLMQ_QUEUES,
   getQueueConfig,
 } from 'src/infrastructure/bullmq/bullmq.constants';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 
 const queueConfig = getQueueConfig(BULLMQ_QUEUES.NOTIFICATION.INBOX);
 

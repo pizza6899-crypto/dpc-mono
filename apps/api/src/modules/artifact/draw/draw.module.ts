@@ -9,7 +9,7 @@ import { ArtifactStatusModule } from '../status/status.module';
 import { ArtifactMasterModule } from '../master/master.module';
 import { ArtifactInventoryModule } from '../inventory/inventory.module';
 import { WalletModule } from 'src/modules/wallet/wallet.module';
-import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';
 
 /**
  * [Artifact Support] 유물 뽑기 서브 모듈

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';
 import { GetUserWalletService } from './application/get-user-wallet.service';
 import { FindWalletTransactionHistoryService } from './application/find-wallet-transaction-history.service';
 import { UserWalletRepository } from './infrastructure/user-wallet.repository';
@@ -19,7 +19,7 @@ import { USER_WALLET_TRANSACTION_REPOSITORY } from './ports/out/user-wallet-tran
 import { UserWalletTransactionRepository } from './infrastructure/wallet-transaction.repository';
 import { UpdateUserBalanceService } from './application/update-user-balance.service';
 import { UserWalletPolicy } from './domain';
-import { SqidsModule } from 'src/common/sqids/sqids.module';
+import { SqidsModule } from 'src/infrastructure/sqids/sqids.module';
 import { USER_WALLET_STATS_REPOSITORY } from './ports/out/user-wallet-stats.repository.token';
 import { UserWalletStatsRepository } from './infrastructure/user-wallet-stats.repository';
 import { ExchangeModule } from '../exchange/exchange.module';

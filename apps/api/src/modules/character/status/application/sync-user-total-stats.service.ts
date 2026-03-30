@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 import { USER_CHARACTER_REPOSITORY_PORT } from '../ports/user-character.repository.port';
 import type { UserCharacterRepositoryPort } from '../ports/user-character.repository.port';
 import { UserCharacter, UserStats } from '../domain/user-character.entity';

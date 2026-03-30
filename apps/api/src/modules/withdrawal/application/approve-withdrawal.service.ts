@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 
 export interface ApproveWithdrawalParams {
   withdrawalId: bigint;

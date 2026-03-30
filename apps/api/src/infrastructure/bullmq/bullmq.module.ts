@@ -6,7 +6,7 @@ import { EnvModule } from 'src/common/env/env.module';
 import { EnvService } from 'src/common/env/env.service';
 import { BullMqSchedulerService } from './bullmq.scheduler.service';
 import { BULLMQ_PREFIX } from './bullmq.types';
-import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';
 
 /**
  * 프로젝트 전체의 BullMQ 인프라를 담당하는 모듈입니다.

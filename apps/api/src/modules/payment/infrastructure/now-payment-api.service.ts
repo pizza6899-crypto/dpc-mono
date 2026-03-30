@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { EnvService } from '../../../common/env/env.service';
 import { RedisService } from 'src/infrastructure/redis/redis.service';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 import { nowUtc } from 'src/utils/date.util';
 import { firstValueFrom } from 'rxjs';
 

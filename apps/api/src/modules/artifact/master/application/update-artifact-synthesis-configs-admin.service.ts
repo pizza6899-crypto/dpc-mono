@@ -5,8 +5,8 @@ import { UpdateArtifactSynthesisConfigsAdminRequestDto } from '../controllers/ad
 import { ArtifactPolicy } from '../domain/artifact-policy.entity';
 import { ArtifactPolicyNotFoundException } from '../domain/master.exception';
 import { ArtifactPolicyPolicy } from '../domain/artifact-policy.policy';
-import { AdvisoryLockService } from 'src/common/concurrency/advisory-lock.service';
-import { LockNamespace } from 'src/common/concurrency/concurrency.constants';
+import { AdvisoryLockService } from 'src/infrastructure/concurrency/advisory-lock.service';
+import { LockNamespace } from 'src/infrastructure/concurrency/concurrency.constants';
 
 /**
  * [Artifact] 유물 합성 설정 수정 서비스 (어드민용)

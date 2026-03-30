@@ -10,7 +10,7 @@ import {
   ProcessWageringCancelService,
   RevertWageringContributionService,
 } from './application/index';
-import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';
 import { CharacterMasterModule } from 'src/modules/character/master/master.module';
 import { CharacterStatusModule } from 'src/modules/character/status/status.module';
 

@@ -6,7 +6,7 @@ import { AttachFileService } from 'src/modules/file/application/attach-file.serv
 import { FileUrlService } from 'src/modules/file/application/file-url.service';
 import { FileUsageType } from 'src/modules/file/domain/model/file-usage.type';
 import { ArtifactCatalogAlreadyExistsException } from '../domain/master.exception';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 import { ArtifactGrade, ArtifactCatalogStatus } from '@prisma/client';
 
 export interface CreateArtifactCatalogAdminCommand {

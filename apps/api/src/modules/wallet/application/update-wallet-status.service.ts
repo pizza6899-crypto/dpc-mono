@@ -19,7 +19,7 @@ import {
   WalletStatusException,
 } from '../domain';
 import { Prisma } from '@prisma/client';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 import { SnowflakeService } from 'src/infrastructure/snowflake/snowflake.service';
 
 export interface UpdateWalletStatusParams {

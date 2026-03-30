@@ -5,7 +5,7 @@ import { PromotionPolicy } from '../domain/promotion.policy';
 import { PromoteUserTierService } from './promote-user-tier.service';
 import { TierStatsService } from '../../audit/application/tier-stats.service';
 import { Transactional } from '@nestjs-cls/transactional';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 import { UserTier } from '../../profile/domain/user-tier.entity';
 import { TierConfigRepositoryPort } from '../../config/infrastructure/tier-config.repository.port';
 import { TierAuditRepositoryPort } from '../../audit/infrastructure/tier-audit.repository.port';

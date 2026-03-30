@@ -16,7 +16,7 @@ import {
 } from '../domain';
 import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 import { CheckWageringRequirementService } from 'src/modules/wagering/requirement/application';
 
 export interface RequestBankWithdrawalParams {

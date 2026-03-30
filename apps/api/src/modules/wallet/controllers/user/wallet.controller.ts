@@ -19,8 +19,8 @@ import { GetUserWalletTransactionHistoryQueryDto } from './dto/request/get-walle
 import { ExchangeCurrencyCode } from '@prisma/client';
 import { WALLET_CURRENCIES } from 'src/utils/currency.util';
 import { CurrencyListResponseDto } from './dto/response/currency-list.response.dto';
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
 
 @Controller('wallet')

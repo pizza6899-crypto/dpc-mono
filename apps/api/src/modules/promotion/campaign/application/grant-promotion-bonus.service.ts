@@ -6,7 +6,7 @@ import { PromotionPolicy, PromotionNotFoundException } from '../domain';
 import type { UserPromotion } from '../domain';
 import { PROMOTION_REPOSITORY } from '../ports';
 import type { PromotionRepositoryPort } from '../ports/promotion.repository.port';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 
 interface GrantPromotionBonusParams {
   userId: bigint;

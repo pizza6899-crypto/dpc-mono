@@ -15,8 +15,8 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { GetActivePromotionsForUserService } from '../../application/get-active-promotions-for-user.service';
 import { PromotionResponseDto } from './dto/response/promotion.response.dto';
 import { ListActivePromotionsQueryDto } from './dto/request/list-active-promotions-query.dto';
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 import {
   Promotion,
   PromotionTranslation,

@@ -7,7 +7,7 @@ import { TierStatsService } from '../../audit/application/tier-stats.service';
 import { Tier } from '../../config/domain/tier.entity';
 import { TierEvaluationCycle } from '@prisma/client';
 import { TierConfigRepositoryPort } from '../../config/infrastructure/tier-config.repository.port';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 
 @Injectable()
 export class EvaluateUserTierService {

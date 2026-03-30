@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ArtifactGrade } from '@prisma/client';
 import { Transactional } from '@nestjs-cls/transactional';
-import { AdvisoryLockService } from 'src/common/concurrency/advisory-lock.service';
-import { LockNamespace } from 'src/common/concurrency/concurrency.constants';
+import { AdvisoryLockService } from 'src/infrastructure/concurrency/advisory-lock.service';
+import { LockNamespace } from 'src/infrastructure/concurrency/concurrency.constants';
 import { UserArtifactStatusRepositoryPort } from '../../status/ports/user-artifact-status.repository.port';
 import { ArtifactDrawConfigRepositoryPort } from '../../master/ports/artifact-draw-config.repository.port';
 import { ArtifactCatalogRepositoryPort } from '../../master/ports/artifact-catalog.repository.port';

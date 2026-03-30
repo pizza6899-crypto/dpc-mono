@@ -15,8 +15,8 @@ import { CreateAlertService } from 'src/modules/notification/alert/application/c
 import { WebsocketService } from 'src/infrastructure/websocket/websocket.service';
 import { SOCKET_EVENT_TYPES } from 'src/infrastructure/websocket/types/socket-payload.types';
 import { SOCKET_ROOMS } from 'src/infrastructure/websocket/constants/websocket-rooms.constant';
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 import { NOTIFICATION_EVENTS } from 'src/modules/notification/common';
 import { SupportInquiryPolicy } from '../domain/support-inquiry.policy';
 

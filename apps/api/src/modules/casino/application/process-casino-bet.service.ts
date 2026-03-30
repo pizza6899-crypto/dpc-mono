@@ -11,7 +11,7 @@ import { GameRoundHistoryService } from 'src/modules/game-round/application/game
 import { WalletActionName } from 'src/modules/wallet/domain';
 import { ResolveGameRoundService } from 'src/modules/game-round/application/resolve-game-round.service';
 import { CheckCasinoBalanceService } from './check-casino-balance.service';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 import { ProcessWageringBetService } from 'src/modules/wagering/engine/application/process-wagering-bet.service';
 
 export interface ProcessCasinoBetCommand {

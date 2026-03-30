@@ -27,8 +27,8 @@ import { RequestClientInfoParam } from 'src/common/auth/decorators/request-info.
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
 import { LogType } from 'src/modules/audit-log/domain';
 import { ExchangeCurrencyCode } from '@prisma/client';
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 import {
   RequestCryptoWithdrawalService,
   RequestBankWithdrawalService,

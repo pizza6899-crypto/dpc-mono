@@ -11,8 +11,8 @@ import { TierPublicResponseDto } from './dto/tier-public.response.dto';
 import { TierPublicQueryDto } from './dto/tier-public.query.dto';
 import { Tier } from '../../domain/tier.entity';
 
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 
 @Controller('public/tiers')
 @ApiTags('Public Tiers')

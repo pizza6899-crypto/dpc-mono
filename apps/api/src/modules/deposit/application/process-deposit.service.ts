@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { DEPOSIT_DETAIL_REPOSITORY } from '../ports';
 import type { DepositDetailRepositoryPort } from '../ports/deposit-detail.repository.port';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 import { DepositMethodType } from '@prisma/client';
 import {
   DepositUnauthorizedActionException,

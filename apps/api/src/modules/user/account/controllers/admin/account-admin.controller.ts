@@ -13,8 +13,8 @@ import type { RequestClientInfo } from 'src/common/http/types/client-info.types'
 import { RegisterAdminService } from '../../application/register-admin.service';
 import { RegisterAdminRequestDto } from './dto/request/register-admin.request.dto';
 import { RegisterAdminResponseDto } from './dto/response/register-admin.response.dto';
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';

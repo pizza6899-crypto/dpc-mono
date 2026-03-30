@@ -15,7 +15,7 @@ import {
   type SocketChatMessageNewPayload,
 } from 'src/infrastructure/websocket/types/socket-payload.types';
 import { getSocketRoom } from 'src/infrastructure/websocket/constants/websocket-rooms.constant';
-import { SqidsService } from 'src/common/sqids/sqids.service';
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
 import {
   CHAT_ROOM_REPOSITORY_PORT,
   type ChatRoomRepositoryPort,
@@ -32,7 +32,7 @@ import {
 import { ChatRoom } from '../domain/chat-room.entity';
 
 import { ChatRoomType, ChatMessageType } from '@prisma/client';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 import { FileUsageType } from 'src/modules/file/domain';
 import { AttachFileService } from 'src/modules/file/application/attach-file.service';
 import { FileUrlService } from 'src/modules/file/application/file-url.service';

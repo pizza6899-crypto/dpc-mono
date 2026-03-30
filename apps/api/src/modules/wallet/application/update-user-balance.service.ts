@@ -22,7 +22,7 @@ import {
   WalletActionName,
   AnyWalletTransactionMetadata,
 } from '../domain';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 import { USER_WALLET_STATS_REPOSITORY } from '../ports/out/user-wallet-stats.repository.token';
 import type {
   UserWalletStatsRepositoryPort,

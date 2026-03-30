@@ -12,8 +12,8 @@ import {
   Public,
   RequireRoles,
 } from 'src/common/auth/decorators/roles.decorator';
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 import { FindGamesService } from '../../application/find-games.service';
 import { CatalogGameResponseDto } from './dto/response/game.response.dto';
 import { GameListRequestDto } from './dto/request/game-list.request.dto';

@@ -6,7 +6,7 @@ import { CasinoGameSessionMapper } from './infrastructure/mapper/casino-game-ses
 import { CasinoGameSessionRepository } from './infrastructure/repository/casino-game-session.repository';
 import { CASINO_GAME_SESSION_REPOSITORY } from './ports/casino-game-session.repository.token';
 import { ExchangeModule } from '../exchange/exchange.module';
-import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';
 
 @Module({
   imports: [ExchangeModule, ConcurrencyModule],

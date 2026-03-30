@@ -16,7 +16,7 @@ import { TierNotFoundException } from '../../config/domain/tier-config.exception
 import { Transactional } from '@nestjs-cls/transactional';
 import { GrantRewardService } from 'src/modules/reward/core/application/grant-reward.service';
 import { ClaimRewardService as CoreClaimRewardService } from 'src/modules/reward/core/application/claim-reward.service';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 
 @Injectable()
 export class ForceUpdateUserTierService {

@@ -19,8 +19,8 @@ import { GetUserTierHistoryQueryDto } from './dto/request/get-user-tier-history.
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { SessionAuthGuard } from 'src/common/auth/guards/session-auth.guard';
 import { User } from 'src/modules/user/profile/domain/model/user.entity';
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 
 @ApiTags('User Tiers')
 @Controller('tiers')

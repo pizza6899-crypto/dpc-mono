@@ -15,8 +15,8 @@ import { type FileRepositoryPort } from '../ports/file.repository.port';
 import { Transactional } from '@nestjs-cls/transactional';
 import { StorageService } from 'src/infrastructure/storage/storage.service';
 
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 
 interface AttachFileCommand {
   fileIds: bigint[] | string[];

@@ -38,8 +38,8 @@ import { CancelDepositService } from '../../application/cancel-deposit.service';
 import { UserDepositResponseDto } from './dto/response/user-deposit.response.dto';
 import { GetUserDepositsQueryDto } from './dto/request/get-user-deposits-query.dto';
 import { CancelDepositResponseDto } from './dto/response/cancel-deposit-response.dto';
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 import { DepositDetail } from '../../domain';
 
 @ApiTags('User Deposit')

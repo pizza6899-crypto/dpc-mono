@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { CharacterLogType } from '@prisma/client';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 import { SnowflakeService } from 'src/infrastructure/snowflake/snowflake.service';
 import { GetCharacterConfigService } from '../../master/application/get-character-config.service';
 import { UserCharacter } from '../domain/user-character.entity';

@@ -4,7 +4,7 @@ import { GameCatalogModule } from './game-catalog/game-catalog.module';
 import { CasinoSessionModule } from '../casino-session/game-session.module';
 import { WhitecliffModule } from './providers/whitecliff/whitecliff.module';
 import { DcsModule } from './providers/dcs/dcs.module';
-import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';
 import { BullModule } from '@nestjs/bullmq';
 import { BullMqModule } from 'src/infrastructure/bullmq/bullmq.module';
 import { CASINO_QUEUES } from './infrastructure/casino.bullmq';

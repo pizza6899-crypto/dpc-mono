@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Transactional } from '@nestjs-cls/transactional';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 import { GainXpService } from './gain-xp.service';
 import { GetCharacterConfigService } from '../../master/application/get-character-config.service';
 import { UserWalletTransaction } from 'src/modules/wallet/domain/model/user-wallet-transaction.entity';

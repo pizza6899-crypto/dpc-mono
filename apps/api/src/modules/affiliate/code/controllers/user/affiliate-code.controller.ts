@@ -34,8 +34,8 @@ import { ValidateCodeFormatResponseDto } from './dto/response/validate-code-form
 import { AffiliateCode } from '../../domain';
 import { LogType } from 'src/modules/audit-log/domain';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 
 @ApiTags('User Affiliate Codes')
 @Controller('affiliate-codes')

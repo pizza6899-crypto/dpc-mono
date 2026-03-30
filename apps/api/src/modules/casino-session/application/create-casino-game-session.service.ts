@@ -9,8 +9,8 @@ import { CasinoGameSession } from '../domain';
 import { CASINO_GAME_SESSION_REPOSITORY } from '../ports/casino-game-session.repository.token';
 import type { CasinoGameSessionRepositoryPort } from '../ports/casino-game-session.repository.port';
 import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';
-import { AdvisoryLockService } from 'src/common/concurrency/advisory-lock.service';
-import { LockNamespace } from 'src/common/concurrency/concurrency.constants';
+import { AdvisoryLockService } from 'src/infrastructure/concurrency/advisory-lock.service';
+import { LockNamespace } from 'src/infrastructure/concurrency/concurrency.constants';
 
 interface CreateSessionParams {
   userId: bigint;

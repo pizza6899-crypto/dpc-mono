@@ -3,7 +3,7 @@ import { Transactional } from '@nestjs-cls/transactional';
 import { AffiliateCodePolicy, AffiliateCodeNotFoundException } from '../domain';
 import { AFFILIATE_CODE_REPOSITORY } from '../ports/out/affiliate-code.repository.token';
 import type { AffiliateCodeRepositoryPort } from '../ports/out/affiliate-code.repository.port';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 
 @Injectable()
 export class DeleteCodeAdminService {

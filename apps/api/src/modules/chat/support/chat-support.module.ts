@@ -11,8 +11,8 @@ import { PendingSupportInquiryService } from './application/pending-support-inqu
 
 import { ChatRoomsModule } from '../rooms/chat-rooms.module';
 
-import { SqidsModule } from 'src/common/sqids/sqids.module';
-import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { SqidsModule } from 'src/infrastructure/sqids/sqids.module';
+import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';
 import { UserProfileModule } from '../../user/profile/user-profile.module';
 import { AlertModule } from 'src/modules/notification/alert/alert.module';
 import { SupportInquiryPolicy } from './domain/support-inquiry.policy';

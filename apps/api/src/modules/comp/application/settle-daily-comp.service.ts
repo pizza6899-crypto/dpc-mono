@@ -23,7 +23,7 @@ import {
   CompPolicyViolationException,
   CompAccountTransaction,
 } from '../domain';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 import { GrantRewardService } from 'src/modules/reward/core/application/grant-reward.service';
 import { SnowflakeService } from 'src/infrastructure/snowflake/snowflake.service';
 

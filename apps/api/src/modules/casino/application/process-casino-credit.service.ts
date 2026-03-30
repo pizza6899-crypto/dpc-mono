@@ -16,7 +16,7 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { CasinoQueueNames } from '../infrastructure/queue/casino-queue.types';
 import { BULLMQ_QUEUES } from 'src/infrastructure/bullmq/bullmq.constants';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 import { ProcessWageringWinService } from 'src/modules/wagering/engine/application/process-wagering-win.service';
 import { ProcessWageringCancelService } from 'src/modules/wagering/engine/application/process-wagering-cancel.service';
 

@@ -8,7 +8,7 @@ import {
 } from '@prisma/client';
 import { WITHDRAWAL_REPOSITORY } from '../ports';
 import type { WithdrawalRepositoryPort } from '../ports';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 
 export interface RejectWithdrawalParams {
   withdrawalId: bigint;

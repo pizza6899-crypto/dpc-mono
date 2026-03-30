@@ -1,7 +1,7 @@
 import {
   SqidsPrefix,
   type SqidsPrefixType,
-} from 'src/common/sqids/sqids.constants';
+} from 'src/infrastructure/sqids/sqids.constants';
 import { FileAccessType } from './model/file.enum';
 import { FileUsageType } from './model/file-usage.type';
 import { FileValidationException } from './file.exception';

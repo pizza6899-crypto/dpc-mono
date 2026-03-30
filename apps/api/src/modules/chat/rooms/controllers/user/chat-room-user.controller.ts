@@ -5,8 +5,8 @@ import {
   ApiStandardResponse,
   ApiStandardErrors,
 } from 'src/common/http/decorators/api-response.decorator';
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { ListChatRoomsService } from '../../application/list-chat-rooms.service';

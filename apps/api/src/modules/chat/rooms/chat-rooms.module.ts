@@ -9,8 +9,8 @@ import { CHAT_MESSAGE_REPOSITORY_PORT } from './ports/chat-message.repository.po
 import { ChatMessageRepository } from './infrastructure/chat-message.repository';
 import { ChatRoomAdminController } from './controllers/admin/chat-room-admin.controller';
 import { ChatRoomUserController } from './controllers/user/chat-room-user.controller';
-import { SqidsModule } from 'src/common/sqids/sqids.module';
-import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { SqidsModule } from 'src/infrastructure/sqids/sqids.module';
+import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';
 import { TierModule } from '../../tier/tier.module';
 import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
 import { FileModule } from '../../file/file.module';

@@ -1,5 +1,5 @@
 import { Module, forwardRef } from '@nestjs/common';
-import { ConcurrencyModule } from 'src/common/concurrency/concurrency.module';
+import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';
 import { SnowflakeModule } from 'src/infrastructure/snowflake/snowflake.module';
 import { CharacterMasterModule } from '../master/master.module';
 import { WalletModule } from '../../wallet/wallet.module';

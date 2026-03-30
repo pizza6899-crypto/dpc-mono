@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ExchangeCurrencyCode } from '@prisma/client';
 import { Transactional } from '@nestjs-cls/transactional';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 import { COMP_REPOSITORY } from '../ports';
 import type { CompRepositoryPort } from '../ports';
 import { FindCompAccountService } from './find-comp-account.service';

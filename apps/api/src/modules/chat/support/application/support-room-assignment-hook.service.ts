@@ -6,8 +6,8 @@ import {
   type ChatRoomRepositoryPort,
 } from '../../rooms/ports/chat-room.repository.port';
 import { ChatRoomType } from '@prisma/client';
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 import { getSocketRoom } from 'src/infrastructure/websocket/constants/websocket-rooms.constant';
 
 /**

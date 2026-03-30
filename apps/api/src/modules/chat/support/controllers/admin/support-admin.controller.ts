@@ -28,8 +28,8 @@ import { CloseSupportInquiryService } from '../../application/close-support-inqu
 import { AssignSupportInquiryService } from '../../application/assign-support-inquiry.service';
 import { PendingSupportInquiryService } from '../../application/pending-support-inquiry.service';
 import { GetChatMessagesService } from '../../../rooms/application/get-chat-messages.service';
-import { SqidsService } from 'src/common/sqids/sqids.service';
-import { SqidsPrefix } from 'src/common/sqids/sqids.constants';
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 import { ListSupportInquiriesAdminRequestDto } from './dto/request/list-support-inquiries-admin.request.dto';
 import { SupportInquiryAdminResponseDto } from './dto/response/support-inquiry-admin.response.dto';
 import { UpdateSupportInquiryAdminRequestDto } from './dto/request/update-support-inquiry-admin.request.dto';

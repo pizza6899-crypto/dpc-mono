@@ -6,7 +6,7 @@ import type { RequestClientInfo } from 'src/common/http/types';
 import { DepositAlreadyProcessedException } from '../domain';
 import type { DepositDetailRepositoryPort } from '../ports/deposit-detail.repository.port';
 import { DEPOSIT_DETAIL_REPOSITORY } from '../ports';
-import { AdvisoryLockService, LockNamespace } from 'src/common/concurrency';
+import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 import { CreateAdminMemoService } from '../../admin-memo/application/create-admin-memo.service';
 import { ProcessDepositPromotionService } from '../../promotion/campaign/application/process-deposit-promotion.service';
 import { DepositNotFoundException } from '../domain';
