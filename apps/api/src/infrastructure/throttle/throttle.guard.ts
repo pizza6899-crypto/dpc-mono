@@ -19,7 +19,7 @@ export class ThrottleGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     private readonly throttleService: ThrottleService,
-  ) {}
+  ) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
@@ -39,9 +39,9 @@ export class ThrottleGuard implements CanActivate {
     const key = throttleOptions.keyGenerator
       ? throttleOptions.keyGenerator(request)
       : this.throttleService.generateKey(
-          request,
-          throttleOptions.scope || ThrottleScope.IP,
-        );
+        request,
+        throttleOptions.scope || ThrottleScope.IP,
+      );
 
     // 쓰로틀링 체크
     const result = await this.throttleService.checkAndIncrement(
