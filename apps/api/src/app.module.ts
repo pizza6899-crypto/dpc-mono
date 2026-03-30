@@ -19,7 +19,7 @@ import { ThrottleGuard } from './common/throttle/throttle.guard';
 import { AffiliateModule } from './modules/affiliate/affiliate.module';
 import { HttpExceptionFilter } from './common/http/exception/http-exception.filter';
 import { WalletModule } from './modules/wallet/wallet.module';
-import { CommonLoggerModule } from './common/logger/logger.module';
+import { CommonLoggerModule } from './infrastructure/logger/logger.module';
 import { AuditLogModule } from './modules/audit-log/audit-log.module';
 import { AuditLogInterceptor } from './modules/audit-log/infrastructure/audit-log.interceptor';
 import { RequestInfoInterceptor } from './common/http/interceptors/request-info.interceptor';

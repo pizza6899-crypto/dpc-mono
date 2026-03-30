@@ -58,14 +58,14 @@ import { randomUUID } from 'crypto';
         transport:
           process.env.NODE_ENV !== 'production'
             ? {
-              target: 'pino-pretty',
-              options: {
-                colorize: true,
-                levelFirst: true,
-                translateTime: 'SYS:standard',
-                ignore: 'pid,hostname', // 로컬 개발 시 불필요한 정보 제거
-              },
-            }
+                target: 'pino-pretty',
+                options: {
+                  colorize: true,
+                  levelFirst: true,
+                  translateTime: 'SYS:standard',
+                  ignore: 'pid,hostname', // 로컬 개발 시 불필요한 정보 제거
+                },
+              }
             : undefined,
 
         // 9. 보안 - 민감 정보 마스킹
@@ -82,4 +82,4 @@ import { randomUUID } from 'crypto';
     }),
   ],
 })
-export class CommonLoggerModule { }
+export class CommonLoggerModule {}
