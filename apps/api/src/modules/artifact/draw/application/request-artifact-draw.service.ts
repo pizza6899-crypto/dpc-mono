@@ -14,6 +14,7 @@ import { ArtifactPolicyNotFoundException } from '../../master/domain/master.exce
 import { ArtifactDrawPriceNotFoundException, CurrencyCodeRequiredException } from '../domain/draw.exception';
 import { ProcessWageringBetService } from 'src/modules/wagering/engine/application/process-wagering-bet.service';
 import { WalletActionName } from 'src/modules/wallet/domain';
+import { ExchangeRateService } from 'src/modules/exchange/application/exchange-rate.service';
 
 export interface RequestDrawCommand {
   drawType: ArtifactDrawType;
@@ -34,6 +35,7 @@ export class RequestArtifactDrawService {
     private readonly policyRepo: ArtifactPolicyRepositoryPort,
     private readonly drawRequestRepo: ArtifactDrawRequestRepositoryPort,
     private readonly wageringBetService: ProcessWageringBetService,
+    private readonly exchangeRateService: ExchangeRateService,
   ) { }
 
   @Transactional()
@@ -87,6 +89,12 @@ export class RequestArtifactDrawService {
         throw new ArtifactDrawPriceNotFoundException(currencyCode);
       }
 
+      // [GAMIFICATION FIX] 사용된 게임재화를 기반으로 USD 환율 획득 (경험치, 콤프 정산용)
+      const usdExchangeRate = await this.exchangeRateService.getRate({
+        fromCurrency: currencyCode,
+        toCurrency: ExchangeCurrencyCode.USD,
+      });
+
       // [Wagering Integration]
       // 웨이저링 베트 처리 (재화 차감, 롤링/콤프 적용, XP 지급)
       await this.wageringBetService.execute({
@@ -94,9 +102,13 @@ export class RequestArtifactDrawService {
         currency: currencyCode,
         betAmount: price,
         exchangeRate: new Prisma.Decimal(1), // 유물 가챠는 전용 게임 재화가 없으므로 1:1 디폴트
+        usdExchangeRate: usdExchangeRate,
         referenceId: drawRequest.id,
         actionName: WalletActionName.ARTIFACT_DRAW,
-        metadata: { drawType, spendCount },
+        metadata: {
+          requestId: String(drawRequest.id),
+          description: '유물 뽑기 베팅',
+        },
       });
 
       // 유통 통계 기록

@@ -12,6 +12,7 @@ import { WalletModule } from 'src/modules/wallet/wallet.module';
 import { WageringModule } from 'src/modules/wagering/wagering.module';
 import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';
 import { SolanaBlockchainModule } from 'src/infrastructure/blockchain/solana/solana-blockchain.module';
+import { ExchangeModule } from 'src/modules/exchange/exchange.module';
 import { ArtifactDrawRequestRepositoryPort } from './ports/artifact-draw-request.repository.port';
 import { PrismaArtifactDrawRequestRepository } from './infrastructure/prisma-artifact-draw-request.repository';
 import { ArtifactDrawRequestMapper } from './infrastructure/artifact-draw-request.mapper';
@@ -28,6 +29,7 @@ import { ArtifactDrawRequestMapper } from './infrastructure/artifact-draw-reques
     WageringModule,
     ConcurrencyModule,
     SolanaBlockchainModule,
+    ExchangeModule,
   ],
   controllers: [UserArtifactDrawController],
   providers: [

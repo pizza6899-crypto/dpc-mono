@@ -22,7 +22,19 @@ import { UpdateUserBalanceService } from 'src/modules/wallet/application/update-
 import { UpdateOperation, WalletActionName } from 'src/modules/wallet/domain';
 import { AdvisoryLockService, LockNamespace } from 'src/infrastructure/concurrency';
 import { WageringProgressionService } from 'src/modules/character/status/application/wagering-progression.service';
+import { UserWallet, AnyWalletTransactionMetadata } from 'src/modules/wallet/domain';
 
+/**
+ * 베팅 처리를 위한 메타데이터 규격 (Strict Mode)
+ */
+export interface ProcessWageringBetMetadata {
+  roundId?: string | bigint;  // 라운드 식별자
+  gameId?: string;           // 게임 식별자
+  provider?: string;         // 공급사 명칭
+  aggregatorTxId?: string;   // 통합 공급사 트랜잭션 ID
+  requestId?: string;        // 요청 추적 ID (유물 뽑기 등)
+  description?: string;      // 추가 설명 (카지노 베팅 등)
+}
 
 export interface ProcessWageringBetCommand {
   userId: bigint;
@@ -32,7 +44,7 @@ export interface ProcessWageringBetCommand {
   usdExchangeRate?: Prisma.Decimal; // Wallet -> USD Rate
   referenceId: bigint | string; // RoundId
   actionName: WalletActionName;
-  metadata: Record<string, any>;
+  metadata: ProcessWageringBetMetadata;
   gameContributionRate?: number;
 }
 
@@ -41,7 +53,7 @@ export interface ProcessWageringBetResult {
   bonusDeducted: Prisma.Decimal;
   cashTxId?: bigint;
   bonusTxId?: bigint;
-  updatedWallet: any;
+  updatedWallet: UserWallet;
 }
 
 @Injectable()
@@ -110,7 +122,7 @@ export class ProcessWageringBetService {
     // 3. 유저 지갑 업데이트 및 트랜잭션 기록
     let newCashTxId: bigint | undefined;
     let newBonusTxId: bigint | undefined;
-    let updatedWallet = userWallet;
+    let updatedWallet: UserWallet = userWallet;
 
     // 3.1. 현금(Cash) 차감
     if (cashDeduction.gt(0)) {
@@ -131,7 +143,7 @@ export class ProcessWageringBetService {
         },
         {
           actionName,
-          metadata: { ...metadata, splitType: 'CASH' } as any,
+          metadata: { ...metadata, splitType: 'CASH' } as AnyWalletTransactionMetadata,
         },
       );
       updatedWallet = result.wallet;
@@ -157,7 +169,7 @@ export class ProcessWageringBetService {
         },
         {
           actionName,
-          metadata: { ...metadata, splitType: 'BONUS' } as any,
+          metadata: { ...metadata, splitType: 'BONUS' } as AnyWalletTransactionMetadata,
         },
       );
       updatedWallet = result.wallet;
