@@ -28,13 +28,13 @@ export class PrismaArtifactDrawRequestRepository implements ArtifactDrawRequestR
   }
 
   /**
-   * 유저별 결과 산출 완료 및 미지급(Settled) 내역 조회
-   */
+  * 유저별 미완료(진행 중 또는 정산 완료) 내역 조회
+  */
   async findSettledByUserId(userId: bigint): Promise<ArtifactDrawRequest[]> {
     const records = await this.tx.artifactDrawRequest.findMany({
       where: {
         userId,
-        status: ArtifactDrawStatus.SETTLED,
+        status: { not: ArtifactDrawStatus.CLAIMED },
       },
       orderBy: { createdAt: 'desc' },
     });

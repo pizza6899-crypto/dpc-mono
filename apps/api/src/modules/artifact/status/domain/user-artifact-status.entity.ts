@@ -212,5 +212,16 @@ export class UserArtifactStatus {
   getGradeTicketDrawCount(grade: ArtifactGrade | 'ALL'): number { return this._drawCountTickets[grade]; }
   getSynthesisSuccessCount(grade: ArtifactGrade): number { return this._synthesisSuccessCounts[grade]; }
   getSynthesisFailCount(grade: ArtifactGrade): number { return this._synthesisFailCounts[grade]; }
+
+  /**
+   * 보유 티켓 통합 정보 반환
+   */
+  get tickets() {
+    return {
+      all: this._ticketAllCount,
+      ...this._gradeTickets,
+    };
+  }
+
   get updatedAt(): Date { return this._updatedAt; }
 }

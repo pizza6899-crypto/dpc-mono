@@ -3,6 +3,7 @@ import { ApiStandardResponse, ApiStandardErrors } from 'src/common/http/decorato
 import { RequestDrawDto } from './dto/request/request-draw.dto';
 import { DrawRequestResponseDto } from './dto/response/draw-request.response.dto';
 import { DrawResultResponseDto } from './dto/response/draw-result.response.dto';
+import { UnclaimedDrawResponseDto } from './dto/response/unclaimed-draw.response.dto';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@prisma/client';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -81,10 +82,10 @@ export class UserArtifactDrawController {
     summary: 'List Unclaimed Draws / 확인하지 않은 뽑기 결과 목록 조회',
     description: 'Retrieves all draws that have been settled by the server but not yet claimed by the user. / 서버에서 결과 산출이 완료되었으나 유저가 아직 확인(Reveal)하지 않은 내역들을 조회합니다.',
   })
-  @ApiStandardResponse(DrawResultResponseDto, { isArray: true })
-  async getUnclaimedDraws(): Promise<DrawResultResponseDto[]> {
+  @ApiStandardResponse(UnclaimedDrawResponseDto, { isArray: true })
+  async getUnclaimedDraws(): Promise<UnclaimedDrawResponseDto[]> {
     const draws = await this.listService.execute();
-    return draws.map(d => this.mapToResultResponse(d));
+    return draws.map(d => this.mapToUnclaimedResponse(d));
   }
 
   /**
@@ -130,7 +131,7 @@ export class UserArtifactDrawController {
       requestId: this.sqidsService.encode(entity.id, SqidsPrefix.ARTIFACT_DRAW_REQUEST),
       status: entity.status,
       items: items.map((item) => ({
-        userArtifactId: this.sqidsService.encode(item.userArtifactId, SqidsPrefix.USER_ARTIFACT),
+        userArtifactId: this.sqidsService.encode(BigInt(item.userArtifactId), SqidsPrefix.USER_ARTIFACT),
         artifactCode: item.artifactCode,
         grade: item.grade,
         blockhash: item.blockhash,
@@ -138,6 +139,17 @@ export class UserArtifactDrawController {
       })),
       settledAt: entity.settledAt || undefined,
       claimedAt: entity.claimedAt || undefined,
+    };
+  }
+
+  private mapToUnclaimedResponse(entity: ArtifactDrawRequest): UnclaimedDrawResponseDto {
+    return {
+      requestId: this.sqidsService.encode(entity.id, SqidsPrefix.ARTIFACT_DRAW_REQUEST),
+      status: entity.status,
+      drawType: entity.drawType,
+      targetSlot: entity.targetSlot.toString(),
+      createdAt: entity.createdAt,
+      settledAt: entity.settledAt || undefined,
     };
   }
 }

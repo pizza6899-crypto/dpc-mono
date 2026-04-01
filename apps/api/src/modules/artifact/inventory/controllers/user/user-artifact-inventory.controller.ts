@@ -55,6 +55,7 @@ export class UserArtifactInventoryController {
         badBeatBenefit: 0,
         criticalBenefit: 0,
       },
+      tickets: status.tickets,
     };
   }
 

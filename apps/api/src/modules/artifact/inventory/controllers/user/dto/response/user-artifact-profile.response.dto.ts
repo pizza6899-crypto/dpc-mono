@@ -43,6 +43,35 @@ export class UserArtifactSlotResponseDto {
 }
 
 /**
+ * [Artifact Inventory] 보유 유물 티켓 수량 정보 DTO
+ */
+export class UserArtifactTicketResponseDto {
+  @ApiProperty({ description: 'Total All Tickets (No Grade Limit) / 등급 무관 전체 티켓 수', example: 10 })
+  all: number;
+
+  @ApiProperty({ description: 'Common Tickets / 일반 확급권', example: 5 })
+  COMMON: number;
+
+  @ApiProperty({ description: 'Uncommon Tickets / 고급 확급권', example: 3 })
+  UNCOMMON: number;
+
+  @ApiProperty({ description: 'Rare Tickets / 희귀 확급권', example: 2 })
+  RARE: number;
+
+  @ApiProperty({ description: 'Epic Tickets / 영웅 확급권', example: 1 })
+  EPIC: number;
+
+  @ApiProperty({ description: 'Legendary Tickets / 전설 확급권', example: 0 })
+  LEGENDARY: number;
+
+  @ApiProperty({ description: 'Mythic Tickets / 신화 확급권', example: 0 })
+  MYTHIC: number;
+
+  @ApiProperty({ description: 'Unique Tickets / 유일 확급권', example: 0 })
+  UNIQUE: number;
+}
+
+/**
  * [Artifact Inventory] 유저 유물 시스템 통합 프로필 응답 DTO (최소 정보 버전)
  */
 export class UserArtifactProfileResponseDto {
@@ -64,4 +93,10 @@ export class UserArtifactProfileResponseDto {
     type: UserArtifactEffectSummaryDto,
   })
   effects: UserArtifactEffectSummaryDto;
+
+  @ApiProperty({
+    description: 'Available Tickets Info / 보유 티켓 정보',
+    type: UserArtifactTicketResponseDto,
+  })
+  tickets: UserArtifactTicketResponseDto;
 }
