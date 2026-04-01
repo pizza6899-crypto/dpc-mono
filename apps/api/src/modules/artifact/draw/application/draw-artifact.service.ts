@@ -4,8 +4,8 @@ import { DrawArtifactByTicketService } from './draw-artifact-by-ticket.service';
 import { DrawArtifactByCurrencyService } from './draw-artifact-by-currency.service';
 
 export interface DrawnArtifact {
-  id: string;
-  artifactId: string;
+  userArtifactId: string; // Encoded ID
+  artifactCode: string;   // Catalog Code
   grade: ArtifactGrade;
 }
 

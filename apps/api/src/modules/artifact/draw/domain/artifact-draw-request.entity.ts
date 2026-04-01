@@ -10,8 +10,8 @@ import {
  * [Artifact Draw] 당첨 결과 아이템 정보 인터페이스
  */
 export interface DrawnItemResult {
-  id: bigint;        // UserArtifact 고유 ID
-  artifactId: string; // Artifact Catalog Code
+  userArtifactId: bigint; // UserArtifact 고유 ID (PK)
+  artifactCode: string;   // Artifact Catalog Code (Unique String)
   grade: ArtifactGrade;
 }
 

@@ -11,6 +11,10 @@ import { ArtifactInventoryModule } from '../inventory/inventory.module';
 import { WalletModule } from 'src/modules/wallet/wallet.module';
 import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';
 
+import { ArtifactDrawRequestRepositoryPort } from './ports/artifact-draw-request.repository.port';
+import { PrismaArtifactDrawRequestRepository } from './infrastructure/prisma-artifact-draw-request.repository';
+import { ArtifactDrawRequestMapper } from './infrastructure/artifact-draw-request.mapper';
+
 /**
  * [Artifact Support] 유물 뽑기 서브 모듈
  */
@@ -28,6 +32,12 @@ import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.mo
     DrawArtifactByTicketService,
     DrawArtifactByCurrencyService,
     ArtifactDrawPolicy,
+    ArtifactDrawRequestMapper,
+    {
+      provide: ArtifactDrawRequestRepositoryPort,
+      useClass: PrismaArtifactDrawRequestRepository,
+    },
   ],
+  exports: [ArtifactDrawRequestRepositoryPort],
 })
 export class ArtifactDrawModule { }

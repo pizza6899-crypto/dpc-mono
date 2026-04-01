@@ -2,11 +2,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ArtifactGrade, ArtifactDrawStatus } from '@prisma/client';
 
 export class DrawnItemDto {
-  @ApiProperty({ description: 'Encoded User Artifact ID (uar_...) / Sqids로 인코딩된 유물 소유 ID' })
-  id: string;
+  @ApiProperty({ description: 'Encoded User Artifact ID (uar_...) / Sqids로 인코딩된 유물 소유 ID (PK)' })
+  userArtifactId: string;
 
-  @ApiProperty({ description: 'Artifact Catalog Code / 유물 카탈로그 코드' })
-  artifactId: string;
+  @ApiProperty({ description: 'Artifact Catalog Code / 유물 카테고리 코드 (Unique Code)' })
+  artifactCode: string;
 
   @ApiProperty({ enum: ArtifactGrade, description: 'Artifact Grade / 유물 등급' })
   grade: ArtifactGrade;
