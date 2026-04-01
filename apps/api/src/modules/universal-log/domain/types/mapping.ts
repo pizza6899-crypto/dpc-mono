@@ -4,7 +4,8 @@ import * as Payloads from './payloads';
  * [핵심] 액션 키(서비스.이벤트)와 페이로드 타입의 매핑
  */
 export interface LogPayloadMap {
-  'artifact.draw': Payloads.ArtifactDrawPayload;
+  'artifact.draw.ticket': Payloads.ArtifactTicketDrawPayload;
+  'artifact.draw.currency': Payloads.ArtifactCurrencyDrawPayload;
   'artifact.equip': Payloads.ArtifactEquipPayload;
   'artifact.unequip': Payloads.ArtifactUnequipPayload;
   'artifact.synthesis': Payloads.ArtifactSynthesisPayload;

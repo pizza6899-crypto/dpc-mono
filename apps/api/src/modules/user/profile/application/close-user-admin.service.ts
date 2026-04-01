@@ -28,7 +28,7 @@ export class CloseUserAdminService {
     private readonly userRepository: UserRepositoryPort,
     private readonly expireUserSessionsService: ExpireUserSessionsService,
     private readonly revokeUserGameSessionsService: RevokeUserGameSessionsService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute({

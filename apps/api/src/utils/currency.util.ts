@@ -23,7 +23,7 @@ function getWalletCurrenciesFromEnv(): readonly ExchangeCurrencyCode[] {
     }
   }
 
-  return [];
+  return Object.values(ExchangeCurrencyCode);
 }
 
 /**

@@ -2,13 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { UserArtifactNotFoundException, InvalidArtifactSlotException, ArtifactAlreadyEquippedException } from '../domain/inventory.exception';
 import { Transactional } from '@nestjs-cls/transactional';
 import { UserArtifactRepositoryPort } from '../ports/user-artifact.repository.port';
-import { EquipArtifactRequestDto } from '../controllers/user/dto/request/equip-artifact.request.dto';
 import { UserArtifactResponseDto } from '../controllers/user/dto/response/user-artifact.response.dto';
 import { GetUserArtifactStatusService } from '../../status/application/get-user-artifact-status.service';
 import { GetEquippedArtifactStatsService } from './get-equipped-artifact-stats.service';
 import { SyncUserTotalStatsService } from 'src/modules/character/status/application/sync-user-total-stats.service';
-import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
-import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 import { CreateUniversalLogService } from 'src/modules/universal-log/application/create-universal-log.service';
 
 import { RequestContextService } from 'src/infrastructure/cls/request-context.service';
@@ -27,7 +24,6 @@ export class EquipArtifactService {
     private readonly statusService: GetUserArtifactStatusService,
     private readonly getEquippedStatsService: GetEquippedArtifactStatsService,
     private readonly syncTotalStatsService: SyncUserTotalStatsService,
-    private readonly sqidsService: SqidsService,
     private readonly universalLogService: CreateUniversalLogService,
   ) { }
 
@@ -35,15 +31,13 @@ export class EquipArtifactService {
    * 유물을 지정된 슬롯에 장착 (트랜잭션)
    */
   @Transactional()
-  async execute(body: EquipArtifactRequestDto): Promise<UserArtifactResponseDto> {
+  async execute(userArtifactId: bigint, slotNo: number): Promise<UserArtifactResponseDto> {
     const userId = this.requestContext.getUserId()!;
-    const { userArtifactId: sqid, slotNo } = body;
 
     // 동시성 제어 (유저별 인벤토리 조작 락)
     await this.lockService.acquireLock(LockNamespace.ARTIFACT_INVENTORY, userId.toString());
 
     // 1. 유물 식별 및 소유권 확인
-    const userArtifactId = this.sqidsService.decode(sqid, SqidsPrefix.USER_ARTIFACT);
     const userArtifact = await this.repository.findById(userArtifactId);
 
     if (!userArtifact || userArtifact.userId !== userId) {
@@ -82,10 +76,11 @@ export class EquipArtifactService {
     await this.universalLogService.execute({
       action: 'artifact.equip',
       payload: {
-        userArtifactId: sqid,
+        userArtifactId: userArtifactId.toString(),
         artifactCode: updated.catalog?.code || 'UNKNOWN',
         slotNo: updated.slotNo!,
         prevArtifactCode,
+        prevUserArtifactId: existingInTargetSlot ? existingInTargetSlot.id.toString() : null,
       },
       targetId: updated.id,
       actorId: userId,
@@ -93,7 +88,7 @@ export class EquipArtifactService {
 
     // 7. 결과 반환
     return {
-      id: this.sqidsService.encode(updated.id, SqidsPrefix.USER_ARTIFACT),
+      id: updated.id.toString(), // Controller에서 인코딩 처리 권장
       artifactCode: updated.catalog?.code || 'UNKNOWN',
       slotNo: updated.slotNo ?? undefined,
       isEquipped: updated.isEquipped,

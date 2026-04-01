@@ -66,7 +66,7 @@ export class CreateUserService {
     private readonly initializeUserTierService: InitializeUserTierService,
     private readonly initializeUserWalletsService: InitializeUserWalletsService,
     private readonly initializeUserArtifactStatusService: InitializeUserArtifactStatusService,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(

@@ -24,6 +24,8 @@ import { UserArtifactProfileResponseDto } from './dto/response/user-artifact-pro
 import { EquipArtifactRequestDto } from './dto/request/equip-artifact.request.dto';
 import { UnequipArtifactRequestDto } from './dto/request/unequip-artifact.request.dto';
 import { GetMyArtifactsQueryDto } from './dto/request/get-my-artifacts.query.dto';
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 
 @ApiTags('User Artifact Inventory')
 @Controller('user/artifact')
@@ -35,6 +37,7 @@ export class UserArtifactInventoryController {
     private readonly equipService: EquipArtifactService,
     private readonly unequipService: UnequipArtifactService,
     private readonly profileService: GetMyArtifactProfileService,
+    private readonly sqidsService: SqidsService,
   ) { }
 
   /**
@@ -86,7 +89,13 @@ export class UserArtifactInventoryController {
   async equipArtifact(
     @Body() body: EquipArtifactRequestDto,
   ): Promise<UserArtifactResponseDto> {
-    return await this.equipService.execute(body);
+    const userArtifactId = this.sqidsService.decode(body.userArtifactId, SqidsPrefix.USER_ARTIFACT);
+    const result = await this.equipService.execute(userArtifactId, body.slotNo);
+
+    // 응답 ID 인코딩
+    result.id = this.sqidsService.encode(BigInt(result.id), SqidsPrefix.USER_ARTIFACT);
+
+    return result;
   }
 
   /**
@@ -109,6 +118,7 @@ export class UserArtifactInventoryController {
   async unequipArtifact(
     @Body() body: UnequipArtifactRequestDto,
   ): Promise<boolean> {
-    return await this.unequipService.execute(body);
+    const userArtifactId = this.sqidsService.decode(body.userArtifactId, SqidsPrefix.USER_ARTIFACT);
+    return await this.unequipService.execute(userArtifactId);
   }
 }

@@ -115,7 +115,7 @@ export class SettleArtifactDrawService {
         : undefined;
 
       // 0~1 난수 1회로 등급과 아이템 모두 결정
-      const { grade, remappedRoll } = this.policy.rollGrade(configs, itemSeed, guaranteedGrade);
+      const { grade, remappedRoll, rawRoll } = this.policy.rollGrade(configs, itemSeed, guaranteedGrade);
 
       // 해당 등급 내에서 유물 선택
       const artifact = this.policy.selectArtifactFromPool(catalogPool, grade, remappedRoll);
@@ -130,6 +130,7 @@ export class SettleArtifactDrawService {
         artifactCode: artifact.code,
         grade: artifact.grade,
         roll: remappedRoll,
+        rawRoll: rawRoll,
       });
     }
 
@@ -139,29 +140,53 @@ export class SettleArtifactDrawService {
 
     // 6. [Universal Log] 최종 결과 기록 (데이터 분석 및 백오피스용)
     const artifactPolicy = await this.policyRepo.findPolicy();
-    const finalCost =
-      artifactPolicy && request.currencyCode
-        ? artifactPolicy.getDrawPrice(request.drawType, request.currencyCode)
-        : null;
 
-    await this.universalLogService.execute({
-      action: 'artifact.draw',
-      targetId: null,
-      actorId: request.userId,
-      payload: {
-        currencyCode: request.currencyCode || 'TICKET',
-        costAmount: finalCost ? finalCost.toNumber() : 0,
-        provablyFair: {
+    if (request.paymentType === 'TICKET') {
+      await this.universalLogService.execute({
+        action: 'artifact.draw.ticket',
+        targetId: request.id,
+        actorId: request.userId,
+        payload: {
+          drawType: request.drawType,
           blockhash: mainBlockhash!,
-          nonce: 0, // 슬롯 기반이므로 0 디폴트
+          ticketType: request.ticketType || 'ALL',
+          ticketCount: request.drawType === 'SINGLE' ? 1 : 1, // (가정) 현재 단일 티켓 제품군만 있다면 1
+          drawCount: drawCount,
+          items: results.map((r) => ({
+            artifactCode: r.artifactCode,
+            grade: r.grade,
+            userArtifactId: r.userArtifactId.toString(),
+            gradeRoll: r.rawRoll,
+            selectRoll: r.roll,
+          })),
         },
-        items: results.map((r) => ({
-          id: r.artifactCode,
-          grade: r.grade,
-          gradeRoll: r.roll,
-        })),
-      },
-    });
+      });
+    } else {
+      const finalCost =
+        artifactPolicy && request.currencyCode
+          ? artifactPolicy.getDrawPrice(request.drawType, request.currencyCode)
+          : null;
+
+      await this.universalLogService.execute({
+        action: 'artifact.draw.currency',
+        targetId: request.id,
+        actorId: request.userId,
+        payload: {
+          drawType: request.drawType,
+          blockhash: mainBlockhash!,
+          currencyCode: request.currencyCode || 'UNKNOWN',
+          costAmount: finalCost ? finalCost.toNumber() : 0,
+          drawCount: drawCount,
+          items: results.map((r) => ({
+            artifactCode: r.artifactCode,
+            grade: r.grade,
+            userArtifactId: r.userArtifactId.toString(),
+            gradeRoll: r.rawRoll,
+            selectRoll: r.roll,
+          })),
+        },
+      });
+    }
 
     this.logger.log(`Successfully settled draw request ${requestId}. Items: ${results.length}`);
     return true;

@@ -17,7 +17,7 @@ export class InitializeUserWalletsService {
   constructor(
     @Inject(USER_WALLET_REPOSITORY)
     private readonly walletRepository: UserWalletRepositoryPort,
-  ) {}
+  ) { }
 
   @Transactional()
   async execute(userId: bigint): Promise<UserWallet[]> {

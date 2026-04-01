@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ActorType, HttpMethod, LogLevel, UserRoleType } from '@prisma/client';
+import { ActorType, LogLevel, UserRoleType } from '@prisma/client';
 import { SnowflakeService } from '../../../infrastructure/snowflake/snowflake.service';
 import { LogActionKey, LogEvent, LogService, PayloadFor } from '../domain/types';
 import { UserAgentCatalog } from '../domain/user-agent-catalog.entity';

@@ -21,12 +21,12 @@ export class ArtifactDrawPolicy {
    * [Rule] 설정된 확률(Gacha Config)에 따라 당첨 등급을 결정합니다.
    * [Method 2] 사용한 난수를 0 ~ 1 범위로 재생산(Normalization)하여 반환합니다.
    */
-  rollGrade(configs: ArtifactDrawConfig[], seed: string, guaranteedGrade?: ArtifactGrade): { grade: ArtifactGrade; remappedRoll: number } {
+  rollGrade(configs: ArtifactDrawConfig[], seed: string, guaranteedGrade?: ArtifactGrade): { grade: ArtifactGrade; remappedRoll: number; rawRoll: number } {
     const rawRoll = this.generateRandomFromSeed(seed);
 
     // 등급 확정권 사용 시
     if (guaranteedGrade) {
-      return { grade: guaranteedGrade, remappedRoll: rawRoll };
+      return { grade: guaranteedGrade, remappedRoll: rawRoll, rawRoll };
     }
 
     const order = Object.values(ArtifactGrade);
@@ -39,14 +39,13 @@ export class ArtifactDrawPolicy {
 
       if (rawRoll <= nextCumulative) {
         // [Normalization] (현재난수 - 구간시작) / 구간길이 = 0 ~ 1 사이의 새로운 난수 탄생
-        // 부동소수점 오차 방지를 위해 prob가 0에 가까울 경우 0으로 처리
         const remapped = prob > 0 ? (rawRoll - cumulative) / prob : 0;
-        return { grade: config.grade, remappedRoll: Math.min(Math.max(remapped, 0), 1) };
+        return { grade: config.grade, remappedRoll: Math.min(Math.max(remapped, 0), 1), rawRoll };
       }
       cumulative = nextCumulative;
     }
 
-    return { grade: ArtifactGrade.COMMON, remappedRoll: rawRoll };
+    return { grade: ArtifactGrade.COMMON, remappedRoll: rawRoll, rawRoll };
   }
 
   /**

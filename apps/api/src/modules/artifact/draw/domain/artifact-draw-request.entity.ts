@@ -14,7 +14,8 @@ export interface ArtifactDrawResult {
   userArtifactId: bigint; // UserArtifact 고유 ID (PK)
   artifactCode: string;   // Artifact Catalog Code (Unique String)
   grade: ArtifactGrade;
-  roll: number;           // 결과 산출에 사용된 0 ~ 1 사이의 난수
+  roll: number;           // 결과 산출에 사용된 0 ~ 1 사이의 (재계산된) 난수
+  rawRoll: number;        // 원본 0 ~ 1 사이의 난수 (등급 결정용)
 }
 
 /**
