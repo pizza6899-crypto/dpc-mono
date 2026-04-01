@@ -82,7 +82,6 @@ export class DrawArtifactByCurrencyService {
     // 3. 감사 로그 기록 (일괄 기록)
     await this.auditLogService.execute({
       action: 'artifact.draw',
-      userId,
       payload: {
         currencyCode: currency,
         costAmount: count === 1 ? 100 : 1000, // TODO: 실제 가격 정책 연동 필요

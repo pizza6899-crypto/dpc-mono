@@ -173,3 +173,43 @@ model UserArtifact {
   @@index([artifactId])
   @@map("user_artifacts")
 }
+
+/// [Artifact] 유물 뽑기 진행 상태
+enum ArtifactDrawStatus {
+  PENDING // 대기 중 (블록 생성 대기)
+  COMPLETED // 완료
+}
+
+/// [Artifact] 유물 뽑기 타입
+enum ArtifactDrawType {
+  SINGLE // 1회 (1)
+  TEN // 10회 (10+1 = 11)
+}
+
+/// [Artifact] 유물 뽑기 결제 수단
+enum ArtifactDrawPaymentType {
+  TICKET // 티켓 소모
+  CURRENCY // 재화 소모
+}
+
+/// [Artifact] 유물 뽑기 요청 내역 (미래 블록 기반 Commit-Reveal 관리용)
+model ArtifactDrawRequest {
+  id           BigInt                  @id @default(autoincrement())
+  userId       BigInt                  @map("user_id")
+  targetSlot   BigInt                  @map("target_slot") // 향후 슬롯 번호 증가에 대비하여 BigInt 사용
+  drawType     ArtifactDrawType        @map("draw_type")
+  paymentType  ArtifactDrawPaymentType @map("payment_type")
+  ticketType   String?                 @map("ticket_type") // ALL, ArtifactGrade 유연성 유지
+  currencyCode ExchangeCurrencyCode?   @map("currency_code") // 사용된 재화 코드 (USD, KRW 등)
+  status       ArtifactDrawStatus      @default(PENDING) @map("status")
+  result       Json?                   @map("result") // 당첨 결과 [{ id: bigint, artifactId: string, grade: ArtifactGrade }, ...]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([targetSlot, status])
+  @@map("artifact_draw_requests")
+}

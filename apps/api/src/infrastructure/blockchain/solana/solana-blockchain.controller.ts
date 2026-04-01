@@ -57,4 +57,19 @@ export class SolanaBlockchainController {
     const end = endSlot ? parseInt(endSlot, 10) : undefined;
     return await this.solanaService.getBlocks(startSlot, end);
   }
+
+  /**
+   * [GET] 최신 블록 상세 정보 조회 (Public)
+   */
+  @Public()
+  @Get('latest-block')
+  @ApiOperation({
+    summary: 'Get Latest Block / 최신 블록 상세 정보 조회',
+    description: 'Returns the details of the latest confirmed block.',
+  })
+  @ApiQuery({ name: 'details', enum: ['none', 'signatures', 'full'], required: false })
+  @ApiStandardResponse()
+  async getLatestBlock(@Query('details') details: 'none' | 'signatures' | 'full' = 'none') {
+    return await this.solanaService.getLatestBlock(details);
+  }
 }

@@ -170,8 +170,9 @@ model User {
   characterLogs UserCharacterLog[] @relation("UserLogs")
 
   // [Artifact]
-  userArtifacts      UserArtifact[]
-  userArtifactStatus UserArtifactStatus?
+  userArtifacts        UserArtifact[]
+  userArtifactStatus   UserArtifactStatus?
+  artifactDrawRequests ArtifactDrawRequest[]
 
   // [User Intelligence]
   userIntelligenceScore     UserIntelligenceScore?

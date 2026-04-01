@@ -53,20 +53,52 @@ export class SolanaService {
   }
 
   /**
+   * 특정 슬롯(Slot) 번호에 해당하는 블록 정보를 조회합니다. (내부 전용)
+   */
+  private async getBlockBySlot(
+    slot: number,
+    transactionDetails: 'none' | 'signatures' | 'full' = 'none',
+  ) {
+    try {
+      /**
+       * 'signatures' 옵션 사용 시 일부 RPC/라이브러리 버전에서 'transactions' 필드 누락으로 인한 파싱 에러가 발생함.
+       * 이를 방지하기 위해 'full' 모드로 가져오되, rewards: false로 최소화하여 조회.
+       */
+      const details = transactionDetails === 'signatures' ? 'full' : transactionDetails;
+
+      return await this.connection.getBlock(slot, {
+        commitment: 'confirmed',
+        encoding: 'json',
+        transactionDetails: details,
+        maxSupportedTransactionVersion: 0,
+        rewards: false,
+      } as any);
+    } catch (error) {
+      this.logger.error(`Failed to fetch block for slot: ${slot}`, error);
+      throw error;
+    }
+  }
+
+  /**
    * 특정 슬롯(Slot) 번호에 해당하는 블록해시를 조회합니다.
    */
   async getBlockHashBySlot(slot: number): Promise<string | null> {
-    try {
-      const block = await this.publicConnection.getBlock(slot, {
-        maxSupportedTransactionVersion: 0,
-        transactionDetails: 'none', // 트랜잭션 내용을 제외하고 메타데이터만 요청하여 효율적으로 조회
-        commitment: 'confirmed',
-      });
+    const block = await this.getBlockBySlot(slot, 'none');
+    return block?.blockhash ?? null;
+  }
 
-      return block?.blockhash ?? null;
+  /**
+   * 현재 가장 최신 확정 블록의 상세 정보를 가져옵니다.
+   */
+  async getLatestBlock(transactionDetails: 'none' | 'signatures' | 'full' = 'none') {
+    let slot = await this.getCurrentSlot();
+
+    try {
+      return await this.getBlockBySlot(slot, transactionDetails);
     } catch (error) {
-      this.logger.error(`Failed to fetch blockhash for slot: ${slot}`, error);
-      throw error;
+      // 최신 슬롯 블록 조회 실패 시 바로 이전 슬롯으로 한 번 더 시도 (인덱싱 지연 대비)
+      this.logger.warn(`Failed to fetch block for latest slot ${slot}, retrying with ${slot - 1}`);
+      return await this.getBlockBySlot(slot - 1, transactionDetails);
     }
   }
 }

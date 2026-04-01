@@ -94,7 +94,6 @@ export class DrawArtifactByTicketService {
     // 3. 감사 로그 기록 (일괄 기록)
     await this.auditLogService.execute({
       action: 'artifact.draw',
-      userId,
       payload: {
         currencyCode: 'TICKET',
         costAmount: count,
