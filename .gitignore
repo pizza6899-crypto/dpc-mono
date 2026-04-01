@@ -8,6 +8,9 @@ dist/
 /out/
 build/
 .turbo/
+.nuxt/
+.output/
+.wrangler/
 
 # Environment variables (모든 하위 폴더의 .env 포함)
 .env
