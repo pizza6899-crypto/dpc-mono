@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
+import { ArtifactGrade } from '@prisma/client';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { UserArtifactRepositoryPort } from '../ports/user-artifact.repository.port';
 import { UserArtifact } from '../domain/user-artifact.entity';
@@ -22,8 +23,72 @@ export class PrismaUserArtifactRepository implements UserArtifactRepositoryPort 
   async findByUserId(userId: bigint): Promise<UserArtifact[]> {
     const records = await this.tx.userArtifact.findMany({
       where: { userId },
+      include: { artifact: true },
     });
     return records.map(record => this.mapper.toEntity(record));
+  }
+
+  /**
+   * 유저의 보유 유물 페이지네이션 조회 (Catalog 정보 포함, 필터 및 정렬 지원)
+   */
+  async findManyByUserId(
+    userId: bigint,
+    options: {
+      skip: number;
+      take: number;
+      grades?: ArtifactGrade[];
+      sortBy?: string;
+      sortOrder?: 'asc' | 'desc';
+    },
+  ): Promise<[UserArtifact[], number]> {
+    const { skip, take, grades, sortBy, sortOrder } = options;
+
+    // 필터 조건 구성
+    const where: any = { userId };
+    if (grades && grades.length > 0) {
+      where.artifact = { grade: { in: grades } };
+    }
+
+    // 정렬 조건 구성
+    const orderBy: any[] = [];
+    if (sortBy === 'grade') {
+      // 1. 등급순 (Enum 정의 순서)
+      orderBy.push({ artifact: { grade: sortOrder || 'asc' } });
+      // 2. 동일 등급 내에서는 최신 획득순 (Fallback)
+      orderBy.push({ createdAt: 'desc' });
+    } else if (sortBy === 'id') {
+      orderBy.push({ id: sortOrder || 'desc' });
+    } else if (sortBy === 'acquiredAt') {
+      orderBy.push({ createdAt: sortOrder || 'desc' });
+    } else {
+      // 기본값: 최신 획득순
+      orderBy.push({ createdAt: 'desc' });
+    }
+
+    // 최종 안정 정렬을 위한 PK 추가
+    if (!orderBy.some(o => o.id)) {
+      orderBy.push({ id: 'desc' });
+    }
+
+    console.log(`[Repository] findManyByUserId - sortBy: ${sortBy}, sortOrder: ${sortOrder}, Final OrderBy:`, JSON.stringify(orderBy));
+
+    const [records, total] = await Promise.all([
+      this.tx.userArtifact.findMany({
+        where,
+        include: { artifact: true },
+        skip,
+        take,
+        orderBy,
+      }),
+      this.tx.userArtifact.count({
+        where,
+      }),
+    ]);
+
+    return [
+      records.map(r => this.mapper.toEntity(r)),
+      total,
+    ];
   }
 
   /**
@@ -32,6 +97,7 @@ export class PrismaUserArtifactRepository implements UserArtifactRepositoryPort 
   async findById(id: bigint): Promise<UserArtifact | null> {
     const record = await this.tx.userArtifact.findUnique({
       where: { id },
+      include: { artifact: true },
     });
     if (!record) return null;
     return this.mapper.toEntity(record);

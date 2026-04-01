@@ -12,10 +12,10 @@ export class UserArtifactResponseDto {
   id: string;
 
   @ApiProperty({
-    description: 'Artifact Master ID / 원형 유물 식별자',
-    example: '101',
+    description: 'Artifact Catalog Code / 유물 카테고리 코드 (Unique Code)',
+    example: 'ART_HEAL_01',
   })
-  artifactId: string;
+  artifactCode: string;
 
   @ApiPropertyOptional({
     description: 'Equipped Slot Number (null if not equipped) / 장착 슬롯 번호',
@@ -30,11 +30,6 @@ export class UserArtifactResponseDto {
   })
   isEquipped: boolean;
 
-  @ApiPropertyOptional({
-    description: 'Artifact Name / 유물 명칭',
-    example: 'Ancient Artifact',
-  })
-  name?: string;
 
   @ApiPropertyOptional({
     description: 'Artifact Grade / 유물 등급',

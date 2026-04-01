@@ -1,3 +1,5 @@
+import { ArtifactCatalog } from '../../master/domain/artifact-catalog.entity';
+
 /**
  * [Artifact] 유저가 보유한 개별 유물 인스턴스 엔티티
  */
@@ -10,6 +12,7 @@ export class UserArtifact {
     private _isEquipped: boolean,
     private readonly _createdAt: Date,
     private readonly _updatedAt: Date,
+    private _catalog?: ArtifactCatalog, // 유물 상세 정보 (도감 정보)
   ) { }
 
   /**
@@ -23,6 +26,7 @@ export class UserArtifact {
     isEquipped: boolean;
     createdAt: Date;
     updatedAt: Date;
+    catalog?: ArtifactCatalog;
   }): UserArtifact {
     return new UserArtifact(
       data.id,
@@ -32,7 +36,15 @@ export class UserArtifact {
       data.isEquipped,
       data.createdAt,
       data.updatedAt,
+      data.catalog,
     );
+  }
+
+  /**
+   * 유물 상세 정보를 수동으로 주입
+   */
+  setCatalog(catalog: ArtifactCatalog): void {
+    this._catalog = catalog;
   }
 
   /**
@@ -59,4 +71,5 @@ export class UserArtifact {
   get isEquipped(): boolean { return this._isEquipped; }
   get createdAt(): Date { return this._createdAt; }
   get updatedAt(): Date { return this._updatedAt; }
+  get catalog(): ArtifactCatalog | undefined { return this._catalog; }
 }

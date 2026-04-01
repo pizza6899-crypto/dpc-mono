@@ -1,3 +1,4 @@
+import { ArtifactGrade } from '@prisma/client';
 import { UserArtifact } from '../domain/user-artifact.entity';
 
 /**
@@ -8,6 +9,20 @@ export abstract class UserArtifactRepositoryPort {
    * 유저의 보유 유물 전체 조회
    */
   abstract findByUserId(userId: bigint): Promise<UserArtifact[]>;
+
+  /**
+   * 유저의 보유 유물 페이지네이션 조회 (Catalog 정보 포함, 필터 및 정렬 지원)
+   */
+  abstract findManyByUserId(
+    userId: bigint,
+    options: {
+      skip: number;
+      take: number;
+      grades?: ArtifactGrade[];
+      sortBy?: string;
+      sortOrder?: 'asc' | 'desc';
+    },
+  ): Promise<[UserArtifact[], number]>;
 
   /**
    * 단일 보유 유물 조회

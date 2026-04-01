@@ -1,13 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { UserArtifact as PrismaUserArtifact } from '@prisma/client';
 import { UserArtifact } from '../domain/user-artifact.entity';
+import { ArtifactCatalogMapper } from '../../master/infrastructure/artifact-catalog.mapper';
 
 @Injectable()
 export class UserArtifactMapper {
+  constructor(private readonly catalogMapper: ArtifactCatalogMapper) { }
+
   /**
    * Prisma 레코드를 도메인 엔티티로 변환
    */
-  toEntity(record: PrismaUserArtifact): UserArtifact {
+  toEntity(record: any): UserArtifact {
     return UserArtifact.rehydrate({
       id: record.id,
       userId: record.userId,
@@ -16,6 +19,7 @@ export class UserArtifactMapper {
       isEquipped: record.isEquipped,
       createdAt: record.createdAt,
       updatedAt: record.updatedAt,
+      catalog: record.artifact ? this.catalogMapper.toEntity(record.artifact) : undefined,
     });
   }
 

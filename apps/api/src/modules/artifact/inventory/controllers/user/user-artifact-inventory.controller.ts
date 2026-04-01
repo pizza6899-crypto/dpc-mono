@@ -10,6 +10,7 @@ import { PaginatedData } from 'src/common/http/types/pagination.types';
 
 // Status Services (Injection)
 import { GetUserArtifactStatusService } from '../../../status/application/get-user-artifact-status.service';
+import { ListMyArtifactsService } from '../../application/list-my-artifacts.service';
 
 // DTOs
 import { UserArtifactResponseDto } from './dto/response/user-artifact.response.dto';
@@ -25,6 +26,7 @@ import { GetMyArtifactsQueryDto } from './dto/request/get-my-artifacts.query.dto
 export class UserArtifactInventoryController {
   constructor(
     private readonly statusService: GetUserArtifactStatusService,
+    private readonly listService: ListMyArtifactsService,
   ) { }
 
   /**
@@ -70,13 +72,7 @@ export class UserArtifactInventoryController {
     @CurrentUser() user: AuthenticatedUser,
     @Query() query: GetMyArtifactsQueryDto,
   ): Promise<PaginatedData<UserArtifactResponseDto>> {
-    // TODO: 인벤토리 전문 조회 서비스 연동 필요
-    return {
-      data: [],
-      page: query.page ?? 1,
-      limit: query.limit ?? 20,
-      total: 0,
-    }; // Mock
+    return await this.listService.execute(user.id, query);
   }
 
   /**

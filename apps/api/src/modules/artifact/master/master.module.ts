@@ -71,6 +71,7 @@ import { UpdateArtifactCatalogAdminService } from './application/update-artifact
     UpdateDrawConfigsAdminService,
     GetArtifactCatalogAdminService,
     CreateArtifactCatalogAdminService,
+    ArtifactCatalogMapper,
   ],
 })
 export class ArtifactMasterModule { }
