@@ -20,39 +20,17 @@ export interface CreateLogCommand<K extends LogActionKey> {
   level?: LogLevel;
   /** 성공 여부 (기본 true) */
   isSuccess?: boolean;
-  /** 행위 주체 유저 ID */
-  userId?: bigint;
-  /** 행위자 타입 (기본 USER) */
-  actorType?: ActorType;
-  /** 행위자 고유 ID (관리자 ID 등) */
-  actorId?: bigint;
   /** 조작 대상 객체 ID */
   targetId?: bigint;
-  /** 분산 추적 ID */
-  traceId?: string;
-  /** 세션 ID */
-  sessionId?: string;
-  /** 기기 고유 ID */
-  deviceId?: string;
+  /** 행위자 고유 ID (관리자 ID 등) */
+  actorId?: bigint;
+  /** 행위자 타입 (명시적으로 지정할 경우만) */
+  actorType?: ActorType;
   /** 실패 시 에러 코드 */
   errorCode?: string;
   /** 소요 시간 (ms) */
   durationMs?: number;
-  /** 클라이언트 IP 주소 */
-  ipAddress?: string;
-  /** 원본 User-Agent 문자열 */
-  userAgent?: string;
-  /** 국가 코드 (ISO 3166-1 alpha-2) */
-  countryCode?: string;
-  /** 요청 경로 */
-  requestPath?: string;
-  /** HTTP 메서드 */
-  requestMethod?: HttpMethod;
-  /** 생성 시각 (기본 현재 시각) */
-  createdAt?: Date;
 }
-
-
 
 /**
  * [UniversalLog] 로그 생성 애플리케이션 서비스
@@ -72,14 +50,14 @@ export class CreateUniversalLogService {
    * 로그 생성 실행 (버퍼 적재)
    */
   async execute<K extends LogActionKey>(command: CreateLogCommand<K>): Promise<void> {
-    const { action, userAgent } = command;
+    const { action } = command;
 
     // 1. 서비스/이벤트 분리 (ActionKey: 'SERVICE.EVENT')
     const [service, event] = action.split('.') as [LogService, LogEvent];
 
     // 2. UserAgent ID 확인/생성 (고중복 데이터 최적화)
     let userAgentId: bigint | null = null;
-    const finalUserAgent = userAgent ?? this.context.getClientInfo()?.userAgent;
+    const finalUserAgent = this.context.getClientInfo()?.userAgent;
 
     if (finalUserAgent) {
       const uaEntity = UserAgentCatalog.fromRaw(finalUserAgent);
@@ -88,7 +66,7 @@ export class CreateUniversalLogService {
 
     // 3. Request Context로부터 필수 정보 자동 추출
     const contextUser = this.context.getUser();
-    const resolvedUserId = command.userId ?? contextUser?.id;
+    const resolvedUserId = contextUser?.id;
 
     // 행위자 타입 자동 결정 로직
     let resolvedActorType = command.actorType;
@@ -102,32 +80,32 @@ export class CreateUniversalLogService {
       }
     }
 
-    // 4. Snowflake ID 채번 (정적 시간 제어 포함)
-    const { id, timestamp } = this.snowflakeService.generate(command.createdAt);
+    // 4. Snowflake ID 채번 (현재 시점 기준)
+    const { id, timestamp } = this.snowflakeService.generate();
 
     // 5. Redis List 버퍼 적재 (RPUSH)
     await this.redis.rpush(UNIVERSAL_LOG_KEYS.BUFFER, {
       id: id.toString(),
       service,
       event,
-      createdAt: (command.createdAt ?? timestamp).toISOString(),
+      createdAt: timestamp.toISOString(),
       payload: command.payload,
       userId: resolvedUserId?.toString(),
       actorType: resolvedActorType,
       actorId: command.actorId?.toString(),
       targetId: command.targetId?.toString(),
-      traceId: command.traceId ?? this.context.getTraceId(),
-      sessionId: command.sessionId ?? this.context.getSessionId(),
-      deviceId: command.deviceId ?? this.context.getDeviceId(),
+      traceId: this.context.getTraceId(),
+      sessionId: this.context.getSessionId(),
+      deviceId: this.context.getDeviceId(),
       level: command.level,
       isSuccess: command.isSuccess,
       errorCode: command.errorCode,
       durationMs: command.durationMs,
-      ipAddress: command.ipAddress ?? this.context.getIpAddress(),
+      ipAddress: this.context.getIpAddress(),
       userAgentId: userAgentId?.toString(),
-      countryCode: command.countryCode ?? this.context.getCountryCode(),
-      requestPath: command.requestPath ?? this.context.getClientInfo()?.path,
-      requestMethod: command.requestMethod ?? this.context.getClientInfo()?.method,
+      countryCode: this.context.getCountryCode(),
+      requestPath: this.context.getClientInfo()?.path,
+      requestMethod: this.context.getClientInfo()?.method,
     });
   }
 }
