@@ -18,8 +18,7 @@ export class RequestDrawDto {
     description: 'Ticket Grade / 확정권 사용 시 티켓 등급 (ALL or Specific Grade)',
   })
   @IsOptional()
-  @IsString()
-  ticketType?: string = 'ALL';
+  ticketType?: ArtifactGrade | 'ALL' = 'ALL';
 
   @ApiProperty({
     enum: ExchangeCurrencyCode,

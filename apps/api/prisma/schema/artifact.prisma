@@ -203,7 +203,7 @@ model ArtifactDrawRequest {
   ticketType   String?                 @map("ticket_type") // ALL, ArtifactGrade 유연성 유지
   currencyCode ExchangeCurrencyCode?   @map("currency_code") // 사용된 재화 코드 (USD, KRW 등)
   status       ArtifactDrawStatus      @default(PENDING) @map("status")
-  result       Json?                   @map("result") // 당첨 결과 [{ id: bigint, artifactId: string, grade: ArtifactGrade }, ...]
+  result       Json?                   @map("result") // 당첨 결과 ArtifactDrawResult[] 형태 [{ blockhash: string, userArtifactId: bigint, artifactCode: string, grade: ArtifactGrade, roll: number }]
 
   settledAt DateTime? @map("settled_at") // 서버 확정 시점
   claimedAt DateTime? @map("claimed_at") // 유저 확인 시점

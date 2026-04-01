@@ -1,3 +1,4 @@
+import { createHash } from 'crypto';
 import { ArtifactGrade } from '@prisma/client';
 import { ArtifactDrawConfig } from '../../master/domain/artifact-draw-config.entity';
 import { ArtifactCatalog } from '../../master/domain/artifact-catalog.entity';
@@ -18,54 +19,72 @@ export class ArtifactDrawPolicy {
 
   /**
    * [Rule] 설정된 확률(Gacha Config)에 따라 당첨 등급을 결정합니다.
-   * 특정 등급 확정권 사용 시 guaranteedGrade를 인자로 전달합니다.
+   * [Method 2] 사용한 난수를 0 ~ 1 범위로 재생산(Normalization)하여 반환합니다.
    */
-  rollGrade(configs: ArtifactDrawConfig[], guaranteedGrade?: ArtifactGrade): ArtifactGrade {
+  rollGrade(configs: ArtifactDrawConfig[], seed: string, guaranteedGrade?: ArtifactGrade): { grade: ArtifactGrade; remappedRoll: number } {
+    const rawRoll = this.generateRandomFromSeed(seed);
+
+    // 등급 확정권 사용 시
     if (guaranteedGrade) {
-      return guaranteedGrade;
+      return { grade: guaranteedGrade, remappedRoll: rawRoll };
     }
-    // 등급 순서대로 정렬 (가시적인 누적 확률 계산을 위해)
+
     const order = Object.values(ArtifactGrade);
     const sortedConfigs = [...configs].sort((a, b) => order.indexOf(a.grade) - order.indexOf(b.grade));
 
-    const roll = Math.random();
     let cumulative = 0;
-
     for (const config of sortedConfigs) {
-      cumulative += Number(config.probability);
-      if (roll <= cumulative) {
-        return config.grade;
+      const prob = Number(config.probability);
+      const nextCumulative = cumulative + prob;
+
+      if (rawRoll <= nextCumulative) {
+        // [Normalization] (현재난수 - 구간시작) / 구간길이 = 0 ~ 1 사이의 새로운 난수 탄생
+        // 부동소수점 오차 방지를 위해 prob가 0에 가까울 경우 0으로 처리
+        const remapped = prob > 0 ? (rawRoll - cumulative) / prob : 0;
+        return { grade: config.grade, remappedRoll: Math.min(Math.max(remapped, 0), 1) };
       }
+      cumulative = nextCumulative;
     }
 
-    // 만약 확률 합계가 1 미만이라면 기본적으로 가장 낮은 등급 반환
-    return ArtifactGrade.COMMON;
+    return { grade: ArtifactGrade.COMMON, remappedRoll: rawRoll };
   }
 
   /**
    * [Rule] 결정된 등급의 풀에서 특정 유물을 무작위로 선택합니다.
-   * (추후 각 유물별 가중치(drawWeight)가 도입될 경우 여기서 해당 로직을 처리)
+   * @param roll 0 ~ 1 사이의 재생산된 난수 (remappedRoll)
    */
-  selectArtifactFromPool(pool: ArtifactCatalog[], grade: ArtifactGrade): ArtifactCatalog {
+  selectArtifactFromPool(pool: ArtifactCatalog[], grade: ArtifactGrade, roll: number): ArtifactCatalog {
     const gradePool = pool.filter(a => a.grade === grade);
 
     if (gradePool.length === 0) {
       throw new NoArtifactsForGradeException(grade);
     }
 
-    // [Simple Random] 현재는 동일 가중치로 무작위 선택
-    // TODO: ArtifactCatalog.drawWeight 필드를 활용한 가중치 랜덤 로직 적용 가능
     const totalWeight = gradePool.reduce((sum, item) => sum + (item.drawWeight || 1000), 0);
-    const roll = Math.random() * totalWeight;
+    const targetWeight = roll * totalWeight;
 
     let currentWeight = 0;
     for (const item of gradePool) {
       currentWeight += (item.drawWeight || 1000);
-      if (roll <= currentWeight) {
+      if (targetWeight <= currentWeight) {
         return item;
       }
     }
 
-    return gradePool[Math.floor(Math.random() * gradePool.length)];
+    return gradePool[gradePool.length - 1];
+  }
+
+  /**
+   * [Utils] 해시값(Blockhash + Index)을 시드로 사용하여 0~1 사이의 12자리 부동소수점 난수를 생성합니다.
+   * (Deterministic Random Generation)
+   */
+  private generateRandomFromSeed(seed: string): number {
+    const hash = createHash('sha256').update(seed).digest('hex');
+    // 해시 문자열 앞 10자리를 16진수로 사용하여 충분한 정밀도 확보 (16^10 ≈ 1조)
+    const hex = hash.substring(0, 10);
+    const value = parseInt(hex, 16);
+    const max = 0xffffffffff; // 16^10 - 1
+
+    return value / max;
   }
 }

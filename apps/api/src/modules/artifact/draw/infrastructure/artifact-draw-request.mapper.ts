@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ArtifactDrawRequest } from '../domain/artifact-draw-request.entity';
-import { ArtifactDrawRequest as ArtifactDrawRequestModel } from '@prisma/client';
+import { ArtifactDrawRequest as ArtifactDrawRequestModel, Prisma } from '@prisma/client';
 
 /**
  * [Artifact Draw] 유물 뽑기 요청 매퍼
@@ -20,7 +20,7 @@ export class ArtifactDrawRequestMapper {
       ticketType: record.ticketType,
       currencyCode: record.currencyCode,
       status: record.status,
-      result: record.result,
+      result: record.result as any,
       settledAt: record.settledAt,
       claimedAt: record.claimedAt,
       createdAt: record.createdAt,
@@ -40,8 +40,7 @@ export class ArtifactDrawRequestMapper {
       ticketType: entity.ticketType,
       currencyCode: entity.currencyCode,
       status: entity.status,
-      // Map domain field names back to whatever DB structure is intended (usually same as domain)
-      result: entity.result as any,
+      result: (entity.result as any) || Prisma.JsonNull,
       settledAt: entity.settledAt,
       claimedAt: entity.claimedAt,
       updatedAt: entity.updatedAt,

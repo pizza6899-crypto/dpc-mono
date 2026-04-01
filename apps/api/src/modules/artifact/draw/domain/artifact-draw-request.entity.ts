@@ -7,12 +7,14 @@ import {
 } from '@prisma/client';
 
 /**
- * [Artifact Draw] 당첨 결과 아이템 정보 인터페이스
+ * [Artifact Draw] 최종 당첨 결과 (블록해시 및 개별 유물 목록 결합)
  */
-export interface DrawnItemResult {
+export interface ArtifactDrawResult {
+  blockhash: string;
   userArtifactId: bigint; // UserArtifact 고유 ID (PK)
   artifactCode: string;   // Artifact Catalog Code (Unique String)
   grade: ArtifactGrade;
+  roll: number;           // 결과 산출에 사용된 0 ~ 1 사이의 난수
 }
 
 /**
@@ -28,7 +30,7 @@ export class ArtifactDrawRequest {
     private readonly _ticketType: string | null,
     private readonly _currencyCode: ExchangeCurrencyCode | null,
     private _status: ArtifactDrawStatus,
-    private _result: DrawnItemResult[] | null,
+    private _result: ArtifactDrawResult[] | null,
     private _settledAt: Date | null,
     private _claimedAt: Date | null,
     private readonly _createdAt: Date,
@@ -47,7 +49,7 @@ export class ArtifactDrawRequest {
     ticketType: string | null;
     currencyCode: ExchangeCurrencyCode | null;
     status: ArtifactDrawStatus;
-    result: any; // Prisma Json 타입
+    result: ArtifactDrawResult[] | null;
     settledAt: Date | null;
     claimedAt: Date | null;
     createdAt: Date;
@@ -62,7 +64,7 @@ export class ArtifactDrawRequest {
       data.ticketType,
       data.currencyCode,
       data.status,
-      data.result as DrawnItemResult[] | null,
+      data.result,
       data.settledAt,
       data.claimedAt,
       data.createdAt,
@@ -103,7 +105,7 @@ export class ArtifactDrawRequest {
    * 결과 산출 완료 처리 (Settle 단계)
    * - 블록 해시가 확인되어 서버에서 보상을 확정한 상태
    */
-  settle(results: DrawnItemResult[]): void {
+  settle(results: ArtifactDrawResult[]): void {
     if (this._status !== ArtifactDrawStatus.PENDING) {
       throw new Error(`Invalid status transition: current status is ${this._status}`);
     }
@@ -134,8 +136,9 @@ export class ArtifactDrawRequest {
   get paymentType(): ArtifactDrawPaymentType { return this._paymentType; }
   get ticketType(): string | null { return this._ticketType; }
   get currencyCode(): ExchangeCurrencyCode | null { return this._currencyCode; }
+  get blockhash(): string | null { return this._result && this._result.length > 0 ? this._result[0].blockhash : null; }
   get status(): ArtifactDrawStatus { return this._status; }
-  get result(): DrawnItemResult[] | null { return this._result; }
+  get result(): ArtifactDrawResult[] | null { return this._result; }
   get settledAt(): Date | null { return this._settledAt; }
   get claimedAt(): Date | null { return this._claimedAt; }
   get createdAt(): Date { return this._createdAt; }

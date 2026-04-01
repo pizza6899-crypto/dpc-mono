@@ -1,6 +1,5 @@
 import { Controller, Post, Get, Body, Param } from '@nestjs/common';
 import { ApiStandardResponse, ApiStandardErrors } from 'src/common/http/decorators/api-response.decorator';
-import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { RequestDrawDto } from './dto/request/request-draw.dto';
 import { DrawRequestResponseDto } from './dto/response/draw-request.response.dto';
 import { DrawResultResponseDto } from './dto/response/draw-result.response.dto';
@@ -10,10 +9,12 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 
-// 가상의 서비스 - 추후 구현 필요
-// import { RequestArtifactDrawService } from '../../application/request-artifact-draw.service';
-// import { ClaimArtifactDrawService } from '../../application/claim-artifact-draw.service';
-// import { ListPendingDrawsService } from '../../application/list-pending-draws.service';
+import { RequestArtifactDrawService } from '../../application/request-artifact-draw.service';
+import { ClaimArtifactDrawService } from '../../application/claim-artifact-draw.service';
+import { ListUnclaimedDrawsService } from '../../application/list-unclaimed-draws.service';
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
+import { ArtifactDrawRequest } from '../../domain/artifact-draw-request.entity';
 
 /**
  * [Artifact Draw] Ruins Artifact Gacha Controller / 유적지 유물 뽑기 컨트롤러
@@ -34,9 +35,10 @@ import { LogType } from 'src/modules/audit-log/domain';
 @ApiStandardErrors()
 export class UserArtifactDrawController {
   constructor(
-    // private readonly requestService: RequestArtifactDrawService,
-    // private readonly claimService: ClaimArtifactDrawService,
-    // private readonly listService: ListPendingDrawsService,
+    private readonly requestService: RequestArtifactDrawService,
+    private readonly claimService: ClaimArtifactDrawService,
+    private readonly listService: ListUnclaimedDrawsService,
+    private readonly sqidsService: SqidsService,
   ) { }
 
   /**
@@ -59,15 +61,16 @@ export class UserArtifactDrawController {
     }),
   })
   async requestDraw(
-    @CurrentUser('id') userId: bigint,
     @Body() dto: RequestDrawDto,
   ): Promise<DrawRequestResponseDto> {
-    // TODO: RequestArtifactDrawService.execute(userId, dto)
-    return {
-      requestId: '1',
-      targetSlot: '123456789',
-      createdAt: new Date(),
-    } as any;
+    const request = await this.requestService.execute({
+      drawType: dto.drawType,
+      paymentType: dto.paymentType,
+      ticketType: dto.ticketType,
+      currencyCode: dto.currencyCode,
+    });
+
+    return this.mapToRequestResponse(request);
   }
 
   /**
@@ -80,11 +83,9 @@ export class UserArtifactDrawController {
     description: 'Retrieves all draws that have been settled by the server but not yet claimed by the user. / 서버에서 결과 산출이 완료되었으나 유저가 아직 확인(Reveal)하지 않은 내역들을 조회합니다.',
   })
   @ApiStandardResponse(DrawResultResponseDto, { isArray: true })
-  async getUnclaimedDraws(
-    @CurrentUser('id') userId: bigint,
-  ): Promise<DrawResultResponseDto[]> {
-    // TODO: ListPendingDrawsService.execute(userId)
-    return [];
+  async getUnclaimedDraws(): Promise<DrawResultResponseDto[]> {
+    const draws = await this.listService.execute();
+    return draws.map(d => this.mapToResultResponse(d));
   }
 
   /**
@@ -106,16 +107,38 @@ export class UserArtifactDrawController {
     }),
   })
   async claimDraw(
-    @CurrentUser('id') userId: bigint,
     @Param('requestId') requestId: string,
   ): Promise<DrawResultResponseDto> {
-    // TODO: ClaimArtifactDrawService.execute(userId, requestId)
+    const decodedId = this.sqidsService.decode(requestId, SqidsPrefix.ARTIFACT_DRAW_REQUEST);
+    const request = await this.claimService.execute(decodedId);
+
+    return this.mapToResultResponse(request);
+  }
+
+  // --- Helpers ---
+
+  private mapToRequestResponse(entity: ArtifactDrawRequest): DrawRequestResponseDto {
     return {
-      requestId: requestId,
-      status: 'CLAIMED',
-      items: [],
-      settledAt: new Date(),
-      claimedAt: new Date(),
-    } as any;
+      requestId: this.sqidsService.encode(entity.id, SqidsPrefix.ARTIFACT_DRAW_REQUEST),
+      targetSlot: entity.targetSlot.toString(),
+      createdAt: entity.createdAt,
+    };
+  }
+
+  private mapToResultResponse(entity: ArtifactDrawRequest): DrawResultResponseDto {
+    const items = entity.result || [];
+    return {
+      requestId: this.sqidsService.encode(entity.id, SqidsPrefix.ARTIFACT_DRAW_REQUEST),
+      status: entity.status,
+      items: items.map((item) => ({
+        userArtifactId: this.sqidsService.encode(item.userArtifactId, SqidsPrefix.USER_ARTIFACT),
+        artifactCode: item.artifactCode,
+        grade: item.grade,
+        blockhash: item.blockhash,
+        roll: item.roll,
+      })),
+      settledAt: entity.settledAt || undefined,
+      claimedAt: entity.claimedAt || undefined,
+    };
   }
 }

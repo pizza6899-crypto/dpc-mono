@@ -10,6 +10,12 @@ export class DrawnItemDto {
 
   @ApiProperty({ enum: ArtifactGrade, description: 'Artifact Grade / 유물 등급' })
   grade: ArtifactGrade;
+
+  @ApiProperty({ description: 'Solana Blockhash used for this item / 결과 산출에 사용된 솔라나 블록해시' })
+  blockhash: string;
+
+  @ApiProperty({ description: 'Roll value (0~1) used for this item / 결과 산출에 사용된 난수' })
+  roll: number;
 }
 
 export class DrawResultResponseDto {
