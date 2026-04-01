@@ -1,37 +1,30 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ArtifactGrade } from '@prisma/client';
+import { ArtifactGrade, ArtifactDrawStatus } from '@prisma/client';
 
-/**
- * [Artifact Draw] 단일 뽑기 결과 항목 DTO
- */
-export class DrawResultItemResponseDto {
-  @ApiProperty({
-    description: 'User Artifact ID (Sqid) / 생성된 유저 유물 식별자',
-    example: 'sqid_artifact_1',
-  })
+export class DrawnItemDto {
+  @ApiProperty({ description: 'Encoded User Artifact ID (uar_...) / Sqids로 인코딩된 유물 소유 ID' })
   id: string;
 
-  @ApiProperty({
-    description: 'Artifact Catalog ID (Master) / 원형 유물 식별자',
-    example: '101',
-  })
+  @ApiProperty({ description: 'Artifact Catalog Code / 유물 카탈로그 코드' })
   artifactId: string;
 
-  @ApiProperty({
-    description: 'Artifact Grade / 유물 등급',
-    enum: ArtifactGrade,
-    example: ArtifactGrade.RARE,
-  })
+  @ApiProperty({ enum: ArtifactGrade, description: 'Artifact Grade / 유물 등급' })
   grade: ArtifactGrade;
 }
 
-/**
- * [Artifact Draw] 뽑기 전체 결과 응답 DTO
- */
 export class DrawResultResponseDto {
-  @ApiProperty({
-    description: 'List of objects drawn / 획득한 유물 목록',
-    type: [DrawResultItemResponseDto],
-  })
-  items: DrawResultItemResponseDto[];
+  @ApiProperty({ description: 'Encoded Draw Request ID (adr_...) / Sqids로 인코딩된 뽑기 요청 ID' })
+  requestId: string;
+
+  @ApiProperty({ enum: ArtifactDrawStatus, description: 'Current Status / 현재 상태 (SETTLED, CLAIMED)' })
+  status: ArtifactDrawStatus;
+
+  @ApiProperty({ type: [DrawnItemDto], description: 'Drawn Items / 당첨된 유물 리스트' })
+  items: DrawnItemDto[];
+
+  @ApiProperty({ description: 'Settlement Time / 결과 확정 시각' })
+  settledAt?: Date;
+
+  @ApiProperty({ description: 'Claimed Time / 유저 확인 시각' })
+  claimedAt?: Date;
 }

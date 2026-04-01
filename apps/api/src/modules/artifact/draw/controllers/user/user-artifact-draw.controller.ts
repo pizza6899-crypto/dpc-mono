@@ -1,62 +1,121 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { UserRoleType } from '@prisma/client';
+import { Controller, Post, Get, Body, Param } from '@nestjs/common';
+import { ApiStandardResponse, ApiStandardErrors } from 'src/common/http/decorators/api-response.decorator';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
+import { RequestDrawDto } from './dto/request/request-draw.dto';
+import { DrawRequestResponseDto } from './dto/response/draw-request.response.dto';
+import { DrawResultResponseDto } from './dto/response/draw-result.response.dto';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
-import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
-import { ApiStandardErrors, ApiStandardResponse } from 'src/common/http/decorators/api-response.decorator';
-import { AuditLog } from 'src/modules/audit-log/infrastructure';
+import { UserRoleType } from '@prisma/client';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 
-// DTOs
-import { DrawArtifactRequestDto } from './dto/request/draw-artifact.request.dto';
-import { DrawResultResponseDto } from './dto/response/draw-result.response.dto';
-
-// Service
-import { DrawArtifactService } from '../../application/draw-artifact.service';
+// 가상의 서비스 - 추후 구현 필요
+// import { RequestArtifactDrawService } from '../../application/request-artifact-draw.service';
+// import { ClaimArtifactDrawService } from '../../application/claim-artifact-draw.service';
+// import { ListPendingDrawsService } from '../../application/list-pending-draws.service';
 
 /**
- * [User Artifact Draw] 유물 뽑기 컨트롤러 (사용자용)
+ * [Artifact Draw] Ruins Artifact Gacha Controller / 유적지 유물 뽑기 컨트롤러
+ *
+ * Follows a Commit-Reveal process based on future block hashes:
+ * 미래 블록 해시 기반의 Commit-Reveal 프로세스를 따릅니다:
+ *
+ * 1. [Request/Commit] User pays currency/ticket and a future target slot is determined.
+ *    - [신청/Commit] 유저가 재화/티켓을 지불하고 결과를 산출할 미래의 타겟 슬롯을 지정합니다.
+ * 2. [Settle] The server reveals results once the target slot is reached (Background process).
+ *    - [산출/Settle] 타겟 슬롯 도달 후 서버가 결과를 산출하고 보상을 지급합니다 (백그라운드 처리).
+ * 3. [Claim/Reveal] User verifies the result and completes the draw sequence.
+ *    - [확인/Reveal] 유저가 최종 결과를 확인하고 뽑기 연출 및 과정을 마무리합니다.
  */
-@ApiTags('User Artifact Drawing')
+@ApiTags('User Artifact Draw')
 @Controller('user/artifact/draw')
 @RequireRoles(UserRoleType.USER)
 @ApiStandardErrors()
 export class UserArtifactDrawController {
   constructor(
-    private readonly drawService: DrawArtifactService,
+    // private readonly requestService: RequestArtifactDrawService,
+    // private readonly claimService: ClaimArtifactDrawService,
+    // private readonly listService: ListPendingDrawsService,
   ) { }
 
   /**
-   * [POST] 유물 뽑기 시도 (재화 또는 티켓 소모)
+   * [POST] 유물 뽑기 신청 (Commit)
+   * 티켓/재화를 차감하고 결과를 산출할 미래 슬롯을 지정합니다.
    */
-  @Post()
+  @Post('request')
+  @ApiOperation({
+    summary: 'Request Artifact Draw / 유물 뽑기 신청 (결제)',
+    description: 'Deducts currency or ticket and commits a draw request for a future Solana slot. / 재화 또는 티켓을 차감하고, 미래의 솔라나 슬롯을 대상으로 뽑기 요청을 생성합니다.',
+  })
+  @ApiStandardResponse(DrawRequestResponseDto)
   @AuditLog({
     type: LogType.ACTIVITY,
     category: 'ARTIFACT',
-    action: 'DRAW_ARTIFACT',
-    extractMetadata: (req) => ({
-      type: req.body.type,
-      paymentType: req.body.paymentType,
-      ticketType: req.body.ticketType,
+    action: 'REQUEST_DRAW',
+    extractMetadata: (req, args) => ({
+      drawType: args[1]?.drawType,
+      paymentType: args[1]?.paymentType,
     }),
   })
+  async requestDraw(
+    @CurrentUser('id') userId: bigint,
+    @Body() dto: RequestDrawDto,
+  ): Promise<DrawRequestResponseDto> {
+    // TODO: RequestArtifactDrawService.execute(userId, dto)
+    return {
+      requestId: '1',
+      targetSlot: '123456789',
+      createdAt: new Date(),
+    } as any;
+  }
+
+  /**
+   * [GET] 확인하지 않은 뽑기 요청 조회
+   * 서버에서 결과 산출(SETTLED)이 끝났으나 유저가 아직 확인하지 않은 내역들을 불러옵니다.
+   */
+  @Get('unclaimed')
   @ApiOperation({
-    summary: 'Draw Artifact / 유물 뽑기 실행',
-    description: `Executes artifact draws using either currency or tickets. / 재화 또는 보유 티켓을 사용하여 유물 뽑기를 수행합니다.
-\n- type: SINGLE (1 draw / 1회 뽑기) | TEN (11 draws - Bonus +1 for the price of 10 / 11회 뽑기 - 10개 가격으로 보너스 1개 제공)
-\n- paymentType: CURRENCY (Spend primary currency / 대표 재화 소모) | TICKET (Spend held tickets / 보유 티켓 소모)
-\n- ticketType: Required for TICKET (ALL or specific grade guaranteed / 티켓 선택 시 필수 - 전체 또는 특정 등급 확정권)`,
+    summary: 'List Unclaimed Draws / 확인하지 않은 뽑기 결과 목록 조회',
+    description: 'Retrieves all draws that have been settled by the server but not yet claimed by the user. / 서버에서 결과 산출이 완료되었으나 유저가 아직 확인(Reveal)하지 않은 내역들을 조회합니다.',
+  })
+  @ApiStandardResponse(DrawResultResponseDto, { isArray: true })
+  async getUnclaimedDraws(
+    @CurrentUser('id') userId: bigint,
+  ): Promise<DrawResultResponseDto[]> {
+    // TODO: ListPendingDrawsService.execute(userId)
+    return [];
+  }
+
+  /**
+   * [POST] 뽑기 결과 확인 및 확정 (Reveal/Claim)
+   * 블록 해시로 결정된 아이템 결과를 확인하고 상태를 CLAIMED로 변경합니다.
+   */
+  @Post('claim/:requestId')
+  @ApiOperation({
+    summary: 'Claim Artifact Draw Result / 유물 뽑기 결과 최종 확인',
+    description: 'Verifies the block hash, reveals the draw result, and completes the claim process. / 블록 해시를 기반으로 결과를 확인하고, 당첨된 유물을 공개하며 수령 절차를 완료합니다.',
   })
   @ApiStandardResponse(DrawResultResponseDto)
-  async draw(
-    @CurrentUser() user: AuthenticatedUser,
-    @Body() body: DrawArtifactRequestDto,
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'ARTIFACT',
+    action: 'CLAIM_RESULT',
+    extractMetadata: (req, args) => ({
+      requestId: args[1],
+    }),
+  })
+  async claimDraw(
+    @CurrentUser('id') userId: bigint,
+    @Param('requestId') requestId: string,
   ): Promise<DrawResultResponseDto> {
-    return this.drawService.execute({
-      userId: user.id,
-      ...body,
-      currency: user.primaryCurrency, // 세션의 대표 커런시 상시 전달
-    });
+    // TODO: ClaimArtifactDrawService.execute(userId, requestId)
+    return {
+      requestId: requestId,
+      status: 'CLAIMED',
+      items: [],
+      settledAt: new Date(),
+      claimedAt: new Date(),
+    } as any;
   }
 }
