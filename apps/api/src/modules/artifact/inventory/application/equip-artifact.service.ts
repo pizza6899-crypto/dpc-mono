@@ -88,6 +88,7 @@ export class EquipArtifactService {
         prevArtifactCode,
       },
       targetId: updated.id,
+      actorId: userId,
     });
 
     // 7. 결과 반환

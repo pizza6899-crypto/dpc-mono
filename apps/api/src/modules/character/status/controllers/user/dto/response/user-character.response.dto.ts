@@ -17,9 +17,27 @@ export class UserCharacterStatsResponseDto {
  * (Presentation 레이어의 순수성을 보장하며 도메인 엔티티를 직접 참조하지 않습니다)
  */
 export class UserCharacterResponseDto {
-  @ApiProperty({ description: 'Current Level / 현재 레벨', example: 10 }) level: number;
-  @ApiProperty({ description: 'Current XP / 현재 경험치', example: '1500.50' }) xp: string;
-  @ApiProperty({ description: 'Available Stat Points / 사용 가능한 스탯 포인트', example: 5 }) statPoints: number;
-  @ApiProperty({ description: 'Total Earned Stat Points / 획득한 총 스탯 포인트', example: 50 }) totalStatPoints: number;
-  @ApiProperty({ description: 'Core Stats / 핵심 스탯' }) stats: UserCharacterStatsResponseDto;
+  @ApiProperty({ description: 'Current Level / 현재 레벨', example: 10 })
+  level: number;
+
+  @ApiProperty({ description: 'Current XP / 현재 경험치', example: '1500.50' })
+  xp: string;
+
+  @ApiProperty({ description: 'Available Stat Points / 사용 가능한 스탯 포인트', example: 5 })
+  statPoints: number;
+
+  @ApiProperty({ description: 'Total Earned Stat Points / 획득한 총 스탯 포인트', example: 50 })
+  totalStatPoints: number;
+
+  @ApiProperty({
+    description: 'Base Stats (from points) / 순수 투자 스탯',
+    type: UserCharacterStatsResponseDto,
+  })
+  baseStats: UserCharacterStatsResponseDto;
+
+  @ApiProperty({
+    description: 'Total Combined Stats / 최종 통합 스탯 (베이스 + 보너스)',
+    type: UserCharacterStatsResponseDto,
+  })
+  totalStats: UserCharacterStatsResponseDto;
 }

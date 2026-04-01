@@ -67,6 +67,7 @@ export class UnequipArtifactService {
         artifactCode: userArtifact.catalog?.code || 'UNKNOWN',
       },
       targetId: userArtifact.id,
+      actorId: userId,
     });
 
     return true;

@@ -87,19 +87,31 @@ export class UserCharacterController {
   }
 
   private mapToResponseDto(domain: UserCharacter): UserCharacterResponseDto {
+    const baseStats = {
+      casinoBenefit: domain.casinoBenefit,
+      slotBenefit: domain.slotBenefit,
+      sportsBenefit: domain.sportsBenefit,
+      minigameBenefit: domain.minigameBenefit,
+      badBeatJackpot: domain.badBeatJackpot,
+      criticalJackpot: domain.criticalJackpot,
+    };
+
+    const totalStats = {
+      casinoBenefit: domain.totalCasinoBenefit,
+      slotBenefit: domain.totalSlotBenefit,
+      sportsBenefit: domain.totalSportsBenefit,
+      minigameBenefit: domain.totalMinigameBenefit,
+      badBeatJackpot: domain.totalBadBeatJackpot,
+      criticalJackpot: domain.totalCriticalJackpot,
+    };
+
     return {
       level: domain.level,
       xp: domain.xp.toString(),
       statPoints: domain.statPoints,
       totalStatPoints: domain.totalStatPoints,
-      stats: {
-        casinoBenefit: domain.casinoBenefit,
-        slotBenefit: domain.slotBenefit,
-        sportsBenefit: domain.sportsBenefit,
-        minigameBenefit: domain.minigameBenefit,
-        badBeatJackpot: domain.badBeatJackpot,
-        criticalJackpot: domain.criticalJackpot,
-      },
+      baseStats,
+      totalStats,
     };
   }
 }

@@ -146,7 +146,7 @@ export class SettleArtifactDrawService {
 
     await this.universalLogService.execute({
       action: 'artifact.draw',
-      targetId: request.id,
+      targetId: null,
       actorId: request.userId,
       payload: {
         currencyCode: request.currencyCode || 'TICKET',

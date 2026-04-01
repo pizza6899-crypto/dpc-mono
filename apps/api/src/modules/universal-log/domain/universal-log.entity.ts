@@ -139,7 +139,7 @@ export class UniversalLog<K extends LogActionKey = LogActionKey> {
   get actorId(): bigint | null { return this._actorId; }
   get service(): LogService { return this._action.service; }
   get event(): LogEvent { return this._action.event; }
-  
+
   /**
    * 서비스.이벤트 형태의 전체 액션 문자열 반환 (K 타입 보장)
    */

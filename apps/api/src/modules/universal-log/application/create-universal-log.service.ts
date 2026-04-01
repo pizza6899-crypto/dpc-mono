@@ -20,10 +20,10 @@ export interface CreateLogCommand<K extends LogActionKey> {
   level?: LogLevel;
   /** 성공 여부 (기본 true) */
   isSuccess?: boolean;
-  /** 조작 대상 객체 ID */
-  targetId?: bigint;
-  /** 행위자 고유 ID (관리자 ID 등) */
-  actorId?: bigint;
+  /** 조작 대상 객체 ID (없으면 null) */
+  targetId: bigint | null;
+  /** 행위자 고유 ID (관리자 ID 등, 시스템 처리면 null) */
+  actorId: bigint | null;
   /** 행위자 타입 (명시적으로 지정할 경우만) */
   actorType?: ActorType;
   /** 실패 시 에러 코드 */
