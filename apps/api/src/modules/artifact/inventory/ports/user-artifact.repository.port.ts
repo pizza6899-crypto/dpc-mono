@@ -30,6 +30,11 @@ export abstract class UserArtifactRepositoryPort {
   abstract findById(id: bigint): Promise<UserArtifact | null>;
 
   /**
+   * 유저의 특정 슬롯에 장착된 유물 조회
+   */
+  abstract findBySlot(userId: bigint, slotNo: number): Promise<UserArtifact | null>;
+
+  /**
    * 신규 유물 생성
    */
   abstract save(entity: UserArtifact): Promise<UserArtifact>;

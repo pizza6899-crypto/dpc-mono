@@ -63,6 +63,23 @@ export class UserArtifact {
     );
   }
 
+  /**
+   * 유물을 지정된 슬롯에 장착
+   */
+  equip(slotNo: number): void {
+    if (slotNo < 1) return;
+    this._slotNo = slotNo;
+    this._isEquipped = true;
+  }
+
+  /**
+   * 유물 장착 해제
+   */
+  unequip(): void {
+    this._slotNo = null;
+    this._isEquipped = false;
+  }
+
   // --- Getters ---
   get id(): bigint { return this._id; }
   get userId(): bigint { return this._userId; }

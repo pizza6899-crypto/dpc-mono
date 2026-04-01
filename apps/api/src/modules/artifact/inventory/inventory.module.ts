@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ArtifactMasterModule } from '../master/master.module';
 import { ArtifactStatusModule } from '../status/status.module'; // Status 모듈 리소스 참조
+import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';
 import { UserArtifactInventoryController } from './controllers/user/user-artifact-inventory.controller';
 import { UserArtifactRepositoryPort } from './ports/user-artifact.repository.port';
 import { PrismaUserArtifactRepository } from './infrastructure/prisma-user-artifact.repository';
 import { ListMyArtifactsService } from './application/list-my-artifacts.service';
+import { EquipArtifactService } from './application/equip-artifact.service';
+import { UnequipArtifactService } from './application/unequip-artifact.service';
 import { UserArtifactMapper } from './infrastructure/user-artifact.mapper';
 import { ArtifactCatalogMapper } from '../master/infrastructure/artifact-catalog.mapper';
 
@@ -12,6 +15,7 @@ import { ArtifactCatalogMapper } from '../master/infrastructure/artifact-catalog
   imports: [
     ArtifactMasterModule,
     ArtifactStatusModule,
+    ConcurrencyModule,
   ],
   controllers: [
     UserArtifactInventoryController,
@@ -24,10 +28,14 @@ import { ArtifactCatalogMapper } from '../master/infrastructure/artifact-catalog
       useClass: PrismaUserArtifactRepository,
     },
     ListMyArtifactsService,
+    EquipArtifactService,
+    UnequipArtifactService,
   ],
   exports: [
     UserArtifactRepositoryPort,
     ListMyArtifactsService,
+    EquipArtifactService,
+    UnequipArtifactService,
   ],
 })
 export class ArtifactInventoryModule { }

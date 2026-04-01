@@ -104,6 +104,21 @@ export class PrismaUserArtifactRepository implements UserArtifactRepositoryPort 
   }
 
   /**
+   * 유저의 특정 슬롯에 장착된 유물 조회
+   */
+  async findBySlot(userId: bigint, slotNo: number): Promise<UserArtifact | null> {
+    const record = await this.tx.userArtifact.findFirst({
+      where: {
+        userId,
+        slotNo,
+      },
+      include: { artifact: true },
+    });
+    if (!record) return null;
+    return this.mapper.toEntity(record);
+  }
+
+  /**
    * 신규 유물 저장 (단일)
    */
   async save(entity: UserArtifact): Promise<UserArtifact> {

@@ -11,6 +11,12 @@ import { PaginatedData } from 'src/common/http/types/pagination.types';
 // Status Services (Injection)
 import { GetUserArtifactStatusService } from '../../../status/application/get-user-artifact-status.service';
 import { ListMyArtifactsService } from '../../application/list-my-artifacts.service';
+import { EquipArtifactService } from '../../application/equip-artifact.service';
+import { UnequipArtifactService } from '../../application/unequip-artifact.service';
+
+// Audit Log
+import { AuditLog } from '../../../../audit-log/infrastructure/audit-log.decorator';
+import { LogType } from '../../../../audit-log/domain';
 
 // DTOs
 import { UserArtifactResponseDto } from './dto/response/user-artifact.response.dto';
@@ -27,6 +33,8 @@ export class UserArtifactInventoryController {
   constructor(
     private readonly statusService: GetUserArtifactStatusService,
     private readonly listService: ListMyArtifactsService,
+    private readonly equipService: EquipArtifactService,
+    private readonly unequipService: UnequipArtifactService,
   ) { }
 
   /**
@@ -79,39 +87,47 @@ export class UserArtifactInventoryController {
    * [POST] 유물 장착 시도
    */
   @Post('equip')
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'ARTIFACT',
+    action: 'EQUIP_ARTIFACT',
+    extractMetadata: (req, _args, result) => ({
+      userArtifactId: req.body.userArtifactId,
+      slotNo: req.body.slotNo,
+      artifactCode: result?.artifactCode,
+    }),
+  })
   @ApiOperation({
     summary: 'Equip Artifact / 유물 장착',
     description: 'Equips an owned artifact to a specific unlocked slot. / 보유한 유물을 지정된 활성 슬롯에 장착합니다.',
   })
   @ApiStandardResponse(UserArtifactResponseDto)
   async equipArtifact(
-    @CurrentUser() user: AuthenticatedUser,
     @Body() body: EquipArtifactRequestDto,
-  ): Promise<any> {
-    // TODO: 장착 로직 서비스 구현 필요
-    return {
-      message: '장착이 성공적으로 처리되었습니다.',
-      userArtifactId: body.userArtifactId,
-      slotNo: body.slotNo,
-    }; // Mock
+  ): Promise<UserArtifactResponseDto> {
+    return await this.equipService.execute(body);
   }
 
   /**
    * [POST] 유물 장착 해제
    */
   @Post('unequip')
+  @AuditLog({
+    type: LogType.ACTIVITY,
+    category: 'ARTIFACT',
+    action: 'UNEQUIP_ARTIFACT',
+    extractMetadata: (req) => ({
+      userArtifactId: req.body.userArtifactId,
+    }),
+  })
   @ApiOperation({
     summary: 'Unequip Artifact / 유물 장착 해제',
     description: 'Removes the artifact from its current slot. / 지정된 유물의 장착 정보를 제거합니다.',
   })
   @ApiStandardResponse(Boolean)
   async unequipArtifact(
-    @CurrentUser() user: AuthenticatedUser,
     @Body() body: UnequipArtifactRequestDto,
   ): Promise<boolean> {
-    const { userArtifactId } = body;
-    // TODO: 장속 해제 로직 구현 필요
-    console.log('Unequipping:', userArtifactId);
-    return true; // Mock
+    return await this.unequipService.execute(body);
   }
 }
