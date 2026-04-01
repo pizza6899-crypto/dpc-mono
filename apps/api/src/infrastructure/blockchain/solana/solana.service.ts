@@ -3,6 +3,8 @@ import { Connection } from '@solana/web3.js';
 import { CacheService } from 'src/infrastructure/cache/cache.service';
 import { CACHE_CONFIG } from 'src/infrastructure/cache/cache.constants';
 import { EnvService } from 'src/infrastructure/env/env.service';
+import { ThrottleService } from 'src/infrastructure/throttle/throttle.service';
+import { ThrottleOptions } from 'src/infrastructure/throttle/types/throttle.types';
 
 @Injectable()
 export class SolanaService {
@@ -13,6 +15,7 @@ export class SolanaService {
   constructor(
     private readonly cacheService: CacheService,
     private readonly envService: EnvService,
+    private readonly throttleService: ThrottleService,
   ) {
     const rpcUrl = this.envService.solana.rpcUrl;
     this.connection = new Connection(rpcUrl);
@@ -26,9 +29,9 @@ export class SolanaService {
     return this.cacheService.getOrSet(
       CACHE_CONFIG.BLOCKCHAIN.SOLANA_CURRENT_SLOT,
       async () => {
-        return await this.connection.getSlot({
+        return await this.callWithThrottle(() => this.connection.getSlot({
           commitment: 'confirmed',
-        });
+        }));
       },
     );
   }
@@ -38,11 +41,11 @@ export class SolanaService {
    */
   async getBlocks(startSlot: number, endSlot?: number): Promise<number[]> {
     try {
-      return await this.connection.getBlocks(
+      return await this.callWithThrottle(() => this.connection.getBlocks(
         startSlot,
         endSlot,
         'confirmed',
-      );
+      ));
     } catch (error) {
       this.logger.error(
         `Failed to fetch blocks (start: ${startSlot}, end: ${endSlot})`,
@@ -66,13 +69,13 @@ export class SolanaService {
        */
       const details = transactionDetails === 'signatures' ? 'full' : transactionDetails;
 
-      return await this.connection.getBlock(slot, {
+      return await this.callWithThrottle(() => this.connection.getBlock(slot, {
         commitment: 'confirmed',
         encoding: 'json',
         transactionDetails: details,
         maxSupportedTransactionVersion: 0,
         rewards: false,
-      } as any);
+      } as any) as Promise<any>);
     } catch (error) {
       this.logger.error(`Failed to fetch block for slot: ${slot}`, error);
       throw error;
@@ -90,5 +93,32 @@ export class SolanaService {
         return block?.blockhash ?? null;
       },
     );
+  }
+
+  /**
+   * RPC 호출에 대한 쓰로틀링을 처리하는 래퍼 (Wait & Retry)
+   */
+  private async callWithThrottle<T>(fn: () => Promise<T>): Promise<T> {
+    const key = 'solana-rpc';
+    // 주 계약 RPC의 초당 요청 한도 (유저 피드백: 10 RPS)
+    const options: ThrottleOptions = { limit: 10, ttl: 1 };
+
+    let result = await this.throttleService.checkAndIncrement(key, options);
+
+    if (!result.allowed) {
+      // 1회 재시도 (재귀 대신 루프나 단발성 대기 사용)
+      const waitTime = (result.retryAfter || 1) * 1000;
+      this.logger.warn(`Solana RPC rate limit hit. Waiting ${waitTime}ms and retrying...`);
+
+      await new Promise((resolve) => setTimeout(resolve, waitTime));
+
+      result = await this.throttleService.checkAndIncrement(key, options);
+      if (!result.allowed) {
+        this.logger.error(`Solana RPC rate limit exceeded after retry.`);
+        throw new Error('Solana RPC rate limit exceeded');
+      }
+    }
+
+    return await fn();
   }
 }

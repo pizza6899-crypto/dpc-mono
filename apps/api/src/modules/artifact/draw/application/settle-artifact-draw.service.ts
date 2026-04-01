@@ -51,11 +51,20 @@ export class SettleArtifactDrawService {
 
     // 2. 전체 뽑기 분량에 필요한 '실제' 확정 슬롯 목록 조회 (Skip 대응)
     const drawCount = this.policy.getDrawCount(request.drawType);
-    // 넉넉한 범위(뽑기 횟수의 3배) 안에서 확정된 슬롯들을 찾습니다.
-    const confirmedSlots = await this.solanaService.getBlocks(
-      Number(request.targetSlot),
-      Number(request.targetSlot) + drawCount * 3
-    );
+    let confirmedSlots: number[];
+    try {
+      // 넉넉한 범위(뽑기 횟수의 3배) 안에서 확정된 슬롯들을 찾습니다.
+      confirmedSlots = await this.solanaService.getBlocks(
+        Number(request.targetSlot),
+        Number(request.targetSlot) + drawCount * 3
+      );
+    } catch (error: any) {
+      if (error.message.includes('rate limit exceeded')) {
+        this.logger.warn(`Solana RPC rate limit exceeded during getBlocks for request ${requestId}. Will retry later.`);
+        return false;
+      }
+      throw error;
+    }
 
     // 아직 필요한 만큼의 블록이 생성/확정되지 않았으면 대기
     if (confirmedSlots.length < drawCount) {
@@ -79,7 +88,17 @@ export class SettleArtifactDrawService {
     // 4. 결정적(Deterministic) 결과 산출 (각 실제 확정 슬롯별 고유 블록해시 사용)
     for (let i = 0; i < drawCount; i++) {
       const itemSlot = targetSlots[i];
-      const itemBlockhash = await this.solanaService.getBlockHashBySlot(itemSlot);
+      let itemBlockhash: string | null = null;
+
+      try {
+        itemBlockhash = await this.solanaService.getBlockHashBySlot(itemSlot);
+      } catch (error: any) {
+        if (error.message.includes('rate limit exceeded')) {
+          this.logger.warn(`Solana RPC rate limit exceeded during getBlockHashBySlot for request ${requestId}. Aborting loop, will retry later.`);
+          return false;
+        }
+        throw error;
+      }
 
       if (!itemBlockhash) {
         this.logger.error(`Failed to fetch blockhash for expected slot: ${itemSlot}`);
