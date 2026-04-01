@@ -67,7 +67,6 @@ export class UserArtifactDrawController {
       drawType: dto.drawType,
       paymentType: dto.paymentType,
       ticketType: dto.ticketType,
-      currencyCode: dto.currencyCode,
     });
 
     return this.mapToRequestResponse(request);

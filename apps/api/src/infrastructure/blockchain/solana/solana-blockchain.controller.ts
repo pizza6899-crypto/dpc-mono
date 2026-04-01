@@ -38,38 +38,4 @@ export class SolanaBlockchainController {
     return await this.solanaService.getBlockHashBySlot(slot);
   }
 
-  /**
-   * [GET] 블록 범위 조회 (Public)
-   */
-  @Public()
-  @Get('blocks')
-  @ApiOperation({
-    summary: 'Get Blocks / 특정 범위 내의 슬롯 번호 목록 조회',
-    description: 'Returns a list of slots between startSlot and optional endSlot.',
-  })
-  @ApiQuery({ name: 'startSlot', type: Number, required: true })
-  @ApiQuery({ name: 'endSlot', type: Number, required: false })
-  @ApiStandardResponse()
-  async getBlocks(
-    @Query('startSlot', ParseIntPipe) startSlot: number,
-    @Query('endSlot') endSlot?: string,
-  ) {
-    const end = endSlot ? parseInt(endSlot, 10) : undefined;
-    return await this.solanaService.getBlocks(startSlot, end);
-  }
-
-  /**
-   * [GET] 최신 블록 상세 정보 조회 (Public)
-   */
-  @Public()
-  @Get('latest-block')
-  @ApiOperation({
-    summary: 'Get Latest Block / 최신 블록 상세 정보 조회',
-    description: 'Returns the details of the latest confirmed block.',
-  })
-  @ApiQuery({ name: 'details', enum: ['none', 'signatures', 'full'], required: false })
-  @ApiStandardResponse()
-  async getLatestBlock(@Query('details') details: 'none' | 'signatures' | 'full' = 'none') {
-    return await this.solanaService.getLatestBlock(details);
-  }
 }

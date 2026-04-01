@@ -19,13 +19,4 @@ export class RequestDrawDto {
   })
   @IsOptional()
   ticketType?: ArtifactGrade | 'ALL' = 'ALL';
-
-  @ApiProperty({
-    enum: ExchangeCurrencyCode,
-    required: false,
-    description: 'Currency Code / 재화 결제 시 통화 코드',
-  })
-  @IsOptional()
-  @IsEnum(ExchangeCurrencyCode)
-  currencyCode?: ExchangeCurrencyCode;
 }

@@ -61,7 +61,7 @@ export class ArtifactDrawRequestNotFoundException extends ArtifactDrawException 
   constructor() {
     super(
       'Artifact draw request not found.',
-      MessageCode.ARTIFACT_NOT_FOUND,
+      MessageCode.ARTIFACT_DRAW_REQUEST_NOT_FOUND,
       HttpStatus.NOT_FOUND,
     );
     this.name = 'ArtifactDrawRequestNotFoundException';
@@ -75,7 +75,7 @@ export class UnauthorizedDrawClaimException extends ArtifactDrawException {
   constructor() {
     super(
       'Unauthorized attempt to claim draw result.',
-      MessageCode.AUTH_INSUFFICIENT_PERMISSIONS, 
+      MessageCode.AUTH_INSUFFICIENT_PERMISSIONS,
       HttpStatus.FORBIDDEN,
     );
     this.name = 'UnauthorizedDrawClaimException';
@@ -89,9 +89,37 @@ export class InvalidDrawStatusException extends ArtifactDrawException {
   constructor(status: string) {
     super(
       `Draw request is in invalid status for this action: ${status}`,
-      MessageCode.REWARD_NOT_CLAIMABLE, 
+      MessageCode.ARTIFACT_DRAW_INVALID_STATUS,
       HttpStatus.BAD_REQUEST,
     );
     this.name = 'InvalidDrawStatusException';
+  }
+}
+
+/**
+ * [Claim] 아직 타겟 슬롯에 도달하지 않아 결과를 산출할 수 없는 경우
+ */
+export class DrawNotSettledYetException extends ArtifactDrawException {
+  constructor() {
+    super(
+      'Draw result is not ready yet. Please wait a few seconds.',
+      MessageCode.ARTIFACT_DRAW_NOT_SETTLED,
+      HttpStatus.ACCEPTED, // 202 Accepted (아직 진행 중임을 시사)
+    );
+    this.name = 'DrawNotSettledYetException';
+  }
+}
+
+/**
+ * [Settle] 필요한 블록해시를 가져올 수 없는 경우 (무결성 오류)
+ */
+export class SolanaBlockhashMissingException extends ArtifactDrawException {
+  constructor(slot: number) {
+    super(
+      `Integrity Error: Blockhash missing for slot ${slot}. Result cannot be generated safely.`,
+      MessageCode.BLOCKCHAIN_SYNC_ERROR,
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
+    this.name = 'SolanaBlockhashMissingException';
   }
 }

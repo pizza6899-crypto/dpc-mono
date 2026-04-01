@@ -11,5 +11,8 @@ import { ArtifactDrawModule } from './draw/draw.module';
     ArtifactStatusModule,
     ArtifactDrawModule,
   ],
+  exports: [
+    ArtifactStatusModule,
+  ],
 })
 export class ArtifactModule { }

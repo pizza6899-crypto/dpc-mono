@@ -183,5 +183,10 @@ export const CACHE_CONFIG = {
       ttlSeconds: 0.7, // 700ms (슬롯은 약 400ms마다 변경되므로 아주 짧게 캐시)
       store: CacheStore.REDIS,
     },
+    SOLANA_BLOCKHASH: (slot: number) => ({
+      key: `blockchain:solana:blockhash:${slot}`,
+      ttlSeconds: 3600, // 1시간 (정산에 충분한 시간이자 메모리 효율을 고려한 절충안)
+      store: CacheStore.REDIS,
+    }),
   },
 } as const;

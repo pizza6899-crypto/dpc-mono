@@ -24,6 +24,7 @@ import { CreateAlertService } from 'src/modules/notification/alert/application/c
 import { NOTIFICATION_EVENTS } from 'src/modules/notification/common';
 import { InitializeUserTierService } from 'src/modules/tier/profile/application/initialize-user-tier.service';
 import { InitializeUserWalletsService } from 'src/modules/wallet/application/initialize-user-wallets.service';
+import { InitializeUserArtifactStatusService } from 'src/modules/artifact/status/application/initialize-user-artifact-status.service';
 
 interface CreateUserServiceParams {
   loginId: string;
@@ -64,6 +65,7 @@ export class CreateUserService {
     private readonly createAlertService: CreateAlertService,
     private readonly initializeUserTierService: InitializeUserTierService,
     private readonly initializeUserWalletsService: InitializeUserWalletsService,
+    private readonly initializeUserArtifactStatusService: InitializeUserArtifactStatusService,
   ) {}
 
   @Transactional()
@@ -160,6 +162,9 @@ export class CreateUserService {
 
     // 7. 지갑 초기화
     await this.initializeUserWalletsService.execute(user.id);
+
+    // 8. 유물 상태 초기화
+    await this.initializeUserArtifactStatusService.execute(user.id);
 
     // 알림 발송
     await this.createAlertService.execute({

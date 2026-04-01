@@ -38,7 +38,7 @@ export class SolanaService {
    */
   async getBlocks(startSlot: number, endSlot?: number): Promise<number[]> {
     try {
-      return await this.publicConnection.getBlocks(
+      return await this.connection.getBlocks(
         startSlot,
         endSlot,
         'confirmed',
@@ -83,22 +83,12 @@ export class SolanaService {
    * 특정 슬롯(Slot) 번호에 해당하는 블록해시를 조회합니다.
    */
   async getBlockHashBySlot(slot: number): Promise<string | null> {
-    const block = await this.getBlockBySlot(slot, 'none');
-    return block?.blockhash ?? null;
-  }
-
-  /**
-   * 현재 가장 최신 확정 블록의 상세 정보를 가져옵니다.
-   */
-  async getLatestBlock(transactionDetails: 'none' | 'signatures' | 'full' = 'none') {
-    let slot = await this.getCurrentSlot();
-
-    try {
-      return await this.getBlockBySlot(slot, transactionDetails);
-    } catch (error) {
-      // 최신 슬롯 블록 조회 실패 시 바로 이전 슬롯으로 한 번 더 시도 (인덱싱 지연 대비)
-      this.logger.warn(`Failed to fetch block for latest slot ${slot}, retrying with ${slot - 1}`);
-      return await this.getBlockBySlot(slot - 1, transactionDetails);
-    }
+    return this.cacheService.getOrSet(
+      CACHE_CONFIG.BLOCKCHAIN.SOLANA_BLOCKHASH(slot),
+      async () => {
+        const block = await this.getBlockBySlot(slot, 'none');
+        return block?.blockhash ?? null;
+      },
+    );
   }
 }

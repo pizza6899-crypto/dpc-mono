@@ -7,6 +7,7 @@ import { CasinoSessionModule } from 'src/modules/casino-session/game-session.mod
 import { AlertModule } from 'src/modules/notification/alert/alert.module';
 import { TierProfileModule } from 'src/modules/tier/profile/tier-profile.module';
 import { WalletModule } from 'src/modules/wallet/wallet.module';
+import { ArtifactStatusModule } from 'src/modules/artifact/status/status.module';
 import { CreateUserService } from './application/create-user.service';
 import { ListUsersService } from './application/list-users.service';
 import { GetUserService } from './application/get-user.service';
@@ -37,6 +38,7 @@ import { EnvModule } from 'src/infrastructure/env/env.module';
     AlertModule,
     TierProfileModule,
     WalletModule,
+    ArtifactStatusModule,
   ],
   providers: [
     CreateUserService,
@@ -76,4 +78,4 @@ import { EnvModule } from 'src/infrastructure/env/env.module';
     USER_REPOSITORY,
   ],
 })
-export class UserProfileModule {}
+export class UserProfileModule { }

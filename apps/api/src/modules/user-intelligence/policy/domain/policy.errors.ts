@@ -10,3 +10,12 @@ export class PolicyNotFoundException extends DomainException {
     super(message, MessageCode.USER_INTELLIGENCE_POLICY_NOT_FOUND, HttpStatus.NOT_FOUND);
   }
 }
+
+/**
+ * 정책 설정 정보가 유효하지 않을 때 발생하는 도메인 예외
+ */
+export class PolicyInvalidConfigException extends DomainException {
+  constructor(message: string = 'UserIntelligencePolicy configuration is invalid. Please check your config data.') {
+    super(message, MessageCode.USER_INTELLIGENCE_POLICY_INVALID_CONFIG, HttpStatus.BAD_REQUEST);
+  }
+}

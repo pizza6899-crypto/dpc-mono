@@ -9,6 +9,7 @@ import { ArtifactStatusModule } from '../status/status.module';
 import { ArtifactMasterModule } from '../master/master.module';
 import { ArtifactInventoryModule } from '../inventory/inventory.module';
 import { WalletModule } from 'src/modules/wallet/wallet.module';
+import { WageringModule } from 'src/modules/wagering/wagering.module';
 import { ConcurrencyModule } from 'src/infrastructure/concurrency/concurrency.module';
 import { SolanaBlockchainModule } from 'src/infrastructure/blockchain/solana/solana-blockchain.module';
 import { ArtifactDrawRequestRepositoryPort } from './ports/artifact-draw-request.repository.port';
@@ -24,6 +25,7 @@ import { ArtifactDrawRequestMapper } from './infrastructure/artifact-draw-reques
     ArtifactMasterModule,
     ArtifactInventoryModule,
     WalletModule,
+    WageringModule,
     ConcurrencyModule,
     SolanaBlockchainModule,
   ],

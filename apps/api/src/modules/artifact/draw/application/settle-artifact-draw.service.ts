@@ -9,6 +9,11 @@ import { UserArtifactRepositoryPort } from '../../inventory/ports/user-artifact.
 import { ArtifactDrawPolicy } from '../domain/artifact-draw.policy';
 import { UserArtifact } from '../../inventory/domain/user-artifact.entity';
 import { ArtifactDrawResult } from '../domain/artifact-draw-request.entity';
+import { CreateUniversalLogService } from 'src/modules/universal-log/application/create-universal-log.service';
+import { ArtifactPolicyRepositoryPort } from '../../master/ports/artifact-policy.repository.port';
+import { AdvisoryLockService } from 'src/infrastructure/concurrency/advisory-lock.service';
+import { LockNamespace } from 'src/infrastructure/concurrency/concurrency.constants';
+import { SolanaBlockhashMissingException } from '../domain/draw.exception';
 
 /**
  * [Artifact Draw] 유물 뽑기 결과 확정 서비스 (Reveal/Settle 단계)
@@ -24,6 +29,9 @@ export class SettleArtifactDrawService {
     private readonly catalogRepo: ArtifactCatalogRepositoryPort,
     private readonly inventoryRepo: UserArtifactRepositoryPort,
     private readonly policy: ArtifactDrawPolicy,
+    private readonly universalLogService: CreateUniversalLogService,
+    private readonly policyRepo: ArtifactPolicyRepositoryPort,
+    private readonly lockService: AdvisoryLockService,
   ) { }
 
   /**
@@ -31,6 +39,9 @@ export class SettleArtifactDrawService {
    */
   @Transactional()
   async execute(requestId: bigint): Promise<boolean> {
+    // 0. 동시성 제어 (Request ID 기반 락)
+    await this.lockService.acquireLock(LockNamespace.ARTIFACT_SETTLE, requestId.toString());
+
     const request = await this.drawRequestRepo.findById(requestId);
 
     // 1. 대상 확인 (PENDING 상태만 처리)
@@ -38,26 +49,46 @@ export class SettleArtifactDrawService {
       return false;
     }
 
-    // 2. 솔라나 블록해시 획득 (targetSlot 기준)
-    const blockhash = await this.solanaService.getBlockHashBySlot(Number(request.targetSlot));
-    if (!blockhash) {
-      // 블록이 아직 생성되지 않았거나 RPC 노드 인덱싱 지연 시 재시도 필요
-      this.logger.warn(`Blockhash not found yet for slot: ${request.targetSlot} (Request ID: ${requestId})`);
+    // 2. 전체 뽑기 분량에 필요한 '실제' 확정 슬롯 목록 조회 (Skip 대응)
+    const drawCount = this.policy.getDrawCount(request.drawType);
+    // 넉넉한 범위(뽑기 횟수의 3배) 안에서 확정된 슬롯들을 찾습니다.
+    const confirmedSlots = await this.solanaService.getBlocks(
+      Number(request.targetSlot),
+      Number(request.targetSlot) + drawCount * 3
+    );
+
+    // 아직 필요한 만큼의 블록이 생성/확정되지 않았으면 대기
+    if (confirmedSlots.length < drawCount) {
+      this.logger.debug(`Not enough confirmed blocks yet. Need ${drawCount}, found ${confirmedSlots.length} (Target: ${request.targetSlot})`);
       return false;
     }
 
-    this.logger.log(`Settling draw request ${requestId} using blockhash: ${blockhash}`);
+    // 앞부분부터 필요한 개수만큼 슬롯 번호를 확정합니다.
+    const targetSlots = confirmedSlots.slice(0, drawCount);
+    const lastResultSlot = targetSlots[drawCount - 1];
+
+    this.logger.log(`Settling draw request ${requestId} for ${drawCount} items (Actual slots: ${targetSlots[0]} ~ ${lastResultSlot})`);
 
     // 3. 확률 설정 및 아이템 풀 로드
     const configs = await this.configRepo.findAll();
     const catalogPool = await this.catalogRepo.findAll();
-
-    const drawCount = this.policy.getDrawCount(request.drawType);
     const results: ArtifactDrawResult[] = [];
 
-    // 4. 결정적(Deterministic) 결과 산출
+    let mainBlockhash: string | null = null;
+
+    // 4. 결정적(Deterministic) 결과 산출 (각 실제 확정 슬롯별 고유 블록해시 사용)
     for (let i = 0; i < drawCount; i++) {
-      const itemSeed = `${blockhash}_${i}`;
+      const itemSlot = targetSlots[i];
+      const itemBlockhash = await this.solanaService.getBlockHashBySlot(itemSlot);
+
+      if (!itemBlockhash) {
+        this.logger.error(`Failed to fetch blockhash for expected slot: ${itemSlot}`);
+        throw new SolanaBlockhashMissingException(itemSlot);
+      }
+
+      if (i === 0) mainBlockhash = itemBlockhash;
+
+      const itemSeed = itemBlockhash; // 더 이상 인덱스를 붙일 필요가 없음 (블록해시 자체가 유니크)
 
       // 등급 확정권 여부 판단 (ALL인 경우 확률 기반으로 동작)
       const guaranteedGrade = request.ticketType && request.ticketType !== 'ALL'
@@ -75,7 +106,7 @@ export class SettleArtifactDrawService {
       const savedItem = await this.inventoryRepo.save(userArtifact);
 
       results.push({
-        blockhash, // 각 아이템이 자신의 검증 해시를 가짐
+        blockhash: itemBlockhash, // 각 아이템이 자신의 고유 검증 해시를 가짐
         userArtifactId: savedItem.id,
         artifactCode: artifact.code,
         grade: artifact.grade,
@@ -86,6 +117,32 @@ export class SettleArtifactDrawService {
     // 5. 요청 상태 업데이트 (SETTLED)
     request.settle(results);
     await this.drawRequestRepo.save(request);
+
+    // 6. [Universal Log] 최종 결과 기록 (데이터 분석 및 백오피스용)
+    const artifactPolicy = await this.policyRepo.findPolicy();
+    const finalCost =
+      artifactPolicy && request.currencyCode
+        ? artifactPolicy.getDrawPrice(request.drawType, request.currencyCode)
+        : null;
+
+    await this.universalLogService.execute({
+      action: 'artifact.draw',
+      targetId: request.id,
+      actorId: request.userId,
+      payload: {
+        currencyCode: request.currencyCode || 'TICKET',
+        costAmount: finalCost ? finalCost.toNumber() : 0,
+        provablyFair: {
+          blockhash: mainBlockhash!,
+          nonce: 0, // 슬롯 기반이므로 0 디폴트
+        },
+        items: results.map((r) => ({
+          id: r.artifactCode,
+          grade: r.grade,
+          gradeRoll: r.roll,
+        })),
+      },
+    });
 
     this.logger.log(`Successfully settled draw request ${requestId}. Items: ${results.length}`);
     return true;

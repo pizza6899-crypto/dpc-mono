@@ -338,8 +338,14 @@ export enum MessageCode {
     ARTIFACT_STATUS_NOT_FOUND = 'ARTIFACT_STATUS_NOT_FOUND', // 유물 상태 정보를 찾을 수 없을 때
     ARTIFACT_CODE_DUPLICATED = 'ARTIFACT_CODE_DUPLICATED', // 이미 존재하는 유물 코드일 때
 
-    // --- 사용자 지능형 평가 (User Intelligence) ---
-    USER_INTELLIGENCE_POLICY_NOT_FOUND = 'USER_INTELLIGENCE_POLICY_NOT_FOUND', // 활성 지능형 평가 정책을 찾을 수 없을 때
     USER_INTELLIGENCE_SCORE_NOT_FOUND = 'USER_INTELLIGENCE_SCORE_NOT_FOUND', // 사용자의 지능형 평가 점수를 찾을 수 없을 때
+    USER_INTELLIGENCE_POLICY_NOT_FOUND = 'USER_INTELLIGENCE_POLICY_NOT_FOUND', // 지능형 정책을 찾을 수 없을 때
+    USER_INTELLIGENCE_POLICY_INVALID_CONFIG = 'USER_INTELLIGENCE_POLICY_INVALID_CONFIG', // 지능형 정책 설정이 유효하지 않을 때
+
+    // --- 유물 뽑기 프로세스 전용 (Artifact Draw Process) ---
+    ARTIFACT_DRAW_REQUEST_NOT_FOUND = 'ARTIFACT_DRAW_REQUEST_NOT_FOUND', // 뽑기 요청을 찾을 수 없을 때
+    ARTIFACT_DRAW_INVALID_STATUS = 'ARTIFACT_DRAW_INVALID_STATUS', // 유효하지 않은 뽑기 상태일 때
+    ARTIFACT_DRAW_NOT_SETTLED = 'ARTIFACT_DRAW_NOT_SETTLED', // 아직 결과가 산출되지 않았을 때 (타겟 슬롯 대기)
+    BLOCKCHAIN_SYNC_ERROR = 'BLOCKCHAIN_SYNC_ERROR', // 블록체인 데이터 동기화 오류 (예: 블록해시 누락)
 }
 

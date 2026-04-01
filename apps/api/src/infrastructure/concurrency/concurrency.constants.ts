@@ -30,6 +30,7 @@ export enum LockNamespace {
   USER_CHARACTER = 1017,
   ARTIFACT_MASTER = 1018,
   ARTIFACT_DRAW = 1019,
+  ARTIFACT_SETTLE = 1020,
 }
 
 export const CONCURRENCY_CONSTANTS = {

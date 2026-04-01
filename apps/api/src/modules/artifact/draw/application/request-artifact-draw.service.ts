@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Transactional } from '@nestjs-cls/transactional';
 import { RequestContextService } from 'src/infrastructure/cls/request-context.service';
-import { ArtifactDrawType, ArtifactDrawPaymentType, ArtifactGrade, ExchangeCurrencyCode } from '@prisma/client';
+import { ArtifactDrawType, ArtifactDrawPaymentType, ArtifactGrade, ExchangeCurrencyCode, Prisma } from '@prisma/client';
 import { SolanaService } from 'src/infrastructure/blockchain/solana/solana.service';
 import { AdvisoryLockService } from 'src/infrastructure/concurrency/advisory-lock.service';
 import { LockNamespace } from 'src/infrastructure/concurrency/concurrency.constants';
@@ -12,12 +12,13 @@ import { ArtifactDrawRequest } from '../domain/artifact-draw-request.entity';
 import { ArtifactStatusNotFoundException } from '../../status/domain/status.exception';
 import { ArtifactPolicyNotFoundException } from '../../master/domain/master.exception';
 import { ArtifactDrawPriceNotFoundException, CurrencyCodeRequiredException } from '../domain/draw.exception';
+import { ProcessWageringBetService } from 'src/modules/wagering/engine/application/process-wagering-bet.service';
+import { WalletActionName } from 'src/modules/wallet/domain';
 
 export interface RequestDrawCommand {
   drawType: ArtifactDrawType;
   paymentType: ArtifactDrawPaymentType;
   ticketType?: ArtifactGrade | 'ALL';
-  currencyCode?: ExchangeCurrencyCode;
 }
 
 /**
@@ -32,12 +33,14 @@ export class RequestArtifactDrawService {
     private readonly userStatusRepo: UserArtifactStatusRepositoryPort,
     private readonly policyRepo: ArtifactPolicyRepositoryPort,
     private readonly drawRequestRepo: ArtifactDrawRequestRepositoryPort,
+    private readonly wageringBetService: ProcessWageringBetService,
   ) { }
 
   @Transactional()
   async execute(command: RequestDrawCommand): Promise<ArtifactDrawRequest> {
     const userId = this.requestContext.getUserId()!;
-    const { drawType, paymentType, ticketType, currencyCode } = command;
+    const { drawType, paymentType, ticketType } = command;
+    const currencyCode = this.requestContext.getPlayCurrency();
 
     // 1. 동시성 제어 (유저별 락)
     await this.lockService.acquireLock(LockNamespace.ARTIFACT_DRAW, userId.toString());
@@ -48,8 +51,24 @@ export class RequestArtifactDrawService {
       throw new ArtifactStatusNotFoundException();
     }
 
-    // 3. 결제 처리 (티켓 또는 재화)
+    // 3. 미래 슬롯(targetSlot) 결정 (Commit -> Reveal 간격)
+    const currentSlot = await this.solanaService.getCurrentSlot();
+    const targetSlot = BigInt(currentSlot + 4); // 약 1.6~2.4초 뒤 (Commit -> Reveal 간격 단축)
+
+    // 4. 뽑기 요청 생성 및 저장 (PENDING)
+    let drawRequest = ArtifactDrawRequest.create({
+      userId,
+      targetSlot,
+      drawType,
+      paymentType,
+      ticketType: ticketType || null,
+      currencyCode: currencyCode || null,
+    });
+    drawRequest = await this.drawRequestRepo.save(drawRequest);
+
+    // 5. 결제 처리 (티켓 또는 재화)
     const spendCount = drawType === 'SINGLE' ? 1 : 10;
+
     if (paymentType === ArtifactDrawPaymentType.TICKET) {
       const type = (ticketType || 'ALL') as any;
       userStatus.spendTickets(type, spendCount);
@@ -68,31 +87,25 @@ export class RequestArtifactDrawService {
         throw new ArtifactDrawPriceNotFoundException(currencyCode);
       }
 
+      // [Wagering Integration]
+      // 웨이저링 베트 처리 (재화 차감, 롤링/콤프 적용, XP 지급)
+      await this.wageringBetService.execute({
+        userId,
+        currency: currencyCode,
+        betAmount: price,
+        exchangeRate: new Prisma.Decimal(1), // 유물 가챠는 전용 게임 재화가 없으므로 1:1 디폴트
+        referenceId: drawRequest.id,
+        actionName: WalletActionName.ARTIFACT_DRAW,
+        metadata: { drawType, spendCount },
+      });
+
       // 유통 통계 기록
       userStatus.recordCurrencyDraw(spendCount);
-
-      // TODO: WalletService.debit(userId, currencyCode, price) 실제 지갑 차감 로직 연동 필요
-      console.log(`[PAYMENT] User ${userId} paid ${price} ${currencyCode} for ${drawType} draw`);
     }
 
     // 상태 업데이트 (티켓 차감 등)
     await this.userStatusRepo.update(userStatus);
 
-    // 4. 미래 슬롯(targetSlot) 결정
-    // 현재 슬롯보다 10~20 슬롯 정도 앞선 블록을 대상으로 지정 (Commit -> Reveal 간격)
-    const currentSlot = await this.solanaService.getCurrentSlot();
-    const targetSlot = BigInt(currentSlot + 10); // 약 4~6초 뒤
-
-    // 5. 뽑기 요청 생성 및 저장 (PENDING)
-    const drawRequest = ArtifactDrawRequest.create({
-      userId,
-      targetSlot,
-      drawType,
-      paymentType,
-      ticketType: ticketType || null,
-      currencyCode: currencyCode || null,
-    });
-
-    return await this.drawRequestRepo.save(drawRequest);
+    return drawRequest;
   }
 }
