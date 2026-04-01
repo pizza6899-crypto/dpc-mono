@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { ArtifactGrade } from '@prisma/client';
 
 /**
- * [Artifact Synthesis] 합성 결과 획독 유물 정보 (DTO 독립성 유지를 위해 인라인 정의)
+ * [Artifact Synthesis] 합성 결과 획득 유물 정보 (DTO 독립성 유지를 위해 인라인 정의)
  */
 export class SynthesizeRewardArtifactDto {
   @ApiProperty({
@@ -42,16 +42,16 @@ export class SynthesizeArtifactResponseDto {
   isSuccess: boolean;
 
   @ApiPropertyOptional({
-    description: 'Result Artifact (only if success) / 합성 결과 유물 (성공 시에만 포함)',
+    description: 'Result Artifact / 합성 결과 유물 (성공/실패 관계없이 지급된 새 유물)',
     type: SynthesizeRewardArtifactDto,
   })
   reward?: SynthesizeRewardArtifactDto | null;
 
   @ApiProperty({
-    description: 'Total Fail Count for this grade / 해당 등급의 현재 누적 실패 횟수 (Pity 체크용)',
+    description: 'Current Pity Stack (Reset on success) / 현재 천장 스택 (성공 시 리셋)',
     example: 3,
   })
-  currentFailCount: number;
+  currentPityCount: number;
 
   @ApiPropertyOptional({
     description: 'Was it a guaranteed success (Pity)? / 확정 성공(천장) 여부',

@@ -17,6 +17,7 @@ export class UserArtifactStatus {
     private _drawCountTickets: Record<ArtifactGrade | 'ALL', number>,
     private _synthesisSuccessCounts: Record<ArtifactGrade, number>,
     private _synthesisFailCounts: Record<ArtifactGrade, number>,
+    private _synthesisPityCounts: Record<ArtifactGrade, number>, // 신규: 천장용 스택 (성공 시 리셋)
     private _updatedAt: Date,
   ) { }
 
@@ -48,18 +49,25 @@ export class UserArtifactStatus {
     drawCountTicketUnique: number;
     synthesisCommonSuccessCount: number;
     synthesisCommonFailCount: number;
+    synthesisCommonPityCount: number;
     synthesisUncommonSuccessCount: number;
     synthesisUncommonFailCount: number;
+    synthesisUncommonPityCount: number;
     synthesisRareSuccessCount: number;
     synthesisRareFailCount: number;
+    synthesisRarePityCount: number;
     synthesisEpicSuccessCount: number;
     synthesisEpicFailCount: number;
+    synthesisEpicPityCount: number;
     synthesisLegendarySuccessCount: number;
     synthesisLegendaryFailCount: number;
+    synthesisLegendaryPityCount: number;
     synthesisMythicSuccessCount: number;
     synthesisMythicFailCount: number;
+    synthesisMythicPityCount: number;
     synthesisUniqueSuccessCount: number;
     synthesisUniqueFailCount: number;
+    synthesisUniquePityCount: number;
     updatedAt: Date;
   }): UserArtifactStatus {
     return new UserArtifactStatus(
@@ -107,6 +115,15 @@ export class UserArtifactStatus {
         [ArtifactGrade.MYTHIC]: data.synthesisMythicFailCount,
         [ArtifactGrade.UNIQUE]: data.synthesisUniqueFailCount,
       },
+      {
+        [ArtifactGrade.COMMON]: data.synthesisCommonPityCount,
+        [ArtifactGrade.UNCOMMON]: data.synthesisUncommonPityCount,
+        [ArtifactGrade.RARE]: data.synthesisRarePityCount,
+        [ArtifactGrade.EPIC]: data.synthesisEpicPityCount,
+        [ArtifactGrade.LEGENDARY]: data.synthesisLegendaryPityCount,
+        [ArtifactGrade.MYTHIC]: data.synthesisMythicPityCount,
+        [ArtifactGrade.UNIQUE]: data.synthesisUniquePityCount,
+      },
       data.updatedAt,
     );
   }
@@ -135,6 +152,7 @@ export class UserArtifactStatus {
       0,
       { ...defaultGradeMap },
       { ALL: 0, ...defaultGradeMap },
+      { ...defaultGradeMap },
       { ...defaultGradeMap },
       { ...defaultGradeMap },
       new Date(),
@@ -174,7 +192,7 @@ export class UserArtifactStatus {
   }
 
   /**
-   * 합성 성공 기록
+   * [Synthesis] 합성 성공 기록
    */
   recordSynthesisSuccess(grade: ArtifactGrade): void {
     this._synthesisSuccessCounts[grade] += 1;
@@ -183,11 +201,20 @@ export class UserArtifactStatus {
   }
 
   /**
-   * 합성 실패 기록
+   * [Synthesis] 합성 실패 기록
    */
   recordSynthesisFail(grade: ArtifactGrade): void {
-    this._synthesisFailCounts[grade] += 1;
+    this._synthesisFailCounts[grade] += 1; // 평생 누적 실패 (리셋 안됨)
+    this._synthesisPityCounts[grade] += 1; // 천장용 스택 증가
     this._totalSynthesisCount += 1;
+    this._updatedAt = new Date();
+  }
+
+  /**
+   * [Synthesis] 특정 등급의 천장 스택 리셋
+   */
+  resetSynthesisPityCount(grade: ArtifactGrade): void {
+    this._synthesisPityCounts[grade] = 0;
     this._updatedAt = new Date();
   }
 
@@ -212,6 +239,7 @@ export class UserArtifactStatus {
   getGradeTicketDrawCount(grade: ArtifactGrade | 'ALL'): number { return this._drawCountTickets[grade]; }
   getSynthesisSuccessCount(grade: ArtifactGrade): number { return this._synthesisSuccessCounts[grade]; }
   getSynthesisFailCount(grade: ArtifactGrade): number { return this._synthesisFailCounts[grade]; }
+  getSynthesisPityCount(grade: ArtifactGrade): number { return this._synthesisPityCounts[grade]; }
 
   /**
    * 보유 티켓 통합 정보 반환

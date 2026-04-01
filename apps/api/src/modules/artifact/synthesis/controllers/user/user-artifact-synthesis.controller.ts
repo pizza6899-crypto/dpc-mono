@@ -11,6 +11,8 @@ import { LogType } from 'src/modules/audit-log/domain';
 import { SynthesizeArtifactRequestDto } from './dto/request/synthesize-artifact.request.dto';
 import { SynthesizeArtifactResponseDto } from './dto/response/synthesize-artifact.response.dto';
 
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 import { SynthesizeArtifactService } from '../../application/synthesize-artifact.service';
 
 /**
@@ -25,6 +27,7 @@ import { SynthesizeArtifactService } from '../../application/synthesize-artifact
 export class UserArtifactSynthesisController {
   constructor(
     private readonly synthesisService: SynthesizeArtifactService,
+    private readonly sqidsService: SqidsService,
   ) { }
 
   @Post()
@@ -46,6 +49,16 @@ export class UserArtifactSynthesisController {
   async synthesizeArtifact(
     @Body() dto: SynthesizeArtifactRequestDto,
   ): Promise<SynthesizeArtifactResponseDto> {
-    return this.synthesisService.execute(dto.ingredientIds);
+    const ingredientIds = dto.ingredientIds.map(sqid => 
+      this.sqidsService.decode(sqid, SqidsPrefix.USER_ARTIFACT)
+    );
+    const result = await this.synthesisService.execute(ingredientIds);
+
+    // 응답 전용 ID 인코딩 처리
+    if (result.reward) {
+      result.reward.id = this.sqidsService.encode(BigInt(result.reward.id), SqidsPrefix.USER_ARTIFACT);
+    }
+
+    return result;
   }
 }

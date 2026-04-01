@@ -109,30 +109,37 @@ model UserArtifactStatus {
   /// COMMON
   synthesisCommonSuccessCount Int @default(0) @map("synthesis_common_success_count")
   synthesisCommonFailCount    Int @default(0) @map("synthesis_common_fail_count")
+  synthesisCommonPityCount    Int @default(0) @map("synthesis_common_pity_count")
 
   /// UNCOMMON
   synthesisUncommonSuccessCount Int @default(0) @map("synthesis_uncommon_success_count")
   synthesisUncommonFailCount    Int @default(0) @map("synthesis_uncommon_fail_count")
+  synthesisUncommonPityCount    Int @default(0) @map("synthesis_uncommon_pity_count")
 
   /// RARE
   synthesisRareSuccessCount Int @default(0) @map("synthesis_rare_success_count")
   synthesisRareFailCount    Int @default(0) @map("synthesis_rare_fail_count")
+  synthesisRarePityCount    Int @default(0) @map("synthesis_rare_pity_count")
 
   /// EPIC
   synthesisEpicSuccessCount Int @default(0) @map("synthesis_epic_success_count")
   synthesisEpicFailCount    Int @default(0) @map("synthesis_epic_fail_count")
+  synthesisEpicPityCount    Int @default(0) @map("synthesis_epic_pity_count")
 
   /// LEGENDARY
   synthesisLegendarySuccessCount Int @default(0) @map("synthesis_legendary_success_count")
   synthesisLegendaryFailCount    Int @default(0) @map("synthesis_legendary_fail_count")
+  synthesisLegendaryPityCount    Int @default(0) @map("synthesis_legendary_pity_count")
 
   /// MYTHIC
   synthesisMythicSuccessCount Int @default(0) @map("synthesis_mythic_success_count")
   synthesisMythicFailCount    Int @default(0) @map("synthesis_mythic_fail_count")
+  synthesisMythicPityCount    Int @default(0) @map("synthesis_mythic_pity_count")
 
   /// UNIQUE
   synthesisUniqueSuccessCount Int @default(0) @map("synthesis_unique_success_count")
   synthesisUniqueFailCount    Int @default(0) @map("synthesis_unique_fail_count")
+  synthesisUniquePityCount    Int @default(0) @map("synthesis_unique_pity_count")
 
   /// [Artifact] 보유 중인 일반 뽑기권 수량 (등급 제한 없음)
   ticketAllCount Int @default(0) @map("ticket_all_count")

@@ -349,5 +349,10 @@ export enum MessageCode {
     ARTIFACT_DRAW_INVALID_STATUS = 'ARTIFACT_DRAW_INVALID_STATUS', // 유효하지 않은 뽑기 상태일 때
     ARTIFACT_DRAW_NOT_SETTLED = 'ARTIFACT_DRAW_NOT_SETTLED', // 아직 결과가 산출되지 않았을 때 (타겟 슬롯 대기)
     BLOCKCHAIN_SYNC_ERROR = 'BLOCKCHAIN_SYNC_ERROR', // 블록체인 데이터 동기화 오류 (예: 블록해시 누락)
+
+    // --- 유물 합성 관련 (Artifact Synthesis) ---
+    ARTIFACT_SYNTHESIS_INVALID_INGREDIENTS = 'ARTIFACT_SYNTHESIS_INVALID_INGREDIENTS', // 합성 재료가 유효하지 않을 때 (소유권, 등급 등)
+    ARTIFACT_SYNTHESIS_POLICY_NOT_FOUND = 'ARTIFACT_SYNTHESIS_POLICY_NOT_FOUND', // 해당 등급의 합성 정책을 찾을 수 없을 때
+    ARTIFACT_SYNTHESIS_MAX_GRADE_REACHED = 'ARTIFACT_SYNTHESIS_MAX_GRADE_REACHED', // 더 이상 합성할 수 없는 최고 등급일 때
 }
 
