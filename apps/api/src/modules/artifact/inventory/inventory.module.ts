@@ -13,6 +13,7 @@ import { ArtifactCatalogMapper } from '../master/infrastructure/artifact-catalog
 
 import { CharacterStatusModule } from 'src/modules/character/status/status.module';
 import { GetEquippedArtifactStatsService } from './application/get-equipped-artifact-stats.service';
+import { GetMyArtifactProfileService } from './application/get-my-artifact-profile.service';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { GetEquippedArtifactStatsService } from './application/get-equipped-arti
     EquipArtifactService,
     UnequipArtifactService,
     GetEquippedArtifactStatsService,
+    GetMyArtifactProfileService,
   ],
   exports: [
     UserArtifactRepositoryPort,
@@ -42,6 +44,7 @@ import { GetEquippedArtifactStatsService } from './application/get-equipped-arti
     EquipArtifactService,
     UnequipArtifactService,
     GetEquippedArtifactStatsService,
+    GetMyArtifactProfileService,
   ],
 })
 export class ArtifactInventoryModule { }

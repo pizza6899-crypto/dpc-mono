@@ -9,10 +9,10 @@ import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import { PaginatedData } from 'src/common/http/types/pagination.types';
 
 // Status Services (Injection)
-import { GetUserArtifactStatusService } from '../../../status/application/get-user-artifact-status.service';
 import { ListMyArtifactsService } from '../../application/list-my-artifacts.service';
 import { EquipArtifactService } from '../../application/equip-artifact.service';
 import { UnequipArtifactService } from '../../application/unequip-artifact.service';
+import { GetMyArtifactProfileService } from '../../application/get-my-artifact-profile.service';
 
 // Audit Log
 import { AuditLog } from '../../../../audit-log/infrastructure/audit-log.decorator';
@@ -31,10 +31,10 @@ import { GetMyArtifactsQueryDto } from './dto/request/get-my-artifacts.query.dto
 @ApiStandardErrors()
 export class UserArtifactInventoryController {
   constructor(
-    private readonly statusService: GetUserArtifactStatusService,
     private readonly listService: ListMyArtifactsService,
     private readonly equipService: EquipArtifactService,
     private readonly unequipService: UnequipArtifactService,
+    private readonly profileService: GetMyArtifactProfileService,
   ) { }
 
   /**
@@ -47,26 +47,7 @@ export class UserArtifactInventoryController {
   })
   @ApiStandardResponse(UserArtifactProfileResponseDto)
   async getMyProfile(@CurrentUser() user: AuthenticatedUser): Promise<UserArtifactProfileResponseDto> {
-    // 실제 서비스 구현 대신 목업 및 Status 모듈 서비스 조합
-    const status = await this.statusService.execute(user.id);
-
-    // TODO: 인벤토리 모듈의 장착 유물 조회 서비스 구현 필요
-    return {
-      activeSlotCount: status.activeSlotCount,
-      slots: Array.from({ length: status.activeSlotCount }, (_, i) => ({
-        slotNo: i + 1,
-        artifact: null, // 실제 구현 시 장착 정보 매핑
-      })),
-      effects: {
-        casinoBenefit: 0,
-        slotBenefit: 0,
-        sportsBenefit: 0,
-        minigameBenefit: 0,
-        badBeatBenefit: 0,
-        criticalBenefit: 0,
-      },
-      tickets: status.tickets,
-    };
+    return await this.profileService.execute(user.id);
   }
 
   @Get()
