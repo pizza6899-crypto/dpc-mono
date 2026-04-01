@@ -9,6 +9,7 @@ import { GetEquippedArtifactStatsService } from './get-equipped-artifact-stats.s
 import { SyncUserTotalStatsService } from 'src/modules/character/status/application/sync-user-total-stats.service';
 import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
 import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
+import { CreateUniversalLogService } from 'src/modules/universal-log/application/create-universal-log.service';
 
 import { RequestContextService } from 'src/infrastructure/cls/request-context.service';
 import { AdvisoryLockService } from 'src/infrastructure/concurrency/advisory-lock.service';
@@ -27,6 +28,7 @@ export class EquipArtifactService {
     private readonly getEquippedStatsService: GetEquippedArtifactStatsService,
     private readonly syncTotalStatsService: SyncUserTotalStatsService,
     private readonly sqidsService: SqidsService,
+    private readonly universalLogService: CreateUniversalLogService,
   ) { }
 
   /**
@@ -61,6 +63,8 @@ export class EquipArtifactService {
 
     // 4. (Swap 로직) 해당 타겟 슬롯에 이미 다른 유물이 있다면 해제
     const existingInTargetSlot = await this.repository.findBySlot(userId, slotNo);
+    const prevArtifactCode = existingInTargetSlot?.catalog?.code || null;
+
     if (existingInTargetSlot && existingInTargetSlot.id !== userArtifact.id) {
       existingInTargetSlot.unequip();
       await this.repository.update(existingInTargetSlot);
@@ -73,6 +77,18 @@ export class EquipArtifactService {
     // 6. 캐릭터 최종 스탯 동기화 (유물 보너스 합산 반영)
     const bonuses = await this.getEquippedStatsService.execute(userId);
     await this.syncTotalStatsService.execute(userId, bonuses);
+
+    // 7. 통합 로그 기록
+    await this.universalLogService.execute({
+      action: 'artifact.equip',
+      payload: {
+        userArtifactId: sqid,
+        artifactCode: updated.catalog?.code || 'UNKNOWN',
+        slotNo: updated.slotNo!,
+        prevArtifactCode,
+      },
+      targetId: updated.id,
+    });
 
     // 7. 결과 반환
     return {

@@ -5,7 +5,8 @@ import * as Payloads from './payloads';
  */
 export interface LogPayloadMap {
   'artifact.draw': Payloads.ArtifactDrawPayload;
-  'artifact.reward': Payloads.ArtifactRewardPayload;
+  'artifact.equip': Payloads.ArtifactEquipPayload;
+  'artifact.unequip': Payloads.ArtifactUnequipPayload;
   // 여기에 새로운 액션과 페이로드 타입을 계속 추가합니다.
 }
 
