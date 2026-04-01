@@ -5,6 +5,8 @@ import { UserArtifactRepositoryPort } from '../ports/user-artifact.repository.po
 import { EquipArtifactRequestDto } from '../controllers/user/dto/request/equip-artifact.request.dto';
 import { UserArtifactResponseDto } from '../controllers/user/dto/response/user-artifact.response.dto';
 import { GetUserArtifactStatusService } from '../../status/application/get-user-artifact-status.service';
+import { GetEquippedArtifactStatsService } from './get-equipped-artifact-stats.service';
+import { SyncUserTotalStatsService } from 'src/modules/character/status/application/sync-user-total-stats.service';
 import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
 import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 
@@ -22,6 +24,8 @@ export class EquipArtifactService {
     private readonly lockService: AdvisoryLockService,
     private readonly repository: UserArtifactRepositoryPort,
     private readonly statusService: GetUserArtifactStatusService,
+    private readonly getEquippedStatsService: GetEquippedArtifactStatsService,
+    private readonly syncTotalStatsService: SyncUserTotalStatsService,
     private readonly sqidsService: SqidsService,
   ) { }
 
@@ -66,7 +70,11 @@ export class EquipArtifactService {
     userArtifact.equip(slotNo);
     const updated = await this.repository.update(userArtifact);
 
-    // 6. 결과 반환
+    // 6. 캐릭터 최종 스탯 동기화 (유물 보너스 합산 반영)
+    const bonuses = await this.getEquippedStatsService.execute(userId);
+    await this.syncTotalStatsService.execute(userId, bonuses);
+
+    // 7. 결과 반환
     return {
       id: this.sqidsService.encode(updated.id, SqidsPrefix.USER_ARTIFACT),
       artifactCode: updated.catalog?.code || 'UNKNOWN',

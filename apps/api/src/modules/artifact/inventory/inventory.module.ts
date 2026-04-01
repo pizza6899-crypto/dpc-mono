@@ -11,11 +11,15 @@ import { UnequipArtifactService } from './application/unequip-artifact.service';
 import { UserArtifactMapper } from './infrastructure/user-artifact.mapper';
 import { ArtifactCatalogMapper } from '../master/infrastructure/artifact-catalog.mapper';
 
+import { CharacterStatusModule } from 'src/modules/character/status/status.module';
+import { GetEquippedArtifactStatsService } from './application/get-equipped-artifact-stats.service';
+
 @Module({
   imports: [
     ArtifactMasterModule,
     ArtifactStatusModule,
     ConcurrencyModule,
+    CharacterStatusModule,
   ],
   controllers: [
     UserArtifactInventoryController,
@@ -30,12 +34,14 @@ import { ArtifactCatalogMapper } from '../master/infrastructure/artifact-catalog
     ListMyArtifactsService,
     EquipArtifactService,
     UnequipArtifactService,
+    GetEquippedArtifactStatsService,
   ],
   exports: [
     UserArtifactRepositoryPort,
     ListMyArtifactsService,
     EquipArtifactService,
     UnequipArtifactService,
+    GetEquippedArtifactStatsService,
   ],
 })
 export class ArtifactInventoryModule { }

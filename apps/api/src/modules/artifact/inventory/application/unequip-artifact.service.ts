@@ -8,6 +8,8 @@ import { AdvisoryLockService } from 'src/infrastructure/concurrency/advisory-loc
 import { LockNamespace } from 'src/infrastructure/concurrency/concurrency.constants';
 import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
 import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
+import { GetEquippedArtifactStatsService } from './get-equipped-artifact-stats.service';
+import { SyncUserTotalStatsService } from 'src/modules/character/status/application/sync-user-total-stats.service';
 
 /**
  * [Artifact Inventory] 유물 장착 해제 서비스
@@ -19,6 +21,8 @@ export class UnequipArtifactService {
     private readonly lockService: AdvisoryLockService,
     private readonly repository: UserArtifactRepositoryPort,
     private readonly sqidsService: SqidsService,
+    private readonly getEquippedStatsService: GetEquippedArtifactStatsService,
+    private readonly syncTotalStatsService: SyncUserTotalStatsService,
   ) { }
 
   /**
@@ -48,6 +52,10 @@ export class UnequipArtifactService {
     // 3. 해제 실행 및 저장
     userArtifact.unequip();
     await this.repository.update(userArtifact);
+
+    // 4. 캐릭터 최종 스탯 동기화 (유물 보너스 변동 반영)
+    const bonuses = await this.getEquippedStatsService.execute(userId);
+    await this.syncTotalStatsService.execute(userId, bonuses);
 
     return true;
   }
