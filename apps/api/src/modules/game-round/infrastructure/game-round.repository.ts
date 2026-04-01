@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { GameRound, GameResultMeta } from '../domain/game-round.entity';
 import {
   GameRoundRepositoryPort,
@@ -6,20 +6,20 @@ import {
 } from '../ports/game-round.repository.port';
 import { GameRoundMapper } from './game-round.mapper';
 import { GameAggregatorType, Prisma } from '@prisma/client';
-import { EXTENDED_PRISMA_CLIENT } from 'src/infrastructure/prisma/prisma.module';
-import type { ExtendedClient } from 'src/infrastructure/prisma/prisma.service';
+import { InjectTransaction } from '@nestjs-cls/transactional';
+import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 
 @Injectable()
 export class GameRoundRepository implements GameRoundRepositoryPort {
   constructor(
-    @Inject(EXTENDED_PRISMA_CLIENT)
-    private readonly prisma: ExtendedClient,
+    @InjectTransaction()
+    private readonly tx: PrismaTransaction,
     private readonly mapper: GameRoundMapper,
-  ) {}
+  ) { }
 
   async save(gameRound: GameRound): Promise<GameRound> {
     const data = this.mapper.toPrisma(gameRound);
-    const result = await this.prisma.casinoGameRound.upsert({
+    const result = await this.tx.casinoGameRound.upsert({
       where: {
         id_startedAt: {
           id: data.id,
@@ -33,7 +33,7 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
   }
 
   async findById(id: bigint, startedAt: Date): Promise<GameRound | null> {
-    const result = await this.prisma.casinoGameRound.findUnique({
+    const result = await this.tx.casinoGameRound.findUnique({
       where: {
         id_startedAt: {
           id,
@@ -49,7 +49,7 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
     aggregatorType: GameAggregatorType,
     startedAt: Date,
   ): Promise<GameRound | null> {
-    const result = await this.prisma.casinoGameRound.findUnique({
+    const result = await this.tx.casinoGameRound.findUnique({
       where: {
         aggregatorRoundId_aggregatorType_startedAt: {
           aggregatorRoundId: externalRoundId,
@@ -74,7 +74,7 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
       referenceTime.getTime() + windowHours * 60 * 60 * 1000,
     );
 
-    const result = await this.prisma.casinoGameRound.findFirst({
+    const result = await this.tx.casinoGameRound.findFirst({
       where: {
         aggregatorRoundId: externalRoundId,
         aggregatorType,
@@ -94,7 +94,7 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
     externalRoundId: string,
     aggregatorType: GameAggregatorType,
   ): Promise<GameRound | null> {
-    const result = await this.prisma.casinoGameRound.findFirst({
+    const result = await this.tx.casinoGameRound.findFirst({
       where: {
         aggregatorRoundId: externalRoundId,
         aggregatorType,
@@ -150,7 +150,7 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
 
     if (Object.keys(updateData).length === 0) return;
 
-    await this.prisma.casinoGameRound.update({
+    await this.tx.casinoGameRound.update({
       where: {
         id_startedAt: {
           id,
@@ -166,7 +166,7 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
     startedAt: Date,
     meta: GameResultMeta,
   ): Promise<void> {
-    await this.prisma.casinoGameRound.update({
+    await this.tx.casinoGameRound.update({
       where: {
         id_startedAt: {
           id,
@@ -185,7 +185,7 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
     if (id_startedAt.length === 0) return;
 
     for (const item of id_startedAt) {
-      await this.prisma.casinoGameRound.update({
+      await this.tx.casinoGameRound.update({
         where: {
           id_startedAt: {
             id: item.id,
@@ -202,7 +202,7 @@ export class GameRoundRepository implements GameRoundRepositoryPort {
   async findByIdForPostProcess(
     id: bigint,
   ): Promise<GameRoundPostProcessContext | null> {
-    const result = await this.prisma.casinoGameRound.findFirst({
+    const result = await this.tx.casinoGameRound.findFirst({
       where: { id },
       include: {
         gameSession: {

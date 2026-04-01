@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { TransactionHost } from '@nestjs-cls/transactional';
-import { PrismaTransactionalAdapter } from 'src/infrastructure/prisma/prisma.module';
+import { Transactional, InjectTransaction } from '@nestjs-cls/transactional';
+import { type PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
 import { RewardSourceType, WageringTargetType, ExchangeCurrencyCode } from '@prisma/client';
 import { COUPON_REPOSITORY_TOKEN } from '../../core/ports/coupon.repository.token';
 import type { CouponRepositoryPort } from '../../core/ports/coupon.repository.port';
@@ -31,7 +31,8 @@ export class ApplyCouponService {
     private readonly snowflakeService: SnowflakeService,
     private readonly redisService: RedisService,
     private readonly getCouponConfigService: GetCouponConfigService,
-    private readonly txHost: TransactionHost<PrismaTransactionalAdapter>,
+    @InjectTransaction()
+    private readonly tx: PrismaTransaction,
   ) { }
 
   private readonly logger = new Logger(ApplyCouponService.name);
@@ -84,68 +85,8 @@ export class ApplyCouponService {
     }
 
     try {
-      // 4. 트랜잭션 내부에서 정합성 보장 로직 수행
-      return await this.txHost.withTransaction(async () => {
-        // 락 획득 후 최신 상태로 다시 조회하여 Race Condition 방지
-        const currentCouponId = coupon!.id; // line 65에서 null 체크됨
-        coupon = await this.couponRepository.findById(currentCouponId);
-        if (!coupon) {
-          throw new CouponNotFoundException();
-        }
-
-        // 5. 유저별 사용 횟수 및 허용 리스트 확인
-        const [userUsageCount, isUserInAllowlist] = await Promise.all([
-          this.userCouponRepository.countUserCouponUsage(userId, coupon.id),
-          this.couponRepository.isUserInAllowlist(coupon.id, userId),
-        ]);
-
-        // 6. 엔티티 레벨 유효성 검증
-        coupon.validateEligibility({
-          userId,
-          userUsageCount,
-          isUserInAllowlist,
-          now,
-        });
-
-        // ⭐ [추가 로직] 유저의 대표 통화와 일치하는 보상만 필터링
-        const matchedRewards = coupon.rewards.filter(
-          (r) => r.currency === userCurrency,
-        );
-
-        if (matchedRewards.length === 0) {
-          throw new CouponCurrencyMismatchException();
-        }
-
-        // 7. 사용 처리 및 이력 기록
-        coupon.incrementUsage();
-        const savedCoupon = await this.couponRepository.save(coupon);
-
-        const { id: usageRecordId } = this.snowflakeService.generate();
-        await this.userCouponRepository.recordUsage({
-          id: usageRecordId,
-          userId,
-          couponId: coupon.id,
-          usedAt: now,
-        });
-
-        // 8. 보상 즉시 지급 및 수령 (Reward Module - Instant Grant)
-        for (const reward of matchedRewards) {
-          await this.instantGrantRewardService.execute({
-            userId,
-            sourceType: RewardSourceType.COUPON,
-            sourceId: coupon.id,
-            rewardType: reward.rewardType,
-            currency: reward.currency,
-            amount: reward.amount,
-            wageringTargetType: WageringTargetType.AMOUNT,
-            wageringMultiplier: reward.wageringMultiplier ?? undefined,
-            maxCashConversion: reward.maxCashConversion ?? undefined,
-            reason: `Coupon applied: ${coupon.code}`,
-          });
-        }
-
-        return savedCoupon;
-      });
+      // 4. 트랜잭션 내부에서 정합성 보장 로직 수행 (별도 메서드로 위임하여 프록시/데코레이터 활용)
+      return await this.applyInTransaction(userId, coupon, userCurrency, now);
     } finally {
       // 9. Safety Unlock: 본인 소유의 락만 해제
       await this.redisService.eval(
@@ -155,5 +96,77 @@ export class ApplyCouponService {
         lockValue,
       );
     }
+  }
+
+  /**
+   * [Transaction] 실제 쿠폰 적용 및 보상 지급 처리 (Atomic 가 보장되어야 함)
+   */
+  @Transactional()
+  private async applyInTransaction(
+    userId: bigint,
+    coupon: Coupon,
+    userCurrency: ExchangeCurrencyCode,
+    now: Date,
+  ): Promise<Coupon> {
+    // 락 획득 후 최신 상태로 다시 조회하여 Race Condition 방지
+    const currentCouponId = coupon.id;
+    const freshCoupon = await this.couponRepository.findById(currentCouponId);
+
+    if (!freshCoupon) {
+      throw new CouponNotFoundException();
+    }
+
+    // 5. 유저별 사용 횟수 및 허용 리스트 확인
+    const [userUsageCount, isUserInAllowlist] = await Promise.all([
+      this.userCouponRepository.countUserCouponUsage(userId, freshCoupon.id),
+      this.couponRepository.isUserInAllowlist(freshCoupon.id, userId),
+    ]);
+
+    // 6. 엔티티 레벨 유효성 검증
+    freshCoupon.validateEligibility({
+      userId,
+      userUsageCount,
+      isUserInAllowlist,
+      now,
+    });
+
+    // ⭐ 유저의 대표 통화와 일치하는 보상만 필터링
+    const matchedRewards = freshCoupon.rewards.filter(
+      (r) => r.currency === userCurrency,
+    );
+
+    if (matchedRewards.length === 0) {
+      throw new CouponCurrencyMismatchException();
+    }
+
+    // 7. 사용 처리 및 이력 기록
+    freshCoupon.incrementUsage();
+    const savedCoupon = await this.couponRepository.save(freshCoupon);
+
+    const { id: usageRecordId } = this.snowflakeService.generate();
+    await this.userCouponRepository.recordUsage({
+      id: usageRecordId,
+      userId,
+      couponId: freshCoupon.id,
+      usedAt: now,
+    });
+
+    // 8. 보상 즉시 지급 및 수령 (Reward Module - Instant Grant)
+    for (const reward of matchedRewards) {
+      await this.instantGrantRewardService.execute({
+        userId,
+        sourceType: RewardSourceType.COUPON,
+        sourceId: freshCoupon.id,
+        rewardType: reward.rewardType,
+        currency: reward.currency,
+        amount: reward.amount,
+        wageringTargetType: WageringTargetType.AMOUNT,
+        wageringMultiplier: reward.wageringMultiplier ?? undefined,
+        maxCashConversion: reward.maxCashConversion ?? undefined,
+        reason: `Coupon applied: ${freshCoupon.code}`,
+      });
+    }
+
+    return savedCoupon;
   }
 }

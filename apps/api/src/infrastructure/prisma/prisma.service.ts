@@ -10,6 +10,7 @@ import kyselyExtension, {
 } from 'prisma-extension-kysely';
 
 export type ExtendedClient = ReturnType<PrismaService['createExtendedClient']>;
+export type PrismaTransaction = ExtendedClient;
 import {
   CamelCasePlugin,
   Kysely,
@@ -20,6 +21,12 @@ import {
 } from 'kysely';
 import { DB } from '../../generated/kysely/kysely-types';
 import { Prisma, PrismaClient } from '@prisma/client';
+
+/**
+ * 확장된 Prisma Client를 위한 주입 토큰
+ * ClsModule 등에서 트랜잭션 어댑터 설정을 위해 참조합니다.
+ */
+export const EXTENDED_PRISMA_CLIENT = Symbol('EXTENDED_PRISMA_CLIENT');
 
 /**
  * Prisma 데이터베이스 서비스 (Kysely 확장 포함)
@@ -51,8 +58,7 @@ import { Prisma, PrismaClient } from '@prisma/client';
 @Injectable()
 export class PrismaService
   extends PrismaClient<Prisma.PrismaClientOptions>
-  implements OnModuleInit, OnModuleDestroy
-{
+  implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(PrismaService.name);
   private _extendedClient: ReturnType<typeof this.createExtendedClient> | null =
     null;
