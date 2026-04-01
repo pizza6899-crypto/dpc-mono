@@ -152,4 +152,14 @@ export class PrismaUserArtifactRepository implements UserArtifactRepositoryPort 
     });
     return this.mapper.toEntity(result);
   }
+
+  /**
+   * 복수 유물 물리적 삭제
+   */
+  async deleteAll(ids: bigint[]): Promise<void> {
+    if (!ids || ids.length === 0) return;
+    await this.tx.userArtifact.deleteMany({
+      where: { id: { in: ids } },
+    });
+  }
 }

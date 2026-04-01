@@ -48,4 +48,9 @@ export abstract class UserArtifactRepositoryPort {
    * 유물 정보 업데이트 (장착/해제 등)
    */
   abstract update(entity: UserArtifact): Promise<UserArtifact>;
+
+  /**
+   * 여러 개의 유물 일괄 삭제 (합성 등 재료 소모 시 사용)
+   */
+  abstract deleteAll(ids: bigint[]): Promise<void>;
 }
