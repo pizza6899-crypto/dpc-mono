@@ -126,6 +126,13 @@ export enum MessageCode {
     PROMOTION_ALREADY_USED = 'PROMOTION_ALREADY_USED', // 이미 사용된 프로모션일 때
     PROMOTION_LANGUAGE_REQUIRED = 'PROMOTION_LANGUAGE_REQUIRED', // 언어 설정이 필요한 경우
     PROMOTION_CURRENCY_REQUIRED = 'PROMOTION_CURRENCY_REQUIRED', // 통화 설정이 필요한 경우
+    
+    // --- 배너 관련 (Banner) ---
+    BANNER_NOT_FOUND = 'BANNER_NOT_FOUND', // 배너를 찾을 수 없을 때
+    BANNER_TRANSLATION_NOT_FOUND = 'BANNER_TRANSLATION_NOT_FOUND', // 배너 번역을 찾을 수 없을 때
+    BANNER_DUPLICATE_TRANSLATION = 'BANNER_DUPLICATE_TRANSLATION', // 중복된 배너 번역이 있을 때
+    BANNER_INVALID_DATE_RANGE = 'BANNER_INVALID_DATE_RANGE', // 노출 날짜 범위가 유효하지 않을 때
+    BANNER_INVALID_STATE = 'BANNER_INVALID_STATE', // 배너 상태가 유효하지 않을 때
 
     // --- 쓰로틀링 관련 (Throttle) ---
     THROTTLE_TOO_MANY_REQUESTS = 'THROTTLE_TOO_MANY_REQUESTS', // 요청 한도 초과

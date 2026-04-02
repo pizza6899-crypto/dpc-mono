@@ -1,8 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { Banner, BannerRepositoryPort } from '../ports/banner.repository.port';
+import type { Banner } from '../domain/banner.entity';
+import type { Language } from '@prisma/client';
+import type { BannerRepositoryPort } from '../ports/banner.repository.port';
 import { BannerMapper } from './banner.mapper';
+import {
+  BannerNotFoundException,
+  BannerInvalidStateException,
+} from '../domain/banner.errors';
 
 @Injectable()
 export class BannerRepository implements BannerRepositoryPort {
@@ -22,33 +28,31 @@ export class BannerRepository implements BannerRepositoryPort {
 
   async getById(id: bigint): Promise<Banner> {
     const banner = await this.findById(id);
-    if (!banner) {
-      throw new Error('Banner not found');
-    }
+    if (!banner) throw new BannerNotFoundException();
     return banner;
   }
 
   async list(options?: {
     isActive?: boolean;
-    language?: string;
+    language?: Language;
     now?: Date;
     limit?: number;
     offset?: number;
+    includeDeleted?: boolean;
   }): Promise<Banner[]> {
     const where: any = {};
     if (options?.isActive !== undefined) where.isActive = options.isActive;
     if (options?.now) {
       where.startDate = { lte: options.now };
       where.endDate = { gte: options.now };
-      where.deletedAt = null;
     }
+    // 기본적으로 삭제된 레코드는 제외
+    if (!options?.includeDeleted) where.deletedAt = null;
 
     const result = await this.tx.banner.findMany({
       where,
       include: {
-        translations: {
-          where: options?.language ? { language: options.language } : {},
-        },
+        translations: options?.language ? { where: { language: options.language } } : true,
       },
       orderBy: { order: 'asc' },
       take: options?.limit,
@@ -58,14 +62,14 @@ export class BannerRepository implements BannerRepositoryPort {
     return result.map((row) => this.mapper.toDomain(row as any));
   }
 
-  async count(options?: { isActive?: boolean; now?: Date }): Promise<number> {
+  async count(options?: { isActive?: boolean; now?: Date; includeDeleted?: boolean }): Promise<number> {
     const where: any = {};
     if (options?.isActive !== undefined) where.isActive = options.isActive;
     if (options?.now) {
       where.startDate = { lte: options.now };
       where.endDate = { gte: options.now };
-      where.deletedAt = null;
     }
+    if (!options?.includeDeleted) where.deletedAt = null;
     return await this.tx.banner.count({ where });
   }
 
@@ -88,7 +92,7 @@ export class BannerRepository implements BannerRepositoryPort {
 
   async update(banner: Banner): Promise<Banner> {
     if (!banner.id) {
-      throw new Error('Banner id is required for update');
+      throw new BannerInvalidStateException('Banner id is required for update');
     }
 
     const data = this.mapper.toPrisma(banner);
@@ -111,6 +115,7 @@ export class BannerRepository implements BannerRepositoryPort {
   }
 
   async delete(id: bigint): Promise<void> {
-    await this.tx.banner.delete({ where: { id } });
+    // soft-delete: set deletedAt timestamp
+    await this.tx.banner.update({ where: { id }, data: { deletedAt: new Date() } });
   }
 }

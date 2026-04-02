@@ -42,7 +42,7 @@ model BannerTranslation {
   // 텍스트 정보
   title   String? @map("title") // 배너 제목 (접근성 및 SEO용)
   altText String? @map("alt_text") // 이미지 대체 텍스트
-
+  
   // 언어별 링크 (선택적 확장)
   linkUrl String? @map("link_url") // 언어별 링크 (공통 linkUrl override)
 

@@ -6,11 +6,11 @@ import { Language } from '@prisma/client';
 export class BannerTranslationRequestDto {
   @ApiProperty({ enum: Language })
   @IsEnum(Language)
-  language: Language;
+  language!: Language;
 
   @ApiProperty({ description: '번역 활성화 여부' })
   @IsBoolean()
-  isActive: boolean;
+  isActive!: boolean;
 
   @ApiPropertyOptional({ description: '직접 이미지 URL' })
   @IsOptional()
@@ -26,12 +26,6 @@ export class BannerTranslationRequestDto {
   @IsOptional()
   @IsString()
   altText?: string;
-
-  @ApiPropertyOptional({ description: '설명' })
-  @IsOptional()
-  @IsString()
-  description?: string;
-
   @ApiPropertyOptional({ description: '언어별 링크' })
   @IsOptional()
   @IsString()
@@ -46,11 +40,11 @@ export class CreateBannerAdminRequestDto {
 
   @ApiProperty({ description: '활성 여부' })
   @IsBoolean()
-  isActive: boolean;
+  isActive!: boolean;
 
   @ApiProperty({ description: '정렬 순서' })
   @IsNumber()
-  order: number;
+  order!: number;
 
   @ApiPropertyOptional({ description: '공통 링크 URL' })
   @IsOptional()
@@ -67,9 +61,14 @@ export class CreateBannerAdminRequestDto {
   @IsDateString()
   endDate?: string;
 
+  @ApiPropertyOptional({ description: '삭제된 시간 (ISO 8601)' })
+  @IsOptional()
+  @IsDateString()
+  deletedAt?: string;
+
   @ApiProperty({ type: [BannerTranslationRequestDto] })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => BannerTranslationRequestDto)
-  translations: BannerTranslationRequestDto[];
+  translations!: BannerTranslationRequestDto[];
 }

@@ -1,5 +1,6 @@
 import type { Language } from '@prisma/client';
-import type { Banner, BannerTranslation } from '../domain/banner.entity';
+import type { Banner as DomainBanner } from '../domain/banner.entity';
+export type Banner = DomainBanner;
 
 export const BANNER_REPOSITORY = 'BANNER_REPOSITORY';
 
@@ -12,8 +13,9 @@ export interface BannerRepositoryPort {
     now?: Date;
     limit?: number;
     offset?: number;
+    includeDeleted?: boolean;
   }): Promise<Banner[]>;
-  count(options?: { isActive?: boolean; now?: Date }): Promise<number>;
+  count(options?: { isActive?: boolean; now?: Date; includeDeleted?: boolean }): Promise<number>;
   create(banner: Banner): Promise<Banner>;
   update(banner: Banner): Promise<Banner>;
   delete(id: bigint): Promise<void>;

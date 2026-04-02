@@ -21,9 +21,8 @@ export class UpdateBannerService {
     translations?: Banner['translations'];
   }): Promise<Banner> {
     const existing = await this.repository.getById(params.id);
-
-    const banner: Banner = {
-      ...existing,
+    // Use domain entity update method to apply changes
+    existing.update({
       name: params.name ?? existing.name,
       isActive: params.isActive ?? existing.isActive,
       order: params.order ?? existing.order,
@@ -32,11 +31,8 @@ export class UpdateBannerService {
       endDate: params.endDate ?? existing.endDate,
       deletedAt: params.deletedAt ?? existing.deletedAt,
       translations: params.translations ?? existing.translations,
-      id: existing.id,
-      createdAt: existing.createdAt,
-      updatedAt: existing.updatedAt,
-    };
+    });
 
-    return this.repository.update(banner);
+    return this.repository.update(existing);
   }
 }

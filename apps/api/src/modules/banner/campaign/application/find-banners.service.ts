@@ -2,10 +2,11 @@ import { Inject, Injectable } from '@nestjs/common';
 import { BANNER_REPOSITORY, type Banner } from '../ports/banner.repository.port';
 import type { BannerRepositoryPort } from '../ports/banner.repository.port';
 import { PaginatedData } from 'src/common/http/types';
+import type { Language } from '@prisma/client';
 
 interface FindBannersParams {
   isActive?: boolean;
-  language?: string;
+  language?: Language;
   page?: number;
   limit?: number;
 }

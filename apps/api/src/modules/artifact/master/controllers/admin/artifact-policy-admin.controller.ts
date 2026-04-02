@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Patch } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { UserRoleType } from '@prisma/client';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { ApiStandardResponse } from 'src/common/http/decorators/api-response.decorator';
@@ -15,6 +15,7 @@ import { UpdateArtifactSynthesisConfigsAdminService } from '../../application/up
 @ApiTags('Admin Artifact Configurations')
 @Controller('admin/artifact/policy')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
+@ApiBearerAuth()
 export class ArtifactPolicyAdminController {
   constructor(
     private readonly getPolicyService: GetArtifactPolicyAdminService,

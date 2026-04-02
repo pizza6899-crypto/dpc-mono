@@ -3,7 +3,8 @@ import type {
   Banner as PrismaBanner,
   BannerTranslation as PrismaBannerTranslation,
 } from '@prisma/client';
-import type { Banner, BannerTranslation } from '../ports/banner.repository.port';
+import type { BannerTranslation } from '../domain/banner.entity';
+import { Banner } from '../domain/banner.entity';
 
 type PrismaBannerWithTranslations = PrismaBanner & {
   translations: PrismaBannerTranslation[];
@@ -12,28 +13,29 @@ type PrismaBannerWithTranslations = PrismaBanner & {
 @Injectable()
 export class BannerMapper {
   toDomain(prismaBanner: PrismaBannerWithTranslations): Banner {
-    return {
+    const translations: BannerTranslation[] = prismaBanner.translations.map((t) => ({
+      id: t.id,
+      language: t.language,
+      isActive: t.isActive,
+      imageUrl: t.imageUrl,
+      title: t.title,
+      altText: t.altText,
+      linkUrl: t.linkUrl,
+    }));
+
+    return Banner.create({
       id: prismaBanner.id,
-      name: prismaBanner.name,
+      name: prismaBanner.name ?? null,
       isActive: prismaBanner.isActive,
       order: prismaBanner.order,
-      linkUrl: prismaBanner.linkUrl,
-      startDate: prismaBanner.startDate,
-      endDate: prismaBanner.endDate,
-      deletedAt: prismaBanner.deletedAt,
-      translations: prismaBanner.translations.map((t) => ({
-        id: t.id,
-        language: t.language,
-        isActive: t.isActive,
-        imageUrl: t.imageUrl,
-        title: t.title,
-        altText: t.altText,
-        description: t.description,
-        linkUrl: t.linkUrl,
-      })),
-      createdAt: prismaBanner.createdAt,
-      updatedAt: prismaBanner.updatedAt,
-    };
+      linkUrl: prismaBanner.linkUrl ?? null,
+      startDate: prismaBanner.startDate ?? null,
+      endDate: prismaBanner.endDate ?? null,
+      deletedAt: prismaBanner.deletedAt ?? null,
+      translations,
+      createdAt: prismaBanner.createdAt ?? null,
+      updatedAt: prismaBanner.updatedAt ?? null,
+    });
   }
 
   toPrisma(banner: Banner): any {
@@ -55,7 +57,6 @@ export class BannerMapper {
       imageUrl: t.imageUrl,
       title: t.title,
       altText: t.altText,
-      description: t.description,
       linkUrl: t.linkUrl,
     }));
   }

@@ -3,10 +3,10 @@ import { Language } from '@prisma/client';
 
 export class BannerTranslationAdminResponseDto {
   @ApiProperty({ enum: Language })
-  language: Language;
+  language!: Language;
 
   @ApiProperty({ description: '언어별 활성화 여부' })
-  isActive: boolean;
+  isActive!: boolean;
 
   @ApiPropertyOptional({ description: '직접 이미지 URL' })
   imageUrl?: string;
@@ -16,26 +16,22 @@ export class BannerTranslationAdminResponseDto {
 
   @ApiPropertyOptional({ description: 'ALT 텍스트' })
   altText?: string;
-
-  @ApiPropertyOptional({ description: '설명' })
-  description?: string;
-
   @ApiPropertyOptional({ description: '언어별 링크' })
   linkUrl?: string;
 }
 
 export class BannerAdminResponseDto {
   @ApiProperty({ description: 'ID' })
-  id: string;
+  id!: string;
 
   @ApiPropertyOptional({ description: '관리자용 이름' })
   name?: string;
 
   @ApiProperty({ description: '활성 여부' })
-  isActive: boolean;
+  isActive!: boolean;
 
   @ApiProperty({ description: '정렬 순서' })
-  order: number;
+  order!: number;
 
   @ApiPropertyOptional({ description: '공통 링크 URL' })
   linkUrl?: string;
@@ -50,5 +46,5 @@ export class BannerAdminResponseDto {
   deletedAt?: string;
 
   @ApiProperty({ type: [BannerTranslationAdminResponseDto] })
-  translations: BannerTranslationAdminResponseDto[];
+  translations!: BannerTranslationAdminResponseDto[];
 }

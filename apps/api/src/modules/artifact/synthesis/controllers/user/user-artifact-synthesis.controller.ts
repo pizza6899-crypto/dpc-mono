@@ -1,9 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { UserRoleType } from '@prisma/client';
-import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
-import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 import { ApiStandardErrors, ApiStandardResponse } from 'src/common/http/decorators/api-response.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
@@ -23,6 +21,7 @@ import { SynthesizeArtifactService } from '../../application/synthesize-artifact
 @ApiTags('User Artifact Synthesis')
 @Controller('user/artifact/synthesis')
 @RequireRoles(UserRoleType.USER)
+@ApiBearerAuth()
 @ApiStandardErrors()
 export class UserArtifactSynthesisController {
   constructor(

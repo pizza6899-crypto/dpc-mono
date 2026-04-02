@@ -7,7 +7,6 @@ export interface BannerTranslation {
   imageUrl?: string | null;
   title?: string | null;
   altText?: string | null;
-  description?: string | null;
   linkUrl?: string | null;
 }
 

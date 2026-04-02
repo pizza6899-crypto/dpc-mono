@@ -29,7 +29,7 @@ import {
   ApiStandardResponse,
 } from 'src/common/http/decorators/api-response.decorator';
 import { PaginationQueryDto } from 'src/common/http/types';
-import type { Banner } from '../../ports';
+import type { Banner } from '../../domain/banner.entity';
 
 @ApiTags('Admin Banners')
 @Controller('admin/banners')
@@ -103,7 +103,6 @@ export class BannerAdminController {
         imageUrl: t.imageUrl ?? null,
         title: t.title ?? null,
         altText: t.altText ?? null,
-        description: t.description ?? null,
         linkUrl: t.linkUrl ?? null,
       })),
     });
@@ -142,7 +141,6 @@ export class BannerAdminController {
             imageUrl: t.imageUrl ?? null,
             title: t.title ?? null,
             altText: t.altText ?? null,
-            description: t.description ?? null,
             linkUrl: t.linkUrl ?? null,
           }))
         : undefined,
@@ -179,7 +177,6 @@ export class BannerAdminController {
         imageUrl: t.imageUrl ?? undefined,
         title: t.title ?? undefined,
         altText: t.altText ?? undefined,
-        description: t.description ?? undefined,
         linkUrl: t.linkUrl ?? undefined,
       })),
     };

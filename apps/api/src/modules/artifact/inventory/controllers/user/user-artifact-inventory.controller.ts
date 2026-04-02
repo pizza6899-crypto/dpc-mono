@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { CurrentUser } from 'src/common/auth/decorators/current-user.decorator';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
@@ -30,6 +30,7 @@ import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
 @ApiTags('User Artifact Inventory')
 @Controller('user/artifact')
 @RequireRoles(UserRoleType.USER)
+@ApiBearerAuth()
 @ApiStandardErrors()
 export class UserArtifactInventoryController {
   constructor(
