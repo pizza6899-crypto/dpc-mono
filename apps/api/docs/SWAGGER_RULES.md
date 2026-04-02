@@ -12,6 +12,12 @@
 - 보호된(인증 필요) 컨트롤러/엔드포인트는 클래스 레벨에 `@ApiBearerAuth()`를 적용합니다.
 - 퍼블릭 엔드포인트는 `@Public()` 데코레이터를 유지합니다.
 
+1.1. 쿠키 기반 인증
+- 프로젝트에서 세션/쿠키 기반 인증을 사용하는 경우 Swagger에 `@ApiCookieAuth()`를 사용해 인증 방식과 쿠키 이름을 명시합니다.
+- 참고: 프로젝트의 `RequireRoles` / `Perms` 데코레이터는 내부적으로 `ApiCookieAuth()`를 적용합니다(`src/common/auth/decorators/roles.decorator.ts`). 따라서 `@RequireRoles(...)`를 사용하면 Swagger에 쿠키 인증이 표시됩니다.
+- 권장: 인증이 필요한 컨트롤러(특히 admin/user 권한이 필요한 경우)는 클래스 레벨에 인증 데코레이터(`@ApiCookieAuth()` 또는 `@ApiBearerAuth()`)를 명시적으로 표기하세요.
+
+
 2. 응답/오류 스키마
 - 성공 응답은 `@ApiResponse` 또는 공통 래퍼(`@ApiStandardResponse` 등)를 사용해 `type`을 명시합니다.
 - 대표적인 오류 응답(400/401/403/404/409)은 각 엔드포인트에 최소 하나 이상 명시합니다. (예: `@ApiResponse({ status: 401, description: 'Unauthorized' })`)
@@ -52,6 +58,22 @@
 	- `public/*` : 인증 없이 공개되는 엔드포인트(예: `public/banners`)
 	- 사용자 API는 별도의 접두사 없이 모듈 경로 하위에 둡니다(예: `banners` 대신 `public/banners` 사용 금지 — 공개는 `public/`로 명시).
 - 컨트롤러가 전부 공개용이면 클래스 레벨에 `@Public()`을 적용합니다.
+
+8. Audit 로깅(AuditLog) 사용 규칙
+- 중요한 상태 변경(생성/수정/삭제)이나 보안·규정상 감사가 필요한 엔드포인트에는 `@AuditLog()`(또는 프로젝트의 감사 데코레이터)를 적용합니다.
+- 적용 위치: 메서드 레벨에서 구체적인 `action`과 `extractMetadata`를 설정하는 것을 권장합니다. 일부 경우(모듈 전체에 일괄 적용 필요) 클래스 레벨 적용을 고려하세요.
+- 예시:
+	```ts
+	@Post()
+	@AuditLog({
+		type: LogType.ACTIVITY,
+		category: 'BANNER',
+		action: 'BANNER_CREATE_ADMIN',
+		extractMetadata: (req, args, result) => ({ id: result?.id }),
+	})
+	async create(@Body() dto: CreateBannerAdminRequestDto) { ... }
+	```
+- 참고: 퍼블릭(read-only) 엔드포인트는 일반적으로 감사 로그를 남기지 않지만, 사용성·모니터링 관점에서 필요하면 적용할 수 있습니다. 관리자 및 사용자 행위 중 중요한 작업에는 반드시 Audit 데코레이터를 고려하세요.
 
 참고
 - 이 문서는 코드베이스를 읽고 자동 추출한 권장 규칙 초안입니다. 적용 전 팀 리뷰를 권장합니다.
