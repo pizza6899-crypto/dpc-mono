@@ -62,11 +62,6 @@ export class CreateBannerAdminRequestDto {
   @IsDateString()
   endDate?: string;
 
-  @ApiPropertyOptional({ description: '배너 공통 이미지 파일 ID (optional) / Banner-level image file id (applies when translation image missing)', example: '123456789' })
-  @IsOptional()
-  @IsString()
-  imageFileId?: string | null;
-
   @ApiPropertyOptional({ description: '삭제된 시간 (ISO 8601) / Deleted at (ISO 8601)', example: null })
   @IsOptional()
   @IsDateString()

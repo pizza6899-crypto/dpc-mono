@@ -50,6 +50,7 @@ import { ChatModule } from './modules/chat/chat.module';
 
 import { UniversalLogModule } from './modules/universal-log/universal-log.module';
 import { SolanaBlockchainModule } from './infrastructure/blockchain/solana/solana-blockchain.module';
+import { BannerModule } from './modules/banner/banner.module';
 
 @Module({
   imports: [
@@ -88,10 +89,10 @@ import { SolanaBlockchainModule } from './infrastructure/blockchain/solana/solan
     CouponModule,
     CharacterModule,
     ArtifactModule,
-
     UserAnalyticsModule,
     AdminMemoModule,
     ChatModule,
+    BannerModule,
   ],
   providers: [
     Reflector,
