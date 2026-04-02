@@ -12,7 +12,7 @@ import { BannerRepository } from './infrastructure/banner.repository';
 import { BannerMapper } from './infrastructure/banner.mapper';
 
 // Ports
-import { BANNER_REPOSITORY } from './ports';
+import { BANNER_REPOSITORY } from './ports/banner.repository.port';
 
 // Controllers
 import { BannerUserController } from './controllers/user/banner-user.controller';

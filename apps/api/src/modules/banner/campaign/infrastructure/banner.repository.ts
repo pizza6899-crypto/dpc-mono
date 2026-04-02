@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectTransaction } from '@nestjs-cls/transactional';
 import type { PrismaTransaction } from 'src/infrastructure/prisma/prisma.module';
-import { Banner, BannerRepositoryPort } from '../ports';
+import { Banner, BannerRepositoryPort } from '../ports/banner.repository.port';
 import { BannerMapper } from './banner.mapper';
 
 @Injectable()

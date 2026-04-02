@@ -3,7 +3,7 @@ import type {
   Banner as PrismaBanner,
   BannerTranslation as PrismaBannerTranslation,
 } from '@prisma/client';
-import type { Banner, BannerTranslation } from '../ports';
+import type { Banner, BannerTranslation } from '../ports/banner.repository.port';
 
 type PrismaBannerWithTranslations = PrismaBanner & {
   translations: PrismaBannerTranslation[];

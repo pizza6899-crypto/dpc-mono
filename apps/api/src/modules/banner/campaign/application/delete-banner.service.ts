@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { BANNER_REPOSITORY } from '../ports';
-import type { BannerRepositoryPort } from '../ports';
+import { BANNER_REPOSITORY } from '../ports/banner.repository.port';
+import type { BannerRepositoryPort } from '../ports/banner.repository.port';
 
 @Injectable()
 export class DeleteBannerService {

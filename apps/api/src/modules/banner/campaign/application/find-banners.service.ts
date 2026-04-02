@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { BANNER_REPOSITORY, type Banner } from '../ports';
-import type { BannerRepositoryPort } from '../ports';
+import { BANNER_REPOSITORY, type Banner } from '../ports/banner.repository.port';
+import type { BannerRepositoryPort } from '../ports/banner.repository.port';
 import { PaginatedData } from 'src/common/http/types';
 
 interface FindBannersParams {
