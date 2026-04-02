@@ -17,17 +17,20 @@ export class CreateBannerService {
     linkUrl?: string | null;
     startDate?: Date | null;
     endDate?: Date | null;
-    translations: Array<any>;
-  }): Promise<InstanceType<typeof Banner>> {
+    translations?: Array<any>;
+  }): Promise<Banner> {
+    const translations = Array.isArray(params.translations)
+      ? params.translations
+      : [];
+
     const banner = Banner.create({
-      id: params.id as any,
       name: params.name ?? null,
       isActive: params.isActive ?? true,
       order: params.order ?? 0,
       linkUrl: params.linkUrl ?? null,
       startDate: params.startDate ?? null,
       endDate: params.endDate ?? null,
-      translations: params.translations ?? [],
+      translations,
       createdAt: null,
       updatedAt: null,
     });
