@@ -21,6 +21,15 @@
 - Enum 필드는 `enum`과 `description`을 함께 표기하여 의미를 설명합니다.
 - 복합 객체(Record, Map, nested object)는 가능하면 별도 DTO로 분해하여 `type`으로 지정합니다.
 
+3.1. 다국어(한국어/영어) 표기
+- API 문서는 국내 개발자와 외부(영문) 소비자 모두를 고려하여 `description`에 한국어와 영어를 병기합니다.
+- 형식 권장: `한국어 설명 / English description` (슬래시로 구분).
+- 예시:
+	```ts
+	@ApiProperty({ description: '활성 여부 / Active flag', example: true })
+	isActive: boolean;
+	```
+
 4. 페이징/컬렉션
 - 페이지네이션 응답은 공통 데코레이터(`@ApiPaginatedResponse`)를 사용해 `data`의 item 타입을 명시합니다.
 - 배열 응답에는 `isArray: true` 또는 `type: [ItemDto]`를 명확히 지정합니다.
