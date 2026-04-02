@@ -1,27 +1,44 @@
 import { Module } from '@nestjs/common';
+
 // Application
-// TODO: import services from ./application
+import { FindBannersService } from './application/find-banners.service';
+import { GetBannerByIdService } from './application/get-banner-by-id.service';
+import { CreateBannerService } from './application/create-banner.service';
+import { UpdateBannerService } from './application/update-banner.service';
+import { DeleteBannerService } from './application/delete-banner.service';
 
 // Infrastructure
-// TODO: import { BannerRepository, BannerMapper } from './infrastructure';
+import { BannerRepository } from './infrastructure/banner.repository';
+import { BannerMapper } from './infrastructure/banner.mapper';
 
 // Ports
-// TODO: import { BANNER_REPOSITORY } from './ports';
+import { BANNER_REPOSITORY } from './ports';
 
 // Controllers
-// TODO: import { BannerUserController, BannerAdminController } from './controllers';
+import { BannerUserController } from './controllers/user/banner-user.controller';
+import { BannerAdminController } from './controllers/admin/banner-admin.controller';
 
 @Module({
   imports: [],
   providers: [
-    // TODO: add application services
-    // TODO: add { provide: BANNER_REPOSITORY, useClass: BannerRepository }
+    BannerMapper,
+    {
+      provide: BANNER_REPOSITORY,
+      useClass: BannerRepository,
+    },
+    FindBannersService,
+    GetBannerByIdService,
+    CreateBannerService,
+    UpdateBannerService,
+    DeleteBannerService,
   ],
-  controllers: [
-    // TODO: BannerUserController, BannerAdminController
-  ],
+  controllers: [BannerUserController, BannerAdminController],
   exports: [
-    // TODO: export services and mappers
+    FindBannersService,
+    GetBannerByIdService,
+    CreateBannerService,
+    UpdateBannerService,
+    DeleteBannerService,
   ],
 })
 export class BannerCampaignModule {}

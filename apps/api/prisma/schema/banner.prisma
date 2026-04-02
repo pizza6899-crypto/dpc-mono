@@ -35,9 +35,8 @@ model BannerTranslation {
   language  Language // 지원 언어: EN, KO, JA
   isActive  Boolean  @default(true) @map("is_active") // 언어별 활성화 상태
 
-  // 이미지 파일 (File 모델 참조)
-  imageFileId BigInt? @map("image_file_id")
-  imageFile   File?   @relation(fields: [imageFileId], references: [id], onDelete: SetNull)
+  // 외부/직접 URL 허용 (유연성 높이기)
+  imageUrl String? @map("image_url")
 
   // 텍스트 정보
   title       String? @map("title") // 배너 제목 (접근성 및 SEO용)
