@@ -35,11 +35,16 @@ model AdminMemo {
     couponId BigInt? @map("coupon_id")
     coupon   Coupon? @relation(fields: [couponId], references: [id])
 
+    /// 배너 관련 메모 시 연결
+    bannerId BigInt? @map("banner_id")
+    banner   Banner? @relation(fields: [bannerId], references: [id])
+
     @@index([adminId])
     @@index([depositId])
     @@index([userId])
     @@index([promotionId])
     @@index([userPromotionId])
     @@index([couponId])
+    @@index([bannerId])
     @@map("admin_memos")
 }

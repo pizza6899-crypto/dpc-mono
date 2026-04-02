@@ -179,6 +179,10 @@ model User {
   userIntelligenceMetric    UserIntelligenceMetric?
   userIntelligenceHistories UserIntelligenceHistory[]
 
+  // 배너 관련 관계 추가
+  bannersCreated Banner[] @relation("BannerCreatedBy")
+  bannersUpdated Banner[] @relation("BannerUpdatedBy")
+
   @@map("users")
 }
 

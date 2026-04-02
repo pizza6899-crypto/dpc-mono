@@ -37,6 +37,9 @@ model File {
   // 파일 사용처 관계
   usages FileUsage[]
 
+  // 배너 이미지 사용 관계 추가
+  bannerTranslations BannerTranslation[]
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
