@@ -15,7 +15,7 @@ import { BannerMapper } from './infrastructure/banner.mapper';
 import { BANNER_REPOSITORY } from './ports/banner.repository.port';
 
 // Controllers
-import { BannerUserController } from './controllers/user/banner-user.controller';
+import { BannerUserController } from './controllers/public/banner-user.controller';
 import { BannerAdminController } from './controllers/admin/banner-admin.controller';
 
 @Module({
