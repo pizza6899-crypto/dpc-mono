@@ -15,7 +15,7 @@ import { BannerMapper } from './infrastructure/banner.mapper';
 import { BANNER_REPOSITORY } from './ports/banner.repository.port';
 
 // Controllers
-import { BannerUserController } from './controllers/public/banner-user.controller';
+import { BannerPublicController } from './controllers/public/banner-public.controller';
 import { BannerAdminController } from './controllers/admin/banner-admin.controller';
 
 @Module({
@@ -32,7 +32,7 @@ import { BannerAdminController } from './controllers/admin/banner-admin.controll
     UpdateBannerService,
     DeleteBannerService,
   ],
-  controllers: [BannerUserController, BannerAdminController],
+  controllers: [BannerPublicController, BannerAdminController],
   exports: [
     FindBannersService,
     GetBannerByIdService,

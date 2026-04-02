@@ -1,14 +1,14 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
 import { Public } from 'src/common/auth/decorators/roles.decorator';
 import { FindBannersService } from '../../application/find-banners.service';
 import { BannerResponseDto } from './dto/response/banner.response.dto';
 import { BannerListQueryDto } from './dto/request/banner-list.query.dto';
 import { Language } from '@prisma/client';
 
-@ApiTags('User Banners')
+@ApiTags('Public Banners')
 @Controller('banners')
-export class BannerUserController {
+export class BannerPublicController {
   constructor(private readonly findBannersService: FindBannersService) {}
 
   @Get()
