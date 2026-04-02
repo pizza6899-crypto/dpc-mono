@@ -7,7 +7,8 @@ import { BannerListQueryDto } from './dto/request/banner-list.query.dto';
 import { Language } from '@prisma/client';
 
 @ApiTags('Public Banners')
-@Controller('banners')
+@Public()
+@Controller('public/banners')
 export class BannerPublicController {
   constructor(private readonly findBannersService: FindBannersService) {}
 
