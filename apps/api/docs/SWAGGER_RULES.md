@@ -9,14 +9,10 @@
 요약 규칙
 
 1. 인증 표기
-- 보호된(인증 필요) 컨트롤러/엔드포인트는 클래스 레벨에 `@ApiBearerAuth()`를 적용합니다.
+- 본 프로젝트의 인증 방식은 **쿠키/세션 기반**입니다. 보호된(인증 필요) 컨트롤러/엔드포인트는 클래스 레벨에 `@ApiCookieAuth()`를 적용합니다.
 - 퍼블릭 엔드포인트는 `@Public()` 데코레이터를 유지합니다.
 
-1.1. 쿠키 기반 인증
-- 프로젝트에서 세션/쿠키 기반 인증을 사용하는 경우 Swagger에 `@ApiCookieAuth()`를 사용해 인증 방식과 쿠키 이름을 명시합니다.
-- 참고: 프로젝트의 `RequireRoles` / `Perms` 데코레이터는 내부적으로 `ApiCookieAuth()`를 적용합니다(`src/common/auth/decorators/roles.decorator.ts`). 따라서 `@RequireRoles(...)`를 사용하면 Swagger에 쿠키 인증이 표시됩니다.
-- 권장: 인증이 필요한 컨트롤러(특히 admin/user 권한이 필요한 경우)는 클래스 레벨에 인증 데코레이터(`@ApiCookieAuth()` 또는 `@ApiBearerAuth()`)를 명시적으로 표기하세요.
-
+- 참고: `RequireRoles(...)` 또는 `Perms(...)` 데코레이터는 Swagger에 쿠키 인증을 표시하도록 내부에서 `@ApiCookieAuth()`를 적용합니다. (인증 표기는 컨트롤러 클래스 레벨이나 해당 데코레이터 사용을 통해 일관되게 나타나야 합니다.)
 
 2. 응답/오류 스키마
 - 성공 응답은 `@ApiResponse` 또는 공통 래퍼(`@ApiStandardResponse` 등)를 사용해 `type`을 명시합니다.
@@ -47,8 +43,8 @@
 6. 데코레이터 일관성
 - 팀 차원의 표준으로 `ApiStandardResponse`와 `ApiStandardErrors`를 사용하는 경우, 사용 가이드(어떤 경우에 표준 데코레이터를 쓰고 어떤 경우에 `@ApiResponse`를 쓰는지)를 문서 하단에 추가합니다.
 
-권장 적용 작업
-- 보호 컨트롤러에 `@ApiBearerAuth()`를 추가하여 인증 필요 여부를 명시.
+- 권장 적용 작업
+- 보호 컨트롤러에 `@ApiCookieAuth()`를 추가하여 인증 필요 여부를 명시 (프로젝트 인증은 쿠키 전용).
 - 복잡한 policy/setting 객체는 별도 DTO로 분리.
 - 실패 응답 표준(공통 ErrorDto)을 정의하고 전 엔드포인트에 적용.
 
