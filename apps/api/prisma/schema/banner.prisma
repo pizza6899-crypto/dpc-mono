@@ -15,8 +15,8 @@ model Banner {
   createdBy BigInt?    @map("created_by")
   updatedBy BigInt?    @map("updated_by")
 
-  createdByUser User? @relation("BannerCreatedBy", fields: [createdBy], references: [id])
-  updatedByUser User? @relation("BannerUpdatedBy", fields: [updatedBy], references: [id])
+  createdByUser User? @relation("BannerCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  updatedByUser User? @relation("BannerUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
 
   // 관리자 메모
   adminMemos AdminMemo[]
@@ -25,6 +25,7 @@ model Banner {
   translations BannerTranslation[]
 
   @@index([isActive, order]) // 활성 배너 정렬 쿼리 최적화
+  @@index([isActive, startDate, endDate, order]) // 날짜 기반 노출 쿼리 최적화
   @@map("banners")
 }
 
@@ -39,9 +40,8 @@ model BannerTranslation {
   imageUrl String? @map("image_url")
 
   // 텍스트 정보
-  title       String? @map("title") // 배너 제목 (접근성 및 SEO용)
-  altText     String? @map("alt_text") // 이미지 대체 텍스트
-  description String? @db.Text @map("description") // 배너 설명 (PromotionTranslation 패턴 준수)
+  title   String? @map("title") // 배너 제목 (접근성 및 SEO용)
+  altText String? @map("alt_text") // 이미지 대체 텍스트
 
   // 언어별 링크 (선택적 확장)
   linkUrl String? @map("link_url") // 언어별 링크 (공통 linkUrl override)
