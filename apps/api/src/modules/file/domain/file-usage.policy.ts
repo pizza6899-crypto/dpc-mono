@@ -42,6 +42,10 @@ export const FILE_USAGE_CONFIGS: Record<FileUsageType, FileUsageConfig> = {
     accessType: FileAccessType.PUBLIC,
     sqidsPrefix: SqidsPrefix.ARTIFACT_CATALOG,
   },
+  [FileUsageType.BANNER_IMAGE]: {
+    accessType: FileAccessType.PUBLIC,
+    sqidsPrefix: SqidsPrefix.BANNER,
+  },
 };
 
 export function getFileUsageConfig(type: FileUsageType): FileUsageConfig {

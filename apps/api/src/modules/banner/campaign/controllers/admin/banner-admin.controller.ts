@@ -20,6 +20,9 @@ import { CreateBannerService } from '../../application/create-banner.service';
 import { UpdateBannerService } from '../../application/update-banner.service';
 import { DeleteBannerService } from '../../application/delete-banner.service';
 import { GetBannerByIdService } from '../../application/get-banner-by-id.service';
+import { SqidsService } from 'src/infrastructure/sqids/sqids.service';
+import { SqidsPrefix } from 'src/infrastructure/sqids/sqids.constants';
+import { BannerInvalidImageFileIdException } from '../../domain/banner.errors';
 import { CreateBannerAdminRequestDto } from './dto/request/create-banner.request.dto';
 import { UpdateBannerAdminRequestDto } from './dto/request/update-banner.request.dto';
 import { BannerAdminResponseDto } from './dto/response/banner-admin.response.dto';
@@ -41,6 +44,7 @@ export class BannerAdminController {
     private readonly createBannerService: CreateBannerService,
     private readonly updateBannerService: UpdateBannerService,
     private readonly deleteBannerService: DeleteBannerService,
+    private readonly sqidsService: SqidsService,
   ) {}
 
   @Get()
@@ -97,14 +101,33 @@ export class BannerAdminController {
       linkUrl: dto.linkUrl,
       startDate: dto.startDate ? new Date(dto.startDate) : null,
       endDate: dto.endDate ? new Date(dto.endDate) : null,
-      translations: dto.translations.map((t) => ({
-        language: t.language,
-        isActive: t.isActive,
-        imageUrl: t.imageUrl ?? null,
-        title: t.title ?? null,
-        altText: t.altText ?? null,
-        linkUrl: t.linkUrl ?? null,
-      })),
+      translations: (dto.translations ?? []).map((t, i) => {
+        const raw = (t as any).imageFileId;
+        if (!raw) {
+          return {
+            language: t.language,
+            isActive: t.isActive,
+            imageFileId: undefined,
+            title: t.title ?? null,
+            altText: t.altText ?? null,
+            linkUrl: t.linkUrl ?? null,
+          };
+        }
+
+        try {
+          const decoded = this.sqidsService.decode(raw, SqidsPrefix.FILE);
+          return {
+            language: t.language,
+            isActive: t.isActive,
+            imageFileId: decoded,
+            title: t.title ?? null,
+            altText: t.altText ?? null,
+            linkUrl: t.linkUrl ?? null,
+          };
+        } catch (e) {
+          throw new BannerInvalidImageFileIdException(i);
+        }
+      }),
     });
 
     return this.toResponseDto(item);
@@ -118,7 +141,7 @@ export class BannerAdminController {
     category: 'BANNER',
     action: 'BANNER_UPDATE_ADMIN',
     extractMetadata: (req, args, result: BannerAdminResponseDto) => ({
-      id: args[0],
+      id: args[0]?.toString?.() ?? args[0],
     }),
   })
   async update(
@@ -135,15 +158,34 @@ export class BannerAdminController {
       endDate: dto.endDate ? new Date(dto.endDate) : undefined,
       deletedAt: dto.deletedAt ? new Date(dto.deletedAt) : undefined,
       translations: dto.translations
-        ? dto.translations.map((t) => ({
-            language: t.language,
-            isActive: t.isActive,
-            imageUrl: t.imageUrl ?? null,
-            title: t.title ?? null,
-            altText: t.altText ?? null,
-            linkUrl: t.linkUrl ?? null,
-          }))
-        : undefined,
+            ? dto.translations.map((t, i) => {
+                const raw = (t as any).imageFileId;
+                if (!raw) {
+                  return {
+                    language: t.language,
+                    isActive: t.isActive,
+                    imageFileId: undefined,
+                    title: t.title ?? null,
+                    altText: t.altText ?? null,
+                    linkUrl: t.linkUrl ?? null,
+                  };
+                }
+
+                try {
+                  const decoded = this.sqidsService.decode(raw, SqidsPrefix.FILE);
+                  return {
+                    language: t.language,
+                    isActive: t.isActive,
+                    imageFileId: decoded,
+                    title: t.title ?? null,
+                    altText: t.altText ?? null,
+                    linkUrl: t.linkUrl ?? null,
+                  };
+                } catch (e) {
+                  throw new BannerInvalidImageFileIdException(i);
+                }
+              })
+            : undefined,
     });
     return this.toResponseDto(item);
   }
@@ -155,7 +197,7 @@ export class BannerAdminController {
     type: LogType.ACTIVITY,
     category: 'BANNER',
     action: 'BANNER_DELETE_ADMIN',
-    extractMetadata: (req, args) => ({ id: args[0] }),
+    extractMetadata: (req, args) => ({ id: args[0]?.toString?.() ?? args[0] }),
   })
   async delete(@Param('id') id: string): Promise<void> {
     await this.deleteBannerService.execute(BigInt(id));

@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { FileModule } from 'src/modules/file/file.module';
 
 // Application
 import { FindBannersService } from './application/find-banners.service';
@@ -19,7 +20,7 @@ import { BannerPublicController } from './controllers/public/banner-public.contr
 import { BannerAdminController } from './controllers/admin/banner-admin.controller';
 
 @Module({
-  imports: [],
+  imports: [FileModule],
   providers: [
     BannerMapper,
     {

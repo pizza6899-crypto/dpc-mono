@@ -91,6 +91,12 @@ export class FilePolicy {
       uploadRoles: ['ADMIN', 'SUPER_ADMIN'],
       maxSize: 5 * 1024 * 1024, // 5MB
     },
+    [FileUsageType.BANNER_IMAGE]: {
+      folder: 'banner/image',
+      accessType: FileAccessType.PUBLIC,
+      uploadRoles: ['ADMIN', 'SUPER_ADMIN'],
+      maxSize: 5 * 1024 * 1024, // 5MB
+    },
   };
 
   static getConfig(usageType: FileUsageType): FilePolicyConfig {
@@ -112,7 +118,7 @@ export class FilePolicy {
 
   static validateFile(
     usageType: FileUsageType,
-    file: Express.Multer.File,
+    file: { size: number; mimetype: string },
   ): void {
     const config = this.getConfig(usageType);
     const maxSize = config.maxSize || this.DEFAULT_MAX_SIZE;

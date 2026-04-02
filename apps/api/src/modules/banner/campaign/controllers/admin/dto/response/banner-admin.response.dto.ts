@@ -8,7 +8,7 @@ export class BannerTranslationAdminResponseDto {
   @ApiProperty({ description: '언어별 활성화 여부 / Language-specific active flag', example: true })
   isActive!: boolean;
 
-  @ApiPropertyOptional({ description: '직접 이미지 URL / Direct image URL', example: 'https://cdn.example.com/banner/ko.png' })
+  @ApiPropertyOptional({ description: '이미지 URL (fileId에서 해석됨) / Image URL (resolved from fileId)', example: 'https://cdn.example.com/banner/ko.png' })
   imageUrl?: string;
 
   @ApiPropertyOptional({ description: '제목 / Title', example: '스프링 캠페인' })
@@ -16,6 +16,7 @@ export class BannerTranslationAdminResponseDto {
 
   @ApiPropertyOptional({ description: 'ALT 텍스트 / ALT text', example: '스프링 캠페인 배너' })
   altText?: string;
+  
   @ApiPropertyOptional({ description: '언어별 링크 / Language-specific link', example: 'https://example.com/ko/promo' })
   linkUrl?: string;
 }

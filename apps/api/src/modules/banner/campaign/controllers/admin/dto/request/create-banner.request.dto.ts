@@ -12,18 +12,21 @@ export class BannerTranslationRequestDto {
   @IsBoolean()
   isActive!: boolean;
   
-  @ApiPropertyOptional({ description: '직접 이미지 URL / Direct image URL', example: 'https://cdn.example.com/banner/en.png' })
+  @ApiPropertyOptional({ description: '이미지 파일 ID (File table id) / Image file id (prefer this over direct URL)', example: '123456789' })
   @IsOptional()
   @IsString()
-  imageUrl?: string;
+  imageFileId?: string | null;
+
   @ApiPropertyOptional({ description: '제목 / Title', example: 'Spring Campaign' })
   @IsOptional()
   @IsString()
   title?: string;
+
   @ApiPropertyOptional({ description: 'ALT 텍스트 / ALT text', example: 'Spring Campaign Banner' })
   @IsOptional()
   @IsString()
   altText?: string;
+  
   @ApiPropertyOptional({ description: '언어별 링크 / Language-specific link', example: 'https://example.com/promo' })
   @IsOptional()
   @IsString()
@@ -59,12 +62,17 @@ export class CreateBannerAdminRequestDto {
   @IsDateString()
   endDate?: string;
 
+  @ApiPropertyOptional({ description: '배너 공통 이미지 파일 ID (optional) / Banner-level image file id (applies when translation image missing)', example: '123456789' })
+  @IsOptional()
+  @IsString()
+  imageFileId?: string | null;
+
   @ApiPropertyOptional({ description: '삭제된 시간 (ISO 8601) / Deleted at (ISO 8601)', example: null })
   @IsOptional()
   @IsDateString()
   deletedAt?: string;
 
-  @ApiProperty({ type: [BannerTranslationRequestDto], description: '언어별 전환 정보 / Language-specific translation entries', example: [{ language: 'EN', isActive: true, title: 'Spring Campaign', imageUrl: 'https://cdn.example.com/banner/en.png' }] })
+  @ApiProperty({ type: [BannerTranslationRequestDto], description: '언어별 전환 정보 / Language-specific translation entries', example: [{ language: 'EN', isActive: true, title: 'Spring Campaign', imageFileId: '123456789' }] })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => BannerTranslationRequestDto)

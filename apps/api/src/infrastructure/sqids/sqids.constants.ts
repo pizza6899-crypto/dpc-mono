@@ -59,6 +59,7 @@ export const SqidsPrefix = {
   ARTIFACT_CATALOG: 'atc',
   USER_ARTIFACT: 'uar',
   ARTIFACT_DRAW_REQUEST: 'adr',
+  BANNER: 'ban',
 } as const;
 
 export type SqidsPrefixType = (typeof SqidsPrefix)[keyof typeof SqidsPrefix];

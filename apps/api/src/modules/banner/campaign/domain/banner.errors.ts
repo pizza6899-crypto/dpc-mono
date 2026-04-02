@@ -43,6 +43,17 @@ export class BannerInvalidStateException extends BannerException {
   }
 }
 
+export class BannerInvalidImageFileIdException extends BannerException {
+  constructor(index?: number) {
+    super(
+      `Invalid imageFileId${index !== undefined ? ` at translations[${index}]` : ''}`,
+      // If specific message code not defined, fall back to validation error
+      (MessageCode as any).BANNER_INVALID_IMAGE_FILE_ID ?? MessageCode.VALIDATION_ERROR,
+      HttpStatus.BAD_REQUEST,
+    );
+  }
+}
+
 export default {
   BannerException,
   BannerNotFoundException,
@@ -50,4 +61,5 @@ export default {
   BannerDuplicateTranslationException,
   BannerInvalidDateRangeException,
   BannerInvalidStateException,
+  BannerInvalidImageFileIdException,
 };

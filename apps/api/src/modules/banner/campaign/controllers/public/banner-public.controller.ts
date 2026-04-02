@@ -26,20 +26,22 @@ export class BannerPublicController {
 
     const banners = Array.isArray(result) ? result : result.data;
 
-    return banners.map((banner) => {
-      const translation =
-        banner.translations.find((t) => t.language === language && t.isActive) ||
-        banner.translations.find((t) => t.language === Language.EN && t.isActive) ||
-        banner.translations.find((t) => t.isActive) ||
-        null;
+    return banners
+      .map((banner) => {
+        const translation =
+          banner.translations.find((t) => t.language === language && t.isActive) ||
+          banner.translations.find((t) => t.language === Language.EN && t.isActive) ||
+          banner.translations.find((t) => t.isActive) ||
+          null;
 
-      return {
-        order: banner.order,
-        linkUrl: banner.linkUrl ?? undefined,
-        imageUrl: translation?.imageUrl ?? undefined,
-        title: translation?.title ?? undefined,
-        altText: translation?.altText ?? undefined,
-      };
-    });
+        return {
+          order: banner.order,
+          linkUrl: banner.linkUrl ?? undefined,
+          imageUrl: translation?.imageUrl ?? undefined,
+          title: translation?.title ?? undefined,
+          altText: translation?.altText ?? undefined,
+        };
+      })
+      .filter((b) => !!b.imageUrl);
   }
 }
