@@ -1,9 +1,9 @@
 // 배너 기본 정보
 model Banner {
   id        BigInt     @id @default(autoincrement())
-  name      String?    // 관리자용 배너 이름 (예: "Welcome Banner 2024")
+  name      String?    @map("name") // 관리자용 배너 이름 (예: "Welcome Banner 2024")
   isActive  Boolean    @default(true) @map("is_active") // 배너 활성화 상태
-  order     Int        @default(0) // 노출 순서 및 우선순위 (낮은 숫자가 우선)
+  order     Int        @default(0) @map("order") // 노출 순서 및 우선순위 (낮은 숫자가 우선)
   linkUrl   String?    @map("link_url") // 클릭 시 이동할 URL (공통 링크)
   startDate DateTime?  @map("start_date") // 노출 시작일
   endDate   DateTime?  @map("end_date") // 노출 종료일
@@ -40,9 +40,9 @@ model BannerTranslation {
   imageFile   File?   @relation(fields: [imageFileId], references: [id], onDelete: SetNull)
 
   // 텍스트 정보
-  title       String? // 배너 제목 (접근성 및 SEO용)
+  title       String? @map("title") // 배너 제목 (접근성 및 SEO용)
   altText     String? @map("alt_text") // 이미지 대체 텍스트
-  description String? @db.Text // 배너 설명 (PromotionTranslation 패턴 준수)
+  description String? @db.Text @map("description") // 배너 설명 (PromotionTranslation 패턴 준수)
 
   // 언어별 링크 (선택적 확장)
   linkUrl String? @map("link_url") // 언어별 링크 (공통 linkUrl override)
