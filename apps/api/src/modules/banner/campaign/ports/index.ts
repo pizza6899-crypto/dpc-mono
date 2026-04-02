@@ -1,5 +1,5 @@
 import type { Language } from '@prisma/client';
-import type { Banner, BannerTranslation } from '../domain/model/banner.entity';
+import type { Banner, BannerTranslation } from '../domain/banner.entity';
 
 export const BANNER_REPOSITORY = 'BANNER_REPOSITORY';
 
