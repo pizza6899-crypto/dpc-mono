@@ -157,7 +157,6 @@ export class BannerAdminController {
       linkUrl: dto.linkUrl,
       startDate: dto.startDate ? new Date(dto.startDate) : undefined,
       endDate: dto.endDate ? new Date(dto.endDate) : undefined,
-      deletedAt: dto.deletedAt ? new Date(dto.deletedAt) : undefined,
       translations: dto.translations
             ? dto.translations.map((t, i) => {
                 const raw = (t as any).imageFileId;
