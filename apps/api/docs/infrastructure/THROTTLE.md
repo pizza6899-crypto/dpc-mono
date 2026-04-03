@@ -1,3 +1,38 @@
+---
+module: throttle
+version: 1.0
+lastUpdated: 2026-04-03
+lastReviewed: 2026-04-03
+docType: infrastructure-module
+audience:
+  - ai-agent
+  - human
+docStatus: canonical
+topics:
+  - throttle
+  - rate-limiting
+  - redis
+  - guard
+  - websocket
+tasks:
+  - add-throttle-rule
+  - debug-rate-limit
+  - inspect-success-based-throttle
+relatedDocs:
+  - README.md
+  - CACHE.md
+  - WEBSOCKET.md
+  - ENV.md
+trustLevel: medium
+owner: infrastructure-throttle
+reviewResponsibility:
+  - review when key generation, scope rules, or guard opt-in behavior changes
+  - review when Redis failure policy or counter semantics change
+  - review when non-HTTP throttle usage patterns such as WebSocket or service-level checks change
+sourceRoots:
+  - ../../src/infrastructure/throttle
+---
+
 # Throttle 인프라 모듈 가이드
 
 경로: `apps/api/src/infrastructure/throttle`
@@ -6,6 +41,17 @@
 - 목적: Redis 기반 카운터를 이용해 HTTP 요청, WebSocket 핸드셰이크, 외부 RPC 호출 등 다양한 경로의 요청 빈도를 제한하는 공통 인프라입니다.
 - 핵심 책임: `@Throttle(...)` 데코레이터가 붙은 HTTP 엔드포인트 보호, 서비스 계층에서의 직접 쓰로틀 체크/증가, 공통 키 생성 규칙 제공.
 - 이 모듈은 단순 “Nest Guard” 하나가 아니라, `ThrottleGuard`와 `ThrottleService`를 분리해 HTTP 레이어와 비HTTP 레이어 모두에서 재사용할 수 있게 만든 구조입니다.
+
+이 문서를 먼저 읽어야 하는 질문
+- 전역 Guard인데 실제 적용은 왜 opt-in처럼 보이는가?
+- 성공 기반 쓰로틀과 일반 쓰로틀은 어떻게 다르게 사용해야 하는가?
+- Redis 장애 시 이 보호 로직은 어떻게 동작하는가?
+
+관련 sibling 문서
+- [CACHE.md](CACHE.md) — 전용 `REDIS.md`가 아직 없기 때문에, Redis TTL·장애 허용·직렬화 관점은 이 문서와 함께 보는 편이 가장 가깝습니다.
+- [BULLMQ.md](BULLMQ.md) — 같은 Redis 인프라가 큐 처리에서는 어떤 운영 형태로 쓰이는지 비교할 수 있습니다.
+- [ENV.md](ENV.md) — Redis 연결 설정과 환경값 출처를 함께 확인할 수 있습니다.
+- [WEBSOCKET.md](WEBSOCKET.md) — 핸드셰이크 쓰로틀링이 실제로 어디에 적용되는지 대표 사용 경로를 볼 수 있습니다.
 
 소스 구성
 - [../../src/infrastructure/throttle/throttle.module.ts](../../src/infrastructure/throttle/throttle.module.ts) — Redis 의존성 연결 및 provider/export 등록

@@ -1,3 +1,37 @@
+---
+module: persistence
+version: 1.0
+lastUpdated: 2026-04-03
+lastReviewed: 2026-04-03
+docType: infrastructure-utility
+audience:
+  - ai-agent
+  - human
+docStatus: canonical
+topics:
+  - persistence
+  - serialization
+  - bigint
+  - decimal
+  - date-restoration
+tasks:
+  - map-persistence-values
+  - debug-type-restoration
+  - add-cast-rule
+relatedDocs:
+  - README.md
+  - CACHE.md
+  - PRISMA.md
+trustLevel: medium
+owner: infrastructure-persistence
+reviewResponsibility:
+  - review when `Cast` or `PersistenceOf<T>` transformation rules change
+  - review when Prisma or Redis boundary restoration semantics change
+  - review when mapper/entity persistence conventions change in ways this guide documents
+sourceRoots:
+  - ../../src/infrastructure/persistence/persistence.util.ts
+---
+
 # Persistence 유틸 가이드
 
 경로: `apps/api/src/infrastructure/persistence/persistence.util.ts`
@@ -6,6 +40,16 @@
 - 목적: Prisma/Redis/JSON 경계에서 변형될 수 있는 타입을 도메인 계층에서 안전하게 복원하기 위한 공통 유틸입니다.
 - 핵심 책임: `bigint`, `Prisma.Decimal`, `Date` 같은 영속성 경계 민감 타입의 복원 규칙을 표준화하고, 컴파일 타임에 “영속화 친화 타입”을 표현할 수 있게 합니다.
 - 이 파일은 모듈은 아니지만, 도메인 `fromPersistence()`와 인프라 mapper에서 매우 자주 쓰이는 핵심 경계 유틸입니다.
+
+이 문서를 먼저 읽어야 하는 질문
+- `bigint`, `Decimal`, `Date`를 도메인 타입으로 어떻게 복원해야 하는가?
+- `PersistenceOf<T>`와 `Cast`는 각각 언제 쓰고 언제 같이 써야 하는가?
+- 유틸만으로 충분하지 않고 호출부에서 수동 복원이 필요한 경우는 언제인가?
+
+관련 sibling 문서
+- [CACHE.md](CACHE.md) — Redis 캐시를 거친 객체를 도메인 타입으로 다시 복원하는 실제 경계를 같이 볼 수 있습니다.
+- [PRISMA.md](PRISMA.md) — Prisma payload를 도메인 엔티티나 리포지토리 mapper로 올릴 때 이 유틸이 어떻게 연결되는지 확인할 수 있습니다.
+- [SNOWFLAKE.md](SNOWFLAKE.md) — `bigint` 기반 식별자를 persistence 경계에서 다룰 때 어떤 타입 주의가 필요한지 이어서 볼 수 있습니다.
 
 소스 구성
 - [../../src/infrastructure/persistence/persistence.util.ts](../../src/infrastructure/persistence/persistence.util.ts) — 전체 구현 파일

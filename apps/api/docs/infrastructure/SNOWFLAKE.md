@@ -1,3 +1,37 @@
+---
+module: snowflake
+version: 1.0
+lastUpdated: 2026-04-03
+lastReviewed: 2026-04-03
+docType: infrastructure-module
+audience:
+  - ai-agent
+  - human
+docStatus: canonical
+topics:
+  - snowflake
+  - ids
+  - timestamps
+  - node-identity
+  - external-id-generation
+tasks:
+  - generate-id
+  - debug-id-collision
+  - inspect-external-timestamp-flow
+relatedDocs:
+  - README.md
+  - SQIDS.md
+  - PERSISTENCE.md
+trustLevel: medium
+owner: infrastructure-snowflake
+reviewResponsibility:
+  - review when bit layout, epoch, node-id strategy, or external generation rules change
+  - review when `parse()` contract or exception semantics change
+  - review when node identity integration changes the generated ID guarantees
+sourceRoots:
+  - ../../src/infrastructure/snowflake
+---
+
 # Snowflake 인프라 모듈 가이드
 
 경로: `apps/api/src/infrastructure/snowflake`
@@ -6,6 +40,16 @@
 - 목적: 분산 환경에서 정렬 가능하고 충돌 없는 `bigint` 기반 ID를 생성하는 공통 인프라입니다.
 - 핵심 책임: 현재 시각 기반 내부 ID 생성, 외부 이벤트 시각 기반 ID 생성, 생성 시각 역추적(`parse`) 기능 제공.
 - 이 구현은 일반적인 Snowflake와 비슷하지만, 현재 프로젝트 요구에 맞춰 “외부 시각 주입 모드”를 별도로 지원하는 것이 핵심 차별점입니다.
+
+이 문서를 먼저 읽어야 하는 질문
+- 내부 생성과 외부 시각 주입 생성은 어떻게 다른가?
+- ID 비트 구조에서 timestamp, nodeId, sequence는 어떻게 나뉘는가?
+- `parse()`로 어떤 운영 디버깅 정보를 복원할 수 있는가?
+
+관련 sibling 문서
+- [SQIDS.md](SQIDS.md) — 내부 `bigint` ID가 외부 노출용 문자열 ID로 어떻게 이어지는지 바로 다음 단계의 경계를 확인할 수 있습니다.
+- [PERSISTENCE.md](PERSISTENCE.md) — Snowflake `bigint`를 DB·캐시 경계에서 안전하게 복원할 때 필요한 타입 규칙을 같이 볼 수 있습니다.
+- [PRISMA.md](PRISMA.md) — 생성된 ID가 실제 DB write path에서 어떤 트랜잭션/ORM 경로를 타는지 연결해 볼 수 있습니다.
 
 소스 구성
 - [../../src/infrastructure/snowflake/snowflake.service.ts](../../src/infrastructure/snowflake/snowflake.service.ts) — Snowflake 생성/복호화 핵심 로직

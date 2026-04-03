@@ -1,3 +1,37 @@
+---
+module: domain-errors
+version: 1.0
+lastUpdated: 2026-04-03
+lastReviewed: 2026-04-03
+docType: policy-rules
+audience:
+  - ai-agent
+  - human
+docStatus: canonical
+topics:
+  - domain-errors
+  - exception-handling
+  - message-codes
+  - http-status
+  - security
+tasks:
+  - define-domain-exception
+  - add-message-code
+  - review-error-contract
+relatedDocs:
+  - README.md
+  - SWAGGER_RULES.md
+trustLevel: medium
+owner: domain-error-policy
+reviewResponsibility:
+  - review when DomainException base contract or global error response shape changes
+  - review when MessageCode enum or HTTP status mapping rules change
+  - review when module-level error authoring conventions change
+sourceRoots:
+  - ../src
+  - ../../../packages/shared/src
+---
+
 # 도메인 에러 가이드
 
 이 문서는 도메인 레이어에서 예외(도메인 에러)를 일관성 있게 정의하고 사용하는 방법을 설명합니다. 모든 예외는 서비스/컨트롤러/글로벌 필터에서 예측 가능하고 안전하게 처리되어야 합니다.
@@ -6,6 +40,16 @@
 - 도메인 에러 생성 방식의 일관성 확보
 - 사용자에게 민감 정보를 노출하지 않도록 보호
 - 서비스 계층과 전역 예외 핸들러 간 명확한 계약 제공
+
+## 관련 sibling 문서
+- [SWAGGER_RULES.md](SWAGGER_RULES.md) — 에러 응답을 Swagger에 어떻게 문서화할지 함께 맞출 때 바로 이어서 봐야 합니다.
+- [artifact/README.md](artifact/README.md) — artifact API 문서를 읽으며 실제 예외 계약이 어떤 엔드포인트 문맥에서 소비되는지 따라갈 때 유용합니다.
+- [README.md](README.md) — 루트 인덱스에서 현재 문서가 어떤 종류의 기준 문서인지 다시 확인할 수 있습니다.
+
+## 문서 지위
+- `canonical` 문서입니다.
+- 도메인 예외 정의, 메시지 코드 사용, 공통 응답 계약의 기준 문서로 사용합니다.
+- 코드와 충돌하면 코드 드리프트를 보고하고 이 문서를 함께 갱신해야 합니다.
 
 ## 핵심 규칙 요약
 - 상속: 모든 도메인 에러는 `DomainException`을 확장한다 (`src/common/exception/domain.exception.ts`).

@@ -1,3 +1,38 @@
+---
+module: cache
+version: 1.0
+lastUpdated: 2026-04-03
+lastReviewed: 2026-04-03
+docType: infrastructure-module
+audience:
+  - ai-agent
+  - human
+docStatus: canonical
+topics:
+  - cache
+  - redis
+  - memory-store
+  - serialization
+  - ttl
+tasks:
+  - add-cache-entry
+  - debug-cache-behavior
+  - choose-cache-store
+relatedDocs:
+  - README.md
+  - PERSISTENCE.md
+  - ENV.md
+  - THROTTLE.md
+trustLevel: medium
+owner: infrastructure-cache
+reviewResponsibility:
+  - review when CACHE_CONFIG store selection, TTL strategy, or cache key policy changes
+  - review when Redis serialization, `getOrSet()`, or `getAndTouch()` semantics change
+  - review when cache service behavior diverges from the access patterns described here
+sourceRoots:
+  - ../../src/infrastructure/cache
+---
+
 # Cache 인프라 모듈 가이드
 
 경로: `apps/api/src/infrastructure/cache`
@@ -6,6 +41,16 @@
 - 목적: 프로젝트 전반에서 사용할 캐시 접근 방식을 표준화하는 공통 인프라 모듈입니다.
 - 핵심 책임: 캐시 키/TTL/저장소 정의 중앙화, 메모리/Redis 저장소 추상화, read-through 캐시 패턴 제공, sliding expiry 지원, 수동 무효화 지원.
 - 중요한 전제: 이 모듈은 "멀티 레이어 자동 캐시"가 아니라, 키별로 `MEMORY` 또는 `REDIS` 중 하나를 선택하는 단일 저장소 캐시입니다.
+
+이 문서를 먼저 읽어야 하는 질문
+- 이 캐시는 L1/L2 계층형인가, 아니면 단일 저장소 선택형인가?
+- 특정 캐시 항목을 `MEMORY`와 `REDIS` 중 어디에 두는 것이 맞는가?
+- `getOrSet()`, `getAndTouch()`, `get()` 중 어떤 접근 패턴을 써야 하는가?
+
+관련 sibling 문서
+- [PERSISTENCE.md](PERSISTENCE.md) — Redis 캐시를 거친 값의 `bigint`·`Decimal`·`Date` 복원 규칙을 함께 이해할 수 있습니다.
+- [THROTTLE.md](THROTTLE.md) — 같은 Redis 기반 카운터/TTL 인프라가 보호 로직에서는 어떻게 쓰이는지 비교할 수 있습니다.
+- [ENV.md](ENV.md) — Redis 연결 정보와 환경 설정의 실제 출처를 확인할 수 있습니다.
 
 소스 구성
 - [../../src/infrastructure/cache/cache.constants.ts](../../src/infrastructure/cache/cache.constants.ts) — 캐시 키 정의와 TTL/저장소 정책 중앙 관리

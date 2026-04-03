@@ -1,3 +1,38 @@
+---
+module: env
+version: 1.0
+lastUpdated: 2026-04-03
+lastReviewed: 2026-04-03
+docType: infrastructure-module
+audience:
+  - ai-agent
+  - human
+docStatus: canonical
+topics:
+  - env
+  - config
+  - settings
+  - secrets
+  - config-module
+tasks:
+  - add-env-config
+  - trace-env-usage
+  - debug-config-loading
+relatedDocs:
+  - README.md
+  - BULLMQ.md
+  - SQIDS.md
+  - PRISMA.md
+trustLevel: medium
+owner: infrastructure-env
+reviewResponsibility:
+  - review when config groups, parsing rules, or required environment values change
+  - review when `EnvService` getters or load boundaries change
+  - review when direct `process.env` escape hatches alter the documented config model
+sourceRoots:
+  - ../../src/infrastructure/env
+---
+
 # Env 인프라 모듈 가이드
 
 경로: `apps/api/src/infrastructure/env`
@@ -6,6 +41,16 @@
 - 목적: `process.env`에 있는 런타임 환경값을 Nest `ConfigModule`로 로드하고, 애플리케이션 전반에서 `EnvService`라는 타입화된 facade로 읽을 수 있게 만드는 공통 인프라입니다.
 - 핵심 책임: 설정 그룹별 로딩, 문자열 환경값의 기본 파싱/정규화, 기능 모듈에 대한 `EnvService` 주입 진입점 제공.
 - 이 모듈은 “강력한 검증기”라기보다, “Config 로더 + 편의 getter 집합”에 더 가깝습니다.
+
+이 문서를 먼저 읽어야 하는 질문
+- 새 환경 변수를 어디에 추가하고 어떻게 `EnvService`로 노출해야 하는가?
+- `process.env` 직접 사용과 `EnvService` 사용의 경계는 어디인가?
+- 필수 환경값 누락이 부팅 시점이 아니라 런타임에서 늦게 드러나는 이유는 무엇인가?
+
+관련 sibling 문서
+- [PRISMA.md](PRISMA.md) — Prisma가 `DATABASE_URL`을 직접 읽는 예외 경로와 Env 계층의 경계를 같이 확인할 수 있습니다.
+- [BULLMQ.md](BULLMQ.md) — Redis 기반 큐 연결이 `EnvService` 값을 어떻게 소비하는지 대표적으로 보여 줍니다.
+- [SQIDS.md](SQIDS.md) — `SQIDS_ALPHABET`, `SQIDS_MIN_LENGTH`처럼 포맷 계약에 가까운 설정 소비 사례를 확인할 수 있습니다.
 
 소스 구성
 - [../../src/infrastructure/env/env.config.ts](../../src/infrastructure/env/env.config.ts) — 설정 그룹별 로딩 정의 (`registerAs`)

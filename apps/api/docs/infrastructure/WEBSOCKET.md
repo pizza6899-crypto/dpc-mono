@@ -1,3 +1,37 @@
+---
+module: websocket
+version: 1.0
+lastUpdated: 2026-04-03
+lastReviewed: 2026-04-03
+docType: infrastructure-module
+audience:
+  - ai-agent
+  - human
+docStatus: canonical
+topics:
+  - websocket
+  - socket.io
+  - sessions
+  - redis-adapter
+  - realtime-push
+tasks:
+  - trace-socket-auth
+  - debug-room-delivery
+  - inspect-websocket-session
+relatedDocs:
+  - README.md
+  - CLS.md
+  - THROTTLE.md
+trustLevel: medium
+owner: infrastructure-websocket
+reviewResponsibility:
+  - review when adapter auth chain, namespaces, room naming, or event envelope contract changes
+  - review when hook execution flow or session create/expire integration changes
+  - review when socket connection throttle or CLS behavior changes
+sourceRoots:
+  - ../../src/infrastructure/websocket
+---
+
 # WebSocket 인프라 모듈 가이드
 
 경로: `apps/api/src/infrastructure/websocket`
@@ -6,6 +40,16 @@
 - 목적: HTTP 세션 쿠키 기반 인증을 재사용해 Socket.IO 연결을 수립하고, 사용자/관리자 실시간 푸시를 공통 방식으로 제공하는 인프라입니다.
 - 핵심 책임: 네임스페이스별 인증 미들웨어 적용, Redis adapter 기반 수평 확장, DB WebSocket 세션 생성/종료, 룸 기반 브로드캐스트, 타입 안전한 이벤트 페이로드 계약 제공.
 - 이 모듈은 “클라이언트가 WebSocket으로 명령을 보내는 채널”이라기보다, REST/백그라운드 작업 결과를 실시간으로 전달하는 서버 푸시 인프라에 가깝습니다.
+
+이 문서를 먼저 읽어야 하는 질문
+- 실제 인증 경계는 게이트웨이인가 `SessionIoAdapter`인가?
+- 연결 훅, 룸 조인, 서버 푸시는 어디서 수행되는가?
+- `sendToUser()`와 `sendToRoom()`은 언제 각각 써야 하는가?
+
+관련 sibling 문서
+- [CLS.md](CLS.md) — WebSocket 경로에서 CLS 컨텍스트가 어떻게 시작되고 어떤 한계가 있는지 같이 봐야 합니다.
+- [THROTTLE.md](THROTTLE.md) — 소켓 핸드셰이크 보호가 어떤 키와 정책으로 동작하는지 바로 이어서 확인할 수 있습니다.
+- [PRISMA.md](PRISMA.md) — WebSocket 세션 생성/종료가 실제 DB 접근 계층과 어떻게 연결되는지 추적할 때 필요합니다.
 
 소스 구성
 - [../../src/infrastructure/websocket/websocket.module.ts](../../src/infrastructure/websocket/websocket.module.ts) — 전역 모듈 등록

@@ -1,3 +1,37 @@
+---
+module: concurrency
+version: 1.0
+lastUpdated: 2026-04-03
+lastReviewed: 2026-04-03
+docType: infrastructure-module
+audience:
+  - ai-agent
+  - human
+docStatus: canonical
+topics:
+  - concurrency
+  - advisory-lock
+  - distributed-lock
+  - postgres
+  - lock-strategy
+tasks:
+  - choose-lock-strategy
+  - debug-lock-contention
+  - inspect-global-lock
+relatedDocs:
+  - README.md
+  - PRISMA.md
+  - CLS.md
+trustLevel: medium
+owner: infrastructure-concurrency
+reviewResponsibility:
+  - review when advisory/global lock strategy, namespaces, or timeout defaults change
+  - review when `global_locks` schema or lock ownership semantics change
+  - review when lock timeout or failure-handling contracts change
+sourceRoots:
+  - ../../src/infrastructure/concurrency
+---
+
 # Concurrency 인프라 모듈 가이드
 
 경로: `apps/api/src/infrastructure/concurrency`
@@ -8,6 +42,16 @@
 - 이 모듈은 사실상 두 가지 락 시스템을 함께 제공합니다.
   - `AdvisoryLockService`: PostgreSQL 트랜잭션 범위 advisory lock
   - `ConcurrencyService`: `global_locks` 테이블 기반 전역 분산 락
+
+이 문서를 먼저 읽어야 하는 질문
+- Advisory lock과 global lock 중 어떤 방식을 선택해야 하는가?
+- 트랜잭션 안에서 같은 엔티티의 동시 수정은 어떻게 막는가?
+- 배치나 스케줄러의 중복 실행을 여러 인스턴스 환경에서 어떻게 방지하는가?
+
+관련 sibling 문서
+- [PRISMA.md](PRISMA.md) — advisory lock이 실제로 어떤 트랜잭션 경로 위에서 동작하는지 함께 봐야 합니다.
+- [BULLMQ.md](BULLMQ.md) — global lock의 대표 사용처인 스케줄러 초기화 흐름을 바로 이어서 확인할 수 있습니다.
+- [CLS.md](CLS.md) — 트랜잭션 경계가 CLS 컨텍스트와 어떻게 결합되는지 같이 볼 때 이해가 쉬워집니다.
 
 소스 구성
 - [../../src/infrastructure/concurrency/advisory-lock.service.ts](../../src/infrastructure/concurrency/advisory-lock.service.ts) — 트랜잭션 범위 advisory lock

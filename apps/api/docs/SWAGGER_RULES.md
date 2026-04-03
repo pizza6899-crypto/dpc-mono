@@ -1,3 +1,37 @@
+---
+module: swagger-rules
+version: 1.0
+lastUpdated: 2026-04-03
+lastReviewed: 2026-04-03
+docType: policy-rules
+audience:
+  - ai-agent
+  - human
+docStatus: draft
+topics:
+  - swagger
+  - dto-documentation
+  - controller-documentation
+  - api-rules
+  - auditlog
+tasks:
+  - document-controller
+  - document-dto
+  - review-swagger-consistency
+relatedDocs:
+  - README.md
+  - artifact/README.md
+  - DOMAIN_ERRORS.md
+trustLevel: low
+owner: api-docs-policy
+reviewResponsibility:
+	- review when Swagger decorator usage or shared response wrappers change
+	- review when auth, DTO, pagination, or audit documentation conventions change
+	- review after team-approved API documentation policy decisions are made
+sourceRoots:
+  - ../src
+---
+
 # API Swagger Rules (Project-wide)
 
 작성일: 2026-04-02
@@ -5,6 +39,16 @@
 목적: 프로젝트 전역에서 일관된 Swagger 문서화를 위해 준수할 규칙들을 정리합니다.
 
 적용 범위: apps/api 프로젝트의 모든 컨트롤러/DTO/데코레이터
+
+관련 sibling 문서
+- [artifact/README.md](artifact/README.md) — artifact 모듈 API 문서를 읽을 때 이 규칙이 어떤 문서군에 적용되는지 바로 이어서 확인할 수 있습니다.
+- [DOMAIN_ERRORS.md](DOMAIN_ERRORS.md) — 오류 응답 상태 코드와 도메인 예외 계약을 함께 맞출 때 같이 읽어야 합니다.
+- [README.md](README.md) — 현재 규칙 문서가 전체 docs 그래프에서 어떤 기준 문서로 쓰이는지 확인할 때 필요합니다.
+
+문서 지위
+- `draft` 문서입니다.
+- 코드베이스를 읽고 정리한 정책 초안이며, 팀 검토 전까지는 절대 규칙이 아니라 검토용 기준으로 사용합니다.
+- 코드나 이미 합의된 규칙과 충돌하면 검토된 코드와 팀 합의를 우선합니다.
 
 요약 규칙
 
@@ -73,4 +117,4 @@
 - 참고: 퍼블릭(read-only) 엔드포인트는 일반적으로 감사 로그를 남기지 않지만, 사용성·모니터링 관점에서 필요하면 적용할 수 있습니다. 관리자 및 사용자 행위 중 중요한 작업에는 반드시 Audit 데코레이터를 고려하세요.
 
 참고
-- 이 문서는 코드베이스를 읽고 자동 추출한 권장 규칙 초안입니다. 적용 전 팀 리뷰를 권장합니다.
+- 이 문서는 코드베이스를 읽고 정리한 권장 규칙 초안입니다. 적용 전 팀 리뷰를 권장합니다.

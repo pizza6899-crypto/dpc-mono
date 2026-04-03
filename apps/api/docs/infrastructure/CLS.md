@@ -1,3 +1,38 @@
+---
+module: cls
+version: 1.0
+lastUpdated: 2026-04-03
+lastReviewed: 2026-04-03
+docType: infrastructure-module
+audience:
+  - ai-agent
+  - human
+docStatus: canonical
+topics:
+  - cls
+  - request-context
+  - transactions
+  - websocket
+  - background-jobs
+tasks:
+  - inspect-request-context
+  - debug-transaction-propagation
+  - trace-user-context
+relatedDocs:
+  - README.md
+  - PRISMA.md
+  - WEBSOCKET.md
+  - BULLMQ.md
+trustLevel: medium
+owner: infrastructure-cls
+reviewResponsibility:
+  - review when request context keys, interceptor wiring, or adapter bootstrap paths change
+  - review when transactional plugin wiring or `RequestContextService` API changes
+  - review when WebSocket or BullMQ CLS propagation semantics change
+sourceRoots:
+  - ../../src/infrastructure/cls
+---
+
 # CLS 인프라 모듈 가이드
 
 경로: `apps/api/src/infrastructure/cls`
@@ -6,6 +41,16 @@
 - 목적: 요청 단위 컨텍스트를 애플리케이션 전역에서 안전하게 조회할 수 있도록 만드는 공통 인프라입니다.
 - 핵심 책임: trace/request ID 보존, 요청별 사용자/클라이언트 정보 공유, Prisma 트랜잭션 컨텍스트 연동, WebSocket 및 백그라운드 작업에서 CLS 실행 컨텍스트 유지.
 - 이 모듈의 핵심 가치는 “매번 Request 객체를 파라미터로 넘기지 않고도 서비스 계층에서 현재 요청 정보를 읽을 수 있게 하는 것”입니다.
+
+이 문서를 먼저 읽어야 하는 질문
+- request context, current user, trace ID를 서비스 계층에서 어떻게 읽는가?
+- `@Transactional()`과 `@InjectTransaction()`은 왜 같은 요청 컨텍스트 안에서 동작하는가?
+- WebSocket이나 BullMQ 경로에서도 CLS 컨텍스트가 어떻게 이어지는가?
+
+관련 sibling 문서
+- [PRISMA.md](PRISMA.md) — CLS가 실제 트랜잭션 프록시와 어떻게 결합되는지 가장 직접적으로 이어지는 문서입니다.
+- [WEBSOCKET.md](WEBSOCKET.md) — Socket.IO 연결 경로에서 CLS 컨텍스트가 어디서 시작되는지 확인할 수 있습니다.
+- [BULLMQ.md](BULLMQ.md) — 백그라운드 잡 실행에서 CLS가 어떻게 열리는지 비교할 수 있습니다.
 
 소스 구성
 - [../../src/infrastructure/cls/cls.module.ts](../../src/infrastructure/cls/cls.module.ts) — `nestjs-cls` 전역 설정 및 Prisma transactional plugin 연결

@@ -1,3 +1,37 @@
+---
+module: bullmq
+version: 1.0
+lastUpdated: 2026-04-03
+lastReviewed: 2026-04-03
+docType: infrastructure-module
+audience:
+  - ai-agent
+  - human
+docStatus: canonical
+topics:
+  - bullmq
+  - queues
+  - workers
+  - scheduler
+  - redis
+tasks:
+  - add-queue
+  - debug-worker
+  - inspect-repeat-jobs
+relatedDocs:
+  - README.md
+  - CLS.md
+  - ENV.md
+trustLevel: medium
+owner: infrastructure-bullmq
+reviewResponsibility:
+  - review when queue registry, repeat scheduler, or worker connection patterns change
+  - review when base processor CLS or audit integration behavior changes
+  - review when BullMQ source roots add or remove core public patterns described here
+sourceRoots:
+  - ../../src/infrastructure/bullmq
+---
+
 # BullMQ 인프라 모듈 가이드
 
 경로: `apps/api/src/infrastructure/bullmq`
@@ -6,6 +40,16 @@
 - 목적: 프로젝트 전반의 큐 처리 인프라를 표준화하는 공통 모듈입니다.
 - 핵심 책임: Redis 연결 구성, 큐 레지스트리 통합, 반복 작업 스케줄 동기화, 프로세서 공통 래핑, 장애 시 감사 로그 연동.
 - 이 모듈은 직접 비즈니스 로직을 수행하지 않고, 각 도메인이 정의한 `*.bullmq.ts`, 프로세서, 프로듀서를 연결해 주는 기반 계층입니다.
+
+이 문서를 먼저 읽어야 하는 질문
+- 새 큐를 추가할 때 어떤 파일들을 함께 수정해야 하는가?
+- 반복 작업(repeatable job)은 부팅 시점에 어디서 Redis와 동기화되는가?
+- 프로세서와 프로듀서는 어떤 Redis 연결을 각각 사용하는가?
+
+관련 sibling 문서
+- [CONCURRENCY.md](CONCURRENCY.md) — 스케줄러 초기화가 왜 global lock으로 보호되는지 함께 이해할 수 있습니다.
+- [CLS.md](CLS.md) — `BaseProcessor`가 잡 실행 시 CLS 컨텍스트를 어떻게 여는지 바로 이어서 확인할 수 있습니다.
+- [ENV.md](ENV.md) — BullMQ의 Redis 연결과 prefix 관련 설정이 어디서 들어오는지 확인할 수 있습니다.
 
 소스 구성
 - [../../src/infrastructure/bullmq/base.processor.ts](../../src/infrastructure/bullmq/base.processor.ts) — 모든 프로세서의 공통 부모 클래스
