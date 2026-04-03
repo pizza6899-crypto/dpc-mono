@@ -62,11 +62,6 @@ export class CreateBannerAdminRequestDto {
   @IsDateString()
   endDate?: string;
 
-  @ApiPropertyOptional({ description: '삭제된 시간 (ISO 8601) / Deleted at (ISO 8601)', example: null })
-  @IsOptional()
-  @IsDateString()
-  deletedAt?: string;
-
   @ApiProperty({ type: [BannerTranslationRequestDto], description: '언어별 전환 정보 / Language-specific translation entries', example: [{ language: 'EN', isActive: true, title: 'Spring Campaign', imageFileId: '123456789' }] })
   @IsArray()
   @ValidateNested({ each: true })
