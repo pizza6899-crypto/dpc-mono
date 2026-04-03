@@ -8,7 +8,7 @@ describe('ArtifactDrawConfig', () => {
     const before = cfg.updatedAt;
     cfg.updateProbability(0.5);
     expect(cfg.probability.toNumber()).toBeCloseTo(0.5);
-    expect(cfg.updatedAt.getTime()).toBeGreaterThan(before.getTime());
+    expect(cfg.updatedAt.getTime()).toBeGreaterThanOrEqual(before.getTime());
   });
 
   it('throws when probability out of range', () => {

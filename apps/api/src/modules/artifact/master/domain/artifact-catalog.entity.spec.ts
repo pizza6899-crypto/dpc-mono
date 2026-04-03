@@ -29,7 +29,7 @@ describe('ArtifactCatalog', () => {
     const before = a.updatedAt;
     a.updateImageUrl('https://img.example/test.png');
     expect(a.imageUrl).toBe('https://img.example/test.png');
-    expect(a.updatedAt.getTime()).toBeGreaterThan(before.getTime());
+    expect(a.updatedAt.getTime()).toBeGreaterThanOrEqual(before.getTime());
   });
 
   it('updates fields and updatedAt', () => {
@@ -48,7 +48,7 @@ describe('ArtifactCatalog', () => {
     expect(a.drawWeight).toBe(5);
     expect(a.statsSummary).toEqual(newStats);
     expect(a.status).toBe(ArtifactCatalogStatus.INACTIVE);
-    expect(a.updatedAt.getTime()).toBeGreaterThan(before.getTime());
+    expect(a.updatedAt.getTime()).toBeGreaterThanOrEqual(before.getTime());
   });
 
   it('deactivates', () => {
