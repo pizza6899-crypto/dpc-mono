@@ -38,4 +38,15 @@ describe('CreateBannerService', () => {
     expect(mockRepo.update).not.toHaveBeenCalled();
     expect(res).toBe(created);
   });
+
+  it('does not call update when translation replacement fails (error propagates)', async () => {
+    const params = { name: 'z', translations: [{ language: 'EN', imageFileId: '1' }] } as any;
+    const created = { id: 3n, update: jest.fn() } as any;
+
+    mockRepo.create.mockResolvedValue(created);
+    mockTranslation.replaceTranslations.mockRejectedValue(new Error('replace-failed'));
+
+    await expect(service.execute(params)).rejects.toThrow('replace-failed');
+    expect(mockRepo.update).not.toHaveBeenCalled();
+  });
 });

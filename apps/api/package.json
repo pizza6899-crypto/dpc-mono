@@ -35,7 +35,9 @@
     "db:infra": "dotenv -e .env -- prisma db execute --file ./prisma/init_infrastructure.sql",
     "db:reset": "dotenv -e .env -- prisma migrate reset",
     "db:deploy": "dotenv -e .env -- prisma migrate deploy",
-    "db:studio": "dotenv -e .env -- prisma studio"
+    "db:studio": "dotenv -e .env -- prisma studio",
+    "setup:test-db": "bash ./scripts/setup_test_db.sh --use-dotenv",
+    "setup:test-db:dry-run": "bash ./scripts/setup_test_db.sh --use-dotenv --dry-run"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.968.0",
