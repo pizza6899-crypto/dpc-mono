@@ -649,3 +649,113 @@ auth/
 
 각 단계는 독립적으로 구현 가능하지만, 의존성이 있는 경우 순서를 지켜야 합니다.
 
+## 🔍 로그인 보안 검토
+
+### 요약
+- 대상 파일: [apps/api/src/modules/auth/credential/controllers/user/user-auth.controller.ts](apps/api/src/modules/auth/credential/controllers/user/user-auth.controller.ts), [apps/api/src/modules/auth/credential/controllers/admin/admin-auth.controller.ts](apps/api/src/modules/auth/credential/controllers/admin/admin-auth.controller.ts), [apps/api/src/modules/auth/credential/application/authenticate-identity.service.ts](apps/api/src/modules/auth/credential/application/authenticate-identity.service.ts), [apps/api/src/modules/auth/credential/application/verify-credential.service.ts](apps/api/src/modules/auth/credential/application/verify-credential.service.ts), [apps/api/src/modules/auth/credential/application/login.service.ts](apps/api/src/modules/auth/credential/application/login.service.ts), [apps/api/src/modules/auth/session/application/create-session.service.ts](apps/api/src/modules/auth/session/application/create-session.service.ts), [apps/api/src/common/auth/strategies/session.serializer.ts](apps/api/src/common/auth/strategies/session.serializer.ts)
+- 핵심 흐름: 컨트롤러 → AuthenticateIdentityService → req.login(req.session) → LoginService → CreateSessionService (DB 세션 생성) → SessionTracker
+- 장점: 더미 해시로 타이밍 공격 완화, 로그인 시도 기록, 감사 로그, 세션 DB/Redis 연동 등 방어기제 존재
+
+### 발견된 문제 (우선순위 포함)
+- (높음) 세션 픽스테이션 위험: 로그인 시 `req.session` 재생성(regenerate) 없이 기존 sessionId를 그대로 사용하여 `req.login()`을 호출함. (취약점: 공격자가 고정된 세션ID를 주입하여 계정 탈취 가능)
+- (높음) 계정 잠금 정책에 시간창 없음: 최근 N번 실패만 검사. 오래된 실패까지 포함될 수 있어 의도치 않은 잠금 발생 가능.
+- (중간) CSRF 미확인: 세션 기반 인증 사용 시 CSRF 미들림/미들웨어 적용 여부 점검 필요 (envService.csrf 설정은 존재).
+- (중간) 세션 페이로드 과다: `serializeUser`가 전체 `AuthenticatedUser`를 저장 → 세션 크기 증가 및 민감정보 노출 위험.
+- (중간) Throttle: 현재 IP 기반만 사용 → 공유 IP 환경에서 오탐 가능. 계정(loginId) 기반 제한 병행 권장.
+
+### 권장 조치 (우선순위 순)
+1. 세션 재생성 (Session Fixation 방지) — 매우 권장
+  - 위치: 로그인 컨트롤러(`user-auth.controller.ts`, `admin-auth.controller.ts`)
+  - 구현: 로그인 직전 또는 직후 `req.session.regenerate()` 호출하여 새 sessionId를 발급한 뒤 `req.login()` 실행, 이후 `loginService.execute`에 `req.sessionID` 전달.
+  - 예시:
+```ts
+// 세션 재생성 → 로그인 → DB 세션 생성 순서 (user-auth.controller)
+await new Promise<void>((resolve, reject) =>
+  req.session?.regenerate((err) => (err ? reject(err) : resolve())),
+);
+await new Promise<void>((resolve, reject) =>
+  req.login(authenticatedUser as any, (err) => (err ? reject(err) : resolve())),
+);
+await this.loginService.execute({
+  user: authenticatedUser,
+  clientInfo,
+  sessionId: req.sessionID,
+  isAdmin: false,
+});
+```
+
+2. 계정 잠금 정책에 시간창(윈도우) 추가 — 권장
+  - Repository/API: `LoginAttemptRepository.listRecent`에 `since?: Date` 옵션 추가.
+  - UseCase: 최근 5회 실패가 '최근 15분' 내에 발생했을 때만 잠금 적용(정책은 서비스 요구에 맞게 조정).
+  - 예시 호출:
+```ts
+const since = new Date(Date.now() - 15 * 60 * 1000); // 15 minutes
+const recentAttempts = await this.loginAttemptRepository.listRecent({
+  loginId,
+  limit: 5,
+  since,
+});
+```
+
+3. CSRF 보호 검토 및 적용 — 권장
+  - 위치: `apps/api/src/main.ts` (session 미들웨어 이후, 라우트 등록 전)
+  - 동작: `envService.csrf.enabled` 확인 후 `csurf` 미들웨어 활성화, 토큰을 쿠키 또는 헤더로 전달하도록 클라이언트 가이드 제공.
+  - 참고: API 클라이언트(예: fetch/axios)에서 `withCredentials: true`와 함께 CSRF 토큰 전송 필요.
+
+4. 세션 직렬화 최소화 — 권장
+  - 위치: `apps/api/src/common/auth/strategies/session.serializer.ts`
+  - 권장: 세션에 저장하는 필드 축소 (`id`, `role`, `status`) — 대량 필드 제거로 Redis 세션 크기 및 동기화 비용 감소.
+
+5. Throttle/Rate limit 강화 — 권장
+  - IP 기반 외에 `loginId` 기반 또는 조합형(계정+IP) 백오프 추가.
+  - 실패 누적 시점에 따른 지수적 딜레이(예: 2^n 초) 적용 고려.
+
+6. 운영 설정 점검
+  - `envService.session` 및 `envService.adminSession`의 `secure`, `httpOnly`, `sameSite`, `maxAgeMs` 값이 운영에 맞는지 확인.
+  - Redis TTL과 DB `expiresAt` 동기화 정책 검증.
+
+### 필요한 코드 변경 목록(우선순위)
+- 변경(수정): [apps/api/src/modules/auth/credential/controllers/user/user-auth.controller.ts](apps/api/src/modules/auth/credential/controllers/user/user-auth.controller.ts) — 세션 재생성 적용
+- 변경(수정): [apps/api/src/modules/auth/credential/controllers/admin/admin-auth.controller.ts](apps/api/src/modules/auth/credential/controllers/admin/admin-auth.controller.ts) — 세션 재생성 적용
+- 변경(수정): [apps/api/src/modules/auth/credential/infrastructure/login-attempt.repository.ts](apps/api/src/modules/auth/credential/infrastructure/login-attempt.repository.ts) — `since` 파라미터 추가
+- 변경(수정): [apps/api/src/modules/auth/credential/application/authenticate-identity.service.ts](apps/api/src/modules/auth/credential/application/authenticate-identity.service.ts) — `listRecent` 호출에 time window 적용
+- 변경(수정): [apps/api/src/common/auth/strategies/session.serializer.ts](apps/api/src/common/auth/strategies/session.serializer.ts) — 직렬화 최소화
+- 변경(검토): [apps/api/src/main.ts](apps/api/src/main.ts) — CSRF 미들웨어 적용 여부 확인/추가
+- 테스트 추가: 세션 재생성(새 sessionID 발급), 계정 잠금(시간창 포함), CSRF 적용 테스트
+
+### 검증/테스트 시나리오 (간단)
+- 세션 재생성: 로그인 전후 `req.sessionID` 값이 변경되는지 확인. 이전 sessionID의 권한으로 접근이 차단되는지 확인.
+- 잠금 정책: 같은 계정으로 5회 실패를 15분 내에 발생시켜 계정 잠금 예외가 발생하는지 확인. 15분 이후 실패 카운트가 초기화되는지 확인.
+- CSRF: 브라우저 클라이언트에서 CSRF 토큰 없이 상태 변경 요청 시 403 발생 확인.
+- 직렬화 필드 변경 시 Redis 세션 데이터가 정상적으로 업데이트되는지 확인.
+
+### 다음 권장 작업 (제가 진행 가능)
+1. 컨트롤러에 `req.session.regenerate()` 적용한 코드 패치 생성 (user/admin 두 파일) — 걸리는 시간: 약 15-30분
+2. `LoginAttemptRepository`에 `since` 파라미터 추가 및 `AuthenticateIdentityService` 호출 수정 — 약 20-40분
+3. `SessionSerializer`를 축소하고 Redis 동기화 테스트 추가 — 약 20-30분
+4. CSRF 미들웨어(선택) 설정 PR 초안 작성 — 약 15-25분
+
+원하시면 우선 1) 세션 재생성 패치를 제가 바로 적용하겠습니다.
+
+## ✅ 우선순위 작업 (진행 상황)
+
+아래는 우선순위가 높은 항목과 현재 진행 상태입니다. 이 체크리스트는 작업 우선순위와 진행 상황을 빠르게 확인하기 위한 요약입니다.
+
+- [ ] 세션 재생성 적용 (user/admin) — 로그인 시 `req.session.regenerate()` 적용 (우선순위: 매우 높음)
+- [ ] 계정 잠금 시간창 적용 — `LoginAttemptRepository.listRecent`에 `since` 추가 (우선순위: 높음)
+- [ ] CSRF 미들웨어 적용 검토 — `main.ts`에서 `csurf` 적용 여부 확인 (우선순위: 중간)
+- [ ] SessionSerializer 축소 — 세션에 저장하는 필드 최소화 (우선순위: 중간)
+- [ ] Throttle 강화 (loginId/계정+IP) — IP 외 계정 기반 제한 추가 (우선순위: 중간)
+- [ ] 테스트 추가: 세션 재생성, 계정 잠금(시간창), CSRF (우선순위: 중간)
+
+진행 상태 요약:
+- [x] 모듈 탐색 및 핵심 파일 수집
+- [x] 로그인 핵심 서비스 코드 정밀 분석
+- [x] 로그인 검토 문서 작성
+- [ ] 세션/토큰 처리 검토
+- [ ] 보안·예외·검증 취약점 점검
+- [ ] 권장 수정사항 및 코드 패치 제안
+- [ ] 테스트/추가 검증 지침 제공
+
+다음 단계: 원하시면 제가 1) 세션 재생성 패치 적용부터 시작하겠습니다. 어느 작업을 먼저 진행할까요?
+
