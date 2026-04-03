@@ -18,7 +18,7 @@ describe('BannerTranslationService', () => {
     const translations = [
       { language: Language.EN, isActive: true, imageFileId: '1', title: 'one' },
       { language: Language.EN, isActive: true, imageFileId: 2n, title: 'two' },
-      { language: Language.KR, isActive: true, imageFileId: '1', title: 'dup' },
+      { language: Language.KO, isActive: true, imageFileId: '1', title: 'dup' },
     ];
 
     const urls = new Map<string, string | null>([['1', 'http://a/1'], ['2', 'http://a/2']]);
