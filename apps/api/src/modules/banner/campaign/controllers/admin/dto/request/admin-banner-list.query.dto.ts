@@ -14,13 +14,9 @@ export class AdminBannerListQueryDto extends createPaginationQueryDto({}, ['crea
   @IsOptional()
   @Type(() => Boolean)
   @IsBoolean()
-  includeDeleted: boolean = true;
+  includeSoftDeleted: boolean = true;
 
-  @ApiPropertyOptional({ description: 'Apply current-time filter (only currently active) / 현재 시각 기준 활성 항목만 표시', example: true })
-  @IsOptional()
-  @Type(() => Boolean)
-  @IsBoolean()
-  includeTime: boolean = false;
+  // `includeTime` removed — admin API no longer supports ad-hoc "now" filtering.
 
   @ApiPropertyOptional({ description: 'Active flag filter / 활성 여부 필터', example: true })
   @IsOptional()

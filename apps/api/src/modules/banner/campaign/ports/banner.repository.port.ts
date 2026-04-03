@@ -13,14 +13,14 @@ export interface BannerRepositoryPort {
     now?: Date;
     limit?: number;
     offset?: number;
-    includeDeleted?: boolean;
+    includeSoftDeleted?: boolean;
     search?: string;
     startDateFrom?: Date | undefined;
     startDateTo?: Date | undefined;
     endDateFrom?: Date | undefined;
     endDateTo?: Date | undefined;
   }): Promise<Banner[]>;
-  count(options?: { isActive?: boolean; now?: Date; includeDeleted?: boolean; search?: string; startDateFrom?: Date | undefined; startDateTo?: Date | undefined; endDateFrom?: Date | undefined; endDateTo?: Date | undefined }): Promise<number>;
+  count(options?: { isActive?: boolean; now?: Date; includeSoftDeleted?: boolean; search?: string; startDateFrom?: Date | undefined; startDateTo?: Date | undefined; endDateFrom?: Date | undefined; endDateTo?: Date | undefined }): Promise<number>;
   create(banner: Banner): Promise<Banner>;
   update(banner: Banner): Promise<Banner>;
   delete(id: bigint): Promise<void>;

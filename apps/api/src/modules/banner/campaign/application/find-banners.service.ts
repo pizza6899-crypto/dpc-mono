@@ -9,8 +9,7 @@ interface FindBannersParams {
   language?: Language;
   page?: number;
   limit?: number;
-  includeDeleted?: boolean;
-  includeTime?: boolean;
+  includeSoftDeleted?: boolean;
   search?: string | undefined;
   startDateFrom?: string | undefined;
   startDateTo?: string | undefined;
@@ -24,18 +23,16 @@ export class FindBannersService {
     @Inject(BANNER_REPOSITORY)
     private readonly repository: BannerRepositoryPort,
   ) {}
-  async execute({ isActive, language, page = 1, limit = 20, includeDeleted = false, includeTime = false, search, startDateFrom, startDateTo, endDateFrom, endDateTo }: FindBannersParams = {}): Promise<PaginatedData<Banner>> {
+  async execute({ isActive, language, page = 1, limit = 20, includeSoftDeleted = false, search, startDateFrom, startDateTo, endDateFrom, endDateTo }: FindBannersParams = {}): Promise<PaginatedData<Banner>> {
     const offset = (page - 1) * limit;
-    const now = includeTime ? new Date() : undefined;
 
     const [data, total] = await Promise.all([
       this.repository.list({
         isActive,
         language,
-        now,
         limit,
         offset,
-        includeDeleted,
+        includeSoftDeleted,
         search,
         startDateFrom: startDateFrom ? new Date(startDateFrom) : undefined,
         startDateTo: startDateTo ? new Date(startDateTo) : undefined,
@@ -44,8 +41,7 @@ export class FindBannersService {
       }),
       this.repository.count({
         isActive,
-        now,
-        includeDeleted,
+        includeSoftDeleted,
         search,
         startDateFrom: startDateFrom ? new Date(startDateFrom) : undefined,
         startDateTo: startDateTo ? new Date(startDateTo) : undefined,

@@ -38,7 +38,7 @@ export class BannerRepository implements BannerRepositoryPort {
     now?: Date;
     limit?: number;
     offset?: number;
-    includeDeleted?: boolean;
+    includeSoftDeleted?: boolean;
     search?: string;
     startDateFrom?: Date | undefined;
     startDateTo?: Date | undefined;
@@ -67,7 +67,7 @@ export class BannerRepository implements BannerRepositoryPort {
     }
 
     // 기본적으로 삭제된 레코드는 제외
-    if (!options?.includeDeleted) where.deletedAt = null;
+    if (!options?.includeSoftDeleted) where.deletedAt = null;
 
     // Search by name or translation title
     const include: any = {};
@@ -100,7 +100,7 @@ export class BannerRepository implements BannerRepositoryPort {
     return result.map((row) => this.mapper.toDomain(row as any));
   }
 
-  async count(options?: { isActive?: boolean; now?: Date; includeDeleted?: boolean; search?: string; startDateFrom?: Date | undefined; startDateTo?: Date | undefined; endDateFrom?: Date | undefined; endDateTo?: Date | undefined }): Promise<number> {
+  async count(options?: { isActive?: boolean; now?: Date; includeSoftDeleted?: boolean; search?: string; startDateFrom?: Date | undefined; startDateTo?: Date | undefined; endDateFrom?: Date | undefined; endDateTo?: Date | undefined }): Promise<number> {
     const where: any = {};
     if (options?.isActive !== undefined) where.isActive = options.isActive;
 
@@ -122,7 +122,7 @@ export class BannerRepository implements BannerRepositoryPort {
       where.endDate = { gte: options.now };
     }
 
-    if (!options?.includeDeleted) where.deletedAt = null;
+    if (!options?.includeSoftDeleted) where.deletedAt = null;
 
     // Apply search across name and translation titles
     if (options?.search) {
