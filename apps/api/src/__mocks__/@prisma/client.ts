@@ -45,7 +45,7 @@ export type ArtifactDrawStatus = (typeof ArtifactDrawStatus)[keyof typeof Artifa
 
 export class Prisma {
   static Decimal = class Decimal {
-    private val: number;
+    val: number;
     constructor(v: number | string | any) { this.val = Number(v); }
     toNumber() { return this.val; }
     mul(n: number) { return new Prisma.Decimal(this.val * n); }
