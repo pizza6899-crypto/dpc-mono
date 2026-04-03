@@ -26,12 +26,12 @@ import { BannerInvalidImageFileIdException } from '../../domain/banner.errors';
 import { CreateBannerAdminRequestDto } from './dto/request/create-banner.request.dto';
 import { UpdateBannerAdminRequestDto } from './dto/request/update-banner.request.dto';
 import { BannerAdminResponseDto } from './dto/response/banner-admin.response.dto';
+import { AdminBannerListQueryDto } from './dto/request/admin-banner-list.query.dto';
 import { Paginated } from 'src/common/http/decorators/paginated.decorator';
 import {
   ApiPaginatedResponse,
   ApiStandardResponse,
 } from 'src/common/http/decorators/api-response.decorator';
-import { PaginationQueryDto } from 'src/common/http/types';
 import type { Banner } from '../../domain/banner.entity';
 
 @ApiTags('Admin Banners')
@@ -51,17 +51,19 @@ export class BannerAdminController {
   @Paginated()
   @ApiOperation({ summary: 'List all banners / 배너 목록 조회 (관리자)' })
   @ApiPaginatedResponse(BannerAdminResponseDto)
-  @AuditLog({
-    type: LogType.ACTIVITY,
-    category: 'BANNER',
-    action: 'BANNER_LIST_ADMIN',
-    extractMetadata: (req, args) => ({ query: args[0] }),
-  })
-  async list(@Query() query: PaginationQueryDto) {
+  async list(@Query() query: AdminBannerListQueryDto) {
     const result = await this.findBannersService.execute({
       page: query.page,
       limit: query.limit,
-      isActive: undefined,
+      isActive: query.isActive,
+      includeDeleted: query.includeDeleted ?? true,
+      includeTime: query.includeTime ?? false,
+      language: query.language,
+      search: query.search,
+      startDateFrom: query.startDateFrom,
+      startDateTo: query.startDateTo,
+      endDateFrom: query.endDateFrom,
+      endDateTo: query.endDateTo,
     });
 
     return {

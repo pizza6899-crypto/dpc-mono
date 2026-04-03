@@ -39,21 +39,59 @@ export class BannerRepository implements BannerRepositoryPort {
     limit?: number;
     offset?: number;
     includeDeleted?: boolean;
+    search?: string;
+    startDateFrom?: Date | undefined;
+    startDateTo?: Date | undefined;
+    endDateFrom?: Date | undefined;
+    endDateTo?: Date | undefined;
   }): Promise<Banner[]> {
     const where: any = {};
     if (options?.isActive !== undefined) where.isActive = options.isActive;
+
+    // Time filters
+    if (options?.startDateFrom || options?.startDateTo) {
+      where.startDate = {};
+      if (options.startDateFrom) where.startDate.gte = options.startDateFrom;
+      if (options.startDateTo) where.startDate.lte = options.startDateTo;
+    }
+    if (options?.endDateFrom || options?.endDateTo) {
+      where.endDate = {};
+      if (options.endDateFrom) where.endDate.gte = options.endDateFrom;
+      if (options.endDateTo) where.endDate.lte = options.endDateTo;
+    }
+
+    // now filter (legacy behavior)
     if (options?.now) {
       where.startDate = { lte: options.now };
       where.endDate = { gte: options.now };
     }
+
     // 기본적으로 삭제된 레코드는 제외
     if (!options?.includeDeleted) where.deletedAt = null;
 
+    // Search by name or translation title
+    const include: any = {};
+    if (options?.language) {
+      include.translations = { where: { language: options.language } };
+    } else {
+      include.translations = true;
+    }
+
+    if (options?.search) {
+      where.AND = [
+        where,
+        {
+          OR: [
+            { name: { contains: options.search, mode: 'insensitive' } },
+            { translations: { some: { title: { contains: options.search, mode: 'insensitive' } } } },
+          ],
+        },
+      ];
+    }
+
     const result = await this.tx.banner.findMany({
       where,
-      include: {
-        translations: options?.language ? { where: { language: options.language } } : true,
-      },
+      include,
       orderBy: { order: 'asc' },
       take: options?.limit,
       skip: options?.offset,
@@ -62,14 +100,43 @@ export class BannerRepository implements BannerRepositoryPort {
     return result.map((row) => this.mapper.toDomain(row as any));
   }
 
-  async count(options?: { isActive?: boolean; now?: Date; includeDeleted?: boolean }): Promise<number> {
+  async count(options?: { isActive?: boolean; now?: Date; includeDeleted?: boolean; search?: string; startDateFrom?: Date | undefined; startDateTo?: Date | undefined; endDateFrom?: Date | undefined; endDateTo?: Date | undefined }): Promise<number> {
     const where: any = {};
     if (options?.isActive !== undefined) where.isActive = options.isActive;
+
+    // Time range filters
+    if (options?.startDateFrom || options?.startDateTo) {
+      where.startDate = {};
+      if (options.startDateFrom) where.startDate.gte = options.startDateFrom;
+      if (options.startDateTo) where.startDate.lte = options.startDateTo;
+    }
+    if (options?.endDateFrom || options?.endDateTo) {
+      where.endDate = {};
+      if (options.endDateFrom) where.endDate.gte = options.endDateFrom;
+      if (options.endDateTo) where.endDate.lte = options.endDateTo;
+    }
+
+    // now filter (legacy behavior)
     if (options?.now) {
       where.startDate = { lte: options.now };
       where.endDate = { gte: options.now };
     }
+
     if (!options?.includeDeleted) where.deletedAt = null;
+
+    // Apply search across name and translation titles
+    if (options?.search) {
+      where.AND = [
+        where,
+        {
+          OR: [
+            { name: { contains: options.search, mode: 'insensitive' } },
+            { translations: { some: { title: { contains: options.search, mode: 'insensitive' } } } },
+          ],
+        },
+      ];
+    }
+
     return await this.tx.banner.count({ where });
   }
 
