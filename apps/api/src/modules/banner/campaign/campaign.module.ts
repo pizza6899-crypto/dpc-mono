@@ -6,6 +6,7 @@ import { FindBannersService } from './application/find-banners.service';
 import { GetBannerByIdService } from './application/get-banner-by-id.service';
 import { CreateBannerService } from './application/create-banner.service';
 import { UpdateBannerService } from './application/update-banner.service';
+import { BannerTranslationService } from './application/banner-translation.service';
 import { DeleteBannerService } from './application/delete-banner.service';
 
 // Infrastructure
@@ -31,6 +32,7 @@ import { BannerAdminController } from './controllers/admin/banner-admin.controll
     GetBannerByIdService,
     CreateBannerService,
     UpdateBannerService,
+    BannerTranslationService,
     DeleteBannerService,
   ],
   controllers: [BannerPublicController, BannerAdminController],
@@ -39,6 +41,7 @@ import { BannerAdminController } from './controllers/admin/banner-admin.controll
     GetBannerByIdService,
     CreateBannerService,
     UpdateBannerService,
+    BannerTranslationService,
     DeleteBannerService,
   ],
 })
