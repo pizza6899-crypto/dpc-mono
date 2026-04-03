@@ -6,7 +6,7 @@ import { DrawResultResponseDto } from './dto/response/draw-result.response.dto';
 import { UnclaimedDrawResponseDto } from './dto/response/unclaimed-draw.response.dto';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { UserRoleType } from '@prisma/client';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { AuditLog } from 'src/modules/audit-log/infrastructure/audit-log.decorator';
 import { LogType } from 'src/modules/audit-log/domain';
 
@@ -33,6 +33,7 @@ import { ArtifactDrawRequest } from '../../domain/artifact-draw-request.entity';
 @ApiTags('User Artifact Draw')
 @Controller('user/artifact/draw')
 @RequireRoles(UserRoleType.USER)
+@ApiBearerAuth()
 @ApiStandardErrors()
 export class UserArtifactDrawController {
   constructor(

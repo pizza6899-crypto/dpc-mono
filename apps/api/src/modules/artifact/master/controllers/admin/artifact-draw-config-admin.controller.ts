@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Patch } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { UserRoleType } from '@prisma/client';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { ApiStandardResponse } from 'src/common/http/decorators/api-response.decorator';
@@ -13,6 +13,7 @@ import { UpdateDrawConfigsAdminService } from '../../application/update-draw-con
 @ApiTags('Admin Artifact Configurations')
 @Controller('admin/artifact/draw-configs')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
+@ApiBearerAuth()
 export class ArtifactDrawConfigAdminController {
   constructor(
     private readonly getService: GetDrawConfigAdminService,

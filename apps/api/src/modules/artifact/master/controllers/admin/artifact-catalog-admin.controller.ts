@@ -9,7 +9,7 @@ import {
   Query,
   HttpStatus,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { UserRoleType } from '@prisma/client';
 import { RequireRoles } from 'src/common/auth/decorators/roles.decorator';
 import { AuditLog } from 'src/modules/audit-log/infrastructure';
@@ -30,6 +30,7 @@ import { ParseBigIntPipe } from '../../../../../common/http/pipes/parse-bigint.p
 @ApiTags('Admin Artifact Catalog')
 @Controller('admin/artifact/catalog')
 @RequireRoles(UserRoleType.ADMIN, UserRoleType.SUPER_ADMIN)
+@ApiBearerAuth()
 export class ArtifactCatalogAdminController {
   constructor(
     private readonly getService: GetArtifactCatalogAdminService,

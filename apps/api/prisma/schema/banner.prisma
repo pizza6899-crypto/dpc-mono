@@ -1,0 +1,58 @@
+// 배너 기본 정보
+model Banner {
+  id        BigInt     @id @default(autoincrement())
+  name      String?    @map("name") // 관리자용 배너 이름 (예: "Welcome Banner 2024")
+  isActive  Boolean    @default(true) @map("is_active") // 배너 활성화 상태
+  order     Int        @default(0) @map("order") // 노출 순서 및 우선순위 (낮은 숫자가 우선)
+  linkUrl   String?    @map("link_url") // 클릭 시 이동할 URL (공통 링크)
+  startDate DateTime?  @map("start_date") // 노출 시작일
+  endDate   DateTime?  @map("end_date") // 노출 종료일
+  deletedAt DateTime?  @map("deleted_at") // 소프트 삭제 지원
+
+  // 감사 정보
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  createdBy BigInt?    @map("created_by")
+  updatedBy BigInt?    @map("updated_by")
+
+  createdByUser User? @relation("BannerCreatedBy", fields: [createdBy], references: [id], onDelete: SetNull)
+  updatedByUser User? @relation("BannerUpdatedBy", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  // 관리자 메모
+  adminMemos AdminMemo[]
+
+  // 다국어 정보
+  translations BannerTranslation[]
+
+  @@index([isActive, order]) // 활성 배너 정렬 쿼리 최적화
+  @@index([isActive, startDate, endDate, order]) // 날짜 기반 노출 쿼리 최적화
+  @@map("banners")
+}
+
+// 배너 다국어 정보 (언어별 이미지 및 텍스트)
+model BannerTranslation {
+  id        BigInt   @id @default(autoincrement())
+  bannerId  BigInt   @map("banner_id")
+  language  Language // 지원 언어: EN, KO, JA
+  isActive  Boolean  @default(true) @map("is_active") // 언어별 활성화 상태
+
+  // 외부/직접 URL 허용 (유연성 높이기)
+  imageUrl String? @map("image_url")
+
+  // 텍스트 정보
+  title   String? @map("title") // 배너 제목 (접근성 및 SEO용)
+  altText String? @map("alt_text") // 이미지 대체 텍스트
+  
+  // 언어별 링크 (선택적 확장)
+  linkUrl String? @map("link_url") // 언어별 링크 (공통 linkUrl override)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  banner Banner @relation(fields: [bannerId], references: [id], onDelete: Cascade)
+
+  @@unique([bannerId, language]) // 배너당 언어 하나씩
+  @@index([bannerId])
+  @@index([language])
+  @@map("banner_translations")
+}

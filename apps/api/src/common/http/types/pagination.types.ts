@@ -93,16 +93,16 @@ export class PaginationQueryDto extends createPaginationQueryDto() {}
 
 export class PaginationDto {
   @ApiProperty({ example: 1, description: 'Current page (현재 페이지)' })
-  page: number;
+  page!: number;
 
   @ApiProperty({
     example: 10,
     description: 'Items per page (페이지당 항목 수)',
   })
-  limit: number;
+  limit!: number;
 
   @ApiProperty({ example: 100, description: 'Total items (전체 항목 수)' })
-  total: number;
+  total!: number;
 }
 
 /**
@@ -121,5 +121,5 @@ export class PaginatedResponseDto<T = any> extends ApiResponseDto<T[]> {
     type: PaginationDto,
     description: 'Pagination information (페이지네이션 정보)',
   })
-  pagination: PaginationDto;
+  pagination!: PaginationDto;
 }
