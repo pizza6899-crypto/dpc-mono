@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Req, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Get, Body, Req, HttpStatus, Logger } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
   ApiStandardResponse,
@@ -28,6 +28,7 @@ import type { AuthenticatedUser } from 'src/common/auth/types/auth.types';
 @ApiTags('Admin Auth')
 @ApiStandardErrors()
 export class AdminAuthController {
+  private readonly logger = new Logger(AdminAuthController.name);
   constructor(
     private readonly authenticateIdentityService: AuthenticateIdentityService,
     private readonly loginService: LoginService,
@@ -90,6 +91,19 @@ export class AdminAuthController {
       isAdmin: true,
     });
 
+    // 2. 세션 재생성 (Session Fixation 방지)
+    try {
+      if (req.session && typeof req.session.regenerate === 'function') {
+        await new Promise<void>((resolve, reject) =>
+          req.session.regenerate((err) => (err ? reject(err) : resolve())),
+        );
+      }
+    } catch (err) {
+      this.logger.error(err, 'Session regenerate failed');
+      throw err; // 중단: 안전을 위해 기존 세션을 사용하는 것을 금지
+    }
+
+    // 3. passport login
     await new Promise<void>((resolve, reject) => {
       req.login(authenticatedUser as any, (err) => {
         if (err) {
@@ -100,7 +114,32 @@ export class AdminAuthController {
       });
     });
 
-    // 3. 로그인 성공 기록 (액티비티 로그 등) 및 HTTP 세션 생성
+    // 4. 세션 저장 보장 (재시도 1회)
+    const saveSessionWithRetry = async (attempts = 2) => {
+      let lastErr: any = null;
+      while (attempts-- > 0) {
+        try {
+          if (req.session && typeof req.session.save === 'function') {
+            await new Promise<void>((resolve, reject) =>
+              req.session.save((err) => (err ? reject(err) : resolve())),
+            );
+          }
+          return;
+        } catch (err) {
+          lastErr = err;
+        }
+      }
+      throw lastErr;
+    };
+
+    try {
+      await saveSessionWithRetry();
+    } catch (err) {
+      this.logger.error(err, 'Session save failed after retry');
+      throw err; // 실패 시 로그인 흐름 중단 (안전상 권장)
+    }
+
+    // 5. 로그인 성공 기록 (액티비티 로그 등) 및 HTTP 세션 생성
     await this.loginService.execute({
       user: authenticatedUser,
       clientInfo,
